@@ -1,0 +1,41 @@
+body{font-family:"微软雅黑",sans-serif;margin: 0;padding: 0; -webkit-text-size-adjust:none;} /* "微软雅黑", "宋体", Arial, sans-serif;*/
+.pull-left{float: left;}
+.pull-right{float: right;}
+.ml10{margin-left: 10px}
+.mr10{margin-right: 10px;}
+.mt3{margin-top: 3px;}
+.mt5{margin-top: 5px;}
+.mt7{margin-top: 7px;}
+.change-page{page-break-after: always;}
+.print-page-label{width:98mm;margin: 0 auto;}
+.print-page-a4{width:210mm;margin: 0 auto;}
+.per-page-a4{margin: 0 4mm;}
+.mt-per-label{margin-top: 2mm;margin-left: 1mm;}
+
+/* .label-ty-101-72  */
+.label-ty-101-76{border:1px solid #000;width: 96.5mm;height: 70.5mm;}
+.label-ty-101-76 .label-top-loginName{width: 35%;}
+.label-ty-101-76 .label-top-barcode{border: 1px solid #333;margin: 3px 6px 0 0;width: 59%;}
+.label-ty-101-76 .trackingNo{width: 100%;height: 22px;}
+.label-ty-101-76 .trackingNo{border-top:1px solid #333;width: 100%;}
+.label-ty-101-76 .fw-bold{font-weight: bold;}
+.label-ty-101-76 .label-top{height: 25%;}
+.label-ty-101-76 .label-bottom{border-top: 2px dashed #333;height: 15%;}
+.label-ty-101-76 .barcode img{width:215px; height:39px;}
+.label-ty-101-76 .country{height: 62px;}
+.label-ty-101-76 .countryNameEN,.label-ty-101-76 .countryNameCN{margin-top: 40px;}
+.label-top,.label-middle,.label-bottom{width: 100%;}
+
+.label-ty-101-76 .buyerId {
+	width:125px;
+	text-overflow:ellipsis;
+	overflow:hidden;
+}
+.label-ty-101-76 .productName {
+	width:222px;
+	text-overflow:ellipsis;
+	overflow:hidden;
+	height:20px;
+}
+
+

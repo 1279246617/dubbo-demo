@@ -1,0 +1,20 @@
+body{font-size:14px;font-family: "微软雅黑", "宋体", Arial, sans-serif;,sans-serif;margin: 0;padding: 0; -webkit-text-size-adjust:none;}/* "微软雅黑", "宋体", Arial, sans-serif;*/
+.pull-left{float: left;}
+.pull-right{float: right;}
+.pageLabel{width: 200mm;height: 277mm;float: none;margin-left: auto;position: relative;margin-right: auto;border:1px solid #000;}
+table{width: 200mm;border-collapse:collapse;}
+td{border-bottom:1px solid #000;text-align: center;line-height: 23px;word-wrap:break-word; overflow:hidden;}
+.autoLineFeed{word-wrap:break-word; overflow:hidden;}
+.td_0{width: 5%;border-right:1px solid #000;}
+.td_1{width: 15%;border-right:1px solid #000;}
+.td_2{width: 20%;border-right:1px solid #000;}
+.td_3{width: 15%;border-right:1px solid #000;}
+.td_4{width: 25%;border-right:1px solid #000;}
+.td_5{width: 8%;border-right:1px solid #000;}
+.td_6{width: 12%;}
+.pageTitle{border-bottom:1px solid #000;}
+.pageTitle_1{font-size: 23px;font-weight: bold;margin-left: 45%;}
+.pageTitle_2{font-size: 12px;margin-left: 70%;margin-bottom: 3px;}
+
+.fs12{font-size: 12px;}
+.ml5{margin-left: 5px;}

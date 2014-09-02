@@ -1,0 +1,30 @@
+body{font-family:"微软雅黑",sans-serif;font-size:12px;margin: 0;padding: 0; -webkit-text-size-adjust:none;} /* "微软雅黑", "宋体", Arial, sans-serif;*/
+.pull-left{float: left;}
+.pull-right{float: right;}
+.widAll{width: 100%;}
+.ml5{margin-left: 5px;}
+.ml10{margin-left: 10px}
+.mr5{margin-right: 5px;}
+.mr10{margin-right: 10px;}
+.mt3{margin-top: 3px;}
+.mt7{margin-top: 7px;}
+.fs15{font-size: 15px;}
+.fs18{font-size: 18px;}
+.fw-bold{font-weight: bold;}
+.ta-center{text-align: center;}
+.change-page{page-break-after: always;}
+.print-page-label{width:98mm;margin: 0 auto;}
+.print-page-a4{width:210mm;margin: 0 auto;}
+.per-page-a4{margin: 0 4mm;}
+.mt-per-label{margin-top: 2mm;margin-left: 1mm;}
+
+.auram-label-101-76-1{border:1px dashed #ccc;width: 96.5mm;height: 70.5mm;}
+
+.auram-label-101-76-1 .label-top{float: left;width: 100%;height: 25%;}
+.auram-label-101-76-1 .label-middle{float: left;width: 100%;height: 55%;border-bottom: 1px solid #333;}
+.auram-label-101-76-1 .label-bottom{float: left;width: 100%;font-size: 14px;}
+.auram-label-101-76-1 .pic-eParcel{margin: 10px;width: 149px;height: 47px;}
+.auram-label-101-76-1 .pic-logo{margin: 10px 0 0 50px;width: 140px;height: 42px;}
+.auram-label-101-76-1 .deliverTo{margin-left: 10px;font-size: 14px;}
+.auram-label-101-76-1 .phoneNumber{margin-left: 100px;}
+.auram-label-101-76-1 .label-middle-part2{font-size: 14px;}

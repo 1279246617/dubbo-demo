@@ -1,0 +1,45 @@
+ body{padding: 10px;}
+.sep{width:100%;border-top: 1px solid #CBCFD5;border-bottom: 1px solid #FDFDFE;margin-top:10px;margin-bottom: 5px;}
+.btn{margin:7px 5px}
+.order-info-name{margin-top: 2px;}
+.customs-field-name{width: 60px;margin-top: 2px;}
+.order-info-sellerAccount{margin-left: 58px;}
+.wid20{width: 20px;}
+.wid40{width: 40px;}
+.wid50{width: 50px;}
+.wid60{width: 60px;}
+.wid80{width: 80px;}
+.wid100{width: 100px}
+.wid140{width: 140px;}
+.wid152{width: 152px;}
+.wid200{width: 200px;}
+.wid201{width: 201px;}
+.wid202{width: 202px;}
+.wid203{width: 203px;}
+.wid820{width: 820px;}
+.ml5{margin-left: 5px;}
+.ml10{margin-left: 10px;}
+.ml50{margin-left: 50px;}
+.ml58{margin-left: 58px;}
+.ml80{margin-left: 80px;}
+.mt5{margin-top: 5px;}
+.f-handle{width: 100%;}
+.f-header{font-weight: bold;color: #317EAC;margin-left: 5px;}
+.f-tb{margin-left: 20px;}
+.widAll{width: 100%;margin: 3px;}
+#f_basicInfo,#f_addressInfo,#f_customsInfo,#f_logInfo,#f_remark{float: left;width: 100%;margin-top: 10px;}
+.requiredMark{color: #ff0000; }
+#remark{width: 722px;height: 88px;}
+.customs-left{width: 33%;}
+.btnAddCustoms{margin-left: 180px;}
+#customsType{width: 142px;}
+.firstTd{background-color: #cedbfa;}
+#tb_customs td{border: 1px solid #84a0c4;height: 23px;white-space:nowrap;width:68px;text-align: center;}
+#remark{color: #ff0000}
+.tdContent{overflow:hidden;text-overflow:ellipsis;width:68px;text-align: center;}
+.btnDelCustoms{cursor: pointer;}
+.requiredMark{vertical-align: sub;}
+.btn-small{margin: 1px 5px;}
+.btn-del{padding: 3px 8px;}
+.salesOrderNo{width: 200px;color: #999}
+.field-content{width: 211px;}
