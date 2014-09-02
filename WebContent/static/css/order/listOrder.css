@@ -1,0 +1,139 @@
+html {overflow: hidden}
+#orderList{overflow-x: hidden;overflow-y:auto;}
+.btn {margin: 7px 5px}
+.widAll{width: 100%;}
+.wid20{width: 20px;}
+.wid22{width: 22px;}
+.wid30{width: 30px;}
+.wid32{width: 32px;}
+.wid40{width: 40px;}
+.wid42{width: 42px;}
+.wid50{width: 50px;}
+.wid60{width: 60px;}
+.wid62{width: 62px;}
+.wid70{width: 70px;}
+.wid80{width: 80px;}
+.wid82{width: 82px;}
+.wid100 {width: 100px}
+.wid120{width: 120px;}
+.wid122{width: 122px;}
+.ml5 {margin-left: 5px;}
+.ml15{margin-left: 15px;}
+.ml30{margin-left: 30px;}
+.btn{line-height: 17px;}
+.btn-small {padding: 4px 8px;}
+#oCategory {height: 23px;margin-top: 2px;}
+
+ .blcakwhite{
+     filter:Gray;
+ }
+.order-bar{
+    height: 25px;
+    padding: 2px 10px 5px 0;
+    background-color: #FBFBFB;
+    border-bottom: 1px solid #DDD;
+    border-top: 1px solid #ddd;
+    white-space: nowrap;
+    -webkit-box-shadow: 0 1px 2px #eaeaea;
+    -moz-box-shadow: 0 1px 2px #eaeaea;
+    box-shadow: 0 1px 2px #eaeaea;
+    background: #FEFEFE;
+    background: -moz-linear-gradient(top,#FEFEFE 0,#F0F3F4 100%);
+    background: -webkit-gradient(linear,left top,left bottom,color-stop(0%,#FEFEFE),color-stop(100%,#F0F3F4));
+    background: -webkit-linear-gradient(top,#FEFEFE 0,#F0F3F4 100%);
+    background: -o-linear-gradient(top,#FEFEFE 0,#F0F3F4 100%);
+    background: -ms-linear-gradient(top,#FEFEFE 0,#F0F3F4 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fefefe',endColorstr='#f0f3f4',GradientType=0);
+    background: linear-gradient(top,#FEFEFE 0,#F0F3F4 100%);
+}
+.order-info{width: 100%;float: left;}
+.fieldName{font-weight: bold;color: #317EAC;}
+.hide{display: none;}
+.order-content{line-height:20px;margin-left: 15px;margin-top:5px;width: 100%;}
+.order-content-left{width:30%;}
+.order-content-middle{width:30%;}
+.order-content-right{width: 38%;}
+.order-info-other{width: 88%;}
+.field_span{margin-left:0;}
+#orderList{width:100%;overflow-x: hidden;}
+.checkbox-content{margin: 4px 0 0 10px;}
+.checkbox-per{
+    vertical-align:middle;
+    margin: 3px 0 0 0 !important;
+}
+.order-id,.trackingNo_span{
+    max-width: 200px;
+    font-size: 14px;
+    line-height: 18px;
+    margin: 0;
+    font-family: 'Telex',sans-serif;
+    font-weight: bold;
+    color: #317EAC;
+    display: inline-block;
+    vertical-align:middle;
+}
+.order-id{margin: 2px 0 0 1px;}
+.order-remark{width: 98%;}
+.order-customer{width: 100%;}
+.view-span{height: 18px;margin-left: 0;}
+.field{width: 140px;height: 20px;}
+.field_span{width: 75%;height: 20px;}
+.field{margin-top: -2px;}
+.field_span,.trackingNo_span,.salesOrderNo_span,.itemQuantity,.overflow-ellipsis{
+    white-space:nowrap;
+	text-overflow:ellipsis;
+	-o-text-overflow:ellipsis;
+	overflow:hidden;
+}
+
+.remark{width: 430px;height: 54px;color: #ff0000;}
+.order-customs-view{width:837px;margin-top: -2px;}
+.customs-edit-btn{margin-top: -2px;}
+.order-item-view{width: 850px;}
+.edit-btn-del{width: 30px;}
+.btn-add,.btn-del{margin: 3px 5px;line-height: 12px !important;}
+.order-status,.order-shipway{margin-top: 1px;}
+.btn-del-order{margin-top: 2px;}
+#loading{margin-top: 20%;margin-left: 45%;}
+.check-all{margin: 8px 0 0 5px;}
+.checkbox-all{vertical-align: middle;}
+.checkbox-all-text{vertical-align: sub;margin-left: 5px;}
+.per-customs{line-height: 22px;}
+.itemPrice{color: #FF8800}
+.trackingNo{margin-top: 3px;width: 200px;}
+.btn-del{padding: 1px 8px;}
+.btn-add{padding: 1px 6px;}
+.asterisk{vertical-align: sub;}
+.itemSku{max-width: 110px;}
+.itemTitle{max-width: 620px;}
+.trackingNo_span{margin-top: 3px;height: 18px;max-width: 140px;min-width: 100px;}
+.salesOrderNo_span{margin-top: 7px;height: 18px;width: 142px;}
+.salesOrderNo{margin-top: 5px;}
+.shipwayCode-view{width: 101px;}
+.shipway-view{width: 80px;max-width: 140px;margin-top: 3px;}
+.shipway-edit{width: 101px;max-width: 140px;margin-top: 1px;height: 24px;}
+.itemQuantity{width: 19px;}
+.order-info-down{margin-left: 15px;line-height: 20px;width: 100%;}
+img{width: 100%;height:100%;}
+
+div[class*="error-message-"]{width: 20px;height: 20px;margin-top: 2px;}
+div[class*="error-message-"] :hover{cursor:pointer;}
+
+.l-verify-tip-content{word-wrap:break-word; overflow:hidden;}
+.markShipped-message{margin-top: 7px;}
+.markHoldUp-message{margin-top: 7px;}
+
+.isCanCancel-message{margin-top: 7px;width: 22px;height: 22px;margin-top: 2px;cursor:pointer;}
+.inSure-message{margin-top: 7px;width: 22px;height: 22px;margin-top: 2px;cursor:pointer;}
+
+.orderListSize{margin-top: 0;height: 22px;border: 1px solid #cccccc;}
+.curPage{height: 20px;}
+.icon-trash{
+    background-image:url("../../img/glyphicons-halflings-white.png");
+}
+
+
+
+
+
+

@@ -1,0 +1,46 @@
+body{font-family:"微软雅黑",sans-serif;font-size:12px;margin: 0;padding: 0; -webkit-text-size-adjust:none;} /* "微软雅黑", "宋体", Arial, sans-serif;*/
+.pull-left{float: left;}
+.pull-right{float: right;}
+.widAll{width: 100%;}
+.ml5{margin-left: 5px;}
+.ml10{margin-left: 10px}
+.mr10{margin-right: 10px;}
+.mt3{margin-top: 3px;}
+.mt7{margin-top: 7px;}
+.fs18{font-size: 18px;}
+.fw-bold{font-weight: bold;}
+.change-page{page-break-after: always;}
+.print-page-label{width:98mm;margin: 0 auto;}
+.print-page-a4{width:210mm;margin: 0 auto;}
+.per-page-a4{margin: 0 4mm;}
+.mt-per-label{margin-top: 2mm;margin-left: 1mm;}
+
+.spp-label-101-76{border:1px dashed #ccc;width: 96.5mm;height: 70.5mm;}
+
+.spp-label-101-76 .label-top{float: left;width: 100%;height: 30%;margin-top: 2px;}
+.spp-label-101-76 .label-middle{float: left;width: 100%;height: 32%;}
+.spp-label-101-76 .label-bottom{float: left;width: 100%;height: 38%;}
+.spp-label-101-76 .label-top-left{width: 48%;}
+.spp-label-101-76 .label-top-right{width: 52%;}
+.spp-label-101-76 .ltr-content{border:1px solid #ccc;width: 95%;}
+.spp-label-101-76 .ltr-content-top{width: 100%;font-size: 14px;border-bottom: 1px solid #ccc;}
+.spp-label-101-76 .ltr-content-top div{margin-left: 35%;}
+.spp-label-101-76 .ltr-content-bottom{width: 100%;}
+.spp-label-101-76 .lcb-left{width: 52%;padding: 1px 0 0 1px;border-right: 1px solid #ccc;}
+.spp-label-101-76 .lcb-right{width: 46%;}
+.spp-label-101-76 .lcb-right img{margin: 1px 0 0 3px;}
+.spp-label-101-76 .ltl-from{margin-top: 10%;}
+.spp-label-101-76 .receiverName{margin-left: 15px;}
+.spp-label-101-76 .label-bottom-part1{height: 20%;}
+.spp-label-101-76 .label-bottom-part2{height: 55%;}
+.spp-label-101-76 .label-bottom-part3{height: 20%;}
+.spp-label-101-76 .no1{font-size: 16px;margin-right: 15px;}
+
+.spp-label-101-76 .lbp-content{height:95%;border:1px solid #ccc;}
+.spp-label-101-76 .spp-barcode1 img{width: 200px;height: 36px;margin-top:2px;margin-left: 22%;}
+.spp-label-101-76 .spp-barcode2 img{width: 150px;height: 16px;margin-right:10px;}
+.spp-label-101-76 .trackingNo{margin-left: 25%;}
+.spp-label-101-76 .lcb-left img{width: 94px;height: 55px;}
+.spp-label-101-76 .lcb-right img{width: 79px;height: 54px;}
+.spp-label-101-76 .label-top-left img{width: 176px;height: 45px;}
+.spp-label-101-76 .addressLine1,.spp-label-101-76 .addressLine2{width: 360px;white-space:nowrap;overflow: hidden;text-overflow: ellipsis;*text-overflow: ellipsis;}

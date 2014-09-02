@@ -1,0 +1,18 @@
+.toolbar1 {
+    height: 33px;
+    line-height: 33px;
+    padding: 0 5px 0 5px;
+    white-space: nowrap;
+    border-bottom: 1px solid #C3C3C3;
+    -webkit-box-shadow: 0 1px 2px #eaeaea;
+    -moz-box-shadow: 0 1px 2px #eaeaea;
+    box-shadow: 0 1px 2px #eaeaea;
+    background: #FEFEFE;
+    background: -moz-linear-gradient(top,#FEFEFE 0,#F0F3F4 100%);
+    background: -webkit-gradient(linear,left top,left bottom,color-stop(0%,#FEFEFE),color-stop(100%,#F0F3F4));
+    background: -webkit-linear-gradient(top,#FEFEFE 0,#F0F3F4 100%);
+    background: -o-linear-gradient(top,#FEFEFE 0,#F0F3F4 100%);
+    background: -ms-linear-gradient(top,#FEFEFE 0,#F0F3F4 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fefefe',endColorstr='#f0f3f4',GradientType=0);
+    background: linear-gradient(top,#FEFEFE 0,#F0F3F4 100%);
+}
