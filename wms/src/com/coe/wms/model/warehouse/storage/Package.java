@@ -2,6 +2,13 @@ package com.coe.wms.model.warehouse.storage;
 
 import java.io.Serializable;
 
+/**
+ * 大包
+ * 
+ * 仓配服务
+ * @author Administrator
+ *
+ */
 public class Package implements Serializable {
 
 	/**
