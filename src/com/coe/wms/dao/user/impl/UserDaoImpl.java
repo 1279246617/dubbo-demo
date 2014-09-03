@@ -38,7 +38,6 @@ public class UserDaoImpl implements IUserDao {
 	@Resource(name = "jdbcTemplate")
 	private JdbcTemplate jdbcTemplate;
 	
-	
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public long saveUser(final User user) {
