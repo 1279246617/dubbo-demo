@@ -14,6 +14,16 @@ public class OrderItem implements Serializable {
 	 */
 	private static final long serialVersionUID = 6403535606524196497L;
 
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	private Long id;
+	
 	/**
 	 * 订单ID, 订单表的ID
 	 */

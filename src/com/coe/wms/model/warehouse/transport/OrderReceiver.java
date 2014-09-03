@@ -13,7 +13,8 @@ public class OrderReceiver implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 8304577723723463601L;
-
+	
+	private Long id;
 	/**
 	 * orderId
 	 */
@@ -211,4 +212,11 @@ public class OrderReceiver implements Serializable {
 		this.email = email;
 	}
 
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
 }
