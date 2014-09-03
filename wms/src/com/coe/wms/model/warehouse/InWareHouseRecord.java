@@ -5,6 +5,8 @@ import java.io.Serializable;
 /**
  * 入库单 (主单)
  * 
+ * 要求一个入库单中只能包含同一个大包号的sku
+ * 
  * @author Administrator
  * 
  */
@@ -34,6 +36,13 @@ public class InWareHouseRecord implements Serializable {
 	 * 批次号
 	 */
 	private String batchNo;
+
+	/**
+	 * 客户下的大包号
+	 * 
+	 * 要求一个入库单中只能包含同一个大包号的sku
+	 */
+	private String packageNo;
 
 	/**
 	 * 创建时间 (收货时间)
