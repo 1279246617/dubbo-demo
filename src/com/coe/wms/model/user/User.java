@@ -51,6 +51,11 @@ public class User implements Serializable {
 	private String userName;
 
 	/**
+	 * 用户类型. 简单区分是客户还是操作员. 用于登录时 跳转到不同的首页. 与具体权限无关
+	 */
+	private String userType;
+
+	/**
 	 * 电话
 	 */
 	private String phone;
@@ -135,5 +140,13 @@ public class User implements Serializable {
 
 	public void setParentId(Long parentId) {
 		this.parentId = parentId;
+	}
+
+	public String getUserType() {
+		return userType;
+	}
+
+	public void setUserType(String userType) {
+		this.userType = userType;
 	}
 }

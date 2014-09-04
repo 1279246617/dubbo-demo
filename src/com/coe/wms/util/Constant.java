@@ -15,13 +15,6 @@ public class Constant {
 	public final static Integer PAPER_A4 = 2;
 
 	/**
-	 * session常量系统用户id
-	 */
-	public final static String SESSION_USER_ID = "userId";
-
-	public final static String SESSION_USER_NAME = "userName";
-
-	/**
 	 * 用于 is_delete 之类的场景
 	 */
 	public final static String Y = "Y";
