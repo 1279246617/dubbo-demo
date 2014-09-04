@@ -34,11 +34,12 @@ public class UserServiceImpl implements IUserService {
 		loginName = loginName.trim();
 		User user = userDao.findUserByLoginName(loginName);
 		if (user == null) {
-			map.put(Constant.MESSAGE, "帐号不存在");
+			//帐号不存在
+			map.put(Constant.MESSAGE, "帐号或密码不正确");
 			return map;
 		}
 		if (!StringUtil.isEqual(password, user.getPassword())) {
-			map.put(Constant.MESSAGE, "密码不正确");
+			map.put(Constant.MESSAGE, "帐号或密码不正确");
 			return map;
 		}
 		if (user.getStatus() == User.STATUS_DELETE) {
@@ -52,7 +53,7 @@ public class UserServiceImpl implements IUserService {
 		// 成功,返回userId userName
 		map.put(Constant.SESSION_USER_ID, String.valueOf(user.getId()));
 		map.put(Constant.SESSION_USER_NAME, user.getUserName());
-		
+
 		map.put(Constant.STATUS, Constant.SUCCESS);
 		return map;
 	}

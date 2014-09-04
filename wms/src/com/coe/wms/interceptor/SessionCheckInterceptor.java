@@ -42,7 +42,7 @@ public class SessionCheckInterceptor extends HandlerInterceptorAdapter {
 		if (session.getAttribute(SessionConstant.USER_ID) != null) {
 			return true;
 		}
-		logger.info("url:" + url + "      redirectUrl:" + Application.getBaseUrl() + redirectUrl);
+		logger.debug("url:" + url + "      redirectUrl:" + Application.getBaseUrl() + redirectUrl);
 		response.sendRedirect(Application.getBaseUrl() + redirectUrl);
 		return false;
 	}

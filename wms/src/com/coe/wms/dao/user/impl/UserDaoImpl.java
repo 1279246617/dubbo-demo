@@ -3,6 +3,7 @@ package com.coe.wms.dao.user.impl;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.List;
 
 import javax.annotation.Resource;
 
@@ -80,9 +81,11 @@ public class UserDaoImpl implements IUserDao {
 	@DataSource(DataSourceCode.WMS)
 	public User findUserByLoginName(String loginName) {
 		String sql = "select id,parent_id,login_name,password,user_name,status from u_user where login_name=?";
-		User user = jdbcTemplate.queryForObject(sql, new String[] { loginName }, new BeanPropertyRowMapper<User>(
-				User.class));
-		return user;
+		List<User> userList = jdbcTemplate.queryForList(sql, new String[] { loginName }, User.class);
+		if (userList.size() > 0) {
+			return userList.get(0);
+		}
+		return null;
 	}
 
 	/**
