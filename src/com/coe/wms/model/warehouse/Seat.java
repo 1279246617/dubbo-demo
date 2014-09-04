@@ -27,7 +27,7 @@ public class Seat implements Serializable {
 	/**
 	 * 货位编号
 	 */
-	private String number;
+	private String seatCode;
 
 	/**
 	 * 备注
@@ -50,12 +50,12 @@ public class Seat implements Serializable {
 		this.sort = sort;
 	}
 
-	public String getNumber() {
-		return number;
+	public String getSeatCode() {
+		return seatCode;
 	}
 
-	public void setNumber(String number) {
-		this.number = number;
+	public void setSeatCode(String seatCode) {
+		this.seatCode = seatCode;
 	}
 
 	public String getRemark() {

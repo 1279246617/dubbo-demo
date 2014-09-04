@@ -36,7 +36,7 @@ public class Package implements Serializable {
 	private String packageTrackingNo;
 
 	/**
-	 * 大包下的产品数量
+	 * 大包下的产品数量(统计packageItem得到)
 	 */
 	private int smallPackageQuantity;
 

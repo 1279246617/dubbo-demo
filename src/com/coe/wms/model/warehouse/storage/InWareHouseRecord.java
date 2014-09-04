@@ -25,7 +25,7 @@ public class InWareHouseRecord implements Serializable {
 	/**
 	 * 仓库id
 	 */
-	private String wareHouseId;
+	private Long wareHouseId;
 
 	/**
 	 * 操作员Id
@@ -62,11 +62,11 @@ public class InWareHouseRecord implements Serializable {
 		this.id = id;
 	}
 
-	public String getWareHouseId() {
+	public Long getWareHouseId() {
 		return wareHouseId;
 	}
 
-	public void setWareHouseId(String wareHouseId) {
+	public void setWareHouseId(Long wareHouseId) {
 		this.wareHouseId = wareHouseId;
 	}
 
@@ -100,5 +100,13 @@ public class InWareHouseRecord implements Serializable {
 
 	public void setRemark(String remark) {
 		this.remark = remark;
+	}
+
+	public String getPackageNo() {
+		return packageNo;
+	}
+
+	public void setPackageNo(String packageNo) {
+		this.packageNo = packageNo;
 	}
 }
