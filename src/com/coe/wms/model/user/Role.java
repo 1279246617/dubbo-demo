@@ -23,7 +23,7 @@ public class Role implements Serializable{
 	 * 角色描述
 	 */
 	private String description;
-
+	
 	/**
 	 * 创建时间
 	 */

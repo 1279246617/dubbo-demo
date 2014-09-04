@@ -38,7 +38,7 @@ public class Menu implements Serializable {
 	 * 状态
 	 */
 	private Integer status;
-
+	
 	public Long getId() {
 		return id;
 	}
