@@ -35,6 +35,7 @@
 				<property name="allowUrls">
 					<list>
 						<value>/login.do</value>
+						<value>/loginCheck.do</value>
 					</list>
 				</property>
 				<!-- 被拦截并拒绝时,跳转至 -->

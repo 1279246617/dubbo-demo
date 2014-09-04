@@ -12,6 +12,21 @@ public class User implements Serializable {
 	private static final long serialVersionUID = 2687493146734506503L;
 
 	/**
+	 * 被删除的
+	 */
+	public static final Integer STATUS_DELETE = -1;
+
+	/**
+	 * 没问题的状态
+	 */
+	public static final Integer STATUS_OK = 1;
+
+	/**
+	 * 冻结,不允许登录
+	 */
+	public static final Integer STATUS_FREEZE = 2;
+
+	/**
 	 * 主键
 	 */
 	private Long id;

@@ -37,7 +37,7 @@ public class UserDaoImpl implements IUserDao {
 
 	@Resource(name = "jdbcTemplate")
 	private JdbcTemplate jdbcTemplate;
-	
+
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public long saveUser(final User user) {
@@ -73,6 +73,15 @@ public class UserDaoImpl implements IUserDao {
 				+ userId;
 		User user = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<User>(User.class));
 		logger.debug("从数据库查询用户:" + sql + " 参数:主键:" + userId);
+		return user;
+	}
+
+	@Override
+	@DataSource(DataSourceCode.WMS)
+	public User findUserByLoginName(String loginName) {
+		String sql = "select id,parent_id,login_name,password,user_name,status from u_user where login_name=?";
+		User user = jdbcTemplate.queryForObject(sql, new String[] { loginName }, new BeanPropertyRowMapper<User>(
+				User.class));
 		return user;
 	}
 

@@ -12,11 +12,10 @@
        http://www.springframework.org/schema/aop
        http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
 
-	<context:property-placeholder location="classpath:jdbc.properties" />
+	<context:property-placeholder location="classpath:jdbc.properties" ignore-unresolvable="true"/>
+	
 	<!-- 扫描类包，将标注Spring注解的类自动转化Bean，同时完成Bean的注入 -->
-	<context:component-scan base-package="com.coe.wms.controller" />
-	<context:component-scan base-package="com.coe.wms.service" />
-	<context:component-scan base-package="com.coe.wms.dao" />
+	<context:component-scan base-package="com.coe.wms.*" />
 	<!-- 配置业务库数据源 -->
 	<bean id="dataSourceWms" class="com.mchange.v2.c3p0.ComboPooledDataSource"
 		destroy-method="close">
@@ -155,6 +154,7 @@
 			<tx:method name="delete*" propagation="REQUIRED" isolation="READ_COMMITTED" />
 			<!-- 查询方法 提示数据库驱动程序和数据库系统，这个事务并不包含更改数据的操作 -->
 			<tx:method name="get*" read-only="true" isolation="READ_COMMITTED" />
+			<tx:method name="find*" read-only="true" isolation="READ_COMMITTED" />
 			<!--其他方法 -->
 			<!-- <tx:method name="*" /> -->
 		</tx:attributes>
@@ -179,5 +179,7 @@
 			</bean>
 		</property>
 	</bean>
-    
+	
+		<!-- 引入系统自定义config  -->
+	<import resource="config-context.xml" />
 </beans>
