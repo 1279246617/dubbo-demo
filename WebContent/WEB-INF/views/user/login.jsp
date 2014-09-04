@@ -36,14 +36,13 @@
 					<label class="control-label" for="loginName">帐号：</label>
 					<div class="controls">
 						<input type="text" class="input-small" id="loginName" name="loginName" value="${loginName}">
-						<span class="help-inline ${field.errorClass}">${field.error}</span>
+						<span class="help-inline " style="color:red" >${message}</span>
 					</div>
 				</div>
 				<div class="control-group">
 					<label class="control-label" for="loginPassword">密码：</label>
 					<div class="controls">
 						<input type="password"  class="input-small"  id="loginPassword" name="loginPassword" value="${loginPassword}">
-						<span class="help-inline ${field.errorClass}">${field.error}</span>
 					</div>
 				</div>
 				<div class="control-group">

@@ -21,7 +21,7 @@ public class BaseInterceptor extends HandlerInterceptorAdapter {
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 		request.setCharacterEncoding("UTF-8");
 		String baseUrl = request.getRequestURI().replace(request.getServletPath(), "");
-		logger.info(baseUrl);
+		logger.debug(baseUrl);
 		if (Application.getBaseUrl() == null) {
 			if (baseUrl.endsWith("/")) {
 				baseUrl = baseUrl.substring(0, baseUrl.length() - 1);

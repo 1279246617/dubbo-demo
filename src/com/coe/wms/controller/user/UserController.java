@@ -65,7 +65,6 @@ public class UserController {
 		return view;
 	}
 
-	@ResponseBody
 	@RequestMapping(value = "/loginCheck", method = RequestMethod.POST)
 	public ModelAndView loginCheck(HttpServletRequest request, HttpServletResponse response, String loginName,
 			String loginPassword, String rememberMe) throws IOException {
@@ -95,8 +94,8 @@ public class UserController {
 			view.setViewName("user/login");
 			view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
 			view.addObject(Constant.MESSAGE, map.get(Constant.MESSAGE));
-			logger.debug("loginName:" + loginName + " loginPassword:" + loginPassword + " :"
-					+ map.get(Constant.MESSAGE));
+			view.addObject("rememberMe", rememberMe);
+			logger.info("loginName:" + loginName + " loginPassword:" + loginPassword + " :" + map.get(Constant.MESSAGE));
 			return view;
 		}
 		// 设置session 包含用户id,用户名
