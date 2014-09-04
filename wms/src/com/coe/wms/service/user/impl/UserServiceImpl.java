@@ -11,6 +11,7 @@ import com.coe.wms.dao.user.IUserDao;
 import com.coe.wms.model.user.User;
 import com.coe.wms.service.user.IUserService;
 import com.coe.wms.util.Constant;
+import com.coe.wms.util.SessionConstant;
 import com.coe.wms.util.StringUtil;
 
 @Service("userService")
@@ -34,7 +35,7 @@ public class UserServiceImpl implements IUserService {
 		loginName = loginName.trim();
 		User user = userDao.findUserByLoginName(loginName);
 		if (user == null) {
-			//帐号不存在
+			// 帐号不存在
 			map.put(Constant.MESSAGE, "帐号或密码不正确");
 			return map;
 		}
@@ -51,8 +52,9 @@ public class UserServiceImpl implements IUserService {
 			return map;
 		}
 		// 成功,返回userId userName
-		map.put(Constant.SESSION_USER_ID, String.valueOf(user.getId()));
-		map.put(Constant.SESSION_USER_NAME, user.getUserName());
+		map.put(SessionConstant.USER_ID, String.valueOf(user.getId()));
+		map.put(SessionConstant.USER_NAME, user.getUserName());
+		map.put(SessionConstant.USER_TYPE, user.getUserType());
 
 		map.put(Constant.STATUS, Constant.SUCCESS);
 		return map;
@@ -61,5 +63,4 @@ public class UserServiceImpl implements IUserService {
 	public void setUserDao(IUserDao userDao) {
 		this.userDao = userDao;
 	}
-
 }

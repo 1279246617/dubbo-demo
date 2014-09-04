@@ -42,7 +42,7 @@ public class UserDaoImpl implements IUserDao {
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public long saveUser(final User user) {
-		final String sql = "insert into u_user (parent_id,login_name,password,user_name,phone,email,created_time,status) values (?,?,?,?,?,?,?,?)";
+		final String sql = "insert into u_user (parent_id,login_name,password,user_name,user_type,phone,email,created_time,status) values (?,?,?,?,?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
@@ -51,10 +51,11 @@ public class UserDaoImpl implements IUserDao {
 				ps.setString(2, user.getLoginName());
 				ps.setString(3, user.getPassword());
 				ps.setString(4, user.getUserName());
-				ps.setString(5, user.getPhone());
-				ps.setString(6, user.getEmail());
-				ps.setLong(7, user.getCreatedTime());
-				ps.setInt(8, user.getStatus());
+				ps.setString(5, user.getUserType());
+				ps.setString(6, user.getPhone());
+				ps.setString(7, user.getEmail());
+				ps.setLong(8, user.getCreatedTime());
+				ps.setInt(9, user.getStatus());
 				return ps;
 			}
 		}, keyHolder);
@@ -70,7 +71,7 @@ public class UserDaoImpl implements IUserDao {
 	@ReadThroughSingleCache(namespace = SsmNameSpace.USER, expiration = 3600)
 	@DataSource(DataSourceCode.WMS)
 	public User getUserById(@ParameterValueKeyProvider Long userId) {
-		String sql = "select id,parentId,loginName,password,userName,phone,email,createdTime,status from u_user where id="
+		String sql = "select id,parent_id,login_name,password,user_name,user_type,phone,email,created_time,status from u_user where id="
 				+ userId;
 		User user = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<User>(User.class));
 		logger.debug("从数据库查询用户:" + sql + " 参数:主键:" + userId);
@@ -80,7 +81,7 @@ public class UserDaoImpl implements IUserDao {
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public User findUserByLoginName(String loginName) {
-		String sql = "select id,parent_id,login_name,password,user_name,status from u_user where login_name=?";
+		String sql = "select id,parent_id,login_name,password,user_name,user_type,status from u_user where login_name=?";
 		List<User> userList = jdbcTemplate.queryForList(sql, new String[] { loginName }, User.class);
 		if (userList.size() > 0) {
 			return userList.get(0);
@@ -95,9 +96,9 @@ public class UserDaoImpl implements IUserDao {
 	@UpdateSingleCache(namespace = SsmNameSpace.USER, expiration = 3600)
 	@DataSource(DataSourceCode.WMS)
 	public int updateUser(@ParameterValueKeyProvider @ParameterDataUpdateContent User user) {
-		String sql = "update u_user set password =?,userName=?,phone=?,email=?,status=? where id=? ";
+		String sql = "update u_user set password =?,user_uame=?,phone=?,email=?,status=?,user_type=? where id=? ";
 		int count = jdbcTemplate.update(sql, user.getParentId(), user.getUserName(), user.getPhone(), user.getEmail(),
-				user.getStatus(), user.getId());
+				user.getStatus(), user.getUserType(), user.getId());
 		logger.debug("更新用户:" + sql + " 影响行数:" + count);
 		return count;
 	}

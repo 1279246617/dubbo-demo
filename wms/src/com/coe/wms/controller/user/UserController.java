@@ -12,13 +12,13 @@ import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.coe.wms.controller.Application;
 import com.coe.wms.service.user.IUserService;
 import com.coe.wms.util.Config;
 import com.coe.wms.util.Constant;
+import com.coe.wms.util.SessionConstant;
 import com.coe.wms.util.StringUtil;
 
 @Controller
@@ -99,8 +99,10 @@ public class UserController {
 			return view;
 		}
 		// 设置session 包含用户id,用户名
-		request.getSession().setAttribute(Constant.SESSION_USER_ID, map.get(Constant.SESSION_USER_ID));
-		request.getSession().setAttribute(Constant.SESSION_USER_NAME, map.get(Constant.SESSION_USER_NAME));
+		request.getSession().setAttribute(SessionConstant.USER_ID, map.get(SessionConstant.USER_ID));
+		request.getSession().setAttribute(SessionConstant.USER_NAME, map.get(SessionConstant.USER_NAME));
+		request.getSession().setAttribute(SessionConstant.USER_TYPE, map.get(SessionConstant.USER_TYPE));
+
 		request.getSession().setMaxInactiveInterval(config.getSessionMaxInactiveInterval());
 		// 登录成功 进入index 方法, index 通过用户类型判断,进入不同首页
 		response.sendRedirect(Application.getBaseUrl() + "/index.do");

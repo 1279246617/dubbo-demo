@@ -19,7 +19,7 @@ public class Application {
 	 * 项目启动完成接受第一个请求时 初始化 baseUrl
 	 */
 	private static String baseUrl = null;
-	
+
 	/**
 	 * baseUrl的key
 	 */
@@ -33,14 +33,12 @@ public class Application {
 		ModelAndView view = new ModelAndView();
 
 		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
-		Long userType = (Long) session.getAttribute(SessionConstant.USER_TYPE);
 		String userName = (String) session.getAttribute(SessionConstant.USER_NAME);
 
-		// 获取路径
-		String ctxPath = request.getSession().getServletContext().getRealPath("/");
-		System.out.println("ctxpath:" + ctxPath);
-
-		// 根据用户类型去不同首页
+		// 用户类型. 简单区分是客户还是操作员. 用于登录时 跳转到不同的首页. 与具体权限无关
+		String userType = (String) session.getAttribute(SessionConstant.USER_TYPE);
+		
+		
 		view.setViewName("index");
 		return view;
 	}
