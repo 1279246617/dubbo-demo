@@ -25,7 +25,18 @@ public class User implements Serializable {
 	 * 冻结,不允许登录
 	 */
 	public static final Integer STATUS_FREEZE = 2;
-
+	
+	/**
+	 * 用户类型 管理员,操作员,  代表公司内部的人
+	 * 
+	 * 改用户类型不用于权限控制,仅用于登录跳转到不同首页
+	 */
+	public static final String USER_TYPE_ADMIN = "A";
+	
+	/**
+	 * 客户
+	 */
+	public static final String USER_TYPE_CUSTOMER = "C";
 	/**
 	 * 主键
 	 */

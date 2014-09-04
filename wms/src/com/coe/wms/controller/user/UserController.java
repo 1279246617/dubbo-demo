@@ -99,7 +99,7 @@ public class UserController {
 			return view;
 		}
 		// 设置session 包含用户id,用户名
-		request.getSession().setAttribute(SessionConstant.USER_ID, map.get(SessionConstant.USER_ID));
+		request.getSession().setAttribute(SessionConstant.USER_ID, Long.valueOf(map.get(SessionConstant.USER_ID)));
 		request.getSession().setAttribute(SessionConstant.USER_NAME, map.get(SessionConstant.USER_NAME));
 		request.getSession().setAttribute(SessionConstant.USER_TYPE, map.get(SessionConstant.USER_TYPE));
 
