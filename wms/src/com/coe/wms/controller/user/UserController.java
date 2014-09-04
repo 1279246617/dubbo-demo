@@ -68,6 +68,7 @@ public class UserController {
 	@RequestMapping(value = "/loginCheck", method = RequestMethod.POST)
 	public ModelAndView loginCheck(HttpServletRequest request, HttpServletResponse response, String loginName,
 			String loginPassword, String rememberMe) throws IOException {
+		ModelAndView view = new ModelAndView();
 		// 处理cookie
 		Cookie cookieLoginName = new Cookie(COOKIE_NAME_LOGIN_NAME, loginName);
 		Cookie cookieLoginPassword = new Cookie(COOKIE_NAME_LOGIN_PASSWORD, loginPassword);
@@ -89,7 +90,6 @@ public class UserController {
 		// 验证登录
 		Map<String, String> map = userService.checkUserLogin(loginName, loginPassword);
 		if (StringUtil.isEqual(map.get(Constant.STATUS), Constant.FAIL)) {
-			ModelAndView view = new ModelAndView();
 			// 验证失败 去登录页
 			view.setViewName("user/login");
 			view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
@@ -102,11 +102,10 @@ public class UserController {
 		request.getSession().setAttribute(SessionConstant.USER_ID, Long.valueOf(map.get(SessionConstant.USER_ID)));
 		request.getSession().setAttribute(SessionConstant.USER_NAME, map.get(SessionConstant.USER_NAME));
 		request.getSession().setAttribute(SessionConstant.USER_TYPE, map.get(SessionConstant.USER_TYPE));
-
 		request.getSession().setMaxInactiveInterval(config.getSessionMaxInactiveInterval());
-		// 登录成功 进入index 方法, index 通过用户类型判断,进入不同首页
-		response.sendRedirect(Application.getBaseUrl() + "/index.do");
-		return null;
+		// 登录成功 进入application index 方法, index 通过用户类型判断,进入不同首页
+		view = new ModelAndView("redirect:/index.do");
+		return view;
 	}
 
 	public void setUserService(IUserService userService) {
