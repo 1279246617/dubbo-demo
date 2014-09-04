@@ -55,7 +55,6 @@ public class UserServiceImpl implements IUserService {
 		map.put(SessionConstant.USER_ID, String.valueOf(user.getId()));
 		map.put(SessionConstant.USER_NAME, user.getUserName());
 		map.put(SessionConstant.USER_TYPE, user.getUserType());
-
 		map.put(Constant.STATUS, Constant.SUCCESS);
 		return map;
 	}

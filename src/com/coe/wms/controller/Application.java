@@ -31,10 +31,9 @@ public class Application {
 	public ModelAndView index(HttpServletRequest request) {
 		HttpSession session = request.getSession();
 		ModelAndView view = new ModelAndView();
-
+			
 		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
 		String userName = (String) session.getAttribute(SessionConstant.USER_NAME);
-
 		// 用户类型. 简单区分是客户还是操作员. 用于登录时 跳转到不同的首页. 与具体权限无关
 		String userType = (String) session.getAttribute(SessionConstant.USER_TYPE);
 		

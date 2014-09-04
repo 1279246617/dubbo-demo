@@ -11,6 +11,7 @@ import org.apache.log4j.Logger;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.simple.ParameterizedBeanPropertyRowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -82,7 +83,8 @@ public class UserDaoImpl implements IUserDao {
 	@DataSource(DataSourceCode.WMS)
 	public User findUserByLoginName(String loginName) {
 		String sql = "select id,parent_id,login_name,password,user_name,user_type,status from u_user where login_name=?";
-		List<User> userList = jdbcTemplate.queryForList(sql, new String[] { loginName }, User.class);
+		List<User> userList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(User.class),
+				loginName);
 		if (userList.size() > 0) {
 			return userList.get(0);
 		}
