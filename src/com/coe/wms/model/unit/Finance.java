@@ -2,14 +2,14 @@ package com.coe.wms.model.unit;
 
 import java.io.Serializable;
 
-public class FinanceUnit implements Serializable {
+public class Finance implements Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -7762634922082461362L;
 
-	public class FinanceUnitCode {
+	public class FinanceCode {
 		/**
 		 * 元
 		 */

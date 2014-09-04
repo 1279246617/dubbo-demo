@@ -3,43 +3,18 @@ package com.coe.wms.model.unit;
 import java.io.Serializable;
 
 /**
- * 长度单位
+ * 大小单位
  * 
  * @author Administrator
  * 
  */
-public class LengthUnits implements Serializable {
-
+public class Size implements Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 6655260324134381275L;
+	private static final long serialVersionUID = 3599105879815231367L;
 
-	public class LengthUnitsCode {
-		/**
-		 * 千米
-		 */
-		public static final String KM = "KM";
-
-		/**
-		 * 米
-		 */
-		public static final String M = "M";
-
-		/**
-		 * 分米
-		 */
-		public static final String DM = "DM";
-
-		/**
-		 * 厘米
-		 */
-		public static final String CM = "CM";
-
-		/**
-		 * 毫米
-		 */
-		public static final String MM = "MM";
+	public class SizeCode {
 
 	}
 
