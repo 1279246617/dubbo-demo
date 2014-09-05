@@ -84,9 +84,13 @@ public class UserController {
 			cookieLoginPassword.setMaxAge(0);
 			cookieRememberMe.setMaxAge(0);
 		}
-		response.addCookie(cookieLoginName);
-		response.addCookie(cookieLoginPassword);
-		response.addCookie(cookieRememberMe);
+		try {
+			response.addCookie(cookieLoginName);
+			response.addCookie(cookieLoginPassword);
+			response.addCookie(cookieRememberMe);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+		}
 		// 验证登录
 		Map<String, String> map = userService.checkUserLogin(loginName, loginPassword);
 		if (StringUtil.isEqual(map.get(Constant.STATUS), Constant.FAIL)) {
@@ -95,7 +99,6 @@ public class UserController {
 			view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
 			view.addObject(Constant.MESSAGE, map.get(Constant.MESSAGE));
 			view.addObject("rememberMe", rememberMe);
-			logger.info("loginName:" + loginName + " loginPassword:" + loginPassword + " :" + map.get(Constant.MESSAGE));
 			return view;
 		}
 		// 设置session 包含用户id,用户名

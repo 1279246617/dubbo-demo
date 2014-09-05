@@ -52,6 +52,20 @@ public class UserServiceImpl implements IUserService {
 			map.put(Constant.MESSAGE, "帐号已冻结");
 			return map;
 		}
+		// 判断用户的父用户状态
+		Long parentId = user.getParentId();
+		if (parentId != null) {
+			User parentUser = userDao.getUserById(parentId);
+			if (parentUser.getStatus() == User.STATUS_DELETE) {
+				map.put(Constant.MESSAGE, "主帐号已删除");
+				return map;
+			}
+			if (parentUser.getStatus() == User.STATUS_FREEZE) {
+				map.put(Constant.MESSAGE, "主帐号已冻结");
+				return map;
+			}
+			map.put(SessionConstant.USER_PARENT_ID, String.valueOf(parentId));
+		}
 		// 成功,返回userId userName
 		map.put(SessionConstant.USER_ID, String.valueOf(user.getId()));
 		map.put(SessionConstant.USER_NAME, user.getUserName());

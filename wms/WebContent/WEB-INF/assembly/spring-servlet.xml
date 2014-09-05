@@ -31,11 +31,11 @@
 		<mvc:interceptor>
 			<mvc:mapping path="/**" />
 			<bean class="com.coe.wms.interceptor.SessionCheckInterceptor">
-				<!-- 不拦截的url -->
+				<!-- 不拦截的包含以下字符串的url -->
 				<property name="allowUrls">
 					<list>
-						<value>/login.do</value>
-						<value>/loginCheck.do</value>
+						<value>/login</value>
+						<value>/api/</value>
 					</list>
 				</property>
 				<!-- 被拦截并拒绝时,跳转至 -->
