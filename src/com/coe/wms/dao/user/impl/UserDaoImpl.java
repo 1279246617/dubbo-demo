@@ -121,7 +121,7 @@ public class UserDaoImpl implements IUserDao {
 	@Override
 	@ReadThroughSingleCache(namespace = SsmNameSpace.INDEX, expiration = 36000)
 	@DataSource(DataSourceCode.WMS)
-	public Index findIndexByUserType(String userType) {
+	public Index findIndexByUserType(@ParameterValueKeyProvider String userType) {
 		Index index = null;
 		String sql = "select id,index_name,index_url,user_type  from u_index where user_type=?";
 		List<Index> indexList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(Index.class),

@@ -8,6 +8,6 @@
 <title>COE</title>
 </head>
 <body>	
-	 this is index!
+	 this is company index!
 </body>
 </html>
