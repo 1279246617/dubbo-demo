@@ -8,6 +8,7 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import com.coe.wms.dao.user.IUserDao;
+import com.coe.wms.model.user.Index;
 import com.coe.wms.model.user.User;
 import com.coe.wms.service.user.IUserService;
 import com.coe.wms.util.Constant;
@@ -57,6 +58,12 @@ public class UserServiceImpl implements IUserService {
 		map.put(SessionConstant.USER_TYPE, user.getUserType());
 		map.put(Constant.STATUS, Constant.SUCCESS);
 		return map;
+	}
+
+	@Override
+	public Index findIndexByUserType(String userType) {
+		Index index = userDao.findIndexByUserType(userType);
+		return index;
 	}
 
 	public void setUserDao(IUserDao userDao) {
