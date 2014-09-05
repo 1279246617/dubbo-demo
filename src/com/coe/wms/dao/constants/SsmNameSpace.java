@@ -10,4 +10,5 @@ public class SsmNameSpace {
 
 	public static final String USER = "USER";
 
+	public static final String INDEX = "INDEX";
 }

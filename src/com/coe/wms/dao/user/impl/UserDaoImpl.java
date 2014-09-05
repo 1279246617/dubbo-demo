@@ -20,6 +20,7 @@ import com.coe.wms.dao.constants.SsmNameSpace;
 import com.coe.wms.dao.datasource.DataSource;
 import com.coe.wms.dao.datasource.DataSourceCode;
 import com.coe.wms.dao.user.IUserDao;
+import com.coe.wms.model.user.Index;
 import com.coe.wms.model.user.User;
 import com.google.code.ssm.api.InvalidateSingleCache;
 import com.google.code.ssm.api.ParameterDataUpdateContent;
@@ -66,10 +67,9 @@ public class UserDaoImpl implements IUserDao {
 	}
 
 	/**
-	 * 当执行getById查询方法时，系统首先会从缓存中获取userId对应的实体 如果实体还没有被缓存，则执行查询方法并将查询结果放入缓存中
+	 * 
 	 */
 	@Override
-	@ReadThroughSingleCache(namespace = SsmNameSpace.USER, expiration = 3600)
 	@DataSource(DataSourceCode.WMS)
 	public User getUserById(@ParameterValueKeyProvider Long userId) {
 		String sql = "select id,parent_id,login_name,password,user_name,user_type,phone,email,created_time,status from u_user where id="
@@ -118,7 +118,24 @@ public class UserDaoImpl implements IUserDao {
 		return count;
 	}
 
+	@Override
+	@ReadThroughSingleCache(namespace = SsmNameSpace.INDEX, expiration = 36000)
+	@DataSource(DataSourceCode.WMS)
+	public Index findIndexByUserType(String userType) {
+		Index index = null;
+		String sql = "select id,index_name,index_url,user_type  from u_index where user_type=?";
+		List<Index> indexList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(Index.class),
+				userType);
+		if (indexList.size() > 0) {
+			index = indexList.get(0);
+			logger.info("userType :" + userType + " index:" + index.getIndexUrl());
+			return index;
+		}
+		return index;
+	}
+
 	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
 	}
+
 }

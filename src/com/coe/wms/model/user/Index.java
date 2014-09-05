@@ -2,6 +2,8 @@ package com.coe.wms.model.user;
 
 import java.io.Serializable;
 
+import com.google.code.ssm.api.CacheKeyMethod;
+
 /**
  * 不同用户类型的首页
  * 
@@ -59,6 +61,7 @@ public class Index implements Serializable {
 		this.indexUrl = indexUrl;
 	}
 
+	@CacheKeyMethod
 	public String getUserType() {
 		return userType;
 	}
