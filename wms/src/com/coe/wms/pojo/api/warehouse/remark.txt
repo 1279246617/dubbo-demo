@@ -1,0 +1,5 @@
+pojo 与顺丰 api xml格式一致
+
+仓配入库(预报): Order ,  Item .  但Order 收发件人信息为空
+
+出库 Order Item ,Order 收发件人不为空 
