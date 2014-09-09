@@ -2,6 +2,12 @@ package com.coe.wms.pojo.api.warehouse;
 
 import java.io.Serializable;
 
+/**
+ * pojo 商品信息, 把顺丰入库和出库时 物品信息合并了
+ * 
+ * @author Administrator
+ * 
+ */
 public class Item implements Serializable {
 
 	/**
@@ -12,6 +18,7 @@ public class Item implements Serializable {
 	 * 商品ID(SKU)
 	 */
 	private String itemId;
+
 	/**
 	 * 商品件数
 	 */
@@ -35,6 +42,16 @@ public class Item implements Serializable {
 	 * 商品税号
 	 */
 	private String itemTax;
+
+	/**
+	 * 供应商
+	 */
+	private String supplier;
+
+	/**
+	 * 商品数量
+	 */
+	private int count;
 
 	public String getItemId() {
 		return itemId;
@@ -84,4 +101,19 @@ public class Item implements Serializable {
 		this.itemTax = itemTax;
 	}
 
+	public String getSupplier() {
+		return supplier;
+	}
+
+	public void setSupplier(String supplier) {
+		this.supplier = supplier;
+	}
+
+	public int getCount() {
+		return count;
+	}
+
+	public void setCount(int count) {
+		this.count = count;
+	}
 }

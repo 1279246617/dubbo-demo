@@ -3,7 +3,7 @@ package com.coe.wms.pojo.api.warehouse;
 import java.io.Serializable;
 import java.util.List;
 
-public class Order implements Serializable {
+public class OutOrder implements Serializable {
 
 	/**
 	 * 
@@ -11,7 +11,7 @@ public class Order implements Serializable {
 	private static final long serialVersionUID = 7750566291547691074L;
 
 	/**
-	 * 顺丰海淘订单号（系统判定如果订单号是否存在，如存在则进行更新。如订单已确认则拒绝更新）
+	 * 出库订单中 才有此字段, 非本系统的大包号 顺丰海淘订单号（系统判定如果订单号是否存在，如存在则进行更新。如订单已确认则拒绝更新）
 	 */
 	private String orderId;
 

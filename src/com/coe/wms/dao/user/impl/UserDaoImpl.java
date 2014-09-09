@@ -27,6 +27,7 @@ import com.google.code.ssm.api.ParameterDataUpdateContent;
 import com.google.code.ssm.api.ParameterValueKeyProvider;
 import com.google.code.ssm.api.ReadThroughSingleCache;
 import com.google.code.ssm.api.UpdateSingleCache;
+import com.mysql.jdbc.Statement;
 
 /**
  * 
@@ -48,7 +49,7 @@ public class UserDaoImpl implements IUserDao {
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
-				PreparedStatement ps = conn.prepareStatement(sql);
+				PreparedStatement ps = conn.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
 				ps.setLong(1, user.getParentId());
 				ps.setString(2, user.getLoginName());
 				ps.setString(3, user.getPassword());
