@@ -16,6 +16,7 @@ import org.springframework.stereotype.Repository;
 import com.coe.wms.dao.datasource.DataSource;
 import com.coe.wms.dao.datasource.DataSourceCode;
 import com.coe.wms.dao.warehouse.storage.IPackageDao;
+import com.mysql.jdbc.Statement;
 
 /**
  * 
@@ -37,7 +38,7 @@ public class PackageDaoImpl implements IPackageDao {
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
-				PreparedStatement ps = conn.prepareStatement(sql);
+				PreparedStatement ps = conn.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
 				ps.setLong(1, pag.getUserId());
 				ps.setString(2, pag.getPackageNo());
 				ps.setString(3, pag.getPackageTrackingNo());
