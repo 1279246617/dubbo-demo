@@ -16,7 +16,6 @@ import org.springframework.stereotype.Repository;
 import com.coe.wms.dao.datasource.DataSource;
 import com.coe.wms.dao.datasource.DataSourceCode;
 import com.coe.wms.dao.warehouse.storage.IPackageDao;
-import com.coe.wms.model.user.User;
 
 /**
  * 
@@ -33,27 +32,24 @@ public class PackageDaoImpl implements IPackageDao {
 
 	@Override
 	@DataSource(DataSourceCode.WMS)
-	public long savePackage(final Package p) {
-//		final String sql = "insert into u_user (parent_id,login_name,password,user_name,user_type,phone,email,created_time,status) values (?,?,?,?,?,?,?,?,?)";
-//		KeyHolder keyHolder = new GeneratedKeyHolder();
-//		jdbcTemplate.update(new PreparedStatementCreator() {
-//			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
-//				PreparedStatement ps = conn.prepareStatement(sql);
-//				ps.setLong(1, user.getParentId());
-//				ps.setString(2, user.getLoginName());
-//				ps.setString(3, user.getPassword());
-//				ps.setString(4, user.getUserName());
-//				ps.setString(5, user.getUserType());
-//				ps.setString(6, user.getPhone());
-//				ps.setString(7, user.getEmail());
-//				ps.setLong(8, user.getCreatedTime());
-//				ps.setInt(9, user.getStatus());
-//				return ps;
-//			}
-//		}, keyHolder);
-//		long id = keyHolder.getKey().longValue();
-//		logger.debug("保存用户:" + sql + " 返回主键:" + id);
-		return 0l;
+	public long savePackage(final com.coe.wms.model.warehouse.storage.Package pag) {
+		final String sql = "insert into w_package (user_id,package_no,package_tracking_no,weight,small_package_quantity,created_time,remark) values (?,?,?,?,?,?,?)";
+		KeyHolder keyHolder = new GeneratedKeyHolder();
+		jdbcTemplate.update(new PreparedStatementCreator() {
+			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
+				PreparedStatement ps = conn.prepareStatement(sql);
+				ps.setLong(1, pag.getUserId());
+				ps.setString(2, pag.getPackageNo());
+				ps.setString(3, pag.getPackageTrackingNo());
+				ps.setDouble(4, pag.getWeight());
+				ps.setInt(5, pag.getSmallPackageQuantity());
+				ps.setLong(6, pag.getCreatedTime());
+				ps.setString(7, pag.getRemark());
+				return ps;
+			}
+		}, keyHolder);
+		long id = keyHolder.getKey().longValue();
+		return id;
 	}
 
 	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {

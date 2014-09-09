@@ -37,6 +37,8 @@ public class Package implements Serializable {
 
 	/**
 	 * 大包下的产品数量(统计packageItem得到)
+	 * 
+	 * 可空
 	 */
 	private int smallPackageQuantity;
 
