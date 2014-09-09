@@ -1,3 +1,10 @@
 仓配服务使用的表
 
-仓配服务 需要使用转运出库时,需创建转运服务订单
+
+1. 以大包为单位预报商品 (Package,PackageItem)
+
+2. 到货-入库记录(InWareHouseRecord,InWareHouseRecordDetail,ProductInventory)
+
+3. 上架-上架记录(sku ,quantity,货架号...)
+
+4. 出货-审核-出库记录(OutWareHouseRecord,OutWareHouseRecordDetail,ProductInventory,OutWareHouseRecordReceiver)
