@@ -34,8 +34,8 @@ public class InOrder implements Serializable {
 	/**
 	 * 商品清单（以下为itemList子内容）
 	 */
-	private List<Item> itemList;
-	
+	private List<InOrderItem> itemList;
+
 	public String getHandoverNumber() {
 		return handoverNumber;
 	}
@@ -60,11 +60,11 @@ public class InOrder implements Serializable {
 		this.timestamp = timestamp;
 	}
 
-	public List<Item> getItemList() {
+	public List<InOrderItem> getItemList() {
 		return itemList;
 	}
 
-	public void setItemList(List<Item> itemList) {
+	public void setItemList(List<InOrderItem> itemList) {
 		this.itemList = itemList;
 	}
 }

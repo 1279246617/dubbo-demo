@@ -21,5 +21,5 @@ public interface IStorageService {
 	 * @param password
 	 * @return
 	 */
-	public Response createOrder(String xml, Long userId);
+	public Response createOrder(String xml);
 }

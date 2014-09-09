@@ -3,12 +3,12 @@ package com.coe.wms.pojo.api.warehouse;
 import java.io.Serializable;
 
 /**
- * pojo 商品信息, 把顺丰入库和出库时 物品信息合并了
+ * pojo 商品信息, 出库时 物品信息
  * 
  * @author Administrator
  * 
  */
-public class Item implements Serializable {
+public class OutOrderItem implements Serializable {
 
 	/**
 	 * 
@@ -16,42 +16,34 @@ public class Item implements Serializable {
 	private static final long serialVersionUID = 9168041737254441815L;
 	/**
 	 * 商品ID(SKU)
+	 * 
+	 * 在入库和出库时都有
 	 */
 	private String itemId;
 
 	/**
-	 * 商品件数
+	 * 商品件数 出库时提供
 	 */
 	private Integer itemQuantity;
 
 	/**
-	 * 商品单价
+	 * 商品单价 出库时提供
 	 */
 	private Double itemPrice;
 
 	/**
-	 * 商品单价币种（默认CNY）
+	 * 商品单价币种（默认CNY） 出库时提供
 	 */
 	private String itemCurrency;
 
 	/**
-	 * 商品单件重量（单位G）
+	 * 商品单件重量（单位G） 出库时提供
 	 */
 	private Double itemWeight;
 	/**
-	 * 商品税号
+	 * 商品税号 出库时提供
 	 */
 	private String itemTax;
-
-	/**
-	 * 供应商
-	 */
-	private String supplier;
-
-	/**
-	 * 商品数量
-	 */
-	private int count;
 
 	public String getItemId() {
 		return itemId;
@@ -99,21 +91,5 @@ public class Item implements Serializable {
 
 	public void setItemTax(String itemTax) {
 		this.itemTax = itemTax;
-	}
-
-	public String getSupplier() {
-		return supplier;
-	}
-
-	public void setSupplier(String supplier) {
-		this.supplier = supplier;
-	}
-
-	public int getCount() {
-		return count;
-	}
-
-	public void setCount(int count) {
-		this.count = count;
 	}
 }
