@@ -26,7 +26,7 @@ public class OutOrder implements Serializable {
 	/**
 	 * 商品清单（以下为itemList子内容）
 	 */
-	private List<Item> itemList;
+	private List<OutOrderItem> itemList;
 
 	/**
 	 * 收件人详情
@@ -62,11 +62,11 @@ public class OutOrder implements Serializable {
 		this.channel = channel;
 	}
 
-	public List<Item> getItemList() {
+	public List<OutOrderItem> getItemList() {
 		return itemList;
 	}
 
-	public void setItemList(List<Item> itemList) {
+	public void setItemList(List<OutOrderItem> itemList) {
 		this.itemList = itemList;
 	}
 
