@@ -133,4 +133,37 @@ public class StringUtil {
 		}
 		return null;
 	}
+	
+	/**
+	 * md5加密方法
+	 * 
+	 * @return String 返回32位md5加密字符串(16位加密取substring(8,24))
+	 */
+	public final static String md5(String plainText) {
+		String md5Str = null;
+		try {
+			StringBuffer buf = new StringBuffer();
+			MessageDigest md = MessageDigest.getInstance("MD5");
+			md.update(plainText.getBytes());
+			byte b[] = md.digest();
+			int i;
+			for (int offset = 0; offset < b.length; offset++) {
+				i = b[offset];
+				if (i < 0) {
+					i += 256;
+				}
+				if (i < 16) {
+					buf.append("0");
+				}
+				buf.append(Integer.toHexString(i));
+			}
+			// 32位的加密
+			md5Str = buf.toString();
+			// 16位的加密
+			// md5Str = buf.toString().md5Strstring(8,24);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return md5Str;
+	}
 }

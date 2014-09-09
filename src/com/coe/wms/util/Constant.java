@@ -47,4 +47,6 @@ public class Constant {
 	 * fail
 	 */
 	public final static String FAIL = "0";
+
+	public static final String UTF_8 = "UTF-8";
 }
