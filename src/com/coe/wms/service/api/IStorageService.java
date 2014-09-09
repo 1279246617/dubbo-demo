@@ -1,14 +1,14 @@
 package com.coe.wms.service.api;
 
-import java.util.Map;
-
 import org.apache.log4j.Logger;
 
+import com.coe.wms.pojo.api.response.Response;
 
 /**
  * 仓配 api service层
+ * 
  * @author Administrator
- *
+ * 
  */
 public interface IStorageService {
 
@@ -21,6 +21,5 @@ public interface IStorageService {
 	 * @param password
 	 * @return
 	 */
-	public Map<String, String> checkUserLogin(String loginName, String password);
- 
+	public Response createOrder(String xml);
 }
