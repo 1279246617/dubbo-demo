@@ -39,6 +39,8 @@ public class User implements Serializable {
 	public static final String USER_TYPE_CUSTOMER = "C";
 	/**
 	 * 主键
+	 * 
+	 * 系统中 用到 用户id的地方  如果表示数据所属的用户用userId, 如果表示数据创建 操作 用 createdByUserId,modifyByUserId
 	 */
 	private Long id;
 
