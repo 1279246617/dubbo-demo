@@ -1,17 +1,21 @@
 package com.coe.wms.controller.api;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.coe.wms.pojo.api.response.Response;
+import com.coe.wms.service.api.IStorageService;
+import com.coe.wms.util.StreamUtil;
+import com.coe.wms.util.XmlUtil;
 
 /**
  * 仓配API
@@ -23,8 +27,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping("/api/storage")
 public class Storage {
 
+	private static final Logger logger = Logger.getLogger(Storage.class);
+
+	@Resource(name = "storageService")
+	private IStorageService storageService;
+
 	/**
-	 * 创建仓配API
+	 * 创建入库订单(预报商品信息)
 	 * 
 	 * @param request
 	 * @param response
@@ -32,22 +41,14 @@ public class Storage {
 	 * @throws IOException
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/createOrder", method = RequestMethod.POST)
+	@RequestMapping(value = "/createOrder", produces = "plain/text; charset=UTF-8", method = RequestMethod.POST)
 	public String createOrder(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		InputStream is = request.getInputStream();
-		
-		BufferedReader br = new BufferedReader(new InputStreamReader(is));
-		
-		System.out.println(request.getCharacterEncoding());
-		
-		String requestBody = "";
-		String line = null;
-		while ((line = br.readLine()) != null) {
-			requestBody += line;
-		}
-		
-		System.out.println("createOrder 收到:" + requestBody);
-		
-		return "干"+requestBody;
+		String requestBody = StreamUtil.streamToString(request.getInputStream());
+		logger.info("仓配创建订单 xml:" + requestBody);
+		// 创建订单服务
+		Response createOrderResponse = storageService.createOrder(requestBody);
+		// 转成xml
+		String xml = XmlUtil.toXml(Response.class, createOrderResponse);
+		return xml;
 	}
 }
