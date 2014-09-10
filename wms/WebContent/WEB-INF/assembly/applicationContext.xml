@@ -17,95 +17,33 @@
 	<!-- 扫描类包，将标注Spring注解的类自动转化Bean，同时完成Bean的注入 -->
 	<context:component-scan base-package="com.coe.wms.*" />
 	<!-- 配置业务库数据源 -->
-	<bean id="dataSourceWms" class="com.mchange.v2.c3p0.ComboPooledDataSource"
-		destroy-method="close">
-		<property name="driverClass">
-			<value>${jdbc.wms.driverClassName}</value>
-		</property>
-		<property name="jdbcUrl">
-			<value>${jdbc.wms.url}</value>
-		</property>
-		<property name="user">
-			<value>${jdbc.wms.username}</value>
-		</property>
-		<property name="password">
-			<value>${jdbc.wms.password}</value>
-		</property>
-		<property name="minPoolSize">
-			<value>50</value>
-		</property>
-		<property name="maxPoolSize">
-			<value>500</value>
-		</property>
-		<property name="initialPoolSize">
-			<value>10</value>
-		</property>
-		<property name="maxIdleTime">
-			<value>120</value>
-		</property>
-		<property name="acquireIncrement">
-			<value>10</value>
-		</property>
-		<property name="maxStatements">
-			<value>0</value>
-		</property>
-		<property name="idleConnectionTestPeriod">
-			<value>60</value>
-		</property>
-		<property name="acquireRetryAttempts">
-			<value>30</value>
-		</property>
-		<property name="breakAfterAcquireFailure">
-			<value>true</value>
-		</property>
-		<property name="testConnectionOnCheckout">
-			<value>false</value>
-		</property>
+	<bean id="dataSourceWms" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+		<!-- 基本属性 url、user、password -->
+	    <property name="url" value="${jdbc.wms.url}" />
+	    <property name="username" value="${jdbc.wms.username}" />
+	    <property name="password" value="${jdbc.wms.password}" />
+	    <!-- 配置初始化大小、最小、最大 -->
+	    <property name="initialSize" value="10" />
+	    <property name="minIdle" value="10" /> 
+	    <property name="maxActive" value="500" />
+	    <!-- 配置获取连接等待超时的时间 20秒-->
+	    <property name="maxWait" value="20000" />
+	    <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 1分钟-->
+	    <property name="timeBetweenEvictionRunsMillis" value="60000" />
+	    <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 5分钟-->
+	    <property name="minEvictableIdleTimeMillis" value="300000" />
 	</bean>
-	<bean id="dataSourceZm" class="com.mchange.v2.c3p0.ComboPooledDataSource"
-		destroy-method="close">
-		<property name="driverClass">
-			<value>${jdbc.zm.driverClassName}</value>
-		</property>
-		<property name="jdbcUrl">
-			<value>${jdbc.zm.url}</value>
-		</property>
-		<property name="user">
-			<value>${jdbc.zm.username}</value>
-		</property>
-		<property name="password">
-			<value>${jdbc.zm.password}</value>
-		</property>
-		<property name="minPoolSize">
-			<value>10</value>
-		</property>
-		<property name="maxPoolSize">
-			<value>50</value>
-		</property>
-		<property name="initialPoolSize">
-			<value>2</value>
-		</property>
-		<property name="maxIdleTime">
-			<value>120</value>
-		</property>
-		<property name="acquireIncrement">
-			<value>2</value>
-		</property>
-		<property name="maxStatements">
-			<value>0</value>
-		</property>
-		<property name="idleConnectionTestPeriod">
-			<value>60</value>
-		</property>
-		<property name="acquireRetryAttempts">
-			<value>10</value>
-		</property>
-		<property name="breakAfterAcquireFailure">
-			<value>true</value>
-		</property>
-		<property name="testConnectionOnCheckout">
-			<value>false</value>
-		</property>
+	<bean id="dataSourceTrack" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+		 <!-- 基本属性 url、user、password -->
+	    <property name="url" value="${jdbc.track.url}" />
+	    <property name="username" value="${jdbc.track.username}" />
+	    <property name="password" value="${jdbc.track.password}" />
+	    <property name="initialSize" value="10" />
+	    <property name="minIdle" value="10" /> 
+	    <property name="maxActive" value="500" />
+	    <property name="maxWait" value="20000" />
+	    <property name="timeBetweenEvictionRunsMillis" value="60000" />
+	    <property name="minEvictableIdleTimeMillis" value="300000" />
 	</bean>
 
 	<!-- 配置Jdbc模板 -->
