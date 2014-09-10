@@ -3,12 +3,14 @@ package com.coe.wms.dao.warehouse.storage.impl;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.List;
 
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.simple.ParameterizedBeanPropertyRowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -17,6 +19,8 @@ import com.coe.wms.dao.datasource.DataSource;
 import com.coe.wms.dao.datasource.DataSourceCode;
 import com.coe.wms.dao.warehouse.storage.IInWarehouseOrderDao;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
+import com.coe.wms.util.Pagination;
+import com.coe.wms.util.StringUtil;
 import com.mysql.jdbc.Statement;
 
 /**
@@ -33,24 +37,71 @@ public class InWarehouseOrderDaoImpl implements IInWarehouseOrderDao {
 
 	@Override
 	@DataSource(DataSourceCode.WMS)
-	public long saveInWarehouseOrder(final InWarehouseOrder pag) {
+	public long saveInWarehouseOrder(final InWarehouseOrder order) {
 		final String sql = "insert into w_s_in_warehouse_order (user_id,package_no,package_tracking_no,weight,small_package_quantity,created_time,remark) values (?,?,?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
 				PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-				ps.setLong(1, pag.getUserId());
-				ps.setString(2, pag.getPackageNo());
-				ps.setString(3, pag.getPackageTrackingNo());
-				ps.setDouble(4, pag.getWeight());
-				ps.setInt(5, pag.getSmallPackageQuantity());
-				ps.setLong(6, pag.getCreatedTime());
-				ps.setString(7, pag.getRemark());
+				ps.setLong(1, order.getUserId());
+				ps.setString(2, order.getPackageNo());
+				ps.setString(3, order.getPackageTrackingNo());
+				ps.setDouble(4, order.getWeight());
+				ps.setInt(5, order.getSmallPackageQuantity());
+				ps.setLong(6, order.getCreatedTime());
+				ps.setString(7, order.getRemark());
 				return ps;
 			}
 		}, keyHolder);
 		long id = keyHolder.getKey().longValue();
 		return id;
+	}
+
+	@Override
+	public InWarehouseOrder getInWarehouseOrderById(Long inWarehouseOrderId) {
+
+		return null;
+	}
+
+	@Override
+	public List<InWarehouseOrder> findInWarehouseOrder(InWarehouseOrder inWarehouseOrder, Pagination page) {
+		StringBuffer sb = new StringBuffer();
+		sb.append("select id,user_id,package_no,package_tracking_no,weight,small_package_quantity,created_time,remark,status,received_quantity where 1=1 ");
+		if (inWarehouseOrder != null) {
+			if (StringUtil.isNotNull(inWarehouseOrder.getPackageNo())) {
+				sb.append(" and package_no = '" + inWarehouseOrder.getPackageNo() + "' ");
+			}
+			if (StringUtil.isNotNull(inWarehouseOrder.getPackageTrackingNo())) {
+				sb.append(" and package_tracking_no = '" + inWarehouseOrder.getPackageTrackingNo() + "' ");
+			}
+			if (StringUtil.isNotNull(inWarehouseOrder.getRemark())) {
+				sb.append(" and remark = '" + inWarehouseOrder.getRemark() + "' ");
+			}
+			if (StringUtil.isNotNull(inWarehouseOrder.getStatus())) {
+				sb.append(" and status = '" + inWarehouseOrder.getStatus() + "' ");
+			}
+//			if (StringUtil.isNotNull(inWarehouseOrder.getCreatedTime()())) {
+//				sb.append(" and remark = '" + inWarehouseOrder.getRemark() + "' ");
+//			}
+			if (inWarehouseOrder.getId()!=null) {
+				sb.append(" and id = " + inWarehouseOrder.getId());
+			}
+			if (inWarehouseOrder.getReceivedQuantity()!=null) {
+				sb.append(" and received_quantity = " +inWarehouseOrder.getReceivedQuantity());
+			}
+			if (inWarehouseOrder.getUserId()!=null) {
+				sb.append(" and user_id = " +inWarehouseOrder.getUserId());
+			}
+			if (inWarehouseOrder.getUserId()!=null) {
+				sb.append(" and user_id = " +inWarehouseOrder.getUserId());
+			}
+		}
+
+		// 分页sql
+		sb.append(page.generatePageSql());
+		List<InWarehouseOrder> inWarehouseOrderList = jdbcTemplate.query(sb.toString(),
+				ParameterizedBeanPropertyRowMapper.newInstance(InWarehouseOrder.class));
+		return inWarehouseOrderList;
 	}
 
 	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {

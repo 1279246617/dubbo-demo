@@ -35,11 +35,11 @@ public class StorageServiceImpl implements IStorageService {
 
 	private static final Logger logger = Logger.getLogger(StorageServiceImpl.class);
 
-	@Resource(name = "packageDao")
-	private IInWarehouseOrderDao packageDao;
+	@Resource(name = "inWarehouseOrderDao")
+	private IInWarehouseOrderDao inWarehouseOrderDao;
 
-	@Resource(name = "packageItemDao")
-	private IInWarehouseOrderItemDao packageItemDao;
+	@Resource(name = "inWarehouseOrderItemDao")
+	private IInWarehouseOrderItemDao inWarehouseOrderItemDao;
 
 	/**
 	 * 入库预报
@@ -56,16 +56,16 @@ public class StorageServiceImpl implements IStorageService {
 		InOrder order = (InOrder) XmlUtil.toObject(xml, OutOrder.class);
 		List<InOrderItem> itemList = order.getItemList();
 		// pojo 转换 model 保存入数据库
-		InWarehouseOrder pag = order.changeToPackage();
+		InWarehouseOrder pag = order.changeToInWarehouseOrder();
 		// 大包id
-		long packageId = packageDao.saveInWarehouseOrder(pag);
+		long packageId = inWarehouseOrderDao.saveInWarehouseOrder(pag);
 		// 商品明细
 		List<InWarehouseOrderItem> packageItemList = new ArrayList<InWarehouseOrderItem>();
 		for (InOrderItem inOrderItem : itemList) {
-			InWarehouseOrderItem packageItem = inOrderItem.changeToPackageItem(packageId);
+			InWarehouseOrderItem packageItem = inOrderItem.changeToInWarehouseOrderItem(packageId);
 			packageItemList.add(packageItem);
 		}
-		int changeSize = packageItemDao.saveBatchInWarehouseOrderItem(packageItemList);
+		int changeSize = inWarehouseOrderItemDao.saveBatchInWarehouseOrderItem(packageItemList);
 
 		logger.info("入库大包号:" + pag.getPackageNo() + " 入库SKU数量:" + changeSize);
 		response.setSucceeded(Constant.SUCCESS);

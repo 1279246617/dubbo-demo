@@ -68,7 +68,7 @@ public class UserDaoImpl implements IUserDao {
 	}
 
 	/**
-	 * 
+	 * 根据用户id查询用户. 如果查询不到结果会抛异常
 	 */
 	@Override
 	@DataSource(DataSourceCode.WMS)
