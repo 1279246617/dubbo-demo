@@ -5,6 +5,7 @@ import java.util.regex.Pattern;
 
 /**
  * 数字 工具类
+ * 
  * @author yechao
  * @date 2013年12月12日
  */
@@ -127,8 +128,10 @@ public class NumberUtil {
 	/**
 	 * 截位 取精度
 	 * 
-	 * @param num 浮点数
-	 * @param pre 保留的小数点位数
+	 * @param num
+	 *            浮点数
+	 * @param pre
+	 *            保留的小数点位数
 	 * @return
 	 */
 	public static Double getNumPrecision(Double num, int pre) {
@@ -163,5 +166,14 @@ public class NumberUtil {
 		bd = null;
 		return d;
 	}
-
+	
+	public static long sumArry(int[] batchUpdateSize) {
+		int sum = 0;
+		if (batchUpdateSize != null) {
+			for (int a : batchUpdateSize) {
+				sum += a;
+			}
+		}
+		return sum;
+	}
 }
