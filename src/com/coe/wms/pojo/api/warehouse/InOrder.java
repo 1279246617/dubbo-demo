@@ -1,7 +1,12 @@
 package com.coe.wms.pojo.api.warehouse;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
+
+import com.coe.wms.model.warehouse.storage.Package;
+import com.coe.wms.model.warehouse.storage.PackageItem;
+import com.coe.wms.model.warehouse.storage.PackageStatus.PackageStatusCode;
 
 /**
  * 顺丰入库订单 xml 对应pojo
@@ -30,6 +35,8 @@ public class InOrder implements Serializable {
 	 * 时间戳
 	 */
 	private String timestamp;
+
+	private Long userId;
 
 	/**
 	 * 商品清单（以下为itemList子内容）
@@ -66,5 +73,17 @@ public class InOrder implements Serializable {
 
 	public void setItemList(List<InOrderItem> itemList) {
 		this.itemList = itemList;
+	}
+
+	public Package changeToPackage() {
+		com.coe.wms.model.warehouse.storage.Package pag = new com.coe.wms.model.warehouse.storage.Package();
+		pag.setCreatedTime(System.currentTimeMillis());
+		String packageNo = this.getHandoverNumber();
+		pag.setPackageNo(packageNo);
+		pag.setStatus(PackageStatusCode.NONE);// 新建的状态为完全未入库
+		pag.setPackageTrackingNo(this.getHandoverNumber());
+		pag.setUserId(this.userId);
+		pag.setSmallPackageQuantity(this.itemList.size());
+		return pag;
 	}
 }

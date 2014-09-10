@@ -21,5 +21,16 @@ public interface IStorageService {
 	 * @param password
 	 * @return
 	 */
-	public Response createOrder(String xml);
+	public Response inWarehouse(String xml);
+	
+	
+	/**
+	 * 解析顺丰仓配出库订单请求xml内容 返回 xml内容对应pojo
+	 * 
+	 * @param loginName
+	 * @param password
+	 * @return
+	 */
+	public Response outWarehouse(String xml);
+	
 }

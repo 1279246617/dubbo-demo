@@ -19,6 +19,7 @@ import com.coe.wms.dao.datasource.DataSource;
 import com.coe.wms.dao.datasource.DataSourceCode;
 import com.coe.wms.dao.warehouse.storage.IPackageItemDao;
 import com.coe.wms.model.warehouse.storage.PackageItem;
+import com.coe.wms.util.NumberUtil;
 import com.mysql.jdbc.Statement;
 
 /**
@@ -34,6 +35,9 @@ public class PackageItemDaoImpl implements IPackageItemDao {
 	@Resource(name = "jdbcTemplate")
 	private JdbcTemplate jdbcTemplate;
 
+	/**
+	 * 保存单个物品
+	 */
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public long savePackageItem(final PackageItem item) {
@@ -52,6 +56,11 @@ public class PackageItemDaoImpl implements IPackageItemDao {
 		return id;
 	}
 
+	/**
+	 * 批量保存物品
+	 */
+	@Override
+	@DataSource(DataSourceCode.WMS)
 	public int saveBatchPackageItem(final List<PackageItem> itemList) {
 		final String sql = "insert into w_package_item (package_id,quantity,sku) values (?,?,?)";
 		int[] batchUpdateSize = jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
@@ -62,20 +71,13 @@ public class PackageItemDaoImpl implements IPackageItemDao {
 				ps.setLong(2, item.getQuantity());
 				ps.setString(3, item.getSku());
 			}
-
+			
 			@Override
 			public int getBatchSize() {
 				return itemList.size();
 			}
 		});
-		
-		int change = 0;
-		if (batchUpdateSize != null) {
-			for (int a : batchUpdateSize) {
-				change += a;
-			}
-		}
-		return change;
+		return NumberUtil.sumArry(batchUpdateSize);
 	}
 
 	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {

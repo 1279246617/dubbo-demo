@@ -6,9 +6,12 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name = "response", namespace="http://wms.coe.com.hk") 
+@XmlRootElement(name = "response", namespace = "http://wms.coe.com.hk")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Response implements Serializable {
+
+	public static final String DESCRIPTION_EMPTY = "内容不能为空";
+
 	/**
 	 * 
 	 */
