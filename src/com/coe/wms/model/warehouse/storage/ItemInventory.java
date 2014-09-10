@@ -11,7 +11,7 @@ import java.io.Serializable;
  * @author Administrator
  * 
  */
-public class ProductInventory implements Serializable {
+public class ItemInventory implements Serializable {
 
 	/**
 	 * 
