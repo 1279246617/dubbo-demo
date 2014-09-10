@@ -16,12 +16,12 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import com.coe.wms.dao.constants.SsmNameSpace;
 import com.coe.wms.dao.datasource.DataSource;
 import com.coe.wms.dao.datasource.DataSourceCode;
 import com.coe.wms.dao.user.IUserDao;
 import com.coe.wms.model.user.Index;
 import com.coe.wms.model.user.User;
+import com.coe.wms.util.SsmNameSpace;
 import com.google.code.ssm.api.InvalidateSingleCache;
 import com.google.code.ssm.api.ParameterDataUpdateContent;
 import com.google.code.ssm.api.ParameterValueKeyProvider;
