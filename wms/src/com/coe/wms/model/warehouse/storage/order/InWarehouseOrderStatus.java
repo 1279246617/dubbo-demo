@@ -10,7 +10,7 @@ import com.google.code.ssm.api.CacheKeyMethod;
  * @author Administrator
  * 
  */
-public class InWareHouseOrderStatus implements Serializable {
+public class InWarehouseOrderStatus implements Serializable {
 
 	public class PackageStatusCode {
 		/**

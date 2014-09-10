@@ -25,12 +25,11 @@ import com.mysql.jdbc.Statement;
 /**
  * 
  * @author Administrator
- * 
  */
-@Repository("packageItemDao")
-public class PackageItemDaoImpl implements IInWarehouseOrderItemDao {
+@Repository("inWarehouseOrderItemDao")
+public class InWarehouseOrderItemDaoImpl implements IInWarehouseOrderItemDao {
 
-	Logger logger = Logger.getLogger(PackageItemDaoImpl.class);
+	Logger logger = Logger.getLogger(InWarehouseOrderItemDaoImpl.class);
 
 	@Resource(name = "jdbcTemplate")
 	private JdbcTemplate jdbcTemplate;
@@ -41,7 +40,7 @@ public class PackageItemDaoImpl implements IInWarehouseOrderItemDao {
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public long saveInWarehouseOrderItem(final InWarehouseOrderItem item) {
-		final String sql = "insert into w_package_item (package_id,quantity,sku) values (?,?,?)";
+		final String sql = "insert into w_s_in_warehouse_order_item (package_id,quantity,sku) values (?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
@@ -62,7 +61,7 @@ public class PackageItemDaoImpl implements IInWarehouseOrderItemDao {
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public int saveBatchInWarehouseOrderItem(final List<InWarehouseOrderItem> itemList) {
-		final String sql = "insert into w_package_item (package_id,quantity,sku) values (?,?,?)";
+		final String sql = "insert into w_s_in_warehouse_order_item (package_id,quantity,sku) values (?,?,?)";
 		int[] batchUpdateSize = jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
 			@Override
 			public void setValues(PreparedStatement ps, int i) throws SQLException {
@@ -71,7 +70,7 @@ public class PackageItemDaoImpl implements IInWarehouseOrderItemDao {
 				ps.setLong(2, item.getQuantity());
 				ps.setString(3, item.getSku());
 			}
-			
+
 			@Override
 			public int getBatchSize() {
 				return itemList.size();
