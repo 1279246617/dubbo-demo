@@ -9,4 +9,6 @@ public interface IInWarehouseOrderItemDao {
 	public long saveInWarehouseOrderItem(InWarehouseOrderItem item);
 
 	public int saveBatchInWarehouseOrderItem(List<InWarehouseOrderItem> itemList);
+	
+//	public List<InWarehouseOrderItem>
 }

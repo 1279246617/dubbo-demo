@@ -78,6 +78,8 @@ public class InWarehouseOrderItemDaoImpl implements IInWarehouseOrderItemDao {
 		});
 		return NumberUtil.sumArry(batchUpdateSize);
 	}
+	
+	
 
 	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;

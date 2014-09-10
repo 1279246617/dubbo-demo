@@ -5,8 +5,7 @@ import java.io.Serializable;
 /**
  * 
  * 
- * 大包
- * 入库订单(客户发预报通知将会入库,但不是真实入库记录)
+ * 大包 入库订单(客户发预报通知将会入库,但不是真实入库记录)
  * 
  * 仓配服务
  * 
@@ -49,7 +48,7 @@ public class InWarehouseOrder implements Serializable {
 	/**
 	 * 大包重量
 	 */
-	private double weight;
+	private Double weight;
 
 	private String remark;
 	/**
@@ -122,7 +121,7 @@ public class InWarehouseOrder implements Serializable {
 		this.smallPackageQuantity = smallPackageQuantity;
 	}
 
-	public double getWeight() {
+	public Double getWeight() {
 		return weight;
 	}
 
