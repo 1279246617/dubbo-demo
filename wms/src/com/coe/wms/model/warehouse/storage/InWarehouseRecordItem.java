@@ -8,7 +8,7 @@ import java.io.Serializable;
  * @author Administrator
  * 
  */
-public class InWarehouseRecordItemDetail implements Serializable {
+public class InWarehouseRecordItem implements Serializable {
 
 	/**
 	 * 
