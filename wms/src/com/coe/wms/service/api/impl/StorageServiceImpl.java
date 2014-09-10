@@ -10,11 +10,10 @@ import org.springframework.stereotype.Service;
 
 import com.coe.wms.dao.warehouse.storage.IPackageDao;
 import com.coe.wms.dao.warehouse.storage.IPackageItemDao;
-import com.coe.wms.model.warehouse.storage.OutWareHouseRecord;
-import com.coe.wms.model.warehouse.storage.OutWareHouseRecordItemDetail;
-import com.coe.wms.model.warehouse.storage.OutWareHouseRecordReceiver;
-import com.coe.wms.model.warehouse.storage.OutWareHouseRecordSender;
-import com.coe.wms.model.warehouse.storage.PackageItem;
+import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
+import com.coe.wms.model.warehouse.storage.order.InWarehouseOrderItem;
+import com.coe.wms.model.warehouse.storage.record.OutWarehouseRecord;
+import com.coe.wms.model.warehouse.storage.record.OutWarehouseRecordItem;
 import com.coe.wms.pojo.api.response.Response;
 import com.coe.wms.pojo.api.warehouse.InOrder;
 import com.coe.wms.pojo.api.warehouse.InOrderItem;
@@ -57,13 +56,13 @@ public class StorageServiceImpl implements IStorageService {
 		InOrder order = (InOrder) XmlUtil.toObject(xml, OutOrder.class);
 		List<InOrderItem> itemList = order.getItemList();
 		// pojo 转换 model 保存入数据库
-		com.coe.wms.model.warehouse.storage.Package pag = order.changeToPackage();
+		InWarehouseOrder pag = order.changeToPackage();
 		// 大包id
 		long packageId = packageDao.savePackage(pag);
 		// 商品明细
-		List<PackageItem> packageItemList = new ArrayList<PackageItem>();
+		List<InWarehouseOrderItem> packageItemList = new ArrayList<InWarehouseOrderItem>();
 		for (InOrderItem inOrderItem : itemList) {
-			PackageItem packageItem = inOrderItem.changeToPackageItem(packageId);
+			InWarehouseOrderItem packageItem = inOrderItem.changeToPackageItem(packageId);
 			packageItemList.add(packageItem);
 		}
 		int changeSize = packageItemDao.saveBatchPackageItem(packageItemList);
@@ -85,17 +84,19 @@ public class StorageServiceImpl implements IStorageService {
 			return response;
 		}
 		OutOrder order = (OutOrder) XmlUtil.toObject(xml, OutOrder.class);
+		
 		List<OutOrderItem> itemList = order.getItemList();
 
-		OutWareHouseRecord outWareHouse = new OutWareHouseRecord();
+		OutWarehouseRecord outWareHouse = new OutWarehouseRecord();
 		outWareHouse.setShipwayCode(order.getChannel());
 		outWareHouse.setCreatedTime(System.currentTimeMillis());
+		//渠道代码
+		outWareHouse.setShipwayCode(order.getChannel());
 		
 		
-		
-		OutWareHouseRecordItemDetail outWareHouseItemDetail = new OutWareHouseRecordItemDetail();
-		OutWareHouseRecordReceiver receiver = new OutWareHouseRecordReceiver();
-		OutWareHouseRecordSender sender = new OutWareHouseRecordSender();
+		OutWarehouseRecordItem outWareHouseItemDetail = new OutWarehouseRecordItem();
+		OutWarehouseRecordReceiver receiver = new OutWarehouseRecordReceiver();
+		OutWarehouseRecordSender sender = new OutWarehouseRecordSender();
 
 		return response;
 	}

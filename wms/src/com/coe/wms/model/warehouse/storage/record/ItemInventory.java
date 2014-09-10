@@ -1,4 +1,4 @@
-package com.coe.wms.model.warehouse.storage;
+package com.coe.wms.model.warehouse.storage.record;
 
 import java.io.Serializable;
 
