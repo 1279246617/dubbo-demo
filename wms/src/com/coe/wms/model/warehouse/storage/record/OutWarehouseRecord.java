@@ -20,6 +20,10 @@ public class OutWarehouseRecord implements Serializable {
 	 * 主键
 	 */
 	private Long id;
+	/**
+	 * 出库订单id,通过出库订单来获取地址
+	 */
+	private Long outWarehouseOrderId;
 
 	/**
 	 * 仓库id
@@ -55,7 +59,7 @@ public class OutWarehouseRecord implements Serializable {
 	 * 状态
 	 */
 	private String status;
-	
+
 	/**
 	 * 出库摘要
 	 */
@@ -131,5 +135,13 @@ public class OutWarehouseRecord implements Serializable {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	public Long getOutWarehouseOrderId() {
+		return outWarehouseOrderId;
+	}
+
+	public void setOutWarehouseOrderId(Long outWarehouseOrderId) {
+		this.outWarehouseOrderId = outWarehouseOrderId;
 	}
 }

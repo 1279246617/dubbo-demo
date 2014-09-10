@@ -16,7 +16,7 @@ import org.springframework.stereotype.Repository;
 
 import com.coe.wms.dao.datasource.DataSource;
 import com.coe.wms.dao.datasource.DataSourceCode;
-import com.coe.wms.dao.warehouse.storage.IPackageDao;
+import com.coe.wms.dao.warehouse.storage.IInWarehouseOrderDao;
 import com.coe.wms.model.warehouse.storage.order.InWareHouseOrderStatus;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
 import com.google.code.ssm.api.ParameterValueKeyProvider;
@@ -28,7 +28,7 @@ import com.mysql.jdbc.Statement;
  * 
  */
 @Repository("packageDao")
-public class PackageDaoImpl implements IPackageDao {
+public class PackageDaoImpl implements IInWarehouseOrderDao {
 
 	Logger logger = Logger.getLogger(PackageDaoImpl.class);
 
@@ -37,7 +37,7 @@ public class PackageDaoImpl implements IPackageDao {
 
 	@Override
 	@DataSource(DataSourceCode.WMS)
-	public long savePackage(final InWarehouseOrder pag) {
+	public long saveInWarehouseOrder(final InWarehouseOrder pag) {
 		final String sql = "insert into w_package (user_id,package_no,package_tracking_no,weight,small_package_quantity,created_time,remark) values (?,?,?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
