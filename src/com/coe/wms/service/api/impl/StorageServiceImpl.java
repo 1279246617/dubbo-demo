@@ -10,8 +10,11 @@ import org.springframework.stereotype.Service;
 
 import com.coe.wms.dao.warehouse.storage.IPackageDao;
 import com.coe.wms.dao.warehouse.storage.IPackageItemDao;
+import com.coe.wms.model.warehouse.storage.OutWareHouseRecord;
+import com.coe.wms.model.warehouse.storage.OutWareHouseRecordItemDetail;
+import com.coe.wms.model.warehouse.storage.OutWareHouseRecordReceiver;
+import com.coe.wms.model.warehouse.storage.OutWareHouseRecordSender;
 import com.coe.wms.model.warehouse.storage.PackageItem;
-import com.coe.wms.model.warehouse.storage.PackageStatus.PackageStatusCode;
 import com.coe.wms.pojo.api.response.Response;
 import com.coe.wms.pojo.api.warehouse.InOrder;
 import com.coe.wms.pojo.api.warehouse.InOrderItem;
@@ -83,6 +86,16 @@ public class StorageServiceImpl implements IStorageService {
 		}
 		OutOrder order = (OutOrder) XmlUtil.toObject(xml, OutOrder.class);
 		List<OutOrderItem> itemList = order.getItemList();
+
+		OutWareHouseRecord outWareHouse = new OutWareHouseRecord();
+		outWareHouse.setShipwayCode(order.getChannel());
+		outWareHouse.setCreatedTime(System.currentTimeMillis());
+		
+		
+		
+		OutWareHouseRecordItemDetail outWareHouseItemDetail = new OutWareHouseRecordItemDetail();
+		OutWareHouseRecordReceiver receiver = new OutWareHouseRecordReceiver();
+		OutWareHouseRecordSender sender = new OutWareHouseRecordSender();
 
 		return response;
 	}

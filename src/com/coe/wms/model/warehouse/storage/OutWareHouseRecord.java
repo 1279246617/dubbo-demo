@@ -4,7 +4,8 @@ import java.io.Serializable;
 
 /**
  * 
- *出库主单 
+ * 出库主单
+ * 
  * @author Administrator
  * 
  */
@@ -29,7 +30,10 @@ public class OutWareHouseRecord implements Serializable {
 	 * 操作员Id
 	 */
 	private Long userId;
-
+	/**
+	 * 出货渠道
+	 */
+	private String shipwayCode;
 	/**
 	 * 批次号
 	 */
@@ -51,7 +55,7 @@ public class OutWareHouseRecord implements Serializable {
 	 * 入库摘要
 	 */
 	private String remark;
-	
+
 	public Long getId() {
 		return id;
 	}
@@ -106,5 +110,13 @@ public class OutWareHouseRecord implements Serializable {
 
 	public void setPackageNo(String packageNo) {
 		this.packageNo = packageNo;
+	}
+
+	public String getShipwayCode() {
+		return shipwayCode;
+	}
+
+	public void setShipwayCode(String shipwayCode) {
+		this.shipwayCode = shipwayCode;
 	}
 }
