@@ -6,8 +6,9 @@ import java.io.Serializable;
  * 大包
  * 
  * 仓配服务
+ * 
  * @author Administrator
- *
+ * 
  */
 public class Package implements Serializable {
 
@@ -27,7 +28,7 @@ public class Package implements Serializable {
 	 * 大包号 同客户下, packageNo 不可重复
 	 */
 	private String packageNo;
-	
+
 	/**
 	 * 大包到货时,贴的运单号
 	 * 
@@ -48,11 +49,35 @@ public class Package implements Serializable {
 	private double weight;
 
 	private String remark;
+	/**
+	 * 大包状态: 客户预报的大包 要知道 是 已经预报, 部分入库, 全部已入库 无需知道出库状态;
+	 */
+	private String status;
+	/**
+	 * 已经到货入库的商品数量
+	 */
+	private int receivedQuantity;
 
 	/**
 	 * 创建时间(不代表收货时间)
 	 */
 	private Long createdTime;
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public int getReceivedQuantity() {
+		return receivedQuantity;
+	}
+
+	public void setReceivedQuantity(int receivedQuantity) {
+		this.receivedQuantity = receivedQuantity;
+	}
 
 	public Long getId() {
 		return id;

@@ -36,20 +36,42 @@ public class Storage {
 	/**
 	 * 创建入库订单(预报商品信息)
 	 * 
+	 * 不代表入库, 无产生InWareHouseRecord,无更改ProductInventory
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
 	 * @throws IOException
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/createOrder", produces = "plain/text; charset=UTF-8", method = RequestMethod.POST)
-	public String createOrder(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	@RequestMapping(value = "/inWarehouse", produces = "plain/text; charset=UTF-8", method = RequestMethod.POST)
+	public String inWarehouse(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		String requestBody = StreamUtil.streamToString(request.getInputStream());
-		logger.info("仓配创建订单 xml:" + requestBody);
+		logger.info("仓配入库订单 xml:" + requestBody);
 		// 创建订单服务
-		Response createOrderResponse = storageService.createOrder(requestBody);
+		Response createOrderResponse = storageService.inWarehouse(requestBody);
 		// 转成xml
 		String xml = XmlUtil.toXml(Response.class, createOrderResponse);
 		return xml;
 	}
+
+	/**
+	 * 创建出库订单(顺丰通知COE 准备出库)
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/outWarehouse", produces = "plain/text; charset=UTF-8", method = RequestMethod.POST)
+	public String outWarehouse(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		String requestBody = StreamUtil.streamToString(request.getInputStream());
+		logger.info("仓配出库订单 xml:" + requestBody);
+		// 出库订单服务
+		Response createOrderResponse = storageService.outWarehouse(requestBody);
+		String xml = XmlUtil.toXml(Response.class, createOrderResponse);
+		return xml;
+	}
+
 }

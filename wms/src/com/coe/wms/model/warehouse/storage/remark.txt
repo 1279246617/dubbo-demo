@@ -4,7 +4,13 @@
 1. 以大包为单位预报商品 (Package,PackageItem)
 
 2. 到货-入库记录(InWareHouseRecord,InWareHouseRecordDetail,ProductInventory)
+到货时,如果扫描头程单号,找不到预报的Package,表示是无主件. 如果找到Package, 要更改Package已经出库数量, 状态是部分入库还是全部已入库
+同时更改ProductInventory 更新SKU和批次库存
+
 
 3. 上架-上架记录(sku ,quantity,货架号...)
 
 4. 出货-审核-出库记录(OutWareHouseRecord,OutWareHouseRecordDetail,ProductInventory,OutWareHouseRecordReceiver)
+当顺丰发送出库订单指令时, 创建OutWareHouseRecord,等出库记录,单状态为 未处理(未真正出库), 同时发送出库确认给顺丰
+当操作员真实对商品进行出库时修改状态为真实出库,并发送订单已出库给顺丰
+操作员也可以手动创建出库OutWareHouseRecord. 但一般要求按照已经创建的OutWareHouseRecord 进行出库(先进先出)

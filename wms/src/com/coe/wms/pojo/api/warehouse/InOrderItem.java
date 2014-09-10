@@ -1,6 +1,10 @@
 package com.coe.wms.pojo.api.warehouse;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.coe.wms.model.warehouse.storage.PackageItem;
 
 /**
  * pojo 商品信息, 顺丰入库 物品信息
@@ -56,5 +60,13 @@ public class InOrderItem implements Serializable {
 
 	public void setCount(int count) {
 		this.count = count;
+	}
+
+	public PackageItem changeToPackageItem(Long packageId) {
+		PackageItem packageItem = new PackageItem();
+		packageItem.setPackageId(packageId);
+		packageItem.setQuantity(this.getCount());
+		packageItem.setSku(this.getItemId());
+		return packageItem;
 	}
 }

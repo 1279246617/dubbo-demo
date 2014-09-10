@@ -166,11 +166,17 @@ public class NumberUtil {
 		bd = null;
 		return d;
 	}
-	
-	public static long sumArry(int[] batchUpdateSize) {
+
+	/**
+	 * 数组 全加
+	 * 
+	 * @param arry
+	 * @return
+	 */
+	public static int sumArry(int[] arry) {
 		int sum = 0;
-		if (batchUpdateSize != null) {
-			for (int a : batchUpdateSize) {
+		if (arry != null) {
+			for (int a : arry) {
 				sum += a;
 			}
 		}

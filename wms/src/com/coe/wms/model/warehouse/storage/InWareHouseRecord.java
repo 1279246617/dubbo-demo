@@ -45,6 +45,8 @@ public class InWareHouseRecord implements Serializable {
 	 * 客户下的大包号
 	 * 
 	 * 要求一个入库单中只能包含同一个大包号的sku
+	 * 
+	 * 如果无大包号, 表示是无主件,即无预报Package
 	 */
 	private String packageNo;
 
