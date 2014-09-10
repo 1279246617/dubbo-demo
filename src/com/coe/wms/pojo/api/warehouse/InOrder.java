@@ -3,7 +3,7 @@ package com.coe.wms.pojo.api.warehouse;
 import java.io.Serializable;
 import java.util.List;
 
-import com.coe.wms.model.warehouse.storage.order.InWareHouseOrderStatus.PackageStatusCode;
+import com.coe.wms.model.warehouse.storage.order.InWarehouseOrderStatus.PackageStatusCode;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
 
 /**

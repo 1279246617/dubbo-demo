@@ -1,8 +1,8 @@
 package com.coe.wms.dao.warehouse.storage;
 
-import com.coe.wms.model.warehouse.storage.order.InWareHouseOrderStatus;
+import com.coe.wms.model.warehouse.storage.order.InWarehouseOrderStatus;
 
 public interface IInWarehouseOrderStatusDao {
 
-	public InWareHouseOrderStatus findInWarehouseOrderStatusByCode(String code);
+	public InWarehouseOrderStatus findInWarehouseOrderStatusByCode(String code);
 }
