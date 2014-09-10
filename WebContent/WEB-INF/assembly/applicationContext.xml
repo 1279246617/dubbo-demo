@@ -19,6 +19,7 @@
 	<!-- 配置业务库数据源 -->
 	<bean id="dataSourceWms" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
 		<!-- 基本属性 url、user、password -->
+		<property name="driverClassName" value="${jdbc.wms.driverClassName}" />
 	    <property name="url" value="${jdbc.wms.url}" />
 	    <property name="username" value="${jdbc.wms.username}" />
 	    <property name="password" value="${jdbc.wms.password}" />
@@ -28,6 +29,8 @@
 	    <property name="maxActive" value="500" />
 	    <!-- 配置获取连接等待超时的时间 20秒-->
 	    <property name="maxWait" value="20000" />
+	     <property name="useUnfairLock" value="false" />
+	    <property name="poolPreparedStatements" value="false" />
 	    <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 1分钟-->
 	    <property name="timeBetweenEvictionRunsMillis" value="60000" />
 	    <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 5分钟-->
@@ -35,6 +38,7 @@
 	</bean>
 	<bean id="dataSourceTrack" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
 		 <!-- 基本属性 url、user、password -->
+		 <property name="driverClassName" value="${jdbc.track.driverClassName}" />	
 	    <property name="url" value="${jdbc.track.url}" />
 	    <property name="username" value="${jdbc.track.username}" />
 	    <property name="password" value="${jdbc.track.password}" />
@@ -42,6 +46,8 @@
 	    <property name="minIdle" value="10" /> 
 	    <property name="maxActive" value="500" />
 	    <property name="maxWait" value="20000" />
+	   	<property name="useUnfairLock" value="false" />
+	    <property name="poolPreparedStatements" value="false" />
 	    <property name="timeBetweenEvictionRunsMillis" value="60000" />
 	    <property name="minEvictableIdleTimeMillis" value="300000" />
 	</bean>
@@ -63,7 +69,7 @@
 			<map key-type="java.lang.String">
 				<entry key="dataSourceWms" value-ref="dataSourceWms"></entry>
 				<!-- 哲盟系统数据库 -->
-				<entry key="dataSourceZm" value-ref="dataSourceZm"></entry>
+				<entry key="dataSourceTrack" value-ref="dataSourceTrack"></entry>
 			</map>
 		</property>
 		<property name="defaultTargetDataSource" ref="dataSourceWms">
