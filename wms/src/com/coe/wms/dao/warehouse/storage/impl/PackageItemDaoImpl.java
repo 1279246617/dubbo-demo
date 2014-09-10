@@ -69,10 +69,13 @@ public class PackageItemDaoImpl implements IPackageItemDao {
 			}
 		});
 		
-		for(int a :batchUpdateSize){
-			System.out.println(a);
+		int change = 0;
+		if (batchUpdateSize != null) {
+			for (int a : batchUpdateSize) {
+				change += a;
+			}
 		}
-		return 0;
+		return change;
 	}
 
 	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {

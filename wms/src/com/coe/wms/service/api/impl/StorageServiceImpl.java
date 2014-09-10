@@ -51,7 +51,13 @@ public class StorageServiceImpl implements IStorageService {
 		InOrderItem item = new InOrderItem();
 		item.setCount(3);
 		item.setItemId("aaaaaaaa");
-
+		itemList.add(item);
+		
+		InOrderItem item2 = new InOrderItem();
+		item2.setCount(3);
+		item2.setItemId("aaaaaaaa");
+		itemList.add(item2);
+		
 		// pojo 转换 model 保存入数据库
 		com.coe.wms.model.warehouse.storage.Package pag = new com.coe.wms.model.warehouse.storage.Package();
 		pag.setCreatedTime(System.currentTimeMillis());
@@ -68,10 +74,8 @@ public class StorageServiceImpl implements IStorageService {
 		for (InOrderItem inOrderItem : itemList) {
 			PackageItem packageItem = new PackageItem();
 			packageItem.setPackageId(packageId);
-
 			packageItem.setQuantity(inOrderItem.getCount());
 			packageItem.setSku(inOrderItem.getItemId());
-
 			packageItemList.add(packageItem);
 		}
 		packageItemDao.saveBatchPackageItem(packageItemList);
