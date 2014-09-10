@@ -1,11 +1,10 @@
 仓配服务使用的表
 
-
-1. 以大包为单位预报商品 (Package,PackageItem)
+1. 以大包为单位预报商品 (Package,PackageItem) (顺丰预报入库订单时 创建)
 
 2. 到货-入库记录(InWareHouseRecord,InWareHouseRecordDetail,ProductInventory)
-到货时,如果扫描头程单号,找不到预报的Package,表示是无主件. 如果找到Package, 要更改Package已经出库数量, 状态是部分入库还是全部已入库
-同时更改ProductInventory 更新SKU和批次库存
+到货时,如果扫描头程单号,找不到预报的Package,表示是无主件. 如果找到Package, 要更改Package已经入库数量, 状态是部分入库还是全部已入库
+同时更改ProductInventory 更新SKU和批次库存   (客户端 可以以大包为单位查询库存情况, 也可以查看入库记录)
 
 
 3. 上架-上架记录(sku ,quantity,货架号...)

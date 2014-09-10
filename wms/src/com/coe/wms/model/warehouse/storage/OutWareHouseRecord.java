@@ -52,7 +52,12 @@ public class OutWareHouseRecord implements Serializable {
 	private Long createdTime;
 
 	/**
-	 * 入库摘要
+	 * 状态
+	 */
+	private String status;
+	
+	/**
+	 * 出库摘要
 	 */
 	private String remark;
 
@@ -118,5 +123,13 @@ public class OutWareHouseRecord implements Serializable {
 
 	public void setShipwayCode(String shipwayCode) {
 		this.shipwayCode = shipwayCode;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 }

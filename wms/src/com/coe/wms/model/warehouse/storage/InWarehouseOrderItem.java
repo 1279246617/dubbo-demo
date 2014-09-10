@@ -2,7 +2,7 @@ package com.coe.wms.model.warehouse.storage;
 
 import java.io.Serializable;
 
-public class PackageItem implements Serializable {
+public class InWarehouseOrderItem implements Serializable {
 
 	/**
 	 * 
