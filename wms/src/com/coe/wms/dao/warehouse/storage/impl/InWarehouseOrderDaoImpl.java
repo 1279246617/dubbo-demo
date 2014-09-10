@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -63,8 +64,14 @@ public class InWarehouseOrderDaoImpl implements IInWarehouseOrderDao {
 		return null;
 	}
 
+	/**
+	 * 查询入库订单
+	 * 
+	 * 参数一律使用实体类加Map . 节省QueryVO
+	 */
 	@Override
-	public List<InWarehouseOrder> findInWarehouseOrder(InWarehouseOrder inWarehouseOrder, Pagination page) {
+	public List<InWarehouseOrder> findInWarehouseOrder(InWarehouseOrder inWarehouseOrder,
+			Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("select id,user_id,package_no,package_tracking_no,weight,small_package_quantity,created_time,remark,status,received_quantity where 1=1 ");
 		if (inWarehouseOrder != null) {
@@ -80,26 +87,35 @@ public class InWarehouseOrderDaoImpl implements IInWarehouseOrderDao {
 			if (StringUtil.isNotNull(inWarehouseOrder.getStatus())) {
 				sb.append(" and status = '" + inWarehouseOrder.getStatus() + "' ");
 			}
-//			if (StringUtil.isNotNull(inWarehouseOrder.getCreatedTime()())) {
-//				sb.append(" and remark = '" + inWarehouseOrder.getRemark() + "' ");
-//			}
-			if (inWarehouseOrder.getId()!=null) {
+			if (inWarehouseOrder.getCreatedTime() != null) {
+				sb.append(" and created_time = " + inWarehouseOrder.getCreatedTime());
+			}
+			if (inWarehouseOrder.getId() != null) {
 				sb.append(" and id = " + inWarehouseOrder.getId());
 			}
-			if (inWarehouseOrder.getReceivedQuantity()!=null) {
-				sb.append(" and received_quantity = " +inWarehouseOrder.getReceivedQuantity());
+			if (inWarehouseOrder.getReceivedQuantity() != null) {
+				sb.append(" and received_quantity = " + inWarehouseOrder.getReceivedQuantity());
 			}
-			if (inWarehouseOrder.getUserId()!=null) {
-				sb.append(" and user_id = " +inWarehouseOrder.getUserId());
+			if (inWarehouseOrder.getUserId() != null) {
+				sb.append(" and user_id = " + inWarehouseOrder.getUserId());
 			}
-			if (inWarehouseOrder.getUserId()!=null) {
-				sb.append(" and user_id = " +inWarehouseOrder.getUserId());
+			if (inWarehouseOrder.getWeight() != null) {
+				sb.append(" and weight = " + inWarehouseOrder.getWeight());
 			}
 		}
-
+		if (moreParam != null) {
+			if (moreParam.get("createdTimeStart") != null) {
+				sb.append(" and created_time >= " + Long.valueOf(moreParam.get("createdTimeStart")));
+			}
+			if (moreParam.get("createdTimeEnd") != null) {
+				sb.append(" and created_time <= " + Long.valueOf(moreParam.get("createdTimeEnd")));
+			}
+		}
 		// 分页sql
 		sb.append(page.generatePageSql());
-		List<InWarehouseOrder> inWarehouseOrderList = jdbcTemplate.query(sb.toString(),
+		String sql = sb.toString();
+		logger.info("查询入库订单sql:" + sql);
+		List<InWarehouseOrder> inWarehouseOrderList = jdbcTemplate.query(sql,
 				ParameterizedBeanPropertyRowMapper.newInstance(InWarehouseOrder.class));
 		return inWarehouseOrderList;
 	}
