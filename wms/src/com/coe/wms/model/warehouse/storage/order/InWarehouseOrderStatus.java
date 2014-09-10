@@ -12,7 +12,7 @@ import com.google.code.ssm.api.CacheKeyMethod;
  */
 public class InWarehouseOrderStatus implements Serializable {
 
-	public class PackageStatusCode {
+	public class InWarehouseOrderStatusCode {
 		/**
 		 * 全未入库
 		 */

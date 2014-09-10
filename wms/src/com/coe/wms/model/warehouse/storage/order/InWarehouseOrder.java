@@ -59,7 +59,7 @@ public class InWarehouseOrder implements Serializable {
 	/**
 	 * 已经到货入库的商品数量
 	 */
-	private int receivedQuantity;
+	private Integer receivedQuantity;
 
 	/**
 	 * 创建时间(不代表收货时间)
@@ -74,11 +74,11 @@ public class InWarehouseOrder implements Serializable {
 		this.status = status;
 	}
 
-	public int getReceivedQuantity() {
+	public Integer getReceivedQuantity() {
 		return receivedQuantity;
 	}
 
-	public void setReceivedQuantity(int receivedQuantity) {
+	public void setReceivedQuantity(Integer receivedQuantity) {
 		this.receivedQuantity = receivedQuantity;
 	}
 

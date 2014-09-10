@@ -3,7 +3,7 @@ package com.coe.wms.pojo.api.warehouse;
 import java.io.Serializable;
 import java.util.List;
 
-import com.coe.wms.model.warehouse.storage.order.InWarehouseOrderStatus.PackageStatusCode;
+import com.coe.wms.model.warehouse.storage.order.InWarehouseOrderStatus.InWarehouseOrderStatusCode;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
 
 /**
@@ -73,15 +73,15 @@ public class InOrder implements Serializable {
 		this.itemList = itemList;
 	}
 
-	public InWarehouseOrder changeToPackage() {
-		InWarehouseOrder pag = new InWarehouseOrder();
-		pag.setCreatedTime(System.currentTimeMillis());
+	public InWarehouseOrder changeToInWarehouseOrder() {
+		InWarehouseOrder order = new InWarehouseOrder();
+		order.setCreatedTime(System.currentTimeMillis());
 		String packageNo = this.getHandoverNumber();
-		pag.setPackageNo(packageNo);
-		pag.setStatus(PackageStatusCode.NONE);// 新建的状态为完全未入库
-		pag.setPackageTrackingNo(this.getHandoverNumber());
-		pag.setUserId(this.userId);
-		pag.setSmallPackageQuantity(this.itemList.size());
-		return pag;
+		order.setPackageNo(packageNo);
+		order.setStatus(InWarehouseOrderStatusCode.NONE);// 新建的状态为完全未入库
+		order.setPackageTrackingNo(this.getHandoverNumber());
+		order.setUserId(this.userId);
+		order.setSmallPackageQuantity(this.itemList.size());
+		return order;
 	}
 }

@@ -60,7 +60,7 @@ public class InOrderItem implements Serializable {
 		this.count = count;
 	}
 
-	public InWarehouseOrderItem changeToPackageItem(Long packageId) {
+	public InWarehouseOrderItem changeToInWarehouseOrderItem(Long packageId) {
 		InWarehouseOrderItem packageItem = new InWarehouseOrderItem();
 		packageItem.setPackageId(packageId);
 		packageItem.setQuantity(this.getCount());
