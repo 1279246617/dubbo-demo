@@ -18,7 +18,7 @@ import org.springframework.stereotype.Repository;
 import com.coe.wms.dao.datasource.DataSource;
 import com.coe.wms.dao.datasource.DataSourceCode;
 import com.coe.wms.dao.warehouse.storage.IPackageItemDao;
-import com.coe.wms.model.warehouse.storage.PackageItem;
+import com.coe.wms.model.warehouse.storage.order.InWarehouseOrderItem;
 import com.coe.wms.util.NumberUtil;
 import com.mysql.jdbc.Statement;
 
@@ -40,7 +40,7 @@ public class PackageItemDaoImpl implements IPackageItemDao {
 	 */
 	@Override
 	@DataSource(DataSourceCode.WMS)
-	public long savePackageItem(final PackageItem item) {
+	public long savePackageItem(final InWarehouseOrderItem item) {
 		final String sql = "insert into w_package_item (package_id,quantity,sku) values (?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
@@ -61,12 +61,12 @@ public class PackageItemDaoImpl implements IPackageItemDao {
 	 */
 	@Override
 	@DataSource(DataSourceCode.WMS)
-	public int saveBatchPackageItem(final List<PackageItem> itemList) {
+	public int saveBatchPackageItem(final List<InWarehouseOrderItem> itemList) {
 		final String sql = "insert into w_package_item (package_id,quantity,sku) values (?,?,?)";
 		int[] batchUpdateSize = jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
 			@Override
 			public void setValues(PreparedStatement ps, int i) throws SQLException {
-				PackageItem item = itemList.get(i);
+				InWarehouseOrderItem item = itemList.get(i);
 				ps.setLong(1, item.getPackageId());
 				ps.setLong(2, item.getQuantity());
 				ps.setString(3, item.getSku());

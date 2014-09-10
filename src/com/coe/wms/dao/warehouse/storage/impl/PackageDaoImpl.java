@@ -17,7 +17,8 @@ import org.springframework.stereotype.Repository;
 import com.coe.wms.dao.datasource.DataSource;
 import com.coe.wms.dao.datasource.DataSourceCode;
 import com.coe.wms.dao.warehouse.storage.IPackageDao;
-import com.coe.wms.model.warehouse.storage.PackageStatus;
+import com.coe.wms.model.warehouse.storage.order.InWareHouseOrderStatus;
+import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
 import com.google.code.ssm.api.ParameterValueKeyProvider;
 import com.mysql.jdbc.Statement;
 
@@ -36,7 +37,7 @@ public class PackageDaoImpl implements IPackageDao {
 
 	@Override
 	@DataSource(DataSourceCode.WMS)
-	public long savePackage(final com.coe.wms.model.warehouse.storage.Package pag) {
+	public long savePackage(final InWarehouseOrder pag) {
 		final String sql = "insert into w_package (user_id,package_no,package_tracking_no,weight,small_package_quantity,created_time,remark) values (?,?,?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
@@ -58,10 +59,10 @@ public class PackageDaoImpl implements IPackageDao {
 
 	@Override
 	@DataSource(DataSourceCode.WMS)
-	public PackageStatus findPackageStatusByCode(@ParameterValueKeyProvider String code) {
+	public InWareHouseOrderStatus findPackageStatusByCode(@ParameterValueKeyProvider String code) {
 		String sql = "select id,code,cn,en from w_package_status where code ='" + code + "'";
-		PackageStatus packageStatus = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<PackageStatus>(
-				PackageStatus.class));
+		InWareHouseOrderStatus packageStatus = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<InWareHouseOrderStatus>(
+				InWareHouseOrderStatus.class));
 		return packageStatus;
 	}
 

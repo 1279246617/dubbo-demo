@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.coe.wms.pojo.api.response.Response;
 import com.coe.wms.service.api.IStorageService;
-import com.coe.wms.util.SessionConstant;
 import com.coe.wms.util.StreamUtil;
 import com.coe.wms.util.XmlUtil;
 
@@ -74,4 +73,6 @@ public class Storage {
 		return xml;
 	}
 
+	
+	
 }

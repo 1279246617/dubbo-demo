@@ -1,15 +1,15 @@
-package com.coe.wms.model.warehouse.storage;
+package com.coe.wms.model.warehouse.storage.order;
 
 import java.io.Serializable;
 
 /**
  * 
- * 出库发件人
+ * 出库收件人
  * 
  * @author Administrator
  * 
  */
-public class OutWarehouseRecordSender implements Serializable {
+public class OutWarehouseOrderReceiver implements Serializable {
 	/**
 	 * 
 	 */
@@ -21,22 +21,22 @@ public class OutWarehouseRecordSender implements Serializable {
 	private Long orderId;
 
 	/**
-	 * 发件人名
+	 * 收件人名
 	 */
 	private String name;
 
 	/**
-	 * 发件人公司
+	 * 收件人公司
 	 */
 	private String company;
 
 	/**
-	 * 发件人名
+	 * 收件人名
 	 */
 	private String firstName;
 
 	/**
-	 * 发件人姓
+	 * 收件人姓
 	 */
 	private String lastName;
 
@@ -84,11 +84,11 @@ public class OutWarehouseRecordSender implements Serializable {
 	private String countryName;
 
 	/**
-	 * 发件人电话号码
+	 * 收件人电话号码
 	 */
 	private String phoneNumber;
 	/**
-	 * 发件人邮箱
+	 * 收件人邮箱
 	 */
 	private String email;
 

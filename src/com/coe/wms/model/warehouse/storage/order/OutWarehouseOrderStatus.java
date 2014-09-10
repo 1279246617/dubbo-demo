@@ -1,4 +1,4 @@
-package com.coe.wms.model.warehouse.storage;
+package com.coe.wms.model.warehouse.storage.order;
 
 import java.io.Serializable;
 
@@ -10,7 +10,7 @@ import com.google.code.ssm.api.CacheKeyMethod;
  * @author Administrator
  * 
  */
-public class OurWarehouseStatus implements Serializable {
+public class OutWarehouseOrderStatus implements Serializable {
 
 	public class OurWareHouseStatusCode {
 		/**

@@ -1,12 +1,10 @@
 package com.coe.wms.pojo.api.warehouse;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
-import com.coe.wms.model.warehouse.storage.Package;
-import com.coe.wms.model.warehouse.storage.PackageItem;
-import com.coe.wms.model.warehouse.storage.PackageStatus.PackageStatusCode;
+import com.coe.wms.model.warehouse.storage.order.InWareHouseOrderStatus.PackageStatusCode;
+import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
 
 /**
  * 顺丰入库订单 xml 对应pojo
@@ -75,8 +73,8 @@ public class InOrder implements Serializable {
 		this.itemList = itemList;
 	}
 
-	public Package changeToPackage() {
-		com.coe.wms.model.warehouse.storage.Package pag = new com.coe.wms.model.warehouse.storage.Package();
+	public InWarehouseOrder changeToPackage() {
+		InWarehouseOrder pag = new InWarehouseOrder();
 		pag.setCreatedTime(System.currentTimeMillis());
 		String packageNo = this.getHandoverNumber();
 		pag.setPackageNo(packageNo);

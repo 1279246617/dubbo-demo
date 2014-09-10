@@ -1,14 +1,14 @@
-package com.coe.wms.model.warehouse.storage;
+package com.coe.wms.model.warehouse.storage.order;
 
 import java.io.Serializable;
 
 /**
- * 入库详情单
+ * 出库详情单
  * 
  * @author Administrator
  * 
  */
-public class InWarehouseRecordItem implements Serializable {
+public class OutWarehouseOrderItem implements Serializable {
 
 	/**
 	 * 

@@ -1,10 +1,11 @@
 package com.coe.wms.dao.warehouse.storage;
 
-import com.coe.wms.model.warehouse.storage.PackageStatus;
+import com.coe.wms.model.warehouse.storage.order.InWareHouseOrderStatus;
+import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
 
 public interface IPackageDao {
 
-	public long savePackage(com.coe.wms.model.warehouse.storage.Package pag);
+	public long savePackage(InWarehouseOrder pag);
 
-	public PackageStatus findPackageStatusByCode(String code);
+	public InWareHouseOrderStatus findPackageStatusByCode(String code);
 }

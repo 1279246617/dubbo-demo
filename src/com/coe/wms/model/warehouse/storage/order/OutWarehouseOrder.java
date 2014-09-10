@@ -1,4 +1,4 @@
-package com.coe.wms.model.warehouse.storage;
+package com.coe.wms.model.warehouse.storage.order;
 
 import java.io.Serializable;
 
@@ -9,7 +9,7 @@ import java.io.Serializable;
  * @author Administrator
  * 
  */
-public class OutWarehouseRecord implements Serializable {
+public class OutWarehouseOrder implements Serializable {
 
 	/**
 	 * 

@@ -1,31 +1,35 @@
-package com.coe.wms.model.warehouse.storage;
+package com.coe.wms.model.warehouse.storage.record;
 
 import java.io.Serializable;
 
 /**
- * 上架表
+ * 入库单 (主单)
+ * 
+ * 
+ * 
+ * 如果入库单是来自于 仓配则 一个入库单中有且只有同一个大包号的sku
+ * 
+ * 如果入库单是来自于 转运则一个入库单商品 等于一个转运订单
  * 
  * @author Administrator
  * 
  */
-public class OnShelf implements Serializable {
+public class InWarehouseRecord implements Serializable {
+
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -7518195625677660678L;
+	private static final long serialVersionUID = -1475638002960975692L;
+
 	/**
 	 * 主键
 	 */
 	private Long id;
+
 	/**
 	 * 仓库id
 	 */
 	private Long wareHouseId;
-
-	/**
-	 * 货架id
-	 */
-	private Long shelfId;
 
 	/**
 	 * 操作员Id
@@ -34,17 +38,15 @@ public class OnShelf implements Serializable {
 
 	/**
 	 * 批次号
-	 * 
-	 * 可空
 	 */
 	private String batchNo;
 
 	/**
 	 * 客户下的大包号
 	 * 
-	 * 要求一个上架记录单中只能包含同一个大包号的sku
+	 * 要求一个入库单中只能包含同一个大包号的sku
 	 * 
-	 * 可空
+	 * 如果无大包号, 表示是无主件,即无预报Package
 	 */
 	private String packageNo;
 
@@ -54,24 +56,9 @@ public class OnShelf implements Serializable {
 	private Long createdTime;
 
 	/**
-	 * 上架摘要
+	 * 入库摘要
 	 */
 	private String remark;
-
-	/**
-	 * sku下产品数量
-	 * 
-	 * 必填
-	 */
-	private int quantity;
-
-	/**
-	 * 
-	 * sku
-	 * 
-	 * 必填
-	 */
-	private String sku;
 
 	public Long getId() {
 		return id;
@@ -87,14 +74,6 @@ public class OnShelf implements Serializable {
 
 	public void setWareHouseId(Long wareHouseId) {
 		this.wareHouseId = wareHouseId;
-	}
-
-	public Long getShelfId() {
-		return shelfId;
-	}
-
-	public void setShelfId(Long shelfId) {
-		this.shelfId = shelfId;
 	}
 
 	public Long getUserId() {
@@ -113,14 +92,6 @@ public class OnShelf implements Serializable {
 		this.batchNo = batchNo;
 	}
 
-	public String getPackageNo() {
-		return packageNo;
-	}
-
-	public void setPackageNo(String packageNo) {
-		this.packageNo = packageNo;
-	}
-
 	public Long getCreatedTime() {
 		return createdTime;
 	}
@@ -137,19 +108,11 @@ public class OnShelf implements Serializable {
 		this.remark = remark;
 	}
 
-	public int getQuantity() {
-		return quantity;
+	public String getPackageNo() {
+		return packageNo;
 	}
 
-	public void setQuantity(int quantity) {
-		this.quantity = quantity;
-	}
-
-	public String getSku() {
-		return sku;
-	}
-
-	public void setSku(String sku) {
-		this.sku = sku;
+	public void setPackageNo(String packageNo) {
+		this.packageNo = packageNo;
 	}
 }

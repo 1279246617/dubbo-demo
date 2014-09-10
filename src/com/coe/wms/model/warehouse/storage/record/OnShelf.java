@@ -1,35 +1,31 @@
-package com.coe.wms.model.warehouse.storage;
+package com.coe.wms.model.warehouse.storage.record;
 
 import java.io.Serializable;
 
 /**
- * 入库单 (主单)
- * 
- * 
- * 
- * 如果入库单是来自于 仓配则 一个入库单中有且只有同一个大包号的sku
- * 
- * 如果入库单是来自于 转运则一个入库单商品 等于一个转运订单
+ * 上架表
  * 
  * @author Administrator
  * 
  */
-public class InWarehouseRecord implements Serializable {
-
+public class OnShelf implements Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -1475638002960975692L;
-
+	private static final long serialVersionUID = -7518195625677660678L;
 	/**
 	 * 主键
 	 */
 	private Long id;
-
 	/**
 	 * 仓库id
 	 */
 	private Long wareHouseId;
+
+	/**
+	 * 货架id
+	 */
+	private Long shelfId;
 
 	/**
 	 * 操作员Id
@@ -38,15 +34,17 @@ public class InWarehouseRecord implements Serializable {
 
 	/**
 	 * 批次号
+	 * 
+	 * 可空
 	 */
 	private String batchNo;
 
 	/**
 	 * 客户下的大包号
 	 * 
-	 * 要求一个入库单中只能包含同一个大包号的sku
+	 * 要求一个上架记录单中只能包含同一个大包号的sku
 	 * 
-	 * 如果无大包号, 表示是无主件,即无预报Package
+	 * 可空
 	 */
 	private String packageNo;
 
@@ -56,9 +54,24 @@ public class InWarehouseRecord implements Serializable {
 	private Long createdTime;
 
 	/**
-	 * 入库摘要
+	 * 上架摘要
 	 */
 	private String remark;
+
+	/**
+	 * sku下产品数量
+	 * 
+	 * 必填
+	 */
+	private int quantity;
+
+	/**
+	 * 
+	 * sku
+	 * 
+	 * 必填
+	 */
+	private String sku;
 
 	public Long getId() {
 		return id;
@@ -74,6 +87,14 @@ public class InWarehouseRecord implements Serializable {
 
 	public void setWareHouseId(Long wareHouseId) {
 		this.wareHouseId = wareHouseId;
+	}
+
+	public Long getShelfId() {
+		return shelfId;
+	}
+
+	public void setShelfId(Long shelfId) {
+		this.shelfId = shelfId;
 	}
 
 	public Long getUserId() {
@@ -92,6 +113,14 @@ public class InWarehouseRecord implements Serializable {
 		this.batchNo = batchNo;
 	}
 
+	public String getPackageNo() {
+		return packageNo;
+	}
+
+	public void setPackageNo(String packageNo) {
+		this.packageNo = packageNo;
+	}
+
 	public Long getCreatedTime() {
 		return createdTime;
 	}
@@ -108,11 +137,19 @@ public class InWarehouseRecord implements Serializable {
 		this.remark = remark;
 	}
 
-	public String getPackageNo() {
-		return packageNo;
+	public int getQuantity() {
+		return quantity;
 	}
 
-	public void setPackageNo(String packageNo) {
-		this.packageNo = packageNo;
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
+	}
+
+	public String getSku() {
+		return sku;
+	}
+
+	public void setSku(String sku) {
+		this.sku = sku;
 	}
 }
