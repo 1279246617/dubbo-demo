@@ -3,6 +3,7 @@ package com.coe.wms.controller;
 import java.io.IOException;
 
 import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -16,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.coe.wms.model.user.Index;
 import com.coe.wms.service.user.IUserService;
 import com.coe.wms.util.SessionConstant;
+import com.coe.wms.util.StringUtil;
 
 @Controller
 @RequestMapping("/")
@@ -72,9 +74,14 @@ public class Application {
 	 */
 	@RequestMapping(value = "/companyIndex", method = RequestMethod.GET)
 	public ModelAndView companyIndex(HttpServletRequest request) {
+		HttpSession session = request.getSession();
 		ModelAndView view = new ModelAndView();
-		
-		
+		// 项目基础路径
+		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
+		// 用户名
+		String userName = (String) session.getAttribute(SessionConstant.USER_NAME);
+		view.addObject("userName", userName);
+
 		view.setViewName("companyIndex");
 		return view;
 	}
@@ -93,5 +100,23 @@ public class Application {
 
 	public static void setBaseUrlName(String baseUrlName) {
 		Application.baseUrlName = baseUrlName;
+	}
+
+	/**
+	 * 查找Cookie 值
+	 * 
+	 * @param cookies
+	 * @param key
+	 * @return
+	 */
+	public static String findCookieValue(Cookie cookies[], String key) {
+		if (cookies != null) {
+			for (Cookie cookie : cookies) {
+				if (StringUtil.isEqual(cookie.getName(), key)) {
+					return cookie.getValue();
+				}
+			}
+		}
+		return null;
 	}
 }
