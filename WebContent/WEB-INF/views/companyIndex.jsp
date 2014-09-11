@@ -6,8 +6,13 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>COE</title>
+
+<link href="@{'public/ligerui/css/ligerui-all.css'}" rel="stylesheet" type="text/css" />
+
 </head>
-<body>	
-	 this is company index!
+<body>
+
+
+		
 </body>
 </html>
