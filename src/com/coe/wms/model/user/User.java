@@ -30,6 +30,8 @@ public class User implements Serializable {
 	 * 用户类型 管理员,操作员,  代表公司内部的人
 	 * 
 	 * 改用户类型不用于权限控制,仅用于登录跳转到不同首页
+	 * 
+	 * 公司用户
 	 */
 	public static final String USER_TYPE_ADMIN = "A";
 	
