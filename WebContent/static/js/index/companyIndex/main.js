@@ -51,20 +51,20 @@ var topMenuAddToTab = function(){
 	$("#topMenu li").live('click', function() {
 	    var tab = $("#framecenter").ligerGetTabManager();
 	    var url=$(this).find("a").attr("href");
-	    if(url!=undefined){
-	        url=url.replace("#","");
-	        var fn=$(this).find("a").attr("fn");
-	        if(fn!=undefined){
-	            eval(fn+"()");
-	        }else{
-	            var tabId=$(this).find("a").attr("tab_id");
-	            $("#loading").show();
-	            var text = $(this).find("a").text();
-	            tab.removeTabItem(tabId);
-	            tab.addTabItem({ tabid : tabId,text: text, url: url });
-	        }
-	    }
-	    return false;
+	    var fn=$(this).find("a").attr("fn");
+        var tabId=$(this).find("a").attr("tab_id");
+	    url=url.replace("#","");
+	    if (url != undefined && url !='') {
+	         if(fn!=undefined){
+	        	 alert(1);
+	             eval(fn+"()");
+	         }else{
+	             $("#loading").show();
+	             var text = $(this).find("a").text();
+	             tab.removeTabItem(tabId);
+	             tab.addTabItem({ tabid : tabId,text: text, url: url });
+	         }
+		}
 	});
 }
 

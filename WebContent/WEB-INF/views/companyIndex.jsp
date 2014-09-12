@@ -24,13 +24,13 @@
                     <a href="" style="float:left;margin-top:1px;margin-right: 30px"><img src="${baseUrl}/static/img/index.png"></a>
                     <div class="nav-collapse" id="topMenu">
                         <ul class="nav pull-left">
- 
+ 				
                         </ul>
                         <ul class="nav pull-right">
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-cog icon-white"></i>系统设置 <b class="caret"></b></a>
                                 <ul class="dropdown-menu">
-									<li><a href="#" tab_id="listRegister">注册信息</a></li>
+									<li><a href="#http://baidu.com" tab_id="listRegister">注册信息</a></li>
                                 </ul>
                             </li>
                             <li class="divider-vertical"></li>
@@ -52,7 +52,7 @@
 	    <div position="center" id="framecenter">
 	    	<!-- 默认加载页面 -->
 	    	<div tabid="dashboard" title="主页">
-	                <iframe frameborder="0" tab_id="dashboard" name="dashboard" id="dashboard" src="http://baidu.com"></iframe>
+	                <iframe frameborder="0" tab_id="dashboard" name="dashboard" id="dashboard" src="${baseUrl}/dashboard/main.do"></iframe>
 	        </div> 
 	    </div>  
 	</div>
