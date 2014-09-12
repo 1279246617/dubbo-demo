@@ -81,8 +81,25 @@ public class Application {
 		// 用户名
 		String userName = (String) session.getAttribute(SessionConstant.USER_NAME);
 		view.addObject("userName", userName);
-
 		view.setViewName("companyIndex");
+		return view;
+	}
+
+	/**
+	 * 退出系统
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "/logout", method = RequestMethod.GET)
+	public ModelAndView logout(HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		ModelAndView view = new ModelAndView();
+		session.removeAttribute(SessionConstant.USER_ID);
+		session.removeAttribute(SessionConstant.USER_NAME);
+		session.removeAttribute(SessionConstant.USER_PARENT_ID);
+		session.removeAttribute(SessionConstant.USER_TYPE);
+		view.setViewName("redirect:/user/login.do");
 		return view;
 	}
 

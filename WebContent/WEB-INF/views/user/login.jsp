@@ -21,7 +21,7 @@
 							<span class="icon-bar"></span>
 						</a> <a href="#" style="float: left; margin-top: 5px"></a>
 						<div class="nav-collapse">
-						<img src="${baseUrl}/static/img/logo-index.png">
+						<img src="${baseUrl}/static/img/index.png">
 					</div>
 				</div>
 			</div>
