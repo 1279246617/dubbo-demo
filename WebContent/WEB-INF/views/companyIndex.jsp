@@ -58,7 +58,7 @@
 		        </div>
 		        <div title="仓库管理" class=" nav-collapse sidebar-nav">
 		              <ul class="nav nav-tabs nav-stacked ">	
-		              		<li><a href="#{baseUrl}/warehouse/storage/inWarehouse.do" tab_id="doInWarehouse"><i class="icon-th"></i><span class="hidden-tablet">入库订单收货</span></a></li>
+		              		<li><a href="#${baseUrl}/warehouse/storage/inWarehouse.do" tab_id="doInWarehouse"><i class="icon-th"></i><span class="hidden-tablet">入库订单收货</span></a></li>
 		              		<li><a href=# tab_id="findInWarehouseRecord"><i class="icon-search"></i><span class="hidden-tablet">入库记录查询</span></a></li>
 		              		<li><a href=# tab_id="doOutWarehouse"><i class="icon-plane"></i><span class="hidden-tablet">出库订单操作</span></a></li>
 		              		<li><a href=# tab_id="findOutWarehouseRecord"><i class="icon-search"></i><span class="hidden-tablet">出库记录查询</span></a></li>
