@@ -42,10 +42,10 @@
         onReload: null
     };
     $.ligerDefaults.TabString = {
-        closeMessage: "关闭当前页",
+        closeMessage: "关闭本页",
         closeOtherMessage: "关闭其他",
         closeAllMessage: "关闭所有",
-        reloadMessage: "刷新"
+        reloadMessage: "重新加载"
     };
 
     $.ligerMethos.Tab = {};

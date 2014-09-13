@@ -52,11 +52,15 @@
 	    	<div id="accordion1" class="  well main-menu"  > 
 		         <div title="订单管理" class=" nav-collapse sidebar-nav">
 		              <ul class="nav nav-tabs nav-stacked ">	
-		              		<li><a href="#http://www.baidu.com" tab_id="doInWarehouse"><i class="icon-th"></i><span class="hidden-tablet">入库订单收货</span></a></li>
 		              		<li><a href=# tab_id="findInWarehouseOrder"><i class="icon-search"></i><span class="hidden-tablet">入库订单查询</span></a></li>
+		              		<li><a href=# tab_id="findOutWarehouseOrder"><i class="icon-search"></i><span class="hidden-tablet">出库订单查询</span></a></li>
+		                </ul>
+		        </div>
+		        <div title="仓库管理" class=" nav-collapse sidebar-nav">
+		              <ul class="nav nav-tabs nav-stacked ">	
+		              		<li><a href="#{baseUrl}/warehouse/storage/inWarehouse.do" tab_id="doInWarehouse"><i class="icon-th"></i><span class="hidden-tablet">入库订单收货</span></a></li>
 		              		<li><a href=# tab_id="findInWarehouseRecord"><i class="icon-search"></i><span class="hidden-tablet">入库记录查询</span></a></li>
 		              		<li><a href=# tab_id="doOutWarehouse"><i class="icon-plane"></i><span class="hidden-tablet">出库订单操作</span></a></li>
-		              		<li><a href=# tab_id="findOutWarehouseOrder"><i class="icon-search"></i><span class="hidden-tablet">出库订单查询</span></a></li>
 		              		<li><a href=# tab_id="findOutWarehouseRecord"><i class="icon-search"></i><span class="hidden-tablet">出库记录查询</span></a></li>
 		                </ul>
 		        </div>
@@ -81,7 +85,7 @@
 						<ul class="nav nav-tabs nav-stacked">
 		                	<li><a href=#><i class="icon-cog"></i><span class="hidden-tablet">渠道管理</span></a></li>
 		              		<li><a href=#><i class="icon-check"></i><span class="hidden-tablet">报价管理</span></a></li>
-		              		<li><a href=#><i class="icon-cog"></i><span class="hidden-tablet">仓库管理</span></a></li>
+		              		<li><a href=#><i class="icon-cog"></i><span class="hidden-tablet">仓库设置</span></a></li>
 		              		<li><a href=#><i class="icon-cog"></i><span class="hidden-tablet">货架类型</span></a></li>
 		                </ul>
 		        </div> 
@@ -91,9 +95,9 @@
    	<!-- 页面中心内容 -->	
     <div position="center" id="framecenter">
     	<!-- 默认加载页面 -->
-<!--     	<div tab_id="dashboard" title="主页"> -->
-<%--                 <iframe frameborder="0" tab_id="dashboard" name="dashboard" id="dashboard" src="${baseUrl}/dashboard/main.do"></iframe> --%>
-<!--         </div>  -->
+    	<div tab_id="dashboard" title="主页">
+                <iframe frameborder="0" tab_id="dashboard" name="dashboard" id="dashboard" src="${baseUrl}/dashboard/main.do"></iframe>
+        </div> 
     </div>  
 	</div>
 	 
@@ -115,6 +119,7 @@
 			$("#accordion1").ligerAccordion({
 				height :500
 			});
+			
 			//左侧菜单 鼠标 hover
 			$('div.main-menu li:not(.nav-header)').hover(function(){
 				$(this).animate({'margin-left':'+=5'},300);

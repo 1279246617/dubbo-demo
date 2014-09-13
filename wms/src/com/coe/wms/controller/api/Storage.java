@@ -20,6 +20,7 @@ import com.coe.wms.util.XmlUtil;
 /**
  * 仓配API
  * 
+ * 创建预报入库订单,出库订单
  * @author Administrator
  * 
  */
