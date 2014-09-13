@@ -24,7 +24,7 @@ import com.coe.wms.util.XmlUtil;
  * @author Administrator
  * 
  */
-@Controller
+@Controller("apiStorage")
 @RequestMapping("/api/storage")
 public class Storage {
 

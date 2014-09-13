@@ -18,6 +18,12 @@ $.extend({
                     content:msg
                 });
             },
+            showTips:function(id,msg){
+                $("#"+id).show().ligerTip({
+                    auto:true,
+                    content:msg
+                });
+            },
             showCanCancelMessage:function(orderId,msg){
                 $(".isCanCancel-message-"+orderId).show().ligerTip({
                     auto:true,

@@ -30,7 +30,7 @@ import com.coe.wms.util.SessionConstant;
  * @author Administrator
  * 
  */
-@Controller
+@Controller("storage")
 @RequestMapping("/warehouse/storage")
 public class Storage {
 
