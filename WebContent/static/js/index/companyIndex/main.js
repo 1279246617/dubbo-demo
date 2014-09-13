@@ -14,7 +14,7 @@ $(window).resize(function() {
 //init
 $(function(){
 	//布局
-	$("#layoutCenter").ligerLayout({ leftWidth: 200,heightDiff:-43});
+	$("#layoutCenter").ligerLayout({ leftWidth: 160,heightDiff:-13});
 	var height = $(".l-layout-center").height();
 	//Tab
 	$("#framecenter").ligerTab({ height: height });
@@ -22,6 +22,7 @@ $(function(){
 	tab = $("#framecenter").ligerGetTabManager();
 	adjustHeight();
 	topMenuAddToTab();
+	leftMenuAddToTab();
 });
 
 var tab = null;

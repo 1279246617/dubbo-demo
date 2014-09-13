@@ -47,8 +47,8 @@ li {
 	margin-bottom:1px;
 }
 .navbar-inner_top {
-	padding-left:20px;
-	padding-right:20px;
+/* 	padding-left:20px; */
+	padding-right:5px;
 	background-color:#50a8dc;
 	background-image:-moz-linear-gradient(top,#61b0df,#369bd7);
 	background-image:-ms-linear-gradient(top,#61b0df,#369bd7);
@@ -201,8 +201,9 @@ html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abb
 	z-index:99999;
 	display:block;
 }
+
 .nav li {
-	font-size:14px;
+	font-size:12px;
 	text-transform:uppercase;
 	font-weight:bold;
 }

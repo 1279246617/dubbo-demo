@@ -23,7 +23,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </a>
-                    <a href="" style="float:left;margin-top:1px;margin-right: 30px"><img src="${baseUrl}/static/img/index.png"></a>
+                    <a href="" style="float:left;margin-top:1px;margin-left: 5px"><img src="${baseUrl}/static/img/index.png"></a>
                     <div class="nav-collapse" id="topMenu">
                         <ul class="nav pull-left">
  				
@@ -47,39 +47,53 @@
 	
 	<div id="layoutCenter">
 		<!-- 左侧菜单 -->
-	    <div position="left" id="leftMenu" class="leftMenu">
+	    <div position="left" id="leftMenu"  >
 	    	<!-- 面板 -->
-	    	<div id="accordion1"> 
-		         <div title="功能列表">
-		              <ul>
-		                    <li>列表一</li>
-		                    <li>列表二</li>
-		                    <li>列表三</li>
-		                    <li>列表四</li>
-		                    <li>列表五</li>
+	    	<div id="accordion1" class="  well main-menu"  > 
+		         <div title="订单管理" class=" nav-collapse sidebar-nav">
+		              <ul class="nav nav-tabs nav-stacked ">	
+		              		<li><a href="#http://www.baidu.com" tab_id="doInWarehouse"><i class="icon-th"></i><span class="hidden-tablet">入库订单收货</span></a></li>
+		              		<li><a href=# tab_id="findInWarehouseOrder"><i class="icon-search"></i><span class="hidden-tablet">入库订单查询</span></a></li>
+		              		<li><a href=# tab_id="findInWarehouseRecord"><i class="icon-search"></i><span class="hidden-tablet">入库记录查询</span></a></li>
+		              		<li><a href=# tab_id="doOutWarehouse"><i class="icon-plane"></i><span class="hidden-tablet">出库订单操作</span></a></li>
+		              		<li><a href=# tab_id="findOutWarehouseOrder"><i class="icon-search"></i><span class="hidden-tablet">出库订单查询</span></a></li>
+		              		<li><a href=# tab_id="findOutWarehouseRecord"><i class="icon-search"></i><span class="hidden-tablet">出库记录查询</span></a></li>
 		                </ul>
 		        </div>
-		         <div title="列表">
-		                <ul>
-		                    <li>列表一</li>
-		                    <li>列表二</li>
-		                    <li>列表三</li>
-		                    <li>列表四</li>
-		                    <li>列表五</li>
+		         <div title="用户管理" class=" nav-collapse sidebar-nav">
+		                <ul class="nav nav-tabs nav-stacked">
+		                	<li><a href=#><i class="icon-plus-sign"></i><span class="hidden-tablet">新建用户</span></a></li>
+		              		<li><a href=#><i class="icon-th-large"></i><span class="hidden-tablet">用户管理</span></a></li>
+		              		<li><a href=#><i class="icon-th-large"></i><span class="hidden-tablet">角色管理</span></a></li>
+		              		<li><a href=#><i class="icon-th-large"></i><span class="hidden-tablet">权限管理</span></a></li>
 		                </ul>
 		        </div> 
-		        <div title="其他" style="padding:10px"> 
-		     			   其他内容
+		        <div title="财务管理" class=" nav-collapse sidebar-nav"> 
+		     			<ul class="nav nav-tabs nav-stacked">
+		                	<li><a href=#><i class="icon-check"></i><span class="hidden-tablet">现金收款</span></a></li>
+		                	<li><a href=#><i class="icon-check"></i><span class="hidden-tablet">入账列表</span></a></li>
+		              		<li><a href=#><i class="icon-check"></i><span class="hidden-tablet">出账审核</span></a></li>
+		              		<li><a href=#><i class="icon-check"></i><span class="hidden-tablet">出账列表</span></a></li>
+		                </ul>
 				</div>
+				
+				<div title="基础资料" class=" nav-collapse sidebar-nav">
+						<ul class="nav nav-tabs nav-stacked">
+		                	<li><a href=#><i class="icon-cog"></i><span class="hidden-tablet">渠道管理</span></a></li>
+		              		<li><a href=#><i class="icon-check"></i><span class="hidden-tablet">报价管理</span></a></li>
+		              		<li><a href=#><i class="icon-cog"></i><span class="hidden-tablet">仓库管理</span></a></li>
+		              		<li><a href=#><i class="icon-cog"></i><span class="hidden-tablet">货架类型</span></a></li>
+		                </ul>
+		        </div> 
     	</div>  
 	</div>
 	    
    	<!-- 页面中心内容 -->	
     <div position="center" id="framecenter">
     	<!-- 默认加载页面 -->
-    	<div tabid="dashboard" title="主页">
-                <iframe frameborder="0" tab_id="dashboard" name="dashboard" id="dashboard" src="${baseUrl}/dashboard/main.do"></iframe>
-        </div> 
+<!--     	<div tab_id="dashboard" title="主页"> -->
+<%--                 <iframe frameborder="0" tab_id="dashboard" name="dashboard" id="dashboard" src="${baseUrl}/dashboard/main.do"></iframe> --%>
+<!--         </div>  -->
     </div>  
 	</div>
 	 
@@ -99,7 +113,14 @@
 		var baseUrl = "${baseUrl}",tab = null,manager=null;
 		$(function() {
 			$("#accordion1").ligerAccordion({
-				height : 300
+				height :500
+			});
+			//左侧菜单 鼠标 hover
+			$('div.main-menu li:not(.nav-header)').hover(function(){
+				$(this).animate({'margin-left':'+=5'},300);
+			},
+			function(){
+				$(this).animate({'margin-left':'-=5'},300);
 			});
 		});
 	</script>
