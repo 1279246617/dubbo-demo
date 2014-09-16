@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -11,6 +12,7 @@ import org.apache.log4j.Logger;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.simple.ParameterizedBeanPropertyRowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -18,8 +20,11 @@ import org.springframework.stereotype.Repository;
 import com.coe.wms.dao.datasource.DataSource;
 import com.coe.wms.dao.datasource.DataSourceCode;
 import com.coe.wms.dao.warehouse.storage.IInWarehouseOrderItemDao;
+import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrderItem;
 import com.coe.wms.util.NumberUtil;
+import com.coe.wms.util.Pagination;
+import com.coe.wms.util.StringUtil;
 import com.mysql.jdbc.Statement;
 
 /**
@@ -78,10 +83,35 @@ public class InWarehouseOrderItemDaoImpl implements IInWarehouseOrderItemDao {
 		});
 		return NumberUtil.sumArry(batchUpdateSize);
 	}
-	
-	
 
 	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
+	}
+
+	/**
+	 * 查询入库订单
+	 * 
+	 * 参数一律使用实体类加Map . 节省QueryVO
+	 */
+	@Override
+	public List<InWarehouseOrderItem> findInWarehouseOrderItem(InWarehouseOrderItem inWarehouseOrderItem,
+			Map<String, String> moreParam, Pagination page) {
+		StringBuffer sb = new StringBuffer();
+		sb.append("select id,package_id,quantity,sku,storage_quantity where 1=1 ");
+		if (inWarehouseOrderItem != null) {
+			if (StringUtil.isNotNull(inWarehouseOrderItem.getSku())) {
+				sb.append(" and sku = '" + inWarehouseOrderItem.getSku() + "' ");
+			}
+			if (inWarehouseOrderItem.getPackageId() != null) {
+				sb.append(" and package_id = '" + inWarehouseOrderItem.getPackageId() + "' ");
+			}
+		}
+		// 分页sql
+		sb.append(page.generatePageSql());
+		String sql = sb.toString();
+		logger.info("查询入库订单明细sql:" + sql);
+		List<InWarehouseOrderItem> inWarehouseOrderItemList = jdbcTemplate.query(sql,
+				ParameterizedBeanPropertyRowMapper.newInstance(InWarehouseOrderItem.class));
+		return inWarehouseOrderItemList;
 	}
 }

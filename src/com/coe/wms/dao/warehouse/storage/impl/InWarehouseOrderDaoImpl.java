@@ -73,7 +73,7 @@ public class InWarehouseOrderDaoImpl implements IInWarehouseOrderDao {
 	public List<InWarehouseOrder> findInWarehouseOrder(InWarehouseOrder inWarehouseOrder,
 			Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select id,user_id,package_no,package_tracking_no,weight,small_package_quantity,created_time,remark,status,received_quantity where 1=1 ");
+		sb.append("select id,user_id,package_no,package_tracking_no,weight,small_package_quantity,created_time,remark,status,received_quantity from w_s_in_warehouse_order where 1=1 ");
 		if (inWarehouseOrder != null) {
 			if (StringUtil.isNotNull(inWarehouseOrder.getPackageNo())) {
 				sb.append(" and package_no = '" + inWarehouseOrder.getPackageNo() + "' ");
@@ -111,8 +111,10 @@ public class InWarehouseOrderDaoImpl implements IInWarehouseOrderDao {
 				sb.append(" and created_time <= " + Long.valueOf(moreParam.get("createdTimeEnd")));
 			}
 		}
-		// 分页sql
-		sb.append(page.generatePageSql());
+		if(page!=null){
+			//			分页sql
+			sb.append(page.generatePageSql());
+		}
 		String sql = sb.toString();
 		logger.info("查询入库订单sql:" + sql);
 		List<InWarehouseOrder> inWarehouseOrderList = jdbcTemplate.query(sql,

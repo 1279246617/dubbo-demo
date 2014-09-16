@@ -2,6 +2,7 @@ package com.coe.wms.service.api.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -21,6 +22,7 @@ import com.coe.wms.pojo.api.warehouse.OutOrder;
 import com.coe.wms.pojo.api.warehouse.OutOrderItem;
 import com.coe.wms.service.api.IStorageService;
 import com.coe.wms.util.Constant;
+import com.coe.wms.util.Pagination;
 import com.coe.wms.util.StringUtil;
 import com.coe.wms.util.XmlUtil;
 
@@ -84,11 +86,36 @@ public class StorageServiceImpl implements IStorageService {
 			return response;
 		}
 		OutOrder order = (OutOrder) XmlUtil.toObject(xml, OutOrder.class);
-		List<OutOrderItem> itemList = order.getItemList();	
-		
-		
+		List<OutOrderItem> itemList = order.getItemList();
 
-		
 		return response;
 	}
+
+	/**
+	 * 根据入库订单id, 查找入库物品明细
+	 * 
+	 * @param orderId
+	 * @param page
+	 * @return
+	 */
+	@Override
+	public Pagination getInWarehouseItemData(Long orderId, Pagination page) {
+		InWarehouseOrder inWarehouseOrder = inWarehouseOrderDao.getInWarehouseOrderById(orderId);
+		InWarehouseOrderItem param = new InWarehouseOrderItem();
+		List<InWarehouseOrderItem> inWarehouseOrderItemList = inWarehouseOrderItemDao.findInWarehouseOrderItem(param,
+				null, page);
+		return page;
+	}
+
+	/**
+	 * 查找入库订单
+	 */
+	@Override
+	public List<InWarehouseOrder> findInWarehouseOrder(InWarehouseOrder inWarehouseOrder,
+			Map<String, String> moreParam, Pagination page) {
+		List<InWarehouseOrder> inWarehouseOrderList = inWarehouseOrderDao.findInWarehouseOrder(inWarehouseOrder,
+				moreParam, page);
+		return inWarehouseOrderList;
+	}
+
 }

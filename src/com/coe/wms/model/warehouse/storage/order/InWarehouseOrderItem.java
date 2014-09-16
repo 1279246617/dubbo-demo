@@ -23,6 +23,21 @@ public class InWarehouseOrderItem implements Serializable {
 
 	private String sku;
 
+	/**
+	 * 该SKU已经入库的数量
+	 * 
+	 * 在添加入库单时,更新此字段.也显示此字段
+	 */
+	private int receivedQuantity;
+
+	public int getReceivedQuantity() {
+		return receivedQuantity;
+	}
+
+	public void setReceivedQuantity(int receivedQuantity) {
+		this.receivedQuantity = receivedQuantity;
+	}
+
 	public Long getId() {
 		return id;
 	}

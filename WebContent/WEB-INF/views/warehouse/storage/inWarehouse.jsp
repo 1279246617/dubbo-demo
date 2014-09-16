@@ -7,72 +7,154 @@
 
 <link href="${baseUrl}/static/bootstrap/bootstrap.min.css" rel="stylesheet"type="text/css" />
 <link href="${baseUrl}/static/bootstrap/common.css" rel="stylesheet" type="text/css"/>
-<link href="${baseUrl}/static/ligerui/ligerUI/skins/Aqua/css/ligerui-all.css" rel="stylesheet" type="text/css" />
 <link href="${baseUrl}/static/lhgdialog/prettify/common.css" type="text/css" rel="stylesheet" />
 <link href="${baseUrl}/static/lhgdialog/prettify/prettify.css" type="text/css" rel="stylesheet" />
 <link href="${baseUrl}/static/calendar/prettify.css" rel="stylesheet" type="text/css" />
 <link href="${baseUrl}/static/calendar/lhgcalendar.css" rel="stylesheet" type="text/css" />
+<link href="${baseUrl}/static/ligerui/ligerUI/skins/Aqua/css/ligerui-all.css" rel="stylesheet" type="text/css" />
 <title>COE</title>
 </head>
 <body>
-	<div class="pull-left" style="margin-left: 10px;width:100%;height:140px; margin-top: 10px;" >
-		<form id="form1" name="form1" method="post">
-			<div>
-				<span>运单号</span>
-          			<input type="text"  name="trackingNo"  id="trackingNo" style="width:220px;"/>
-           		<!-- 根据运单号 查找预报入库订单信息,  如果查不到信息或查到多条订单, 要求操作员输入客户帐号(登录名)-->		
-           		<span style="margin-left: 10px;">客户帐号</span>
-           		<input type="text" name="trackingNo"  id="trackingNo" style="width:160px;" readonly="readonly"/>
-           		<img class="tips" id="customerNoTips" msg="根据运单号找不到唯一的入库订单时,将要求输入客户帐号" src="${baseUrl}/static/img/help.gif">
-			</div>					
-      </form>
-      	
-	 	<form id="form2" name="form2" method="post">
-			<div>
-				<span>SKU</span>
-          		<input type="text"  name="trackingNo"  id="trackingNo" style="width:220px;"/>
-           		<span style="margin-left: 10px;">产品数量</span>
-           		<input type="text" name="trackingNo"  id="trackingNo" style="width:160px;"/>
-			</div>					
-      </form>
-          
-	</div>
+	<div class="pull-left" style="width:100%;height:140px; margin-top: 10px;" >
+		 <form action="${baseUrl}/warehouse/storage/getInWarehouseOrder.do" id="searchform" name="searchform" method="post">
+			<table class="table table-striped" style="width:850px;">
+					<tr>
+							<td>
+									跟踪单号&nbsp;&nbsp;<input type="text"  name="trackingNo"  id="trackingNo" style="width:200px;"/>
+							</td>		
+							<td>
+								客户帐号&nbsp;&nbsp;<input type="text" name="userLoginName"  id="userLoginName" style="width:160px;" readonly="readonly"/>
+		          				<img class="tips" id="customerNoTips" msg="根据运单号找不到唯一的入库订单时,将要求输入客户帐号" src="${baseUrl}/static/img/help.gif">
+		          				&nbsp;&nbsp;
+		          				 <input type="checkbox" name="unKnowCustomer" id="unKnowCustomer" readonly="readonly"/>&nbsp;标记为无主件
+		          				&nbsp;&nbsp;&nbsp;&nbsp;
+		          				 <a class="btn  btn-primary" id="enter" onclick="clickEnter()" style="cursor:pointer;">确认提交</a>
+		          				 &nbsp;&nbsp;&nbsp;&nbsp;
+		          				 <a class="btn  btn-primary" style="cursor:pointer;">摘要</a>
+							</td>
+					</tr>
+			</table>
+		</form>
 		
-	 <div id="maingrid" class="pull-left" style="width:100%;"></div> 
-	 
+		<table class="table table-striped" style="width:1150px;">
+			<tr>
+					<td>产品SKU&nbsp;&nbsp;<input type="text"  name="itemSku"  id="itemSku" style="width:130px;"/></td>		
+					<td>
+						产品数量&nbsp;&nbsp;<input type="text"  name="itemQuantity"  id="itemQuantity" style="width:90px;"/>
+						&nbsp;&nbsp; 
+						<a class="btn  btn-primary" id="enterItem" style="cursor:pointer;">确认提交</a>
+						&nbsp;&nbsp;&nbsp;&nbsp;
+		          		<a class="btn  btn-primary" style="cursor:pointer;">备注</a>
+					</td>	
+					<td>
+						<div style="float: left;">仓库&nbsp;&nbsp;</div>
+						<div  style="float: left;">
+								<select style="width:100px;" id="warehouseId">
+									<option value="1">1-香港仓</option>
+									<option value="2">2-美国仓</option>
+									<option value="3">3-英国仓</option>
+								</select>
+						</div>
+					</td>
+					<td>
+							货架&nbsp;&nbsp;<input type="text"  name="itemQuantity"  id="itemQuantity" style="width:90px;"/>
+							<input type="checkbox" name="1" checked="checked" />自动
+					</td>
+					<td>
+							货位&nbsp;&nbsp;<input type="text"  name="itemQuantity"  id="itemQuantity" style="width:90px;"/>
+							 <input type="checkbox" name="2" checked="checked" />自动
+					</td>			
+			</tr>	
+		</table>
+	</div>
+	<div id="maingrid" class="pull-left" style="width:100%;">
+				
+	</div> 
 	 <script type="text/javascript" src="${baseUrl}/static/jquery/jquery.js"></script>
 	<script type="text/javascript" src="${baseUrl}/static/jquery/jquery.showMessage.js"></script>
 	<script  type="text/javascript" src="${baseUrl}/static/ligerui/ligerUI/js/core/base.js"></script>
 	<script type="text/javascript" src="${baseUrl}/static/ligerui/ligerUI/js/ligerui.all.js"></script>
+	<script type="text/javascript" src="${baseUrl}/static/ligerui/ligerUI/js/plugins/ligeruiPatch.js"></script>
     <script type="text/javascript" src="${baseUrl}/static/ligerui/ligerUI/js/plugins/ligerTab.js"></script>
     <script  type="text/javascript" src="${baseUrl}/static/ligerui/ligerUI/js/plugins/ligerTree.js" ></script>
-	<script type="text/javascript">
-		var baseUrl = "${baseUrl}";
-	    $(function(){
+    
+   <script src="${baseUrl}/static/ligerui/ligerUI/js/plugins/ligerCheckBox.js" type="text/javascript"></script>
+    <script src="${baseUrl}/static/ligerui/ligerUI/js/plugins/ligerResizable.js" type="text/javascript"></script>
+    <script src="${baseUrl}/static/ligerui/ligerUI/js/plugins/ligerComboBox.js" type="text/javascript"></script>
+    <script type="text/javascript">
+	   var baseUrl = "${baseUrl}";
+  	  $(function(){
 	    	$(".tips").each(function(i,e){
 	                var $img = $(e);
 	                var msg = $img.attr("msg");
 	                var id =  $img.attr("id");
 	                $.showTips(id,msg);
 	        });
-	    	
-	       	initGrid();
-	    });
+	       	//输入物品信息
+	     	$("#enterItem").click(function(){
+	     			
+	     	});
+	    	initGrid();
+   		});
+  	  
+  	  //点击提交跟踪号
+  	  function clickEnter(){
+    		var trackingNo = $("#trackingNo");
+      		var trackingNoStr = trackingNo.val();
+      		if($.trim(trackingNoStr) ==""){
+      			parent.$.showDialogMessage("请输入跟踪单号.",null,null);
+      			return;
+      		}
+    		if(trackingNoStr.indexOf(" ")> -1 && $.trim(trackingNoStr) !=""){
+    			parent.$.showDialogMessage("您输入的跟踪单号中包含空白字符已被忽略.",null,null);
+    			trackingNo.val($.trim(trackingNoStr));
+    		}    	
+    		//检查跟踪号是否能找到唯一的入库订单
+   		   $.getJSON(baseUrl+'/warehouse/storage/checkFindInWarehouseOrder.do?trackingNo='+trackingNoStr,function(msg) {
+             	 if (msg.status != 1) {
+             	 		parent.$.showDialogMessage(msg.message,null,null);           
+             	 		//找不到唯一的订单,解开客户帐号
+             	 		$('#userLoginName').removeAttr("readonly");
+             	 		//若不输入客户帐号,标记为无主件
+             	 		$('#unKnowCustomer').removeAttr("readonly");
+                   }
+			});
+    		   
+    		
+    		
+    		
+    		//刷新Grid				
+    		btnSearch("#searchform",grid);
+  	  }
+    </script>	
+    
+    
+	<script type="text/javascript">
 	   	 var grid = null;
-	   	var data = { Rows: [{ "ProductID": 1, "ProductName": "Chai", "SupplierID": 1, "CategoryID": 1, "QuantityPerUnit": "10 boxes x 20 bags", "UnitPrice": 18, "UnitsInStock": 39, "UnitsOnOrder": 0, "ReorderLevel": 10, "Discontinued": false, "EAN13": "070684900001" }, { "ProductID": 2, "ProductName": "Chang", "SupplierID": 1, "CategoryID": 1, "QuantityPerUnit": "24 - 12 oz bottles", "UnitPrice": 19, "UnitsInStock": 17, "UnitsOnOrder": 40, "ReorderLevel": 25, "Discontinued": false, "EAN13": "070684900002" }, { "ProductID": 3, "ProductName": "Aniseed Syrup", "SupplierID": 1, "CategoryID": 2, "QuantityPerUnit": "12 - 550 ml bottles", "UnitPrice": 10, "UnitsInStock": 13, "UnitsOnOrder": 70, "ReorderLevel": 25, "Discontinued": false, "EAN13": "070684900003" }, { "ProductID": 4, "ProductName": "Chef Anton's Cajun Seasoning", "SupplierID": 2, "CategoryID": 2, "QuantityPerUnit": "48 - 6 oz jars", "UnitPrice": 22, "UnitsInStock": 53, "UnitsOnOrder": 0, "ReorderLevel": 0, "Discontinued": false, "EAN13": "070684900004" }, { "ProductID": 5, "ProductName": "Chef Anton's Gumbo Mix", "SupplierID": 2, "CategoryID": 2, "QuantityPerUnit": "36 boxes", "UnitPrice": 21.35, "UnitsInStock": 0, "UnitsOnOrder": 0, "ReorderLevel": 0, "Discontinued": true, "EAN13": "070684900005" }, { "ProductID": 6, "ProductName": "Grandma's Boysenberry Spread", "SupplierID": 3, "CategoryID": 2, "QuantityPerUnit": "12 - 8 oz jars", "UnitPrice": 25, "UnitsInStock": 120, "UnitsOnOrder": 0, "ReorderLevel": 25, "Discontinued": false, "EAN13": "070684900006" }, { "ProductID": 7, "ProductName": "Uncle Bob's Organic Dried Pears", "SupplierID": 3, "CategoryID": 7, "QuantityPerUnit": "12 - 1 lb pkgs.", "UnitPrice": 30, "UnitsInStock": 15, "UnitsOnOrder": 0, "ReorderLevel": 10, "Discontinued": false, "EAN13": "070684900007" }, { "ProductID": 8, "ProductName": "Northwoods Cranberry Sauce", "SupplierID": 3, "CategoryID": 2, "QuantityPerUnit": "12 - 12 oz jars", "UnitPrice": 40, "UnitsInStock": 6, "UnitsOnOrder": 0, "ReorderLevel": 0, "Discontinued": false, "EAN13": "070684900008" }, { "ProductID": 9, "ProductName": "Mishi Kobe Niku", "SupplierID": 4, "CategoryID": 6, "QuantityPerUnit": "18 - 500 g pkgs.", "UnitPrice": 97, "UnitsInStock": 29, "UnitsOnOrder": 0, "ReorderLevel": 0, "Discontinued": true, "EAN13": "070684900009" }], Total: 77 };
 	     function initGrid() {
 	    	   grid = $("#maingrid").ligerGrid({
 	                columns: [
-		                { display: '主键', name: 'ProductID', type: 'int', width:'25%'},
-		                
-		                { display: '产品名', name: 'ProductName', align: 'left',width:'25%'},
-		                
-		                { display: '单价', name: 'UnitPrice', align: 'right',type:'float',width:'24%'},
-		                
-		                { display: '仓库数量', name: 'UnitsInStock', align: 'right', type: 'float',width:'20%'}
+	                    { display: '产品SKU', name: 'sku', align: 'right',type:'float',width:'13%'},
+	  		            { display: '预报产品数量', name: 'quantity', align: 'right', type: 'float',width:'9%'},
+	  		          	{ display: '实际收货数量', name: 'quantity', align: 'right', type: 'float',width:'9%'},
+	  		          	{ display: '产品描述', name: 'productDescription', align: 'right', type: 'float',width:'10%'},
+		                { display: '仓库', name: 'warehouse', align: 'right', type: 'float',width:'9%'},
+		                { display: '货架', name: 'shelves', align: 'right', type: 'float',width:'9%'},
+		                { display: '货位', name: 'seat', align: 'right', type: 'float',width:'10%'},
+		                { display: '批次号', name: 'batchNo', type: 'int', width:'12%'},
+		                {display: '操作',isSort: false,width: '9%',render: function(row) {
+		            		var h = "";
+		            		if (!row._editing) {
+		            			h += '<a href="javascript:updateInWarehouseItem(' + row.id + ')">编辑</a> ';
+		            			h += '<a href="javascript:deleteInWarehouseItem(' + row.id + ')">删除</a>';
+		            		}
+		            		return h;
+		            	}
+		            }
 	                ],  
 	                isScroll: true,
-	                data: data,
+	                dataAction: 'server',
+	                url: baseUrl+'/warehouse/storage/getInWarehouseOrder.do',
 	                pageSize: 20, 
 	                usePager: 'true',
 	                sortName: 'ProductID',
@@ -84,7 +166,6 @@
 	                clickToEdit: true
 	            });
 	        };	
-	  
 	</script>
 </body>
 </html>
