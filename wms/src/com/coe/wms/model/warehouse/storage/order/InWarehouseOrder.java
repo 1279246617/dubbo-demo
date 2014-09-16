@@ -1,6 +1,7 @@
 package com.coe.wms.model.warehouse.storage.order;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 
@@ -64,6 +65,12 @@ public class InWarehouseOrder implements Serializable {
 	 * 创建时间(不代表收货时间)
 	 */
 	private Long createdTime;
+
+	/**
+	 * 入库订单物品明细
+	 * 
+	 */
+	private List<InWarehouseOrderItem> itemList;
 
 	public String getStatus() {
 		return status;
@@ -143,5 +150,17 @@ public class InWarehouseOrder implements Serializable {
 
 	public void setCreatedTime(Long createdTime) {
 		this.createdTime = createdTime;
+	}
+
+	public List<InWarehouseOrderItem> getItemList() {
+		return itemList;
+	}
+
+	public void setItemList(List<InWarehouseOrderItem> itemList) {
+		this.itemList = itemList;
+	}
+
+	public void setWeight(Double weight) {
+		this.weight = weight;
 	}
 }

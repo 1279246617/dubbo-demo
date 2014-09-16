@@ -1,8 +1,10 @@
 package com.coe.wms.dao.warehouse.storage;
 
 import java.util.List;
+import java.util.Map;
 
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrderItem;
+import com.coe.wms.util.Pagination;
 
 public interface IInWarehouseOrderItemDao {
 
@@ -10,5 +12,5 @@ public interface IInWarehouseOrderItemDao {
 
 	public int saveBatchInWarehouseOrderItem(List<InWarehouseOrderItem> itemList);
 	
-//	public List<InWarehouseOrderItem>
+	public List<InWarehouseOrderItem> findInWarehouseOrderItem(InWarehouseOrderItem inWarehouseOrder,Map<String,String> moreParam, Pagination page);
 }

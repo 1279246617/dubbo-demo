@@ -41,7 +41,7 @@ $.extend({
                 return lhgdialog({
                     title: '警告',
                     id: 'Alert',
-                    zIndex: _zIndex(),
+                    zIndex: "99999",
                     icon: 'alert.gif',
                     fixed: true,
                     lock: true,
