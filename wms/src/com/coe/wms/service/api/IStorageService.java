@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
+import com.coe.wms.model.user.User;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
 import com.coe.wms.pojo.api.response.Response;
 import com.coe.wms.util.Pagination;
@@ -47,6 +48,16 @@ public interface IStorageService {
 	 */
 	public List<InWarehouseOrder> findInWarehouseOrder(InWarehouseOrder inWarehouseOrder,
 			Map<String, String> moreParam, Pagination page);
+
+	/**
+	 * 找入库订单中包含的用户信息
+	 * 
+	 * @param inWarehouseOrder
+	 * @param moreParam
+	 * @param page
+	 * @return
+	 */
+	public List<User> findUserByInWarehouseOrder(List<InWarehouseOrder> inWarehouseOrderList);
 
 	/**
 	 * 获取入库订单物品

@@ -1,6 +1,8 @@
 package com.coe.wms.controller.user;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -12,12 +14,15 @@ import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.coe.wms.controller.Application;
+import com.coe.wms.model.user.User;
 import com.coe.wms.service.user.IUserService;
 import com.coe.wms.util.Config;
 import com.coe.wms.util.Constant;
+import com.coe.wms.util.GsonUtil;
 import com.coe.wms.util.SessionConstant;
 import com.coe.wms.util.StringUtil;
 
@@ -109,6 +114,28 @@ public class UserController {
 		// 登录成功 进入application index 方法, index 通过用户类型判断,进入不同首页
 		view = new ModelAndView("redirect:/index.do");
 		return view;
+	}
+
+	/**
+	 * 根据用户登录名 模糊搜索用户
+	 * 
+	 * @param request
+	 * @param response
+	 * @param keyword
+	 * @return
+	 * @throws IOException
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/searchUser")
+	public String searchUser(HttpServletRequest request, HttpServletResponse response, String keyword)
+			throws IOException {
+		List<User> userList = userService.findUserByLikeLoginName(keyword);
+		String[] strArry = new String[userList.size()];
+		for (int i = 0; i < userList.size(); i++) {
+			User user = userList.get(i);
+			strArry[i] = user.getId() + "-" + user.getLoginName() + "-" + keyword;
+		}
+		return GsonUtil.toJson(strArry);
 	}
 
 	public void setUserService(IUserService userService) {

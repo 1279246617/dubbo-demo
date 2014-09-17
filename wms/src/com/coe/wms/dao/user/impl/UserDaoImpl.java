@@ -25,6 +25,7 @@ import com.coe.wms.util.SsmNameSpace;
 import com.google.code.ssm.api.InvalidateSingleCache;
 import com.google.code.ssm.api.ParameterDataUpdateContent;
 import com.google.code.ssm.api.ParameterValueKeyProvider;
+import com.google.code.ssm.api.ReadThroughAssignCache;
 import com.google.code.ssm.api.ReadThroughSingleCache;
 import com.google.code.ssm.api.UpdateSingleCache;
 import com.mysql.jdbc.Statement;
@@ -49,7 +50,7 @@ public class UserDaoImpl implements IUserDao {
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
-				PreparedStatement ps = conn.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
+				PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 				ps.setLong(1, user.getParentId());
 				ps.setString(2, user.getLoginName());
 				ps.setString(3, user.getPassword());
@@ -72,6 +73,7 @@ public class UserDaoImpl implements IUserDao {
 	 */
 	@Override
 	@DataSource(DataSourceCode.WMS)
+	@ReadThroughSingleCache(namespace = SsmNameSpace.USER, expiration = 3600)
 	public User getUserById(@ParameterValueKeyProvider Long userId) {
 		String sql = "select id,parent_id,login_name,password,user_name,user_type,phone,email,created_time,status from u_user where id="
 				+ userId;
@@ -90,6 +92,23 @@ public class UserDaoImpl implements IUserDao {
 			return userList.get(0);
 		}
 		return null;
+	}
+
+	@Override
+	@DataSource(DataSourceCode.WMS)
+	public List<User> findUserByLikeLoginName(String loginName) {
+		String sql = "select id,parent_id,login_name,user_name from u_user where login_name like '%" + loginName + "%'";
+		List<User> userList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(User.class));
+		return userList;
+	}
+
+	@Override
+	@DataSource(DataSourceCode.WMS)
+	@ReadThroughAssignCache(assignedKey = "AllUser", namespace = SsmNameSpace.USER, expiration = 3600)
+	public List<User> findAllUser() {
+		String sql = "select id,parent_id,login_name,password,user_name,user_type,phone,email,created_time,status from u_user ";
+		List<User> userList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(User.class));
+		return userList;
 	}
 
 	/**

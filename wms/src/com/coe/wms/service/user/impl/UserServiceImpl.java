@@ -1,6 +1,8 @@
 package com.coe.wms.service.user.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -74,13 +76,50 @@ public class UserServiceImpl implements IUserService {
 		return map;
 	}
 
+	/**
+	 * 根据用户类型 获取登录首页
+	 */
 	@Override
 	public Index findIndexByUserType(String userType) {
 		Index index = userDao.findIndexByUserType(userType);
 		return index;
 	}
 
+	/**
+	 * 根据用户类型 获取登录首页
+	 */
+	@Override
+	public List<User> findUserByLikeLoginName(String loginName) {
+		List<User> userList = new ArrayList<User>();
+		if (StringUtil.isNull(loginName)) {
+			return userList;
+		}
+		loginName = loginName.trim().toLowerCase();
+		List<User> tempUserList = userDao.findAllUser();
+		for (User tempUser : tempUserList) {
+			// 相同
+			if (tempUser.getLoginName().equalsIgnoreCase(loginName)) {
+				userList.add(tempUser);
+			} else if (tempUser.getLoginName().toLowerCase().contains(loginName)) {
+				userList.add(tempUser);
+			} else if (loginName.contains(tempUser.getLoginName().toLowerCase())) {
+				userList.add(tempUser);
+			}
+		}
+		return userList;
+	}
+
+	/**
+	 * 根据id 获取用户
+	 */
+	@Override
+	public User getUserById(Long userId) {
+		User user = userDao.getUserById(userId);
+		return user;
+	}
+
 	public void setUserDao(IUserDao userDao) {
 		this.userDao = userDao;
 	}
+
 }

@@ -86,7 +86,6 @@
       }
 
       items = $.isFunction(this.source) ? this.source(this.query, $.proxy(this.process, this)) : this.source
-
       return items ? this.process(items) : this
     }
 
@@ -134,7 +133,6 @@
 
   , render: function (items) {
       var that = this
-
       items = $(items).map(function (i, item) {
         i = $(that.options.item).attr('data-value', item)
         i.find('a').html(that.highlighter(item))

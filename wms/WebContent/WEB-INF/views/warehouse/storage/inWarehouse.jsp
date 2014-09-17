@@ -12,25 +12,28 @@
 <link href="${baseUrl}/static/calendar/prettify.css" rel="stylesheet" type="text/css" />
 <link href="${baseUrl}/static/calendar/lhgcalendar.css" rel="stylesheet" type="text/css" />
 <link href="${baseUrl}/static/ligerui/ligerUI/skins/Aqua/css/ligerui-all.css" rel="stylesheet" type="text/css" />
+
 <title>COE</title>
 </head>
 <body>
 	<div class="pull-left" style="width:100%;height:140px; margin-top: 10px;" >
 		 <form action="${baseUrl}/warehouse/storage/getInWarehouseOrder.do" id="searchform" name="searchform" method="post">
-			<table class="table table-striped" style="width:850px;">
+			<table class="table table-striped" style="width:1050px;">
 					<tr>
 							<td>
-									跟踪单号&nbsp;&nbsp;<input type="text"  name="trackingNo"  id="trackingNo" style="width:200px;"/>
+									跟踪单号&nbsp;&nbsp;<input type="text"  name="trackingNo"  id="trackingNo" style="width:180px;"/>
 							</td>		
 							<td>
-								客户帐号&nbsp;&nbsp;<input type="text" name="userLoginName"  id="userLoginName" style="width:160px;" readonly="readonly"/>
+								客户帐号&nbsp;&nbsp;<input type="text" name="userLoginName" data-provide="typeahead"  id="userLoginName" style="width:120px;"  readonly="readonly" />
+								<select style="width:160px;display:none;" id="userIdSelect"></select>
+								<input name="userId" id="userId" style="display:none;">
 		          				<img class="tips" id="customerNoTips" msg="根据运单号找不到唯一的入库订单时,将要求输入客户帐号" src="${baseUrl}/static/img/help.gif">
 		          				&nbsp;&nbsp;
 		          				 <input type="checkbox" name="unKnowCustomer" id="unKnowCustomer" readonly="readonly"/>&nbsp;标记为无主件
 		          				&nbsp;&nbsp;&nbsp;&nbsp;
-		          				 <a class="btn  btn-primary" id="enter" onclick="clickEnter()" style="cursor:pointer;">确认提交</a>
+		          				 <a class="btn  btn-primary" id="enter" onclick="clickEnter()" style="cursor:pointer;">保存入库主单</a>
 		          				 &nbsp;&nbsp;&nbsp;&nbsp;
-		          				 <a class="btn  btn-primary" style="cursor:pointer;">摘要</a>
+		          				 入库主单摘要&nbsp;&nbsp;<input type="text"  name="orderRemark"  id="orderRemark" style="width:220px;"/>
 							</td>
 					</tr>
 			</table>
@@ -38,51 +41,61 @@
 		
 		<table class="table table-striped" style="width:1150px;">
 			<tr>
-					<td>产品SKU&nbsp;&nbsp;<input type="text"  name="itemSku"  id="itemSku" style="width:130px;"/></td>		
-					<td>
+					<td colspan="2">产品SKU&nbsp;&nbsp;<input type="text"  name="itemSku"  id="itemSku" style="width:130px;"/></td>		
+					<td  >
 						产品数量&nbsp;&nbsp;<input type="text"  name="itemQuantity"  id="itemQuantity" style="width:90px;"/>
 						&nbsp;&nbsp; 
-						<a class="btn  btn-primary" id="enterItem" style="cursor:pointer;">确认提交</a>
-						&nbsp;&nbsp;&nbsp;&nbsp;
-		          		<a class="btn  btn-primary" style="cursor:pointer;">备注</a>
+						<a class="btn  btn-primary" id="enterItem" style="cursor:pointer;">保存入库明细</a>
 					</td>	
-					<td>
-						<div style="float: left;">仓库&nbsp;&nbsp;</div>
-						<div  style="float: left;">
-								<select style="width:100px;" id="warehouseId">
-									<option value="1">1-香港仓</option>
-									<option value="2">2-美国仓</option>
-									<option value="3">3-英国仓</option>
-								</select>
-						</div>
-					</td>
-					<td>
-							货架&nbsp;&nbsp;<input type="text"  name="itemQuantity"  id="itemQuantity" style="width:90px;"/>
-							<input type="checkbox" name="1" checked="checked" />自动
-					</td>
-					<td>
-							货位&nbsp;&nbsp;<input type="text"  name="itemQuantity"  id="itemQuantity" style="width:90px;"/>
-							 <input type="checkbox" name="2" checked="checked" />自动
-					</td>			
 			</tr>	
+			<tr>
+				<td>
+						 仓库&nbsp;&nbsp;
+						<select style="width:100px;" id="warehouseId">
+							<option value="1">1-香港仓</option>
+							<option value="2">2-美国仓</option>
+							<option value="3">3-英国仓</option>
+						</select>
+					<td>
+						货架&nbsp;&nbsp;<input type="text"  name="itemQuantity"  id="itemQuantity" style="width:90px;"/>
+						<input type="checkbox" name="1" checked="checked" />自动
+					</td>
+					<td>
+						货位&nbsp;&nbsp;<input type="text"  name="itemQuantity"  id="itemQuantity" style="width:90px;"/>
+						 <input type="checkbox" name="2" checked="checked" />自动
+					</td>
+			</tr>
 		</table>
 	</div>
 	<div id="maingrid" class="pull-left" style="width:100%;">
 				
 	</div> 
 	 <script type="text/javascript" src="${baseUrl}/static/jquery/jquery.js"></script>
+	     
+    <script type="text/javascript" src="${baseUrl}/static/bootstrap/bootstrap-typeahead.js"></script>
+    
 	<script type="text/javascript" src="${baseUrl}/static/jquery/jquery.showMessage.js"></script>
 	<script  type="text/javascript" src="${baseUrl}/static/ligerui/ligerUI/js/core/base.js"></script>
 	<script type="text/javascript" src="${baseUrl}/static/ligerui/ligerUI/js/ligerui.all.js"></script>
 	<script type="text/javascript" src="${baseUrl}/static/ligerui/ligerUI/js/plugins/ligeruiPatch.js"></script>
     <script type="text/javascript" src="${baseUrl}/static/ligerui/ligerUI/js/plugins/ligerTab.js"></script>
     <script  type="text/javascript" src="${baseUrl}/static/ligerui/ligerUI/js/plugins/ligerTree.js" ></script>
+
     
-   <script src="${baseUrl}/static/ligerui/ligerUI/js/plugins/ligerCheckBox.js" type="text/javascript"></script>
-    <script src="${baseUrl}/static/ligerui/ligerUI/js/plugins/ligerResizable.js" type="text/javascript"></script>
-    <script src="${baseUrl}/static/ligerui/ligerUI/js/plugins/ligerComboBox.js" type="text/javascript"></script>
     <script type="text/javascript">
 	   var baseUrl = "${baseUrl}";
+		//回车事件
+	    $(window).keydown(function(event){
+	    	if((event.keyCode   ==   13)) {
+	    		clickEnter();
+	    		return;
+	    	}  
+	    	if((event.keyCode   ==   13) &&   (event.ctrlKey)) {
+	    		//提交一次收货
+	    		
+	    	}
+	    });
+		
   	  $(function(){
 	    	$(".tips").each(function(i,e){
 	                var $img = $(e);
@@ -94,13 +107,49 @@
 	     	$("#enterItem").click(function(){
 	     			
 	     	});
-	    	initGrid();
+	    	//客户帐号自动完成
+	        $("#userLoginName").typeahead({
+	            source: function (query, process) {
+	            	var userResult = "";
+	                $.ajax({
+	          	      type : "post",
+	          	      url : baseUrl+'/user/searchUser.do?keyword='+query,
+	          	      async : false,
+	          	      success : function(data){
+	          	       	 data = eval("(" + data + ")");
+	          	      	userResult = data;
+	          	      }
+	          	   });
+	                return userResult;
+	            },
+	            highlighter: function(item) {
+	            	var arr = item.split("-");
+	  	          	var userId = arr[0];
+	  	          	var loginName = arr[1];
+	  	          	var keyword = arr[2];
+	  	          	var newKeyword = ("<font color='red'>"+keyword+"</font>");
+	  	          	var newItem = userId.replace(keyword,newKeyword)+"-"+loginName.replace(keyword,newKeyword);
+	  	          	return newItem;
+	            },
+	            updater: function(item) {
+            	 var itemArr = item.split("-");
+  	              $("#userId").val(itemArr[0]);
+  	              return itemArr[1];
+	     	 }
+	      });
+	    	
+	    	
+	     initGrid();
    		});
   	  
   	  //点击提交跟踪号
+  	  //1. 跟踪号为空,要求输入跟踪号
+  	  //2.跟踪号不为空,客户帐号为空, 请求后台获取运单预报用户数据, 提示输入客户帐号,标记无主件
+  	  //3.跟踪号不为空,客户帐号为空,但已经标记无主件
   	  function clickEnter(){
     		var trackingNo = $("#trackingNo");
       		var trackingNoStr = trackingNo.val();
+      		var userLoginName = $('#userLoginName');
       		if($.trim(trackingNoStr) ==""){
       			parent.$.showDialogMessage("请输入跟踪单号.",null,null);
       			return;
@@ -109,20 +158,39 @@
     			parent.$.showDialogMessage("您输入的跟踪单号中包含空白字符已被忽略.",null,null);
     			trackingNo.val($.trim(trackingNoStr));
     		}    	
+    		
+    		if(userLoginName.val() == ''){
+    			
+    		}
     		//检查跟踪号是否能找到唯一的入库订单
    		   $.getJSON(baseUrl+'/warehouse/storage/checkFindInWarehouseOrder.do?trackingNo='+trackingNoStr,function(msg) {
-             	 if (msg.status != 1) {
-             	 		parent.$.showDialogMessage(msg.message,null,null);           
-             	 		//找不到唯一的订单,解开客户帐号
-             	 		$('#userLoginName').removeAttr("readonly");
-             	 		//若不输入客户帐号,标记为无主件
-             	 		$('#unKnowCustomer').removeAttr("readonly");
-                   }
+	   			if (msg.status == -1) {
+	   				 //找不到订单,请输入客户帐号
+	   				parent.$.showDialogMessage(msg.message,null,null);
+	   				userLoginName.removeAttr("readonly");
+	   				//标记为无主件,操作员可以手工取消标记无主件
+	   				$("#unKnowCustomer").attr("checked","checked");
+	     	 		$('#unKnowCustomer').removeAttr("readonly");
+	   			 }
+	   			if (msg.status == 2) {
+	   				 //找到多条订单,请选择客户帐号
+	   				parent.$.showDialogMessage(msg.message,null,null);
+	   				userLoginName.hide();
+	   				var userIdSelect = $("#userIdSelect");
+	   				userIdSelect.show();
+	   				userIdSelect.empty();  
+	   				$.each(msg.userList, function(i, n){
+	   					userIdSelect.append("<option value='"+this.id+"'>"+this.loginName+"</option>");  
+	   				});
+	   			 }
+	   			
+	   			if (msg.status == 1) {
+	   				$('#userLoginName').val(msg.user.loginName);
+	   				$('#userId').val(msg.user.id);
+	   				//光标移至产品SKU
+					$("#itemSku").focus();	   				
+	   			}
 			});
-    		   
-    		
-    		
-    		
     		//刷新Grid				
     		btnSearch("#searchform",grid);
   	  }
@@ -157,7 +225,7 @@
 	                url: baseUrl+'/warehouse/storage/getInWarehouseOrder.do',
 	                pageSize: 20, 
 	                usePager: 'true',
-	                sortName: 'ProductID',
+	                sortName: 'sku',
 	                width: '100%',
 	                height: '99%',
 	                checkbox: true,

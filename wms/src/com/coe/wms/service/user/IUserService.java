@@ -1,10 +1,12 @@
 package com.coe.wms.service.user;
 
+import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
 
 import com.coe.wms.model.user.Index;
+import com.coe.wms.model.user.User;
 
 public interface IUserService {
 
@@ -26,4 +28,19 @@ public interface IUserService {
 	 * @return
 	 */
 	public Index findIndexByUserType(String userType);
+
+	/**
+	 * 
+	 * @param userId
+	 * @return
+	 */
+	public User getUserById(Long userId);
+
+	/**
+	 * 登录名 like 查询用户
+	 * 
+	 * @param loginName
+	 * @return
+	 */
+	public List<User> findUserByLikeLoginName(String loginName);
 }

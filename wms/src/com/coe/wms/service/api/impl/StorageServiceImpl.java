@@ -9,12 +9,12 @@ import javax.annotation.Resource;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
+import com.coe.wms.dao.user.IUserDao;
 import com.coe.wms.dao.warehouse.storage.IInWarehouseOrderDao;
 import com.coe.wms.dao.warehouse.storage.IInWarehouseOrderItemDao;
+import com.coe.wms.model.user.User;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrderItem;
-import com.coe.wms.model.warehouse.storage.record.OutWarehouseRecord;
-import com.coe.wms.model.warehouse.storage.record.OutWarehouseRecordItem;
 import com.coe.wms.pojo.api.response.Response;
 import com.coe.wms.pojo.api.warehouse.InOrder;
 import com.coe.wms.pojo.api.warehouse.InOrderItem;
@@ -42,6 +42,9 @@ public class StorageServiceImpl implements IStorageService {
 
 	@Resource(name = "inWarehouseOrderItemDao")
 	private IInWarehouseOrderItemDao inWarehouseOrderItemDao;
+
+	@Resource(name = "userDao")
+	private IUserDao userDao;
 
 	/**
 	 * 入库预报
@@ -118,4 +121,28 @@ public class StorageServiceImpl implements IStorageService {
 		return inWarehouseOrderList;
 	}
 
+	/***
+	 * 根据入库订单 找用户id
+	 */
+	@Override
+	public List<User> findUserByInWarehouseOrder(List<InWarehouseOrder> inWarehouseOrderList) {
+		List<User> userList = new ArrayList<User>();
+		for (InWarehouseOrder inWarehouseOrder : inWarehouseOrderList) {
+			if (inWarehouseOrder.getUserId() == null) {
+				continue;
+			}
+			boolean bool = true;
+			for (User user : userList) {
+				if (user.getId() == inWarehouseOrder.getUserId()) {
+					bool = false;
+					break;
+				}
+			}
+			if (bool) {
+				User user = userDao.getUserById(inWarehouseOrder.getUserId());
+				userList.add(user);
+			}
+		}
+		return userList;
+	}
 }
