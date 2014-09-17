@@ -133,4 +133,23 @@ public class Storage {
 
 		return GsonUtil.toJson(map);
 	}
+
+	/**
+	 * 入库主单 查询
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/inWarehouseRecord", method = RequestMethod.GET)
+	public ModelAndView inWarehouseRecord(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		HttpSession session = request.getSession();
+		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
+		ModelAndView view = new ModelAndView();
+		view.addObject("userId", userId);
+		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
+		view.setViewName("warehouse/storage/inWarehouseRecord");
+		return view;
+	}
 }

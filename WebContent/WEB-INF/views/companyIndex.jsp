@@ -52,16 +52,23 @@
 	    	<div id="accordion1" class="  well main-menu"  > 
 		         <div title="订单管理" class=" nav-collapse sidebar-nav">
 		              <ul class="nav nav-tabs nav-stacked ">	
-		              		<li><a href=# tab_id="findInWarehouseOrder"><i class="icon-search"></i><span class="hidden-tablet">入库订单查询</span></a></li>
-		              		<li><a href=# tab_id="findOutWarehouseOrder"><i class="icon-search"></i><span class="hidden-tablet">出库订单查询</span></a></li>
+		              		<li><a href=# tab_id="findInWarehouseOrder"><i class="icon-zoom-in"></i><span class="hidden-tablet">入库订单查询</span></a></li>
+		              		<!-- 出库订单查询中,需要具备审核功能,反审核 -->
+		              		<li><a href=# tab_id="findOutWarehouseOrder"><i class="icon-zoom-out"></i><span class="hidden-tablet">出库订单查询</span></a></li>
+		              		<!-- 待审核出库订单,只显示未审核出库订单,方便审核的人快速操作 -->
+		              		<li><a href=# tab_id="findOutWarehouseOrder"><i class="icon-folder-open"></i><span class="hidden-tablet">待审核出库订单</span></a></li>
 		                </ul>
 		        </div>
 		        <div title="仓库管理" class=" nav-collapse sidebar-nav">
 		              <ul class="nav nav-tabs nav-stacked ">	
 		              		<li><a href="#${baseUrl}/warehouse/storage/inWarehouse.do" tab_id="doInWarehouse"><i class="icon-th"></i><span class="hidden-tablet">入库订单收货</span></a></li>
-		              		<li><a href=# tab_id="findInWarehouseRecord"><i class="icon-search"></i><span class="hidden-tablet">入库记录查询</span></a></li>
+		              		<!-- 入库主单查询 条件: 客户帐号,创建时间段,仓库,入库批次号 -->
+		              		<li><a href="#${baseUrl}/warehouse/storage/inWarehouseRecord.do" tab_id="findInWarehouseOrderRecord"><i class="icon-zoom-in"></i><span class="hidden-tablet">入库主单查询</span></a></li>
+		              		<!-- 入库明细查询 条件: SKU, 数量, 主单号,批次号,客户帐号,时间,产品描述 -->
+		              		<li><a href=# tab_id="findInWarehouseItemRecord"><i class="icon-zoom-in"></i><span class="hidden-tablet">入库明细查询</span></a></li>
+			              		
 		              		<li><a href=# tab_id="doOutWarehouse"><i class="icon-plane"></i><span class="hidden-tablet">出库订单操作</span></a></li>
-		              		<li><a href=# tab_id="findOutWarehouseRecord"><i class="icon-search"></i><span class="hidden-tablet">出库记录查询</span></a></li>
+		              		<li><a href=# tab_id="findOutWarehouseRecord"><i class="icon-zoom-out"></i><span class="hidden-tablet">出库记录查询</span></a></li>
 		                </ul>
 		        </div>
 		         <div title="用户管理" class=" nav-collapse sidebar-nav">
