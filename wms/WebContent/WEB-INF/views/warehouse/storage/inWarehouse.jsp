@@ -5,6 +5,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
+<link href="${baseUrl}/static/css/common.css" rel="stylesheet" type="text/css" />
 <link href="${baseUrl}/static/bootstrap/bootstrap.min.css" rel="stylesheet"type="text/css" />
 <link href="${baseUrl}/static/bootstrap/common.css" rel="stylesheet" type="text/css"/>
 <link href="${baseUrl}/static/lhgdialog/prettify/common.css" type="text/css" rel="stylesheet" />
@@ -13,15 +14,16 @@
 <link href="${baseUrl}/static/calendar/lhgcalendar.css" rel="stylesheet" type="text/css" />
 <link href="${baseUrl}/static/ligerui/ligerUI/skins/Aqua/css/ligerui-all.css" rel="stylesheet" type="text/css" />
 
+
 <title>COE</title>
 </head>
 <body>
-	<div class="pull-left" style="width:100%;height:140px; margin-top: 10px;" >
+	<div class="pull-left" style="width:100%;height:140px; margin-top: 1px;" >
 		 <form action="${baseUrl}/warehouse/storage/getInWarehouseOrder.do" id="searchform" name="searchform" method="post">
-			<table class="table table-striped" style="width:1050px;">
-					<tr>
+			<table class="table table-striped" style="width:1050px;margin-bottom: 5px">
+					<tr style="height:15px;">
 							<td>
-									跟踪单号&nbsp;&nbsp;<input type="text"  name="trackingNo"  id="trackingNo" style="width:180px;"/>
+									跟踪单号&nbsp;&nbsp;<input type="text"  name="trackingNo"  id="trackingNo" style="width:190px;"/>
 							</td>		
 							<td>
 								客户帐号&nbsp;&nbsp;<input type="text" name="userLoginName" data-provide="typeahead"  id="userLoginName" style="width:120px;"  readonly="readonly" />
@@ -31,44 +33,83 @@
 		          				&nbsp;&nbsp;
 		          				 <input type="checkbox" name="unKnowCustomer" id="unKnowCustomer" readonly="readonly"/>&nbsp;标记为无主件
 		          				&nbsp;&nbsp;&nbsp;&nbsp;
-		          				 <a class="btn  btn-primary" id="enter" onclick="clickEnter()" style="cursor:pointer;">保存入库主单</a>
+		          				 <a class="btn  btn-primary" id="enter" onclick="clickEnter()" style="cursor:pointer;"><i class="icon-ok"></i>保存主单</a>
 		          				 &nbsp;&nbsp;&nbsp;&nbsp;
-		          				 入库主单摘要&nbsp;&nbsp;<input type="text"  name="orderRemark"  id="orderRemark" style="width:220px;"/>
+		          				 主单摘要&nbsp;&nbsp;<input type="text"  name="orderRemark"  id="orderRemark" style="width:220px;"/>
 							</td>
 					</tr>
 			</table>
 		</form>
-		
-		<table class="table table-striped" style="width:1150px;">
+		<table class="table table-striped" style="width:1200px;margin-bottom: 0px">
 			<tr>
-					<td colspan="2">产品SKU&nbsp;&nbsp;<input type="text"  name="itemSku"  id="itemSku" style="width:130px;"/></td>		
 					<td  >
-						产品数量&nbsp;&nbsp;<input type="text"  name="itemQuantity"  id="itemQuantity" style="width:90px;"/>
-						&nbsp;&nbsp; 
-						<a class="btn  btn-primary" id="enterItem" style="cursor:pointer;">保存入库明细</a>
+						<span class="pull-left" style="width:52px;">产品SKU</span>
+						<span class="pull-left" style="width:160px;">
+							<input type="text"  name="itemSku"  id="itemSku" style="width:130px;"/>
+						</span>
+						
+						<span class="pull-left" style="width:52px;">产品数量</span>
+						<span class="pull-left" style="width:102px;">
+							<input type="text"  name="itemQuantity"  id="itemQuantity" style="width:90px;"/>
+						</span>
+						
+						<span class="pull-left" style="width:105px;">
+							<a class="btn  btn-primary" id="enterItem" style="cursor:pointer;"><i class="icon-ok"></i>保存明细</a>
+						</span>
+						
+						<span class="pull-left" style="width:52px;">明细备注</span>
+						<span class="pull-left" style="width:180px;">
+							<input type="text"  name="itemRemark"  id="itemRemark" style="width:160px;"/>
+						</span>
+						
+		          		<span class="pull-left" style="width:30px;">仓库</span>
+		          		<span class="pull-left" style="width:110px;">
+		          			<select style="width:80px;" id="warehouseId">
+								<option value="1">1-香港仓</option>
+								<option value="2">2-美国仓</option>
+								<option value="3">3-英国仓</option>
+							</select>
+		          		</span>
+						
+						<span class="pull-left" style="width:30px;">货架</span>
+						<span class="pull-left" style="width:140px;">
+							<input type="text"  name="itemQuantity"  id="itemQuantity" style="width:70px;"/>
+							<input type="checkbox" name="1" checked="checked" />自动
+						</span>
+						
+						<span class="pull-left" style="width:30px;">货位</span>
+						<span class="pull-left" style="width:130px;">
+							<input type="text"  name="itemQuantity"  id="itemQuantity" style="width:70px;"/>
+						 	<input type="checkbox" name="2" checked="checked" />自动
+						</span>
+						
 					</td>	
 			</tr>	
-			<tr>
-				<td>
-						 仓库&nbsp;&nbsp;
-						<select style="width:100px;" id="warehouseId">
-							<option value="1">1-香港仓</option>
-							<option value="2">2-美国仓</option>
-							<option value="3">3-英国仓</option>
-						</select>
-					<td>
-						货架&nbsp;&nbsp;<input type="text"  name="itemQuantity"  id="itemQuantity" style="width:90px;"/>
-						<input type="checkbox" name="1" checked="checked" />自动
-					</td>
-					<td>
-						货位&nbsp;&nbsp;<input type="text"  name="itemQuantity"  id="itemQuantity" style="width:90px;"/>
-						 <input type="checkbox" name="2" checked="checked" />自动
-					</td>
-			</tr>
 		</table>
 	</div>
+	
+	<table  class="table table-striped" style="margin-bottom: 0px">
+		<tr>
+			<td>
+				<div class="pull-left">
+					<a class="btn  btn-small btn-danger" onclick="" title="批量设置为已经收货"><i class="icon-th-large"></i>批量收货</a>
+					&nbsp;
+                   <a class="btn btn-small btn-primary" onclick=""><i class="icon-cog"></i>设置仓库</a>
+                   &nbsp;
+                   <a class="btn btn-small btn-primary" onclick=""><i class="icon-cog"></i>设置货架</a>
+                   &nbsp;
+                   <a class="btn btn-small btn-primary" onclick=""><i class="icon-cog"></i>设置货位</a>
+              </div>
+              <form action="#" id="searchform2" name="searchform2" method="post">
+                  <div class="pull-right searchContent">
+                          SKU&nbsp;<input type="text"  name="sku" title="可输入sku搜索">
+                          <a class="btn btn-primary btn-small" id="btn_search"><i class="icon-search"></i>搜索</a>
+                  </div>
+              </form>
+			</td>
+		</tr>
+	</table>	
 	<div id="maingrid" class="pull-left" style="width:100%;">
-				
 	</div> 
 	 <script type="text/javascript" src="${baseUrl}/static/jquery/jquery.js"></script>
 	     
