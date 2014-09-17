@@ -1,5 +1,7 @@
 package com.coe.wms.dao.user;
 
+import java.util.List;
+
 import com.coe.wms.model.user.Index;
 import com.coe.wms.model.user.User;
 
@@ -16,6 +18,10 @@ public interface IUserDao {
 	 * @return
 	 */
 	public User findUserByLoginName(String loginName);
+
+	public List<User> findUserByLikeLoginName(String loginName);
+	
+	public List<User> findAllUser();
 
 	public int updateUser(User user);
 
