@@ -52,7 +52,7 @@
                		</span>
                		
                		<span class="pull-left" style="width:65px;">
-               			<a class="btn btn-primary btn-small" id="btn_search"><i class="icon-search"></i>搜索</a>
+               			<a class="btn btn-primary btn-small" id="btn_search"><i class="icon-search icon-white"></i>搜索</a>
                			<input style=" visibility:hidden;">
                		</span>
                </div>
