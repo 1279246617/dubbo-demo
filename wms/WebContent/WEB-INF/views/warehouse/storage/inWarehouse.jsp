@@ -33,7 +33,7 @@
 		          				&nbsp;&nbsp;
 		          				 <input type="checkbox" name="unKnowCustomer" id="unKnowCustomer" readonly="readonly"/>&nbsp;标记为无主件
 		          				&nbsp;&nbsp;&nbsp;&nbsp;
-		          				 <a class="btn  btn-primary" id="enter" onclick="clickEnter()" style="cursor:pointer;"><i class="icon-ok"></i>保存主单</a>
+		          				 <a class="btn  btn-primary" id="enter" onclick="clickEnter()" style="cursor:pointer;"><i class="icon-ok icon-white"></i>保存主单</a>
 		          				 &nbsp;&nbsp;&nbsp;&nbsp;
 		          				 主单摘要&nbsp;&nbsp;<input type="text"  name="orderRemark"  id="orderRemark" style="width:220px;"/>
 							</td>
@@ -54,7 +54,7 @@
 						</span>
 						
 						<span class="pull-left" style="width:105px;">
-							<a class="btn  btn-primary" id="enterItem" style="cursor:pointer;"><i class="icon-ok"></i>保存明细</a>
+							<a class="btn  btn-primary" id="enterItem" style="cursor:pointer;"><i class="icon-ok icon-white"></i>保存明细</a>
 						</span>
 						
 						<span class="pull-left" style="width:52px;">明细备注</span>
@@ -92,18 +92,18 @@
 		<tr>
 			<td>
 				<div class="pull-left">
-					<a class="btn  btn-small btn-danger" onclick="" title="批量设置为已经收货"><i class="icon-th-large"></i>批量收货</a>
+					<a class="btn  btn-small btn-danger" onclick="" title="批量设置为已经收货"><i class="icon-th-large icon-white"></i>批量收货</a>
 					&nbsp;
-                   <a class="btn btn-small btn-primary" onclick=""><i class="icon-cog"></i>设置仓库</a>
+                   <a class="btn btn-small btn-primary" onclick=""><i class="icon-cog icon-white"></i>设置仓库</a>
                    &nbsp;
-                   <a class="btn btn-small btn-primary" onclick=""><i class="icon-cog"></i>设置货架</a>
+                   <a class="btn btn-small btn-primary" onclick=""><i class="icon-cog icon-white"></i>设置货架</a>
                    &nbsp;
-                   <a class="btn btn-small btn-primary" onclick=""><i class="icon-cog"></i>设置货位</a>
+                   <a class="btn btn-small btn-primary" onclick=""><i class="icon-cog icon-white"></i>设置货位</a>
               </div>
               <form action="#" id="searchform2" name="searchform2" method="post">
                   <div class="pull-right searchContent">
                           SKU&nbsp;<input type="text"  name="sku" title="可输入sku搜索">
-                          <a class="btn btn-primary btn-small" id="btn_search"><i class="icon-search"></i>搜索</a>
+                          <a class="btn btn-primary btn-small" id="btn_search"><i class="icon-search icon-white"></i>搜索</a>
                   </div>
               </form>
 			</td>
