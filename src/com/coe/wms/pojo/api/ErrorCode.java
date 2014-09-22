@@ -1,4 +1,4 @@
-package com.coe.wms.pojo.api.Constant;
+package com.coe.wms.pojo.api;
 
 public class ErrorCode {
 
