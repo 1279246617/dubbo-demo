@@ -30,8 +30,10 @@ public class Warehouse {
 		String msgId = request.getParameter("msg_id");
 		//版本 (2014-09-23)当前1.0
 		String version = request.getParameter("version");
+		
+		
 		String xml = null;
-
+		
 		return xml;
 	}
 }
