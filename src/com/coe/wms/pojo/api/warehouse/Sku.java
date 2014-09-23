@@ -1,4 +1,4 @@
-package com.coe.wms.pojo.api.warehouse;
+package com.coe.wms.pojo.api.warehouse.storage;
 
 import java.io.Serializable;
 
