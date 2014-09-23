@@ -1,4 +1,4 @@
-package com.coe.wms.pojo.api.warehouse;
+package com.coe.wms.pojo.api.warehouse.storage;
 
 /**
  * SF文档 7.13. SKU入库指令

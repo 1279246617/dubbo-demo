@@ -1,5 +1,13 @@
-package com.coe.wms.pojo.api;
+package com.coe.wms.pojo.api.warehouse.storage;
 
-public class EventBody {
-
+/**
+ * 仓配入库 eventBody
+ * 
+ * @author Administrator
+ * 
+ */
+public class EventBody extends com.coe.wms.pojo.api.warehouse.EventBody {
+	
+	
+	
 }
