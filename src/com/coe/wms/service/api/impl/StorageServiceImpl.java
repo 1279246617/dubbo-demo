@@ -15,8 +15,13 @@ import com.coe.wms.dao.warehouse.storage.IInWarehouseOrderItemDao;
 import com.coe.wms.model.user.User;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrderItem;
+import com.coe.wms.pojo.api.warehouse.Response;
+import com.coe.wms.pojo.api.warehouse.ResponseItems;
+import com.coe.wms.pojo.api.warehouse.Responses;
 import com.coe.wms.service.api.IStorageService;
 import com.coe.wms.util.Pagination;
+import com.coe.wms.util.StringUtil;
+import com.coe.wms.util.XmlUtil;
 
 /**
  * 仓配服务
@@ -88,5 +93,21 @@ public class StorageServiceImpl implements IStorageService {
 			}
 		}
 		return userList;
+	}
+
+	@Override
+	public String warehouseInterface(String logisticsInterface, String key, String dataDigest, String msgType,
+			String msgId, String version) {
+		Responses responses = new Responses();
+		// 验证内容和签名字符串
+		String md5dataDigest = StringUtil.md5_32(logisticsInterface + key);
+		if (!StringUtil.isEqual(md5dataDigest, dataDigest)) {
+			ResponseItems responseItems = new ResponseItems();
+			Response response = new Response();
+			
+			responseItems.setResponse(response);
+			responses.setResponseItems(responseItems);
+		}
+		return XmlUtil.toXml(Responses.class, responses);
 	}
 }
