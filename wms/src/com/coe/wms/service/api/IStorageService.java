@@ -21,24 +21,6 @@ public interface IStorageService {
 	static final Logger logger = Logger.getLogger(IStorageService.class);
 
 	/**
-	 * 解析顺丰仓配入库订单请求xml内容 返回 xml内容对应pojo
-	 * 
-	 * @param loginName
-	 * @param password
-	 * @return
-	 */
-	public Response inWarehouse(String xml);
-
-	/**
-	 * 解析顺丰仓配出库订单请求xml内容 返回 xml内容对应pojo
-	 * 
-	 * @param loginName
-	 * @param password
-	 * @return
-	 */
-	public Response outWarehouse(String xml);
-
-	/**
 	 * 找入库订单
 	 * 
 	 * @param inWarehouseOrder
@@ -48,7 +30,7 @@ public interface IStorageService {
 	 */
 	public List<InWarehouseOrder> findInWarehouseOrder(InWarehouseOrder inWarehouseOrder,
 			Map<String, String> moreParam, Pagination page);
-
+	 
 	/**
 	 * 找入库订单中包含的用户信息
 	 * 
@@ -58,7 +40,7 @@ public interface IStorageService {
 	 * @return
 	 */
 	public List<User> findUserByInWarehouseOrder(List<InWarehouseOrder> inWarehouseOrderList);
-
+	
 	/**
 	 * 获取入库订单物品
 	 * 
