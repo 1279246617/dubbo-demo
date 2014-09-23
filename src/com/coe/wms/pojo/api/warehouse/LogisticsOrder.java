@@ -1,4 +1,4 @@
-package com.coe.wms.pojo.api.warehouse.storage;
+package com.coe.wms.pojo.api.warehouse;
 
 /**
  * SF文档 7.13. SKU入库指令
@@ -11,6 +11,8 @@ public class LogisticsOrder {
 	private String logisticsType;
 
 	private String carrierCode;
+
+	private String mailNo;
 
 	private SkuDetail skuDetail;
 
@@ -36,5 +38,13 @@ public class LogisticsOrder {
 
 	public void setSkuDetail(SkuDetail skuDetail) {
 		this.skuDetail = skuDetail;
+	}
+
+	public String getMailNo() {
+		return mailNo;
+	}
+
+	public void setMailNo(String mailNo) {
+		this.mailNo = mailNo;
 	}
 }

@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.coe.wms.pojo.api.response.Response;
 import com.coe.wms.service.api.IStorageService;
 import com.coe.wms.util.StreamUtil;
 import com.coe.wms.util.XmlUtil;
@@ -21,6 +20,7 @@ import com.coe.wms.util.XmlUtil;
  * 仓配API
  * 
  * 创建预报入库订单,出库订单
+ * 
  * @author Administrator
  * 
  */
@@ -48,32 +48,8 @@ public class Storage {
 	public String inWarehouse(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		String requestBody = StreamUtil.streamToString(request.getInputStream());
 		logger.info("仓配入库订单 xml:" + requestBody);
-		// 创建订单服务
-		Response createOrderResponse = storageService.inWarehouse(requestBody);
-		// 转成xml
-		String xml = XmlUtil.toXml(Response.class, createOrderResponse);
+		
+		String xml = null;
 		return xml;
 	}
-
-	/**
-	 * 创建出库订单(顺丰通知COE 准备出库)
-	 * 
-	 * @param request
-	 * @param response
-	 * @return
-	 * @throws IOException
-	 */
-	@ResponseBody
-	@RequestMapping(value = "/outWarehouse", produces = "plain/text; charset=UTF-8", method = RequestMethod.POST)
-	public String outWarehouse(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		String requestBody = StreamUtil.streamToString(request.getInputStream());
-		logger.info("仓配出库订单 xml:" + requestBody);
-		// 出库订单服务
-		Response createOrderResponse = storageService.outWarehouse(requestBody);
-		String xml = XmlUtil.toXml(Response.class, createOrderResponse);
-		return xml;
-	}
-
-	
-	
 }

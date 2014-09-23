@@ -1,4 +1,4 @@
-package com.coe.wms.pojo.api.warehouse.storage;
+package com.coe.wms.pojo.api.warehouse;
 
 import java.io.Serializable;
 
@@ -9,7 +9,7 @@ public class Sku implements Serializable {
 	private String skuCode;
 
 	private String skuName;
-	
+
 	/**
 	 * 入库数量
 	 */
