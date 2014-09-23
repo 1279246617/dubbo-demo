@@ -40,7 +40,7 @@ public final class CommonUtil {
 		if (StringUtil.isNotNull(appSecretKey)) {
 			waitSignatureString += appSecretKey;
 		}
-		return StringUtil.md5(waitSignatureString);
+		return StringUtil.md5_32(waitSignatureString);
 	}
 
 	/**

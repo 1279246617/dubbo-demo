@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 
 import com.coe.wms.model.user.User;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
+import com.coe.wms.pojo.api.warehouse.LogisticsEventsRequest;
 import com.coe.wms.util.Pagination;
 
 /**
@@ -29,7 +30,7 @@ public interface IStorageService {
 	 */
 	public List<InWarehouseOrder> findInWarehouseOrder(InWarehouseOrder inWarehouseOrder,
 			Map<String, String> moreParam, Pagination page);
-	 
+
 	/**
 	 * 找入库订单中包含的用户信息
 	 * 
@@ -39,7 +40,7 @@ public interface IStorageService {
 	 * @return
 	 */
 	public List<User> findUserByInWarehouseOrder(List<InWarehouseOrder> inWarehouseOrderList);
-	
+
 	/**
 	 * 获取入库订单物品
 	 * 
@@ -48,4 +49,17 @@ public interface IStorageService {
 	 * @return
 	 */
 	public Pagination getInWarehouseItemData(Long orderId, Pagination page);
+	
+	/**
+	 * 
+	 * @param logisticsInterface 消息内容
+	 * @param key  签名(签名参数名 顺丰未指定)
+	 * @param dataDigest 消息签名
+	 * @param msgType 消息类型,根据消息类型判断业务类型
+	 * @param msgId 消息ID
+	 * @param version
+	 * @return
+	 */
+	public String warehouseInterface(String logisticsInterface, String key, String dataDigest, String msgType,
+			String msgId, String version);
 }
