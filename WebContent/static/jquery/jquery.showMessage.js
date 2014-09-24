@@ -12,31 +12,12 @@ $.extend({
 				$("body").prepend(msgDiv);
 				scrollOpt = setInterval("scrollMessage(document.getElementById('messageContent'))",30);
 			},
-            showErrorMessage:function(orderId,msg){
-                $(".error-message-"+orderId).show().ligerTip({
-                    auto:true,
-                    content:msg
-                });
-            },
             showTips:function(id,msg){
                 $("#"+id).show().ligerTip({
                     auto:true,
                     content:msg
                 });
             },
-            showCanCancelMessage:function(orderId,msg){
-                $(".isCanCancel-message-"+orderId).show().ligerTip({
-                    auto:true,
-                    content:msg
-                });
-            },
-            showInSureMessage:function(orderId,msg){
-                $(".inSure-message-"+orderId).show().ligerTip({
-                    auto:true,
-                    content:msg
-                });
-            },
-            
             showDialogMessage:function(content, callback, parent ){//弹出窗提示
                 return lhgdialog({
                     title: '警告',

@@ -29,11 +29,11 @@
 									</span>
 							</td>		
 							<td>
-								客户帐号&nbsp;&nbsp;<input type="text" name="userLoginName" data-provide="typeahead"  id="userLoginName" style="width:120px;"  readonly="readonly" />
+								客户帐号&nbsp;&nbsp;<input type="text" name="userLoginName" data-provide="typeahead"  id="userLoginName" style="width:120px;"  />
 								<select style="width:160px;display:none;" id="userIdSelect"></select>
 		          				<img class="tips" id="customerNoTips" msg="根据运单号找不到唯一的入库订单时,将要求输入客户帐号" src="${baseUrl}/static/img/help.gif">
 		          				&nbsp;&nbsp;
-		          				 <input type="checkbox" name="unKnowCustomer" id="unKnowCustomer" readonly="readonly"/>&nbsp;标记为无主件
+		          				 <input type="checkbox" name="unKnowCustomer" id="unKnowCustomer" />&nbsp;标记为无主件
 		          				&nbsp;&nbsp;&nbsp;&nbsp;
 		          				 <a class="btn  btn-primary" id="enter" onclick="clickEnter()" style="cursor:pointer;"><i class="icon-ok icon-white"></i>保存主单</a>
 		          				 &nbsp;&nbsp;&nbsp;&nbsp;
@@ -52,7 +52,7 @@
 						
 						<span class="pull-left" style="width:52px;">产品数量</span>
 						<span class="pull-left" style="width:102px;">
-							<input type="text"  name="itemQuantity"  id="itemQuantity" style="width:90px;"/>
+							<input type="text"  name="itemQuantity"  id="itemQuantity" style="width:90px;" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"/>
 						</span>
 						
 						<span class="pull-left" style="width:105px;">
@@ -201,6 +201,7 @@
       		
       		if($.trim(trackingNoStr) ==""){
       			parent.$.showDialogMessage("请输入跟踪单号.",null,null);
+      			//焦点回到跟踪单号
       			return;
       		}
     		if(trackingNoStr.indexOf(" ")> -1 && $.trim(trackingNoStr) !=""){

@@ -68,11 +68,14 @@ public class UserDaoImpl implements IUserDao {
 		return id;
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public Long findUserIdByLoginName(String loginName) {
 		String sql = "select id from u_user where login_name=?";
-		return jdbcTemplate.queryForLong(sql, loginName);
+		List<Long> idList = jdbcTemplate.queryForList(sql, Long.class,loginName);
+		if (idList.size() > 0) {
+			return idList.get(0);
+		}
+		return null;
 	}
 
 	/**

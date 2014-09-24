@@ -49,4 +49,20 @@ public class Constant {
 	public final static String FAIL = "0";
 
 	public static final String UTF_8 = "UTF-8";
+
+	/**
+	 * 逗号
+	 */
+	public static final String SYMBOL_COMMA = ",";
+
+	public static final String SYMBOL_COLON = ":";
+
+	public static final String SYMBOL_UNDERLINE = "_";
+
+	public static final String SYMBOL_SLASH = "/";
+
+	public static final String LANGUAGE_CN = "zh_CN";
+
+	public static final String LANGUAGE_EN = "en_US";
+
 }

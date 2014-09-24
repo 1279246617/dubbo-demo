@@ -26,7 +26,7 @@ public class DateUtil {
 	public static String yyyyMMdd = "yyyy/MM/dd";
 
 	public static String yyyy_MM_dd = "yyyy-MM-dd";
-
+	
 	public static String MMddYYYY = "MM/dd/yyyy";
 
 	/**

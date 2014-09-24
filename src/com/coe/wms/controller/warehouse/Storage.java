@@ -120,18 +120,18 @@ public class Storage {
 	 * @throws IOException
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/saveInWarehouseOrder")
-	public String saveInWarehouseOrder(HttpServletRequest request, String trackingNo, String userLoginName,
+	@RequestMapping(value = "/saveInWarehouseRecord")
+	public String saveInWarehouseRecord(HttpServletRequest request, String trackingNo, String userLoginName,
 			String isUnKnowCustomer, String remark) throws IOException {
 		logger.info("trackingNo:" + trackingNo + " userLoginName:" + userLoginName + " isUnKnowCustomer:"
 				+ isUnKnowCustomer + "  remark:" + remark);
 		Map<String, String> map = new HashMap<String, String>();
 		map.put(Constant.STATUS, Constant.FAIL);
 		// 校验和保存
-		Map<String, String> serviceResult = storageService.saveInWarehouseOrder(trackingNo, userLoginName,
+		Map<String, String> serviceResult = storageService.saveInWarehouseRecord(trackingNo, userLoginName,
 				isUnKnowCustomer, remark);
 		// 失败
-		if (StringUtil.isEqual(serviceResult.get(Constant.STATUS), Constant.SUCCESS)) {
+		if (!StringUtil.isEqual(serviceResult.get(Constant.STATUS), Constant.SUCCESS)) {
 			map.put(Constant.MESSAGE, serviceResult.get(Constant.MESSAGE));
 			return GsonUtil.toJson(map);
 		}

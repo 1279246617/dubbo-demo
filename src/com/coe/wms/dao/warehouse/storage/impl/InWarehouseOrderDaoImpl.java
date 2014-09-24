@@ -39,7 +39,7 @@ public class InWarehouseOrderDaoImpl implements IInWarehouseOrderDao {
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public long saveInWarehouseOrder(final InWarehouseOrder order) {
-		final String sql = "insert into w_s_in_warehouse_order (user_id,package_no,package_tracking_no,weight,small_package_quantity,created_time,remark) values (?,?,?,?,?,?,?)";
+		final String sql = "insert into w_s_in_warehouse_order (user_id,package_no,package_tracking_no,weight,small_package_quantity,created_time,remark,status) values (?,?,?,?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
@@ -47,10 +47,11 @@ public class InWarehouseOrderDaoImpl implements IInWarehouseOrderDao {
 				ps.setLong(1, order.getUserId());
 				ps.setString(2, order.getPackageNo());
 				ps.setString(3, order.getPackageTrackingNo());
-				ps.setDouble(4, order.getWeight());
+				ps.setDouble(4, order.getWeight() != null ? order.getWeight() : 0);
 				ps.setInt(5, order.getSmallPackageQuantity());
 				ps.setLong(6, order.getCreatedTime());
 				ps.setString(7, order.getRemark());
+				ps.setString(8, order.getStatus());
 				return ps;
 			}
 		}, keyHolder);
@@ -111,8 +112,8 @@ public class InWarehouseOrderDaoImpl implements IInWarehouseOrderDao {
 				sb.append(" and created_time <= " + Long.valueOf(moreParam.get("createdTimeEnd")));
 			}
 		}
-		if(page!=null){
-			//			分页sql
+		if (page != null) {
+			// 分页sql
 			sb.append(page.generatePageSql());
 		}
 		String sql = sb.toString();
