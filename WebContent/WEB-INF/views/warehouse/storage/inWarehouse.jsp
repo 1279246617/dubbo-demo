@@ -23,12 +23,14 @@
 			<table class="table table-striped" style="width:1050px;margin-bottom: 5px">
 					<tr style="height:15px;">
 							<td>
-									跟踪单号&nbsp;&nbsp;<input type="text"  name="trackingNo"  id="trackingNo" style="width:190px;"/>
+									<span class="pull-left" style="width:52px;">跟踪单号</span>
+									<span class="pull-left" style="width:191px;">
+										<input type="text"  name="trackingNo"  id="trackingNo" style="width:190px;"/>
+									</span>
 							</td>		
 							<td>
 								客户帐号&nbsp;&nbsp;<input type="text" name="userLoginName" data-provide="typeahead"  id="userLoginName" style="width:120px;"  readonly="readonly" />
 								<select style="width:160px;display:none;" id="userIdSelect"></select>
-								<input name="userId" id="userId" style="display:none;">
 		          				<img class="tips" id="customerNoTips" msg="根据运单号找不到唯一的入库订单时,将要求输入客户帐号" src="${baseUrl}/static/img/help.gif">
 		          				&nbsp;&nbsp;
 		          				 <input type="checkbox" name="unKnowCustomer" id="unKnowCustomer" readonly="readonly"/>&nbsp;标记为无主件
@@ -121,7 +123,7 @@
 	<script type="text/javascript" src="${baseUrl}/static/ligerui/ligerUI/js/plugins/ligeruiPatch.js"></script>
     <script type="text/javascript" src="${baseUrl}/static/ligerui/ligerUI/js/plugins/ligerTab.js"></script>
     <script  type="text/javascript" src="${baseUrl}/static/ligerui/ligerUI/js/plugins/ligerTree.js" ></script>
-
+	<script  type="text/javascript" src="${baseUrl}/static/js/warehouse/inwarehouse.js" ></script>
     
     <script type="text/javascript">
 	   var baseUrl = "${baseUrl}";
@@ -174,12 +176,10 @@
 	            },
 	            updater: function(item) {
             	 var itemArr = item.split("-");
-  	              $("#userId").val(itemArr[0]);
   	              return itemArr[1];
 	     	 }
 	      });
-	    	
-	    	
+		    	
 	     initGrid();
    		});
   	  
@@ -190,48 +190,33 @@
   	  function clickEnter(){
     		var trackingNo = $("#trackingNo");
       		var trackingNoStr = trackingNo.val();
+      		
       		var userLoginName = $('#userLoginName');
+      		var userLoginNameStr = userLoginName.val();
+      		
+      		var unKnowCustomer = $("#unKnowCustomer");
+      		var isUnKnowCustomer = unKnowCustomer.is(':checked'); //true | false
+      		
+      		var remark = $("#orderRemark").val();
+      		
       		if($.trim(trackingNoStr) ==""){
       			parent.$.showDialogMessage("请输入跟踪单号.",null,null);
       			return;
       		}
     		if(trackingNoStr.indexOf(" ")> -1 && $.trim(trackingNoStr) !=""){
-    			parent.$.showDialogMessage("您输入的跟踪单号中包含空白字符已被忽略.",null,null);
+    			parent.$.showShortMessage({msg:"您输入的跟踪单号中包含空白字符已被忽略.",animate:true,left:"40%"});
     			trackingNo.val($.trim(trackingNoStr));
     		}    	
-    		
-    		if(userLoginName.val() == ''){
-    			
+    		//跟踪号不为空,客户帐号为空调用clickEnterStep1();
+    		if($.trim(userLoginNameStr) == ''){
+    			clickEnterStep1(trackingNoStr,userLoginName);		    			
     		}
-    		//检查跟踪号是否能找到唯一的入库订单
-   		   $.getJSON(baseUrl+'/warehouse/storage/checkFindInWarehouseOrder.do?trackingNo='+trackingNoStr,function(msg) {
-	   			if (msg.status == -1) {
-	   				 //找不到订单,请输入客户帐号
-	   				parent.$.showDialogMessage(msg.message,null,null);
-	   				userLoginName.removeAttr("readonly");
-	   				//标记为无主件,操作员可以手工取消标记无主件
-	   				$("#unKnowCustomer").attr("checked","checked");
-	     	 		$('#unKnowCustomer').removeAttr("readonly");
-	   			 }
-	   			if (msg.status == 2) {
-	   				 //找到多条订单,请选择客户帐号
-	   				parent.$.showDialogMessage(msg.message,null,null);
-	   				userLoginName.hide();
-	   				var userIdSelect = $("#userIdSelect");
-	   				userIdSelect.show();
-	   				userIdSelect.empty();  
-	   				$.each(msg.userList, function(i, n){
-	   					userIdSelect.append("<option value='"+this.id+"'>"+this.loginName+"</option>");  
-	   				});
-	   			 }
-	   			
-	   			if (msg.status == 1) {
-	   				$('#userLoginName').val(msg.user.loginName);
-	   				$('#userId').val(msg.user.id);
-	   				//光标移至产品SKU
-					$("#itemSku").focus();	   				
-	   			}
-			});
+			
+    		//跟踪号不为空,客户帐号不为空,将提交保存
+    		if($.trim(userLoginNameStr) != ''){
+    			clickEnterStep2(trackingNoStr,userLoginNameStr,isUnKnowCustomer,remark);
+    		}
+    		
     		//刷新Grid				
     		btnSearch("#searchform",grid);
   	  }

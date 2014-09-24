@@ -21,6 +21,17 @@ public interface IStorageService {
 	static final Logger logger = Logger.getLogger(IStorageService.class);
 
 	/**
+	 * 保存入库订单 返回成功,失败,错误信息
+	 * 
+	 * @param inWarehouseOrder
+	 * @param moreParam
+	 * @param page
+	 * @return
+	 */
+	public Map<String, String> saveInWarehouseOrder(String trackingNo, String userLoginName, String isUnKnowCustomer,
+			String remark);
+
+	/**
 	 * 找入库订单
 	 * 
 	 * @param inWarehouseOrder
@@ -49,14 +60,19 @@ public interface IStorageService {
 	 * @return
 	 */
 	public Pagination getInWarehouseItemData(Long orderId, Pagination page);
-	
+
 	/**
 	 * 
-	 * @param logisticsInterface 消息内容
-	 * @param key  签名(签名参数名 顺丰未指定)
-	 * @param dataDigest 消息签名
-	 * @param msgType 消息类型,根据消息类型判断业务类型
-	 * @param msgId 消息ID
+	 * @param logisticsInterface
+	 *            消息内容
+	 * @param key
+	 *            签名(签名参数名 顺丰未指定)
+	 * @param dataDigest
+	 *            消息签名
+	 * @param msgType
+	 *            消息类型,根据消息类型判断业务类型
+	 * @param msgId
+	 *            消息ID
 	 * @param version
 	 * @return
 	 */

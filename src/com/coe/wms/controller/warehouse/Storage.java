@@ -26,6 +26,7 @@ import com.coe.wms.util.Constant;
 import com.coe.wms.util.GsonUtil;
 import com.coe.wms.util.Pagination;
 import com.coe.wms.util.SessionConstant;
+import com.coe.wms.util.StringUtil;
 
 /**
  * 仓库仓配业务 控制类
@@ -105,6 +106,37 @@ public class Storage {
 		}
 		// 只找到一个订单,对应一个客户
 		map.put("user", userList.get(0));
+		map.put(Constant.STATUS, Constant.SUCCESS);
+		return GsonUtil.toJson(map);
+	}
+
+	/**
+	 * 保存入库主单
+	 * 
+	 * @param request
+	 * @param trackingNo
+	 * @param userLoginName
+	 * @return
+	 * @throws IOException
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/saveInWarehouseOrder")
+	public String saveInWarehouseOrder(HttpServletRequest request, String trackingNo, String userLoginName,
+			String isUnKnowCustomer, String remark) throws IOException {
+		logger.info("trackingNo:" + trackingNo + " userLoginName:" + userLoginName + " isUnKnowCustomer:"
+				+ isUnKnowCustomer + "  remark:" + remark);
+		Map<String, String> map = new HashMap<String, String>();
+		map.put(Constant.STATUS, Constant.FAIL);
+		// 校验和保存
+		Map<String, String> serviceResult = storageService.saveInWarehouseOrder(trackingNo, userLoginName,
+				isUnKnowCustomer, remark);
+		// 失败
+		if (StringUtil.isEqual(serviceResult.get(Constant.STATUS), Constant.SUCCESS)) {
+			map.put(Constant.MESSAGE, serviceResult.get(Constant.MESSAGE));
+			return GsonUtil.toJson(map);
+		}
+		// 成功,返回id
+		map.put("id", serviceResult.get("id"));
 		map.put(Constant.STATUS, Constant.SUCCESS);
 		return GsonUtil.toJson(map);
 	}
