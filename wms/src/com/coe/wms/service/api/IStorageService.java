@@ -29,7 +29,7 @@ public interface IStorageService {
 	 * @return
 	 */
 	public Map<String, String> saveInWarehouseRecord(String trackingNo, String userLoginName, String isUnKnowCustomer,
-			String remark);
+			String remark,Long userIdOfOperator);
 
 	/**
 	 * 找入库订单

@@ -125,11 +125,13 @@ public class Storage {
 			String isUnKnowCustomer, String remark) throws IOException {
 		logger.info("trackingNo:" + trackingNo + " userLoginName:" + userLoginName + " isUnKnowCustomer:"
 				+ isUnKnowCustomer + "  remark:" + remark);
+		// 操作员
+		Long userIdOfOperator = (Long) request.getSession().getAttribute(SessionConstant.USER_ID);
 		Map<String, String> map = new HashMap<String, String>();
 		map.put(Constant.STATUS, Constant.FAIL);
 		// 校验和保存
 		Map<String, String> serviceResult = storageService.saveInWarehouseRecord(trackingNo, userLoginName,
-				isUnKnowCustomer, remark);
+				isUnKnowCustomer, remark, userIdOfOperator);
 		// 失败
 		if (!StringUtil.isEqual(serviceResult.get(Constant.STATUS), Constant.SUCCESS)) {
 			map.put(Constant.MESSAGE, serviceResult.get(Constant.MESSAGE));
