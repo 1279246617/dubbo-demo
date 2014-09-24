@@ -28,7 +28,7 @@ import com.mysql.jdbc.Statement;
  * 
  * @author Administrator
  */
-@Repository("inWarehouseRecordDaoImpl")
+@Repository("inWarehouseRecordDao")
 public class InWarehouseRecordDaoImpl implements IInWarehouseRecordDao {
 
 	Logger logger = Logger.getLogger(InWarehouseRecordDaoImpl.class);
@@ -39,12 +39,12 @@ public class InWarehouseRecordDaoImpl implements IInWarehouseRecordDao {
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public long saveInWarehouseRecord(final InWarehouseRecord record) {
-		final String sql = "insert into w_s_in_warehouse_record (ware_house_id,,user_id,batch_no,package_no,package_tracking_no,is_un_know_customer,created_time,remark) values (?,?,?,?,?,?,?,?)";
+		final String sql = "insert into w_s_in_warehouse_record (ware_house_id,user_id,batch_no,package_no,package_tracking_no,is_un_know_customer,created_time,remark) values (?,?,?,?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
 				PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-				ps.setLong(1, record.getWareHouseId());
+				ps.setLong(1, record.getWareHouseId() != null ? record.getWareHouseId() : 0);
 				ps.setLong(2, record.getUserId());
 				ps.setString(3, record.getBatchNo());
 				ps.setString(4, record.getPackageNo());
