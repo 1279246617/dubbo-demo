@@ -13,14 +13,16 @@ import org.springframework.stereotype.Service;
 import com.coe.wms.dao.user.IUserDao;
 import com.coe.wms.dao.warehouse.storage.IInWarehouseOrderDao;
 import com.coe.wms.dao.warehouse.storage.IInWarehouseOrderItemDao;
+import com.coe.wms.dao.warehouse.storage.IInWarehouseRecordDao;
 import com.coe.wms.model.user.User;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrderItem;
-import com.coe.wms.model.warehouse.storage.order.InWarehouseOrderStatus.InWarehouseOrderStatusCode;
+import com.coe.wms.model.warehouse.storage.record.InWarehouseRecord;
 import com.coe.wms.pojo.api.warehouse.Response;
 import com.coe.wms.pojo.api.warehouse.ResponseItems;
 import com.coe.wms.pojo.api.warehouse.Responses;
 import com.coe.wms.service.api.IStorageService;
+import com.coe.wms.util.CommonUtil;
 import com.coe.wms.util.Constant;
 import com.coe.wms.util.Pagination;
 import com.coe.wms.util.StringUtil;
@@ -42,6 +44,9 @@ public class StorageServiceImpl implements IStorageService {
 
 	@Resource(name = "inWarehouseOrderItemDao")
 	private IInWarehouseOrderItemDao inWarehouseOrderItemDao;
+
+	@Resource(name = "inWarehouseRecordDao")
+	private IInWarehouseRecordDao inWarehouseRecordDao;
 
 	@Resource(name = "userDao")
 	private IUserDao userDao;
@@ -115,7 +120,7 @@ public class StorageServiceImpl implements IStorageService {
 	}
 
 	@Override
-	public Map<String, String> saveInWarehouseOrder(String trackingNo, String userLoginName, String isUnKnowCustomer,
+	public Map<String, String> saveInWarehouseRecord(String trackingNo, String userLoginName, String isUnKnowCustomer,
 			String remark) {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put(Constant.STATUS, Constant.FAIL);
@@ -123,12 +128,10 @@ public class StorageServiceImpl implements IStorageService {
 			map.put(Constant.MESSAGE, "请输入跟踪单号.");
 			return map;
 		}
-		InWarehouseOrder inWarehouseOrder = new InWarehouseOrder();
-		inWarehouseOrder.setCreatedTime(System.currentTimeMillis());
-		inWarehouseOrder.setPackageTrackingNo(trackingNo);
-		inWarehouseOrder.setRemark(remark);
-		// 全未入库
-		inWarehouseOrder.setStatus(InWarehouseOrderStatusCode.NONE);
+		InWarehouseRecord inWarehouseRecord = new InWarehouseRecord();
+		inWarehouseRecord.setCreatedTime(System.currentTimeMillis());
+		inWarehouseRecord.setPackageTrackingNo(trackingNo);
+		inWarehouseRecord.setRemark(remark);
 		// 可不输入登录名, 若输入则验证用户名必须存在
 		if (StringUtil.isNotNull(userLoginName)) {
 			Long userId = userDao.findUserIdByLoginName(userLoginName);
@@ -136,10 +139,14 @@ public class StorageServiceImpl implements IStorageService {
 				map.put(Constant.MESSAGE, "请输入正确的客户帐号.");
 				return map;
 			}
-			inWarehouseOrder.setUserId(userId);
+			inWarehouseRecord.setUserId(userId);
 		}
+		// 创建批次号
+		String batchNo = InWarehouseRecord.generateBatchNo(null, null, Constant.SYMBOL_UNDERLINE, trackingNo, null,null, isUnKnowCustomer);
+		inWarehouseRecord.setBatchNo(batchNo);
+		
 		// 返回id
-		long id = inWarehouseOrderDao.saveInWarehouseOrder(inWarehouseOrder);
+		long id = inWarehouseRecordDao.saveInWarehouseRecord(inWarehouseRecord);
 		map.put("id", "" + id);
 		map.put(Constant.STATUS, Constant.SUCCESS);
 		return map;

@@ -1,6 +1,10 @@
 package com.coe.wms.model.warehouse.storage.record;
 
 import java.io.Serializable;
+import java.util.Date;
+
+import com.coe.wms.util.DateUtil;
+import com.coe.wms.util.StringUtil;
 
 /**
  * 入库单 (主单)
@@ -40,6 +44,20 @@ public class InWarehouseRecord implements Serializable {
 	 * 批次号
 	 */
 	private String batchNo;
+
+	/**
+	 * 大包到货时,贴的运单号
+	 * 
+	 * 要求客户预报的时候 大包头程 运单号 对应一个大包
+	 */
+	private String packageTrackingNo;
+
+	/**
+	 * 是否是无主件(实际业务逻辑中,无预报则是无主件)
+	 * 
+	 * Y | N
+	 */
+	private String isUnKnowCustomer;
 
 	/**
 	 * 客户下的大包号
@@ -104,6 +122,22 @@ public class InWarehouseRecord implements Serializable {
 		return remark;
 	}
 
+	public String getPackageTrackingNo() {
+		return packageTrackingNo;
+	}
+
+	public void setPackageTrackingNo(String packageTrackingNo) {
+		this.packageTrackingNo = packageTrackingNo;
+	}
+
+	public String getIsUnKnowCustomer() {
+		return isUnKnowCustomer;
+	}
+
+	public void setIsUnKnowCustomer(String isUnKnowCustomer) {
+		this.isUnKnowCustomer = isUnKnowCustomer;
+	}
+
 	public void setRemark(String remark) {
 		this.remark = remark;
 	}
@@ -114,5 +148,22 @@ public class InWarehouseRecord implements Serializable {
 
 	public void setPackageNo(String packageNo) {
 		this.packageNo = packageNo;
+	}
+
+	/**
+	 * 创建批次号
+	 */
+	public static String generateBatchNo(String prefix, String suffix, String delimiter, String trackingNo,
+			Long userIdOfCustomer, Long userIdOfOperater, String isUnKnowCustomer) {
+		StringBuffer sb = new StringBuffer();
+		if (StringUtil.isNotNull(prefix)) {
+			sb.append(prefix + delimiter);
+		}
+		String dateNow = DateUtil.dateConvertString(new Date(), "yyyyMMdd");
+		sb.append(dateNow);
+		if (StringUtil.isNotNull(suffix)) {
+			sb.append(delimiter + suffix);
+		}
+		return sb.toString();
 	}
 }

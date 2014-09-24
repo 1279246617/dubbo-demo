@@ -28,7 +28,7 @@ public interface IStorageService {
 	 * @param page
 	 * @return
 	 */
-	public Map<String, String> saveInWarehouseOrder(String trackingNo, String userLoginName, String isUnKnowCustomer,
+	public Map<String, String> saveInWarehouseRecord(String trackingNo, String userLoginName, String isUnKnowCustomer,
 			String remark);
 
 	/**

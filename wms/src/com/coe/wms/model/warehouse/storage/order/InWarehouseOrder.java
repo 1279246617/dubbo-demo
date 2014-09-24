@@ -72,22 +72,6 @@ public class InWarehouseOrder implements Serializable {
 	 */
 	private List<InWarehouseOrderItem> itemList;
 
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
-	}
-
-	public Integer getReceivedQuantity() {
-		return receivedQuantity;
-	}
-
-	public void setReceivedQuantity(Integer receivedQuantity) {
-		this.receivedQuantity = receivedQuantity;
-	}
-
 	public Long getId() {
 		return id;
 	}
@@ -132,7 +116,7 @@ public class InWarehouseOrder implements Serializable {
 		return weight;
 	}
 
-	public void setWeight(double weight) {
+	public void setWeight(Double weight) {
 		this.weight = weight;
 	}
 
@@ -142,6 +126,22 @@ public class InWarehouseOrder implements Serializable {
 
 	public void setRemark(String remark) {
 		this.remark = remark;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public Integer getReceivedQuantity() {
+		return receivedQuantity;
+	}
+
+	public void setReceivedQuantity(Integer receivedQuantity) {
+		this.receivedQuantity = receivedQuantity;
 	}
 
 	public Long getCreatedTime() {
@@ -158,9 +158,5 @@ public class InWarehouseOrder implements Serializable {
 
 	public void setItemList(List<InWarehouseOrderItem> itemList) {
 		this.itemList = itemList;
-	}
-
-	public void setWeight(Double weight) {
-		this.weight = weight;
 	}
 }

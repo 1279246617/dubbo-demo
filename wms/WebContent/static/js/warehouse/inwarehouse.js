@@ -35,9 +35,13 @@ function clickEnterStep1(trackingNoStr,userLoginName) {
 
 //第二次点击保存主单(已输入客户单号)
 function clickEnterStep2(trackingNoStr,userLoginNameStr,isUnKnowCustomer,remark) {
-	$.getJSON(baseUrl+ '/warehouse/storage/saveInWarehouseOrder.do?trackingNo='
+	$.getJSON(baseUrl+ '/warehouse/storage/saveInWarehouseRecord.do?trackingNo='
 			+ trackingNoStr+'&userLoginName='+userLoginNameStr+'&isUnKnowCustomer='+isUnKnowCustomer+"&remark="+remark, function(msg) {
-		
+		if(msg.status == -1){
+			parent.$.showDialogMessage(msg.message, null, null);
+			return;
+		}
+		alert(msg.id);
 		
 	});
 }
