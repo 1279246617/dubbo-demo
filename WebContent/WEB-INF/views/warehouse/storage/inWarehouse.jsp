@@ -30,7 +30,8 @@
 							</td>		
 							<td>
 								客户帐号&nbsp;&nbsp;<input type="text" name="userLoginName" data-provide="typeahead"  id="userLoginName" style="width:120px;"  />
-								<select style="width:160px;display:none;" id="userIdSelect"></select>
+								<select style="width:160px;display:none;" id="loginNameSelect" onchange="loginNameSelectChange()">
+								</select>
 		          				<img class="tips" id="customerNoTips" msg="根据运单号找不到唯一的入库订单时,将要求输入客户帐号" src="${baseUrl}/static/img/help.gif">
 		          				&nbsp;&nbsp;
 		          				 <input type="checkbox" name="unKnowCustomer" id="unKnowCustomer" />&nbsp;标记为无主件

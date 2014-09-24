@@ -16,11 +16,12 @@ function clickEnterStep1(trackingNoStr,userLoginName) {
 			// 找到多条订单,请选择客户帐号
 			parent.$.showDialogMessage(msg.message, null, null);
 			userLoginName.hide();
-			var userIdSelect = $("#userIdSelect");
-			userIdSelect.show();
-			userIdSelect.empty();
+			var loginNameSelect = $("#loginNameSelect");
+			loginNameSelect.show();
+			loginNameSelect.empty();
+			loginNameSelect.append("<option></option>");
 			$.each(msg.userList, function(i, n) {
-				userIdSelect.append("<option value='" + this.loginName + "'>"
+				loginNameSelect.append("<option value='" + this.loginName + "'>"
 						+ this.loginName + "</option>");
 			});
 		}
@@ -41,7 +42,13 @@ function clickEnterStep2(trackingNoStr,userLoginNameStr,isUnKnowCustomer,remark)
 			parent.$.showDialogMessage(msg.message, null, null);
 			return;
 		}
-		alert(msg.id);
+		
+		
 		
 	});
+}
+//用户名下拉组 赋值到 input
+function loginNameSelectChange(){
+	var loginNameSelect = 	$("#loginNameSelect").val();
+	$("#userLoginName").val(loginNameSelect);
 }
