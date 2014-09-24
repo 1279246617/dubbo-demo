@@ -39,19 +39,20 @@ public class InWarehouseRecordDaoImpl implements IInWarehouseRecordDao {
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public long saveInWarehouseRecord(final InWarehouseRecord record) {
-		final String sql = "insert into w_s_in_warehouse_record (ware_house_id,user_id,batch_no,package_no,package_tracking_no,is_un_know_customer,created_time,remark) values (?,?,?,?,?,?,?,?)";
+		final String sql = "insert into w_s_in_warehouse_record (ware_house_id,user_id_of_customer,user_id_of_operator,batch_no,package_no,package_tracking_no,is_un_know_customer,created_time,remark) values (?,?,?,?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
 				PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 				ps.setLong(1, record.getWareHouseId() != null ? record.getWareHouseId() : 0);
-				ps.setLong(2, record.getUserId());
-				ps.setString(3, record.getBatchNo());
-				ps.setString(4, record.getPackageNo());
-				ps.setString(5, record.getPackageTrackingNo());
-				ps.setString(6, record.getIsUnKnowCustomer());
-				ps.setLong(7, record.getCreatedTime());
-				ps.setString(8, record.getRemark());
+				ps.setLong(2, record.getUserIdOfCustomer());
+				ps.setLong(3, record.getUserIdOfOperator());
+				ps.setString(4, record.getBatchNo());
+				ps.setString(5, record.getPackageNo());
+				ps.setString(6, record.getPackageTrackingNo());
+				ps.setString(7, record.getIsUnKnowCustomer());
+				ps.setLong(8, record.getCreatedTime());
+				ps.setString(9, record.getRemark());
 				return ps;
 			}
 		}, keyHolder);
@@ -98,8 +99,11 @@ public class InWarehouseRecordDaoImpl implements IInWarehouseRecordDao {
 			if (InWarehouseRecord.getWareHouseId() != null) {
 				sb.append(" and ware_house_id = " + InWarehouseRecord.getWareHouseId());
 			}
-			if (InWarehouseRecord.getUserId() != null) {
-				sb.append(" and user_id = " + InWarehouseRecord.getUserId());
+			if (InWarehouseRecord.getUserIdOfCustomer() != null) {
+				sb.append(" and user_id_of_customer = " + InWarehouseRecord.getUserIdOfCustomer());
+			}
+			if (InWarehouseRecord.getUserIdOfOperator() != null) {
+				sb.append(" and user_id_of_operator = " + InWarehouseRecord.getUserIdOfOperator());
 			}
 		}
 		if (moreParam != null) {

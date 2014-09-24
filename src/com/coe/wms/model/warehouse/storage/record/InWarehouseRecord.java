@@ -38,7 +38,12 @@ public class InWarehouseRecord implements Serializable {
 	/**
 	 * 操作员Id
 	 */
-	private Long userId;
+	private Long userIdOfOperator;
+
+	/**
+	 * 客户的用户Id
+	 */
+	private Long userIdOfCustomer;
 
 	/**
 	 * 批次号
@@ -93,13 +98,21 @@ public class InWarehouseRecord implements Serializable {
 	public void setWareHouseId(Long wareHouseId) {
 		this.wareHouseId = wareHouseId;
 	}
-
-	public Long getUserId() {
-		return userId;
+	
+	public Long getUserIdOfOperator() {
+		return userIdOfOperator;
 	}
 
-	public void setUserId(Long userId) {
-		this.userId = userId;
+	public void setUserIdOfOperator(Long userIdOfOperator) {
+		this.userIdOfOperator = userIdOfOperator;
+	}
+
+	public Long getUserIdOfCustomer() {
+		return userIdOfCustomer;
+	}
+
+	public void setUserIdOfCustomer(Long userIdOfCustomer) {
+		this.userIdOfCustomer = userIdOfCustomer;
 	}
 
 	public String getBatchNo() {

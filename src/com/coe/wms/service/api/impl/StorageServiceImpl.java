@@ -121,7 +121,7 @@ public class StorageServiceImpl implements IStorageService {
 
 	@Override
 	public Map<String, String> saveInWarehouseRecord(String trackingNo, String userLoginName, String isUnKnowCustomer,
-			String remark) {
+			String remark, Long userIdOfOperator) {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put(Constant.STATUS, Constant.FAIL);
 		if (StringUtil.isNull(trackingNo)) {
@@ -139,12 +139,14 @@ public class StorageServiceImpl implements IStorageService {
 				map.put(Constant.MESSAGE, "请输入正确的客户帐号.");
 				return map;
 			}
-			inWarehouseRecord.setUserId(userId);
+			inWarehouseRecord.setUserIdOfCustomer(userId);
 		}
+		inWarehouseRecord.setUserIdOfOperator(userIdOfOperator);
 		// 创建批次号
-		String batchNo = InWarehouseRecord.generateBatchNo(null, null, Constant.SYMBOL_UNDERLINE, trackingNo, null,null, isUnKnowCustomer);
+		String batchNo = InWarehouseRecord.generateBatchNo(null, null, Constant.SYMBOL_UNDERLINE, trackingNo, null,
+				null, isUnKnowCustomer);
 		inWarehouseRecord.setBatchNo(batchNo);
-		
+
 		// 返回id
 		long id = inWarehouseRecordDao.saveInWarehouseRecord(inWarehouseRecord);
 		map.put("id", "" + id);
