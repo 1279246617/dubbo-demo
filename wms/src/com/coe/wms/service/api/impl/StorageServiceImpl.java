@@ -1,6 +1,7 @@
 package com.coe.wms.service.api.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,10 +16,12 @@ import com.coe.wms.dao.warehouse.storage.IInWarehouseOrderItemDao;
 import com.coe.wms.model.user.User;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrderItem;
+import com.coe.wms.model.warehouse.storage.order.InWarehouseOrderStatus.InWarehouseOrderStatusCode;
 import com.coe.wms.pojo.api.warehouse.Response;
 import com.coe.wms.pojo.api.warehouse.ResponseItems;
 import com.coe.wms.pojo.api.warehouse.Responses;
 import com.coe.wms.service.api.IStorageService;
+import com.coe.wms.util.Constant;
 import com.coe.wms.util.Pagination;
 import com.coe.wms.util.StringUtil;
 import com.coe.wms.util.XmlUtil;
@@ -104,10 +107,41 @@ public class StorageServiceImpl implements IStorageService {
 		if (!StringUtil.isEqual(md5dataDigest, dataDigest)) {
 			ResponseItems responseItems = new ResponseItems();
 			Response response = new Response();
-			
+
 			responseItems.setResponse(response);
 			responses.setResponseItems(responseItems);
 		}
 		return XmlUtil.toXml(Responses.class, responses);
+	}
+
+	@Override
+	public Map<String, String> saveInWarehouseOrder(String trackingNo, String userLoginName, String isUnKnowCustomer,
+			String remark) {
+		Map<String, String> map = new HashMap<String, String>();
+		map.put(Constant.STATUS, Constant.FAIL);
+		if (StringUtil.isNull(trackingNo)) {
+			map.put(Constant.MESSAGE, "请输入跟踪单号.");
+			return map;
+		}
+		InWarehouseOrder inWarehouseOrder = new InWarehouseOrder();
+		inWarehouseOrder.setCreatedTime(System.currentTimeMillis());
+		inWarehouseOrder.setPackageTrackingNo(trackingNo);
+		inWarehouseOrder.setRemark(remark);
+		// 全未入库
+		inWarehouseOrder.setStatus(InWarehouseOrderStatusCode.NONE);
+		// 可不输入登录名, 若输入则验证用户名必须存在
+		if (StringUtil.isNotNull(userLoginName)) {
+			Long userId = userDao.findUserIdByLoginName(userLoginName);
+			if (userId == null || userId == 0) {
+				map.put(Constant.MESSAGE, "请输入正确的客户帐号.");
+				return map;
+			}
+			inWarehouseOrder.setUserId(userId);
+		}
+		// 返回id
+		long id = inWarehouseOrderDao.saveInWarehouseOrder(inWarehouseOrder);
+		map.put("id", "" + id);
+		map.put(Constant.STATUS, Constant.SUCCESS);
+		return map;
 	}
 }

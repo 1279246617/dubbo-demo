@@ -19,8 +19,16 @@ public interface IUserDao {
 	 */
 	public User findUserByLoginName(String loginName);
 
+	/**
+	 * 根据登录名找id
+	 * 
+	 * @param loginName
+	 * @return
+	 */
+	public Long findUserIdByLoginName(String loginName);
+
 	public List<User> findUserByLikeLoginName(String loginName);
-	
+
 	public List<User> findAllUser();
 
 	public int updateUser(User user);

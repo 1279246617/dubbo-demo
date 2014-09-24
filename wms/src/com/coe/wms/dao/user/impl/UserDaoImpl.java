@@ -68,6 +68,13 @@ public class UserDaoImpl implements IUserDao {
 		return id;
 	}
 
+	@SuppressWarnings("deprecation")
+	@Override
+	public Long findUserIdByLoginName(String loginName) {
+		String sql = "select id from u_user where login_name=?";
+		return jdbcTemplate.queryForLong(sql, loginName);
+	}
+
 	/**
 	 * 根据用户id查询用户. 如果查询不到结果会抛异常
 	 */
@@ -157,5 +164,4 @@ public class UserDaoImpl implements IUserDao {
 	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
 	}
-
 }
