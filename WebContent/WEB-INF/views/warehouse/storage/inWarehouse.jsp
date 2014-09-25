@@ -25,7 +25,7 @@
 							<td>
 									<span class="pull-left" style="width:52px;">跟踪单号</span>
 									<span class="pull-left" style="width:191px;">
-										<input type="text"  name="trackingNo"  id="trackingNo" style="width:190px;"/>
+										<input type="text"  name="trackingNo"  id="trackingNo" onfocus="trackingNoFocus()"  style="width:190px;"/>
 									</span>
 							</td>		
 							<td>
@@ -128,6 +128,8 @@
     
     <script type="text/javascript">
 	   var baseUrl = "${baseUrl}";
+	   //进入页面,焦点跟踪单号
+	   $("#trackingNo").focus();
 		//回车事件
 	    $(window).keydown(function(event){
 	    	if((event.keyCode   ==   13)) {
@@ -211,9 +213,10 @@
     		}    	
     		//跟踪号不为空,客户帐号为空调用clickEnterStep1();
     		if($.trim(userLoginNameStr) == ''){
-    			clickEnterStep1(trackingNoStr,userLoginName);		    			
+    			clickEnterStep1(trackingNoStr,userLoginName,remark);		    			
     		}
-			
+    		
+			// 若根据跟踪号 顺利找到唯一的客户帐号 自动调用clickEnterStep2
     		//跟踪号不为空,客户帐号不为空,将提交保存
     		if($.trim(userLoginNameStr) != ''){
     			clickEnterStep2(trackingNoStr,userLoginNameStr,isUnKnowCustomer,remark);
