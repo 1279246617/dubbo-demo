@@ -129,10 +129,7 @@ public class StorageServiceImpl implements IStorageService {
 			return map;
 		}
 		InWarehouseRecord inWarehouseRecord = new InWarehouseRecord();
-		inWarehouseRecord.setCreatedTime(System.currentTimeMillis());
-		inWarehouseRecord.setPackageTrackingNo(trackingNo);
-		inWarehouseRecord.setRemark(remark);
-		// 可不输入登录名, 若输入则验证用户名必须存在
+		// 必须输入登录名, 验证用户名必须存在
 		if (StringUtil.isNotNull(userLoginName)) {
 			Long userId = userDao.findUserIdByLoginName(userLoginName);
 			if (userId == null || userId == 0) {
@@ -140,13 +137,33 @@ public class StorageServiceImpl implements IStorageService {
 				return map;
 			}
 			inWarehouseRecord.setUserIdOfCustomer(userId);
+		} else {
+			map.put(Constant.MESSAGE, "请输入客户帐号.");
+			return map;
 		}
+
+		// 检查该跟踪单号,入库主单是否已经存在
+		InWarehouseRecord param = new InWarehouseRecord();
+		param.setPackageTrackingNo(trackingNo);
+		List<InWarehouseRecord> inWarehouseRecordList = inWarehouseRecordDao.findInWarehouseRecord(param, null, null);
+		if (inWarehouseRecordList.size() > 0) {
+			map.put(Constant.MESSAGE, "跟踪单号已存在入库主单.");
+			return map;
+		}
+
+		if (StringUtil.isEqual(isUnKnowCustomer, Constant.TRUE)) {
+			inWarehouseRecord.setIsUnKnowCustomer(Constant.Y);
+		} else {
+			inWarehouseRecord.setIsUnKnowCustomer(Constant.N);
+		}
+		inWarehouseRecord.setCreatedTime(System.currentTimeMillis());
+		inWarehouseRecord.setPackageTrackingNo(trackingNo);
+		inWarehouseRecord.setRemark(remark);
 		inWarehouseRecord.setUserIdOfOperator(userIdOfOperator);
 		// 创建批次号
 		String batchNo = InWarehouseRecord.generateBatchNo(null, null, Constant.SYMBOL_UNDERLINE, trackingNo, null,
 				null, isUnKnowCustomer);
 		inWarehouseRecord.setBatchNo(batchNo);
-
 		// 返回id
 		long id = inWarehouseRecordDao.saveInWarehouseRecord(inWarehouseRecord);
 		map.put("id", "" + id);

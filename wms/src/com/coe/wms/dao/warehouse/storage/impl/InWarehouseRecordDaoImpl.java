@@ -39,7 +39,7 @@ public class InWarehouseRecordDaoImpl implements IInWarehouseRecordDao {
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public long saveInWarehouseRecord(final InWarehouseRecord record) {
-		final String sql = "insert into w_s_in_warehouse_record (ware_house_id,user_id_of_customer,user_id_of_operator,batch_no,package_no,package_tracking_no,is_un_know_customer,created_time,remark) values (?,?,?,?,?,?,?,?)";
+		final String sql = "insert into w_s_in_warehouse_record (ware_house_id,user_id_of_customer,user_id_of_operator,batch_no,package_no,package_tracking_no,is_un_know_customer,created_time,remark) values (?,?,?,?,?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
@@ -73,7 +73,7 @@ public class InWarehouseRecordDaoImpl implements IInWarehouseRecordDao {
 	public List<InWarehouseRecord> findInWarehouseRecord(InWarehouseRecord InWarehouseRecord,
 			Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select id,ware_house_id,user_id,batch_no,package_no,package_tracking_no,is_un_know_customer,created_time,remark from w_s_in_warehouse_record where 1=1 ");
+		sb.append("select id,ware_house_id,user_id_of_customer,user_id_of_operator,batch_no,package_no,package_tracking_no,is_un_know_customer,created_time,remark from w_s_in_warehouse_record where 1=1 ");
 		if (InWarehouseRecord != null) {
 			if (StringUtil.isNotNull(InWarehouseRecord.getPackageNo())) {
 				sb.append(" and package_no = '" + InWarehouseRecord.getPackageNo() + "' ");
