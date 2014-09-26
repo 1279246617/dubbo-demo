@@ -204,4 +204,26 @@ public class StorageServiceImpl implements IStorageService {
 		pagination.rows = list;
 		return pagination;
 	}
+
+	@Override
+	public Pagination getInWarehouseOrderData(InWarehouseOrder inWarehouseOrder, Map<String, String> moreParam,
+			Pagination pagination) {
+		List<InWarehouseOrder> inWarehouseOrderList = inWarehouseOrderDao.findInWarehouseOrder(inWarehouseOrder,
+				moreParam, pagination);
+		List list = new ArrayList();
+		for (InWarehouseOrder order : inWarehouseOrderList) {
+			Map map = new HashMap();
+			map.put("id", order.getId());
+			if (order.getCreatedTime() != null) {
+				map.put("createdTime",
+						DateUtil.dateConvertString(new Date(order.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss));
+			}
+			map.put("userNameOfOperator", order.getUserIdOfOperator());
+			map.put("warehouseId", order.getWarehouseId());
+			list.add(map);
+		}
+		pagination.total = inWarehouseOrderDao.countInWarehouseOrder(inWarehouseOrder, moreParam);
+		pagination.rows = list;
+		return pagination;
+	}
 }

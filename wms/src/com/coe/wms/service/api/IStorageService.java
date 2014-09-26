@@ -52,6 +52,16 @@ public interface IStorageService {
 			Map<String, String> moreParam, Pagination page);
 
 	/**
+	 * 获取入库订单
+	 * 
+	 * @param inWarehouseRecordId
+	 * @param page
+	 * @return
+	 */
+	public Pagination getInWarehouseOrderData(InWarehouseOrder inWarehouseOrder, Map<String, String> moreParam,
+			Pagination page);
+
+	/**
 	 * 找入库订单中包含的用户信息
 	 * 
 	 * @param inWarehouseOrder
