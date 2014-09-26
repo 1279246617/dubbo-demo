@@ -14,4 +14,6 @@ public interface IInWarehouseOrderDao {
 
 	public List<InWarehouseOrder> findInWarehouseOrder(InWarehouseOrder inWarehouseOrder,Map<String,String> moreParam, Pagination page);
 	
+	public Long  countInWarehouseOrder(InWarehouseOrder inWarehouseOrder,Map<String,String> moreParam);
+	
 }

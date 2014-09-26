@@ -55,6 +55,73 @@ public class Storage {
 	private IUserService userService;
 
 	/**
+	 * 入库订单 查询
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/listInWarehouseOrder", method = RequestMethod.GET)
+	public ModelAndView listInWarehouseOrder(HttpServletRequest request, HttpServletResponse response)
+			throws IOException {
+		HttpSession session = request.getSession();
+		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
+		ModelAndView view = new ModelAndView();
+		view.addObject("userId", userId);
+		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
+		view.setViewName("warehouse/storage/listInWarehouseOrder");
+		return view;
+	}
+
+	/**
+	 * 获取入库订单
+	 * 
+	 * @param request
+	 * @param response
+	 * @param userLoginName
+	 *            客户登录名,仅当根据跟踪号无法找到订单时,要求输入
+	 * @return
+	 * @throws IOException
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/getInWarehouseOrderData", method = RequestMethod.POST)
+	public String getInWarehouseOrderData(HttpServletRequest request, String sortorder, String sortname, int page,
+			int pagesize, String userLoginName, Long warehouseId, String trackingNo, String createdTimeStart,
+			String createdTimeEnd) throws IOException {
+		logger.info("warehouseId:" + warehouseId + "  userLoginName:" + userLoginName + " createdTimeStart:"
+				+ createdTimeStart + " createdTimeEnd:" + createdTimeEnd);
+		logger.info("sortorder:" + sortorder + "  sortname:" + sortname + " page:" + page + " pagesize:" + pagesize);
+		HttpSession session = request.getSession();
+		// 当前操作员
+		Long userIdOfOperator = (Long) session.getAttribute(SessionConstant.USER_ID);
+		Pagination pagination = new Pagination();
+		pagination.curPage = page;
+		pagination.pageSize = pagesize;
+		pagination.sortName = sortname;
+		pagination.sortOrder = sortorder;
+
+		InWarehouseOrder param = new InWarehouseOrder();
+		param.setPackageTrackingNo(trackingNo);
+		if (StringUtil.isNotNull(userLoginName)) {
+			Long userIdOfCustomer = userService.findUserIdByLoginName(userLoginName);
+			// 客户id
+			param.setUserIdOfCustomer(userIdOfCustomer);
+		}
+		param.setWarehouseId(warehouseId);
+		// 更多参数
+		Map<String, String> moreParam = new HashMap<String, String>();
+		moreParam.put("createdTimeStart", createdTimeStart);
+		moreParam.put("createdTimeEnd", createdTimeEnd);
+		
+		pagination = storageService.getInWarehouseOrderData(param, moreParam, pagination);
+		Map map = new HashMap();
+		map.put("Rows", pagination.rows);
+		map.put("Total", pagination.total);
+		return GsonUtil.toJson(map);
+	}
+
+	/**
 	 * 入库订单收货
 	 * 
 	 * @param request
@@ -154,8 +221,8 @@ public class Storage {
 	 * @throws IOException
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/getInWarehouseRecordItem", method = RequestMethod.POST)
-	public String getInWarehouseRecordItem(HttpServletRequest request, String sortorder, String sortname, int page,
+	@RequestMapping(value = "/getInWarehouseRecordItemData", method = RequestMethod.POST)
+	public String getInWarehouseRecordItemData(HttpServletRequest request, String sortorder, String sortname, int page,
 			int pagesize, Long inWarehouseRecordId) throws IOException {
 		Map map = new HashMap();
 		if (inWarehouseRecordId == null) {
@@ -222,44 +289,6 @@ public class Storage {
 	}
 
 	/**
-	 * 获取入库订单
-	 * 
-	 * @param request
-	 * @param response
-	 * @param userLoginName
-	 *            客户登录名,仅当根据跟踪号无法找到订单时,要求输入
-	 * @return
-	 * @throws IOException
-	 */
-	@ResponseBody
-	@RequestMapping(value = "/getInWarehouseOrder", method = RequestMethod.POST)
-	public String getInWarehouseOrder(HttpServletRequest request, String sortorder, String sortname, int page,
-			int pagesize, String trackingNo, String userLoginName) throws IOException {
-		logger.info("trackingNo:" + trackingNo + "  userLoginName:" + userLoginName);
-		logger.info("sortorder:" + sortorder + "  sortname:" + sortname + " page:" + page + " pagesize:" + pagesize);
-		HttpSession session = request.getSession();
-		// 当前操作员
-		Long userIdOfOperator = (Long) session.getAttribute(SessionConstant.USER_ID);
-		Pagination pagination = new Pagination();
-		pagination.curPage = page;
-		pagination.pageSize = pagesize;
-		pagination.sortName = sortname;
-		pagination.sortOrder = sortorder;
-		// 客户id
-		Long userIdOfCustomer = userService.findUserIdByLoginName(userLoginName);
-		InWarehouseOrder param = new InWarehouseOrder();
-		param.setPackageTrackingNo(trackingNo);
-		param.setUserIdOfCustomer(userIdOfCustomer);
-		// 执行查询
-		List<InWarehouseOrder> inWarehouseOrderList = storageService.findInWarehouseOrder(param, null, pagination);
-
-		Map map = new HashMap();
-		map.put("Rows", pagination.rows);
-		map.put("Total", pagination.total);
-		return GsonUtil.toJson(map);
-	}
-
-	/**
 	 * 入库主单 查询
 	 * 
 	 * @param request
@@ -267,14 +296,16 @@ public class Storage {
 	 * @return
 	 * @throws IOException
 	 */
-	@RequestMapping(value = "/inWarehouseRecord", method = RequestMethod.GET)
-	public ModelAndView inWarehouseRecord(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	@RequestMapping(value = "/listInWarehouseRecord", method = RequestMethod.GET)
+	public ModelAndView listInWarehouseRecord(HttpServletRequest request, HttpServletResponse response)
+			throws IOException {
 		HttpSession session = request.getSession();
 		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
 		ModelAndView view = new ModelAndView();
 		view.addObject("userId", userId);
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
-		view.setViewName("warehouse/storage/inWarehouseRecord");
+		view.setViewName("warehouse/storage/listInWarehouseRecord");
 		return view;
 	}
+
 }

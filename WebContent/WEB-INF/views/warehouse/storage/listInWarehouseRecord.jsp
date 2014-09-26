@@ -43,12 +43,12 @@
                		
                		<span class="pull-left" style="width:155px;">
                			创建时间
-	               		<input type="text"   style="width:100px;" name="sku" title="起始创建时间">
+	               		<input type="text"   style="width:100px;" name="createdTimeStart" id="createdTimeStart" title="起始创建时间">
                		</span>
                		
                		<span class="pull-left" style="width:200px;">
                			至	
-               			<input type="text"   style="width:100px;" name="sku" title="终止创建时间">
+               			<input type="text"   style="width:100px;" name="createdTimeEnd" id="createdTimeEnd" title="终止创建时间">
                		</span>
                		
                		<span class="pull-left" style="width:65px;">

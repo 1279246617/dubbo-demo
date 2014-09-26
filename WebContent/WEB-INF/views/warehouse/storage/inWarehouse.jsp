@@ -19,7 +19,7 @@
 </head>
 <body>
 	<div class="pull-left" style="width:100%;height:140px; margin-top: 1px;" >
-		 <form action="${baseUrl}/warehouse/storage/getInWarehouseRecordItem.do" id="searchform" name="searchform" method="post">
+		 <form action="${baseUrl}/warehouse/storage/getInWarehouseRecordItemData.do" id="searchform" name="searchform" method="post">
 			<table class="table table-striped" style="width:1150px;margin-bottom: 5px">
 					<tr style="height:15px;">
 							<td>
@@ -119,6 +119,7 @@
 	</table>	
 	<div id="maingrid" class="pull-left" style="width:100%;">
 	</div> 
+	
 	 <script type="text/javascript" src="${baseUrl}/static/jquery/jquery.js"></script>
 	     
     <script type="text/javascript" src="${baseUrl}/static/bootstrap/bootstrap-typeahead.js"></script>
@@ -261,7 +262,7 @@
 	                ],  
 	                isScroll: true,
 	                dataAction: 'server',
-	                url: baseUrl+'/warehouse/storage/getInWarehouseRecordItem.do',
+	                url: baseUrl+'/warehouse/storage/getInWarehouseRecordItemData.do',
 	                pageSize: 20, 
 	                usePager: 'true',
 	                sortName: 'sku',

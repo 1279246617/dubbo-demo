@@ -3,6 +3,7 @@ package com.coe.wms.dao.warehouse.storage.impl;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -21,6 +22,7 @@ import com.coe.wms.dao.datasource.DataSourceCode;
 import com.coe.wms.dao.warehouse.storage.IInWarehouseRecordDao;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecord;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecordItem;
+import com.coe.wms.util.DateUtil;
 import com.coe.wms.util.Pagination;
 import com.coe.wms.util.StringUtil;
 import com.mysql.jdbc.Statement;
@@ -109,10 +111,16 @@ public class InWarehouseRecordDaoImpl implements IInWarehouseRecordDao {
 		}
 		if (moreParam != null) {
 			if (moreParam.get("createdTimeStart") != null) {
-				sb.append(" and created_time >= " + Long.valueOf(moreParam.get("createdTimeStart")));
+				Date date = DateUtil.stringConvertDate(moreParam.get("createdTimeStart"), DateUtil.yyyy_MM_ddHHmmss);
+				if (date != null) {
+					sb.append(" and created_time >= " + date.getTime());
+				}
 			}
 			if (moreParam.get("createdTimeEnd") != null) {
-				sb.append(" and created_time <= " + Long.valueOf(moreParam.get("createdTimeEnd")));
+				Date date = DateUtil.stringConvertDate(moreParam.get("createdTimeEnd"), DateUtil.yyyy_MM_ddHHmmss);
+				if (date != null) {
+					sb.append(" and created_time <= " + date.getTime());
+				}
 			}
 		}
 		if (page != null) {
@@ -165,10 +173,16 @@ public class InWarehouseRecordDaoImpl implements IInWarehouseRecordDao {
 		}
 		if (moreParam != null) {
 			if (moreParam.get("createdTimeStart") != null) {
-				sb.append(" and created_time >= " + Long.valueOf(moreParam.get("createdTimeStart")));
+				Date date = DateUtil.stringConvertDate(moreParam.get("createdTimeStart"), DateUtil.yyyy_MM_ddHHmmss);
+				if (date != null) {
+					sb.append(" and created_time >= " + date.getTime());
+				}
 			}
 			if (moreParam.get("createdTimeEnd") != null) {
-				sb.append(" and created_time <= " + Long.valueOf(moreParam.get("createdTimeEnd")));
+				Date date = DateUtil.stringConvertDate(moreParam.get("createdTimeEnd"), DateUtil.yyyy_MM_ddHHmmss);
+				if (date != null) {
+					sb.append(" and created_time <= " + date.getTime());
+				}
 			}
 		}
 		if (page != null) {
@@ -220,10 +234,16 @@ public class InWarehouseRecordDaoImpl implements IInWarehouseRecordDao {
 		}
 		if (moreParam != null) {
 			if (moreParam.get("createdTimeStart") != null) {
-				sb.append(" and created_time >= " + Long.valueOf(moreParam.get("createdTimeStart")));
+				Date date = DateUtil.stringConvertDate(moreParam.get("createdTimeStart"), DateUtil.yyyy_MM_ddHHmmss);
+				if (date != null) {
+					sb.append(" and created_time >= " + date.getTime());
+				}
 			}
 			if (moreParam.get("createdTimeEnd") != null) {
-				sb.append(" and created_time <= " + Long.valueOf(moreParam.get("createdTimeEnd")));
+				Date date = DateUtil.stringConvertDate(moreParam.get("createdTimeEnd"), DateUtil.yyyy_MM_ddHHmmss);
+				if (date != null) {
+					sb.append(" and created_time <= " + date.getTime());
+				}
 			}
 		}
 		String sql = sb.toString();

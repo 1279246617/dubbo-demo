@@ -3,6 +3,7 @@ package com.coe.wms.dao.warehouse.storage.impl;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -20,6 +21,7 @@ import com.coe.wms.dao.datasource.DataSource;
 import com.coe.wms.dao.datasource.DataSourceCode;
 import com.coe.wms.dao.warehouse.storage.IInWarehouseOrderDao;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
+import com.coe.wms.util.DateUtil;
 import com.coe.wms.util.Pagination;
 import com.coe.wms.util.StringUtil;
 import com.mysql.jdbc.Statement;
@@ -110,10 +112,16 @@ public class InWarehouseOrderDaoImpl implements IInWarehouseOrderDao {
 		}
 		if (moreParam != null) {
 			if (moreParam.get("createdTimeStart") != null) {
-				sb.append(" and created_time >= " + Long.valueOf(moreParam.get("createdTimeStart")));
+				Date date = DateUtil.stringConvertDate(moreParam.get("createdTimeStart"), DateUtil.yyyy_MM_ddHHmmss);
+				if (date != null) {
+					sb.append(" and created_time >= " + date.getTime());
+				}
 			}
 			if (moreParam.get("createdTimeEnd") != null) {
-				sb.append(" and created_time <= " + Long.valueOf(moreParam.get("createdTimeEnd")));
+				Date date = DateUtil.stringConvertDate(moreParam.get("createdTimeEnd"), DateUtil.yyyy_MM_ddHHmmss);
+				if (date != null) {
+					sb.append(" and created_time <= " + date.getTime());
+				}
 			}
 		}
 		if (page != null) {
@@ -127,8 +135,62 @@ public class InWarehouseOrderDaoImpl implements IInWarehouseOrderDao {
 		return inWarehouseOrderList;
 	}
 
+	@Override
+	public Long countInWarehouseOrder(InWarehouseOrder inWarehouseOrder, Map<String, String> moreParam) {
+		StringBuffer sb = new StringBuffer();
+		sb.append("select count(id) from w_s_in_warehouse_order where 1=1 ");
+		if (inWarehouseOrder != null) {
+			if (StringUtil.isNotNull(inWarehouseOrder.getPackageNo())) {
+				sb.append(" and package_no = '" + inWarehouseOrder.getPackageNo() + "' ");
+			}
+			if (StringUtil.isNotNull(inWarehouseOrder.getPackageTrackingNo())) {
+				sb.append(" and package_tracking_no = '" + inWarehouseOrder.getPackageTrackingNo() + "' ");
+			}
+			if (StringUtil.isNotNull(inWarehouseOrder.getRemark())) {
+				sb.append(" and remark = '" + inWarehouseOrder.getRemark() + "' ");
+			}
+			if (StringUtil.isNotNull(inWarehouseOrder.getStatus())) {
+				sb.append(" and status = '" + inWarehouseOrder.getStatus() + "' ");
+			}
+			if (inWarehouseOrder.getCreatedTime() != null) {
+				sb.append(" and created_time = " + inWarehouseOrder.getCreatedTime());
+			}
+			if (inWarehouseOrder.getId() != null) {
+				sb.append(" and id = " + inWarehouseOrder.getId());
+			}
+			if (inWarehouseOrder.getReceivedQuantity() != null) {
+				sb.append(" and received_quantity = " + inWarehouseOrder.getReceivedQuantity());
+			}
+			if (inWarehouseOrder.getUserIdOfCustomer() != null) {
+				sb.append(" and user_id_of_customer = " + inWarehouseOrder.getUserIdOfCustomer());
+			}
+			if (inWarehouseOrder.getUserIdOfOperator() != null) {
+				sb.append(" and user_id_of_operator = " + inWarehouseOrder.getUserIdOfOperator());
+			}
+			if (inWarehouseOrder.getWeight() != null) {
+				sb.append(" and weight = " + inWarehouseOrder.getWeight());
+			}
+		}
+		if (moreParam != null) {
+			if (moreParam.get("createdTimeStart") != null) {
+				Date date = DateUtil.stringConvertDate(moreParam.get("createdTimeStart"), DateUtil.yyyy_MM_ddHHmmss);
+				if (date != null) {
+					sb.append(" and created_time >= " + date.getTime());
+				}
+			}
+			if (moreParam.get("createdTimeEnd") != null) {
+				Date date = DateUtil.stringConvertDate(moreParam.get("createdTimeEnd"), DateUtil.yyyy_MM_ddHHmmss);
+				if (date != null) {
+					sb.append(" and created_time <= " + date.getTime());
+				}
+			}
+		}
+		String sql = sb.toString();
+		logger.info("统计入库订单sql:" + sql);
+		return jdbcTemplate.queryForLong(sql);
+	}
+
 	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
 	}
-
 }

@@ -72,6 +72,11 @@ public class InWarehouseOrder implements Serializable {
 	private Long createdTime;
 
 	/**
+	 * 预报仓库id
+	 */
+	private Long warehouseId;
+
+	/**
 	 * 入库订单物品明细
 	 * 
 	 */
@@ -99,6 +104,14 @@ public class InWarehouseOrder implements Serializable {
 
 	public void setPackageTrackingNo(String packageTrackingNo) {
 		this.packageTrackingNo = packageTrackingNo;
+	}
+
+	public Long getWarehouseId() {
+		return warehouseId;
+	}
+
+	public void setWarehouseId(Long warehouseId) {
+		this.warehouseId = warehouseId;
 	}
 
 	public int getSmallPackageQuantity() {
