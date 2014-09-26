@@ -1,6 +1,7 @@
 package com.coe.wms.controller.warehouse;
 
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -99,7 +100,7 @@ public class Storage {
 		List<User> userList = storageService.findUserByInWarehouseOrder(inWarehouseOrderList);
 		map.put("userList", userList);
 		if (inWarehouseOrderList.size() > 1) {
-			// 实际已经控制 同一个客户下的跟踪号不可能重复,所以多个订单表示有多个客户帐号
+			// 已经控制 同一个客户下的跟踪号不可能重复,所以多个订单表示有多个客户帐号
 			map.put(Constant.MESSAGE, "找到超过一个订单,请选择客户帐号.");
 			map.put(Constant.STATUS, "2");
 			return GsonUtil.toJson(map);
@@ -120,7 +121,7 @@ public class Storage {
 	 * @throws IOException
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/saveInWarehouseRecord")
+	@RequestMapping(value = "/saveInWarehouseRecord", method = RequestMethod.POST)
 	public String saveInWarehouseRecord(HttpServletRequest request, String trackingNo, String userLoginName,
 			String isUnKnowCustomer, String remark) throws IOException {
 		logger.info("trackingNo:" + trackingNo + " userLoginName:" + userLoginName + " isUnKnowCustomer:"
@@ -132,19 +133,96 @@ public class Storage {
 		// 校验和保存
 		Map<String, String> serviceResult = storageService.saveInWarehouseRecord(trackingNo, userLoginName,
 				isUnKnowCustomer, remark, userIdOfOperator);
+		// 成功,返回id
+		map.put("id", serviceResult.get("id"));
 		// 失败
 		if (!StringUtil.isEqual(serviceResult.get(Constant.STATUS), Constant.SUCCESS)) {
 			map.put(Constant.MESSAGE, serviceResult.get(Constant.MESSAGE));
 			return GsonUtil.toJson(map);
 		}
-		// 成功,返回id
-		map.put("id", serviceResult.get("id"));
 		map.put(Constant.STATUS, Constant.SUCCESS);
 		return GsonUtil.toJson(map);
 	}
 
 	/**
-	 * 获取某个大包号(头程运单号下的所有SKU和数量)
+	 * 获取入库记录明细
+	 * 
+	 * @param request
+	 * @param response
+	 * @param userLoginName
+	 * @return
+	 * @throws IOException
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/getInWarehouseRecordItem", method = RequestMethod.POST)
+	public String getInWarehouseRecordItem(HttpServletRequest request, String sortorder, String sortname, int page,
+			int pagesize, Long inWarehouseRecordId) throws IOException {
+		Map map = new HashMap();
+		if (inWarehouseRecordId == null) {
+			return GsonUtil.toJson(map);
+		}
+		HttpSession session = request.getSession();
+		// 当前操作员
+		Long userIdOfOperator = (Long) session.getAttribute(SessionConstant.USER_ID);
+		Pagination pagination = new Pagination();
+		pagination.curPage = page;
+		pagination.pageSize = pagesize;
+		pagination.sortName = sortname;
+		pagination.sortOrder = sortorder;
+		// 客户id
+		pagination = storageService.getInWarehouseRecordItemData(inWarehouseRecordId, pagination);
+		if (pagination != null) {
+			map.put("Rows", pagination.rows);
+			map.put("Total", pagination.total);
+		}
+		return GsonUtil.toJson(map);
+	}
+
+	/**
+	 * 获取入库订单明细(头程运单号下的所有SKU和数量)
+	 * 
+	 * @param request
+	 * @param response
+	 * @param userLoginName
+	 *            客户登录名,仅当根据跟踪号无法找到订单时,要求输入
+	 * @return
+	 * @throws IOException
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/getInWarehouseOrderItem", method = RequestMethod.POST)
+	public String getInWarehouseOrderItem(HttpServletRequest request, String sortorder, String sortname, int page,
+			int pagesize, String trackingNo, String userLoginName) throws IOException {
+		Map map = new HashMap();
+		logger.info("trackingNo:" + trackingNo + "  userLoginName:" + userLoginName);
+		logger.info("sortorder:" + sortorder + "  sortname:" + sortname + " page:" + page + " pagesize:" + pagesize);
+		HttpSession session = request.getSession();
+		// 当前操作员
+		Long userIdOfOperator = (Long) session.getAttribute(SessionConstant.USER_ID);
+		Pagination pagination = new Pagination();
+		pagination.curPage = page;
+		pagination.pageSize = pagesize;
+		pagination.sortName = sortname;
+		pagination.sortOrder = sortorder;
+		// 客户id
+		Long userIdOfCustomer = userService.findUserIdByLoginName(userLoginName);
+		InWarehouseOrder param = new InWarehouseOrder();
+		param.setPackageTrackingNo(trackingNo);
+		param.setUserIdOfCustomer(userIdOfCustomer);
+		// 执行查询(应当只有1个结果, 多个结果,只取第一个结果. 跟踪号重复的情况 ,待处理)
+		List<InWarehouseOrder> inWarehouseOrderList = storageService.findInWarehouseOrder(param, null, null);
+		if (inWarehouseOrderList.size() < 0) {
+			return GsonUtil.toJson(map);
+		}
+		InWarehouseOrder order = inWarehouseOrderList.get(0);
+		pagination = storageService.getInWarehouseItemData(order.getId(), pagination);
+		map.put("Rows", pagination.rows);
+		map.put("Total", pagination.total);
+
+		return GsonUtil.toJson(map);
+	}
+
+	/**
+	 * 获取入库订单
 	 * 
 	 * @param request
 	 * @param response
@@ -157,14 +235,27 @@ public class Storage {
 	@RequestMapping(value = "/getInWarehouseOrder", method = RequestMethod.POST)
 	public String getInWarehouseOrder(HttpServletRequest request, String sortorder, String sortname, int page,
 			int pagesize, String trackingNo, String userLoginName) throws IOException {
+		logger.info("trackingNo:" + trackingNo + "  userLoginName:" + userLoginName);
+		logger.info("sortorder:" + sortorder + "  sortname:" + sortname + " page:" + page + " pagesize:" + pagesize);
 		HttpSession session = request.getSession();
-		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
+		// 当前操作员
+		Long userIdOfOperator = (Long) session.getAttribute(SessionConstant.USER_ID);
 		Pagination pagination = new Pagination();
+		pagination.curPage = page;
+		pagination.pageSize = pagesize;
+		pagination.sortName = sortname;
+		pagination.sortOrder = sortorder;
+		// 客户id
+		Long userIdOfCustomer = userService.findUserIdByLoginName(userLoginName);
+		InWarehouseOrder param = new InWarehouseOrder();
+		param.setPackageTrackingNo(trackingNo);
+		param.setUserIdOfCustomer(userIdOfCustomer);
+		// 执行查询
+		List<InWarehouseOrder> inWarehouseOrderList = storageService.findInWarehouseOrder(param, null, pagination);
 
 		Map map = new HashMap();
 		map.put("Rows", pagination.rows);
 		map.put("Total", pagination.total);
-
 		return GsonUtil.toJson(map);
 	}
 

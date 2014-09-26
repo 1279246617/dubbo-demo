@@ -12,9 +12,9 @@ public class InWarehouseOrderItem implements Serializable {
 	private Long id;
 
 	/**
-	 * 大包号 同客户下, packageNo 不可重复
+	 * 入库订单id
 	 */
-	private Long packageId;
+	private Long orderId;
 
 	/**
 	 * sku下产品数量
@@ -46,12 +46,12 @@ public class InWarehouseOrderItem implements Serializable {
 		this.id = id;
 	}
 
-	public Long getPackageId() {
-		return packageId;
+	public Long getOrderId() {
+		return orderId;
 	}
 
-	public void setPackageId(Long packageId) {
-		this.packageId = packageId;
+	public void setOrderId(Long orderId) {
+		this.orderId = orderId;
 	}
 
 	public int getQuantity() {

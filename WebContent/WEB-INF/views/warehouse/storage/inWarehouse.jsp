@@ -19,13 +19,13 @@
 </head>
 <body>
 	<div class="pull-left" style="width:100%;height:140px; margin-top: 1px;" >
-		 <form action="${baseUrl}/warehouse/storage/getInWarehouseOrder.do" id="searchform" name="searchform" method="post">
-			<table class="table table-striped" style="width:1050px;margin-bottom: 5px">
+		 <form action="${baseUrl}/warehouse/storage/getInWarehouseRecordItem.do" id="searchform" name="searchform" method="post">
+			<table class="table table-striped" style="width:1150px;margin-bottom: 5px">
 					<tr style="height:15px;">
 							<td>
 									<span class="pull-left" style="width:52px;">跟踪单号</span>
 									<span class="pull-left" style="width:191px;">
-										<input type="text"  name="trackingNo"  id="trackingNo" onfocus="trackingNoFocus()"  style="width:190px;"/>
+										<input type="text"  name="trackingNo"  id="trackingNo" onfocus="trackingNoFocus()"   style="width:190px;"/>
 									</span>
 							</td>		
 							<td>
@@ -37,8 +37,12 @@
 		          				 <input type="checkbox" name="unKnowCustomer" id="unKnowCustomer" />&nbsp;标记为无主件
 		          				&nbsp;&nbsp;&nbsp;&nbsp;
 		          				 <a class="btn  btn-primary" id="enter" onclick="clickEnter()" style="cursor:pointer;"><i class="icon-ok icon-white"></i>保存主单</a>
+		          				 &nbsp;&nbsp;
+		          				 <button class="btn  btn-primary"   style="cursor:pointer;" type="reset"><i class="icon-ok icon-white"></i>清除</button>
 		          				 &nbsp;&nbsp;&nbsp;&nbsp;
 		          				 主单摘要&nbsp;&nbsp;<input type="text"  name="orderRemark"  id="orderRemark" style="width:220px;"/>
+		          				 <!-- 入库主单记录id -->
+		          				 <input type="text" name="inWarehouseRecordId" id="inWarehouseRecordId" style="display:none;">
 							</td>
 					</tr>
 			</table>
@@ -103,6 +107,7 @@
                    &nbsp;
                    <a class="btn btn-small btn-primary" onclick=""><i class="icon-cog icon-white"></i>设置货位</a>
               </div>
+              
               <form action="#" id="searchform2" name="searchform2" method="post">
                   <div class="pull-right searchContent">
                           SKU&nbsp;<input type="text"  name="sku" title="可输入sku搜索">
@@ -130,15 +135,18 @@
 	   var baseUrl = "${baseUrl}";
 	   //进入页面,焦点跟踪单号
 	   $("#trackingNo").focus();
-		//回车事件
 	    $(window).keydown(function(event){
+	    	//回车事件
 	    	if((event.keyCode   ==   13)) {
 	    		clickEnter();
 	    		return;
 	    	}  
+	    	//空格
+			if(event.keyCode == 32 && !$(event.target).is('input,textarea')){
+				alert('提交明细');
+				return;
+			}    	
 	    	if((event.keyCode   ==   13) &&   (event.ctrlKey)) {
-	    		//提交一次收货
-	    		
 	    	}
 	    });
 		
@@ -233,15 +241,15 @@
 	     function initGrid() {
 	    	   grid = $("#maingrid").ligerGrid({
 	                columns: [
-	                    { display: '产品SKU', name: 'sku', align: 'right',type:'float',width:'13%'},
-	  		            { display: '预报产品数量', name: 'quantity', align: 'right', type: 'float',width:'9%'},
-	  		          	{ display: '实际收货数量', name: 'quantity', align: 'right', type: 'float',width:'9%'},
+	                    { display: '产品SKU', name: 'sku', align: 'right',width:'12%'},
+	  		          	{ display: '收货数量', name: 'quantity', align: 'right', type: 'int',width:'9%'},
 	  		          	{ display: '产品描述', name: 'productDescription', align: 'right', type: 'float',width:'10%'},
 		                { display: '仓库', name: 'warehouse', align: 'right', type: 'float',width:'9%'},
 		                { display: '货架', name: 'shelves', align: 'right', type: 'float',width:'9%'},
 		                { display: '货位', name: 'seat', align: 'right', type: 'float',width:'10%'},
-		                { display: '批次号', name: 'batchNo', type: 'int', width:'12%'},
-		                {display: '操作',isSort: false,width: '9%',render: function(row) {
+		                { display: '批次号', name: 'batchNo', type: 'int', width:'10%'},
+		                { display: '操作员', name: 'userNameOfOperator',width:'8%'},
+		                {display: '操作',isSort: false,width: '11%',render: function(row) {
 		            		var h = "";
 		            		if (!row._editing) {
 		            			h += '<a href="javascript:updateInWarehouseItem(' + row.id + ')">编辑</a> ';
@@ -253,7 +261,7 @@
 	                ],  
 	                isScroll: true,
 	                dataAction: 'server',
-	                url: baseUrl+'/warehouse/storage/getInWarehouseOrder.do',
+	                url: baseUrl+'/warehouse/storage/getInWarehouseRecordItem.do',
 	                pageSize: 20, 
 	                usePager: 'true',
 	                sortName: 'sku',

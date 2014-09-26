@@ -34,12 +34,16 @@ function clickEnterStep1(trackingNoStr,userLoginName,remark) {
 
 //第二次点击保存主单(已输入客户单号)
 function clickEnterStep2(trackingNoStr,userLoginNameStr,isUnKnowCustomer,remark) {
-	$.getJSON(baseUrl+ '/warehouse/storage/saveInWarehouseRecord.do?trackingNo='
+	$.post(baseUrl+ '/warehouse/storage/saveInWarehouseRecord.do?trackingNo='
 			+ trackingNoStr+'&userLoginName='+userLoginNameStr+'&isUnKnowCustomer='+isUnKnowCustomer+"&remark="+remark, function(msg) {
+		//赋值入库记录id 到隐藏input
+		$("#inWarehouseRecordId").val(msg.id);
+		
 		if(msg.status == 0){
 			parent.$.showShortMessage({msg:msg.message,animate:true,left:"45%"});
 			return;
 		}
+		
 		if(msg.status == 1){
 			parent.$.showShortMessage({msg:"保存主单成功.",animate:true,left:"45%"});
 			// 光标移至产品SKU
@@ -47,7 +51,7 @@ function clickEnterStep2(trackingNoStr,userLoginNameStr,isUnKnowCustomer,remark)
 			return;
 		}
 		
-	});
+	},"json");
 }
 //用户名下拉组 赋值到 input
 function loginNameSelectChange(){
@@ -58,4 +62,5 @@ function loginNameSelectChange(){
 //跟踪号改变, 清除用户名
 function trackingNoFocus(){
 	$("#userLoginName").val('');
+	$("#trackingNo").select();
 }

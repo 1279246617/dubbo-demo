@@ -25,7 +25,12 @@ public class InWarehouseOrder implements Serializable {
 	/**
 	 * 订单所属客户id
 	 */
-	private Long userId;
+	private Long userIdOfCustomer;
+
+	/**
+	 * 订单所属操作员id
+	 */
+	private Long userIdOfOperator;
 
 	/**
 	 * 大包号 同客户下, packageNo 不可重复
@@ -78,14 +83,6 @@ public class InWarehouseOrder implements Serializable {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public Long getUserId() {
-		return userId;
-	}
-
-	public void setUserId(Long userId) {
-		this.userId = userId;
 	}
 
 	public String getPackageNo() {
@@ -158,5 +155,21 @@ public class InWarehouseOrder implements Serializable {
 
 	public void setItemList(List<InWarehouseOrderItem> itemList) {
 		this.itemList = itemList;
+	}
+
+	public Long getUserIdOfCustomer() {
+		return userIdOfCustomer;
+	}
+
+	public void setUserIdOfCustomer(Long userIdOfCustomer) {
+		this.userIdOfCustomer = userIdOfCustomer;
+	}
+
+	public Long getUserIdOfOperator() {
+		return userIdOfOperator;
+	}
+
+	public void setUserIdOfOperator(Long userIdOfOperator) {
+		this.userIdOfOperator = userIdOfOperator;
 	}
 }

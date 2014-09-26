@@ -1,6 +1,7 @@
 package com.coe.wms.service.api.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,12 +19,13 @@ import com.coe.wms.model.user.User;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrderItem;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecord;
+import com.coe.wms.model.warehouse.storage.record.InWarehouseRecordItem;
 import com.coe.wms.pojo.api.warehouse.Response;
 import com.coe.wms.pojo.api.warehouse.ResponseItems;
 import com.coe.wms.pojo.api.warehouse.Responses;
 import com.coe.wms.service.api.IStorageService;
-import com.coe.wms.util.CommonUtil;
 import com.coe.wms.util.Constant;
+import com.coe.wms.util.DateUtil;
 import com.coe.wms.util.Pagination;
 import com.coe.wms.util.StringUtil;
 import com.coe.wms.util.XmlUtil;
@@ -55,16 +57,17 @@ public class StorageServiceImpl implements IStorageService {
 	 * 根据入库订单id, 查找入库物品明细
 	 * 
 	 * @param orderId
-	 * @param page
+	 * @param pagination
 	 * @return
 	 */
 	@Override
-	public Pagination getInWarehouseItemData(Long orderId, Pagination page) {
-		InWarehouseOrder inWarehouseOrder = inWarehouseOrderDao.getInWarehouseOrderById(orderId);
+	public Pagination getInWarehouseItemData(Long orderId, Pagination pagination) {
 		InWarehouseOrderItem param = new InWarehouseOrderItem();
+		param.setOrderId(orderId);
 		List<InWarehouseOrderItem> inWarehouseOrderItemList = inWarehouseOrderItemDao.findInWarehouseOrderItem(param,
-				null, page);
-		return page;
+				null, pagination);
+
+		return pagination;
 	}
 
 	/**
@@ -85,18 +88,18 @@ public class StorageServiceImpl implements IStorageService {
 	public List<User> findUserByInWarehouseOrder(List<InWarehouseOrder> inWarehouseOrderList) {
 		List<User> userList = new ArrayList<User>();
 		for (InWarehouseOrder inWarehouseOrder : inWarehouseOrderList) {
-			if (inWarehouseOrder.getUserId() == null) {
+			if (inWarehouseOrder.getUserIdOfCustomer() == null) {
 				continue;
 			}
 			boolean bool = true;
 			for (User user : userList) {
-				if (user.getId() == inWarehouseOrder.getUserId()) {
+				if (user.getId() == inWarehouseOrder.getUserIdOfCustomer()) {
 					bool = false;
 					break;
 				}
 			}
 			if (bool) {
-				User user = userDao.getUserById(inWarehouseOrder.getUserId());
+				User user = userDao.getUserById(inWarehouseOrder.getUserIdOfCustomer());
 				userList.add(user);
 			}
 		}
@@ -147,6 +150,8 @@ public class StorageServiceImpl implements IStorageService {
 		param.setPackageTrackingNo(trackingNo);
 		List<InWarehouseRecord> inWarehouseRecordList = inWarehouseRecordDao.findInWarehouseRecord(param, null, null);
 		if (inWarehouseRecordList.size() > 0) {
+			// 返回入库主单的id
+			map.put("id", "" + inWarehouseRecordList.get(0).getId());
 			map.put(Constant.MESSAGE, "跟踪单号已存在入库主单.");
 			return map;
 		}
@@ -169,5 +174,34 @@ public class StorageServiceImpl implements IStorageService {
 		map.put("id", "" + id);
 		map.put(Constant.STATUS, Constant.SUCCESS);
 		return map;
+	}
+
+	@Override
+	public Pagination getInWarehouseRecordItemData(Long inWarehouseRecordId, Pagination pagination) {
+		InWarehouseRecordItem inWarehouseRecordItem = new InWarehouseRecordItem();
+		inWarehouseRecordItem.setInWareHouseRecordId(inWarehouseRecordId);
+		List<InWarehouseRecordItem> inWarehouseRecordItemList = inWarehouseRecordDao.findInWarehouseRecordItem(
+				inWarehouseRecordItem, null, pagination);
+		List list = new ArrayList();
+		for (InWarehouseRecordItem item : inWarehouseRecordItemList) {
+			Map map = new HashMap();
+			map.put("id", item.getId());
+			if (item.getCreatedTime() != null) {
+				map.put("createdTime",
+						DateUtil.dateConvertString(new Date(item.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss));
+			}
+			map.put("inWareHouseRecordId", item.getInWareHouseRecordId());
+			map.put("quantity", item.getQuantity());
+			map.put("remark", item.getRemark());
+			map.put("seatId", item.getSeatId());
+			map.put("shelvesId", item.getShelvesId());
+			map.put("sku", item.getSku());
+			map.put("userNameOfOperator", item.getUserIdOfOperator());
+			map.put("warehouseId", item.getWarehouseId());
+			list.add(map);
+		}
+		pagination.total = inWarehouseRecordDao.countInWarehouseRecordItem(inWarehouseRecordItem, null);
+		pagination.rows = list;
+		return pagination;
 	}
 }
