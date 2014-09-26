@@ -109,6 +109,11 @@ public class UserServiceImpl implements IUserService {
 		return userList;
 	}
 
+	@Override
+	public Long findUserIdByLoginName(String loginName) {
+		return userDao.findUserIdByLoginName(loginName);
+	}
+
 	/**
 	 * 根据id 获取用户
 	 */

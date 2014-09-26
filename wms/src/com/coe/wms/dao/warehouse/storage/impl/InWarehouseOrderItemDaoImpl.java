@@ -50,7 +50,7 @@ public class InWarehouseOrderItemDaoImpl implements IInWarehouseOrderItemDao {
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
 				PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-				ps.setLong(1, item.getPackageId());
+				ps.setLong(1, item.getOrderId());
 				ps.setLong(2, item.getQuantity());
 				ps.setString(3, item.getSku());
 				return ps;
@@ -66,12 +66,12 @@ public class InWarehouseOrderItemDaoImpl implements IInWarehouseOrderItemDao {
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public int saveBatchInWarehouseOrderItem(final List<InWarehouseOrderItem> itemList) {
-		final String sql = "insert into w_s_in_warehouse_order_item (package_id,quantity,sku) values (?,?,?)";
+		final String sql = "insert into w_s_in_warehouse_order_item (order_id,quantity,sku) values (?,?,?)";
 		int[] batchUpdateSize = jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
 			@Override
 			public void setValues(PreparedStatement ps, int i) throws SQLException {
 				InWarehouseOrderItem item = itemList.get(i);
-				ps.setLong(1, item.getPackageId());
+				ps.setLong(1, item.getOrderId());
 				ps.setLong(2, item.getQuantity());
 				ps.setString(3, item.getSku());
 			}
@@ -97,13 +97,13 @@ public class InWarehouseOrderItemDaoImpl implements IInWarehouseOrderItemDao {
 	public List<InWarehouseOrderItem> findInWarehouseOrderItem(InWarehouseOrderItem inWarehouseOrderItem,
 			Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select id,package_id,quantity,sku,storage_quantity where 1=1 ");
+		sb.append("select id,order_id,quantity,sku,storage_quantity where 1=1 ");
 		if (inWarehouseOrderItem != null) {
 			if (StringUtil.isNotNull(inWarehouseOrderItem.getSku())) {
 				sb.append(" and sku = '" + inWarehouseOrderItem.getSku() + "' ");
 			}
-			if (inWarehouseOrderItem.getPackageId() != null) {
-				sb.append(" and package_id = '" + inWarehouseOrderItem.getPackageId() + "' ");
+			if (inWarehouseOrderItem.getOrderId() != null) {
+				sb.append(" and order_id = '" + inWarehouseOrderItem.getOrderId() + "' ");
 			}
 		}
 		// 分页sql

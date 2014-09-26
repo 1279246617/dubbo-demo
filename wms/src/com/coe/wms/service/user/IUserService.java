@@ -35,6 +35,13 @@ public interface IUserService {
 	 * @return
 	 */
 	public User getUserById(Long userId);
+	
+	/**
+	 * 
+	 * @param userId
+	 * @return
+	 */
+	public Long findUserIdByLoginName(String loginName);
 
 	/**
 	 * 登录名 like 查询用户

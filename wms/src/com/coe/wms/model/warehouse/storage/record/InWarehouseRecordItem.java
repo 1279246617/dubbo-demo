@@ -26,9 +26,21 @@ public class InWarehouseRecordItem implements Serializable {
 	private Long inWareHouseRecordId;
 
 	/**
+	 * 创建时间(收货时间)
+	 */
+	private Long createdTime;
+	/**
 	 * 数量
 	 */
 	private Integer quantity;
+
+	public Long getCreatedTime() {
+		return createdTime;
+	}
+
+	public void setCreatedTime(Long createdTime) {
+		this.createdTime = createdTime;
+	}
 
 	/**
 	 * sku
@@ -39,6 +51,26 @@ public class InWarehouseRecordItem implements Serializable {
 	 * 备注
 	 */
 	private String remark;
+
+	/**
+	 * 仓库id
+	 */
+	private Long warehouseId;
+
+	/**
+	 * 货架id
+	 */
+	private Long shelvesId;
+
+	/**
+	 * 货位id
+	 */
+	private Long seatId;
+
+	/**
+	 * 收货人
+	 */
+	private Long userIdOfOperator;
 
 	public Long getId() {
 		return id;
@@ -76,8 +108,39 @@ public class InWarehouseRecordItem implements Serializable {
 		return remark;
 	}
 
+	public Long getUserIdOfOperator() {
+		return userIdOfOperator;
+	}
+
+	public void setUserIdOfOperator(Long userIdOfOperator) {
+		this.userIdOfOperator = userIdOfOperator;
+	}
+
 	public void setRemark(String remark) {
 		this.remark = remark;
 	}
 
+	public Long getWarehouseId() {
+		return warehouseId;
+	}
+
+	public void setWarehouseId(Long warehouseId) {
+		this.warehouseId = warehouseId;
+	}
+
+	public Long getShelvesId() {
+		return shelvesId;
+	}
+
+	public void setShelvesId(Long shelvesId) {
+		this.shelvesId = shelvesId;
+	}
+
+	public Long getSeatId() {
+		return seatId;
+	}
+
+	public void setSeatId(Long seatId) {
+		this.seatId = seatId;
+	}
 }

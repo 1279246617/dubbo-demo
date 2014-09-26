@@ -39,12 +39,12 @@ public class InWarehouseOrderDaoImpl implements IInWarehouseOrderDao {
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public long saveInWarehouseOrder(final InWarehouseOrder order) {
-		final String sql = "insert into w_s_in_warehouse_order (user_id,package_no,package_tracking_no,weight,small_package_quantity,created_time,remark,status) values (?,?,?,?,?,?,?,?)";
+		final String sql = "insert into w_s_in_warehouse_order (user_id_of_customer,package_no,package_tracking_no,weight,small_package_quantity,created_time,remark,status,user_id_of_operator) values (?,?,?,?,?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
 				PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-				ps.setLong(1, order.getUserId());
+				ps.setLong(1, order.getUserIdOfCustomer());
 				ps.setString(2, order.getPackageNo());
 				ps.setString(3, order.getPackageTrackingNo());
 				ps.setDouble(4, order.getWeight() != null ? order.getWeight() : 0);
@@ -52,6 +52,7 @@ public class InWarehouseOrderDaoImpl implements IInWarehouseOrderDao {
 				ps.setLong(6, order.getCreatedTime());
 				ps.setString(7, order.getRemark());
 				ps.setString(8, order.getStatus());
+				ps.setLong(9, order.getUserIdOfOperator());
 				return ps;
 			}
 		}, keyHolder);
@@ -74,7 +75,7 @@ public class InWarehouseOrderDaoImpl implements IInWarehouseOrderDao {
 	public List<InWarehouseOrder> findInWarehouseOrder(InWarehouseOrder inWarehouseOrder,
 			Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select id,user_id,package_no,package_tracking_no,weight,small_package_quantity,created_time,remark,status,received_quantity from w_s_in_warehouse_order where 1=1 ");
+		sb.append("select id,user_id_of_customer,user_id_of_operator,package_no,package_tracking_no,weight,small_package_quantity,created_time,remark,status,received_quantity from w_s_in_warehouse_order where 1=1 ");
 		if (inWarehouseOrder != null) {
 			if (StringUtil.isNotNull(inWarehouseOrder.getPackageNo())) {
 				sb.append(" and package_no = '" + inWarehouseOrder.getPackageNo() + "' ");
@@ -97,8 +98,11 @@ public class InWarehouseOrderDaoImpl implements IInWarehouseOrderDao {
 			if (inWarehouseOrder.getReceivedQuantity() != null) {
 				sb.append(" and received_quantity = " + inWarehouseOrder.getReceivedQuantity());
 			}
-			if (inWarehouseOrder.getUserId() != null) {
-				sb.append(" and user_id = " + inWarehouseOrder.getUserId());
+			if (inWarehouseOrder.getUserIdOfCustomer() != null) {
+				sb.append(" and user_id_of_customer = " + inWarehouseOrder.getUserIdOfCustomer());
+			}
+			if (inWarehouseOrder.getUserIdOfOperator() != null) {
+				sb.append(" and user_id_of_operator = " + inWarehouseOrder.getUserIdOfOperator());
 			}
 			if (inWarehouseOrder.getWeight() != null) {
 				sb.append(" and weight = " + inWarehouseOrder.getWeight());
