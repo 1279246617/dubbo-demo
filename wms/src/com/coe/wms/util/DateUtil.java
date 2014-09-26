@@ -26,7 +26,7 @@ public class DateUtil {
 	public static String yyyyMMdd = "yyyy/MM/dd";
 
 	public static String yyyy_MM_dd = "yyyy-MM-dd";
-	
+
 	public static String MMddYYYY = "MM/dd/yyyy";
 
 	/**
@@ -176,5 +176,17 @@ public class DateUtil {
 	public static Long getDiffDays(Date date1, Date date2) {
 		Long diffDays = getDiffHours(date1, date2) / 24;
 		return diffDays;
+	}
+
+	public static String getTodayStart() {
+		String time = DateUtil.dateConvertString(new Date(), DateUtil.yyyy_MM_dd);
+		String timeFrom = time + " 00:00:00";
+		return timeFrom;
+	}
+	
+	public static String getTodayEnd() {
+		String time = DateUtil.dateConvertString(new Date(), DateUtil.yyyy_MM_dd);
+		String timeTo = time + " 23:59:59";
+		return timeTo;
 	}
 }

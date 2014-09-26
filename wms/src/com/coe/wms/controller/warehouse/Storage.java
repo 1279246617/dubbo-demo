@@ -24,6 +24,7 @@ import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
 import com.coe.wms.service.api.IStorageService;
 import com.coe.wms.service.user.IUserService;
 import com.coe.wms.util.Constant;
+import com.coe.wms.util.DateUtil;
 import com.coe.wms.util.GsonUtil;
 import com.coe.wms.util.Pagination;
 import com.coe.wms.util.SessionConstant;
@@ -70,6 +71,8 @@ public class Storage {
 		ModelAndView view = new ModelAndView();
 		view.addObject("userId", userId);
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
+		view.addObject("todayStart", DateUtil.getTodayStart());
+		view.addObject("todayEnd", DateUtil.getTodayEnd());
 		view.setViewName("warehouse/storage/listInWarehouseOrder");
 		return view;
 	}
@@ -113,7 +116,7 @@ public class Storage {
 		Map<String, String> moreParam = new HashMap<String, String>();
 		moreParam.put("createdTimeStart", createdTimeStart);
 		moreParam.put("createdTimeEnd", createdTimeEnd);
-		
+
 		pagination = storageService.getInWarehouseOrderData(param, moreParam, pagination);
 		Map map = new HashMap();
 		map.put("Rows", pagination.rows);
