@@ -57,7 +57,7 @@ public class Pagination {
 	public String generatePageSql() {
 		String sql = "";
 		if (StringUtil.isNotNull(this.sortName)) {
-			sql += "order by ";
+			sql += " order by ";
 			sql += this.sortName + " ";
 			if (StringUtil.isNotNull(this.sortOrder)) {
 				sql += this.sortOrder + " ";

@@ -4,15 +4,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	
 	<link href="${baseUrl}/static/css/common.css" rel="stylesheet" type="text/css" />
 	<link href="${baseUrl}/static/bootstrap/bootstrap.min.css" rel="stylesheet"type="text/css" />
 	<link href="${baseUrl}/static/bootstrap/common.css" rel="stylesheet" type="text/css"/>
 	
 	<link href="${baseUrl}/static/lhgdialog/prettify/common.css" type="text/css" rel="stylesheet" />
 	<link href="${baseUrl}/static/lhgdialog/prettify/prettify.css" type="text/css" rel="stylesheet" />
-	
 	<link href="${baseUrl}/static/calendar/prettify.css" rel="stylesheet" type="text/css" />
+	
 	<link href="${baseUrl}/static/calendar/lhgcalendar.css" rel="stylesheet" type="text/css" />
 	
 	<link href="${baseUrl}/static/ligerui/ligerUI/skins/Aqua/css/ligerui-all.css" rel="stylesheet" type="text/css" />
@@ -42,12 +41,12 @@
                		
                		<span class="pull-left" style="width:165px;">
                			创建时间
-	               		<input type="text"   style="width:110px;" name="createdTimeStart" title="起始创建时间">
+	               		<input type="text"   style="width:110px;" name="createdTimeStart" id="createdTimeStart" value="${todayStart}" title="起始创建时间">
                		</span>
                		
                		<span class="pull-left" style="width:200px;">
                			至	
-               			<input type="text"   style="width:110px;" name="createdTimeEnd" title="终止创建时间">
+               			<input type="text"   style="width:110px;" name="createdTimeEnd"  id="createdTimeEnd" value="${todayEnd}" title="终止创建时间">
                		</span>
                		
                		<span class="pull-left" style="width:55px;">
@@ -96,6 +95,7 @@
 	     	 }
 	      });
    			
+	        $('#createdTimeStart,#createdTimeEnd').calendar({ format:'yyyy-MM-dd HH:mm:ss' });
    			initGrid();  
    		});
    		  
@@ -124,10 +124,10 @@
 	                ],  
 	                isScroll: true,
 	                dataAction: 'server',
-	                url: baseUrl+'/warehouse/storage/getInWarehouseOrderData.do',
+	                url: baseUrl+'/warehouse/storage/getInWarehouseOrderData.do?createdTimeStart=${todayStart}',
 	                pageSize: 20, 
 	                usePager: 'true',
-	                sortName: 'createdTime',
+	                sortName: 'id',
 	                width: '100%',
 	                height: '99%',
 	                checkbox: true,
@@ -139,8 +139,9 @@
    	</script>
    	
 	<script type="text/javascript" src="${baseUrl}/static/jquery/jquery.showMessage.js"></script>
-	
-	<script  type="text/javascript" src="${baseUrl}/static/ligerui/ligerUI/js/core/base.js"></script>
+	<script type="text/javascript" src="${baseUrl}/static/ligerui/ligerUI/js/core/base.js"></script>
+	<script type="text/javascript" src="${baseUrl}/static/calendar/lhgcalendar.min.js"></script>
+	<script type="text/javascript" src="${baseUrl}/static/calendar/prettify.js"></script>
 	<script type="text/javascript" src="${baseUrl}/static/ligerui/ligerUI/js/ligerui.all.js"></script>
 </body>
 </html>
