@@ -95,6 +95,20 @@ public interface IStorageService {
 	 * @param version
 	 * @return
 	 */
-	public String warehouseInterface(String logisticsInterface, String token, String dataDigest, String msgType,
+	public String warehouseInterface(String logisticsInterface, Long userIdOfCustomer, String dataDigest, String msgType,
 			String msgId, String version);
+
+	/**
+	 * 接口验证
+	 * 
+	 * @param logisticsInterface
+	 * @param token
+	 * @param dataDigest
+	 * @param msgType
+	 * @param msgId
+	 * @param version
+	 * @return
+	 */
+	public Map<String, String> warehouseInterfaceValidate(String logisticsInterface, String token, String dataDigest,
+			String msgType, String msgId, String version);
 }

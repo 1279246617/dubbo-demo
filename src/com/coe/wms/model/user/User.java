@@ -72,9 +72,24 @@ public class User implements Serializable {
 	private String userType;
 
 	/**
-	 * 用户API令牌
+	 * 客户调用系统API令牌(密钥)
 	 */
 	private String token;
+	/**
+	 * 客户调用系统API 标识消息来源字段
+	 */
+	private String msgSource;
+
+	/**
+	 * 我方调用对方(客户)系统(sf) 密钥
+	 */
+	private String oppositeToken;
+
+	/**
+	 * 我方调用对方(客户)系统(sf) 标识消息来源字段
+	 */
+	private String oppositeMsgSource;
+
 	/**
 	 * 电话
 	 */
@@ -172,6 +187,30 @@ public class User implements Serializable {
 
 	public String getUserType() {
 		return userType;
+	}
+
+	public String getMsgSource() {
+		return msgSource;
+	}
+
+	public void setMsgSource(String msgSource) {
+		this.msgSource = msgSource;
+	}
+
+	public String getOppositeToken() {
+		return oppositeToken;
+	}
+
+	public void setOppositeToken(String oppositeToken) {
+		this.oppositeToken = oppositeToken;
+	}
+
+	public String getOppositeMsgSource() {
+		return oppositeMsgSource;
+	}
+
+	public void setOppositeMsgSource(String oppositeMsgSource) {
+		this.oppositeMsgSource = oppositeMsgSource;
 	}
 
 	public void setUserType(String userType) {

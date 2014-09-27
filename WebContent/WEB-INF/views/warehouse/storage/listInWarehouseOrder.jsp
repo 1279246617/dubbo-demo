@@ -39,14 +39,14 @@
 						<input type="text"  name="trackingNo"  id="trackingNo"   style="width:120px;"/>
 					</span>
                		
-               		<span class="pull-left" style="width:165px;">
+               		<span class="pull-left" style="width:175px;">
                			创建时间
-	               		<input type="text"   style="width:110px;" name="createdTimeStart" id="createdTimeStart" value="${todayStart}" title="起始创建时间">
+	               		<input type="text"   style="width:120px;" name="createdTimeStart" id="createdTimeStart" value="${todayStart}" title="起始创建时间">
                		</span>
                		
                		<span class="pull-left" style="width:200px;">
                			至	
-               			<input type="text"   style="width:110px;" name="createdTimeEnd"  id="createdTimeEnd" value="${todayEnd}" title="终止创建时间">
+               			<input type="text"   style="width:120px;" name="createdTimeEnd"  id="createdTimeEnd" value="${todayEnd}" title="终止创建时间">
                		</span>
                		
                		<span class="pull-left" style="width:55px;">
