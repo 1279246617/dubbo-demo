@@ -20,6 +20,16 @@ public interface IUserDao {
 	public User findUserByLoginName(String loginName);
 
 	/**
+	 * 根据消息来源字段找用户
+	 * 
+	 * 用于API接口
+	 * 
+	 * @param msgSource
+	 * @return
+	 */
+	public User findUserByMsgSource(String msgSource);
+
+	/**
 	 * 根据登录名找id
 	 * 
 	 * @param loginName

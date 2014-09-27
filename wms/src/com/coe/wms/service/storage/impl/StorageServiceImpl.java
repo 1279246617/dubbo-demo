@@ -20,8 +20,8 @@ import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrderItem;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecord;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecordItem;
+import com.coe.wms.pojo.api.warehouse.ErrorCode;
 import com.coe.wms.pojo.api.warehouse.Response;
-import com.coe.wms.pojo.api.warehouse.ResponseItems;
 import com.coe.wms.pojo.api.warehouse.Responses;
 import com.coe.wms.service.storage.IStorageService;
 import com.coe.wms.util.Constant;
@@ -106,20 +106,65 @@ public class StorageServiceImpl implements IStorageService {
 		return userList;
 	}
 
+	/**
+	 * 
+	 */
 	@Override
-	public String warehouseInterface(String logisticsInterface, String key, String dataDigest, String msgType,
-			String msgId, String version) {
+	public String warehouseInterface(String logisticsInterface, Long userIdOfCustomer, String dataDigest,
+			String msgType, String msgId, String version) {
 		Responses responses = new Responses();
-		// 验证内容和签名字符串
-		String md5dataDigest = StringUtil.md5_32(logisticsInterface + key);
-		if (!StringUtil.isEqual(md5dataDigest, dataDigest)) {
-			ResponseItems responseItems = new ResponseItems();
-			Response response = new Response();
-			
-			responseItems.setResponse(response);
-			responses.setResponseItems(responseItems);
-		}
+		List<Response> responseItems = new ArrayList<Response>();
+		Response response = new Response();
+		response.setSuccess(Constant.FALSE);
+		responseItems.add(response);
+		responses.setResponseItems(responseItems);
+		
+		
 		return XmlUtil.toXml(Responses.class, responses);
+	}
+
+	@Override
+	public Map<String, String> warehouseInterfaceValidate(String logisticsInterface, String msgSource,
+			String dataDigest, String msgType, String msgId, String version) {
+		Map<String, String> map = new HashMap<String, String>();
+		Responses responses = new Responses();
+		List<Response> responseItems = new ArrayList<Response>();
+		Response response = new Response();
+		response.setSuccess(Constant.FALSE);
+		responseItems.add(response);
+		responses.setResponseItems(responseItems);
+
+		map.put("status", Constant.FAIL);
+		// 缺少关键字段
+		if (StringUtil.isNull(logisticsInterface) || StringUtil.isNull(msgSource) || StringUtil.isNull(dataDigest)
+				|| StringUtil.isNull(msgType) || StringUtil.isNull(msgId)) {
+			response.setReason(ErrorCode.S12);
+			response.setReasonDesc("缺少关键字段,请检查以下字段:logistics_interface,data_digest,msg_type,msg_id");
+			map.put(Constant.MESSAGE, XmlUtil.toXml(Responses.class, responses));
+			return map;
+		}
+
+		// 根据msgSource 找到客户(token),找到密钥
+		User user = userDao.findUserByMsgSource(msgSource);
+		if (user == null) {
+			response.setReason(ErrorCode.S03);
+			response.setReasonDesc("根据msg_source 找不到客户");
+			map.put(Constant.MESSAGE, XmlUtil.toXml(Responses.class, responses));
+			return map;
+		}
+
+		// 验证内容和签名字符串
+		String md5dataDigest = StringUtil.md5_32(logisticsInterface + user.getToken());
+		if (!StringUtil.isEqual(md5dataDigest, dataDigest)) {
+			// 签名错误
+			response.setReason(ErrorCode.S02);
+			response.setReasonDesc("收到消息签名:" + dataDigest + " 系统计算消息签名:" + md5dataDigest);
+			map.put(Constant.MESSAGE, XmlUtil.toXml(Responses.class, responses));
+			return map;
+		}
+		map.put(Constant.STATUS, Constant.SUCCESS);
+		map.put(Constant.USER_ID_OF_CUSTOMER, "" + user.getId());
+		return map;
 	}
 
 	@Override

@@ -39,6 +39,16 @@ public class Constant {
 	public final static String MESSAGE = "message";
 
 	/**
+	 * 客户id
+	 */
+	public final static String USER_ID_OF_CUSTOMER = "userIdOfCustomer";
+
+	/**
+	 * 操作员id
+	 */
+	public final static String USER_ID_OF_OPERATOR = "userIdOfOperator";
+
+	/**
 	 * success
 	 */
 	public final static String SUCCESS = "1";
