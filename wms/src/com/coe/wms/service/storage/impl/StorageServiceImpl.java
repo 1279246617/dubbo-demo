@@ -1,4 +1,4 @@
-package com.coe.wms.service.api.impl;
+package com.coe.wms.service.storage.impl;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -23,7 +23,7 @@ import com.coe.wms.model.warehouse.storage.record.InWarehouseRecordItem;
 import com.coe.wms.pojo.api.warehouse.Response;
 import com.coe.wms.pojo.api.warehouse.ResponseItems;
 import com.coe.wms.pojo.api.warehouse.Responses;
-import com.coe.wms.service.api.IStorageService;
+import com.coe.wms.service.storage.IStorageService;
 import com.coe.wms.util.Constant;
 import com.coe.wms.util.DateUtil;
 import com.coe.wms.util.Pagination;
