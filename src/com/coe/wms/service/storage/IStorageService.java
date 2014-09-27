@@ -1,4 +1,4 @@
-package com.coe.wms.service.api;
+package com.coe.wms.service.storage;
 
 import java.util.List;
 import java.util.Map;
