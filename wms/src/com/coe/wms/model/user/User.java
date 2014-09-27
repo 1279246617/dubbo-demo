@@ -25,16 +25,16 @@ public class User implements Serializable {
 	 * 冻结,不允许登录
 	 */
 	public static final Integer STATUS_FREEZE = 2;
-	
+
 	/**
-	 * 用户类型 管理员,操作员,  代表公司内部的人
+	 * 用户类型 管理员,操作员, 代表公司内部的人
 	 * 
 	 * 改用户类型不用于权限控制,仅用于登录跳转到不同首页
 	 * 
 	 * 公司用户
 	 */
 	public static final String USER_TYPE_ADMIN = "A";
-	
+
 	/**
 	 * 客户
 	 */
@@ -42,7 +42,8 @@ public class User implements Serializable {
 	/**
 	 * 主键
 	 * 
-	 * 系统中 用到 用户id的地方  如果表示数据所属的用户用userId, 如果表示数据创建 操作 用 createdByUserId,modifyByUserId
+	 * 系统中 用到 用户id的地方 如果表示数据所属的用户用userId, 如果表示数据创建 操作 用
+	 * createdByUserId,modifyByUserId
 	 */
 	private Long id;
 
@@ -70,6 +71,10 @@ public class User implements Serializable {
 	 */
 	private String userType;
 
+	/**
+	 * 用户API令牌
+	 */
+	private String token;
 	/**
 	 * 电话
 	 */
@@ -119,6 +124,14 @@ public class User implements Serializable {
 
 	public String getPhone() {
 		return phone;
+	}
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
 	}
 
 	public void setPhone(String phone) {

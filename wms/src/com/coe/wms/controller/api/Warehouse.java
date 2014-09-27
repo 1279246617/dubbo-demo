@@ -34,7 +34,7 @@ public class Warehouse {
 		// 消息内容
 		String logisticsInterface = request.getParameter("logistics_interface");
 		// 签名(签名参数名 顺丰未指定)
-		String key = request.getParameter("key");
+		String token = request.getParameter("token");
 		// 消息签名
 		String dataDigest = request.getParameter("data_digest");
 		// 消息类型,根据消息类型判断业务类型
@@ -47,7 +47,7 @@ public class Warehouse {
 		logger.info("dataDigest:" + dataDigest);
 		logger.info("msgType:" + msgType);
 		
-		String xml = storageService.warehouseInterface(logisticsInterface, key, dataDigest, msgType, msgId, version);
+		String xml = storageService.warehouseInterface(logisticsInterface, token, dataDigest, msgType, msgId, version);
 		return xml;
 	}
 }
