@@ -84,7 +84,7 @@ public interface IStorageService {
 	 * 
 	 * @param logisticsInterface
 	 *            消息内容
-	 * @param key
+	 * @param token
 	 *            签名(签名参数名 顺丰未指定)
 	 * @param dataDigest
 	 *            消息签名
@@ -95,6 +95,6 @@ public interface IStorageService {
 	 * @param version
 	 * @return
 	 */
-	public String warehouseInterface(String logisticsInterface, String key, String dataDigest, String msgType,
+	public String warehouseInterface(String logisticsInterface, String token, String dataDigest, String msgType,
 			String msgId, String version);
 }

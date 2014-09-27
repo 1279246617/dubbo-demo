@@ -115,7 +115,7 @@ public class StorageServiceImpl implements IStorageService {
 		if (!StringUtil.isEqual(md5dataDigest, dataDigest)) {
 			ResponseItems responseItems = new ResponseItems();
 			Response response = new Response();
-
+			
 			responseItems.setResponse(response);
 			responses.setResponseItems(responseItems);
 		}
