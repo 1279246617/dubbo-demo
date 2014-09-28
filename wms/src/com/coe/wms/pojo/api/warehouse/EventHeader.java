@@ -6,18 +6,16 @@ import javax.xml.bind.annotation.XmlElement;
 
 public class EventHeader implements Serializable {
 	private static final long serialVersionUID = 7237402518355471977L;
-	@XmlElement
+	
 	private String eventType;
 
-	@XmlElement
 	private String eventTime;
 
-	@XmlElement
 	private String eventSource;
 
-	@XmlElement
 	private String eventTarget;
 
+	
 	public String getEventType() {
 		return eventType;
 	}
@@ -26,6 +24,7 @@ public class EventHeader implements Serializable {
 		this.eventType = eventType;
 	}
 
+	
 	public String getEventTime() {
 		return eventTime;
 	}
@@ -34,6 +33,7 @@ public class EventHeader implements Serializable {
 		this.eventTime = eventTime;
 	}
 
+	
 	public String getEventSource() {
 		return eventSource;
 	}
@@ -42,6 +42,7 @@ public class EventHeader implements Serializable {
 		this.eventSource = eventSource;
 	}
 
+	
 	public String getEventTarget() {
 		return eventTarget;
 	}
@@ -49,7 +50,8 @@ public class EventHeader implements Serializable {
 	public void setEventTarget(String eventTarget) {
 		this.eventTarget = eventTarget;
 	}
-
+	
+	
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}

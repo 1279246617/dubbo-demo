@@ -78,6 +78,7 @@ public class Warehouse {
 		String eventType = (String) eventTypeMap.get("eventType");
 		// 把事件主体交给各服务方法处理
 		EventBody eventBody = (EventBody) eventTypeMap.get("eventBody");
+		
 		if (StringUtil.isEqualIgnoreCase(EventType.LOGISTICS_SKU_STOCKIN_INFO, eventType)) {// 创建入库订单
 			responseXml = storageService.warehouseInterfaceCreateInWarehouseOrder(eventBody, userIdOfCustomer);
 		}
