@@ -2,6 +2,8 @@ package com.coe.wms.pojo.api.warehouse;
 
 import java.io.Serializable;
 
+import javax.xml.bind.annotation.XmlElement;
+
 /**
  * 仓配入库 eventBody
  * 
@@ -11,6 +13,8 @@ import java.io.Serializable;
 public class EventBody implements Serializable {
 
 	private static final long serialVersionUID = 5322710746438843491L;
+	
+	@XmlElement
 	private LogisticsDetail logisticsDetail;
 	
 	public LogisticsDetail getLogisticsDetail() {
