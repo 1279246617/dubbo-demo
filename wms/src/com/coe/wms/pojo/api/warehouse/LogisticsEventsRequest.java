@@ -2,9 +2,12 @@ package com.coe.wms.pojo.api.warehouse;
 
 import java.io.Serializable;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 /**
  * SKU入库请求内容封装类
  */
+@XmlRootElement
 public class LogisticsEventsRequest implements Serializable {
 
 	/**

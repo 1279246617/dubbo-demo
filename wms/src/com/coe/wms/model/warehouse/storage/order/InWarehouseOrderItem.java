@@ -24,6 +24,16 @@ public class InWarehouseOrderItem implements Serializable {
 	private String sku;
 
 	/**
+	 * 商品名称
+	 */
+	private String skuName;
+
+	/**
+	 * 备注
+	 */
+	private String skuRemark;
+
+	/**
 	 * 该SKU已经入库的数量
 	 * 
 	 * 在添加入库单时,更新此字段.也显示此字段
@@ -60,6 +70,22 @@ public class InWarehouseOrderItem implements Serializable {
 
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
+	}
+
+	public String getSkuName() {
+		return skuName;
+	}
+
+	public void setSkuName(String skuName) {
+		this.skuName = skuName;
+	}
+
+	public String getSkuRemark() {
+		return skuRemark;
+	}
+
+	public void setSkuRemark(String skuRemark) {
+		this.skuRemark = skuRemark;
 	}
 
 	public String getSku() {

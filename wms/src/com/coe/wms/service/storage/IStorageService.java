@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 
 import com.coe.wms.model.user.User;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
+import com.coe.wms.pojo.api.warehouse.EventBody;
 import com.coe.wms.pojo.api.warehouse.LogisticsEventsRequest;
 import com.coe.wms.util.Pagination;
 
@@ -82,6 +83,7 @@ public interface IStorageService {
 
 	/**
 	 * 
+	 * 
 	 * @param logisticsInterface
 	 *            消息内容
 	 * @param token
@@ -95,8 +97,8 @@ public interface IStorageService {
 	 * @param version
 	 * @return
 	 */
-	public String warehouseInterface(String logisticsInterface, Long userIdOfCustomer, String dataDigest, String msgType,
-			String msgId, String version);
+	public Map<String, Object> warehouseInterfaceEventType(String logisticsInterface, Long userIdOfCustomer,
+			String dataDigest, String msgType, String msgId, String version);
 
 	/**
 	 * 接口验证
@@ -111,4 +113,13 @@ public interface IStorageService {
 	 */
 	public Map<String, String> warehouseInterfaceValidate(String logisticsInterface, String token, String dataDigest,
 			String msgType, String msgId, String version);
+
+	/**
+	 * 创建入库订单
+	 * 
+	 * @param eventBody
+	 * @param userIdOfCustomer
+	 * @return
+	 */
+	public String warehouseInterfaceCreateInWarehouseOrder(EventBody eventBody, Long userIdOfCustomer);
 }
