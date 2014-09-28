@@ -2,29 +2,36 @@ package com.coe.wms.pojo.api.warehouse;
 
 import java.io.Serializable;
 
+import javax.xml.bind.annotation.XmlElement;
+
 /**
  * SF文档 7.13. SKU入库指令
  * 
  * @author Administrator
  * 
  */
-public class LogisticsOrder implements Serializable{
+public class LogisticsOrder implements Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 8116810058074766132L;
-
+	@XmlElement
 	private String logisticsType;
-	
+
+	@XmlElement
 	private String logisticsWeight;
-	
+
+	@XmlElement
 	private String logisticsFreight;
 
+	@XmlElement
 	private String carrierCode;
 
+	@XmlElement
 	private String mailNo;
 
+	@XmlElement
 	private SkuDetail skuDetail;
 
 	public String getLogisticsType() {

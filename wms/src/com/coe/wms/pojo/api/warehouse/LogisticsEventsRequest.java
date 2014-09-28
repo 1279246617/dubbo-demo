@@ -2,6 +2,7 @@ package com.coe.wms.pojo.api.warehouse;
 
 import java.io.Serializable;
 
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -14,7 +15,7 @@ public class LogisticsEventsRequest implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = -4731883715949095086L;
-
+	@XmlElement
 	private LogisticsEvent logisticsEvent;
 
 	public LogisticsEvent getLogisticsEvent() {

@@ -2,19 +2,24 @@ package com.coe.wms.pojo.api.warehouse;
 
 import java.io.Serializable;
 
+import javax.xml.bind.annotation.XmlElement;
+
 public class Sku implements Serializable {
 
 	private static final long serialVersionUID = 551558947068185258L;
-
+	@XmlElement
 	private String skuCode;
 
+	@XmlElement
 	private String skuName;
 
 	/**
 	 * 入库数量
 	 */
+	@XmlElement
 	private Integer skuQty;
 
+	@XmlElement
 	private String skuRemark;
 
 	public String getSkuCode() {

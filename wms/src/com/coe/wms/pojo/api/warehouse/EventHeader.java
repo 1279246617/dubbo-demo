@@ -2,15 +2,20 @@ package com.coe.wms.pojo.api.warehouse;
 
 import java.io.Serializable;
 
+import javax.xml.bind.annotation.XmlElement;
+
 public class EventHeader implements Serializable {
 	private static final long serialVersionUID = 7237402518355471977L;
-
+	@XmlElement
 	private String eventType;
 
+	@XmlElement
 	private String eventTime;
 
+	@XmlElement
 	private String eventSource;
 
+	@XmlElement
 	private String eventTarget;
 
 	public String getEventType() {
