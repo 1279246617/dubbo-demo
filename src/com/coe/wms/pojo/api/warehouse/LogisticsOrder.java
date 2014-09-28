@@ -2,8 +2,6 @@ package com.coe.wms.pojo.api.warehouse;
 
 import java.io.Serializable;
 
-import javax.xml.bind.annotation.XmlElement;
-
 /**
  * SF文档 7.13. SKU入库指令
  * 
@@ -11,29 +9,24 @@ import javax.xml.bind.annotation.XmlElement;
  * 
  */
 public class LogisticsOrder implements Serializable {
-
+	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 8116810058074766132L;
-	@XmlElement
+
 	private String logisticsType;
 
-	@XmlElement
 	private String logisticsWeight;
 
-	@XmlElement
 	private String logisticsFreight;
 
-	@XmlElement
 	private String carrierCode;
 
-	@XmlElement
 	private String mailNo;
 
-	@XmlElement
 	private SkuDetail skuDetail;
-
+	
 	public String getLogisticsType() {
 		return logisticsType;
 	}
@@ -42,10 +35,12 @@ public class LogisticsOrder implements Serializable {
 		this.logisticsType = logisticsType;
 	}
 
+	
 	public String getCarrierCode() {
 		return carrierCode;
 	}
 
+	
 	public String getLogisticsWeight() {
 		return logisticsWeight;
 	}
@@ -54,6 +49,7 @@ public class LogisticsOrder implements Serializable {
 		this.logisticsWeight = logisticsWeight;
 	}
 
+	
 	public String getLogisticsFreight() {
 		return logisticsFreight;
 	}
@@ -66,6 +62,7 @@ public class LogisticsOrder implements Serializable {
 		this.carrierCode = carrierCode;
 	}
 
+	
 	public SkuDetail getSkuDetail() {
 		return skuDetail;
 	}
@@ -73,7 +70,8 @@ public class LogisticsOrder implements Serializable {
 	public void setSkuDetail(SkuDetail skuDetail) {
 		this.skuDetail = skuDetail;
 	}
-
+	
+	
 	public String getMailNo() {
 		return mailNo;
 	}
