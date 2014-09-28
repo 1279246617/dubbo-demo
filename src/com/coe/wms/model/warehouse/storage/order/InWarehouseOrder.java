@@ -38,6 +38,15 @@ public class InWarehouseOrder implements Serializable {
 	private String packageNo;
 
 	/**
+	 * 如果物流类型为 2或3系统会生成一个虚拟承运商编号
+	 */
+	private String carrierCode;
+
+	/**
+	 * 运单类型(运单,空运,自运)
+	 */
+	private String logisticsType;
+	/**
 	 * 大包到货时,贴的运单号
 	 * 
 	 * 要求客户预报的时候 大包头程 运单号 对应一个大包
@@ -134,6 +143,14 @@ public class InWarehouseOrder implements Serializable {
 		return remark;
 	}
 
+	public String getLogisticsType() {
+		return logisticsType;
+	}
+
+	public void setLogisticsType(String logisticsType) {
+		this.logisticsType = logisticsType;
+	}
+
 	public void setRemark(String remark) {
 		this.remark = remark;
 	}
@@ -184,5 +201,13 @@ public class InWarehouseOrder implements Serializable {
 
 	public void setUserIdOfOperator(Long userIdOfOperator) {
 		this.userIdOfOperator = userIdOfOperator;
+	}
+
+	public String getCarrierCode() {
+		return carrierCode;
+	}
+
+	public void setCarrierCode(String carrierCode) {
+		this.carrierCode = carrierCode;
 	}
 }

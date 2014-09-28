@@ -118,7 +118,7 @@ public class UserDaoImpl implements IUserDao {
 
 	@Override
 	public User findUserByMsgSource(String msgSource) {
-		String sql = "select id,parent_id,login_name,user_name,tokan,msg_source,opposite_token,opposite_msg_source from u_user where msg_source = ?";
+		String sql = "select id,parent_id,login_name,user_name,token,msg_source,opposite_token,opposite_msg_source from u_user where msg_source = ?";
 		List<User> userList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(User.class),
 				msgSource);
 		if (userList.size() > 0) {

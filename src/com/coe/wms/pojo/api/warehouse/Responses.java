@@ -3,6 +3,9 @@ package com.coe.wms.pojo.api.warehouse;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
 public class Responses implements Serializable {
 
 	private static final long serialVersionUID = 2100301746079308394L;

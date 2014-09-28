@@ -1,14 +1,25 @@
 package com.coe.wms.pojo.api.warehouse;
 
+import java.io.Serializable;
+
 /**
  * SF文档 7.13. SKU入库指令
  * 
  * @author Administrator
  * 
  */
-public class LogisticsOrder {
+public class LogisticsOrder implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8116810058074766132L;
 
 	private String logisticsType;
+	
+	private String logisticsWeight;
+	
+	private String logisticsFreight;
 
 	private String carrierCode;
 
@@ -26,6 +37,22 @@ public class LogisticsOrder {
 
 	public String getCarrierCode() {
 		return carrierCode;
+	}
+
+	public String getLogisticsWeight() {
+		return logisticsWeight;
+	}
+
+	public void setLogisticsWeight(String logisticsWeight) {
+		this.logisticsWeight = logisticsWeight;
+	}
+
+	public String getLogisticsFreight() {
+		return logisticsFreight;
+	}
+
+	public void setLogisticsFreight(String logisticsFreight) {
+		this.logisticsFreight = logisticsFreight;
 	}
 
 	public void setCarrierCode(String carrierCode) {

@@ -45,7 +45,7 @@ public class InWarehouseOrderItemDaoImpl implements IInWarehouseOrderItemDao {
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public long saveInWarehouseOrderItem(final InWarehouseOrderItem item) {
-		final String sql = "insert into w_s_in_warehouse_order_item (package_id,quantity,sku) values (?,?,?)";
+		final String sql = "insert into w_s_in_warehouse_order_item (order_id,quantity,sku,sku_name,sku_remark) values (?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
@@ -53,6 +53,8 @@ public class InWarehouseOrderItemDaoImpl implements IInWarehouseOrderItemDao {
 				ps.setLong(1, item.getOrderId());
 				ps.setLong(2, item.getQuantity());
 				ps.setString(3, item.getSku());
+				ps.setString(4, item.getSkuName());
+				ps.setString(5, item.getSkuRemark());
 				return ps;
 			}
 		}, keyHolder);
@@ -66,7 +68,7 @@ public class InWarehouseOrderItemDaoImpl implements IInWarehouseOrderItemDao {
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public int saveBatchInWarehouseOrderItem(final List<InWarehouseOrderItem> itemList) {
-		final String sql = "insert into w_s_in_warehouse_order_item (order_id,quantity,sku) values (?,?,?)";
+		final String sql = "insert into w_s_in_warehouse_order_item (order_id,quantity,sku,sku_name,sku_remark) values (?,?,?,?,?)";
 		int[] batchUpdateSize = jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
 			@Override
 			public void setValues(PreparedStatement ps, int i) throws SQLException {
@@ -74,6 +76,30 @@ public class InWarehouseOrderItemDaoImpl implements IInWarehouseOrderItemDao {
 				ps.setLong(1, item.getOrderId());
 				ps.setLong(2, item.getQuantity());
 				ps.setString(3, item.getSku());
+				ps.setString(4, item.getSkuName());
+				ps.setString(5, item.getSkuRemark());
+			}
+			@Override
+			public int getBatchSize() {
+				return itemList.size();
+			}
+		});
+		return NumberUtil.sumArry(batchUpdateSize);
+	}
+
+	@Override
+	@DataSource(DataSourceCode.WMS)
+	public int saveBatchInWarehouseOrderItemWithOrderId(final List<InWarehouseOrderItem> itemList, final Long orderId) {
+		final String sql = "insert into w_s_in_warehouse_order_item (order_id,quantity,sku,sku_name,sku_remark) values (?,?,?,?,?)";
+		int[] batchUpdateSize = jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+			@Override
+			public void setValues(PreparedStatement ps, int i) throws SQLException {
+				InWarehouseOrderItem item = itemList.get(i);
+				ps.setLong(1, orderId);
+				ps.setLong(2, item.getQuantity());
+				ps.setString(3, item.getSku());
+				ps.setString(4, item.getSkuName());
+				ps.setString(5, item.getSkuRemark());
 			}
 
 			@Override
@@ -97,10 +123,13 @@ public class InWarehouseOrderItemDaoImpl implements IInWarehouseOrderItemDao {
 	public List<InWarehouseOrderItem> findInWarehouseOrderItem(InWarehouseOrderItem inWarehouseOrderItem,
 			Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select id,order_id,quantity,sku,storage_quantity where 1=1 ");
+		sb.append("select id,order_id,quantity,sku,received_quantity,sku_name,sku_remark where 1=1 ");
 		if (inWarehouseOrderItem != null) {
 			if (StringUtil.isNotNull(inWarehouseOrderItem.getSku())) {
 				sb.append(" and sku = '" + inWarehouseOrderItem.getSku() + "' ");
+			}
+			if (StringUtil.isNotNull(inWarehouseOrderItem.getSkuName())) {
+				sb.append(" and sku_name = '" + inWarehouseOrderItem.getSkuName() + "' ");
 			}
 			if (inWarehouseOrderItem.getOrderId() != null) {
 				sb.append(" and order_id = '" + inWarehouseOrderItem.getOrderId() + "' ");

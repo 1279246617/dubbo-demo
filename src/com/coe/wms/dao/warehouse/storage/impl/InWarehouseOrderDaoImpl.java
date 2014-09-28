@@ -41,7 +41,7 @@ public class InWarehouseOrderDaoImpl implements IInWarehouseOrderDao {
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public long saveInWarehouseOrder(final InWarehouseOrder order) {
-		final String sql = "insert into w_s_in_warehouse_order (user_id_of_customer,package_no,package_tracking_no,weight,small_package_quantity,created_time,remark,status,user_id_of_operator) values (?,?,?,?,?,?,?,?,?)";
+		final String sql = "insert into w_s_in_warehouse_order (user_id_of_customer,package_no,package_tracking_no,weight,small_package_quantity,created_time,remark,status,user_id_of_operator,carrier_code,logistics_type) values (?,?,?,?,?,?,?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
@@ -55,6 +55,8 @@ public class InWarehouseOrderDaoImpl implements IInWarehouseOrderDao {
 				ps.setString(7, order.getRemark());
 				ps.setString(8, order.getStatus());
 				ps.setLong(9, order.getUserIdOfOperator());
+				ps.setString(10, order.getCarrierCode());
+				ps.setString(11, order.getLogisticsType());
 				return ps;
 			}
 		}, keyHolder);
@@ -77,7 +79,7 @@ public class InWarehouseOrderDaoImpl implements IInWarehouseOrderDao {
 	public List<InWarehouseOrder> findInWarehouseOrder(InWarehouseOrder inWarehouseOrder,
 			Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select id,user_id_of_customer,user_id_of_operator,package_no,package_tracking_no,weight,small_package_quantity,created_time,remark,status,received_quantity from w_s_in_warehouse_order where 1=1 ");
+		sb.append("select id,user_id_of_customer,user_id_of_operator,package_no,package_tracking_no,weight,small_package_quantity,created_time,remark,status,received_quantity,carrier_code,logistics_type from w_s_in_warehouse_order where 1=1 ");
 		if (inWarehouseOrder != null) {
 			if (StringUtil.isNotNull(inWarehouseOrder.getPackageNo())) {
 				sb.append(" and package_no = '" + inWarehouseOrder.getPackageNo() + "' ");
@@ -108,6 +110,12 @@ public class InWarehouseOrderDaoImpl implements IInWarehouseOrderDao {
 			}
 			if (inWarehouseOrder.getWeight() != null) {
 				sb.append(" and weight = " + inWarehouseOrder.getWeight());
+			}
+			if (inWarehouseOrder.getCarrierCode() != null) {
+				sb.append(" and carrier_code = " + inWarehouseOrder.getCarrierCode());
+			}
+			if (inWarehouseOrder.getLogisticsType() != null) {
+				sb.append(" and logistics_type = " + inWarehouseOrder.getLogisticsType());
 			}
 		}
 		if (moreParam != null) {
@@ -169,6 +177,12 @@ public class InWarehouseOrderDaoImpl implements IInWarehouseOrderDao {
 			}
 			if (inWarehouseOrder.getWeight() != null) {
 				sb.append(" and weight = " + inWarehouseOrder.getWeight());
+			}
+			if (inWarehouseOrder.getCarrierCode() != null) {
+				sb.append(" and carrier_code = " + inWarehouseOrder.getCarrierCode());
+			}
+			if (inWarehouseOrder.getLogisticsType() != null) {
+				sb.append(" and logistics_type = " + inWarehouseOrder.getLogisticsType());
 			}
 		}
 		if (moreParam != null) {
