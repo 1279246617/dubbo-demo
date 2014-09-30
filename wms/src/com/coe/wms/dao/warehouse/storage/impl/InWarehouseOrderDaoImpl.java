@@ -1,6 +1,7 @@
 package com.coe.wms.dao.warehouse.storage.impl;
 
 import java.sql.Connection;
+
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Date;
@@ -54,7 +55,7 @@ public class InWarehouseOrderDaoImpl implements IInWarehouseOrderDao {
 				ps.setLong(6, order.getCreatedTime());
 				ps.setString(7, order.getRemark());
 				ps.setString(8, order.getStatus());
-				ps.setLong(9, order.getUserIdOfOperator());
+				ps.setLong(9, order.getUserIdOfOperator() != null ? order.getUserIdOfOperator() : 0);
 				ps.setString(10, order.getCarrierCode());
 				ps.setString(11, order.getLogisticsType());
 				return ps;

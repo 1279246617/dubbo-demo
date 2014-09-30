@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
+import com.coe.wms.exception.ServiceException;
 import com.coe.wms.model.user.User;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
 import com.coe.wms.pojo.api.warehouse.EventBody;
@@ -121,5 +122,6 @@ public interface IStorageService {
 	 * @param userIdOfCustomer
 	 * @return
 	 */
-	public String warehouseInterfaceCreateInWarehouseOrder(EventBody eventBody, Long userIdOfCustomer);
+	public String warehouseInterfaceSaveInWarehouseOrder(EventBody eventBody, Long userIdOfCustomer)
+			throws ServiceException;
 }
