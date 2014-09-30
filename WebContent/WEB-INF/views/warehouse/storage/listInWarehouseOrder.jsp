@@ -23,16 +23,16 @@
            <form action="${baseUrl}/warehouse/storage/getInWarehouseOrderData.do" id="searchform" name="searchform" method="post">
                <div class="pull-right searchContent">
                		<span class="pull-left" style="width:175px;">
-               			预报仓库
+               			仓库
                			<select style="width:100px;" id="warehouseId">
+               				<option></option>
 							<option value="1">1-香港仓</option>
-							<option value="2">2-美国仓</option>
 						</select>
                		</span>
                		
                		<span class="pull-left" style="width:175px;">
                			客户帐号
-               			<input type="text" name="userLoginName" data-provide="typeahead"  id="userLoginName" style="width:100px;" title="可输入客户登录名" />
+               			<input type="text" name="userLoginName" data-provide="typeahead"  id="userLoginName" style="width:100px;" title="请输入客户登录名" />
                		</span>
 					<span class="pull-left" style="width:195px;">
 						跟踪单号	
@@ -97,21 +97,26 @@
    			
 	        $('#createdTimeStart,#createdTimeEnd').calendar({ format:'yyyy-MM-dd HH:mm:ss' });
    			initGrid();  
+   			
+   			//btn_search
+   			$("#btn_search").click(function(){
+   				btnSearch("#searchform",grid);
+   			});
+   			
    		});
    		  
    	 	 var grid = null;
 	     function initGrid() {
 	    	 grid = $("#maingrid").ligerGrid({
 	                columns: [
-	                    { display: '客户帐号', name: 'userNameOfCustomer', align: 'right',type:'float',width:'13%'},
-	  		            { display: '大包号', name: 'packageNo', align: 'right', type: 'float',width:'9%'},
-	  		          	{ display: '跟踪单号', name: 'packageTrackingNo', align: 'right', type: 'float',width:'9%'},
-	  		          	{ display: '大包重量', name: 'weight', align: 'right', type: 'float',width:'10%'},
+	                    { display: '客户帐号', name: 'userNameOfCustomer', align: 'right',type:'float',width:'10%'},
+	  		          	{ display: '跟踪单号', name: 'packageTrackingNo', align: 'right', type: 'float',width:'12%'},
+	  		          	{ display: '总重量', name: 'weight', align: 'right', type: 'float',width:'8%'},
 		                { display: '仓库', name: 'warehouse', align: 'right', type: 'float',width:'9%'},
-		                { display: '备注', name: 'remark', align: 'right', type: 'float',width:'9%'},
-		                { display: '状态', name: 'status', align: 'right', type: 'float',width:'10%'},
-		                { display: '已收货数量', name: 'receivedQuantity', type: 'int', width:'12%'},
-		                { display: '创建时间', name: 'createdTime', align: 'right', type: 'float',width:'10%'},
+		                { display: '备注', name: 'remark', align: 'right', type: 'float',width:'14%'},
+		                { display: '状态', name: 'status', align: 'right', type: 'float',width:'8%'},
+		                { display: '已收货数量', name: 'receivedQuantity', type: 'int', width:'8%'},
+		                { display: '创建时间', name: 'createdTime', align: 'right', type: 'float',width:'13%'},
 		                {display: '操作',isSort: false,width: '9%',render: function(row) {
 		            		var h = "";
 		            		if (!row._editing) {
@@ -125,7 +130,7 @@
 	                isScroll: true,
 	                dataAction: 'server',
 	                url: baseUrl+'/warehouse/storage/getInWarehouseOrderData.do?createdTimeStart=${todayStart}',
-	                pageSize: 20, 
+	                pageSize: 50, 
 	                usePager: 'true',
 	                sortName: 'id',
 	                width: '100%',
@@ -140,6 +145,7 @@
    	
 	<script type="text/javascript" src="${baseUrl}/static/jquery/jquery.showMessage.js"></script>
 	<script type="text/javascript" src="${baseUrl}/static/ligerui/ligerUI/js/core/base.js"></script>
+	<script type="text/javascript" src="${baseUrl}/static/ligerui/ligerUI/js/plugins/ligeruiPatch.js"></script>
 	<script type="text/javascript" src="${baseUrl}/static/calendar/lhgcalendar.min.js"></script>
 	<script type="text/javascript" src="${baseUrl}/static/calendar/prettify.js"></script>
 	<script type="text/javascript" src="${baseUrl}/static/ligerui/ligerUI/js/ligerui.all.js"></script>

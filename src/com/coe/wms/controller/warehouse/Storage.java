@@ -91,6 +91,9 @@ public class Storage {
 	public String getInWarehouseOrderData(HttpServletRequest request, String sortorder, String sortname, int page,
 			int pagesize, String userLoginName, Long warehouseId, String trackingNo, String createdTimeStart,
 			String createdTimeEnd) throws IOException {
+		if (StringUtil.isNotNull(createdTimeStart) && createdTimeStart.contains(",")) {
+			createdTimeStart = createdTimeStart.substring(createdTimeStart.lastIndexOf(","), createdTimeStart.length());
+		}
 		logger.info("warehouseId:" + warehouseId + "  userLoginName:" + userLoginName + " createdTimeStart:"
 				+ createdTimeStart + " createdTimeEnd:" + createdTimeEnd);
 		logger.info("sortorder:" + sortorder + "  sortname:" + sortname + " page:" + page + " pagesize:" + pagesize);

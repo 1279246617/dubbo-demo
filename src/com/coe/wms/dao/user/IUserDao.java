@@ -42,7 +42,7 @@ public interface IUserDao {
 	public List<User> findAllUser();
 
 	public int updateUser(User user);
-
+	
 	public int deleteUserById(Long userId);
 
 	/**

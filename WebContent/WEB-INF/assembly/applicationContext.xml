@@ -81,7 +81,7 @@
 		class="org.springframework.jdbc.datasource.DataSourceTransactionManager"
 		p:dataSource-ref="dynamicDataSource" />
 
-	<!-- 通过AOP配置提供事务增强，让service-impl包下所有Bean的所有方法拥有事务 -->
+	<!-- 配置事务管理，让service-impl包下所有Bean的所有方法拥有事务 -->
 	<aop:config proxy-target-class="true">
 		<aop:pointcut id="serviceMethod"
 			expression=" execution(* com.coe.wms.service.*.*(..))" />
@@ -93,14 +93,17 @@
 			<!-- 保存,更新,删除方法 -->
 			<!-- 事务隔离:丢失更新 ,脏读,幻读,不可重复读 READ_COMMITTED:只能保障无脏读, 查询时加共享锁,查询结束即放开共享锁,提交时加排他锁 -->
 			<!-- 尽量读操作在方法开始, 写操作在方法结尾 ,因为写操作会加排他锁 -->
-			<tx:method name="save*" propagation="REQUIRED" isolation="READ_COMMITTED" />
-			<tx:method name="update*" propagation="REQUIRED" isolation="READ_COMMITTED" />
-			<tx:method name="delete*" propagation="REQUIRED" isolation="READ_COMMITTED" />
+			<!-- propagation事务传播 isolation事务隔离 -->
+			<tx:method name="save*" propagation="REQUIRED" isolation="READ_COMMITTED" rollback-for="com.coe.wms.exception.ServiceException"/>
+			<tx:method name="update*" propagation="REQUIRED" isolation="READ_COMMITTED" rollback-for="com.coe.wms.exception.ServiceException"/>
+			<tx:method name="delete*" propagation="REQUIRED" isolation="READ_COMMITTED" rollback-for="com.coe.wms.exception.ServiceException"/>
+			<tx:method name="*save*" propagation="REQUIRED" isolation="READ_COMMITTED" rollback-for="com.coe.wms.exception.ServiceException"/>
+				
 			<!-- 查询方法 提示数据库驱动程序和数据库系统，这个事务并不包含更改数据的操作 -->
-			<tx:method name="get*" read-only="true" isolation="READ_COMMITTED" />
-			<tx:method name="find*" read-only="true" isolation="READ_COMMITTED" />
+			<tx:method name="get*" read-only="true" isolation="READ_UNCOMMITTED"/>
+			<tx:method name="find*" read-only="true" isolation="READ_UNCOMMITTED" />
 			<!--其他方法 -->
-			<!-- <tx:method name="*" /> -->
+			<tx:method name="*"  isolation="READ_UNCOMMITTED" rollback-for="com.coe.wms.exception.ServiceException"/>
 		</tx:attributes>
 	</tx:advice>
 

@@ -15,6 +15,7 @@ import com.coe.wms.dao.user.IUserDao;
 import com.coe.wms.dao.warehouse.storage.IInWarehouseOrderDao;
 import com.coe.wms.dao.warehouse.storage.IInWarehouseOrderItemDao;
 import com.coe.wms.dao.warehouse.storage.IInWarehouseRecordDao;
+import com.coe.wms.exception.ServiceException;
 import com.coe.wms.model.user.User;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrderItem;
@@ -35,6 +36,7 @@ import com.coe.wms.pojo.api.warehouse.SkuDetail;
 import com.coe.wms.service.storage.IStorageService;
 import com.coe.wms.util.Constant;
 import com.coe.wms.util.DateUtil;
+import com.coe.wms.util.NumberUtil;
 import com.coe.wms.util.Pagination;
 import com.coe.wms.util.StringUtil;
 import com.coe.wms.util.XmlUtil;
@@ -195,13 +197,14 @@ public class StorageServiceImpl implements IStorageService {
 
 		map.put(Constant.STATUS, Constant.FAIL);
 		// 缺少关键字段
-//		if (StringUtil.isNull(logisticsInterface) || StringUtil.isNull(msgSource) || StringUtil.isNull(dataDigest)
-//				|| StringUtil.isNull(msgType) || StringUtil.isNull(msgId)) {
-//			response.setReason(ErrorCode.S12_CODE);
-//			response.setReasonDesc("缺少关键字段,请检查以下字段:logistics_interface,data_digest,msg_type,msg_id");
-//			map.put(Constant.MESSAGE, XmlUtil.toXml(Responses.class, responses));
-//			return map;
-//		}
+		// if (StringUtil.isNull(logisticsInterface) ||
+		// StringUtil.isNull(msgSource) || StringUtil.isNull(dataDigest)
+		// || StringUtil.isNull(msgType) || StringUtil.isNull(msgId)) {
+		// response.setReason(ErrorCode.S12_CODE);
+		// response.setReasonDesc("缺少关键字段,请检查以下字段:logistics_interface,data_digest,msg_type,msg_id");
+		// map.put(Constant.MESSAGE, XmlUtil.toXml(Responses.class, responses));
+		// return map;
+		// }
 
 		// 根据msgSource 找到客户(token),找到密钥
 		User user = userDao.findUserByMsgSource(msgSource);
@@ -214,13 +217,14 @@ public class StorageServiceImpl implements IStorageService {
 
 		// 验证内容和签名字符串
 		String md5dataDigest = StringUtil.encoderByMd5(logisticsInterface + user.getToken());
-//		if (!StringUtil.isEqual(md5dataDigest, dataDigest)) {
-//			// 签名错误
-//			response.setReason(ErrorCode.S02_CODE);
-//			response.setReasonDesc("收到消息签名:" + dataDigest + " 系统计算消息签名:" + md5dataDigest);
-//			map.put(Constant.MESSAGE, XmlUtil.toXml(Responses.class, responses));
-//			return map;
-//		}
+		// if (!StringUtil.isEqual(md5dataDigest, dataDigest)) {
+		// // 签名错误
+		// response.setReason(ErrorCode.S02_CODE);
+		// response.setReasonDesc("收到消息签名:" + dataDigest + " 系统计算消息签名:" +
+		// md5dataDigest);
+		// map.put(Constant.MESSAGE, XmlUtil.toXml(Responses.class, responses));
+		// return map;
+		// }
 		map.put(Constant.STATUS, Constant.SUCCESS);
 		map.put(Constant.USER_ID_OF_CUSTOMER, "" + user.getId());
 		return map;
@@ -230,7 +234,8 @@ public class StorageServiceImpl implements IStorageService {
 	 * api 创建入库订单
 	 */
 	@Override
-	public String warehouseInterfaceCreateInWarehouseOrder(EventBody eventBody, Long userIdOfCustomer) {
+	public String warehouseInterfaceSaveInWarehouseOrder(EventBody eventBody, Long userIdOfCustomer)
+			throws ServiceException {
 		Responses responses = new Responses();
 		List<Response> responseItems = new ArrayList<Response>();
 		Response response = new Response();
@@ -238,7 +243,7 @@ public class StorageServiceImpl implements IStorageService {
 		responseItems.add(response);
 		responses.setResponseItems(responseItems);
 		LogisticsDetail logisticsDetail = eventBody.getLogisticsDetail();
-		
+
 		if (logisticsDetail == null) {
 			response.setReason(ErrorCode.S01_CODE);
 			response.setReasonDesc("EventBody对象获取LogisticsDetail对象的得到Null");
@@ -250,11 +255,22 @@ public class StorageServiceImpl implements IStorageService {
 			response.setReasonDesc("LogisticsDetail对象获取logisticsOrders对象的得到Null");
 			return XmlUtil.toXml(Responses.class, responses);
 		}
+
 		// 开始入库
 		for (int i = 0; i < logisticsOrders.size(); i++) {
+			// 待添加事务关闭,开启
 			LogisticsOrder logisticsOrder = logisticsOrders.get(i);
 			logger.info("正在入库:第" + (i + 1) + " 跟踪单号(mailNo):" + logisticsOrder.getMailNo());
-
+			if (StringUtil.isNull(logisticsOrder.getMailNo())) {
+				throw new ServiceException("跟踪单号为空,订单入库失败");
+			}
+			// 判断是否已经存在相同的跟踪单号和承运商(目前仅判断相同的跟踪单号就不可以入库)
+			InWarehouseOrder param = new InWarehouseOrder();
+			param.setPackageTrackingNo(logisticsOrder.getMailNo());
+			Long validate = inWarehouseOrderDao.countInWarehouseOrder(param, null);
+			if (validate >= 1) {
+				throw new ServiceException("跟踪单号:" + logisticsOrder.getMailNo() + " 重复,订单入库失败");
+			}
 			// pojo 转 model
 			InWarehouseOrder inWarehouseOrder = new InWarehouseOrder();
 			inWarehouseOrder.setCreatedTime(System.currentTimeMillis());
@@ -298,13 +314,12 @@ public class StorageServiceImpl implements IStorageService {
 			inWarehouseOrder.setSmallPackageQuantity(smallPackageQuantity);
 			// 保存入库订单得到入库订单id
 			Long orderId = inWarehouseOrderDao.saveInWarehouseOrder(inWarehouseOrder);
+
 			int count = inWarehouseOrderItemDao.saveBatchInWarehouseOrderItemWithOrderId(inwarehouseOrderItemList,
 					orderId);
 
 			logger.info("入库主单id:" + orderId + " 入库明细数量:" + count);
-			
 		}
-		
 		response.setSuccess(Constant.TRUE);
 		return XmlUtil.toXml(Responses.class, responses);
 	}
@@ -405,8 +420,16 @@ public class StorageServiceImpl implements IStorageService {
 				map.put("createdTime",
 						DateUtil.dateConvertString(new Date(order.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss));
 			}
-			map.put("userNameOfOperator", order.getUserIdOfOperator());
-			map.put("warehouseId", order.getWarehouseId());
+			// 查询用户名
+			User user = userDao.getUserById(order.getUserIdOfCustomer());
+			map.put("userNameOfCustomer", user.getLoginName());
+			map.put("packageTrackingNo", order.getPackageTrackingNo());
+			if (order.getWeight() != null) {
+				map.put("weight", NumberUtil.getNumPrecision(order.getWeight(), 2));
+			}
+			
+			
+			map.put("warehouse", order.getWarehouseId());
 			list.add(map);
 		}
 		pagination.total = inWarehouseOrderDao.countInWarehouseOrder(inWarehouseOrder, moreParam);
