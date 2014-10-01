@@ -434,17 +434,21 @@ public class StorageServiceImpl implements IStorageService {
 			User user = userDao.getUserById(order.getUserIdOfCustomer());
 			map.put("userNameOfCustomer", user.getLoginName());
 			map.put("packageTrackingNo", order.getPackageTrackingNo());
+			// 承运商
+			map.put("carrierCode", order.getCarrierCode());
 			if (order.getWeight() != null) {
 				map.put("weight", Weight.gTurnToKg(order.getWeight()));
 			}
+
 			if (order.getWarehouseId() != null) {
 				Warehouse warehouse = warehouseDao.getWarehouseById(order.getWarehouseId());
 				if (warehouse != null) {
-					map.put("warehouse", warehouse.getWareHouseName());
+					map.put("warehouse", warehouse.getWarehouseName());
 				}
 			}
 			map.put("remark", order.getRemark());
-			InWarehouseOrderStatus inWarehouseOrderStatus = inWarehouseOrderStatusDao.findInWarehouseOrderStatusByCode(order.getStatus());
+			InWarehouseOrderStatus inWarehouseOrderStatus = inWarehouseOrderStatusDao
+					.findInWarehouseOrderStatusByCode(order.getStatus());
 			if (inWarehouseOrderStatus != null) {
 				map.put("status", inWarehouseOrderStatus.getCn());
 			}

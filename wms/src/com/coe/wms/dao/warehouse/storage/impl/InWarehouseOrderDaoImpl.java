@@ -80,7 +80,7 @@ public class InWarehouseOrderDaoImpl implements IInWarehouseOrderDao {
 	public List<InWarehouseOrder> findInWarehouseOrder(InWarehouseOrder inWarehouseOrder,
 			Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select id,user_id_of_customer,user_id_of_operator,package_no,package_tracking_no,weight,small_package_quantity,created_time,remark,status,received_quantity,carrier_code,logistics_type from w_s_in_warehouse_order where 1=1 ");
+		sb.append("select id,user_id_of_customer,user_id_of_operator,package_no,package_tracking_no,weight,small_package_quantity,created_time,remark,status,received_quantity,carrier_code,logistics_type,warehouse_id from w_s_in_warehouse_order where 1=1 ");
 		if (inWarehouseOrder != null) {
 			if (StringUtil.isNotNull(inWarehouseOrder.getPackageNo())) {
 				sb.append(" and package_no = '" + inWarehouseOrder.getPackageNo() + "' ");

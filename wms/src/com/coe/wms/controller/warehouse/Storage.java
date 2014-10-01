@@ -94,9 +94,6 @@ public class Storage {
 		if (StringUtil.isNotNull(createdTimeStart) && createdTimeStart.contains(",")) {
 			createdTimeStart = createdTimeStart.substring(createdTimeStart.lastIndexOf(","), createdTimeStart.length());
 		}
-		logger.info("warehouseId:" + warehouseId + "  userLoginName:" + userLoginName + " createdTimeStart:"
-				+ createdTimeStart + " createdTimeEnd:" + createdTimeEnd);
-		logger.info("sortorder:" + sortorder + "  sortname:" + sortname + " page:" + page + " pagesize:" + pagesize);
 		HttpSession session = request.getSession();
 		// 当前操作员
 		Long userIdOfOperator = (Long) session.getAttribute(SessionConstant.USER_ID);
@@ -110,7 +107,6 @@ public class Storage {
 		param.setPackageTrackingNo(trackingNo);
 		if (StringUtil.isNotNull(userLoginName)) {
 			Long userIdOfCustomer = userService.findUserIdByLoginName(userLoginName);
-			// 客户id
 			param.setUserIdOfCustomer(userIdOfCustomer);
 		}
 		param.setWarehouseId(warehouseId);
