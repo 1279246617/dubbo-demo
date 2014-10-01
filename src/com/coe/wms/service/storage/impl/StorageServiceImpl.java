@@ -12,13 +12,18 @@ import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import com.coe.wms.dao.user.IUserDao;
+import com.coe.wms.dao.warehouse.IWarehouseDao;
 import com.coe.wms.dao.warehouse.storage.IInWarehouseOrderDao;
 import com.coe.wms.dao.warehouse.storage.IInWarehouseOrderItemDao;
+import com.coe.wms.dao.warehouse.storage.IInWarehouseOrderStatusDao;
 import com.coe.wms.dao.warehouse.storage.IInWarehouseRecordDao;
 import com.coe.wms.exception.ServiceException;
+import com.coe.wms.model.unit.Weight;
 import com.coe.wms.model.user.User;
+import com.coe.wms.model.warehouse.Warehouse;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrderItem;
+import com.coe.wms.model.warehouse.storage.order.InWarehouseOrderStatus;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrderStatus.InWarehouseOrderStatusCode;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecord;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecordItem;
@@ -36,7 +41,6 @@ import com.coe.wms.pojo.api.warehouse.SkuDetail;
 import com.coe.wms.service.storage.IStorageService;
 import com.coe.wms.util.Constant;
 import com.coe.wms.util.DateUtil;
-import com.coe.wms.util.NumberUtil;
 import com.coe.wms.util.Pagination;
 import com.coe.wms.util.StringUtil;
 import com.coe.wms.util.XmlUtil;
@@ -52,8 +56,14 @@ public class StorageServiceImpl implements IStorageService {
 
 	private static final Logger logger = Logger.getLogger(StorageServiceImpl.class);
 
+	@Resource(name = "warehouseDao")
+	private IWarehouseDao warehouseDao;
+
 	@Resource(name = "inWarehouseOrderDao")
 	private IInWarehouseOrderDao inWarehouseOrderDao;
+
+	@Resource(name = "inWarehouseOrderStatusDao")
+	private IInWarehouseOrderStatusDao inWarehouseOrderStatusDao;
 
 	@Resource(name = "inWarehouseOrderItemDao")
 	private IInWarehouseOrderItemDao inWarehouseOrderItemDao;
@@ -425,11 +435,20 @@ public class StorageServiceImpl implements IStorageService {
 			map.put("userNameOfCustomer", user.getLoginName());
 			map.put("packageTrackingNo", order.getPackageTrackingNo());
 			if (order.getWeight() != null) {
-				map.put("weight", NumberUtil.getNumPrecision(order.getWeight(), 2));
+				map.put("weight", Weight.gTurnToKg(order.getWeight()));
 			}
-			
-			
-			map.put("warehouse", order.getWarehouseId());
+			if (order.getWarehouseId() != null) {
+				Warehouse warehouse = warehouseDao.getWarehouseById(order.getWarehouseId());
+				if (warehouse != null) {
+					map.put("warehouse", warehouse.getWareHouseName());
+				}
+			}
+			map.put("remark", order.getRemark());
+			InWarehouseOrderStatus inWarehouseOrderStatus = inWarehouseOrderStatusDao.findInWarehouseOrderStatusByCode(order.getStatus());
+			if (inWarehouseOrderStatus != null) {
+				map.put("status", inWarehouseOrderStatus.getCn());
+			}
+			map.put("receivedQuantity", order.getReceivedQuantity());
 			list.add(map);
 		}
 		pagination.total = inWarehouseOrderDao.countInWarehouseOrder(inWarehouseOrder, moreParam);
