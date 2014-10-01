@@ -16,7 +16,7 @@ public class Warehouse implements Serializable {
 	/**
 	 * 仓库名称
 	 */
-	private String wareHouseName;
+	private String warehouseName;
 
 	private String remark;
 
@@ -75,12 +75,12 @@ public class Warehouse implements Serializable {
 		this.id = id;
 	}
 
-	public String getWareHouseName() {
-		return wareHouseName;
+	public String getWarehouseName() {
+		return warehouseName;
 	}
 
-	public void setWareHouseName(String wareHouseName) {
-		this.wareHouseName = wareHouseName;
+	public void setWarehouseName(String warehouseName) {
+		this.warehouseName = warehouseName;
 	}
 
 	public String getRemark() {
