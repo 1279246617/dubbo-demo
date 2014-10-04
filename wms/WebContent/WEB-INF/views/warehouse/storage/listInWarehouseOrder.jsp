@@ -46,7 +46,7 @@
                		
                		<span class="pull-left" style="width:200px;">
                			至	
-               			<input type="text"   style="width:120px;" name="createdTimeEnd"  id="createdTimeEnd" value="${todayEnd}" title="终止创建时间">
+               			<input type="text"   style="width:120px;" name="createdTimeEnd"  id="createdTimeEnd"  title="终止创建时间">
                		</span>
                		
                		<span class="pull-left" style="width:55px;">

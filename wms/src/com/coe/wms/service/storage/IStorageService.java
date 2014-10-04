@@ -124,4 +124,14 @@ public interface IStorageService {
 	 */
 	public String warehouseInterfaceSaveInWarehouseOrder(EventBody eventBody, Long userIdOfCustomer)
 			throws ServiceException;
+	
+	/**
+	 * 创建出库订单
+	 * 
+	 * @param eventBody
+	 * @param userIdOfCustomer
+	 * @return
+	 */
+	public String warehouseInterfaceSaveOutWarehouseOrder(EventBody eventBody, Long userIdOfCustomer)
+			throws ServiceException;
 }

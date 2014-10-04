@@ -9,7 +9,7 @@ import java.io.Serializable;
  * 
  */
 public class LogisticsOrder implements Serializable {
-	
+
 	/**
 	 * 
 	 */
@@ -25,8 +25,35 @@ public class LogisticsOrder implements Serializable {
 
 	private String mailNo;
 
+	private String segmentCode;
+
+	private String poNo;
+
+	private String routeId;
+
+	private String logisticsRemark;
+	private SenderDetail senderDetail;
+
+	private ReceiverDetail receiverDetail;
+
+	public ReceiverDetail getReceiverDetail() {
+		return receiverDetail;
+	}
+
+	public void setReceiverDetail(ReceiverDetail receiverDetail) {
+		this.receiverDetail = receiverDetail;
+	}
+
+	public String getLogisticsRemark() {
+		return logisticsRemark;
+	}
+
+	public void setLogisticsRemark(String logisticsRemark) {
+		this.logisticsRemark = logisticsRemark;
+	}
+
 	private SkuDetail skuDetail;
-	
+
 	public String getLogisticsType() {
 		return logisticsType;
 	}
@@ -35,12 +62,42 @@ public class LogisticsOrder implements Serializable {
 		this.logisticsType = logisticsType;
 	}
 
-	
+	public String getSegmentCode() {
+		return segmentCode;
+	}
+
+	public void setSegmentCode(String segmentCode) {
+		this.segmentCode = segmentCode;
+	}
+
+	public String getPoNo() {
+		return poNo;
+	}
+
+	public void setPoNo(String poNo) {
+		this.poNo = poNo;
+	}
+
+	public String getRouteId() {
+		return routeId;
+	}
+
+	public void setRouteId(String routeId) {
+		this.routeId = routeId;
+	}
+
+	public SenderDetail getSenderDetail() {
+		return senderDetail;
+	}
+
+	public void setSenderDetail(SenderDetail senderDetail) {
+		this.senderDetail = senderDetail;
+	}
+
 	public String getCarrierCode() {
 		return carrierCode;
 	}
 
-	
 	public String getLogisticsWeight() {
 		return logisticsWeight;
 	}
@@ -49,7 +106,6 @@ public class LogisticsOrder implements Serializable {
 		this.logisticsWeight = logisticsWeight;
 	}
 
-	
 	public String getLogisticsFreight() {
 		return logisticsFreight;
 	}
@@ -62,7 +118,6 @@ public class LogisticsOrder implements Serializable {
 		this.carrierCode = carrierCode;
 	}
 
-	
 	public SkuDetail getSkuDetail() {
 		return skuDetail;
 	}
@@ -70,8 +125,7 @@ public class LogisticsOrder implements Serializable {
 	public void setSkuDetail(SkuDetail skuDetail) {
 		this.skuDetail = skuDetail;
 	}
-	
-	
+
 	public String getMailNo() {
 		return mailNo;
 	}

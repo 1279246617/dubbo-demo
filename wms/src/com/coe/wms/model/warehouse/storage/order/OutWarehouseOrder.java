@@ -24,12 +24,18 @@ public class OutWarehouseOrder implements Serializable {
 	/**
 	 * 仓库id
 	 */
-	private Long wareHouseId;
+	private Long warehouseId;
+
 
 	/**
-	 * 操作员Id
+	 * 订单所属客户id
 	 */
-	private Long userId;
+	private Long userIdOfCustomer;
+
+	/**
+	 * 订单所属操作员id
+	 */
+	private Long userIdOfOperator;
 	/**
 	 * 出货渠道
 	 */
@@ -68,22 +74,15 @@ public class OutWarehouseOrder implements Serializable {
 	public void setId(Long id) {
 		this.id = id;
 	}
-
-	public Long getWareHouseId() {
-		return wareHouseId;
+ 
+	public Long getWarehouseId() {
+		return warehouseId;
 	}
 
-	public void setWareHouseId(Long wareHouseId) {
-		this.wareHouseId = wareHouseId;
+	public void setWarehouseId(Long warehouseId) {
+		this.warehouseId = warehouseId;
 	}
 
-	public Long getUserId() {
-		return userId;
-	}
-
-	public void setUserId(Long userId) {
-		this.userId = userId;
-	}
 
 	public String getBatchNo() {
 		return batchNo;
@@ -131,5 +130,21 @@ public class OutWarehouseOrder implements Serializable {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	public Long getUserIdOfCustomer() {
+		return userIdOfCustomer;
+	}
+
+	public void setUserIdOfCustomer(Long userIdOfCustomer) {
+		this.userIdOfCustomer = userIdOfCustomer;
+	}
+
+	public Long getUserIdOfOperator() {
+		return userIdOfOperator;
+	}
+
+	public void setUserIdOfOperator(Long userIdOfOperator) {
+		this.userIdOfOperator = userIdOfOperator;
 	}
 }

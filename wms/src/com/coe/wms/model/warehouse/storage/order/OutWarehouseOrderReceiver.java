@@ -14,11 +14,20 @@ public class OutWarehouseOrderReceiver implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = -4245802122495822276L;
+
+	/**
+	 * 顺丰API出库指令无传目的国家(顺丰海涛目的国家只有 中国,但我司仓储业务不止中国范围,必须指定国家)
+	 * 
+	 */
+	public static final String CN = "CN";
+
+	public static final String CN_VALUE = "中国";
+
 	private Long id;
 	/**
 	 * orderId
 	 */
-	private Long orderId;
+	private Long outWarehouseOrderId;
 
 	/**
 	 * 收件人名
@@ -87,18 +96,16 @@ public class OutWarehouseOrderReceiver implements Serializable {
 	 * 收件人电话号码
 	 */
 	private String phoneNumber;
+
+	/**
+	 * 收件人手机号码
+	 */
+	private String mobileNumber;
+
 	/**
 	 * 收件人邮箱
 	 */
 	private String email;
-
-	public Long getOrderId() {
-		return orderId;
-	}
-
-	public void setOrderId(Long orderId) {
-		this.orderId = orderId;
-	}
 
 	public String getName() {
 		return name;
@@ -114,6 +121,14 @@ public class OutWarehouseOrderReceiver implements Serializable {
 
 	public void setCompany(String company) {
 		this.company = company;
+	}
+
+	public Long getOutWarehouseOrderId() {
+		return outWarehouseOrderId;
+	}
+
+	public void setOutWarehouseOrderId(Long outWarehouseOrderId) {
+		this.outWarehouseOrderId = outWarehouseOrderId;
 	}
 
 	public String getFirstName() {
@@ -138,6 +153,14 @@ public class OutWarehouseOrderReceiver implements Serializable {
 
 	public void setAddressLine1(String addressLine1) {
 		this.addressLine1 = addressLine1;
+	}
+
+	public String getMobileNumber() {
+		return mobileNumber;
+	}
+
+	public void setMobileNumber(String mobileNumber) {
+		this.mobileNumber = mobileNumber;
 	}
 
 	public String getAddressLine2() {

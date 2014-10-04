@@ -18,7 +18,7 @@ public class OutWarehouseOrderSender implements Serializable {
 	/**
 	 * orderId
 	 */
-	private Long orderId;
+	private Long outWarehouseOrderId;
 
 	/**
 	 * 发件人名
@@ -92,13 +92,6 @@ public class OutWarehouseOrderSender implements Serializable {
 	 */
 	private String email;
 
-	public Long getOrderId() {
-		return orderId;
-	}
-
-	public void setOrderId(Long orderId) {
-		this.orderId = orderId;
-	}
 
 	public String getName() {
 		return name;
@@ -106,6 +99,14 @@ public class OutWarehouseOrderSender implements Serializable {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public Long getOutWarehouseOrderId() {
+		return outWarehouseOrderId;
+	}
+
+	public void setOutWarehouseOrderId(Long outWarehouseOrderId) {
+		this.outWarehouseOrderId = outWarehouseOrderId;
 	}
 
 	public String getCompany() {

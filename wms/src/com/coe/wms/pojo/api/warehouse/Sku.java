@@ -9,6 +9,10 @@ public class Sku implements Serializable {
 	private String skuCode;
 
 	private String skuName;
+	
+	private Double skuUnitPrice;
+	
+	private String skuPriceCurrency;
 
 	/**
 	 * 入库数量
@@ -29,6 +33,22 @@ public class Sku implements Serializable {
 	
 	public String getSkuName() {
 		return skuName;
+	}
+
+	public Double getSkuUnitPrice() {
+		return skuUnitPrice;
+	}
+
+	public void setSkuUnitPrice(Double skuUnitPrice) {
+		this.skuUnitPrice = skuUnitPrice;
+	}
+
+	public String getSkuPriceCurrency() {
+		return skuPriceCurrency;
+	}
+
+	public void setSkuPriceCurrency(String skuPriceCurrency) {
+		this.skuPriceCurrency = skuPriceCurrency;
 	}
 
 	public void setSkuName(String skuName) {
