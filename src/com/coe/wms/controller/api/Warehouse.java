@@ -92,7 +92,7 @@ public class Warehouse {
 			}
 
 			if (StringUtil.isEqualIgnoreCase(EventType.LOGISTICS_SKU_PAID, eventType)) {// 创建出库订单
-				responseXml = storageService.warehouseInterfaceSaveInWarehouseOrder(eventBody, userIdOfCustomer);
+				responseXml = storageService.warehouseInterfaceSaveOutWarehouseOrder(eventBody, userIdOfCustomer);
 			}
 
 			if (StringUtil.isEqualIgnoreCase(EventType.LOGISTICS_SEND_SKU, eventType)) { // 确认创建出库订单

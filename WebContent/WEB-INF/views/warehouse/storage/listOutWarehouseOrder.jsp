@@ -20,7 +20,7 @@
 </head>
 <body>
 	  <div class="toolbar1">
-           <form action="${baseUrl}/warehouse/storage/getInWarehouseOrderData.do" id="searchform" name="searchform" method="post">
+           <form action="${baseUrl}/warehouse/storage/getOutWarehouseOrderData.do" id="searchform" name="searchform" method="post">
                <div class="pull-right searchContent">
                		<span class="pull-left" style="width:175px;">
                			仓库
@@ -121,15 +121,15 @@
 		                {display: '操作',isSort: false,width: '10%',render: function(row) {
 		            		var h = "";
 		            		if (!row._editing) {
-		            			h += '<a href="javascript:updateInWarehouseItem(' + row.id + ')">编辑</a> ';
-		            			h += '<a href="javascript:deleteInWarehouseItem(' + row.id + ')">删除</a>';
+		            			h += '<a href="javascript:updateOutWarehouseItem(' + row.id + ')">编辑</a> ';
+		            			h += '<a href="javascript:deleteOutWarehouseItem(' + row.id + ')">删除</a>';
 		            		}
 		            		return h;
 		            	}
 		            }
 	                ],  
 	                dataAction: 'server',
-	                url: baseUrl+'/warehouse/storage/getInWarehouseOrderData.do?createdTimeStart=${todayStart}',
+	                url: baseUrl+'/warehouse/storage/getOutWarehouseOrderData.do?createdTimeStart=${todayStart}',
 	                pageSize: 50, 
 	                pageSizeOptions:[10,50,100,500,1000],
 	                usePager: 'true',

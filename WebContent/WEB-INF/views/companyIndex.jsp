@@ -54,9 +54,9 @@
 		              <ul class="nav nav-tabs nav-stacked ">	
 		              		<li><a href="#${baseUrl}/warehouse/storage/listInWarehouseOrder.do" tab_id="findInWarehouseOrder"><i class="icon-zoom-in"></i><span class="hidden-tablet">入库订单查询</span></a></li>
 		              		<!-- 出库订单查询中,需要具备审核功能,反审核 -->
-		              		<li><a href=# tab_id="findOutWarehouseOrder"><i class="icon-zoom-out"></i><span class="hidden-tablet">出库订单查询</span></a></li>
+		              		<li><a href="#${baseUrl}/warehouse/storage/listOutWarehouseOrder.do" tab_id="findOutWarehouseOrder"><i class="icon-zoom-out"></i><span class="hidden-tablet">出库订单查询</span></a></li>
 		              		<!-- 待审核出库订单,只显示未审核出库订单,方便审核的人快速操作 -->
-		              		<li><a href=# tab_id="findOutWarehouseOrder"><i class="icon-folder-open"></i><span class="hidden-tablet">待审核出库订单</span></a></li>
+		              		<li><a href=# tab_id="waitOutWarehouseOrder"><i class="icon-folder-open"></i><span class="hidden-tablet">待审核出库订单</span></a></li>
 		                </ul>
 		        </div>
 		        <div title="仓库管理" class=" nav-collapse sidebar-nav">

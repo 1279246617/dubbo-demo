@@ -71,7 +71,6 @@ public class Storage {
 		view.addObject("userId", userId);
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
 		view.addObject("todayStart", DateUtil.getTodayStart());
-		view.addObject("todayEnd", DateUtil.getTodayEnd());
 		view.setViewName("warehouse/storage/listInWarehouseOrder");
 		return view;
 	}
@@ -92,7 +91,76 @@ public class Storage {
 			int pagesize, String userLoginName, Long warehouseId, String trackingNo, String createdTimeStart,
 			String createdTimeEnd) throws IOException {
 		if (StringUtil.isNotNull(createdTimeStart) && createdTimeStart.contains(",")) {
-			createdTimeStart = createdTimeStart.substring(createdTimeStart.lastIndexOf(","), createdTimeStart.length());
+			createdTimeStart = createdTimeStart.substring(createdTimeStart.lastIndexOf(",") + 1,
+					createdTimeStart.length());
+		}
+		HttpSession session = request.getSession();
+		// 当前操作员
+		Long userIdOfOperator = (Long) session.getAttribute(SessionConstant.USER_ID);
+		Pagination pagination = new Pagination();
+		pagination.curPage = page;
+		pagination.pageSize = pagesize;
+		pagination.sortName = sortname;
+		pagination.sortOrder = sortorder;
+
+		InWarehouseOrder param = new InWarehouseOrder();
+		param.setPackageTrackingNo(trackingNo);
+		if (StringUtil.isNotNull(userLoginName)) {
+			Long userIdOfCustomer = userService.findUserIdByLoginName(userLoginName);
+			param.setUserIdOfCustomer(userIdOfCustomer);
+		}
+		param.setWarehouseId(warehouseId);
+		// 更多参数
+		Map<String, String> moreParam = new HashMap<String, String>();
+		moreParam.put("createdTimeStart", createdTimeStart);
+		moreParam.put("createdTimeEnd", createdTimeEnd);
+
+		pagination = storageService.getInWarehouseOrderData(param, moreParam, pagination);
+		Map map = new HashMap();
+		map.put("Rows", pagination.rows);
+		map.put("Total", pagination.total);
+		return GsonUtil.toJson(map);
+	}
+
+	/**
+	 * 出库订单 查询
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/listOutWarehouseOrder", method = RequestMethod.GET)
+	public ModelAndView listOutWarehouseOrder(HttpServletRequest request, HttpServletResponse response)
+			throws IOException {
+		HttpSession session = request.getSession();
+		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
+		ModelAndView view = new ModelAndView();
+		view.addObject("userId", userId);
+		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
+		view.addObject("todayStart", DateUtil.getTodayStart());
+		view.setViewName("warehouse/storage/listInWarehouseOrder");
+		return view;
+	}
+
+	/**
+	 * 获取出库订单
+	 * 
+	 * @param request
+	 * @param response
+	 * @param userLoginName
+	 *            客户登录名,仅当根据跟踪号无法找到订单时,要求输入
+	 * @return
+	 * @throws IOException
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/getOutWarehouseOrderData", method = RequestMethod.POST)
+	public String getOutWarehouseOrderData(HttpServletRequest request, String sortorder, String sortname, int page,
+			int pagesize, String userLoginName, Long warehouseId, String trackingNo, String createdTimeStart,
+			String createdTimeEnd) throws IOException {
+		if (StringUtil.isNotNull(createdTimeStart) && createdTimeStart.contains(",")) {
+			createdTimeStart = createdTimeStart.substring(createdTimeStart.lastIndexOf(",") + 1,
+					createdTimeStart.length());
 		}
 		HttpSession session = request.getSession();
 		// 当前操作员

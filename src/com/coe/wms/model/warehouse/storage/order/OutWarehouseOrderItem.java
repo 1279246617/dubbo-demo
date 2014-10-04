@@ -23,7 +23,7 @@ public class OutWarehouseOrderItem implements Serializable {
 	/**
 	 * 入库主单id
 	 */
-	private Long inWareHouseRecordId;
+	private Long outWarehouseOrderId;
 
 	/**
 	 * 数量
@@ -36,6 +36,21 @@ public class OutWarehouseOrderItem implements Serializable {
 	private String sku;
 
 	/**
+	 * 可用于报关描述(申报品名)
+	 */
+	private String skuName;
+
+	/**
+	 * 可用于报关币种
+	 */
+	private String skuPriceCurrency;
+
+	/**
+	 * sku单价 可用于报关价值
+	 */
+	private Double skuUnitPrice;
+
+	/**
 	 * 备注
 	 */
 	private String remark;
@@ -44,16 +59,40 @@ public class OutWarehouseOrderItem implements Serializable {
 		return id;
 	}
 
+	public String getSkuName() {
+		return skuName;
+	}
+
+	public void setSkuName(String skuName) {
+		this.skuName = skuName;
+	}
+
+	public String getSkuPriceCurrency() {
+		return skuPriceCurrency;
+	}
+
+	public void setSkuPriceCurrency(String skuPriceCurrency) {
+		this.skuPriceCurrency = skuPriceCurrency;
+	}
+
+	public Double getSkuUnitPrice() {
+		return skuUnitPrice;
+	}
+
+	public void setSkuUnitPrice(Double skuUnitPrice) {
+		this.skuUnitPrice = skuUnitPrice;
+	}
+
 	public void setId(Long id) {
 		this.id = id;
 	}
 
-	public Long getInWareHouseRecordId() {
-		return inWareHouseRecordId;
+	public Long getOutWarehouseOrderId() {
+		return outWarehouseOrderId;
 	}
 
-	public void setInWareHouseRecordId(Long inWareHouseRecordId) {
-		this.inWareHouseRecordId = inWareHouseRecordId;
+	public void setOutWarehouseOrderId(Long outWarehouseOrderId) {
+		this.outWarehouseOrderId = outWarehouseOrderId;
 	}
 
 	public Integer getQuantity() {

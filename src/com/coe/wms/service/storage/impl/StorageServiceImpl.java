@@ -25,19 +25,28 @@ import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrderItem;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrderStatus;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrderStatus.InWarehouseOrderStatusCode;
+import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrder;
+import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderItem;
+import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderReceiver;
+import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderSender;
+import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus.OurWareHouseStatusCode;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecord;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecordItem;
 import com.coe.wms.pojo.api.warehouse.ErrorCode;
 import com.coe.wms.pojo.api.warehouse.EventBody;
 import com.coe.wms.pojo.api.warehouse.EventHeader;
+import com.coe.wms.pojo.api.warehouse.Item;
 import com.coe.wms.pojo.api.warehouse.LogisticsDetail;
 import com.coe.wms.pojo.api.warehouse.LogisticsEvent;
 import com.coe.wms.pojo.api.warehouse.LogisticsEventsRequest;
 import com.coe.wms.pojo.api.warehouse.LogisticsOrder;
+import com.coe.wms.pojo.api.warehouse.ReceiverDetail;
 import com.coe.wms.pojo.api.warehouse.Response;
 import com.coe.wms.pojo.api.warehouse.Responses;
+import com.coe.wms.pojo.api.warehouse.SenderDetail;
 import com.coe.wms.pojo.api.warehouse.Sku;
 import com.coe.wms.pojo.api.warehouse.SkuDetail;
+import com.coe.wms.pojo.api.warehouse.TradeDetail;
 import com.coe.wms.service.storage.IStorageService;
 import com.coe.wms.util.Constant;
 import com.coe.wms.util.DateUtil;
@@ -240,100 +249,6 @@ public class StorageServiceImpl implements IStorageService {
 		return map;
 	}
 
-	/**
-	 * api 创建入库订单
-	 */
-	@Override
-	public String warehouseInterfaceSaveInWarehouseOrder(EventBody eventBody, Long userIdOfCustomer)
-			throws ServiceException {
-		Responses responses = new Responses();
-		List<Response> responseItems = new ArrayList<Response>();
-		Response response = new Response();
-		response.setSuccess(Constant.FALSE);
-		responseItems.add(response);
-		responses.setResponseItems(responseItems);
-		LogisticsDetail logisticsDetail = eventBody.getLogisticsDetail();
-
-		if (logisticsDetail == null) {
-			response.setReason(ErrorCode.S01_CODE);
-			response.setReasonDesc("EventBody对象获取LogisticsDetail对象的得到Null");
-			return XmlUtil.toXml(Responses.class, responses);
-		}
-		List<LogisticsOrder> logisticsOrders = logisticsDetail.getLogisticsOrders();
-		if (logisticsOrders == null) {
-			response.setReason(ErrorCode.S01_CODE);
-			response.setReasonDesc("LogisticsDetail对象获取logisticsOrders对象的得到Null");
-			return XmlUtil.toXml(Responses.class, responses);
-		}
-
-		// 开始入库
-		for (int i = 0; i < logisticsOrders.size(); i++) {
-			// 待添加事务关闭,开启
-			LogisticsOrder logisticsOrder = logisticsOrders.get(i);
-			logger.info("正在入库:第" + (i + 1) + " 跟踪单号(mailNo):" + logisticsOrder.getMailNo());
-			if (StringUtil.isNull(logisticsOrder.getMailNo())) {
-				throw new ServiceException("跟踪单号为空,订单入库失败");
-			}
-			// 判断是否已经存在相同的跟踪单号和承运商(目前仅判断相同的跟踪单号就不可以入库)
-			InWarehouseOrder param = new InWarehouseOrder();
-			param.setPackageTrackingNo(logisticsOrder.getMailNo());
-			Long validate = inWarehouseOrderDao.countInWarehouseOrder(param, null);
-			if (validate >= 1) {
-				throw new ServiceException("跟踪单号:" + logisticsOrder.getMailNo() + " 重复,订单入库失败");
-			}
-			// pojo 转 model
-			InWarehouseOrder inWarehouseOrder = new InWarehouseOrder();
-			inWarehouseOrder.setCreatedTime(System.currentTimeMillis());
-			inWarehouseOrder.setPackageTrackingNo(logisticsOrder.getMailNo());
-			inWarehouseOrder.setUserIdOfCustomer(userIdOfCustomer);
-			// 已预报,未入库
-			inWarehouseOrder.setStatus(InWarehouseOrderStatusCode.NONE);
-			// 大包号,目前等于跟踪单号
-			inWarehouseOrder.setPackageNo(logisticsOrder.getMailNo());
-			inWarehouseOrder.setCarrierCode(logisticsOrder.getCarrierCode());
-			inWarehouseOrder.setLogisticsType(logisticsOrder.getLogisticsType());
-
-			// sku明细
-			SkuDetail skuDetail = logisticsOrder.getSkuDetail();
-			if (skuDetail == null) {
-				logger.info("正在入库:第" + (i + 1) + " 物品明细(SkuDetail) 得到Null");
-				continue;
-			}
-			List<Sku> skuList = skuDetail.getSkus();
-			if (skuList == null) {
-				logger.info("正在入库:第" + (i + 1) + "物品明细SkuDetail - >(skuList) 得到Null");
-				continue;
-			}
-			int smallPackageQuantity = 0;
-			List<InWarehouseOrderItem> inwarehouseOrderItemList = new ArrayList<InWarehouseOrderItem>();
-			for (int j = 0; j < skuList.size(); j++) {
-				Sku sku = skuList.get(j);
-				if (sku.getSkuQty() == null || StringUtil.isNull(sku.getSkuCode())) {
-					continue;
-				}
-				InWarehouseOrderItem inwarehouseOrderItem = new InWarehouseOrderItem();
-				inwarehouseOrderItem.setSku(sku.getSkuCode());
-				inwarehouseOrderItem.setQuantity(sku.getSkuQty());
-				inwarehouseOrderItem.setSkuName(sku.getSkuName());
-				inwarehouseOrderItem.setSkuRemark(sku.getSkuRemark());
-				smallPackageQuantity += sku.getSkuQty();
-				// 入库主单的id
-				inwarehouseOrderItemList.add(inwarehouseOrderItem);
-			}
-			// 物品总数量
-			inWarehouseOrder.setSmallPackageQuantity(smallPackageQuantity);
-			// 保存入库订单得到入库订单id
-			Long orderId = inWarehouseOrderDao.saveInWarehouseOrder(inWarehouseOrder);
-
-			int count = inWarehouseOrderItemDao.saveBatchInWarehouseOrderItemWithOrderId(inwarehouseOrderItemList,
-					orderId);
-
-			logger.info("入库主单id:" + orderId + " 入库明细数量:" + count);
-		}
-		response.setSuccess(Constant.TRUE);
-		return XmlUtil.toXml(Responses.class, responses);
-	}
-
 	@Override
 	public Map<String, String> saveInWarehouseRecord(String trackingNo, String userLoginName, String isUnKnowCustomer,
 			String remark, Long userIdOfOperator) {
@@ -458,5 +373,190 @@ public class StorageServiceImpl implements IStorageService {
 		pagination.total = inWarehouseOrderDao.countInWarehouseOrder(inWarehouseOrder, moreParam);
 		pagination.rows = list;
 		return pagination;
+	}
+
+	/**
+	 * api 创建入库订单
+	 */
+	@Override
+	public String warehouseInterfaceSaveInWarehouseOrder(EventBody eventBody, Long userIdOfCustomer)
+			throws ServiceException {
+		Responses responses = new Responses();
+		List<Response> responseItems = new ArrayList<Response>();
+		Response response = new Response();
+		response.setSuccess(Constant.FALSE);
+		responseItems.add(response);
+		responses.setResponseItems(responseItems);
+		LogisticsDetail logisticsDetail = eventBody.getLogisticsDetail();
+
+		if (logisticsDetail == null) {
+			response.setReason(ErrorCode.S01_CODE);
+			response.setReasonDesc("EventBody对象获取LogisticsDetail对象的得到Null");
+			return XmlUtil.toXml(Responses.class, responses);
+		}
+		List<LogisticsOrder> logisticsOrders = logisticsDetail.getLogisticsOrders();
+		if (logisticsOrders == null) {
+			response.setReason(ErrorCode.S01_CODE);
+			response.setReasonDesc("LogisticsDetail对象获取logisticsOrders对象的得到Null");
+			return XmlUtil.toXml(Responses.class, responses);
+		}
+
+		// 开始入库
+		for (int i = 0; i < logisticsOrders.size(); i++) {
+			// 待添加事务关闭,开启
+			LogisticsOrder logisticsOrder = logisticsOrders.get(i);
+			logger.info("正在入库:第" + (i + 1) + " 跟踪单号(mailNo):" + logisticsOrder.getMailNo());
+			if (StringUtil.isNull(logisticsOrder.getMailNo())) {
+				throw new ServiceException("跟踪单号为空,订单入库失败");
+			}
+			// 判断是否已经存在相同的跟踪单号和承运商(目前仅判断相同的跟踪单号就不可以入库)
+			InWarehouseOrder param = new InWarehouseOrder();
+			param.setPackageTrackingNo(logisticsOrder.getMailNo());
+			Long validate = inWarehouseOrderDao.countInWarehouseOrder(param, null);
+			if (validate >= 1) {
+				throw new ServiceException("跟踪单号:" + logisticsOrder.getMailNo() + " 重复,订单入库失败");
+			}
+			// pojo 转 model
+			InWarehouseOrder inWarehouseOrder = new InWarehouseOrder();
+			inWarehouseOrder.setCreatedTime(System.currentTimeMillis());
+			inWarehouseOrder.setPackageTrackingNo(logisticsOrder.getMailNo());
+			inWarehouseOrder.setUserIdOfCustomer(userIdOfCustomer);
+			// 已预报,未入库
+			inWarehouseOrder.setStatus(InWarehouseOrderStatusCode.NONE);
+			// 大包号,目前等于跟踪单号
+			inWarehouseOrder.setPackageNo(logisticsOrder.getMailNo());
+			inWarehouseOrder.setCarrierCode(logisticsOrder.getCarrierCode());
+			inWarehouseOrder.setLogisticsType(logisticsOrder.getLogisticsType());
+
+			// sku明细
+			SkuDetail skuDetail = logisticsOrder.getSkuDetail();
+			if (skuDetail == null) {
+				logger.info("正在入库:第" + (i + 1) + " 物品明细(SkuDetail) 得到Null");
+				continue;
+			}
+			List<Sku> skuList = skuDetail.getSkus();
+			if (skuList == null) {
+				logger.info("正在入库:第" + (i + 1) + "物品明细SkuDetail - >(skuList) 得到Null");
+				continue;
+			}
+			int smallPackageQuantity = 0;
+			List<InWarehouseOrderItem> inwarehouseOrderItemList = new ArrayList<InWarehouseOrderItem>();
+			for (int j = 0; j < skuList.size(); j++) {
+				Sku sku = skuList.get(j);
+				if (sku.getSkuQty() == null || StringUtil.isNull(sku.getSkuCode())) {
+					continue;
+				}
+				InWarehouseOrderItem inwarehouseOrderItem = new InWarehouseOrderItem();
+				inwarehouseOrderItem.setSku(sku.getSkuCode());
+				inwarehouseOrderItem.setQuantity(sku.getSkuQty());
+				inwarehouseOrderItem.setSkuName(sku.getSkuName());
+				inwarehouseOrderItem.setSkuRemark(sku.getSkuRemark());
+				smallPackageQuantity += sku.getSkuQty();
+				// 入库主单的id
+				inwarehouseOrderItemList.add(inwarehouseOrderItem);
+			}
+			// 物品总数量
+			inWarehouseOrder.setSmallPackageQuantity(smallPackageQuantity);
+			// 保存入库订单得到入库订单id
+			Long orderId = inWarehouseOrderDao.saveInWarehouseOrder(inWarehouseOrder);
+
+			int count = inWarehouseOrderItemDao.saveBatchInWarehouseOrderItemWithOrderId(inwarehouseOrderItemList,
+					orderId);
+
+			logger.info("入库主单id:" + orderId + " 入库明细数量:" + count);
+		}
+		response.setSuccess(Constant.TRUE);
+		return XmlUtil.toXml(Responses.class, responses);
+	}
+
+	/**
+	 * API创建出库订单
+	 */
+	@Override
+	public String warehouseInterfaceSaveOutWarehouseOrder(EventBody eventBody, Long userIdOfCustomer)
+			throws ServiceException {
+		Responses responses = new Responses();
+		List<Response> responseItems = new ArrayList<Response>();
+		Response response = new Response();
+		response.setSuccess(Constant.FALSE);
+		responseItems.add(response);
+		responses.setResponseItems(responseItems);
+		// 出库订单发件人信息
+		LogisticsDetail logisticsDetail = eventBody.getLogisticsDetail();
+		if (logisticsDetail == null) {
+			response.setReason(ErrorCode.S01_CODE);
+			response.setReasonDesc("EventBody对象获取LogisticsDetail对象的得到Null");
+			return XmlUtil.toXml(Responses.class, responses);
+		}
+		List<LogisticsOrder> logisticsOrders = logisticsDetail.getLogisticsOrders();
+		if (logisticsOrders == null) {
+			response.setReason(ErrorCode.S01_CODE);
+			response.setReasonDesc("LogisticsDetail对象获取LogisticsOrders对象的得到Null");
+			return XmlUtil.toXml(Responses.class, responses);
+		}
+		// 保存入库
+		for (int i = 0; i < logisticsOrders.size(); i++) {
+			LogisticsOrder logisticsOrder = logisticsOrders.get(i);
+			if (logisticsOrder == null) {
+				throw new ServiceException("LogisticsOrders对象获取LogisticsOrder对象的得到Null");
+			}
+			ReceiverDetail receiverDetail = logisticsOrder.getReceiverDetail();
+			if (receiverDetail == null) {
+				throw new ServiceException("LogisticsOrder对象获取ReceiverDetail对象的得到Null");
+			}
+			SenderDetail senderDetail = logisticsOrder.getSenderDetail();
+			if (senderDetail == null) {
+				throw new ServiceException("LogisticsOrder对象获取SenderDetail对象的得到Null");
+			}
+			SkuDetail skuDetail = logisticsOrder.getSkuDetail();
+			if (skuDetail == null) {
+				throw new ServiceException("LogisticsOrder对象获取SkuDetail对象的得到Null");
+			}
+			List<Sku> skus = skuDetail.getSkus();
+			if (skus == null) {
+				throw new ServiceException("SkuDetail对象获取List<Sku>对象的得到Null");
+			}
+
+			logger.info("出库订单:第" + (i + 1) + "(poNo):" + logisticsOrder.getPoNo());
+			// 主单
+			OutWarehouseOrder outWarehouseOrder = new OutWarehouseOrder();
+			outWarehouseOrder.setCreatedTime(System.currentTimeMillis());
+			outWarehouseOrder.setRemark(logisticsOrder.getLogisticsRemark());
+			outWarehouseOrder.setStatus(OurWareHouseStatusCode.DRAFT);
+
+			// 收件人
+			OutWarehouseOrderReceiver outWarehouseOrderReceiver = new OutWarehouseOrderReceiver();
+			outWarehouseOrderReceiver.setAddressLine1(receiverDetail.getStreetAddress());
+			outWarehouseOrderReceiver.setCity(receiverDetail.getCity());
+			outWarehouseOrderReceiver.setCountryCode(OutWarehouseOrderReceiver.CN);
+			outWarehouseOrderReceiver.setCountryName(OutWarehouseOrderReceiver.CN_VALUE);
+			outWarehouseOrderReceiver.setCounty(receiverDetail.getDistrict());
+			outWarehouseOrderReceiver.setEmail(receiverDetail.getEmail());
+			outWarehouseOrderReceiver.setName(receiverDetail.getName());
+			outWarehouseOrderReceiver.setPhoneNumber(receiverDetail.getPhone());
+			outWarehouseOrderReceiver.setPostalCode(receiverDetail.getZipCode());
+			outWarehouseOrderReceiver.setStateOrProvince(receiverDetail.getProvince());
+			outWarehouseOrderReceiver.setMobileNumber(receiverDetail.getMobile());
+
+			// 物品信息
+			for (int j = 0; j < skus.size(); j++) {
+				Sku sku = skus.get(j);
+				if (sku == null) {
+					throw new ServiceException("SkuDetail对象获取Sku对象的得到Null");
+				}
+				OutWarehouseOrderItem outWarehouseOrderItem = new OutWarehouseOrderItem();
+				outWarehouseOrderItem.setQuantity(sku.getSkuQty());
+				outWarehouseOrderItem.setRemark(sku.getSkuRemark());
+				outWarehouseOrderItem.setSku(sku.getSkuCode());
+				outWarehouseOrderItem.setSkuName(sku.getSkuName());
+				outWarehouseOrderItem.setSkuUnitPrice(sku.getSkuUnitPrice());
+				outWarehouseOrderItem.setSkuPriceCurrency(sku.getSkuPriceCurrency());
+			}
+			// 发件人信息
+			OutWarehouseOrderSender outWarehouseOrderSender = new OutWarehouseOrderSender();
+			
+			
+		}
+		return null;
 	}
 }
