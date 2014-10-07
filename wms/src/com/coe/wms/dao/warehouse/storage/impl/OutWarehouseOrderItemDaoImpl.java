@@ -129,7 +129,7 @@ public class OutWarehouseOrderItemDaoImpl implements IOutWarehouseOrderItemDao {
 	public List<OutWarehouseOrderItem> findOutWarehouseOrderItem(OutWarehouseOrderItem outWarehouseOrderItem,
 			Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select id,out_warehouse_order_id,quantity,sku,sku_name,sku_unit_price,sku_price_currency,remark where 1=1 ");
+		sb.append("select id,out_warehouse_order_id,quantity,sku,sku_name,sku_unit_price,sku_price_currency,remark from w_s_out_warehouse_order_item where 1=1 ");
 		if (outWarehouseOrderItem != null) {
 			if (StringUtil.isNotNull(outWarehouseOrderItem.getSku())) {
 				sb.append(" and sku = '" + outWarehouseOrderItem.getSku() + "' ");
@@ -157,7 +157,9 @@ public class OutWarehouseOrderItemDaoImpl implements IOutWarehouseOrderItemDao {
 			}
 		}
 		// 分页sql
-		sb.append(page.generatePageSql());
+		if(page!=null){
+			sb.append(page.generatePageSql());	
+		}
 		String sql = sb.toString();
 		logger.info("查询出库订单明细sql:" + sql);
 		List<OutWarehouseOrderItem> outWarehouseOrderItemList = jdbcTemplate.query(sql,

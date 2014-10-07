@@ -449,6 +449,15 @@ public class StorageServiceImpl implements IStorageService {
 			if(outWarehouseOrderSender!=null){
 				map.put("senderName", outWarehouseOrderSender.getName());
 			}
+			//物品明细(目前仅展示SKU*数量)
+			String itemStr = "";
+			OutWarehouseOrderItem outWarehouseOrderItemParam = new OutWarehouseOrderItem();
+			outWarehouseOrderItemParam.setOutWarehouseOrderId(outWarehouseOrderId);
+			List<OutWarehouseOrderItem> outWarehouseOrderItemList = outWarehouseOrderItemDao.findOutWarehouseOrderItem(outWarehouseOrderItemParam, null, null);
+			for (OutWarehouseOrderItem outWarehouseOrderItem : outWarehouseOrderItemList) {
+				itemStr += outWarehouseOrderItem.getSku() + "*" + outWarehouseOrderItem.getQuantity() + " ";
+			}
+			map.put("items", itemStr);
 			list.add(map);
 		}
 		pagination.total = outWarehouseOrderDao.countOutWarehouseOrder(outWarehouseOrder, moreParam);

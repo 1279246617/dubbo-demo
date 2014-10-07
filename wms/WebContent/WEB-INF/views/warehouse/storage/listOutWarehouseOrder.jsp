@@ -110,12 +110,12 @@
 	    	 grid = $("#maingrid").ligerGrid({
 	                columns: [
 	                    { display: '客户帐号', name: 'userNameOfCustomer', align: 'center',type:'float',width:'9%'},
-	  		          	{ display: '客户单号', name: 'customerReferenceNo', align: 'center', type: 'float',width:'12%'},
+	  		          	{ display: '客户单号', name: 'customerReferenceNo', align: 'center', type: 'float',width:'10%'},
 		                { display: '仓库', name: 'warehouse', align: 'center', type: 'float',width:'8%'},
 		                { display: '出库物品', name: 'items', align: 'center', type: 'float',width:'18%'},
 		                { display: '状态', name: 'status', align: 'center', type: 'float',width:'8%'},
 		                { display: '收件人名', name: 'receiverName', align: 'center', type: 'float',width:'8%'},
-		                { display: '收件人街道1', name: 'receiverAddressLine1', align: 'center', type: 'float',width:'8%'},
+		                { display: '收件人街道1', name: 'receiverAddressLine1', align: 'center', type: 'float',width:'12%'},
 		                { display: '收件人街道2', name: 'receiverAddressLine2', align: 'center', type: 'float',width:'8%'},
 		                { display: '收件人县区', name: 'receiverCounty', align: 'center', type: 'float',width:'8%'},
 		                { display: '收件人城市', name: 'receiverCity', align: 'center', type: 'float',width:'8%'},
