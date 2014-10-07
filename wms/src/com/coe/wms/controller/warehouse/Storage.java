@@ -139,7 +139,7 @@ public class Storage {
 		view.addObject("userId", userId);
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
 		view.addObject("todayStart", DateUtil.getTodayStart());
-		view.setViewName("warehouse/storage/listInWarehouseOrder");
+		view.setViewName("warehouse/storage/listOutWarehouseOrder");
 		return view;
 	}
 

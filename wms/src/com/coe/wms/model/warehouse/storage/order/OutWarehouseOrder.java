@@ -26,7 +26,6 @@ public class OutWarehouseOrder implements Serializable {
 	 */
 	private Long warehouseId;
 
-
 	/**
 	 * 订单所属客户id
 	 */
@@ -61,11 +60,16 @@ public class OutWarehouseOrder implements Serializable {
 	 * 状态
 	 */
 	private String status;
-	
+
 	/**
 	 * 出库摘要
 	 */
 	private String remark;
+
+	/**
+	 * 客户参考号, 用于客户对该出库指令进行修改,确认等
+	 */
+	private String customerReferenceNo;
 
 	public Long getId() {
 		return id;
@@ -74,7 +78,7 @@ public class OutWarehouseOrder implements Serializable {
 	public void setId(Long id) {
 		this.id = id;
 	}
- 
+
 	public Long getWarehouseId() {
 		return warehouseId;
 	}
@@ -83,13 +87,20 @@ public class OutWarehouseOrder implements Serializable {
 		this.warehouseId = warehouseId;
 	}
 
-
 	public String getBatchNo() {
 		return batchNo;
 	}
 
 	public void setBatchNo(String batchNo) {
 		this.batchNo = batchNo;
+	}
+
+	public String getCustomerReferenceNo() {
+		return customerReferenceNo;
+	}
+
+	public void setCustomerReferenceNo(String customerReferenceNo) {
+		this.customerReferenceNo = customerReferenceNo;
 	}
 
 	public Long getCreatedTime() {

@@ -56,6 +56,11 @@ public class OutWarehouseOrderSender implements Serializable {
 	private String stateOrProvince;
 
 	/**
+	 * 发件人手机号码
+	 */
+	private String mobileNumber;
+
+	/**
 	 * 城市
 	 */
 	private String city;
@@ -92,7 +97,6 @@ public class OutWarehouseOrderSender implements Serializable {
 	 */
 	private String email;
 
-
 	public String getName() {
 		return name;
 	}
@@ -115,6 +119,14 @@ public class OutWarehouseOrderSender implements Serializable {
 
 	public void setCompany(String company) {
 		this.company = company;
+	}
+
+	public String getMobileNumber() {
+		return mobileNumber;
+	}
+
+	public void setMobileNumber(String mobileNumber) {
+		this.mobileNumber = mobileNumber;
 	}
 
 	public String getFirstName() {

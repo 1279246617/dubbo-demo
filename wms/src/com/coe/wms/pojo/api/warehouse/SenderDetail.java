@@ -16,7 +16,8 @@ public class SenderDetail implements Serializable {
 	private String district;
 	private String streetAddress;
 	private String zipCode;
-
+	private String country;
+	
 	public String getName() {
 		return name;
 	}
@@ -83,6 +84,14 @@ public class SenderDetail implements Serializable {
 
 	public String getZipCode() {
 		return zipCode;
+	}
+
+	public String getCountry() {
+		return country;
+	}
+
+	public void setCountry(String country) {
+		this.country = country;
 	}
 
 	public void setZipCode(String zipCode) {
