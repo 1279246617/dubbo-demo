@@ -17,6 +17,11 @@ import com.coe.wms.dao.warehouse.storage.IInWarehouseOrderDao;
 import com.coe.wms.dao.warehouse.storage.IInWarehouseOrderItemDao;
 import com.coe.wms.dao.warehouse.storage.IInWarehouseOrderStatusDao;
 import com.coe.wms.dao.warehouse.storage.IInWarehouseRecordDao;
+import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderDao;
+import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderItemDao;
+import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderReceiverDao;
+import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderSenderDao;
+import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderStatusDao;
 import com.coe.wms.exception.ServiceException;
 import com.coe.wms.model.unit.Weight;
 import com.coe.wms.model.user.User;
@@ -29,13 +34,13 @@ import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrder;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderItem;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderReceiver;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderSender;
+import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus.OurWareHouseStatusCode;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecord;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecordItem;
 import com.coe.wms.pojo.api.warehouse.ErrorCode;
 import com.coe.wms.pojo.api.warehouse.EventBody;
 import com.coe.wms.pojo.api.warehouse.EventHeader;
-import com.coe.wms.pojo.api.warehouse.Item;
 import com.coe.wms.pojo.api.warehouse.LogisticsDetail;
 import com.coe.wms.pojo.api.warehouse.LogisticsEvent;
 import com.coe.wms.pojo.api.warehouse.LogisticsEventsRequest;
@@ -46,7 +51,6 @@ import com.coe.wms.pojo.api.warehouse.Responses;
 import com.coe.wms.pojo.api.warehouse.SenderDetail;
 import com.coe.wms.pojo.api.warehouse.Sku;
 import com.coe.wms.pojo.api.warehouse.SkuDetail;
-import com.coe.wms.pojo.api.warehouse.TradeDetail;
 import com.coe.wms.service.storage.IStorageService;
 import com.coe.wms.util.Constant;
 import com.coe.wms.util.DateUtil;
@@ -80,6 +84,21 @@ public class StorageServiceImpl implements IStorageService {
 	@Resource(name = "inWarehouseRecordDao")
 	private IInWarehouseRecordDao inWarehouseRecordDao;
 
+	@Resource(name = "outWarehouseOrderDao")
+	private IOutWarehouseOrderDao outWarehouseOrderDao;
+
+	@Resource(name = "outWarehouseOrderStatusDao")
+	private IOutWarehouseOrderStatusDao outWarehouseOrderStatusDao;
+
+	@Resource(name = "outWarehouseOrderItemDao")
+	private IOutWarehouseOrderItemDao outWarehouseOrderItemDao;
+
+	@Resource(name = "outWarehouseOrderSenderDao")
+	private IOutWarehouseOrderSenderDao outWarehouseOrderSenderDao;
+
+	@Resource(name = "outWarehouseOrderReceiverDao")
+	private IOutWarehouseOrderReceiverDao outWarehouseOrderReceiverDao;
+
 	@Resource(name = "userDao")
 	private IUserDao userDao;
 
@@ -94,8 +113,7 @@ public class StorageServiceImpl implements IStorageService {
 	public Pagination getInWarehouseItemData(Long orderId, Pagination pagination) {
 		InWarehouseOrderItem param = new InWarehouseOrderItem();
 		param.setOrderId(orderId);
-		List<InWarehouseOrderItem> inWarehouseOrderItemList = inWarehouseOrderItemDao.findInWarehouseOrderItem(param,
-				null, pagination);
+		List<InWarehouseOrderItem> inWarehouseOrderItemList = inWarehouseOrderItemDao.findInWarehouseOrderItem(param, null, pagination);
 
 		return pagination;
 	}
@@ -104,10 +122,8 @@ public class StorageServiceImpl implements IStorageService {
 	 * 查找入库订单
 	 */
 	@Override
-	public List<InWarehouseOrder> findInWarehouseOrder(InWarehouseOrder inWarehouseOrder,
-			Map<String, String> moreParam, Pagination page) {
-		List<InWarehouseOrder> inWarehouseOrderList = inWarehouseOrderDao.findInWarehouseOrder(inWarehouseOrder,
-				moreParam, page);
+	public List<InWarehouseOrder> findInWarehouseOrder(InWarehouseOrder inWarehouseOrder, Map<String, String> moreParam, Pagination page) {
+		List<InWarehouseOrder> inWarehouseOrderList = inWarehouseOrderDao.findInWarehouseOrder(inWarehouseOrder, moreParam, page);
 		return inWarehouseOrderList;
 	}
 
@@ -140,8 +156,8 @@ public class StorageServiceImpl implements IStorageService {
 	 * 
 	 */
 	@Override
-	public Map<String, Object> warehouseInterfaceEventType(String logisticsInterface, Long userIdOfCustomer,
-			String dataDigest, String msgType, String msgId, String version) {
+	public Map<String, Object> warehouseInterfaceEventType(String logisticsInterface, Long userIdOfCustomer, String dataDigest,
+			String msgType, String msgId, String version) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put(Constant.STATUS, Constant.FAIL);
 
@@ -204,8 +220,8 @@ public class StorageServiceImpl implements IStorageService {
 	}
 
 	@Override
-	public Map<String, String> warehouseInterfaceValidate(String logisticsInterface, String msgSource,
-			String dataDigest, String msgType, String msgId, String version) {
+	public Map<String, String> warehouseInterfaceValidate(String logisticsInterface, String msgSource, String dataDigest, String msgType,
+			String msgId, String version) {
 		Map<String, String> map = new HashMap<String, String>();
 		Responses responses = new Responses();
 		List<Response> responseItems = new ArrayList<Response>();
@@ -249,9 +265,12 @@ public class StorageServiceImpl implements IStorageService {
 		return map;
 	}
 
+	/**
+	 * 保存入库记录主单
+	 */
 	@Override
-	public Map<String, String> saveInWarehouseRecord(String trackingNo, String userLoginName, String isUnKnowCustomer,
-			String remark, Long userIdOfOperator) {
+	public Map<String, String> saveInWarehouseRecord(String trackingNo, String userLoginName, String isUnKnowCustomer, String remark,
+			Long userIdOfOperator) {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put(Constant.STATUS, Constant.FAIL);
 		if (StringUtil.isNull(trackingNo)) {
@@ -293,8 +312,7 @@ public class StorageServiceImpl implements IStorageService {
 		inWarehouseRecord.setRemark(remark);
 		inWarehouseRecord.setUserIdOfOperator(userIdOfOperator);
 		// 创建批次号
-		String batchNo = InWarehouseRecord.generateBatchNo(null, null, Constant.SYMBOL_UNDERLINE, trackingNo, null,
-				null, isUnKnowCustomer);
+		String batchNo = InWarehouseRecord.generateBatchNo(null, null, Constant.SYMBOL_UNDERLINE, trackingNo, null, null, isUnKnowCustomer);
 		inWarehouseRecord.setBatchNo(batchNo);
 		// 返回id
 		long id = inWarehouseRecordDao.saveInWarehouseRecord(inWarehouseRecord);
@@ -303,19 +321,21 @@ public class StorageServiceImpl implements IStorageService {
 		return map;
 	}
 
+	/**
+	 * 获取出库记录明细数据
+	 */
 	@Override
 	public Pagination getInWarehouseRecordItemData(Long inWarehouseRecordId, Pagination pagination) {
 		InWarehouseRecordItem inWarehouseRecordItem = new InWarehouseRecordItem();
 		inWarehouseRecordItem.setInWareHouseRecordId(inWarehouseRecordId);
-		List<InWarehouseRecordItem> inWarehouseRecordItemList = inWarehouseRecordDao.findInWarehouseRecordItem(
-				inWarehouseRecordItem, null, pagination);
-		List list = new ArrayList();
+		List<InWarehouseRecordItem> inWarehouseRecordItemList = inWarehouseRecordDao.findInWarehouseRecordItem(inWarehouseRecordItem, null,
+				pagination);
+		List<Object> list = new ArrayList<Object>();
 		for (InWarehouseRecordItem item : inWarehouseRecordItemList) {
-			Map map = new HashMap();
+			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("id", item.getId());
 			if (item.getCreatedTime() != null) {
-				map.put("createdTime",
-						DateUtil.dateConvertString(new Date(item.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss));
+				map.put("createdTime", DateUtil.dateConvertString(new Date(item.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss));
 			}
 			map.put("inWareHouseRecordId", item.getInWareHouseRecordId());
 			map.put("quantity", item.getQuantity());
@@ -332,18 +352,18 @@ public class StorageServiceImpl implements IStorageService {
 		return pagination;
 	}
 
+	/**
+	 * 获取出库订单数据
+	 */
 	@Override
-	public Pagination getInWarehouseOrderData(InWarehouseOrder inWarehouseOrder, Map<String, String> moreParam,
-			Pagination pagination) {
-		List<InWarehouseOrder> inWarehouseOrderList = inWarehouseOrderDao.findInWarehouseOrder(inWarehouseOrder,
-				moreParam, pagination);
-		List list = new ArrayList();
+	public Pagination getInWarehouseOrderData(InWarehouseOrder inWarehouseOrder, Map<String, String> moreParam, Pagination pagination) {
+		List<InWarehouseOrder> inWarehouseOrderList = inWarehouseOrderDao.findInWarehouseOrder(inWarehouseOrder, moreParam, pagination);
+		List<Object> list = new ArrayList<Object>();
 		for (InWarehouseOrder order : inWarehouseOrderList) {
-			Map map = new HashMap();
+			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("id", order.getId());
 			if (order.getCreatedTime() != null) {
-				map.put("createdTime",
-						DateUtil.dateConvertString(new Date(order.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss));
+				map.put("createdTime", DateUtil.dateConvertString(new Date(order.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss));
 			}
 			// 查询用户名
 			User user = userDao.getUserById(order.getUserIdOfCustomer());
@@ -362,8 +382,7 @@ public class StorageServiceImpl implements IStorageService {
 				}
 			}
 			map.put("remark", order.getRemark());
-			InWarehouseOrderStatus inWarehouseOrderStatus = inWarehouseOrderStatusDao
-					.findInWarehouseOrderStatusByCode(order.getStatus());
+			InWarehouseOrderStatus inWarehouseOrderStatus = inWarehouseOrderStatusDao.findInWarehouseOrderStatusByCode(order.getStatus());
 			if (inWarehouseOrderStatus != null) {
 				map.put("status", inWarehouseOrderStatus.getCn());
 			}
@@ -376,11 +395,53 @@ public class StorageServiceImpl implements IStorageService {
 	}
 
 	/**
+	 * 获取出库订单列表数据
+	 */
+	@Override
+	public Pagination getOutWarehouseOrderData(OutWarehouseOrder outWarehouseOrder, Map<String, String> moreParam, Pagination pagination) {
+		List<OutWarehouseOrder> outWarehouseOrderList = outWarehouseOrderDao.findOutWarehouseOrder(outWarehouseOrder, moreParam, pagination);
+		List<Object> list = new ArrayList<Object>();
+		for (OutWarehouseOrder order : outWarehouseOrderList) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("id", order.getId());
+			if (order.getCreatedTime() != null) {
+				map.put("createdTime", DateUtil.dateConvertString(new Date(order.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss));
+			}
+			// 查询用户名
+			User user = userDao.getUserById(order.getUserIdOfCustomer());
+			map.put("userNameOfCustomer", user.getLoginName());
+			map.put("customerReferenceNo", order.getCustomerReferenceNo());
+			if (order.getWarehouseId() != null) {
+				Warehouse warehouse = warehouseDao.getWarehouseById(order.getWarehouseId());
+				if (warehouse != null) {
+					map.put("warehouse", warehouse.getWarehouseName());
+				}
+			}
+			map.put("remark", order.getRemark());
+			OutWarehouseOrderStatus outWarehouseOrderStatus = outWarehouseOrderStatusDao.findOutWarehouseOrderStatusByCode(order.getStatus());
+			if (outWarehouseOrderStatus != null) {
+				map.put("status", outWarehouseOrderStatus.getCn());
+			}
+			
+			//收件人信息
+			OutWarehouseOrderReceiver param = new OutWarehouseOrderReceiver();
+			param.setOutWarehouseOrderId(order.getId());
+			
+			OutWarehouseOrderReceiver outWarehouseOrderReceiver = outWarehouseOrderReceiverDao.findOutWarehouseOrderReceiver(param, null, null)
+			
+			
+			list.add(map);
+		}
+		pagination.total = outWarehouseOrderDao.countOutWarehouseOrder(outWarehouseOrder, moreParam);
+		pagination.rows = list;
+		return pagination;
+	}
+
+	/**
 	 * api 创建入库订单
 	 */
 	@Override
-	public String warehouseInterfaceSaveInWarehouseOrder(EventBody eventBody, Long userIdOfCustomer)
-			throws ServiceException {
+	public String warehouseInterfaceSaveInWarehouseOrder(EventBody eventBody, Long userIdOfCustomer) throws ServiceException {
 		Responses responses = new Responses();
 		List<Response> responseItems = new ArrayList<Response>();
 		Response response = new Response();
@@ -460,8 +521,7 @@ public class StorageServiceImpl implements IStorageService {
 			// 保存入库订单得到入库订单id
 			Long orderId = inWarehouseOrderDao.saveInWarehouseOrder(inWarehouseOrder);
 
-			int count = inWarehouseOrderItemDao.saveBatchInWarehouseOrderItemWithOrderId(inwarehouseOrderItemList,
-					orderId);
+			int count = inWarehouseOrderItemDao.saveBatchInWarehouseOrderItemWithOrderId(inwarehouseOrderItemList, orderId);
 
 			logger.info("入库主单id:" + orderId + " 入库明细数量:" + count);
 		}
@@ -473,8 +533,7 @@ public class StorageServiceImpl implements IStorageService {
 	 * API创建出库订单
 	 */
 	@Override
-	public String warehouseInterfaceSaveOutWarehouseOrder(EventBody eventBody, Long userIdOfCustomer)
-			throws ServiceException {
+	public String warehouseInterfaceSaveOutWarehouseOrder(EventBody eventBody, Long userIdOfCustomer) throws ServiceException {
 		Responses responses = new Responses();
 		List<Response> responseItems = new ArrayList<Response>();
 		Response response = new Response();
@@ -494,7 +553,7 @@ public class StorageServiceImpl implements IStorageService {
 			response.setReasonDesc("LogisticsDetail对象获取LogisticsOrders对象的得到Null");
 			return XmlUtil.toXml(Responses.class, responses);
 		}
-		// 保存入库
+		// 保存
 		for (int i = 0; i < logisticsOrders.size(); i++) {
 			LogisticsOrder logisticsOrder = logisticsOrders.get(i);
 			if (logisticsOrder == null) {
@@ -516,14 +575,42 @@ public class StorageServiceImpl implements IStorageService {
 			if (skus == null) {
 				throw new ServiceException("SkuDetail对象获取List<Sku>对象的得到Null");
 			}
-
 			logger.info("出库订单:第" + (i + 1) + "(poNo):" + logisticsOrder.getPoNo());
+
 			// 主单
 			OutWarehouseOrder outWarehouseOrder = new OutWarehouseOrder();
 			outWarehouseOrder.setCreatedTime(System.currentTimeMillis());
 			outWarehouseOrder.setRemark(logisticsOrder.getLogisticsRemark());
 			outWarehouseOrder.setStatus(OurWareHouseStatusCode.DRAFT);
+			outWarehouseOrder.setUserIdOfCustomer(userIdOfCustomer);
+			// 客户参考号,用于后面客户对该出库订单进行修改,确认等,以及回传出库状态
+			outWarehouseOrder.setCustomerReferenceNo(logisticsOrder.getPoNo());
+			// 保存主单 得到主单Id
+			Long outWarehouseOrderId = outWarehouseOrderDao.saveOutWarehouseOrder(outWarehouseOrder);
 
+			logger.info("出库订单:第" + (i + 1) + "客户参考号customerReferenceNo(poNo):" + logisticsOrder.getPoNo() + " 保存出库订单,得到Id:"
+					+ outWarehouseOrderId);
+
+			// 出库订单明细信息
+			List<OutWarehouseOrderItem> itemList = new ArrayList<OutWarehouseOrderItem>();
+			for (int j = 0; j < skus.size(); j++) {
+				Sku sku = skus.get(j);
+				if (sku == null) {
+					throw new ServiceException("SkuDetail对象获取Sku对象的得到Null");
+				}
+				OutWarehouseOrderItem outWarehouseOrderItem = new OutWarehouseOrderItem();
+				outWarehouseOrderItem.setQuantity(sku.getSkuQty());
+				outWarehouseOrderItem.setRemark(sku.getSkuRemark());
+				outWarehouseOrderItem.setSku(sku.getSkuCode());
+				outWarehouseOrderItem.setSkuName(sku.getSkuName());
+				outWarehouseOrderItem.setSkuUnitPrice(sku.getSkuUnitPrice());
+				outWarehouseOrderItem.setSkuPriceCurrency(sku.getSkuPriceCurrency());
+				outWarehouseOrderItem.setOutWarehouseOrderId(outWarehouseOrderId);
+				itemList.add(outWarehouseOrderItem);
+			}
+			// 保存出库订单明细
+			long itemCount = outWarehouseOrderItemDao.saveBatchOutWarehouseOrderItemWithOrderId(itemList, outWarehouseOrderId);
+			logger.info("出库订单:第" + (i + 1) + "客户参考号customerReferenceNo(poNo):" + logisticsOrder.getPoNo() + " 保存出库订单明细条数:" + itemCount);
 			// 收件人
 			OutWarehouseOrderReceiver outWarehouseOrderReceiver = new OutWarehouseOrderReceiver();
 			outWarehouseOrderReceiver.setAddressLine1(receiverDetail.getStreetAddress());
@@ -537,26 +624,31 @@ public class StorageServiceImpl implements IStorageService {
 			outWarehouseOrderReceiver.setPostalCode(receiverDetail.getZipCode());
 			outWarehouseOrderReceiver.setStateOrProvince(receiverDetail.getProvince());
 			outWarehouseOrderReceiver.setMobileNumber(receiverDetail.getMobile());
-
-			// 物品信息
-			for (int j = 0; j < skus.size(); j++) {
-				Sku sku = skus.get(j);
-				if (sku == null) {
-					throw new ServiceException("SkuDetail对象获取Sku对象的得到Null");
-				}
-				OutWarehouseOrderItem outWarehouseOrderItem = new OutWarehouseOrderItem();
-				outWarehouseOrderItem.setQuantity(sku.getSkuQty());
-				outWarehouseOrderItem.setRemark(sku.getSkuRemark());
-				outWarehouseOrderItem.setSku(sku.getSkuCode());
-				outWarehouseOrderItem.setSkuName(sku.getSkuName());
-				outWarehouseOrderItem.setSkuUnitPrice(sku.getSkuUnitPrice());
-				outWarehouseOrderItem.setSkuPriceCurrency(sku.getSkuPriceCurrency());
-			}
+			outWarehouseOrderReceiver.setOutWarehouseOrderId(outWarehouseOrderId);
+			// 保存收件人
+			Long outWarehouseOrderReceiverId = outWarehouseOrderReceiverDao.saveOutWarehouseOrderReceiver(outWarehouseOrderReceiver);
+			logger.info("出库订单:第" + (i + 1) + "客户参考号customerReferenceNo(poNo):" + logisticsOrder.getPoNo()
+					+ " 保存收件人,outWarehouseOrderReceiverId:" + outWarehouseOrderReceiverId);
 			// 发件人信息
 			OutWarehouseOrderSender outWarehouseOrderSender = new OutWarehouseOrderSender();
-			
-			
+			outWarehouseOrderSender.setAddressLine1(senderDetail.getStreetAddress());
+			outWarehouseOrderSender.setCity(senderDetail.getCity());
+			outWarehouseOrderSender.setCountryCode(senderDetail.getCountry());
+			outWarehouseOrderSender.setCountryName(senderDetail.getCountry());
+			outWarehouseOrderSender.setCounty(senderDetail.getDistrict());
+			outWarehouseOrderSender.setEmail(senderDetail.getEmail());
+			outWarehouseOrderSender.setName(senderDetail.getName());
+			outWarehouseOrderSender.setPhoneNumber(senderDetail.getPhone());
+			outWarehouseOrderSender.setPostalCode(senderDetail.getZipCode());
+			outWarehouseOrderSender.setStateOrProvince(senderDetail.getProvince());
+			outWarehouseOrderSender.setMobileNumber(senderDetail.getMobile());
+			outWarehouseOrderSender.setOutWarehouseOrderId(outWarehouseOrderId);
+			// 保存发件人
+			Long outWarehouseOrderSenderId = outWarehouseOrderSenderDao.saveOutWarehouseOrderSender(outWarehouseOrderSender);
+			logger.info("出库订单:第" + (i + 1) + "客户参考号customerReferenceNo(poNo):" + logisticsOrder.getPoNo()
+					+ " 保存发件人,outWarehouseOrderSenderId:" + outWarehouseOrderSenderId);
 		}
-		return null;
+		response.setSuccess(Constant.TRUE);
+		return XmlUtil.toXml(Responses.class, responses);
 	}
 }

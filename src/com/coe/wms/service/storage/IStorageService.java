@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 import com.coe.wms.exception.ServiceException;
 import com.coe.wms.model.user.User;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
+import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrder;
 import com.coe.wms.pojo.api.warehouse.EventBody;
 import com.coe.wms.pojo.api.warehouse.LogisticsEventsRequest;
 import com.coe.wms.util.Pagination;
@@ -30,8 +31,8 @@ public interface IStorageService {
 	 * @param page
 	 * @return
 	 */
-	public Map<String, String> saveInWarehouseRecord(String trackingNo, String userLoginName, String isUnKnowCustomer,
-			String remark, Long userIdOfOperator);
+	public Map<String, String> saveInWarehouseRecord(String trackingNo, String userLoginName, String isUnKnowCustomer, String remark,
+			Long userIdOfOperator);
 
 	/**
 	 * 获取入库记录物品
@@ -50,8 +51,7 @@ public interface IStorageService {
 	 * @param page
 	 * @return
 	 */
-	public List<InWarehouseOrder> findInWarehouseOrder(InWarehouseOrder inWarehouseOrder,
-			Map<String, String> moreParam, Pagination page);
+	public List<InWarehouseOrder> findInWarehouseOrder(InWarehouseOrder inWarehouseOrder, Map<String, String> moreParam, Pagination page);
 
 	/**
 	 * 获取入库订单
@@ -60,8 +60,16 @@ public interface IStorageService {
 	 * @param page
 	 * @return
 	 */
-	public Pagination getInWarehouseOrderData(InWarehouseOrder inWarehouseOrder, Map<String, String> moreParam,
-			Pagination page);
+	public Pagination getInWarehouseOrderData(InWarehouseOrder inWarehouseOrder, Map<String, String> moreParam, Pagination page);
+
+	/**
+	 * 获取出库订单
+	 * 
+	 * @param inWarehouseRecordId
+	 * @param page
+	 * @return
+	 */
+	public Pagination getOutWarehouseOrderData(OutWarehouseOrder outWarehouseOrder, Map<String, String> moreParam, Pagination page);
 
 	/**
 	 * 找入库订单中包含的用户信息
@@ -98,8 +106,8 @@ public interface IStorageService {
 	 * @param version
 	 * @return
 	 */
-	public Map<String, Object> warehouseInterfaceEventType(String logisticsInterface, Long userIdOfCustomer,
-			String dataDigest, String msgType, String msgId, String version);
+	public Map<String, Object> warehouseInterfaceEventType(String logisticsInterface, Long userIdOfCustomer, String dataDigest,
+			String msgType, String msgId, String version);
 
 	/**
 	 * 接口验证
@@ -112,8 +120,8 @@ public interface IStorageService {
 	 * @param version
 	 * @return
 	 */
-	public Map<String, String> warehouseInterfaceValidate(String logisticsInterface, String token, String dataDigest,
-			String msgType, String msgId, String version);
+	public Map<String, String> warehouseInterfaceValidate(String logisticsInterface, String token, String dataDigest, String msgType,
+			String msgId, String version);
 
 	/**
 	 * 创建入库订单
@@ -122,9 +130,8 @@ public interface IStorageService {
 	 * @param userIdOfCustomer
 	 * @return
 	 */
-	public String warehouseInterfaceSaveInWarehouseOrder(EventBody eventBody, Long userIdOfCustomer)
-			throws ServiceException;
-	
+	public String warehouseInterfaceSaveInWarehouseOrder(EventBody eventBody, Long userIdOfCustomer) throws ServiceException;
+
 	/**
 	 * 创建出库订单
 	 * 
@@ -132,6 +139,5 @@ public interface IStorageService {
 	 * @param userIdOfCustomer
 	 * @return
 	 */
-	public String warehouseInterfaceSaveOutWarehouseOrder(EventBody eventBody, Long userIdOfCustomer)
-			throws ServiceException;
+	public String warehouseInterfaceSaveOutWarehouseOrder(EventBody eventBody, Long userIdOfCustomer) throws ServiceException;
 }
