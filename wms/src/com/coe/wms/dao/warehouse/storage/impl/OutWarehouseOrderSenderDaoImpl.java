@@ -218,4 +218,17 @@ public class OutWarehouseOrderSenderDaoImpl implements IOutWarehouseOrderSenderD
 				ParameterizedBeanPropertyRowMapper.newInstance(OutWarehouseOrderSender.class));
 		return outWarehouseOrderSenderList;
 	}
+
+	@Override
+	public OutWarehouseOrderSender getOutWarehouseOrderSenderByOrderId(Long outWarehouseOrderId) {
+		String sql = "select id,out_warehouse_order_id,name,company,first_name,last_name,address_line1,state_or_province,city,county,postal_code,country_code,country_name,phone_number,email,mobile_number,address_line2 whereout_warehouse_order_id =  "
+				+ outWarehouseOrderId;
+		logger.info("查询出库订单发件人sql:" + sql);
+		List<OutWarehouseOrderSender> outWarehouseOrderSenderList = jdbcTemplate.query(sql,
+				ParameterizedBeanPropertyRowMapper.newInstance(OutWarehouseOrderSender.class));
+		if (outWarehouseOrderSenderList != null && outWarehouseOrderSenderList.size() > 0) {
+			return outWarehouseOrderSenderList.get(0);
+		}
+		return null;
+	}
 }
