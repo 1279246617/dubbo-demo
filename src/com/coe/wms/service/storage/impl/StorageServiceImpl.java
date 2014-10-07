@@ -399,10 +399,12 @@ public class StorageServiceImpl implements IStorageService {
 	 */
 	@Override
 	public Pagination getOutWarehouseOrderData(OutWarehouseOrder outWarehouseOrder, Map<String, String> moreParam, Pagination pagination) {
-		List<OutWarehouseOrder> outWarehouseOrderList = outWarehouseOrderDao.findOutWarehouseOrder(outWarehouseOrder, moreParam, pagination);
+		List<OutWarehouseOrder> outWarehouseOrderList = outWarehouseOrderDao
+				.findOutWarehouseOrder(outWarehouseOrder, moreParam, pagination);
 		List<Object> list = new ArrayList<Object>();
 		for (OutWarehouseOrder order : outWarehouseOrderList) {
 			Map<String, Object> map = new HashMap<String, Object>();
+			Long outWarehouseOrderId = order.getId();
 			map.put("id", order.getId());
 			if (order.getCreatedTime() != null) {
 				map.put("createdTime", DateUtil.dateConvertString(new Date(order.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss));
@@ -411,25 +413,42 @@ public class StorageServiceImpl implements IStorageService {
 			User user = userDao.getUserById(order.getUserIdOfCustomer());
 			map.put("userNameOfCustomer", user.getLoginName());
 			map.put("customerReferenceNo", order.getCustomerReferenceNo());
-			if (order.getWarehouseId() != null) {
+			if (order.getWarehouseId() != null && order.getWarehouseId()!=0) {
 				Warehouse warehouse = warehouseDao.getWarehouseById(order.getWarehouseId());
 				if (warehouse != null) {
 					map.put("warehouse", warehouse.getWarehouseName());
 				}
 			}
 			map.put("remark", order.getRemark());
-			OutWarehouseOrderStatus outWarehouseOrderStatus = outWarehouseOrderStatusDao.findOutWarehouseOrderStatusByCode(order.getStatus());
+			OutWarehouseOrderStatus outWarehouseOrderStatus = outWarehouseOrderStatusDao.findOutWarehouseOrderStatusByCode(order
+					.getStatus());
 			if (outWarehouseOrderStatus != null) {
 				map.put("status", outWarehouseOrderStatus.getCn());
 			}
-			
-			//收件人信息
-			OutWarehouseOrderReceiver param = new OutWarehouseOrderReceiver();
-			param.setOutWarehouseOrderId(order.getId());
-			
-			OutWarehouseOrderReceiver outWarehouseOrderReceiver = outWarehouseOrderReceiverDao.findOutWarehouseOrderReceiver(param, null, null)
-			
-			
+			// 收件人信息
+			OutWarehouseOrderReceiver outWarehouseOrderReceiver = outWarehouseOrderReceiverDao.getOutWarehouseOrderReceiverByOrderId(outWarehouseOrderId);
+			if (outWarehouseOrderReceiver != null) {
+				map.put("receiverAddressLine1", outWarehouseOrderReceiver.getAddressLine1());
+				map.put("receiverAddressLine2", outWarehouseOrderReceiver.getAddressLine2());
+				map.put("receiverCity", outWarehouseOrderReceiver.getCity());
+				map.put("receiverCompany", outWarehouseOrderReceiver.getCompany());
+				map.put("receiverCountryCode", outWarehouseOrderReceiver.getCountryCode());
+				map.put("receiverCountryName", outWarehouseOrderReceiver.getCountryName());
+				map.put("receiverCounty", outWarehouseOrderReceiver.getCounty());
+				map.put("receiverEmail", outWarehouseOrderReceiver.getEmail());
+				map.put("receiverFirstName", outWarehouseOrderReceiver.getFirstName());
+				map.put("receiverLastName", outWarehouseOrderReceiver.getLastName());
+				map.put("receiverMobileNumber", outWarehouseOrderReceiver.getMobileNumber());
+				map.put("receiverName", outWarehouseOrderReceiver.getName());
+				map.put("receiverPhoneNumber", outWarehouseOrderReceiver.getPhoneNumber());
+				map.put("receiverPostalCode", outWarehouseOrderReceiver.getPostalCode());
+				map.put("receiverStateOrProvince", outWarehouseOrderReceiver.getStateOrProvince());
+			}
+			// 发件人
+			OutWarehouseOrderSender outWarehouseOrderSender = outWarehouseOrderSenderDao.getOutWarehouseOrderSenderByOrderId(outWarehouseOrderId);
+			if(outWarehouseOrderSender!=null){
+				map.put("senderName", outWarehouseOrderSender.getName());
+			}
 			list.add(map);
 		}
 		pagination.total = outWarehouseOrderDao.countOutWarehouseOrder(outWarehouseOrder, moreParam);

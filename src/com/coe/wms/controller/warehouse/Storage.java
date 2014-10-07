@@ -20,6 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.coe.wms.controller.Application;
 import com.coe.wms.model.user.User;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
+import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrder;
 import com.coe.wms.service.storage.IStorageService;
 import com.coe.wms.service.user.IUserService;
 import com.coe.wms.util.Constant;
@@ -63,8 +64,7 @@ public class Storage {
 	 * @throws IOException
 	 */
 	@RequestMapping(value = "/listInWarehouseOrder", method = RequestMethod.GET)
-	public ModelAndView listInWarehouseOrder(HttpServletRequest request, HttpServletResponse response)
-			throws IOException {
+	public ModelAndView listInWarehouseOrder(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		HttpSession session = request.getSession();
 		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
 		ModelAndView view = new ModelAndView();
@@ -87,12 +87,10 @@ public class Storage {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/getInWarehouseOrderData", method = RequestMethod.POST)
-	public String getInWarehouseOrderData(HttpServletRequest request, String sortorder, String sortname, int page,
-			int pagesize, String userLoginName, Long warehouseId, String trackingNo, String createdTimeStart,
-			String createdTimeEnd) throws IOException {
+	public String getInWarehouseOrderData(HttpServletRequest request, String sortorder, String sortname, int page, int pagesize,
+			String userLoginName, Long warehouseId, String trackingNo, String createdTimeStart, String createdTimeEnd) throws IOException {
 		if (StringUtil.isNotNull(createdTimeStart) && createdTimeStart.contains(",")) {
-			createdTimeStart = createdTimeStart.substring(createdTimeStart.lastIndexOf(",") + 1,
-					createdTimeStart.length());
+			createdTimeStart = createdTimeStart.substring(createdTimeStart.lastIndexOf(",") + 1, createdTimeStart.length());
 		}
 		HttpSession session = request.getSession();
 		// 当前操作员
@@ -131,8 +129,7 @@ public class Storage {
 	 * @throws IOException
 	 */
 	@RequestMapping(value = "/listOutWarehouseOrder", method = RequestMethod.GET)
-	public ModelAndView listOutWarehouseOrder(HttpServletRequest request, HttpServletResponse response)
-			throws IOException {
+	public ModelAndView listOutWarehouseOrder(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		HttpSession session = request.getSession();
 		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
 		ModelAndView view = new ModelAndView();
@@ -155,12 +152,11 @@ public class Storage {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/getOutWarehouseOrderData", method = RequestMethod.POST)
-	public String getOutWarehouseOrderData(HttpServletRequest request, String sortorder, String sortname, int page,
-			int pagesize, String userLoginName, Long warehouseId, String trackingNo, String createdTimeStart,
-			String createdTimeEnd) throws IOException {
+	public String getOutWarehouseOrderData(HttpServletRequest request, String sortorder, String sortname, int page, int pagesize,
+			String userLoginName, Long warehouseId, String customerReferenceNo, String createdTimeStart, String createdTimeEnd)
+			throws IOException {
 		if (StringUtil.isNotNull(createdTimeStart) && createdTimeStart.contains(",")) {
-			createdTimeStart = createdTimeStart.substring(createdTimeStart.lastIndexOf(",") + 1,
-					createdTimeStart.length());
+			createdTimeStart = createdTimeStart.substring(createdTimeStart.lastIndexOf(",") + 1, createdTimeStart.length());
 		}
 		HttpSession session = request.getSession();
 		// 当前操作员
@@ -170,20 +166,23 @@ public class Storage {
 		pagination.pageSize = pagesize;
 		pagination.sortName = sortname;
 		pagination.sortOrder = sortorder;
-
-		InWarehouseOrder param = new InWarehouseOrder();
-		param.setPackageTrackingNo(trackingNo);
+		
+		OutWarehouseOrder param = new OutWarehouseOrder();
+		//客户单号
+		param.setCustomerReferenceNo(customerReferenceNo);
+		//客户帐号
 		if (StringUtil.isNotNull(userLoginName)) {
 			Long userIdOfCustomer = userService.findUserIdByLoginName(userLoginName);
 			param.setUserIdOfCustomer(userIdOfCustomer);
 		}
+		//仓库
 		param.setWarehouseId(warehouseId);
 		// 更多参数
 		Map<String, String> moreParam = new HashMap<String, String>();
 		moreParam.put("createdTimeStart", createdTimeStart);
 		moreParam.put("createdTimeEnd", createdTimeEnd);
-
-		pagination = storageService.getInWarehouseOrderData(param, moreParam, pagination);
+		
+		pagination = storageService.getOutWarehouseOrderData(param, moreParam, pagination);
 		Map map = new HashMap();
 		map.put("Rows", pagination.rows);
 		map.put("Total", pagination.total);
@@ -220,8 +219,7 @@ public class Storage {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/checkFindInWarehouseOrder")
-	public String checkFindInWarehouseOrder(HttpServletRequest request, String trackingNo, String userLoginName)
-			throws IOException {
+	public String checkFindInWarehouseOrder(HttpServletRequest request, String trackingNo, String userLoginName) throws IOException {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put(Constant.STATUS, Constant.FAIL);
 		InWarehouseOrder param = new InWarehouseOrder();
@@ -258,17 +256,17 @@ public class Storage {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/saveInWarehouseRecord", method = RequestMethod.POST)
-	public String saveInWarehouseRecord(HttpServletRequest request, String trackingNo, String userLoginName,
-			String isUnKnowCustomer, String remark) throws IOException {
-		logger.info("trackingNo:" + trackingNo + " userLoginName:" + userLoginName + " isUnKnowCustomer:"
-				+ isUnKnowCustomer + "  remark:" + remark);
+	public String saveInWarehouseRecord(HttpServletRequest request, String trackingNo, String userLoginName, String isUnKnowCustomer,
+			String remark) throws IOException {
+		logger.info("trackingNo:" + trackingNo + " userLoginName:" + userLoginName + " isUnKnowCustomer:" + isUnKnowCustomer + "  remark:"
+				+ remark);
 		// 操作员
 		Long userIdOfOperator = (Long) request.getSession().getAttribute(SessionConstant.USER_ID);
 		Map<String, String> map = new HashMap<String, String>();
 		map.put(Constant.STATUS, Constant.FAIL);
 		// 校验和保存
-		Map<String, String> serviceResult = storageService.saveInWarehouseRecord(trackingNo, userLoginName,
-				isUnKnowCustomer, remark, userIdOfOperator);
+		Map<String, String> serviceResult = storageService.saveInWarehouseRecord(trackingNo, userLoginName, isUnKnowCustomer, remark,
+				userIdOfOperator);
 		// 成功,返回id
 		map.put("id", serviceResult.get("id"));
 		// 失败
@@ -291,8 +289,8 @@ public class Storage {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/getInWarehouseRecordItemData", method = RequestMethod.POST)
-	public String getInWarehouseRecordItemData(HttpServletRequest request, String sortorder, String sortname, int page,
-			int pagesize, Long inWarehouseRecordId) throws IOException {
+	public String getInWarehouseRecordItemData(HttpServletRequest request, String sortorder, String sortname, int page, int pagesize,
+			Long inWarehouseRecordId) throws IOException {
 		Map map = new HashMap();
 		if (inWarehouseRecordId == null) {
 			return GsonUtil.toJson(map);
@@ -326,8 +324,8 @@ public class Storage {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/getInWarehouseOrderItem", method = RequestMethod.POST)
-	public String getInWarehouseOrderItem(HttpServletRequest request, String sortorder, String sortname, int page,
-			int pagesize, String trackingNo, String userLoginName) throws IOException {
+	public String getInWarehouseOrderItem(HttpServletRequest request, String sortorder, String sortname, int page, int pagesize,
+			String trackingNo, String userLoginName) throws IOException {
 		Map map = new HashMap();
 		logger.info("trackingNo:" + trackingNo + "  userLoginName:" + userLoginName);
 		logger.info("sortorder:" + sortorder + "  sortname:" + sortname + " page:" + page + " pagesize:" + pagesize);
@@ -366,8 +364,7 @@ public class Storage {
 	 * @throws IOException
 	 */
 	@RequestMapping(value = "/listInWarehouseRecord", method = RequestMethod.GET)
-	public ModelAndView listInWarehouseRecord(HttpServletRequest request, HttpServletResponse response)
-			throws IOException {
+	public ModelAndView listInWarehouseRecord(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		HttpSession session = request.getSession();
 		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
 		ModelAndView view = new ModelAndView();

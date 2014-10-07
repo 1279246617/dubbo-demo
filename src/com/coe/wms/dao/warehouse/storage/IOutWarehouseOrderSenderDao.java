@@ -16,4 +16,6 @@ public interface IOutWarehouseOrderSenderDao {
 
 	public List<OutWarehouseOrderSender> findOutWarehouseOrderSender(OutWarehouseOrderSender outWarehouseOrderSender,
 			Map<String, String> moreParam, Pagination page);
+
+	public OutWarehouseOrderSender getOutWarehouseOrderSenderByOrderId(Long outWarehouseOrderId);
 }

@@ -35,8 +35,8 @@
                			<input type="text" name="userLoginName" data-provide="typeahead"  id="userLoginName" style="width:100px;" title="请输入客户登录名" />
                		</span>
 					<span class="pull-left" style="width:195px;">
-						跟踪单号	
-						<input type="text"  name="trackingNo"  id="trackingNo"   style="width:120px;"/>
+						客户单号	
+						<input type="text"  name="customerReferenceNo"  id="customerReferenceNo"   style="width:120px;"/>
 					</span>
                		
                		<span class="pull-left" style="width:175px;">
@@ -124,6 +124,7 @@
 		                { display: '收件人邮编', name: 'receiverPostalCode', align: 'center', type: 'float',width:'8%'},
 		                { display: '收件人手机', name: 'receiverPhoneNumber', align: 'center', type: 'float',width:'8%'},
 		                { display: '收件人电话', name: 'receiverMobileNumber', align: 'center', type: 'float',width:'8%'},
+		                { display: '发件人名', name: 'senderName', align: 'center', type: 'float',width:'8%'},
 		                { display: '备注', name: 'remark', align: 'center', type: 'float',width:'15%'},
 		                { display: '创建时间', name: 'createdTime', align: 'center', type: 'float',width:'12%'},
 		                {display: '操作',isSort: false,width: '10%',render: function(row) {
