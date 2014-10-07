@@ -20,7 +20,7 @@
 </head>
 <body>
 	  <div class="toolbar1">
-           <form action="${baseUrl}/warehouse/storage/getOutWarehouseOrderData.do" id="searchform" name="searchform" method="post">
+           <form action="${baseUrl}/warehouse/storage/getWaitCheckOutWarehouseOrderData.do" id="searchform" name="searchform" method="post">
                <div class="pull-right searchContent">
                		<span class="pull-left" style="width:175px;">
                			仓库
@@ -41,7 +41,7 @@
                		
                		<span class="pull-left" style="width:175px;">
                			创建时间
-	               		<input type="text"   style="width:120px;" name="createdTimeStart" id="createdTimeStart" value="${todayStart}" title="起始创建时间">
+	               		<input type="text"   style="width:120px;" name="createdTimeStart" id="createdTimeStart"  title="起始创建时间">
                		</span>
                		
                		<span class="pull-left" style="width:200px;">
@@ -113,7 +113,6 @@
 	  		          	{ display: '客户单号', name: 'customerReferenceNo', align: 'center', type: 'float',width:'10%'},
 		                { display: '仓库', name: 'warehouse', align: 'center', type: 'float',width:'8%'},
 		                { display: '出库物品', name: 'items', align: 'center', type: 'float',width:'18%'},
-		                { display: '状态', name: 'status', align: 'center', type: 'float',width:'8%'},
 		                { display: '收件人名', name: 'receiverName', align: 'center', type: 'float',width:'8%'},
 		                { display: '收件人街道1', name: 'receiverAddressLine1', align: 'center', type: 'float',width:'12%'},
 		                { display: '收件人街道2', name: 'receiverAddressLine2', align: 'center', type: 'float',width:'8%'},
@@ -138,8 +137,8 @@
 		            }
 	                ],  
 	                dataAction: 'server',
-	                url: baseUrl+'/warehouse/storage/getOutWarehouseOrderData.do?createdTimeStart=${todayStart}',
-	                pageSize: 50, 
+	                url: baseUrl+'/warehouse/storage/getWaitCheckOutWarehouseOrderData.do',
+	                pageSize: 100, 
 	                pageSizeOptions:[10,50,100,500,1000],
 	                usePager: 'true',
 	                sortName: 'id',

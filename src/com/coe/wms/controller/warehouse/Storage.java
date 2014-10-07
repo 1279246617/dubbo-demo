@@ -188,7 +188,75 @@ public class Storage {
 		map.put("Total", pagination.total);
 		return GsonUtil.toJson(map);
 	}
+	
 
+	/**
+	 *待审核出库订单 查询
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/listWaitCheckOutWarehouseOrder", method = RequestMethod.GET)
+	public ModelAndView listWaitCheckOutWarehouseOrder(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		HttpSession session = request.getSession();
+		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
+		ModelAndView view = new ModelAndView();
+		view.addObject("userId", userId);
+		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
+		view.setViewName("warehouse/storage/listWaitCheckOutWarehouseOrder");
+		return view;
+	}
+	
+	/**
+	 * 获取待审核出库订单
+	 * 
+	 * @param request
+	 * @param response
+	 * @param userLoginName
+	 * @return
+	 * @throws IOException
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/getWaitCheckOutWarehouseOrderData", method = RequestMethod.POST)
+	public String getWaitCheckOutWarehouseOrderData(HttpServletRequest request, String sortorder, String sortname, int page, int pagesize,
+			String userLoginName, Long warehouseId, String customerReferenceNo, String createdTimeStart, String createdTimeEnd)
+			throws IOException {
+		if (StringUtil.isNotNull(createdTimeStart) && createdTimeStart.contains(",")) {
+			createdTimeStart = createdTimeStart.substring(createdTimeStart.lastIndexOf(",") + 1, createdTimeStart.length());
+		}
+		HttpSession session = request.getSession();
+		// 当前操作员
+		Long userIdOfOperator = (Long) session.getAttribute(SessionConstant.USER_ID);
+		Pagination pagination = new Pagination();
+		pagination.curPage = page;
+		pagination.pageSize = pagesize;
+		pagination.sortName = sortname;
+		pagination.sortOrder = sortorder;
+		
+		OutWarehouseOrder param = new OutWarehouseOrder();
+		//客户单号
+		param.setCustomerReferenceNo(customerReferenceNo);
+		//客户帐号
+		if (StringUtil.isNotNull(userLoginName)) {
+			Long userIdOfCustomer = userService.findUserIdByLoginName(userLoginName);
+			param.setUserIdOfCustomer(userIdOfCustomer);
+		}
+		//仓库
+		param.setWarehouseId(warehouseId);
+		// 更多参数
+		Map<String, String> moreParam = new HashMap<String, String>();
+		moreParam.put("createdTimeStart", createdTimeStart);
+		moreParam.put("createdTimeEnd", createdTimeEnd);
+		
+		pagination = storageService.getOutWarehouseOrderData(param, moreParam, pagination);
+		Map map = new HashMap();
+		map.put("Rows", pagination.rows);
+		map.put("Total", pagination.total);
+		return GsonUtil.toJson(map);
+	}
+	
 	/**
 	 * 入库订单收货
 	 * 
