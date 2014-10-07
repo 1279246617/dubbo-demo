@@ -42,7 +42,7 @@ public class OutWarehouseOrderDaoImpl implements IOutWarehouseOrderDao {
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public long saveOutWarehouseOrder(final OutWarehouseOrder order) {
-		final String sql = "insert into w_s_out_warehouse_order (warehouse_id,user_id_of_customer,user_id_of_operator,shipway_code,batch_no,package_no,created_time,status,remark,customer_reference_no) values (?,?,?,?,?,?,?,?,?,?)";
+		final String sql = "insert into w_s_out_warehouse_order (warehouse_id,user_id_of_customer,user_id_of_operator,shipway_code,created_time,status,remark,customer_reference_no) values (?,?,?,?,?,?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
@@ -51,12 +51,10 @@ public class OutWarehouseOrderDaoImpl implements IOutWarehouseOrderDao {
 				ps.setLong(2, order.getUserIdOfCustomer() != null ? order.getUserIdOfCustomer() : 0);
 				ps.setLong(3, order.getUserIdOfOperator() != null ? order.getUserIdOfOperator() : 0);
 				ps.setString(4, order.getShipwayCode());
-				ps.setString(5, order.getBatchNo());
-				ps.setString(6, order.getPackageNo());
-				ps.setLong(7, order.getCreatedTime());
-				ps.setString(8, order.getStatus());
-				ps.setString(9, order.getRemark());
-				ps.setString(10, order.getCustomerReferenceNo());
+				ps.setLong(5, order.getCreatedTime());
+				ps.setString(6, order.getStatus());
+				ps.setString(7, order.getRemark());
+				ps.setString(8, order.getCustomerReferenceNo());
 				return ps;
 			}
 		}, keyHolder);
@@ -78,7 +76,7 @@ public class OutWarehouseOrderDaoImpl implements IOutWarehouseOrderDao {
 	@Override
 	public List<OutWarehouseOrder> findOutWarehouseOrder(OutWarehouseOrder outWarehouseOrder, Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select id,warehouse_id,user_id_of_customer,user_id_of_operator,shipway_code,batch_no,package_no,created_time,status,remark,customer_reference_no from w_s_out_warehouse_order where 1=1 ");
+		sb.append("select id,warehouse_id,user_id_of_customer,user_id_of_operator,shipway_code,created_time,status,remark,customer_reference_no from w_s_out_warehouse_order where 1=1 ");
 		if (outWarehouseOrder != null) {
 			if (outWarehouseOrder.getId() != null) {
 				sb.append(" and id = " + outWarehouseOrder.getId());
@@ -91,12 +89,6 @@ public class OutWarehouseOrderDaoImpl implements IOutWarehouseOrderDao {
 			}
 			if (StringUtil.isNotNull(outWarehouseOrder.getShipwayCode())) {
 				sb.append(" and shipway_code = '" + outWarehouseOrder.getShipwayCode() + "' ");
-			}
-			if (StringUtil.isNotNull(outWarehouseOrder.getBatchNo())) {
-				sb.append(" and batch_no = '" + outWarehouseOrder.getBatchNo() + "' ");
-			}
-			if (StringUtil.isNotNull(outWarehouseOrder.getPackageNo())) {
-				sb.append(" and package_no = '" + outWarehouseOrder.getPackageNo() + "' ");
 			}
 			if (outWarehouseOrder.getCreatedTime() != null) {
 				sb.append(" and created_time = " + outWarehouseOrder.getCreatedTime());
@@ -152,12 +144,6 @@ public class OutWarehouseOrderDaoImpl implements IOutWarehouseOrderDao {
 			}
 			if (StringUtil.isNotNull(outWarehouseOrder.getShipwayCode())) {
 				sb.append(" and shipway_code = '" + outWarehouseOrder.getShipwayCode() + "' ");
-			}
-			if (StringUtil.isNotNull(outWarehouseOrder.getBatchNo())) {
-				sb.append(" and batch_no = '" + outWarehouseOrder.getBatchNo() + "' ");
-			}
-			if (StringUtil.isNotNull(outWarehouseOrder.getPackageNo())) {
-				sb.append(" and package_no = '" + outWarehouseOrder.getPackageNo() + "' ");
 			}
 			if (outWarehouseOrder.getCreatedTime() != null) {
 				sb.append(" and created_time = " + outWarehouseOrder.getCreatedTime());

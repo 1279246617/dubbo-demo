@@ -39,17 +39,6 @@ public class OutWarehouseOrder implements Serializable {
 	 * 出货渠道
 	 */
 	private String shipwayCode;
-	/**
-	 * 批次号
-	 */
-	private String batchNo;
-
-	/**
-	 * 客户下的大包号
-	 * 
-	 * 要求一个入库单中只能包含同一个大包号的sku
-	 */
-	private String packageNo;
 
 	/**
 	 * 创建时间 (收货时间)
@@ -87,14 +76,6 @@ public class OutWarehouseOrder implements Serializable {
 		this.warehouseId = warehouseId;
 	}
 
-	public String getBatchNo() {
-		return batchNo;
-	}
-
-	public void setBatchNo(String batchNo) {
-		this.batchNo = batchNo;
-	}
-
 	public String getCustomerReferenceNo() {
 		return customerReferenceNo;
 	}
@@ -117,14 +98,6 @@ public class OutWarehouseOrder implements Serializable {
 
 	public void setRemark(String remark) {
 		this.remark = remark;
-	}
-
-	public String getPackageNo() {
-		return packageNo;
-	}
-
-	public void setPackageNo(String packageNo) {
-		this.packageNo = packageNo;
 	}
 
 	public String getShipwayCode() {

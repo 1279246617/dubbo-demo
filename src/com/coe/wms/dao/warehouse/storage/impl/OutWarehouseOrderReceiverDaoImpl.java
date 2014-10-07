@@ -156,7 +156,7 @@ public class OutWarehouseOrderReceiverDaoImpl implements IOutWarehouseOrderRecei
 	public List<OutWarehouseOrderReceiver> findOutWarehouseOrderReceiver(OutWarehouseOrderReceiver outWarehouseOrderReceiver,
 			Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select id,out_warehouse_order_id,name,company,first_name,last_name,address_line1,state_or_province,city,county,postal_code,country_code,country_name,phone_number,email,mobile_number,address_line2 where 1=1 ");
+		sb.append("select id,out_warehouse_order_id,name,company,first_name,last_name,address_line1,state_or_province,city,county,postal_code,country_code,country_name,phone_number,email,mobile_number,address_line2 from w_s_out_warehouse_order_receiver where 1=1 ");
 		if (outWarehouseOrderReceiver != null) {
 			if (StringUtil.isNotNull(outWarehouseOrderReceiver.getName())) {
 				sb.append(" and name = '" + outWarehouseOrderReceiver.getName() + "' ");
@@ -221,7 +221,7 @@ public class OutWarehouseOrderReceiverDaoImpl implements IOutWarehouseOrderRecei
 
 	@Override
 	public OutWarehouseOrderReceiver getOutWarehouseOrderReceiverByOrderId(Long outWarehouseOrderId) {
-		String sql = "select id,out_warehouse_order_id,name,company,first_name,last_name,address_line1,state_or_province,city,county,postal_code,country_code,country_name,phone_number,email,mobile_number,address_line2 where out_warehouse_order_id = "+ outWarehouseOrderId;
+		String sql = "select id,out_warehouse_order_id,name,company,first_name,last_name,address_line1,state_or_province,city,county,postal_code,country_code,country_name,phone_number,email,mobile_number,address_line2 from w_s_out_warehouse_order_receiver where out_warehouse_order_id = "+ outWarehouseOrderId;
 		logger.info("查询出库订单收件人sql:" + sql);
 		List<OutWarehouseOrderReceiver> outWarehouseOrderReceiverList = jdbcTemplate.query(sql,
 				ParameterizedBeanPropertyRowMapper.newInstance(OutWarehouseOrderReceiver.class));
