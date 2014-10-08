@@ -34,14 +34,6 @@ public class InWarehouseRecordItem implements Serializable {
 	 */
 	private Integer quantity;
 
-	public Long getCreatedTime() {
-		return createdTime;
-	}
-
-	public void setCreatedTime(Long createdTime) {
-		this.createdTime = createdTime;
-	}
-
 	/**
 	 * sku
 	 */
@@ -78,6 +70,14 @@ public class InWarehouseRecordItem implements Serializable {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+	
+	public Long getCreatedTime() {
+		return createdTime;
+	}
+
+	public void setCreatedTime(Long createdTime) {
+		this.createdTime = createdTime;
 	}
 
 	public Long getInWarehouseRecordId() {

@@ -362,7 +362,7 @@ public class Storage {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/saveInWarehouseRecordItem", method = RequestMethod.POST)
-	public String saveInWarehouseRecordItem(HttpServletRequest request, String itemSku, String itemQuantity, String itemRemark,
+	public String saveInWarehouseRecordItem(HttpServletRequest request, String itemSku, Integer itemQuantity, String itemRemark,
 			Long warehouseId, Long shelvesId, Long seatId,Long inWarehouseRecordId) throws IOException {
 		logger.info("保存入库明细: itemSku="+itemSku+" itemQuantity="+itemQuantity+" itemRemark="+ itemRemark+" warehouseId="+warehouseId+" shelvesId="+shelvesId+" seatId="+seatId+" inWarehouseRecordId="+inWarehouseRecordId);
 		// 操作员
@@ -370,7 +370,7 @@ public class Storage {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put(Constant.STATUS, Constant.FAIL);
 		// 校验和保存
-		Map<String, String> serviceResult = storageService.saveInWarehouseRecordItem(itemSku, itemQuantity, itemRemark, warehouseId, shelvesId, seatId, inWarehouseRecordId);
+		Map<String, String> serviceResult = storageService.saveInWarehouseRecordItem(itemSku, itemQuantity, itemRemark, warehouseId, shelvesId, seatId, inWarehouseRecordId,userIdOfOperator);
 		// 失败
 		if (!StringUtil.isEqual(serviceResult.get(Constant.STATUS), Constant.SUCCESS)) {
 			map.put(Constant.MESSAGE, serviceResult.get(Constant.MESSAGE));
@@ -390,7 +390,7 @@ public class Storage {
 	 * @throws IOException
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/getInWarehouseRecordItemData", method = RequestMethod.POST)
+	@RequestMapping(value = "/getInWarehouseRecordItemData")
 	public String getInWarehouseRecordItemData(HttpServletRequest request, String sortorder, String sortname, int page, int pagesize,
 			Long inWarehouseRecordId) throws IOException {
 		Map map = new HashMap();

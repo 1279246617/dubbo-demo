@@ -126,15 +126,15 @@ public class StorageServiceImpl implements IStorageService {
 	 * 保存入库明细
 	 */
 	@Override
-	public Map<String, String> saveInWarehouseRecordItem(String itemSku, String itemQuantity, String itemRemark, Long warehouseId,
-			Long shelvesId, Long seatId, Long inWarehouseRecordId) {
+	public Map<String, String> saveInWarehouseRecordItem(String itemSku, Integer itemQuantity, String itemRemark, Long warehouseId,
+			Long shelvesId, Long seatId, Long inWarehouseRecordId, Long userIdOfOperator) {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put(Constant.STATUS, Constant.FAIL);
 		if (StringUtil.isNull(itemSku)) {
 			map.put(Constant.MESSAGE, "请输入产品SKU.");
 			return map;
 		}
-		if (StringUtil.isNull(itemQuantity)) {
+		if (itemQuantity == null) {
 			map.put(Constant.MESSAGE, "请输入产品数量.");
 			return map;
 		}
@@ -142,14 +142,23 @@ public class StorageServiceImpl implements IStorageService {
 		InWarehouseRecordItem param = new InWarehouseRecordItem();
 		param.setInWarehouseRecordId(inWarehouseRecordId);
 		param.setSku(itemSku);
-		List<InWarehouseRecordItem> inWarehouseRecordList = inWarehouseRecordItemDao.findInWarehouseRecordItem(param, null, null);
-		if (inWarehouseRecordList.size() > 0) {
+		List<InWarehouseRecordItem> inWarehouseRecordItemList = inWarehouseRecordItemDao.findInWarehouseRecordItem(param, null, null);
+		if (inWarehouseRecordItemList.size() > 0) {
 			// 返回入库主单的id
-			map.put("id", "" + inWarehouseRecordList.get(0).getId());
+			map.put("id", "" + inWarehouseRecordItemList.get(0).getId());
 			map.put(Constant.MESSAGE, "该产品SKU已存在入库记录.");
 			return map;
 		}
 		InWarehouseRecordItem inWarehouseRecordItem = new InWarehouseRecordItem();
+		inWarehouseRecordItem.setCreatedTime(System.currentTimeMillis());
+		inWarehouseRecordItem.setInWarehouseRecordId(inWarehouseRecordId);
+		inWarehouseRecordItem.setQuantity(itemQuantity);
+		inWarehouseRecordItem.setRemark(itemRemark);
+		inWarehouseRecordItem.setSeatId(seatId);
+		inWarehouseRecordItem.setShelvesId(shelvesId);
+		inWarehouseRecordItem.setSku(itemSku);
+		inWarehouseRecordItem.setUserIdOfOperator(userIdOfOperator);
+		inWarehouseRecordItem.setWarehouseId(warehouseId);
 		// 返回id
 		long id = inWarehouseRecordItemDao.saveInWarehouseRecordItem(inWarehouseRecordItem);
 		map.put("id", "" + id);

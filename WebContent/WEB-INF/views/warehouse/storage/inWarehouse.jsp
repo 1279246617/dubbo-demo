@@ -135,7 +135,7 @@
 	   var baseUrl = "${baseUrl}";
 	   //进入页面,焦点跟踪单号
 	   $("#trackingNo").focus();
-	   focus = "1";
+	   var focus = "1";
 	    $(window).keydown(function(event){
 	    	//回车事件
 	    	if((event.keyCode   ==   13)) {
@@ -149,8 +149,7 @@
 	    	if((event.keyCode   ==   13) &&   (event.ctrlKey)) {
 	    	}
 	    });
-		
-	  var focus = "";
+	
   	  $(function(){
 	  		$("input").focus(function(){
 	  			//当前获取焦点的文本框是 主单还是明细
