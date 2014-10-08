@@ -3,6 +3,7 @@ package com.coe.wms.dao.warehouse.storage.impl;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.List;
 import java.util.Map;
 
@@ -52,9 +53,9 @@ public class InWarehouseRecordItemDaoImpl implements IInWarehouseRecordItemDao {
 				ps.setLong(1, item.getInWarehouseRecordId());
 				ps.setLong(2, item.getQuantity());
 				ps.setString(3, item.getSku());
-				ps.setLong(4, item.getSeatId());
-				ps.setLong(5, item.getShelvesId());
-				ps.setLong(6, item.getWarehouseId());
+				ps.setLong(4, item.getSeatId() != null ? item.getSeatId() : 0);
+				ps.setLong(5, item.getShelvesId() != null ? item.getShelvesId() : 0);
+				ps.setLong(6, item.getWarehouseId() != null ? item.getWarehouseId() : 0);
 				ps.setString(7, item.getRemark());
 				ps.setLong(8, item.getCreatedTime());
 				ps.setLong(9, item.getUserIdOfOperator());
