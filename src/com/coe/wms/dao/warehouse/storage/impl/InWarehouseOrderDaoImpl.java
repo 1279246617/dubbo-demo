@@ -42,7 +42,7 @@ public class InWarehouseOrderDaoImpl implements IInWarehouseOrderDao {
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public long saveInWarehouseOrder(final InWarehouseOrder order) {
-		final String sql = "insert into w_s_in_warehouse_order (user_id_of_customer,package_no,package_tracking_no,weight,small_package_quantity,created_time,remark,status,user_id_of_operator,carrier_code,logistics_type) values (?,?,?,?,?,?,?,?,?,?,?)";
+		final String sql = "insert into w_s_in_warehouse_order (user_id_of_customer,package_no,package_tracking_no,weight,created_time,remark,status,user_id_of_operator,carrier_code,logistics_type) values (?,?,?,?,?,?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
@@ -51,13 +51,12 @@ public class InWarehouseOrderDaoImpl implements IInWarehouseOrderDao {
 				ps.setString(2, order.getPackageNo());
 				ps.setString(3, order.getPackageTrackingNo());
 				ps.setDouble(4, order.getWeight() != null ? order.getWeight() : 0);
-				ps.setInt(5, order.getSmallPackageQuantity());
-				ps.setLong(6, order.getCreatedTime());
-				ps.setString(7, order.getRemark());
-				ps.setString(8, order.getStatus());
-				ps.setLong(9, order.getUserIdOfOperator() != null ? order.getUserIdOfOperator() : 0);
-				ps.setString(10, order.getCarrierCode());
-				ps.setString(11, order.getLogisticsType());
+				ps.setLong(5, order.getCreatedTime());
+				ps.setString(6, order.getRemark());
+				ps.setString(7, order.getStatus());
+				ps.setLong(8, order.getUserIdOfOperator() != null ? order.getUserIdOfOperator() : 0);
+				ps.setString(9, order.getCarrierCode());
+				ps.setString(10, order.getLogisticsType());
 				return ps;
 			}
 		}, keyHolder);
@@ -80,7 +79,7 @@ public class InWarehouseOrderDaoImpl implements IInWarehouseOrderDao {
 	public List<InWarehouseOrder> findInWarehouseOrder(InWarehouseOrder inWarehouseOrder,
 			Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select id,user_id_of_customer,user_id_of_operator,package_no,package_tracking_no,weight,small_package_quantity,created_time,remark,status,received_quantity,carrier_code,logistics_type,warehouse_id from w_s_in_warehouse_order where 1=1 ");
+		sb.append("select id,user_id_of_customer,user_id_of_operator,package_no,package_tracking_no,weight,created_time,remark,status,carrier_code,logistics_type,warehouse_id from w_s_in_warehouse_order where 1=1 ");
 		if (inWarehouseOrder != null) {
 			if (StringUtil.isNotNull(inWarehouseOrder.getPackageNo())) {
 				sb.append(" and package_no = '" + inWarehouseOrder.getPackageNo() + "' ");
@@ -99,9 +98,6 @@ public class InWarehouseOrderDaoImpl implements IInWarehouseOrderDao {
 			}
 			if (inWarehouseOrder.getId() != null) {
 				sb.append(" and id = " + inWarehouseOrder.getId());
-			}
-			if (inWarehouseOrder.getReceivedQuantity() != null) {
-				sb.append(" and received_quantity = " + inWarehouseOrder.getReceivedQuantity());
 			}
 			if (inWarehouseOrder.getUserIdOfCustomer() != null) {
 				sb.append(" and user_id_of_customer = " + inWarehouseOrder.getUserIdOfCustomer());
@@ -166,9 +162,6 @@ public class InWarehouseOrderDaoImpl implements IInWarehouseOrderDao {
 			}
 			if (inWarehouseOrder.getId() != null) {
 				sb.append(" and id = " + inWarehouseOrder.getId());
-			}
-			if (inWarehouseOrder.getReceivedQuantity() != null) {
-				sb.append(" and received_quantity = " + inWarehouseOrder.getReceivedQuantity());
 			}
 			if (inWarehouseOrder.getUserIdOfCustomer() != null) {
 				sb.append(" and user_id_of_customer = " + inWarehouseOrder.getUserIdOfCustomer());

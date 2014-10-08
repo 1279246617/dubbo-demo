@@ -86,12 +86,13 @@ public class Storage {
 	 * @throws IOException
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/getInWarehouseOrderData", method = RequestMethod.POST)
+	@RequestMapping(value = "/getInWarehouseOrderData")
 	public String getInWarehouseOrderData(HttpServletRequest request, String sortorder, String sortname, int page, int pagesize,
 			String userLoginName, Long warehouseId, String trackingNo, String createdTimeStart, String createdTimeEnd) throws IOException {
 		if (StringUtil.isNotNull(createdTimeStart) && createdTimeStart.contains(",")) {
 			createdTimeStart = createdTimeStart.substring(createdTimeStart.lastIndexOf(",") + 1, createdTimeStart.length());
 		}
+		
 		HttpSession session = request.getSession();
 		// 当前操作员
 		Long userIdOfOperator = (Long) session.getAttribute(SessionConstant.USER_ID);

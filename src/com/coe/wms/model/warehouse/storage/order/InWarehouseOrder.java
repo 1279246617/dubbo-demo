@@ -54,13 +54,6 @@ public class InWarehouseOrder implements Serializable {
 	private String packageTrackingNo;
 
 	/**
-	 * 大包下的产品数量(统计packageItem得到)
-	 * 
-	 * 可空
-	 */
-	private int smallPackageQuantity;
-
-	/**
 	 * 大包重量
 	 */
 	private Double weight;
@@ -70,10 +63,6 @@ public class InWarehouseOrder implements Serializable {
 	 * 大包状态: 客户预报的大包 要知道 是 已经预报, 部分入库, 全部已入库 无需知道出库状态;
 	 */
 	private String status;
-	/**
-	 * 已经到货入库的商品数量
-	 */
-	private Integer receivedQuantity;
 
 	/**
 	 * 创建时间(不代表收货时间)
@@ -123,14 +112,6 @@ public class InWarehouseOrder implements Serializable {
 		this.warehouseId = warehouseId;
 	}
 
-	public int getSmallPackageQuantity() {
-		return smallPackageQuantity;
-	}
-
-	public void setSmallPackageQuantity(int smallPackageQuantity) {
-		this.smallPackageQuantity = smallPackageQuantity;
-	}
-
 	public Double getWeight() {
 		return weight;
 	}
@@ -162,15 +143,6 @@ public class InWarehouseOrder implements Serializable {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-
-	public Integer getReceivedQuantity() {
-		return receivedQuantity;
-	}
-
-	public void setReceivedQuantity(Integer receivedQuantity) {
-		this.receivedQuantity = receivedQuantity;
-	}
-
 	public Long getCreatedTime() {
 		return createdTime;
 	}

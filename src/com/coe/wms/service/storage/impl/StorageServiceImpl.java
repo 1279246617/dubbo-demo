@@ -386,7 +386,14 @@ public class StorageServiceImpl implements IStorageService {
 			if (inWarehouseOrderStatus != null) {
 				map.put("status", inWarehouseOrderStatus.getCn());
 			}
-			map.put("receivedQuantity", order.getReceivedQuantity());
+			InWarehouseOrderItem param = new InWarehouseOrderItem();
+			param.setOrderId(order.getId());
+			List<InWarehouseOrderItem> inWarehouseOrderItemList = inWarehouseOrderItemDao.findInWarehouseOrderItem(param, null, null);
+			String skus = "";
+			for (InWarehouseOrderItem item : inWarehouseOrderItemList) {
+				skus += item.getSku() + "*" + item.getQuantity()+" ";
+			}
+			map.put("skus", skus);
 			list.add(map);
 		}
 		pagination.total = inWarehouseOrderDao.countInWarehouseOrder(inWarehouseOrder, moreParam);
@@ -413,7 +420,7 @@ public class StorageServiceImpl implements IStorageService {
 			User user = userDao.getUserById(order.getUserIdOfCustomer());
 			map.put("userNameOfCustomer", user.getLoginName());
 			map.put("customerReferenceNo", order.getCustomerReferenceNo());
-			if (order.getWarehouseId() != null && order.getWarehouseId()!=0) {
+			if (order.getWarehouseId() != null && order.getWarehouseId() != 0) {
 				Warehouse warehouse = warehouseDao.getWarehouseById(order.getWarehouseId());
 				if (warehouse != null) {
 					map.put("warehouse", warehouse.getWarehouseName());
@@ -426,7 +433,8 @@ public class StorageServiceImpl implements IStorageService {
 				map.put("status", outWarehouseOrderStatus.getCn());
 			}
 			// 收件人信息
-			OutWarehouseOrderReceiver outWarehouseOrderReceiver = outWarehouseOrderReceiverDao.getOutWarehouseOrderReceiverByOrderId(outWarehouseOrderId);
+			OutWarehouseOrderReceiver outWarehouseOrderReceiver = outWarehouseOrderReceiverDao
+					.getOutWarehouseOrderReceiverByOrderId(outWarehouseOrderId);
 			if (outWarehouseOrderReceiver != null) {
 				map.put("receiverAddressLine1", outWarehouseOrderReceiver.getAddressLine1());
 				map.put("receiverAddressLine2", outWarehouseOrderReceiver.getAddressLine2());
@@ -445,15 +453,17 @@ public class StorageServiceImpl implements IStorageService {
 				map.put("receiverStateOrProvince", outWarehouseOrderReceiver.getStateOrProvince());
 			}
 			// 发件人
-			OutWarehouseOrderSender outWarehouseOrderSender = outWarehouseOrderSenderDao.getOutWarehouseOrderSenderByOrderId(outWarehouseOrderId);
-			if(outWarehouseOrderSender!=null){
+			OutWarehouseOrderSender outWarehouseOrderSender = outWarehouseOrderSenderDao
+					.getOutWarehouseOrderSenderByOrderId(outWarehouseOrderId);
+			if (outWarehouseOrderSender != null) {
 				map.put("senderName", outWarehouseOrderSender.getName());
 			}
-			//物品明细(目前仅展示SKU*数量)
+			// 物品明细(目前仅展示SKU*数量)
 			String itemStr = "";
 			OutWarehouseOrderItem outWarehouseOrderItemParam = new OutWarehouseOrderItem();
 			outWarehouseOrderItemParam.setOutWarehouseOrderId(outWarehouseOrderId);
-			List<OutWarehouseOrderItem> outWarehouseOrderItemList = outWarehouseOrderItemDao.findOutWarehouseOrderItem(outWarehouseOrderItemParam, null, null);
+			List<OutWarehouseOrderItem> outWarehouseOrderItemList = outWarehouseOrderItemDao.findOutWarehouseOrderItem(
+					outWarehouseOrderItemParam, null, null);
 			for (OutWarehouseOrderItem outWarehouseOrderItem : outWarehouseOrderItemList) {
 				itemStr += outWarehouseOrderItem.getSku() + "*" + outWarehouseOrderItem.getQuantity() + " ";
 			}
@@ -528,7 +538,6 @@ public class StorageServiceImpl implements IStorageService {
 				logger.info("正在入库:第" + (i + 1) + "物品明细SkuDetail - >(skuList) 得到Null");
 				continue;
 			}
-			int smallPackageQuantity = 0;
 			List<InWarehouseOrderItem> inwarehouseOrderItemList = new ArrayList<InWarehouseOrderItem>();
 			for (int j = 0; j < skuList.size(); j++) {
 				Sku sku = skuList.get(j);
@@ -540,17 +549,12 @@ public class StorageServiceImpl implements IStorageService {
 				inwarehouseOrderItem.setQuantity(sku.getSkuQty());
 				inwarehouseOrderItem.setSkuName(sku.getSkuName());
 				inwarehouseOrderItem.setSkuRemark(sku.getSkuRemark());
-				smallPackageQuantity += sku.getSkuQty();
 				// 入库主单的id
 				inwarehouseOrderItemList.add(inwarehouseOrderItem);
 			}
-			// 物品总数量
-			inWarehouseOrder.setSmallPackageQuantity(smallPackageQuantity);
 			// 保存入库订单得到入库订单id
 			Long orderId = inWarehouseOrderDao.saveInWarehouseOrder(inWarehouseOrder);
-
 			int count = inWarehouseOrderItemDao.saveBatchInWarehouseOrderItemWithOrderId(inwarehouseOrderItemList, orderId);
-
 			logger.info("入库主单id:" + orderId + " 入库明细数量:" + count);
 		}
 		response.setSuccess(Constant.TRUE);

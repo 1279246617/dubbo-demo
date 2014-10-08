@@ -112,21 +112,25 @@
 	                    { display: '客户帐号', name: 'userNameOfCustomer', align: 'center',type:'float',width:'9%'},
 	                    { display: '承运商', name: 'carrierCode', align: 'center', type: 'float',width:'9%'},
 	  		          	{ display: '运单号', name: 'packageTrackingNo', align: 'center', type: 'float',width:'12%'},
-	  		          	{ display: '总重量(KG)', name: 'weight', align: 'center', type: 'float',width:'7%'},
 		                { display: '仓库', name: 'warehouse', align: 'center', type: 'float',width:'8%'},
 		                { display: '状态', name: 'status', align: 'center', type: 'float',width:'8%'},
-		                { display: '已收货数量', name: 'receivedQuantity', align: 'center',type: 'int', width:'8%'},
-		                { display: '备注', name: 'remark', align: 'center', type: 'float',width:'15%'},
+		            	{ display: 'SKU预览', isSort: false, align: 'center', type: 'float',width:'17%',render: function(row) {
+		            		var skus = "";
+		            		if (!row._editing) {
+		            			skus += '<a href="javascript:listInWarehouseOrderItem(' + row.id + ')">'+row.skus+'</a> ';
+		            		}
+		            		return skus;
+	  		          	}},
+		                { display: '备注', name: 'remark', align: 'center', type: 'float',width:'13%'},
 		                { display: '创建时间', name: 'createdTime', align: 'center', type: 'float',width:'12%'},
 		                {display: '操作',isSort: false,width: '10%',render: function(row) {
 		            		var h = "";
 		            		if (!row._editing) {
-		            			h += '<a href="javascript:updateInWarehouseItem(' + row.id + ')">编辑</a> ';
+		            			h += '<a href="javascript:updateInWarehouseItem(' + row.id + ')">备注</a> ';
 		            			h += '<a href="javascript:deleteInWarehouseItem(' + row.id + ')">删除</a>';
 		            		}
 		            		return h;
-		            	}
-		            }
+		            	}}
 	                ],  
 	                dataAction: 'server',
 	                url: baseUrl+'/warehouse/storage/getInWarehouseOrderData.do?createdTimeStart=${todayStart}',
@@ -146,6 +150,10 @@
 	                enabledSort:false
 	            });
 	        };		
+	        
+	        function listInWarehouseOrderItem(orderId){
+	        	alert("订单id:"+orderId);
+	        }
    	</script>
    	
 	<script type="text/javascript" src="${baseUrl}/static/jquery/jquery.showMessage.js"></script>

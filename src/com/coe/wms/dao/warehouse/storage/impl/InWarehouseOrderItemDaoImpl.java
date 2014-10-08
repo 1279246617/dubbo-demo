@@ -20,7 +20,6 @@ import org.springframework.stereotype.Repository;
 import com.coe.wms.dao.datasource.DataSource;
 import com.coe.wms.dao.datasource.DataSourceCode;
 import com.coe.wms.dao.warehouse.storage.IInWarehouseOrderItemDao;
-import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrderItem;
 import com.coe.wms.util.NumberUtil;
 import com.coe.wms.util.Pagination;
@@ -123,7 +122,7 @@ public class InWarehouseOrderItemDaoImpl implements IInWarehouseOrderItemDao {
 	public List<InWarehouseOrderItem> findInWarehouseOrderItem(InWarehouseOrderItem inWarehouseOrderItem,
 			Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select id,order_id,quantity,sku,received_quantity,sku_name,sku_remark where 1=1 ");
+		sb.append("select id,order_id,quantity,sku,received_quantity,sku_name,sku_remark from w_s_in_warehouse_order_item where 1=1 ");
 		if (inWarehouseOrderItem != null) {
 			if (StringUtil.isNotNull(inWarehouseOrderItem.getSku())) {
 				sb.append(" and sku = '" + inWarehouseOrderItem.getSku() + "' ");
@@ -136,11 +135,16 @@ public class InWarehouseOrderItemDaoImpl implements IInWarehouseOrderItemDao {
 			}
 		}
 		// 分页sql
-		sb.append(page.generatePageSql());
+		if(page!=null){
+			sb.append(page.generatePageSql());	
+		}
 		String sql = sb.toString();
 		logger.info("查询入库订单明细sql:" + sql);
 		List<InWarehouseOrderItem> inWarehouseOrderItemList = jdbcTemplate.query(sql,
 				ParameterizedBeanPropertyRowMapper.newInstance(InWarehouseOrderItem.class));
+		
+		logger.info("查询入库订单明细sql:" + sql +" size:"+inWarehouseOrderItemList.size());
+		
 		return inWarehouseOrderItemList;
 	}
 }
