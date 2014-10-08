@@ -36,13 +36,14 @@
 		          				&nbsp;&nbsp;
 		          				 <input type="checkbox" name="unKnowCustomer" id="unKnowCustomer" />&nbsp;标记为无主件
 		          				&nbsp;&nbsp;&nbsp;&nbsp;
+		          				 主单备注&nbsp;&nbsp;<input type="text"  name="orderRemark"  id="orderRemark" style="width:220px;"/>
+		          				 <!-- 入库主单记录id -->
+		          				 <input type="text" name="inWarehouseRecordId" id="inWarehouseRecordId" style="display:none;">
+		          				 
 		          				 <a class="btn  btn-primary" id="enter" onclick="clickEnter()" style="cursor:pointer;"><i class="icon-ok icon-white"></i>保存主单</a>
 		          				 &nbsp;&nbsp;
 		          				 <button class="btn  btn-primary"   style="cursor:pointer;" type="reset"><i class="icon-ok icon-white"></i>清除</button>
 		          				 &nbsp;&nbsp;&nbsp;&nbsp;
-		          				 主单摘要&nbsp;&nbsp;<input type="text"  name="orderRemark"  id="orderRemark" style="width:220px;"/>
-		          				 <!-- 入库主单记录id -->
-		          				 <input type="text" name="inWarehouseRecordId" id="inWarehouseRecordId" style="display:none;">
 							</td>
 					</tr>
 			</table>

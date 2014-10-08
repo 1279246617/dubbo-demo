@@ -19,7 +19,7 @@ public class InWarehouseOrderItem implements Serializable {
 	/**
 	 * sku下产品数量
 	 */
-	private int quantity;
+	private Integer quantity;
 
 	private String sku;
 
@@ -38,15 +38,7 @@ public class InWarehouseOrderItem implements Serializable {
 	 * 
 	 * 在添加入库单时,更新此字段.也显示此字段
 	 */
-	private int receivedQuantity;
-
-	public int getReceivedQuantity() {
-		return receivedQuantity;
-	}
-
-	public void setReceivedQuantity(int receivedQuantity) {
-		this.receivedQuantity = receivedQuantity;
-	}
+	private Integer receivedQuantity;
 
 	public Long getId() {
 		return id;
@@ -64,12 +56,20 @@ public class InWarehouseOrderItem implements Serializable {
 		this.orderId = orderId;
 	}
 
-	public int getQuantity() {
+	public Integer getQuantity() {
 		return quantity;
 	}
 
-	public void setQuantity(int quantity) {
+	public void setQuantity(Integer quantity) {
 		this.quantity = quantity;
+	}
+
+	public String getSku() {
+		return sku;
+	}
+
+	public void setSku(String sku) {
+		this.sku = sku;
 	}
 
 	public String getSkuName() {
@@ -88,11 +88,11 @@ public class InWarehouseOrderItem implements Serializable {
 		this.skuRemark = skuRemark;
 	}
 
-	public String getSku() {
-		return sku;
+	public Integer getReceivedQuantity() {
+		return receivedQuantity;
 	}
 
-	public void setSku(String sku) {
-		this.sku = sku;
+	public void setReceivedQuantity(Integer receivedQuantity) {
+		this.receivedQuantity = receivedQuantity;
 	}
 }
