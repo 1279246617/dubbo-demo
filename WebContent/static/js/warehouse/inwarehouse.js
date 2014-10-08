@@ -60,7 +60,7 @@ function saveInWarehouseRecordStep1(trackingNoStr,userLoginName,remark) {
 			userLoginName.show();
 			$('#userLoginName').val(msg.user.loginName);
 			//步骤1能得到用户名,直接调用步骤2
-			clickEnterStep2(trackingNoStr,msg.user.loginName,null,remark);
+			saveInWarehouseRecordStep2(trackingNoStr,msg.user.loginName,null,remark);
 		}
 	});
 }
