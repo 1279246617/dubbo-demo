@@ -25,22 +25,22 @@
 							<td>
 									<span class="pull-left" style="width:52px;">跟踪单号</span>
 									<span class="pull-left" style="width:191px;">
-										<input type="text"  name="trackingNo"  id="trackingNo" onfocus="trackingNoFocus()"   style="width:190px;"/>
+										<input type="text"  name="trackingNo"  id="trackingNo" t="1" onfocus="trackingNoFocus()"   style="width:190px;"/>
 									</span>
 							</td>		
 							<td>
-								客户帐号&nbsp;&nbsp;<input type="text" name="userLoginName" data-provide="typeahead"  id="userLoginName" style="width:120px;"  />
+								客户帐号&nbsp;&nbsp;<input type="text" name="userLoginName"  t="1" data-provide="typeahead"  id="userLoginName" style="width:120px;"  />
 								<select style="width:160px;display:none;" id="loginNameSelect" onchange="loginNameSelectChange()">
 								</select>
 		          				<img class="tips" id="customerNoTips" msg="根据运单号找不到唯一的入库订单时,将要求输入客户帐号" src="${baseUrl}/static/img/help.gif">
 		          				&nbsp;&nbsp;
-		          				 <input type="checkbox" name="unKnowCustomer" id="unKnowCustomer" />&nbsp;标记为无主件
+		          				 <input type="checkbox" name="unKnowCustomer" t="1" id="unKnowCustomer" />&nbsp;标记为无主件
 		          				&nbsp;&nbsp;&nbsp;&nbsp;
-		          				 主单备注&nbsp;&nbsp;<input type="text"  name="orderRemark"  id="orderRemark" style="width:220px;"/>
+		          				 主单备注&nbsp;&nbsp;<input type="text" t="1"  name="orderRemark"  id="orderRemark" style="width:220px;"/>
 		          				 <!-- 入库主单记录id -->
-		          				 <input type="text" name="inWarehouseRecordId" id="inWarehouseRecordId" style="display:none;">
+		          				 <input type="text" name="inWarehouseRecordId" t="1" id="inWarehouseRecordId" style="display:none;">
 		          				 
-		          				 <a class="btn  btn-primary" id="enter" onclick="clickEnter()" style="cursor:pointer;"><i class="icon-ok icon-white"></i>保存主单</a>
+		          				 <a class="btn  btn-primary" id="enter" onclick="saveInWarehouseRecord()" style="cursor:pointer;"><i class="icon-ok icon-white"></i>保存主单</a>
 		          				 &nbsp;&nbsp;
 		          				 <button class="btn  btn-primary"   style="cursor:pointer;" type="reset"><i class="icon-ok icon-white"></i>清除</button>
 		          				 &nbsp;&nbsp;&nbsp;&nbsp;
@@ -53,42 +53,42 @@
 					<td  >
 						<span class="pull-left" style="width:52px;">产品SKU</span>
 						<span class="pull-left" style="width:160px;">
-							<input type="text"  name="itemSku"  id="itemSku" style="width:130px;"/>
+							<input type="text"  name="itemSku" t="2"  id="itemSku" style="width:130px;"/>
 						</span>
 						
 						<span class="pull-left" style="width:52px;">产品数量</span>
 						<span class="pull-left" style="width:102px;">
-							<input type="text"  name="itemQuantity"  id="itemQuantity" style="width:90px;" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"/>
+							<input type="text"  name="itemQuantity"  id="itemQuantity" t="2" style="width:90px;" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"/>
 						</span>
 						
-						<span class="pull-left" style="width:105px;">
-							<a class="btn  btn-primary" id="enterItem" style="cursor:pointer;"><i class="icon-ok icon-white"></i>保存明细</a>
-						</span>
 						
 						<span class="pull-left" style="width:52px;">明细备注</span>
 						<span class="pull-left" style="width:180px;">
-							<input type="text"  name="itemRemark"  id="itemRemark" style="width:160px;"/>
+							<input type="text"  name="itemRemark"  id="itemRemark" t="2" style="width:160px;"/>
 						</span>
+						
+						<span class="pull-left" style="width:105px;">
+							<a class="btn  btn-primary" id="enterItem" onclick="saveInWarehouseRecordItem();" style="cursor:pointer;"><i class="icon-ok icon-white"></i>保存明细</a>
+						</span>
+						
 						
 		          		<span class="pull-left" style="width:30px;">仓库</span>
 		          		<span class="pull-left" style="width:110px;">
 		          			<select style="width:80px;" id="warehouseId">
 								<option value="1">1-香港仓</option>
-								<option value="2">2-美国仓</option>
-								<option value="3">3-英国仓</option>
 							</select>
 		          		</span>
 						
 						<span class="pull-left" style="width:30px;">货架</span>
 						<span class="pull-left" style="width:140px;">
-							<input type="text"  name="itemQuantity"  id="itemQuantity" style="width:70px;"/>
-							<input type="checkbox" name="1" checked="checked" />自动
+							<input type="text"  name="shelvesId"  id="shelvesId" t="2" style="width:70px;"/>
+							<input type="checkbox" name="1" t="2" checked="checked" />自动
 						</span>
 						
 						<span class="pull-left" style="width:30px;">货位</span>
 						<span class="pull-left" style="width:130px;">
-							<input type="text"  name="itemQuantity"  id="itemQuantity" style="width:70px;"/>
-						 	<input type="checkbox" name="2" checked="checked" />自动
+							<input type="text"  name="seatId"  t="2" id="seatId" style="width:70px;"/>
+						 	<input type="checkbox" name="2" checked="checked"  t="2"/>自动
 						</span>
 						
 					</td>	
@@ -100,8 +100,6 @@
 		<tr>
 			<td>
 				<div class="pull-left">
-					<a class="btn  btn-small btn-danger" onclick="" title="批量设置为已经收货"><i class="icon-th-large icon-white"></i>批量收货</a>
-					&nbsp;
                    <a class="btn btn-small btn-primary" onclick=""><i class="icon-cog icon-white"></i>设置仓库</a>
                    &nbsp;
                    <a class="btn btn-small btn-primary" onclick=""><i class="icon-cog icon-white"></i>设置货架</a>
@@ -137,6 +135,7 @@
 	   var baseUrl = "${baseUrl}";
 	   //进入页面,焦点跟踪单号
 	   $("#trackingNo").focus();
+	   focus = "1";
 	    $(window).keydown(function(event){
 	    	//回车事件
 	    	if((event.keyCode   ==   13)) {
@@ -145,14 +144,19 @@
 	    	}  
 	    	//空格
 			if(event.keyCode == 32 && !$(event.target).is('input,textarea')){
-				alert('提交明细');
 				return;
 			}    	
 	    	if((event.keyCode   ==   13) &&   (event.ctrlKey)) {
 	    	}
 	    });
 		
+	  var focus = "";
   	  $(function(){
+	  		$("input").focus(function(){
+	  			//当前获取焦点的文本框是 主单还是明细
+	  			focus = $(this).attr("t");
+	  		});
+	  		
 	    	$(".tips").each(function(i,e){
 	                var $img = $(e);
 	                var msg = $img.attr("msg");
@@ -195,44 +199,17 @@
 		    	
 	     initGrid();
    		});
-  	  
-  	  //点击提交跟踪号
-  	  //1. 跟踪号为空,要求输入跟踪号
-  	  //2.跟踪号不为空,客户帐号为空, 请求后台获取运单预报用户数据, 提示输入客户帐号,标记无主件
-  	  //3.跟踪号不为空,客户帐号为空,但已经标记无主件
+  	  	
+  	  //回车事件
   	  function clickEnter(){
-    		var trackingNo = $("#trackingNo");
-      		var trackingNoStr = trackingNo.val();
-      		
-      		var userLoginName = $('#userLoginName');
-      		var userLoginNameStr = userLoginName.val();
-      		
-      		var unKnowCustomer = $("#unKnowCustomer");
-      		var isUnKnowCustomer = unKnowCustomer.is(':checked'); //true | false
-      		
-      		var remark = $("#orderRemark").val();
-      		
-      		if($.trim(trackingNoStr) ==""){
-      			parent.$.showDialogMessage("请输入跟踪单号.",null,null);
-      			//焦点回到跟踪单号
-      			return;
-      		}
-    		if(trackingNoStr.indexOf(" ")> -1 && $.trim(trackingNoStr) !=""){
-    			parent.$.showShortMessage({msg:"您输入的跟踪单号中包含空白字符已被忽略.",animate:true,left:"40%"});
-    			trackingNo.val($.trim(trackingNoStr));
-    		}    	
-    		//跟踪号不为空,客户帐号为空调用clickEnterStep1();
-    		if($.trim(userLoginNameStr) == ''){
-    			clickEnterStep1(trackingNoStr,userLoginName,remark);		    			
-    		}
-    		
-			// 若根据跟踪号 顺利找到唯一的客户帐号 自动调用clickEnterStep2
-    		//跟踪号不为空,客户帐号不为空,将提交保存
-    		if($.trim(userLoginNameStr) != ''){
-    			clickEnterStep2(trackingNoStr,userLoginNameStr,isUnKnowCustomer,remark);
-    		}
-    		
-    		//刷新Grid				
+  		  	if(focus == '1'){
+	  		  	saveInWarehouseRecord();	
+  		  	}
+    		//保存明细
+			if(focus == '2'){
+	      		saveInWarehouseRecordItem();
+			}
+			//刷新Grid				
     		btnSearch("#searchform",grid);
   	  }
     </script>	

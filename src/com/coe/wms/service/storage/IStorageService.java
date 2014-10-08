@@ -33,7 +33,17 @@ public interface IStorageService {
 	 */
 	public Map<String, String> saveInWarehouseRecord(String trackingNo, String userLoginName, String isUnKnowCustomer, String remark,
 			Long userIdOfOperator);
-
+	
+	/**
+	 * 保存入库明细  返回成功,失败,错误信息
+	 * 
+	 * @param inWarehouseOrder
+	 * @param moreParam
+	 * @param page
+	 * @return
+	 */
+	public Map<String, String> saveInWarehouseRecordItem(String itemSku, String itemQuantity, String itemRemark,Long warehouseId, Long shelvesId, Long seatId,Long inWarehouseRecordId);
+	
 	/**
 	 * 获取入库记录物品
 	 * 

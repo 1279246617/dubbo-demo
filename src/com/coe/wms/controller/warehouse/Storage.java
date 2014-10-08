@@ -92,7 +92,7 @@ public class Storage {
 		if (StringUtil.isNotNull(createdTimeStart) && createdTimeStart.contains(",")) {
 			createdTimeStart = createdTimeStart.substring(createdTimeStart.lastIndexOf(",") + 1, createdTimeStart.length());
 		}
-		
+
 		HttpSession session = request.getSession();
 		// 当前操作员
 		Long userIdOfOperator = (Long) session.getAttribute(SessionConstant.USER_ID);
@@ -167,32 +167,31 @@ public class Storage {
 		pagination.pageSize = pagesize;
 		pagination.sortName = sortname;
 		pagination.sortOrder = sortorder;
-		
+
 		OutWarehouseOrder param = new OutWarehouseOrder();
-		//客户单号
+		// 客户单号
 		param.setCustomerReferenceNo(customerReferenceNo);
-		//客户帐号
+		// 客户帐号
 		if (StringUtil.isNotNull(userLoginName)) {
 			Long userIdOfCustomer = userService.findUserIdByLoginName(userLoginName);
 			param.setUserIdOfCustomer(userIdOfCustomer);
 		}
-		//仓库
+		// 仓库
 		param.setWarehouseId(warehouseId);
 		// 更多参数
 		Map<String, String> moreParam = new HashMap<String, String>();
 		moreParam.put("createdTimeStart", createdTimeStart);
 		moreParam.put("createdTimeEnd", createdTimeEnd);
-		
+
 		pagination = storageService.getOutWarehouseOrderData(param, moreParam, pagination);
 		Map map = new HashMap();
 		map.put("Rows", pagination.rows);
 		map.put("Total", pagination.total);
 		return GsonUtil.toJson(map);
 	}
-	
 
 	/**
-	 *待审核出库订单 查询
+	 * 待审核出库订单 查询
 	 * 
 	 * @param request
 	 * @param response
@@ -209,7 +208,7 @@ public class Storage {
 		view.setViewName("warehouse/storage/listWaitCheckOutWarehouseOrder");
 		return view;
 	}
-	
+
 	/**
 	 * 获取待审核出库订单
 	 * 
@@ -235,29 +234,29 @@ public class Storage {
 		pagination.pageSize = pagesize;
 		pagination.sortName = sortname;
 		pagination.sortOrder = sortorder;
-		
+
 		OutWarehouseOrder param = new OutWarehouseOrder();
-		//客户单号
+		// 客户单号
 		param.setCustomerReferenceNo(customerReferenceNo);
-		//客户帐号
+		// 客户帐号
 		if (StringUtil.isNotNull(userLoginName)) {
 			Long userIdOfCustomer = userService.findUserIdByLoginName(userLoginName);
 			param.setUserIdOfCustomer(userIdOfCustomer);
 		}
-		//仓库
+		// 仓库
 		param.setWarehouseId(warehouseId);
 		// 更多参数
 		Map<String, String> moreParam = new HashMap<String, String>();
 		moreParam.put("createdTimeStart", createdTimeStart);
 		moreParam.put("createdTimeEnd", createdTimeEnd);
-		
+
 		pagination = storageService.getOutWarehouseOrderData(param, moreParam, pagination);
 		Map map = new HashMap();
 		map.put("Rows", pagination.rows);
 		map.put("Total", pagination.total);
 		return GsonUtil.toJson(map);
 	}
-	
+
 	/**
 	 * 入库订单收货
 	 * 
@@ -338,6 +337,40 @@ public class Storage {
 				userIdOfOperator);
 		// 成功,返回id
 		map.put("id", serviceResult.get("id"));
+		// 失败
+		if (!StringUtil.isEqual(serviceResult.get(Constant.STATUS), Constant.SUCCESS)) {
+			map.put(Constant.MESSAGE, serviceResult.get(Constant.MESSAGE));
+			return GsonUtil.toJson(map);
+		}
+		map.put(Constant.STATUS, Constant.SUCCESS);
+		return GsonUtil.toJson(map);
+	}
+
+	 
+	/**
+	 * 保存入库明细
+	 * @param request
+	 * @param itemSku 物品sku
+	 * @param itemQuantity 收货数量
+	 * @param itemRemark 备注
+	 * @param warehouseId 仓库id
+	 * @param shelvesId 货架
+	 * @param seatId 货位
+	 * @param inWarehouseRecordId 所属的入库主单
+	 * @return
+	 * @throws IOException
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/saveInWarehouseRecordItem", method = RequestMethod.POST)
+	public String saveInWarehouseRecordItem(HttpServletRequest request, String itemSku, String itemQuantity, String itemRemark,
+			Long warehouseId, Long shelvesId, Long seatId,Long inWarehouseRecordId) throws IOException {
+		logger.info("保存入库明细: itemSku="+itemSku+" itemQuantity="+itemQuantity+" itemRemark="+ itemRemark+" warehouseId="+warehouseId+" shelvesId="+shelvesId+" seatId="+seatId+" inWarehouseRecordId="+inWarehouseRecordId);
+		// 操作员
+		Long userIdOfOperator = (Long) request.getSession().getAttribute(SessionConstant.USER_ID);
+		Map<String, String> map = new HashMap<String, String>();
+		map.put(Constant.STATUS, Constant.FAIL);
+		// 校验和保存
+		Map<String, String> serviceResult = storageService.saveInWarehouseRecordItem(itemSku, itemQuantity, itemRemark, warehouseId, shelvesId, seatId, inWarehouseRecordId);
 		// 失败
 		if (!StringUtil.isEqual(serviceResult.get(Constant.STATUS), Constant.SUCCESS)) {
 			map.put(Constant.MESSAGE, serviceResult.get(Constant.MESSAGE));

@@ -14,17 +14,31 @@ public class OutWarehouseOrderStatus implements Serializable {
 
 	public class OurWareHouseStatusCode {
 		/**
-		 * 收到出库指令, 但未处理 (草稿)
+		 * 顺丰新建出库订单,等待COE审核 Wait Warehouse Check
 		 */
-		public static final String DRAFT = "DRAFT";
+		public static final String WWC = "WWC";
 		/**
-		 * 出库指令已经确认(不能再修改)
+		 * COE审核通过,等待称重 Wait Warehouse Weighing
 		 */
-		public static final String CONFIRM = "CONFIRM";
+		public static final String WWW = "WWW";
 		/**
-		 * 完成出库
+		 * COE称重,并已经回传出库重量 Wait Customer Check
 		 */
-		public static final String COMPLETE = "COMPLETE";
+		public static final String WCC = "WCC";
+		/**
+		 * 顺丰确认出库,等待COE操作出库 Wait Out Warehouse Operation
+		 */
+		public static final String WWO = "WWO";
+
+		/**
+		 * 出库成功 Out Warehouse Success
+		 */
+		public static final String SUCCESS = "SUCCESS";
+
+		/**
+		 * 出库失败 Out Warehouse Fail
+		 */
+		public static final String FAIL = "FAIL";
 	}
 
 	/**
