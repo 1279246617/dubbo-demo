@@ -1,0 +1,182 @@
+package com.coe.wms.dao.warehouse.storage.impl;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.apache.log4j.Logger;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.simple.ParameterizedBeanPropertyRowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Repository;
+
+import com.coe.wms.dao.datasource.DataSource;
+import com.coe.wms.dao.datasource.DataSourceCode;
+import com.coe.wms.dao.warehouse.storage.IInWarehouseRecordItemDao;
+import com.coe.wms.model.warehouse.storage.record.InWarehouseRecordItem;
+import com.coe.wms.util.NumberUtil;
+import com.coe.wms.util.Pagination;
+import com.coe.wms.util.StringUtil;
+import com.mysql.jdbc.Statement;
+
+/**
+ * 
+ * @author Administrator
+ */
+@Repository("inWarehouseRecordItemDao")
+public class InWarehouseRecordItemDaoImpl implements IInWarehouseRecordItemDao {
+
+	Logger logger = Logger.getLogger(InWarehouseRecordItemDaoImpl.class);
+
+	@Resource(name = "jdbcTemplate")
+	private JdbcTemplate jdbcTemplate;
+
+	/**
+	 * 保存单个物品
+	 */
+	@Override
+	@DataSource(DataSourceCode.WMS)
+	public long saveInWarehouseRecordItem(final InWarehouseRecordItem item) {
+		final String sql = "insert into w_s_in_warehouse_record_item (in_warehouse_record_id,quantity,sku,seat_id,shelves_id,warehouse_id,remark,created_time,user_id_of_operator) values (?,?,?,?,?,?,?,?,?)";
+		KeyHolder keyHolder = new GeneratedKeyHolder();
+		jdbcTemplate.update(new PreparedStatementCreator() {
+			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
+				PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+				ps.setLong(1, item.getInWarehouseRecordId());
+				ps.setLong(2, item.getQuantity());
+				ps.setString(3, item.getSku());
+				ps.setLong(4, item.getSeatId());
+				ps.setLong(5, item.getShelvesId());
+				ps.setLong(6, item.getWarehouseId());
+				ps.setString(7, item.getRemark());
+				ps.setLong(8, item.getCreatedTime());
+				ps.setLong(9, item.getUserIdOfOperator());
+				return ps;
+			}
+		}, keyHolder);
+		long id = keyHolder.getKey().longValue();
+		return id;
+	}
+
+	/**
+	 * 批量保存物品
+	 */
+	@Override
+	@DataSource(DataSourceCode.WMS)
+	public int saveBatchInWarehouseRecordItem(final List<InWarehouseRecordItem> itemList) {
+		final String sql = "insert into w_s_in_warehouse_record_item (in_warehouse_record_id,quantity,sku,seat_id,shelves_id,warehouse_id,remark,created_time,user_id_of_operator) values (?,?,?,?,?,?,?,?,?)";
+		int[] batchUpdateSize = jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+			@Override
+			public void setValues(PreparedStatement ps, int i) throws SQLException {
+				InWarehouseRecordItem item = itemList.get(i);
+				ps.setLong(1, item.getInWarehouseRecordId());
+				ps.setLong(2, item.getQuantity());
+				ps.setString(3, item.getSku());
+				ps.setLong(4, item.getSeatId());
+				ps.setLong(5, item.getShelvesId());
+				ps.setLong(6, item.getWarehouseId());
+				ps.setString(7, item.getRemark());
+				ps.setLong(8, item.getCreatedTime());
+				ps.setLong(9, item.getUserIdOfOperator());
+			}
+
+			@Override
+			public int getBatchSize() {
+				return itemList.size();
+			}
+		});
+		return NumberUtil.sumArry(batchUpdateSize);
+	}
+
+	@Override
+	@DataSource(DataSourceCode.WMS)
+	public int saveBatchInWarehouseRecordItemWithRecordId(final List<InWarehouseRecordItem> itemList, final Long recordId) {
+		final String sql = "insert into w_s_in_warehouse_record_item (in_warehouse_record_id,quantity,sku,seat_id,shelves_id,warehouse_id,remark,created_time,user_id_of_operator) values (?,?,?,?,?,?,?,?,?)";
+		int[] batchUpdateSize = jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+			@Override
+			public void setValues(PreparedStatement ps, int i) throws SQLException {
+				InWarehouseRecordItem item = itemList.get(i);
+				ps.setLong(1, recordId);
+				ps.setLong(2, item.getQuantity());
+				ps.setString(3, item.getSku());
+				ps.setLong(4, item.getSeatId());
+				ps.setLong(5, item.getShelvesId());
+				ps.setLong(6, item.getWarehouseId());
+				ps.setString(7, item.getRemark());
+				ps.setLong(8, item.getCreatedTime());
+				ps.setLong(9, item.getUserIdOfOperator());
+			}
+
+			@Override
+			public int getBatchSize() {
+				return itemList.size();
+			}
+		});
+		return NumberUtil.sumArry(batchUpdateSize);
+	}
+
+	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
+		this.jdbcTemplate = jdbcTemplate;
+	}
+
+	/**
+	 * 查询入库记录
+	 * 
+	 * 参数一律使用实体类加Map . 节省QueryVO
+	 */
+	@Override
+	public List<InWarehouseRecordItem> findInWarehouseRecordItem(InWarehouseRecordItem inWarehouseRecordItem,
+			Map<String, String> moreParam, Pagination page) {
+		StringBuffer sb = new StringBuffer();
+		sb.append("select id,in_warehouse_record_id,quantity,sku,seat_id,shelves_id,warehouse_id,remark,created_time,user_id_of_operator from w_s_in_warehouse_record_item where 1=1 ");
+		if (inWarehouseRecordItem != null) {
+			if (StringUtil.isNotNull(inWarehouseRecordItem.getSku())) {
+				sb.append(" and sku = '" + inWarehouseRecordItem.getSku() + "' ");
+			}
+			if (StringUtil.isNotNull(inWarehouseRecordItem.getRemark())) {
+				sb.append(" and remark = '" + inWarehouseRecordItem.getRemark() + "' ");
+			}
+			if (inWarehouseRecordItem.getInWarehouseRecordId() != null) {
+				sb.append(" and in_warehouse_record_id = '" + inWarehouseRecordItem.getInWarehouseRecordId() + "' ");
+			}
+			if (inWarehouseRecordItem.getQuantity() != null) {
+				sb.append(" and quantity = '" + inWarehouseRecordItem.getQuantity() + "' ");
+			}
+			if (inWarehouseRecordItem.getSeatId() != null) {
+				sb.append(" and seat_id = '" + inWarehouseRecordItem.getSeatId() + "' ");
+			}
+			if (inWarehouseRecordItem.getShelvesId() != null) {
+				sb.append(" and shelves_id = '" + inWarehouseRecordItem.getShelvesId() + "' ");
+			}
+			if (inWarehouseRecordItem.getWarehouseId() != null) {
+				sb.append(" and warehouse_id = '" + inWarehouseRecordItem.getWarehouseId() + "' ");
+			}
+			if (inWarehouseRecordItem.getCreatedTime() != null) {
+				sb.append(" and created_time = '" + inWarehouseRecordItem.getCreatedTime() + "' ");
+			}
+			if (inWarehouseRecordItem.getUserIdOfOperator() != null) {
+				sb.append(" and user_id_of_operator = '" + inWarehouseRecordItem.getUserIdOfOperator() + "' ");
+			}
+			if (inWarehouseRecordItem.getId() != null) {
+				sb.append(" and id = '" + inWarehouseRecordItem.getId() + "' ");
+			}
+		}
+		// 分页sql
+		if (page != null) {
+			sb.append(page.generatePageSql());
+		}
+		String sql = sb.toString();
+		logger.info("查询入库记录明细sql:" + sql);
+		List<InWarehouseRecordItem> inWarehouseRecordItemList = jdbcTemplate.query(sql,
+				ParameterizedBeanPropertyRowMapper.newInstance(InWarehouseRecordItem.class));
+		logger.info("查询入库记录明细sql:" + sql + " size:" + inWarehouseRecordItemList.size());
+		return inWarehouseRecordItemList;
+	}
+}

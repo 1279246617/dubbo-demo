@@ -23,7 +23,7 @@ public class InWarehouseRecordItem implements Serializable {
 	/**
 	 * 入库主单id
 	 */
-	private Long inWareHouseRecordId;
+	private Long inWarehouseRecordId;
 
 	/**
 	 * 创建时间(收货时间)
@@ -80,12 +80,12 @@ public class InWarehouseRecordItem implements Serializable {
 		this.id = id;
 	}
 
-	public Long getInWareHouseRecordId() {
-		return inWareHouseRecordId;
+	public Long getInWarehouseRecordId() {
+		return inWarehouseRecordId;
 	}
 
-	public void setInWareHouseRecordId(Long inWareHouseRecordId) {
-		this.inWareHouseRecordId = inWareHouseRecordId;
+	public void setInWarehouseRecordId(Long inWareHouseRecordId) {
+		this.inWarehouseRecordId = inWareHouseRecordId;
 	}
 
 	public Integer getQuantity() {

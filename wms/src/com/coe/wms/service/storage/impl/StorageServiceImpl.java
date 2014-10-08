@@ -17,6 +17,7 @@ import com.coe.wms.dao.warehouse.storage.IInWarehouseOrderDao;
 import com.coe.wms.dao.warehouse.storage.IInWarehouseOrderItemDao;
 import com.coe.wms.dao.warehouse.storage.IInWarehouseOrderStatusDao;
 import com.coe.wms.dao.warehouse.storage.IInWarehouseRecordDao;
+import com.coe.wms.dao.warehouse.storage.IInWarehouseRecordItemDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderItemDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderReceiverDao;
@@ -81,9 +82,6 @@ public class StorageServiceImpl implements IStorageService {
 	@Resource(name = "inWarehouseOrderItemDao")
 	private IInWarehouseOrderItemDao inWarehouseOrderItemDao;
 
-	@Resource(name = "inWarehouseRecordDao")
-	private IInWarehouseRecordDao inWarehouseRecordDao;
-
 	@Resource(name = "outWarehouseOrderDao")
 	private IOutWarehouseOrderDao outWarehouseOrderDao;
 
@@ -98,6 +96,12 @@ public class StorageServiceImpl implements IStorageService {
 
 	@Resource(name = "outWarehouseOrderReceiverDao")
 	private IOutWarehouseOrderReceiverDao outWarehouseOrderReceiverDao;
+
+	@Resource(name = "inWarehouseRecordDao")
+	private IInWarehouseRecordDao inWarehouseRecordDao;
+
+	@Resource(name = "inWarehouseRecordItemDao")
+	private IInWarehouseRecordItemDao inWarehouseRecordItemDao;
 
 	@Resource(name = "userDao")
 	private IUserDao userDao;
@@ -117,20 +121,42 @@ public class StorageServiceImpl implements IStorageService {
 
 		return pagination;
 	}
-	
+
 	/**
 	 * 保存入库明细
 	 */
 	@Override
 	public Map<String, String> saveInWarehouseRecordItem(String itemSku, String itemQuantity, String itemRemark, Long warehouseId,
 			Long shelvesId, Long seatId, Long inWarehouseRecordId) {
-		Map<String,String> map = new HashMap<String,String>();
-		
-		
+		Map<String, String> map = new HashMap<String, String>();
+		map.put(Constant.STATUS, Constant.FAIL);
+		if (StringUtil.isNull(itemSku)) {
+			map.put(Constant.MESSAGE, "请输入产品SKU.");
+			return map;
+		}
+		if (StringUtil.isNull(itemQuantity)) {
+			map.put(Constant.MESSAGE, "请输入产品数量.");
+			return map;
+		}
+		// 检查该SKU是否已经存在
+		InWarehouseRecordItem param = new InWarehouseRecordItem();
+		param.setInWarehouseRecordId(inWarehouseRecordId);
+		param.setSku(itemSku);
+		List<InWarehouseRecordItem> inWarehouseRecordList = inWarehouseRecordItemDao.findInWarehouseRecordItem(param, null, null);
+		if (inWarehouseRecordList.size() > 0) {
+			// 返回入库主单的id
+			map.put("id", "" + inWarehouseRecordList.get(0).getId());
+			map.put(Constant.MESSAGE, "该产品SKU已存在入库记录.");
+			return map;
+		}
+		InWarehouseRecordItem inWarehouseRecordItem = new InWarehouseRecordItem();
+		// 返回id
+		long id = inWarehouseRecordItemDao.saveInWarehouseRecordItem(inWarehouseRecordItem);
+		map.put("id", "" + id);
+		map.put(Constant.STATUS, Constant.SUCCESS);
 		return map;
 	}
-	
-	
+
 	/**
 	 * 查找入库订单
 	 */
@@ -340,7 +366,7 @@ public class StorageServiceImpl implements IStorageService {
 	@Override
 	public Pagination getInWarehouseRecordItemData(Long inWarehouseRecordId, Pagination pagination) {
 		InWarehouseRecordItem inWarehouseRecordItem = new InWarehouseRecordItem();
-		inWarehouseRecordItem.setInWareHouseRecordId(inWarehouseRecordId);
+		inWarehouseRecordItem.setInWarehouseRecordId(inWarehouseRecordId);
 		List<InWarehouseRecordItem> inWarehouseRecordItemList = inWarehouseRecordDao.findInWarehouseRecordItem(inWarehouseRecordItem, null,
 				pagination);
 		List<Object> list = new ArrayList<Object>();
@@ -350,7 +376,7 @@ public class StorageServiceImpl implements IStorageService {
 			if (item.getCreatedTime() != null) {
 				map.put("createdTime", DateUtil.dateConvertString(new Date(item.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss));
 			}
-			map.put("inWareHouseRecordId", item.getInWareHouseRecordId());
+			map.put("inWareHouseRecordId", item.getInWarehouseRecordId());
 			map.put("quantity", item.getQuantity());
 			map.put("remark", item.getRemark());
 			map.put("seatId", item.getSeatId());
@@ -404,7 +430,7 @@ public class StorageServiceImpl implements IStorageService {
 			List<InWarehouseOrderItem> inWarehouseOrderItemList = inWarehouseOrderItemDao.findInWarehouseOrderItem(param, null, null);
 			String skus = "";
 			for (InWarehouseOrderItem item : inWarehouseOrderItemList) {
-				skus += item.getSku() + "*" + item.getQuantity()+" ";
+				skus += item.getSku() + "*" + item.getQuantity() + " ";
 			}
 			map.put("skus", skus);
 			list.add(map);
