@@ -117,7 +117,20 @@ public class StorageServiceImpl implements IStorageService {
 
 		return pagination;
 	}
-
+	
+	/**
+	 * 保存入库明细
+	 */
+	@Override
+	public Map<String, String> saveInWarehouseRecordItem(String itemSku, String itemQuantity, String itemRemark, Long warehouseId,
+			Long shelvesId, Long seatId, Long inWarehouseRecordId) {
+		Map<String,String> map = new HashMap<String,String>();
+		
+		
+		return map;
+	}
+	
+	
 	/**
 	 * 查找入库订单
 	 */
@@ -613,7 +626,7 @@ public class StorageServiceImpl implements IStorageService {
 			OutWarehouseOrder outWarehouseOrder = new OutWarehouseOrder();
 			outWarehouseOrder.setCreatedTime(System.currentTimeMillis());
 			outWarehouseOrder.setRemark(logisticsOrder.getLogisticsRemark());
-			outWarehouseOrder.setStatus(OurWareHouseStatusCode.DRAFT);
+			outWarehouseOrder.setStatus(OurWareHouseStatusCode.WWC);
 			outWarehouseOrder.setUserIdOfCustomer(userIdOfCustomer);
 			// 客户参考号,用于后面客户对该出库订单进行修改,确认等,以及回传出库状态
 			outWarehouseOrder.setCustomerReferenceNo(logisticsOrder.getPoNo());
