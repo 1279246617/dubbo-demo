@@ -74,7 +74,7 @@
 						
 		          		<span class="pull-left" style="width:30px;">仓库</span>
 		          		<span class="pull-left" style="width:110px;">
-		          			<select style="width:80px;" id="warehouseId">
+		          			<select style="width:80px;" id="warehouseId" name="warehouseId">
 								<option value="1">1-香港仓</option>
 							</select>
 		          		</span>

@@ -7,6 +7,7 @@ function saveInWarehouseRecord(){
 	var unKnowCustomer = $("#unKnowCustomer");
 	var isUnKnowCustomer = unKnowCustomer.is(':checked'); //true | false
 	var remark = $("#orderRemark").val();
+	var warehouseId = $("#warehouseId").val(); 
 	if($.trim(trackingNoStr) ==""){
 		parent.$.showDialogMessage("请输入跟踪单号.",null,null);
 		//焦点回到跟踪单号
@@ -19,17 +20,17 @@ function saveInWarehouseRecord(){
 		
 	//跟踪号不为空,客户帐号为空调用clickEnterStep1();
 	if($.trim(userLoginNameStr) == ''){
-		saveInWarehouseRecordStep1(trackingNoStr,userLoginName,remark);		    			
+		saveInWarehouseRecordStep1(trackingNoStr,userLoginName,remark,warehouseId);		    			
 	}
 	// 若根据跟踪号 顺利找到唯一的客户帐号 自动调用clickEnterStep2
 	//跟踪号不为空,客户帐号不为空,将提交保存
 	if($.trim(userLoginNameStr) != ''){
-		saveInWarehouseRecordStep2(trackingNoStr,userLoginNameStr,isUnKnowCustomer,remark);
+		saveInWarehouseRecordStep2(trackingNoStr,userLoginNameStr,isUnKnowCustomer,remark,warehouseId);
 	}
 }
 
 //保存主单1(无输入客户单号)
-function saveInWarehouseRecordStep1(trackingNoStr,userLoginName,remark) {
+function saveInWarehouseRecordStep1(trackingNoStr,userLoginName,remark,warehouseId) {
 	var loginNameSelect = $("#loginNameSelect");
 	// 检查跟踪号是否能找到唯一的入库订单
 	$.getJSON(baseUrl
@@ -60,16 +61,17 @@ function saveInWarehouseRecordStep1(trackingNoStr,userLoginName,remark) {
 			userLoginName.show();
 			$('#userLoginName').val(msg.user.loginName);
 			//步骤1能得到用户名,直接调用步骤2
-			saveInWarehouseRecordStep2(trackingNoStr,msg.user.loginName,null,remark);
+			saveInWarehouseRecordStep2(trackingNoStr,msg.user.loginName,null,remark,warehouseId);
 		}
 	});
 }
 
 
 //保存主单2(已输入客户单号)
-function saveInWarehouseRecordStep2(trackingNoStr,userLoginNameStr,isUnKnowCustomer,remark) {
+function saveInWarehouseRecordStep2(trackingNoStr,userLoginNameStr,isUnKnowCustomer,remark,warehouseId) {
 	$.post(baseUrl+ '/warehouse/storage/saveInWarehouseRecord.do?trackingNo='
-			+ trackingNoStr+'&userLoginName='+userLoginNameStr+'&isUnKnowCustomer='+isUnKnowCustomer+"&remark="+remark, function(msg) {
+			+ trackingNoStr+'&userLoginName='+userLoginNameStr+'&isUnKnowCustomer='
+			+isUnKnowCustomer+'&warehouseId='+warehouseId+'&remark='+remark, function(msg) {
 		//赋值入库记录id 到隐藏input
 		$("#inWarehouseRecordId").val(msg.id);
 		

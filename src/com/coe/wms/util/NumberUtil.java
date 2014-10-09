@@ -182,4 +182,17 @@ public class NumberUtil {
 		}
 		return sum;
 	}
+
+	/**
+	 * 大于0,非空
+	 * 
+	 * @param num
+	 * @return
+	 */
+	public static boolean greaterThanZero(Long num) {
+		if (num != null && num > 0) {
+			return true;
+		}
+		return false;
+	}
 }

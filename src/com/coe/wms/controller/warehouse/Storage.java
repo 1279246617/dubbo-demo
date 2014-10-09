@@ -326,7 +326,7 @@ public class Storage {
 	@ResponseBody
 	@RequestMapping(value = "/saveInWarehouseRecord", method = RequestMethod.POST)
 	public String saveInWarehouseRecord(HttpServletRequest request, String trackingNo, String userLoginName, String isUnKnowCustomer,
-			String remark) throws IOException {
+			String remark,Long warehouseId) throws IOException {
 		logger.info("trackingNo:" + trackingNo + " userLoginName:" + userLoginName + " isUnKnowCustomer:" + isUnKnowCustomer + "  remark:"
 				+ remark);
 		// 操作员
@@ -335,7 +335,7 @@ public class Storage {
 		map.put(Constant.STATUS, Constant.FAIL);
 		// 校验和保存
 		Map<String, String> serviceResult = storageService.saveInWarehouseRecord(trackingNo, userLoginName, isUnKnowCustomer, remark,
-				userIdOfOperator);
+				userIdOfOperator,warehouseId);
 		// 成功,返回id
 		map.put("id", serviceResult.get("id"));
 		// 失败
