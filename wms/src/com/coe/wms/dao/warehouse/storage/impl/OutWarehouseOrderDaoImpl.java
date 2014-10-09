@@ -42,7 +42,7 @@ public class OutWarehouseOrderDaoImpl implements IOutWarehouseOrderDao {
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public long saveOutWarehouseOrder(final OutWarehouseOrder order) {
-		final String sql = "insert into w_s_out_warehouse_order (warehouse_id,user_id_of_customer,user_id_of_operator,shipway_code,created_time,status,remark,customer_reference_no) values (?,?,?,?,?,?,?,?,?,?)";
+		final String sql = "insert into w_s_out_warehouse_order (warehouse_id,user_id_of_customer,user_id_of_operator,shipway_code,created_time,status,remark,customer_reference_no) values (?,?,?,?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {

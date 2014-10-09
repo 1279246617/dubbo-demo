@@ -141,7 +141,7 @@ public class InWarehouseRecordDaoImpl implements IInWarehouseRecordDao {
 	public List<InWarehouseRecordItem> findInWarehouseRecordItem(InWarehouseRecordItem inWarehouseRecordItem,
 			Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select id,in_warehouse_record_id,sku,warehouse_id,seat_id,shelves_id,created_time,remark from w_s_in_warehouse_record_item where 1=1 ");
+		sb.append("select id,in_warehouse_record_id,sku,quantity,warehouse_id,seat_no,shelves_no,created_time,remark,user_id_of_operator from w_s_in_warehouse_record_item where 1=1 ");
 		if (inWarehouseRecordItem != null) {
 			if (inWarehouseRecordItem.getId() != null) {
 				sb.append(" and id = '" + inWarehouseRecordItem.getId() + "' ");
@@ -152,20 +152,23 @@ public class InWarehouseRecordDaoImpl implements IInWarehouseRecordDao {
 			if (StringUtil.isNotNull(inWarehouseRecordItem.getSku())) {
 				sb.append(" and sku = '" + inWarehouseRecordItem.getSku() + "' ");
 			}
-			if (inWarehouseRecordItem.getInWareHouseRecordId() != null) {
-				sb.append(" and in_warehouse_record_id = '" + inWarehouseRecordItem.getInWareHouseRecordId() + "' ");
+			if (inWarehouseRecordItem.getInWarehouseRecordId() != null) {
+				sb.append(" and in_warehouse_record_id = '" + inWarehouseRecordItem.getInWarehouseRecordId() + "' ");
 			}
 			if (inWarehouseRecordItem.getWarehouseId() != null) {
 				sb.append(" and warehouse_id = '" + inWarehouseRecordItem.getWarehouseId() + "' ");
 			}
-			if (inWarehouseRecordItem.getShelvesId() != null) {
-				sb.append(" and shelves_id = '" + inWarehouseRecordItem.getShelvesId() + "' ");
+			if (StringUtil.isNotNull(inWarehouseRecordItem.getShelvesNo())) {
+				sb.append(" and shelves_no = '" + inWarehouseRecordItem.getShelvesNo() + "' ");
 			}
-			if (inWarehouseRecordItem.getSeatId() != null) {
-				sb.append(" and seat_id = '" + inWarehouseRecordItem.getSeatId() + "' ");
+			if (StringUtil.isNotNull(inWarehouseRecordItem.getSeatNo())) {
+				sb.append(" and seat_no = '" + inWarehouseRecordItem.getSeatNo() + "' ");
 			}
 			if (inWarehouseRecordItem.getUserIdOfOperator() != null) {
 				sb.append(" and user_id_of_operator = " + inWarehouseRecordItem.getUserIdOfOperator());
+			}
+			if (inWarehouseRecordItem.getQuantity() != null) {
+				sb.append(" and quantity = " + inWarehouseRecordItem.getQuantity());
 			}
 			if (inWarehouseRecordItem.getCreatedTime() != null) {
 				sb.append(" and created_time = " + inWarehouseRecordItem.getCreatedTime());
@@ -213,20 +216,23 @@ public class InWarehouseRecordDaoImpl implements IInWarehouseRecordDao {
 			if (StringUtil.isNotNull(inWarehouseRecordItem.getSku())) {
 				sb.append(" and sku = '" + inWarehouseRecordItem.getSku() + "' ");
 			}
-			if (inWarehouseRecordItem.getInWareHouseRecordId() != null) {
-				sb.append(" and in_warehouse_record_id = '" + inWarehouseRecordItem.getInWareHouseRecordId() + "' ");
+			if (inWarehouseRecordItem.getInWarehouseRecordId() != null) {
+				sb.append(" and in_warehouse_record_id = '" + inWarehouseRecordItem.getInWarehouseRecordId() + "' ");
 			}
 			if (inWarehouseRecordItem.getWarehouseId() != null) {
 				sb.append(" and warehouse_id = '" + inWarehouseRecordItem.getWarehouseId() + "' ");
 			}
-			if (inWarehouseRecordItem.getShelvesId() != null) {
-				sb.append(" and shelves_id = '" + inWarehouseRecordItem.getShelvesId() + "' ");
+			if (StringUtil.isNotNull(inWarehouseRecordItem.getShelvesNo())) {
+				sb.append(" and shelves_no = '" + inWarehouseRecordItem.getShelvesNo() + "' ");
 			}
-			if (inWarehouseRecordItem.getSeatId() != null) {
-				sb.append(" and seat_id = '" + inWarehouseRecordItem.getSeatId() + "' ");
+			if (StringUtil.isNotNull(inWarehouseRecordItem.getSeatNo())) {
+				sb.append(" and seat_no = '" + inWarehouseRecordItem.getSeatNo() + "' ");
 			}
 			if (inWarehouseRecordItem.getUserIdOfOperator() != null) {
 				sb.append(" and user_id_of_operator = " + inWarehouseRecordItem.getUserIdOfOperator());
+			}
+			if (inWarehouseRecordItem.getQuantity() != null) {
+				sb.append(" and quantity = " + inWarehouseRecordItem.getQuantity());
 			}
 			if (inWarehouseRecordItem.getCreatedTime() != null) {
 				sb.append(" and created_time = " + inWarehouseRecordItem.getCreatedTime());

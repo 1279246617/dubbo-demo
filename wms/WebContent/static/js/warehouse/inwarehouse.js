@@ -99,8 +99,8 @@ function saveInWarehouseRecordItem() {
 	var itemQuantity = $("#itemQuantity").val();
 	var itemRemark = $("#itemRemark").val();
 	var warehouseId = $("#warehouseId").val();
-	var shelvesId = $("#shelvesId").val();
-	var seatId = $("#seatId").val();
+	var shelvesNo = $("#shelvesNo").val();
+	var seatNo = $("#seatNo").val();
 	//入库主单id
 	var inWarehouseRecordId = $("#inWarehouseRecordId").val();
 	if(inWarehouseRecordId==''){
@@ -109,17 +109,31 @@ function saveInWarehouseRecordItem() {
 	}
 	if(itemSku == ''){
 		parent.$.showShortMessage({msg:"请输入产品SKU",animate:true,left:"45%"});
+		$("#itemSku").focus();
 		return;
 	}
 	if(itemQuantity==''){
-		parent.$.showShortMessage({msg:"请输入产品数量",animate:true,left:"45%"});
+		$("#itemQuantity").focus();
 		return;
 	}
 	$.post(baseUrl+ '/warehouse/storage/saveInWarehouseRecordItem.do?itemSku='
-			+ itemSku+'&itemQuantity='+itemQuantity+'&itemRemark='+itemRemark+"&warehouseId="+warehouseId+"&shelvesId="+shelvesId+"&seatId="+seatId+"&inWarehouseRecordId="+inWarehouseRecordId, function(msg) {
-		
-	
-		
+			+ itemSku+'&itemQuantity='+itemQuantity+'&itemRemark='+itemRemark+"&warehouseId="
+			+warehouseId+"&shelvesNo="+shelvesNo+"&seatNo="+seatNo+"&inWarehouseRecordId="+inWarehouseRecordId, function(msg) {
+		if(msg.status == 0){
+			//保存失败,显示提示
+			parent.$.showShortMessage({msg:msg.message,animate:true,left:"45%"});
+			// 光标移至产品SKU
+			$("#itemSku").focus();
+			focus = "2";
+			return;
+		}
+		if(msg.status == 1){
+			parent.$.showShortMessage({msg:"保存明细成功.",animate:true,left:"45%"});
+			// 光标移至产品SKU
+			$("#itemSku").focus();
+			focus = "2";
+			return;
+		}
 	},"json");
 }
 

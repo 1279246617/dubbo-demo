@@ -50,14 +50,30 @@ public class InWarehouseRecordItem implements Serializable {
 	private Long warehouseId;
 
 	/**
-	 * 货架id
+	 * 货架编号
 	 */
-	private Long shelvesId;
+	private String shelvesNo;
 
 	/**
-	 * 货位id
+	 * 货位编号
 	 */
-	private Long seatId;
+	private String seatNo;
+	
+	public String getShelvesNo() {
+		return shelvesNo;
+	}
+
+	public void setShelvesNo(String shelvesNo) {
+		this.shelvesNo = shelvesNo;
+	}
+
+	public String getSeatNo() {
+		return seatNo;
+	}
+
+	public void setSeatNo(String seatNo) {
+		this.seatNo = seatNo;
+	}
 
 	/**
 	 * 收货人
@@ -71,7 +87,7 @@ public class InWarehouseRecordItem implements Serializable {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	
+
 	public Long getCreatedTime() {
 		return createdTime;
 	}
@@ -126,21 +142,5 @@ public class InWarehouseRecordItem implements Serializable {
 
 	public void setWarehouseId(Long warehouseId) {
 		this.warehouseId = warehouseId;
-	}
-
-	public Long getShelvesId() {
-		return shelvesId;
-	}
-
-	public void setShelvesId(Long shelvesId) {
-		this.shelvesId = shelvesId;
-	}
-
-	public Long getSeatId() {
-		return seatId;
-	}
-
-	public void setSeatId(Long seatId) {
-		this.seatId = seatId;
 	}
 }

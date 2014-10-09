@@ -127,7 +127,7 @@ public class StorageServiceImpl implements IStorageService {
 	 */
 	@Override
 	public Map<String, String> saveInWarehouseRecordItem(String itemSku, Integer itemQuantity, String itemRemark, Long warehouseId,
-			Long shelvesId, Long seatId, Long inWarehouseRecordId, Long userIdOfOperator) {
+			String shelvesNo, String seatNo, Long inWarehouseRecordId, Long userIdOfOperator) {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put(Constant.STATUS, Constant.FAIL);
 		if (StringUtil.isNull(itemSku)) {
@@ -136,6 +136,14 @@ public class StorageServiceImpl implements IStorageService {
 		}
 		if (itemQuantity == null) {
 			map.put(Constant.MESSAGE, "请输入产品数量.");
+			return map;
+		}
+		// 检查该SKU是否存在入库订单中
+		InWarehouseOrderItem inWarehouseOrderItemParam = new InWarehouseOrderItem();
+		inWarehouseOrderItemParam.setSku(itemSku);
+		List<InWarehouseOrderItem> inWarehouseOrderItemList = inWarehouseOrderItemDao.findInWarehouseOrderItem(inWarehouseOrderItemParam,null, null);
+		if (inWarehouseOrderItemList.size() <= 0) {
+			map.put(Constant.MESSAGE, "该产品SKU在此订单中无预报.");
 			return map;
 		}
 		// 检查该SKU是否已经存在
@@ -154,8 +162,8 @@ public class StorageServiceImpl implements IStorageService {
 		inWarehouseRecordItem.setInWarehouseRecordId(inWarehouseRecordId);
 		inWarehouseRecordItem.setQuantity(itemQuantity);
 		inWarehouseRecordItem.setRemark(itemRemark);
-		inWarehouseRecordItem.setSeatId(seatId);
-		inWarehouseRecordItem.setShelvesId(shelvesId);
+		inWarehouseRecordItem.setSeatNo(seatNo);
+		inWarehouseRecordItem.setShelvesNo(shelvesNo);
 		inWarehouseRecordItem.setSku(itemSku);
 		inWarehouseRecordItem.setUserIdOfOperator(userIdOfOperator);
 		inWarehouseRecordItem.setWarehouseId(warehouseId);
@@ -385,14 +393,21 @@ public class StorageServiceImpl implements IStorageService {
 			if (item.getCreatedTime() != null) {
 				map.put("createdTime", DateUtil.dateConvertString(new Date(item.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss));
 			}
-			map.put("inWareHouseRecordId", item.getInWarehouseRecordId());
 			map.put("quantity", item.getQuantity());
 			map.put("remark", item.getRemark());
-			map.put("seatId", item.getSeatId());
-			map.put("shelvesId", item.getShelvesId());
+			map.put("seatNo", item.getSeatNo());
+			map.put("shelvesNo", item.getShelvesNo());
 			map.put("sku", item.getSku());
-			map.put("userNameOfOperator", item.getUserIdOfOperator());
-			map.put("warehouseId", item.getWarehouseId());
+			if (item.getUserIdOfOperator() != null && item.getUserIdOfOperator() != 0) {
+				User user = userDao.getUserById(item.getUserIdOfOperator());
+				map.put("userLoginNameOfOperator", user.getLoginName());
+			}
+			if (item.getWarehouseId() != null && item.getWarehouseId() != 0) {
+				Warehouse warehouse = warehouseDao.getWarehouseById(item.getWarehouseId());
+				if (warehouse != null) {
+					map.put("warehouse", warehouse.getWarehouseName());
+				}
+			}
 			list.add(map);
 		}
 		pagination.total = inWarehouseRecordDao.countInWarehouseRecordItem(inWarehouseRecordItem, null);
@@ -730,5 +745,13 @@ public class StorageServiceImpl implements IStorageService {
 		}
 		response.setSuccess(Constant.TRUE);
 		return XmlUtil.toXml(Responses.class, responses);
+	}
+	
+	/**
+	 * 发送入库信息给客户
+	 */
+	@Override
+	public void sendInWarehouseInfoToCustomer() throws ServiceException {
+		System.out.println("啊啊啊啊啊啊啊啊");
 	}
 }
