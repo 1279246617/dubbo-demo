@@ -5,4 +5,6 @@ import com.coe.wms.model.warehouse.Warehouse;
 public interface IWarehouseDao {
 	
 	public Warehouse getWarehouseById(Long warehouseId);
+	
+	public Warehouse getWarehouseByNo(String warehouseNo);
 }

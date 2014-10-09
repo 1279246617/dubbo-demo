@@ -56,13 +56,13 @@ public class Warehouse {
 			// 版本 (2014-09-23)当前1.0
 			String version = request.getParameter("version");
 			logger.info("logisticsInterface:" + logisticsInterface);
-			logger.info("dataDigest:" + dataDigest + " msgType:" + msgType + " msgSource:" + msgSource + " msgId:"
-					+ msgId + " version:" + version);
+			logger.info("dataDigest:" + dataDigest + " msgType:" + msgType + " msgSource:" + msgSource + " msgId:" + msgId + " version:"
+					+ version);
 
 			String responseXml = null;
 			// 验证参数
-			Map<String, String> validateResultMap = storageService.warehouseInterfaceValidate(logisticsInterface,
-					msgSource, dataDigest, msgType, msgId, version);
+			Map<String, String> validateResultMap = storageService.warehouseInterfaceValidate(logisticsInterface, msgSource, dataDigest,
+					msgType, msgId, version);
 			if (StringUtil.isEqual(validateResultMap.get(Constant.STATUS), Constant.FAIL)) {
 				responseXml = validateResultMap.get(Constant.MESSAGE);
 
@@ -73,8 +73,8 @@ public class Warehouse {
 			Long userIdOfCustomer = Long.valueOf(validateResultMap.get(Constant.USER_ID_OF_CUSTOMER));
 
 			// 获取事件类型
-			Map<String, Object> eventTypeMap = storageService.warehouseInterfaceEventType(logisticsInterface,
-					userIdOfCustomer, dataDigest, msgType, msgId, version);
+			Map<String, Object> eventTypeMap = storageService.warehouseInterfaceEventType(logisticsInterface, userIdOfCustomer, dataDigest,
+					msgType, msgId, version);
 			// 根据事件类型(eventType)分到不同方法处理
 			if (!StringUtil.isEqual((String) eventTypeMap.get(Constant.STATUS), Constant.SUCCESS)) {
 				responseXml = (String) eventTypeMap.get(Constant.MESSAGE);
@@ -84,11 +84,13 @@ public class Warehouse {
 			}
 			// 成功获取事件类型
 			String eventType = (String) eventTypeMap.get("eventType");
+			// 事件目标(仓库编码)
+			String eventTarget = (String) eventTypeMap.get("eventTarget");
 			// 把事件主体交给各服务方法处理
 			EventBody eventBody = (EventBody) eventTypeMap.get("eventBody");
 
 			if (StringUtil.isEqualIgnoreCase(EventType.LOGISTICS_SKU_STOCKIN_INFO, eventType)) {// 创建入库订单
-				responseXml = storageService.warehouseInterfaceSaveInWarehouseOrder(eventBody, userIdOfCustomer);
+				responseXml = storageService.warehouseInterfaceSaveInWarehouseOrder(eventBody, userIdOfCustomer, eventTarget);
 			}
 
 			if (StringUtil.isEqualIgnoreCase(EventType.LOGISTICS_SKU_PAID, eventType)) {// 创建出库订单
@@ -96,7 +98,7 @@ public class Warehouse {
 			}
 
 			if (StringUtil.isEqualIgnoreCase(EventType.LOGISTICS_SEND_SKU, eventType)) { // 确认创建出库订单
-				responseXml = storageService.warehouseInterfaceSaveInWarehouseOrder(eventBody, userIdOfCustomer);
+				responseXml = storageService.warehouseInterfaceSaveInWarehouseOrder(eventBody, userIdOfCustomer, eventTarget);
 			}
 
 			logger.info("eventType:" + eventType + "  responseXml:" + responseXml);
