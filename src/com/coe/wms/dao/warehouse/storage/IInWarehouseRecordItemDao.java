@@ -15,4 +15,6 @@ public interface IInWarehouseRecordItemDao {
 	public int saveBatchInWarehouseRecordItemWithRecordId(List<InWarehouseRecordItem> itemList,Long orderId);
 	
 	public List<InWarehouseRecordItem> findInWarehouseRecordItem(InWarehouseRecordItem inWarehouseRecord,Map<String,String> moreParam, Pagination page);
+
+	public Long countInWarehouseRecordItem(InWarehouseRecordItem inWarehouseRecordItem, Map<String, String> moreParam);
 }

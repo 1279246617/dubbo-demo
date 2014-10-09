@@ -21,6 +21,7 @@ import com.coe.wms.controller.Application;
 import com.coe.wms.model.user.User;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrder;
+import com.coe.wms.model.warehouse.storage.record.InWarehouseRecord;
 import com.coe.wms.service.storage.IStorageService;
 import com.coe.wms.service.user.IUserService;
 import com.coe.wms.util.Constant;
@@ -346,31 +347,40 @@ public class Storage {
 		return GsonUtil.toJson(map);
 	}
 
-	 
 	/**
 	 * 保存入库明细
+	 * 
 	 * @param request
-	 * @param itemSku 物品sku
-	 * @param itemQuantity 收货数量
-	 * @param itemRemark 备注
-	 * @param warehouseId 仓库id
-	 * @param shelvesNo 货架
-	 * @param seatNo 货位
-	 * @param inWarehouseRecordId 所属的入库主单
+	 * @param itemSku
+	 *            物品sku
+	 * @param itemQuantity
+	 *            收货数量
+	 * @param itemRemark
+	 *            备注
+	 * @param warehouseId
+	 *            仓库id
+	 * @param shelvesNo
+	 *            货架
+	 * @param seatNo
+	 *            货位
+	 * @param inWarehouseRecordId
+	 *            所属的入库主单
 	 * @return
 	 * @throws IOException
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/saveInWarehouseRecordItem", method = RequestMethod.POST)
 	public String saveInWarehouseRecordItem(HttpServletRequest request, String itemSku, Integer itemQuantity, String itemRemark,
-			Long warehouseId, String shelvesNo, String seatNo,Long inWarehouseRecordId) throws IOException {
-		logger.info("保存入库明细: itemSku="+itemSku+" itemQuantity="+itemQuantity+" itemRemark="+ itemRemark+" warehouseId="+warehouseId+" shelvesId="+shelvesNo+" seatId="+seatNo+" inWarehouseRecordId="+inWarehouseRecordId);
+			Long warehouseId, String shelvesNo, String seatNo, Long inWarehouseRecordId) throws IOException {
+		logger.info("保存入库明细: itemSku=" + itemSku + " itemQuantity=" + itemQuantity + " itemRemark=" + itemRemark + " warehouseId="
+				+ warehouseId + " shelvesId=" + shelvesNo + " seatId=" + seatNo + " inWarehouseRecordId=" + inWarehouseRecordId);
 		// 操作员
 		Long userIdOfOperator = (Long) request.getSession().getAttribute(SessionConstant.USER_ID);
 		Map<String, String> map = new HashMap<String, String>();
 		map.put(Constant.STATUS, Constant.FAIL);
 		// 校验和保存
-		Map<String, String> serviceResult = storageService.saveInWarehouseRecordItem(itemSku, itemQuantity, itemRemark, warehouseId, shelvesNo, seatNo, inWarehouseRecordId,userIdOfOperator);
+		Map<String, String> serviceResult = storageService.saveInWarehouseRecordItem(itemSku, itemQuantity, itemRemark, warehouseId,
+				shelvesNo, seatNo, inWarehouseRecordId, userIdOfOperator);
 		// 失败
 		if (!StringUtil.isEqual(serviceResult.get(Constant.STATUS), Constant.SUCCESS)) {
 			map.put(Constant.MESSAGE, serviceResult.get(Constant.MESSAGE));
@@ -472,8 +482,57 @@ public class Storage {
 		ModelAndView view = new ModelAndView();
 		view.addObject("userId", userId);
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
+		view.addObject("todayStart", DateUtil.getTodayStart());
 		view.setViewName("warehouse/storage/listInWarehouseRecord");
 		return view;
+	}
+
+	/**
+	 * 获取入库记录
+	 * 
+	 * @param request
+	 * @param response
+	 * @param userLoginName
+	 *            客户登录名,仅当根据跟踪号无法找到订单时,要求输入
+	 * @return
+	 * @throws IOException
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/getInWarehouseRecordData")
+	public String getInWarehouseRecordData(HttpServletRequest request, String sortorder, String sortname, int page, int pagesize,
+			String userLoginName, Long warehouseId, String trackingNo, String batchNo, String createdTimeStart, String createdTimeEnd)
+			throws IOException {
+		if (StringUtil.isNotNull(createdTimeStart) && createdTimeStart.contains(",")) {
+			createdTimeStart = createdTimeStart.substring(createdTimeStart.lastIndexOf(",") + 1, createdTimeStart.length());
+		}
+
+		HttpSession session = request.getSession();
+		// 当前操作员
+		Long userIdOfOperator = (Long) session.getAttribute(SessionConstant.USER_ID);
+		Pagination pagination = new Pagination();
+		pagination.curPage = page;
+		pagination.pageSize = pagesize;
+		pagination.sortName = sortname;
+		pagination.sortOrder = sortorder;
+
+		InWarehouseRecord param = new InWarehouseRecord();
+		param.setPackageTrackingNo(trackingNo);
+		if (StringUtil.isNotNull(userLoginName)) {
+			Long userIdOfCustomer = userService.findUserIdByLoginName(userLoginName);
+			param.setUserIdOfCustomer(userIdOfCustomer);
+		}
+		param.setWarehouseId(warehouseId);
+		param.setBatchNo(batchNo);
+		
+		// 更多参数
+		Map<String, String> moreParam = new HashMap<String, String>();
+		moreParam.put("createdTimeStart", createdTimeStart);
+		moreParam.put("createdTimeEnd", createdTimeEnd);
+		pagination = storageService.getInWarehouseRecordData(param, moreParam, pagination);
+		Map map = new HashMap();
+		map.put("Rows", pagination.rows);
+		map.put("Total", pagination.total);
+		return GsonUtil.toJson(map);
 	}
 
 }

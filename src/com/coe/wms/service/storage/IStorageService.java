@@ -9,8 +9,8 @@ import com.coe.wms.exception.ServiceException;
 import com.coe.wms.model.user.User;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrder;
+import com.coe.wms.model.warehouse.storage.record.InWarehouseRecord;
 import com.coe.wms.pojo.api.warehouse.EventBody;
-import com.coe.wms.pojo.api.warehouse.LogisticsEventsRequest;
 import com.coe.wms.util.Pagination;
 
 /**
@@ -72,6 +72,17 @@ public interface IStorageService {
 	 */
 	public Pagination getInWarehouseOrderData(InWarehouseOrder inWarehouseOrder, Map<String, String> moreParam, Pagination page);
 
+	
+	/**
+	 * 获取入库记录
+	 * 
+	 * @param inWarehouseRecordId
+	 * @param page
+	 * @return
+	 */
+	public Pagination getInWarehouseRecordData(InWarehouseRecord inWarehouseRecord, Map<String, String> moreParam, Pagination page);
+	
+	
 	/**
 	 * 获取出库订单
 	 * 
