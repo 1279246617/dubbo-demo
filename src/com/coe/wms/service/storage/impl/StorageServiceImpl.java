@@ -746,12 +746,4 @@ public class StorageServiceImpl implements IStorageService {
 		response.setSuccess(Constant.TRUE);
 		return XmlUtil.toXml(Responses.class, responses);
 	}
-	
-	/**
-	 * 发送入库信息给客户
-	 */
-	@Override
-	public void sendInWarehouseInfoToCustomer() throws ServiceException {
-		System.out.println("啊啊啊啊啊啊啊啊");
-	}
 }
