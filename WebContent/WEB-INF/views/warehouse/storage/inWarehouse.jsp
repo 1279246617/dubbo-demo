@@ -81,13 +81,13 @@
 						
 						<span class="pull-left" style="width:30px;">货架</span>
 						<span class="pull-left" style="width:140px;">
-							<input type="text"  name="shelvesId"  id="shelvesId" t="2" style="width:70px;"/>
+							<input type="text"  name="shelvesNo"  id="shelvesNo" t="2" style="width:70px;"/>
 							<input type="checkbox" name="1" t="2" checked="checked" />自动
 						</span>
 						
 						<span class="pull-left" style="width:30px;">货位</span>
 						<span class="pull-left" style="width:130px;">
-							<input type="text"  name="seatId"  t="2" id="seatId" style="width:70px;"/>
+							<input type="text"  name="seatNo"  t="2" id="seatNo" style="width:70px;"/>
 						 	<input type="checkbox" name="2" checked="checked"  t="2"/>自动
 						</span>
 						
@@ -219,14 +219,14 @@
 	     function initGrid() {
 	    	   grid = $("#maingrid").ligerGrid({
 	                columns: [
-	                    { display: '产品SKU', name: 'sku', align: 'right',width:'12%'},
-	  		          	{ display: '收货数量', name: 'quantity', align: 'right', type: 'int',width:'9%'},
-	  		          	{ display: '产品描述', name: 'productDescription', align: 'right', type: 'float',width:'10%'},
-		                { display: '仓库', name: 'warehouse', align: 'right', type: 'float',width:'9%'},
-		                { display: '货架', name: 'shelves', align: 'right', type: 'float',width:'9%'},
-		                { display: '货位', name: 'seat', align: 'right', type: 'float',width:'10%'},
-		                { display: '批次号', name: 'batchNo', type: 'int', width:'10%'},
-		                { display: '操作员', name: 'userNameOfOperator',width:'8%'},
+	                    { display: '产品SKU', name: 'sku', align: 'center',width:'13%'},
+	  		          	{ display: '收货数量', name: 'quantity', align: 'center', type: 'int',width:'9%'},
+		                { display: '仓库', name: 'warehouse', align: 'center', type: 'float',width:'9%'},
+		                { display: '货架', name: 'shelvesNo', align: 'center', type: 'float',width:'9%'},
+		                { display: '货位', name: 'seatNo', align: 'center', type: 'float',width:'10%'},
+		                { display: '收货时间', name: 'createdTime', type: 'int', width:'12%'},
+		                { display: '备注', name: 'remark', align: 'center', type: 'float',width:'13%'},
+		                { display: '操作员', name: 'userLoginNameOfOperator',width:'10%'},
 		                {display: '操作',isSort: false,width: '11%',render: function(row) {
 		            		var h = "";
 		            		if (!row._editing) {

@@ -42,7 +42,7 @@ public interface IStorageService {
 	 * @param page
 	 * @return
 	 */
-	public Map<String, String> saveInWarehouseRecordItem(String itemSku, Integer itemQuantity, String itemRemark, Long warehouseId,Long shelvesId, Long seatId, Long inWarehouseRecordId, Long userIdOfOperator);
+	public Map<String, String> saveInWarehouseRecordItem(String itemSku, Integer itemQuantity, String itemRemark, Long warehouseId,String shelvesNo, String seatNo, Long inWarehouseRecordId, Long userIdOfOperator);
 
 	/**
 	 * 获取入库记录物品
@@ -150,4 +150,9 @@ public interface IStorageService {
 	 * @return
 	 */
 	public String warehouseInterfaceSaveOutWarehouseOrder(EventBody eventBody, Long userIdOfCustomer) throws ServiceException;
+	
+	/**
+	 * 发送入库信息给客户
+	 */
+	public void sendInWarehouseInfoToCustomer() throws ServiceException;;
 }

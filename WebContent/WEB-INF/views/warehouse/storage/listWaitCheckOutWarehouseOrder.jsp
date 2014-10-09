@@ -20,9 +20,17 @@
 </head>
 <body>
 	  <div class="toolbar1">
-           <form action="${baseUrl}/warehouse/storage/getWaitCheckOutWarehouseOrderData.do" id="searchform" name="searchform" method="post">
+           <form action="${baseUrl}/warehouse/storage/getOutWarehouseOrderData.do" id="searchform" name="searchform" method="post">
+           		<div class="pull-left">
+           			<span class="pull-left" style="width:55px;">
+			       		<a class="btn btn-primary btn-small" onclick="checkOrder()" title="审核出库订单">
+			           		 <i class="icon-folder-open"></i>审核
+			       	 	</a>
+			       	 	<input style=" visibility:hidden;">
+		       	 	</span>
+		    	</div>    
                <div class="pull-right searchContent">
-               		<span class="pull-left" style="width:175px;">
+               		<span class="pull-left" style="width:160px;">
                			仓库
                			<select style="width:100px;" id="warehouseId" name="warehouseId">
                				<option></option>
@@ -30,18 +38,18 @@
 						</select>
                		</span>
                		
-               		<span class="pull-left" style="width:175px;">
+               		<span class="pull-left" style="width:170px;">
                			客户帐号
                			<input type="text" name="userLoginName" data-provide="typeahead"  id="userLoginName" style="width:100px;" title="请输入客户登录名" />
                		</span>
-					<span class="pull-left" style="width:195px;">
+					<span class="pull-left" style="width:190px;">
 						客户单号	
 						<input type="text"  name="customerReferenceNo"  id="customerReferenceNo"   style="width:120px;"/>
 					</span>
                		
                		<span class="pull-left" style="width:175px;">
                			创建时间
-	               		<input type="text"   style="width:120px;" name="createdTimeStart" id="createdTimeStart"  title="起始创建时间">
+	               		<input type="text"   style="width:120px;" name="createdTimeStart" id="createdTimeStart" value="${todayStart}" title="起始创建时间">
                		</span>
                		
                		<span class="pull-left" style="width:200px;">
@@ -112,7 +120,13 @@
 	                    { display: '客户帐号', name: 'userNameOfCustomer', align: 'center',type:'float',width:'9%'},
 	  		          	{ display: '客户单号', name: 'customerReferenceNo', align: 'center', type: 'float',width:'10%'},
 		                { display: '仓库', name: 'warehouse', align: 'center', type: 'float',width:'8%'},
-		                { display: '出库物品', name: 'items', align: 'center', type: 'float',width:'18%'},
+		              	{ display: 'SKU预览', isSort: false, align: 'center', type: 'float',width:'17%',render: function(row) {
+		            		var skus = "";
+		            		if (!row._editing) {
+		            			skus += '<a href="javascript:listInWarehouseOrderItem(' + row.id + ')">'+row.items+'</a> ';
+		            		}
+		            		return skus;
+	  		          	}},
 		                { display: '收件人名', name: 'receiverName', align: 'center', type: 'float',width:'8%'},
 		                { display: '收件人街道1', name: 'receiverAddressLine1', align: 'center', type: 'float',width:'12%'},
 		                { display: '收件人街道2', name: 'receiverAddressLine2', align: 'center', type: 'float',width:'8%'},

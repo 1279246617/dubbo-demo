@@ -354,8 +354,8 @@ public class Storage {
 	 * @param itemQuantity 收货数量
 	 * @param itemRemark 备注
 	 * @param warehouseId 仓库id
-	 * @param shelvesId 货架
-	 * @param seatId 货位
+	 * @param shelvesNo 货架
+	 * @param seatNo 货位
 	 * @param inWarehouseRecordId 所属的入库主单
 	 * @return
 	 * @throws IOException
@@ -363,14 +363,14 @@ public class Storage {
 	@ResponseBody
 	@RequestMapping(value = "/saveInWarehouseRecordItem", method = RequestMethod.POST)
 	public String saveInWarehouseRecordItem(HttpServletRequest request, String itemSku, Integer itemQuantity, String itemRemark,
-			Long warehouseId, Long shelvesId, Long seatId,Long inWarehouseRecordId) throws IOException {
-		logger.info("保存入库明细: itemSku="+itemSku+" itemQuantity="+itemQuantity+" itemRemark="+ itemRemark+" warehouseId="+warehouseId+" shelvesId="+shelvesId+" seatId="+seatId+" inWarehouseRecordId="+inWarehouseRecordId);
+			Long warehouseId, String shelvesNo, String seatNo,Long inWarehouseRecordId) throws IOException {
+		logger.info("保存入库明细: itemSku="+itemSku+" itemQuantity="+itemQuantity+" itemRemark="+ itemRemark+" warehouseId="+warehouseId+" shelvesId="+shelvesNo+" seatId="+seatNo+" inWarehouseRecordId="+inWarehouseRecordId);
 		// 操作员
 		Long userIdOfOperator = (Long) request.getSession().getAttribute(SessionConstant.USER_ID);
 		Map<String, String> map = new HashMap<String, String>();
 		map.put(Constant.STATUS, Constant.FAIL);
 		// 校验和保存
-		Map<String, String> serviceResult = storageService.saveInWarehouseRecordItem(itemSku, itemQuantity, itemRemark, warehouseId, shelvesId, seatId, inWarehouseRecordId,userIdOfOperator);
+		Map<String, String> serviceResult = storageService.saveInWarehouseRecordItem(itemSku, itemQuantity, itemRemark, warehouseId, shelvesNo, seatNo, inWarehouseRecordId,userIdOfOperator);
 		// 失败
 		if (!StringUtil.isEqual(serviceResult.get(Constant.STATUS), Constant.SUCCESS)) {
 			map.put(Constant.MESSAGE, serviceResult.get(Constant.MESSAGE));
