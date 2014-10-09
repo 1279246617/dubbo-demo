@@ -112,22 +112,22 @@
 	     function initGrid() {
 	    	 grid = $("#maingrid").ligerGrid({
 	                columns: [
-	  	                    { display: '到货跟踪单号', name: 'trackingNo', align: 'right',type:'float',width:'13%'},
+							{ display: '客户帐号', name: 'userLoginNameOfCustomer',type:'float',width:'9%'},
+							{ display: '仓库', name: 'warehouse', type: 'float',width:'9%'},
+	  	                    { display: '跟踪单号', name: 'trackingNo',type:'float',width:'13%'},
 		  	                { display: '入库批次号', name: 'batchNo', type: 'int', width:'12%'},
-		  		            { display: '预报产品数量', name: 'quantity', align: 'right', type: 'float',width:'9%'},
-		  		          	{ display: '实际收货数量', name: 'quantity', align: 'right', type: 'float',width:'9%'},
-		  		        	{ display: 'SKU预览', isSort: false, align: 'center', type: 'float',width:'17%',render: function(row) {
+		  		            { display: '预报产品数量', name: 'quantity', type: 'float',width:'9%'},
+		  		          	{ display: '实际收货数量', name: 'receivedQuantity', type: 'float',width:'9%'},
+		  		        	{ display: 'SKU预览', isSort: false, align: 'center', type: 'float',width:'16%',render: function(row) {
 			            		var skus = "";
 			            		if (!row._editing) {
 			            			skus += '<a href="javascript:listInWarehouseRecordItem(' + row.id + ')">'+row.skus+'</a> ';
 			            		}
 			            		return skus;
 		  		          	}},
-			                { display: '仓库', name: 'warehouse', align: 'right', type: 'float',width:'9%'},
-			                { display: '货架', name: 'shelves', align: 'right', type: 'float',width:'9%'},
-			                { display: '货位', name: 'seat', align: 'right', type: 'float',width:'10%'},
 			                { display: '入库备注', name: 'remark', width:'12%'},
-			                {display: '操作',isSort: false,width: '9%',render: function(row) {
+			                { display: '操作员', name: 'userLoginNameOfOperator',type:'float',width:'9%'},
+			                {display: '操作',isSort: false,width: '8%',render: function(row) {
 			            		var h = "";
 			            		if (!row._editing) {
 			            			h += '<a href="javascript:updateInWarehouseItem(' + row.id + ')">详情</a> ';

@@ -32,7 +32,7 @@ public interface IStorageService {
 	 * @return
 	 */
 	public Map<String, String> saveInWarehouseRecord(String trackingNo, String userLoginName, String isUnKnowCustomer, String remark,
-			Long userIdOfOperator);
+			Long userIdOfOperator,Long warehouseId);
 
 	/**
 	 * 保存入库明细 返回成功,失败,错误信息

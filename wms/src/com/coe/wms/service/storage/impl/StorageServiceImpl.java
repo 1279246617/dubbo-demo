@@ -55,6 +55,7 @@ import com.coe.wms.pojo.api.warehouse.SkuDetail;
 import com.coe.wms.service.storage.IStorageService;
 import com.coe.wms.util.Constant;
 import com.coe.wms.util.DateUtil;
+import com.coe.wms.util.NumberUtil;
 import com.coe.wms.util.Pagination;
 import com.coe.wms.util.StringUtil;
 import com.coe.wms.util.XmlUtil;
@@ -327,7 +328,7 @@ public class StorageServiceImpl implements IStorageService {
 	 */
 	@Override
 	public Map<String, String> saveInWarehouseRecord(String trackingNo, String userLoginName, String isUnKnowCustomer, String remark,
-			Long userIdOfOperator) {
+			Long userIdOfOperator, Long warehouseId) {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put(Constant.STATUS, Constant.FAIL);
 		if (StringUtil.isNull(trackingNo)) {
@@ -358,7 +359,6 @@ public class StorageServiceImpl implements IStorageService {
 			map.put(Constant.MESSAGE, "跟踪单号已存在入库主单.");
 			return map;
 		}
-
 		if (StringUtil.isEqual(isUnKnowCustomer, Constant.TRUE)) {
 			inWarehouseRecord.setIsUnKnowCustomer(Constant.Y);
 		} else {
@@ -371,6 +371,7 @@ public class StorageServiceImpl implements IStorageService {
 		// 创建批次号
 		String batchNo = InWarehouseRecord.generateBatchNo(null, null, Constant.SYMBOL_UNDERLINE, trackingNo, null, null, isUnKnowCustomer);
 		inWarehouseRecord.setBatchNo(batchNo);
+		inWarehouseRecord.setWarehouseId(warehouseId);
 		// 返回id
 		long id = inWarehouseRecordDao.saveInWarehouseRecord(inWarehouseRecord);
 		map.put("id", "" + id);
@@ -399,11 +400,11 @@ public class StorageServiceImpl implements IStorageService {
 			map.put("seatNo", item.getSeatNo());
 			map.put("shelvesNo", item.getShelvesNo());
 			map.put("sku", item.getSku());
-			if (item.getUserIdOfOperator() != null && item.getUserIdOfOperator() != 0) {
+			if (NumberUtil.greaterThanZero(item.getUserIdOfOperator())) {
 				User user = userDao.getUserById(item.getUserIdOfOperator());
 				map.put("userLoginNameOfOperator", user.getLoginName());
 			}
-			if (item.getWarehouseId() != null && item.getWarehouseId() != 0) {
+			if (NumberUtil.greaterThanZero(item.getWarehouseId())) {
 				Warehouse warehouse = warehouseDao.getWarehouseById(item.getWarehouseId());
 				if (warehouse != null) {
 					map.put("warehouse", warehouse.getWarehouseName());
@@ -484,7 +485,7 @@ public class StorageServiceImpl implements IStorageService {
 			User user = userDao.getUserById(order.getUserIdOfCustomer());
 			map.put("userNameOfCustomer", user.getLoginName());
 			map.put("customerReferenceNo", order.getCustomerReferenceNo());
-			if (order.getWarehouseId() != null && order.getWarehouseId() != 0) {
+			if (NumberUtil.greaterThanZero(order.getWarehouseId())) {
 				Warehouse warehouse = warehouseDao.getWarehouseById(order.getWarehouseId());
 				if (warehouse != null) {
 					map.put("warehouse", warehouse.getWarehouseName());
@@ -764,23 +765,30 @@ public class StorageServiceImpl implements IStorageService {
 			}
 			// 查询用户名
 			User user = userDao.getUserById(record.getUserIdOfCustomer());
-			map.put("userNameOfCustomer", user.getLoginName());
-			map.put("packageTrackingNo", record.getPackageTrackingNo());
-			if (record.getWarehouseId() != null) {
+			map.put("userLoginNameOfCustomer", user.getLoginName());
+			// 查询操作员
+			if (NumberUtil.greaterThanZero(record.getUserIdOfOperator())) {
+				User userOfOperator = userDao.getUserById(record.getUserIdOfOperator());
+				map.put("userLoginNameOfOperator", userOfOperator.getLoginName());
+			}
+			map.put("trackingNo", record.getPackageTrackingNo());
+			map.put("batchNo", record.getBatchNo());
+			if (NumberUtil.greaterThanZero(record.getWarehouseId())) {
 				Warehouse warehouse = warehouseDao.getWarehouseById(record.getWarehouseId());
-				if (warehouse != null) {
-					map.put("warehouse", warehouse.getWarehouseName());
-				}
+				map.put("warehouse", warehouse.getWarehouseName());
 			}
 			map.put("remark", record.getRemark());
 			InWarehouseRecordItem param = new InWarehouseRecordItem();
 			param.setInWarehouseRecordId(record.getId());
 			List<InWarehouseRecordItem> inWarehouseRecordItemList = inWarehouseRecordItemDao.findInWarehouseRecordItem(param, null, null);
+			Integer receivedQuantity = 0;
 			String skus = "";
 			for (InWarehouseRecordItem item : inWarehouseRecordItemList) {
 				skus += item.getSku() + "*" + item.getQuantity() + " ";
+				receivedQuantity += item.getQuantity();
 			}
 			map.put("skus", skus);
+			map.put("receivedQuantity", receivedQuantity);
 			list.add(map);
 		}
 		pagination.total = inWarehouseRecordDao.countInWarehouseRecord(inWarehouseRecord, moreParam);
