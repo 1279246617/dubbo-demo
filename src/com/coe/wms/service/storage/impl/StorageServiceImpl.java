@@ -256,12 +256,15 @@ public class StorageServiceImpl implements IStorageService {
 		}
 		// 得到事件类型,根据事件类型,分发事件Body 到不同方法处理
 		String eventType = eventHeader.getEventType();
+		// 事件目标,仓库编码
+		String eventTarget = eventHeader.getEventTarget();
 		if (StringUtil.isNull(eventType)) {
 			response.setReason(ErrorCode.S01_CODE);
 			response.setReasonDesc("EventHeader对象获取eventType的得到Null");
 			map.put(Constant.MESSAGE, XmlUtil.toXml(Responses.class, responses));
 			return map;
 		}
+
 		// 事件Body
 		EventBody eventBody = logisticsEvent.getEventBody();
 		if (eventBody == null) {
@@ -273,6 +276,7 @@ public class StorageServiceImpl implements IStorageService {
 		// 成功得到事件类型,返回body
 		map.put(Constant.STATUS, Constant.SUCCESS);
 		map.put("eventType", eventType);
+		map.put("eventTarget", eventTarget);
 		map.put("eventBody", eventBody);
 		return map;
 	}
@@ -544,7 +548,8 @@ public class StorageServiceImpl implements IStorageService {
 	 * api 创建入库订单
 	 */
 	@Override
-	public String warehouseInterfaceSaveInWarehouseOrder(EventBody eventBody, Long userIdOfCustomer) throws ServiceException {
+	public String warehouseInterfaceSaveInWarehouseOrder(EventBody eventBody, Long userIdOfCustomer, String warehouseNo)
+			throws ServiceException {
 		Responses responses = new Responses();
 		List<Response> responseItems = new ArrayList<Response>();
 		Response response = new Response();
@@ -564,7 +569,14 @@ public class StorageServiceImpl implements IStorageService {
 			response.setReasonDesc("LogisticsDetail对象获取logisticsOrders对象的得到Null");
 			return XmlUtil.toXml(Responses.class, responses);
 		}
-
+		
+		Warehouse warehouse = warehouseDao.getWarehouseByNo(warehouseNo);
+		if (warehouse == null) {
+			response.setReason(ErrorCode.B0003_CODE);
+			response.setReasonDesc("根据仓库编号(eventTarget)获取仓库得到Null");
+			return XmlUtil.toXml(Responses.class, responses);
+		}
+		
 		// 开始入库
 		for (int i = 0; i < logisticsOrders.size(); i++) {
 			// 待添加事务关闭,开启

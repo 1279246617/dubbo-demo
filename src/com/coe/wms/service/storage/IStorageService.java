@@ -151,7 +151,7 @@ public interface IStorageService {
 	 * @param userIdOfCustomer
 	 * @return
 	 */
-	public String warehouseInterfaceSaveInWarehouseOrder(EventBody eventBody, Long userIdOfCustomer) throws ServiceException;
+	public String warehouseInterfaceSaveInWarehouseOrder(EventBody eventBody, Long userIdOfCustomer,String warehouseNo) throws ServiceException;
 
 	/**
 	 * 创建出库订单

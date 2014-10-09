@@ -17,6 +17,11 @@ public class Warehouse implements Serializable {
 	 * 仓库名称
 	 */
 	private String warehouseName;
+	
+	/**
+	 * 仓库编码(与顺丰API 仓库编码相同)
+	 */
+	private String warehouseNo;
 
 	private String remark;
 
@@ -217,5 +222,13 @@ public class Warehouse implements Serializable {
 
 	public void setLastModifieByUserId(Long lastModifieByUserId) {
 		this.lastModifieByUserId = lastModifieByUserId;
+	}
+
+	public String getWarehouseNo() {
+		return warehouseNo;
+	}
+
+	public void setWarehouseNo(String warehouseNo) {
+		this.warehouseNo = warehouseNo;
 	}
 }

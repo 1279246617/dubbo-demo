@@ -67,7 +67,7 @@ public class StorageTaskImpl implements IStorageTask {
 	/**
 	 * 发送仓配入库订单信息给客户
 	 */
-	@Scheduled(cron="0 0/1 8-18 * * ? ")   //早上8点到下午6点,每分钟
+//	@Scheduled(cron="0 0/1 8-18 * * ? ")   //早上8点到下午6点,每分钟
 //	@Scheduled(cron="0 0/30 8-18 * * ? ")   //早上8点到下午6点,每半小时一次
 	@Override
 	public void sendInWarehouseInfoToCustomer() {
