@@ -33,7 +33,7 @@ public class InWarehouseRecord implements Serializable {
 	/**
 	 * 仓库id
 	 */
-	private Long wareHouseId;
+	private Long warehouseId;
 
 	/**
 	 * 操作员Id
@@ -91,14 +91,15 @@ public class InWarehouseRecord implements Serializable {
 		this.id = id;
 	}
 
-	public Long getWareHouseId() {
-		return wareHouseId;
+	
+	public Long getWarehouseId() {
+		return warehouseId;
 	}
 
-	public void setWareHouseId(Long wareHouseId) {
-		this.wareHouseId = wareHouseId;
+	public void setWarehouseId(Long warehouseId) {
+		this.warehouseId = warehouseId;
 	}
-	
+
 	public Long getUserIdOfOperator() {
 		return userIdOfOperator;
 	}

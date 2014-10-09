@@ -141,7 +141,8 @@ public class StorageServiceImpl implements IStorageService {
 		// 检查该SKU是否存在入库订单中
 		InWarehouseOrderItem inWarehouseOrderItemParam = new InWarehouseOrderItem();
 		inWarehouseOrderItemParam.setSku(itemSku);
-		List<InWarehouseOrderItem> inWarehouseOrderItemList = inWarehouseOrderItemDao.findInWarehouseOrderItem(inWarehouseOrderItemParam,null, null);
+		List<InWarehouseOrderItem> inWarehouseOrderItemList = inWarehouseOrderItemDao.findInWarehouseOrderItem(inWarehouseOrderItemParam,
+				null, null);
 		if (inWarehouseOrderItemList.size() <= 0) {
 			map.put(Constant.MESSAGE, "该产品SKU在此订单中无预报.");
 			return map;
@@ -384,8 +385,8 @@ public class StorageServiceImpl implements IStorageService {
 	public Pagination getInWarehouseRecordItemData(Long inWarehouseRecordId, Pagination pagination) {
 		InWarehouseRecordItem inWarehouseRecordItem = new InWarehouseRecordItem();
 		inWarehouseRecordItem.setInWarehouseRecordId(inWarehouseRecordId);
-		List<InWarehouseRecordItem> inWarehouseRecordItemList = inWarehouseRecordDao.findInWarehouseRecordItem(inWarehouseRecordItem, null,
-				pagination);
+		List<InWarehouseRecordItem> inWarehouseRecordItemList = inWarehouseRecordItemDao.findInWarehouseRecordItem(inWarehouseRecordItem,
+				null, pagination);
 		List<Object> list = new ArrayList<Object>();
 		for (InWarehouseRecordItem item : inWarehouseRecordItemList) {
 			Map<String, Object> map = new HashMap<String, Object>();
@@ -410,7 +411,7 @@ public class StorageServiceImpl implements IStorageService {
 			}
 			list.add(map);
 		}
-		pagination.total = inWarehouseRecordDao.countInWarehouseRecordItem(inWarehouseRecordItem, null);
+		pagination.total = inWarehouseRecordItemDao.countInWarehouseRecordItem(inWarehouseRecordItem, null);
 		pagination.rows = list;
 		return pagination;
 	}
@@ -745,5 +746,45 @@ public class StorageServiceImpl implements IStorageService {
 		}
 		response.setSuccess(Constant.TRUE);
 		return XmlUtil.toXml(Responses.class, responses);
+	}
+
+	/**
+	 * 获取入库记录
+	 */
+	@Override
+	public Pagination getInWarehouseRecordData(InWarehouseRecord inWarehouseRecord, Map<String, String> moreParam, Pagination pagination) {
+		List<InWarehouseRecord> inWarehouseRecordList = inWarehouseRecordDao
+				.findInWarehouseRecord(inWarehouseRecord, moreParam, pagination);
+		List<Object> list = new ArrayList<Object>();
+		for (InWarehouseRecord record : inWarehouseRecordList) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("id", record.getId());
+			if (record.getCreatedTime() != null) {
+				map.put("createdTime", DateUtil.dateConvertString(new Date(record.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss));
+			}
+			// 查询用户名
+			User user = userDao.getUserById(record.getUserIdOfCustomer());
+			map.put("userNameOfCustomer", user.getLoginName());
+			map.put("packageTrackingNo", record.getPackageTrackingNo());
+			if (record.getWarehouseId() != null) {
+				Warehouse warehouse = warehouseDao.getWarehouseById(record.getWarehouseId());
+				if (warehouse != null) {
+					map.put("warehouse", warehouse.getWarehouseName());
+				}
+			}
+			map.put("remark", record.getRemark());
+			InWarehouseRecordItem param = new InWarehouseRecordItem();
+			param.setInWarehouseRecordId(record.getId());
+			List<InWarehouseRecordItem> inWarehouseRecordItemList = inWarehouseRecordItemDao.findInWarehouseRecordItem(param, null, null);
+			String skus = "";
+			for (InWarehouseRecordItem item : inWarehouseRecordItemList) {
+				skus += item.getSku() + "*" + item.getQuantity() + " ";
+			}
+			map.put("skus", skus);
+			list.add(map);
+		}
+		pagination.total = inWarehouseRecordDao.countInWarehouseRecord(inWarehouseRecord, moreParam);
+		pagination.rows = list;
+		return pagination;
 	}
 }

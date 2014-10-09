@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -22,6 +23,7 @@ import com.coe.wms.dao.datasource.DataSource;
 import com.coe.wms.dao.datasource.DataSourceCode;
 import com.coe.wms.dao.warehouse.storage.IInWarehouseRecordItemDao;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecordItem;
+import com.coe.wms.util.DateUtil;
 import com.coe.wms.util.NumberUtil;
 import com.coe.wms.util.Pagination;
 import com.coe.wms.util.StringUtil;
@@ -169,6 +171,20 @@ public class InWarehouseRecordItemDaoImpl implements IInWarehouseRecordItemDao {
 				sb.append(" and id = '" + inWarehouseRecordItem.getId() + "' ");
 			}
 		}
+		if (moreParam != null) {
+			if (moreParam.get("createdTimeStart") != null) {
+				Date date = DateUtil.stringConvertDate(moreParam.get("createdTimeStart"), DateUtil.yyyy_MM_ddHHmmss);
+				if (date != null) {
+					sb.append(" and created_time >= " + date.getTime());
+				}
+			}
+			if (moreParam.get("createdTimeEnd") != null) {
+				Date date = DateUtil.stringConvertDate(moreParam.get("createdTimeEnd"), DateUtil.yyyy_MM_ddHHmmss);
+				if (date != null) {
+					sb.append(" and created_time <= " + date.getTime());
+				}
+			}
+		}
 		// 分页sql
 		if (page != null) {
 			sb.append(page.generatePageSql());
@@ -179,5 +195,63 @@ public class InWarehouseRecordItemDaoImpl implements IInWarehouseRecordItemDao {
 				ParameterizedBeanPropertyRowMapper.newInstance(InWarehouseRecordItem.class));
 		logger.info("查询入库记录明细sql:" + sql + " size:" + inWarehouseRecordItemList.size());
 		return inWarehouseRecordItemList;
+	}
+
+	/**
+	 * 查询入库明细记录
+	 */
+	@Override
+	public Long countInWarehouseRecordItem(InWarehouseRecordItem inWarehouseRecordItem, Map<String, String> moreParam) {
+		StringBuffer sb = new StringBuffer();
+		sb.append("select count(id) from w_s_in_warehouse_record_item where 1=1 ");
+		if (inWarehouseRecordItem != null) {
+			if (StringUtil.isNotNull(inWarehouseRecordItem.getSku())) {
+				sb.append(" and sku = '" + inWarehouseRecordItem.getSku() + "' ");
+			}
+			if (StringUtil.isNotNull(inWarehouseRecordItem.getRemark())) {
+				sb.append(" and remark = '" + inWarehouseRecordItem.getRemark() + "' ");
+			}
+			if (inWarehouseRecordItem.getInWarehouseRecordId() != null) {
+				sb.append(" and in_warehouse_record_id = '" + inWarehouseRecordItem.getInWarehouseRecordId() + "' ");
+			}
+			if (inWarehouseRecordItem.getQuantity() != null) {
+				sb.append(" and quantity = '" + inWarehouseRecordItem.getQuantity() + "' ");
+			}
+			if (inWarehouseRecordItem.getSeatNo() != null) {
+				sb.append(" and seat_no = '" + inWarehouseRecordItem.getSeatNo() + "' ");
+			}
+			if (inWarehouseRecordItem.getShelvesNo() != null) {
+				sb.append(" and shelves_no = '" + inWarehouseRecordItem.getShelvesNo() + "' ");
+			}
+			if (inWarehouseRecordItem.getWarehouseId() != null) {
+				sb.append(" and warehouse_id = '" + inWarehouseRecordItem.getWarehouseId() + "' ");
+			}
+			if (inWarehouseRecordItem.getCreatedTime() != null) {
+				sb.append(" and created_time = '" + inWarehouseRecordItem.getCreatedTime() + "' ");
+			}
+			if (inWarehouseRecordItem.getUserIdOfOperator() != null) {
+				sb.append(" and user_id_of_operator = '" + inWarehouseRecordItem.getUserIdOfOperator() + "' ");
+			}
+			if (inWarehouseRecordItem.getId() != null) {
+				sb.append(" and id = '" + inWarehouseRecordItem.getId() + "' ");
+			}
+		}
+		if (moreParam != null) {
+			if (moreParam.get("createdTimeStart") != null) {
+				Date date = DateUtil.stringConvertDate(moreParam.get("createdTimeStart"), DateUtil.yyyy_MM_ddHHmmss);
+				if (date != null) {
+					sb.append(" and created_time >= " + date.getTime());
+				}
+			}
+			if (moreParam.get("createdTimeEnd") != null) {
+				Date date = DateUtil.stringConvertDate(moreParam.get("createdTimeEnd"), DateUtil.yyyy_MM_ddHHmmss);
+				if (date != null) {
+					sb.append(" and created_time <= " + date.getTime());
+				}
+			}
+		}
+		String sql = sb.toString();
+		logger.info("统计入库明细记录sql:" + sql);
+		return jdbcTemplate.queryForLong(sql);
 	}
 }
