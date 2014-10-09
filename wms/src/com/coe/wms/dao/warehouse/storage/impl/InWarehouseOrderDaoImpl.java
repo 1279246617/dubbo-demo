@@ -1,7 +1,6 @@
 package com.coe.wms.dao.warehouse.storage.impl;
 
 import java.sql.Connection;
-
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Date;
@@ -42,7 +41,7 @@ public class InWarehouseOrderDaoImpl implements IInWarehouseOrderDao {
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public long saveInWarehouseOrder(final InWarehouseOrder order) {
-		final String sql = "insert into w_s_in_warehouse_order (user_id_of_customer,package_no,package_tracking_no,weight,created_time,remark,status,user_id_of_operator,carrier_code,logistics_type) values (?,?,?,?,?,?,?,?,?,?)";
+		final String sql = "insert into w_s_in_warehouse_order (user_id_of_customer,package_no,package_tracking_no,weight,created_time,remark,status,user_id_of_operator,carrier_code,logistics_type,warehouse_id) values (?,?,?,?,?,?,?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
@@ -57,6 +56,7 @@ public class InWarehouseOrderDaoImpl implements IInWarehouseOrderDao {
 				ps.setLong(8, order.getUserIdOfOperator() != null ? order.getUserIdOfOperator() : 0);
 				ps.setString(9, order.getCarrierCode());
 				ps.setString(10, order.getLogisticsType());
+				ps.setLong(11, order.getWarehouseId());
 				return ps;
 			}
 		}, keyHolder);
@@ -76,8 +76,7 @@ public class InWarehouseOrderDaoImpl implements IInWarehouseOrderDao {
 	 * 参数一律使用实体类加Map . 节省QueryVO
 	 */
 	@Override
-	public List<InWarehouseOrder> findInWarehouseOrder(InWarehouseOrder inWarehouseOrder,
-			Map<String, String> moreParam, Pagination page) {
+	public List<InWarehouseOrder> findInWarehouseOrder(InWarehouseOrder inWarehouseOrder, Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("select id,user_id_of_customer,user_id_of_operator,package_no,package_tracking_no,weight,created_time,remark,status,carrier_code,logistics_type,warehouse_id from w_s_in_warehouse_order where 1=1 ");
 		if (inWarehouseOrder != null) {
@@ -98,6 +97,9 @@ public class InWarehouseOrderDaoImpl implements IInWarehouseOrderDao {
 			}
 			if (inWarehouseOrder.getId() != null) {
 				sb.append(" and id = " + inWarehouseOrder.getId());
+			}
+			if (inWarehouseOrder.getWarehouseId() != null) {
+				sb.append(" and warehouse_id = " + inWarehouseOrder.getWarehouseId());
 			}
 			if (inWarehouseOrder.getUserIdOfCustomer() != null) {
 				sb.append(" and user_id_of_customer = " + inWarehouseOrder.getUserIdOfCustomer());
@@ -163,6 +165,9 @@ public class InWarehouseOrderDaoImpl implements IInWarehouseOrderDao {
 			if (inWarehouseOrder.getId() != null) {
 				sb.append(" and id = " + inWarehouseOrder.getId());
 			}
+			if (inWarehouseOrder.getWarehouseId() != null) {
+				sb.append(" and warehouse_id = " + inWarehouseOrder.getWarehouseId());
+			}
 			if (inWarehouseOrder.getUserIdOfCustomer() != null) {
 				sb.append(" and user_id_of_customer = " + inWarehouseOrder.getUserIdOfCustomer());
 			}
@@ -200,5 +205,13 @@ public class InWarehouseOrderDaoImpl implements IInWarehouseOrderDao {
 
 	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
+	}
+
+	@Override
+	public Long countInWarehouseOrderItemByTrackingNo(String trackingNo) {
+		String sql = "select sum(quantity) from w_s_in_warehouse_order_item where order_id = (select id from w_s_in_warehouse_order WHERE package_tracking_no = '"
+				+ trackingNo + "')";
+		logger.info("统计入库订单预报物品数量sql:" + sql);
+		return jdbcTemplate.queryForLong(sql);
 	}
 }

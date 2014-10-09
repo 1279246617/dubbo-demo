@@ -23,6 +23,8 @@ public class ItemInventory implements Serializable {
 	private Long wareHouseId;
 
 	private String sku;
+	
+	private Integer quantity;
 
 	/**
 	 * 入库批次号 可以查到某批次还剩余多少货
@@ -51,6 +53,14 @@ public class ItemInventory implements Serializable {
 
 	public void setSku(String sku) {
 		this.sku = sku;
+	}
+
+	public Integer getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(Integer quantity) {
+		this.quantity = quantity;
 	}
 
 	public String getBatchNo() {

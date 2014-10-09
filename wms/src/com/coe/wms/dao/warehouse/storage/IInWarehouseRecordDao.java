@@ -15,4 +15,8 @@ public interface IInWarehouseRecordDao {
 	public List<InWarehouseRecord> findInWarehouseRecord(InWarehouseRecord InWarehouseRecord, Map<String, String> moreParam, Pagination page);
 
 	public Long countInWarehouseRecord(InWarehouseRecord InWarehouseRecord, Map<String, String> moreParam);
+
+	public int updateInWarehouseRecordCallback(InWarehouseRecord InWarehouseRecord);
+
+	public List<Long> findCallbackUnSuccessRecordId();
 }

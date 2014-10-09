@@ -158,7 +158,7 @@
 	                sortName: 'id',
 	                width: '100%',
 	                height: '99%',
-	                checkbox: false,
+	                checkbox: true,
 	                rownumbers:true,
 	                alternatingRow:true,
 	                minColToggle:20,

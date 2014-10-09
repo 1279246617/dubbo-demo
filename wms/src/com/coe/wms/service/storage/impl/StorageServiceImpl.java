@@ -52,6 +52,8 @@ import com.coe.wms.pojo.api.warehouse.Responses;
 import com.coe.wms.pojo.api.warehouse.SenderDetail;
 import com.coe.wms.pojo.api.warehouse.Sku;
 import com.coe.wms.pojo.api.warehouse.SkuDetail;
+import com.coe.wms.pojo.api.warehouse.TradeDetail;
+import com.coe.wms.pojo.api.warehouse.TradeOrder;
 import com.coe.wms.service.storage.IStorageService;
 import com.coe.wms.util.Constant;
 import com.coe.wms.util.DateUtil;
@@ -232,15 +234,14 @@ public class StorageServiceImpl implements IStorageService {
 		if (logisticsEventsRequest == null) {
 			// xml 转对象得到空
 			response.setReason(ErrorCode.S01_CODE);
-			response.setReasonDesc("logisticsInterface消息内容转LogisticsEventsRequest对象的得到Null");
-
+			response.setReasonDesc("logisticsInterface消息内容转LogisticsEventsRequest对象得到Null");
 			map.put(Constant.MESSAGE, XmlUtil.toXml(Responses.class, responses));
 			return map;
 		}
 		LogisticsEvent logisticsEvent = logisticsEventsRequest.getLogisticsEvent();
 		if (logisticsEvent == null) {
 			response.setReason(ErrorCode.S01_CODE);
-			response.setReasonDesc("LogisticsEventsRequest对象获取LogisticsEvent对象的得到Null");
+			response.setReasonDesc("LogisticsEventsRequest对象获取LogisticsEvent对象得到Null");
 
 			map.put(Constant.MESSAGE, XmlUtil.toXml(Responses.class, responses));
 			return map;
@@ -249,7 +250,7 @@ public class StorageServiceImpl implements IStorageService {
 		EventHeader eventHeader = logisticsEvent.getEventHeader();
 		if (eventHeader == null) {
 			response.setReason(ErrorCode.S01_CODE);
-			response.setReasonDesc("LogisticsEvent对象获取EventHeader对象的得到Null");
+			response.setReasonDesc("LogisticsEvent对象获取EventHeader对象得到Null");
 
 			map.put(Constant.MESSAGE, XmlUtil.toXml(Responses.class, responses));
 			return map;
@@ -260,7 +261,7 @@ public class StorageServiceImpl implements IStorageService {
 		String eventTarget = eventHeader.getEventTarget();
 		if (StringUtil.isNull(eventType)) {
 			response.setReason(ErrorCode.S01_CODE);
-			response.setReasonDesc("EventHeader对象获取eventType的得到Null");
+			response.setReasonDesc("EventHeader对象获取eventType得到Null");
 			map.put(Constant.MESSAGE, XmlUtil.toXml(Responses.class, responses));
 			return map;
 		}
@@ -269,7 +270,7 @@ public class StorageServiceImpl implements IStorageService {
 		EventBody eventBody = logisticsEvent.getEventBody();
 		if (eventBody == null) {
 			response.setReason(ErrorCode.S01_CODE);
-			response.setReasonDesc("LogisticsEvent对象获取EventBody对象的得到Null");
+			response.setReasonDesc("LogisticsEvent对象获取EventBody对象得到Null");
 			map.put(Constant.MESSAGE, XmlUtil.toXml(Responses.class, responses));
 			return map;
 		}
@@ -560,23 +561,23 @@ public class StorageServiceImpl implements IStorageService {
 
 		if (logisticsDetail == null) {
 			response.setReason(ErrorCode.S01_CODE);
-			response.setReasonDesc("EventBody对象获取LogisticsDetail对象的得到Null");
+			response.setReasonDesc("EventBody对象获取LogisticsDetail对象得到Null");
 			return XmlUtil.toXml(Responses.class, responses);
 		}
 		List<LogisticsOrder> logisticsOrders = logisticsDetail.getLogisticsOrders();
 		if (logisticsOrders == null) {
 			response.setReason(ErrorCode.S01_CODE);
-			response.setReasonDesc("LogisticsDetail对象获取logisticsOrders对象的得到Null");
+			response.setReasonDesc("LogisticsDetail对象获取logisticsOrders对象得到Null");
 			return XmlUtil.toXml(Responses.class, responses);
 		}
-		
+
 		Warehouse warehouse = warehouseDao.getWarehouseByNo(warehouseNo);
 		if (warehouse == null) {
 			response.setReason(ErrorCode.B0003_CODE);
 			response.setReasonDesc("根据仓库编号(eventTarget)获取仓库得到Null");
 			return XmlUtil.toXml(Responses.class, responses);
 		}
-		
+
 		// 开始入库
 		for (int i = 0; i < logisticsOrders.size(); i++) {
 			// 待添加事务关闭,开启
@@ -603,7 +604,7 @@ public class StorageServiceImpl implements IStorageService {
 			inWarehouseOrder.setPackageNo(logisticsOrder.getMailNo());
 			inWarehouseOrder.setCarrierCode(logisticsOrder.getCarrierCode());
 			inWarehouseOrder.setLogisticsType(logisticsOrder.getLogisticsType());
-
+			inWarehouseOrder.setWarehouseId(warehouse.getId());
 			// sku明细
 			SkuDetail skuDetail = logisticsOrder.getSkuDetail();
 			if (skuDetail == null) {
@@ -642,62 +643,96 @@ public class StorageServiceImpl implements IStorageService {
 	 * API创建出库订单
 	 */
 	@Override
-	public String warehouseInterfaceSaveOutWarehouseOrder(EventBody eventBody, Long userIdOfCustomer) throws ServiceException {
+	public String warehouseInterfaceSaveOutWarehouseOrder(EventBody eventBody, Long userIdOfCustomer, String warehouseNo)
+			throws ServiceException {
 		Responses responses = new Responses();
 		List<Response> responseItems = new ArrayList<Response>();
 		Response response = new Response();
 		response.setSuccess(Constant.FALSE);
 		responseItems.add(response);
 		responses.setResponseItems(responseItems);
+		// 取 tradeDetail 中tradeOrderId 作为客户参考号
+		TradeDetail tradeDetail = eventBody.getTradeDetail();
+		if (tradeDetail == null) {
+			response.setReason(ErrorCode.S01_CODE);
+			response.setReasonDesc("EventBody对象获取TradeDetail对象得到Null");
+			return XmlUtil.toXml(Responses.class, responses);
+		}
+		List<TradeOrder> tradeOrderList = tradeDetail.getTradeOrders();
+		if (tradeOrderList == null || tradeOrderList.size() == 0) {
+			response.setReason(ErrorCode.S01_CODE);
+			response.setReasonDesc("TradeDetail对象获取TradeOrders对象得到Null");
+			return XmlUtil.toXml(Responses.class, responses);
+		}
+		// 客户参考号
+		String customerReferenceNo = tradeOrderList.get(0).getTradeOrderId();
+		if (StringUtil.isNull(customerReferenceNo)) {
+			response.setReason(ErrorCode.S01_CODE);
+			response.setReasonDesc("TradeOrder对象获取tradeOrderId得到Null");
+			return XmlUtil.toXml(Responses.class, responses);
+		}
 		// 出库订单发件人信息
 		LogisticsDetail logisticsDetail = eventBody.getLogisticsDetail();
 		if (logisticsDetail == null) {
 			response.setReason(ErrorCode.S01_CODE);
-			response.setReasonDesc("EventBody对象获取LogisticsDetail对象的得到Null");
+			response.setReasonDesc("EventBody对象获取LogisticsDetail对象得到Null");
 			return XmlUtil.toXml(Responses.class, responses);
 		}
 		List<LogisticsOrder> logisticsOrders = logisticsDetail.getLogisticsOrders();
 		if (logisticsOrders == null) {
 			response.setReason(ErrorCode.S01_CODE);
-			response.setReasonDesc("LogisticsDetail对象获取LogisticsOrders对象的得到Null");
+			response.setReasonDesc("LogisticsDetail对象获取LogisticsOrders对象得到Null");
+			return XmlUtil.toXml(Responses.class, responses);
+		}
+		Warehouse warehouse = warehouseDao.getWarehouseByNo(warehouseNo);
+		if (warehouse == null) {
+			response.setReason(ErrorCode.B0003_CODE);
+			response.setReasonDesc("根据仓库编号(eventTarget)获取仓库得到Null");
 			return XmlUtil.toXml(Responses.class, responses);
 		}
 		// 保存
 		for (int i = 0; i < logisticsOrders.size(); i++) {
 			LogisticsOrder logisticsOrder = logisticsOrders.get(i);
 			if (logisticsOrder == null) {
-				throw new ServiceException("LogisticsOrders对象获取LogisticsOrder对象的得到Null");
+				throw new ServiceException("LogisticsOrders对象获取LogisticsOrder对象得到Null");
 			}
 			ReceiverDetail receiverDetail = logisticsOrder.getReceiverDetail();
 			if (receiverDetail == null) {
-				throw new ServiceException("LogisticsOrder对象获取ReceiverDetail对象的得到Null");
+				throw new ServiceException("LogisticsOrder对象获取ReceiverDetail对象得到Null");
 			}
 			SenderDetail senderDetail = logisticsOrder.getSenderDetail();
 			if (senderDetail == null) {
-				throw new ServiceException("LogisticsOrder对象获取SenderDetail对象的得到Null");
+				throw new ServiceException("LogisticsOrder对象获取SenderDetail对象得到Null");
 			}
 			SkuDetail skuDetail = logisticsOrder.getSkuDetail();
 			if (skuDetail == null) {
-				throw new ServiceException("LogisticsOrder对象获取SkuDetail对象的得到Null");
+				throw new ServiceException("LogisticsOrder对象获取SkuDetail对象得到Null");
 			}
 			List<Sku> skus = skuDetail.getSkus();
 			if (skus == null) {
-				throw new ServiceException("SkuDetail对象获取List<Sku>对象的得到Null");
+				throw new ServiceException("SkuDetail对象获取List<Sku>对象得到Null");
 			}
-			logger.info("出库订单:第" + (i + 1) + "(poNo):" + logisticsOrder.getPoNo());
-
+			logger.info("出库订单:第" + (i + 1) + "(customerReferenceNo):" + customerReferenceNo);
+			// 检查客户参考号是否重复
+			OutWarehouseOrder outWarehouseOrderParam = new OutWarehouseOrder();
+			outWarehouseOrderParam.setCustomerReferenceNo(customerReferenceNo);
+			Long count = outWarehouseOrderDao.countOutWarehouseOrder(outWarehouseOrderParam, null);
+			if (count > 0) {
+				throw new ServiceException("客户参考号(tradeOrderId)重复,保存失败");
+			}
 			// 主单
 			OutWarehouseOrder outWarehouseOrder = new OutWarehouseOrder();
 			outWarehouseOrder.setCreatedTime(System.currentTimeMillis());
 			outWarehouseOrder.setRemark(logisticsOrder.getLogisticsRemark());
 			outWarehouseOrder.setStatus(OurWareHouseStatusCode.WWC);
 			outWarehouseOrder.setUserIdOfCustomer(userIdOfCustomer);
+			outWarehouseOrder.setWarehouseId(warehouse.getId());
 			// 客户参考号,用于后面客户对该出库订单进行修改,确认等,以及回传出库状态
-			outWarehouseOrder.setCustomerReferenceNo(logisticsOrder.getPoNo());
+			outWarehouseOrder.setCustomerReferenceNo(customerReferenceNo);
 			// 保存主单 得到主单Id
 			Long outWarehouseOrderId = outWarehouseOrderDao.saveOutWarehouseOrder(outWarehouseOrder);
 
-			logger.info("出库订单:第" + (i + 1) + "客户参考号customerReferenceNo(poNo):" + logisticsOrder.getPoNo() + " 保存出库订单,得到Id:"
+			logger.info("出库订单:第" + (i + 1) + "客户参考号customerReferenceNo(tradeOrderId):" + customerReferenceNo + " 保存出库订单,得到Id:"
 					+ outWarehouseOrderId);
 
 			// 出库订单明细信息
@@ -705,7 +740,7 @@ public class StorageServiceImpl implements IStorageService {
 			for (int j = 0; j < skus.size(); j++) {
 				Sku sku = skus.get(j);
 				if (sku == null) {
-					throw new ServiceException("SkuDetail对象获取Sku对象的得到Null");
+					throw new ServiceException("SkuDetail对象获取Sku对象得到Null");
 				}
 				OutWarehouseOrderItem outWarehouseOrderItem = new OutWarehouseOrderItem();
 				outWarehouseOrderItem.setQuantity(sku.getSkuQty());
@@ -719,7 +754,7 @@ public class StorageServiceImpl implements IStorageService {
 			}
 			// 保存出库订单明细
 			long itemCount = outWarehouseOrderItemDao.saveBatchOutWarehouseOrderItemWithOrderId(itemList, outWarehouseOrderId);
-			logger.info("出库订单:第" + (i + 1) + "客户参考号customerReferenceNo(poNo):" + logisticsOrder.getPoNo() + " 保存出库订单明细条数:" + itemCount);
+			logger.info("出库订单:第" + (i + 1) + "客户参考号customerReferenceNo(tradeOrderId):" + customerReferenceNo + " 保存出库订单明细条数:" + itemCount);
 			// 收件人
 			OutWarehouseOrderReceiver outWarehouseOrderReceiver = new OutWarehouseOrderReceiver();
 			outWarehouseOrderReceiver.setAddressLine1(receiverDetail.getStreetAddress());
@@ -736,7 +771,7 @@ public class StorageServiceImpl implements IStorageService {
 			outWarehouseOrderReceiver.setOutWarehouseOrderId(outWarehouseOrderId);
 			// 保存收件人
 			Long outWarehouseOrderReceiverId = outWarehouseOrderReceiverDao.saveOutWarehouseOrderReceiver(outWarehouseOrderReceiver);
-			logger.info("出库订单:第" + (i + 1) + "客户参考号customerReferenceNo(poNo):" + logisticsOrder.getPoNo()
+			logger.info("出库订单:第" + (i + 1) + "客户参考号customerReferenceNo(tradeOrderId):" + customerReferenceNo
 					+ " 保存收件人,outWarehouseOrderReceiverId:" + outWarehouseOrderReceiverId);
 			// 发件人信息
 			OutWarehouseOrderSender outWarehouseOrderSender = new OutWarehouseOrderSender();
@@ -754,7 +789,7 @@ public class StorageServiceImpl implements IStorageService {
 			outWarehouseOrderSender.setOutWarehouseOrderId(outWarehouseOrderId);
 			// 保存发件人
 			Long outWarehouseOrderSenderId = outWarehouseOrderSenderDao.saveOutWarehouseOrderSender(outWarehouseOrderSender);
-			logger.info("出库订单:第" + (i + 1) + "客户参考号customerReferenceNo(poNo):" + logisticsOrder.getPoNo()
+			logger.info("出库订单:第" + (i + 1) + "客户参考号customerReferenceNo(tradeOrderId):" + customerReferenceNo
 					+ " 保存发件人,outWarehouseOrderSenderId:" + outWarehouseOrderSenderId);
 		}
 		response.setSuccess(Constant.TRUE);
@@ -801,6 +836,9 @@ public class StorageServiceImpl implements IStorageService {
 			}
 			map.put("skus", skus);
 			map.put("receivedQuantity", receivedQuantity);
+			// 预报物品数量,根据跟踪单号找入库订单
+			Long orderItemsize = inWarehouseOrderDao.countInWarehouseOrderItemByTrackingNo(record.getPackageTrackingNo());
+			map.put("quantity", orderItemsize);
 			list.add(map);
 		}
 		pagination.total = inWarehouseRecordDao.countInWarehouseRecord(inWarehouseRecord, moreParam);

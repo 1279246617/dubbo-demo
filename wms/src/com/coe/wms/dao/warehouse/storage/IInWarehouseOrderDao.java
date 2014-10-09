@@ -12,8 +12,9 @@ public interface IInWarehouseOrderDao {
 
 	public InWarehouseOrder getInWarehouseOrderById(Long inWarehouseOrderId);
 
-	public List<InWarehouseOrder> findInWarehouseOrder(InWarehouseOrder inWarehouseOrder,Map<String,String> moreParam, Pagination page);
-	
-	public Long  countInWarehouseOrder(InWarehouseOrder inWarehouseOrder,Map<String,String> moreParam);
-	
+	public List<InWarehouseOrder> findInWarehouseOrder(InWarehouseOrder inWarehouseOrder, Map<String, String> moreParam, Pagination page);
+
+	public Long countInWarehouseOrder(InWarehouseOrder inWarehouseOrder, Map<String, String> moreParam);
+
+	public Long countInWarehouseOrderItemByTrackingNo(String trackingNo);
 }
