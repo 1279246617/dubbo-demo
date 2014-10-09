@@ -28,6 +28,12 @@
 			       	 	</a>
 			       	 	<input style=" visibility:hidden;">
 		       	 	</span>
+		       	 	<span class="pull-left" style="width:95px;">
+			       		<a class="btn btn-primary btn-small" onclick="checkOrder()" title="打印捡货单">
+			           		 <i class="icon-folder-open"></i>打印捡货单
+			       	 	</a>
+			       	 	<input style=" visibility:hidden;">
+		       	 	</span>
 		    	</div>    
                <div class="pull-right searchContent">
                		<span class="pull-left" style="width:160px;">
@@ -159,7 +165,7 @@
 	                sortName: 'id',
 	                width: '100%',
 	                height: '99%',
-	                checkbox: false,
+	                checkbox: true,
 	                rownumbers:true,
 	                alternatingRow:true,
 	                minColToggle:20,

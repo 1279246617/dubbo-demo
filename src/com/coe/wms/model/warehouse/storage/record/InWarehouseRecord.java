@@ -82,6 +82,16 @@ public class InWarehouseRecord implements Serializable {
 	 * 入库摘要
 	 */
 	private String remark;
+	
+	/**
+	 * 回调是否成功
+	 */
+	private String callbackIsSuccess;
+	
+	/**
+	 * 回调次数
+	 */
+	private Integer callbackCount;
 
 	public Long getId() {
 		return id;
@@ -91,7 +101,6 @@ public class InWarehouseRecord implements Serializable {
 		this.id = id;
 	}
 
-	
 	public Long getWarehouseId() {
 		return warehouseId;
 	}
@@ -102,6 +111,22 @@ public class InWarehouseRecord implements Serializable {
 
 	public Long getUserIdOfOperator() {
 		return userIdOfOperator;
+	}
+
+	public String getCallbackIsSuccess() {
+		return callbackIsSuccess;
+	}
+
+	public void setCallbackIsSuccess(String callbackIsSuccess) {
+		this.callbackIsSuccess = callbackIsSuccess;
+	}
+
+	public Integer getCallbackCount() {
+		return callbackCount;
+	}
+
+	public void setCallbackCount(Integer callbackCount) {
+		this.callbackCount = callbackCount;
 	}
 
 	public void setUserIdOfOperator(Long userIdOfOperator) {
@@ -167,8 +192,8 @@ public class InWarehouseRecord implements Serializable {
 	/**
 	 * 创建批次号
 	 */
-	public static String generateBatchNo(String prefix, String suffix, String delimiter, String trackingNo,
-			Long userIdOfCustomer, Long userIdOfOperater, String isUnKnowCustomer) {
+	public static String generateBatchNo(String prefix, String suffix, String delimiter, String trackingNo, Long userIdOfCustomer,
+			Long userIdOfOperater, String isUnKnowCustomer) {
 		StringBuffer sb = new StringBuffer();
 		if (StringUtil.isNotNull(prefix)) {
 			sb.append(prefix + delimiter);
