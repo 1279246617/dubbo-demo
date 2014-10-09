@@ -150,9 +150,4 @@ public interface IStorageService {
 	 * @return
 	 */
 	public String warehouseInterfaceSaveOutWarehouseOrder(EventBody eventBody, Long userIdOfCustomer) throws ServiceException;
-	
-	/**
-	 * 发送入库信息给客户
-	 */
-	public void sendInWarehouseInfoToCustomer() throws ServiceException;;
 }
