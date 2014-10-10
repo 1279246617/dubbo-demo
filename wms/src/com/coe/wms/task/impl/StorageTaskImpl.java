@@ -88,9 +88,14 @@ public class StorageTaskImpl implements IStorageTask {
 	private IUserDao userDao;
 
 	/**
+	 * 回传入库SKU,顺丰服务名
+	 */
+	private final String serviceName = "logistics.event.wms.skustockin.info";
+
+	/**
 	 * 发送仓配入库订单信息给客户
 	 */
-	@Scheduled(cron = "0 0/1 8-18 * * ? ")
+//	@Scheduled(cron = "0 0/1 8-18 * * ? ")
 	// 早上8点到下午6点,每分钟
 	// @Scheduled(cron="0 0/30 8-18 * * ? ") //早上8点到下午6点,每半小时一次
 	@Override
@@ -169,15 +174,15 @@ public class StorageTaskImpl implements IStorageTask {
 			basicNameValuePairs.add(new BasicNameValuePair("logistics_interface", xml));
 			// 仓库编号
 			basicNameValuePairs.add(new BasicNameValuePair("logistics_provider_id", warehouse.getWarehouseNo()));
-			basicNameValuePairs.add(new BasicNameValuePair("msg_type", EventType.WMS_SKU_STOCKIN_INFO));
+			basicNameValuePairs.add(new BasicNameValuePair("msg_type", serviceName));
 			basicNameValuePairs.add(new BasicNameValuePair("msg_source", msgSource));
 			String dataDigest = StringUtil.encoderByMd5(xml + user.getOppositeToken());
 			basicNameValuePairs.add(new BasicNameValuePair("data_digest", dataDigest));
 			basicNameValuePairs.add(new BasicNameValuePair("version", "1.0"));
-			
+
 			logger.info("回传SKU入库信息: logistics_interface=" + xml);
 			logger.info("回传SKU入库信息: logistics_provider_id=" + warehouse.getWarehouseNo());
-			logger.info("回传SKU入库信息: msg_type=" + EventType.WMS_SKU_STOCKIN_INFO);
+			logger.info("回传SKU入库信息: msg_type=" + serviceName);
 			logger.info("回传SKU入库信息: msg_source=" + msgSource);
 			logger.info("回传SKU入库信息: data_digest=" + dataDigest);
 

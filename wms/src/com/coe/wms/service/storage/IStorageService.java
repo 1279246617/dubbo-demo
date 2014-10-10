@@ -32,7 +32,7 @@ public interface IStorageService {
 	 * @return
 	 */
 	public Map<String, String> saveInWarehouseRecord(String trackingNo, String userLoginName, String isUnKnowCustomer, String remark,
-			Long userIdOfOperator,Long warehouseId);
+			Long userIdOfOperator, Long warehouseId);
 
 	/**
 	 * 保存入库明细 返回成功,失败,错误信息
@@ -42,7 +42,8 @@ public interface IStorageService {
 	 * @param page
 	 * @return
 	 */
-	public Map<String, String> saveInWarehouseRecordItem(String itemSku, Integer itemQuantity, String itemRemark, Long warehouseId,String shelvesNo, String seatNo, Long inWarehouseRecordId, Long userIdOfOperator);
+	public Map<String, String> saveInWarehouseRecordItem(String itemSku, Integer itemQuantity, String itemRemark, Long warehouseId,
+			String shelvesNo, String seatNo, Long inWarehouseRecordId, Long userIdOfOperator);
 
 	/**
 	 * 获取入库记录物品
@@ -72,7 +73,6 @@ public interface IStorageService {
 	 */
 	public Pagination getInWarehouseOrderData(InWarehouseOrder inWarehouseOrder, Map<String, String> moreParam, Pagination page);
 
-	
 	/**
 	 * 获取入库记录
 	 * 
@@ -81,8 +81,7 @@ public interface IStorageService {
 	 * @return
 	 */
 	public Pagination getInWarehouseRecordData(InWarehouseRecord inWarehouseRecord, Map<String, String> moreParam, Pagination page);
-	
-	
+
 	/**
 	 * 获取出库订单
 	 * 
@@ -151,7 +150,8 @@ public interface IStorageService {
 	 * @param userIdOfCustomer
 	 * @return
 	 */
-	public String warehouseInterfaceSaveInWarehouseOrder(EventBody eventBody, Long userIdOfCustomer,String warehouseNo) throws ServiceException;
+	public String warehouseInterfaceSaveInWarehouseOrder(EventBody eventBody, Long userIdOfCustomer, String warehouseNo)
+			throws ServiceException;
 
 	/**
 	 * 创建出库订单
@@ -160,5 +160,16 @@ public interface IStorageService {
 	 * @param userIdOfCustomer
 	 * @return
 	 */
-	public String warehouseInterfaceSaveOutWarehouseOrder(EventBody eventBody, Long userIdOfCustomer,String warehouseNo) throws ServiceException;
+	public String warehouseInterfaceSaveOutWarehouseOrder(EventBody eventBody, Long userIdOfCustomer, String warehouseNo)
+			throws ServiceException;
+	
+	/**
+	 * 审核出库订单
+	 * 
+	 * @param orderIds
+	 * @param checkResult
+	 * @return
+	 * @throws ServiceException
+	 */
+	public Map<String, String> checkOutWarehouseOrder(String orderIds, Integer checkResult,Long userIdOfOperator ) throws ServiceException;
 }
