@@ -10,6 +10,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.simple.ParameterizedBeanPropertyRowMapper;
@@ -21,6 +22,7 @@ import com.coe.wms.dao.datasource.DataSource;
 import com.coe.wms.dao.datasource.DataSourceCode;
 import com.coe.wms.dao.warehouse.storage.IInWarehouseOrderDao;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
+import com.coe.wms.model.warehouse.storage.record.InWarehouseRecord;
 import com.coe.wms.util.DateUtil;
 import com.coe.wms.util.Pagination;
 import com.coe.wms.util.StringUtil;
@@ -66,8 +68,9 @@ public class InWarehouseOrderDaoImpl implements IInWarehouseOrderDao {
 
 	@Override
 	public InWarehouseOrder getInWarehouseOrderById(Long inWarehouseOrderId) {
-
-		return null;
+		String sql = "select id,user_id_of_customer,user_id_of_operator,package_no,package_tracking_no,weight,created_time,remark,status,carrier_code,logistics_type,warehouse_id from w_s_in_warehouse_order where id= "+ inWarehouseOrderId;
+		InWarehouseOrder order = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<InWarehouseOrder>(InWarehouseOrder.class));
+		return order;
 	}
 
 	/**

@@ -56,6 +56,13 @@ public class InWarehouseRecord implements Serializable {
 	 * 要求客户预报的时候 大包头程 运单号 对应一个大包
 	 */
 	private String packageTrackingNo;
+	
+	/**
+	 * 入库订单id, 非必有字段,当收货时找到预报订单时,保存入库订单id
+	 * 
+	 * 当入库订单id 字段不为空时, 入库记录和入库订单的关系以入库订单id为准, 否则以跟踪号为准
+	 */
+	private Long inWarehouseOrderId;
 
 	/**
 	 * 是否是无主件(实际业务逻辑中,无预报则是无主件)
@@ -95,6 +102,14 @@ public class InWarehouseRecord implements Serializable {
 
 	public Long getId() {
 		return id;
+	}
+
+	public Long getInWarehouseOrderId() {
+		return inWarehouseOrderId;
+	}
+
+	public void setInWarehouseOrderId(Long inWarehouseOrderId) {
+		this.inWarehouseOrderId = inWarehouseOrderId;
 	}
 
 	public void setId(Long id) {

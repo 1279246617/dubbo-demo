@@ -13,9 +13,19 @@ public class Sku implements Serializable {
 	private Double skuUnitPrice;
 	
 	private String skuPriceCurrency;
+	
+	/**
+	 * sku 入库数量
+	 */
+	private Integer skuInBoundQty;
+	
+	/**
+	 * 入库时间
+	 */
+	private String skuBoundTime;
 
 	/**
-	 * 入库数量
+	 * 预报数量
 	 */
 	private Integer skuQty;
 
@@ -47,8 +57,24 @@ public class Sku implements Serializable {
 		return skuPriceCurrency;
 	}
 
+	public Integer getSkuInBoundQty() {
+		return skuInBoundQty;
+	}
+
+	public void setSkuInBoundQty(Integer skuInBoundQty) {
+		this.skuInBoundQty = skuInBoundQty;
+	}
+
 	public void setSkuPriceCurrency(String skuPriceCurrency) {
 		this.skuPriceCurrency = skuPriceCurrency;
+	}
+
+	public String getSkuBoundTime() {
+		return skuBoundTime;
+	}
+
+	public void setSkuBoundTime(String skuBoundTime) {
+		this.skuBoundTime = skuBoundTime;
 	}
 
 	public void setSkuName(String skuName) {
