@@ -231,7 +231,7 @@ public class InWarehouseRecordDaoImpl implements IInWarehouseRecordDao {
 	 */
 	@Override
 	public List<Long> findCallbackUnSuccessRecordId() {
-		String sql = "select id from w_s_in_warehouse_record where callback_is_success = 'N' or  callback_is_success is null";
+		String sql = "select id from w_s_in_warehouse_record where user_id_of_customer is not null and (callback_is_success = 'N' or  callback_is_success is null)";
 		List<Long> recordIdList = jdbcTemplate.queryForList(sql, Long.class);
 		return recordIdList;
 	}

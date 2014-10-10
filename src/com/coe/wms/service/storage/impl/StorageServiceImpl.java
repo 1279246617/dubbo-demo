@@ -295,14 +295,13 @@ public class StorageServiceImpl implements IStorageService {
 
 		map.put(Constant.STATUS, Constant.FAIL);
 		// 缺少关键字段
-		// if (StringUtil.isNull(logisticsInterface) ||
-		// StringUtil.isNull(msgSource) || StringUtil.isNull(dataDigest)
-		// || StringUtil.isNull(msgType) || StringUtil.isNull(msgId)) {
-		// response.setReason(ErrorCode.S12_CODE);
-		// response.setReasonDesc("缺少关键字段,请检查以下字段:logistics_interface,data_digest,msg_type,msg_id");
-		// map.put(Constant.MESSAGE, XmlUtil.toXml(Responses.class, responses));
-		// return map;
-		// }
+		if (StringUtil.isNull(logisticsInterface) || StringUtil.isNull(msgSource) || StringUtil.isNull(dataDigest)
+				|| StringUtil.isNull(msgType) || StringUtil.isNull(msgId)) {
+			response.setReason(ErrorCode.S12_CODE);
+			response.setReasonDesc("缺少关键字段,请检查以下字段:logistics_interface,data_digest,msg_type,msg_id");
+			map.put(Constant.MESSAGE, XmlUtil.toXml(Responses.class, responses));
+			return map;
+		}
 
 		// 根据msgSource 找到客户(token),找到密钥
 		User user = userDao.findUserByMsgSource(msgSource);
@@ -315,14 +314,13 @@ public class StorageServiceImpl implements IStorageService {
 
 		// 验证内容和签名字符串
 		String md5dataDigest = StringUtil.encoderByMd5(logisticsInterface + user.getToken());
-		// if (!StringUtil.isEqual(md5dataDigest, dataDigest)) {
-		// // 签名错误
-		// response.setReason(ErrorCode.S02_CODE);
-		// response.setReasonDesc("收到消息签名:" + dataDigest + " 系统计算消息签名:" +
-		// md5dataDigest);
-		// map.put(Constant.MESSAGE, XmlUtil.toXml(Responses.class, responses));
-		// return map;
-		// }
+		if (!StringUtil.isEqual(md5dataDigest, dataDigest)) {
+			// 签名错误
+			response.setReason(ErrorCode.S02_CODE);
+			response.setReasonDesc("收到消息签名:" + dataDigest + " 系统计算消息签名:" + md5dataDigest);
+			map.put(Constant.MESSAGE, XmlUtil.toXml(Responses.class, responses));
+			return map;
+		}
 		map.put(Constant.STATUS, Constant.SUCCESS);
 		map.put(Constant.USER_ID_OF_CUSTOMER, "" + user.getId());
 		return map;

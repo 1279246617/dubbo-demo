@@ -1,11 +1,14 @@
 package com.coe.wms.task.impl;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.log4j.Logger;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -22,6 +25,7 @@ import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderItemDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderReceiverDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderSenderDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderStatusDao;
+import com.coe.wms.model.user.User;
 import com.coe.wms.model.warehouse.Warehouse;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecord;
@@ -38,6 +42,8 @@ import com.coe.wms.pojo.api.warehouse.SkuDetail;
 import com.coe.wms.task.IStorageTask;
 import com.coe.wms.util.Constant;
 import com.coe.wms.util.DateUtil;
+import com.coe.wms.util.HttpUtil;
+import com.coe.wms.util.StringUtil;
 import com.coe.wms.util.XmlUtil;
 
 @Component
@@ -97,22 +103,16 @@ public class StorageTaskImpl implements IStorageTask {
 		for (int i = 0; i < recordIdList.size(); i++) {
 			Long recordId = recordIdList.get(i);
 			InWarehouseRecord inWarehouseRecord = inWarehouseRecordDao.getInWarehouseRecordById(recordId);
-
 			// 仓库
 			Warehouse warehouse = warehouseDao.getWarehouseById(inWarehouseRecord.getWarehouseId());
-
 			// 大包跟踪号
 			String trackingNo = inWarehouseRecord.getPackageTrackingNo();
-
 			InWarehouseRecordItem recordItemParam = new InWarehouseRecordItem();
 			recordItemParam.setInWarehouseRecordId(recordId);
 			// 入库明细
 			List<InWarehouseRecordItem> recordItemList = inWarehouseRecordItemDao.findInWarehouseRecordItem(recordItemParam, null, null);
-
 			LogisticsEventsRequest logisticsEventsRequest = new LogisticsEventsRequest();
-			//
 			LogisticsEvent logisticsEvent = new LogisticsEvent();
-
 			// 事件头
 			EventHeader eventHeader = new EventHeader();
 			eventHeader.setEventType(EventType.WMS_SKU_STOCKIN_INFO);
@@ -121,14 +121,11 @@ public class StorageTaskImpl implements IStorageTask {
 			eventHeader.setEventSource(warehouse.getWarehouseNo());
 			// CP_PARTNERFLAT 为 顺丰文档指定
 			eventHeader.setEventTarget("CP_PARTNERFLAT");
-
 			logisticsEvent.setEventHeader(eventHeader);
-
 			// 事件body
 			EventBody eventBody = new EventBody();
 			// 物流详情
 			LogisticsDetail logisticsDetail = new LogisticsDetail();
-
 			List<LogisticsOrder> logisticsOrders = new ArrayList<LogisticsOrder>();
 			LogisticsOrder logisticsOrder = new LogisticsOrder();
 			// 对应入库订单
@@ -165,9 +162,34 @@ public class StorageTaskImpl implements IStorageTask {
 			logisticsEventsRequest.setLogisticsEvent(logisticsEvent);
 
 			String xml = XmlUtil.toXml(LogisticsEventsRequest.class, logisticsEventsRequest);
-			logger.info("回传SKU入库信息: xml=" + xml);
+			User user = userDao.getUserById(inWarehouseRecord.getUserIdOfCustomer());
+
+			String msgSource = user.getOppositeMsgSource();
+			List<BasicNameValuePair> basicNameValuePairs = new ArrayList<BasicNameValuePair>();
+			basicNameValuePairs.add(new BasicNameValuePair("logistics_interface", xml));
+			// 仓库编号
+			basicNameValuePairs.add(new BasicNameValuePair("logistics_provider_id", warehouse.getWarehouseNo()));
+			basicNameValuePairs.add(new BasicNameValuePair("msg_type", EventType.WMS_SKU_STOCKIN_INFO));
+			basicNameValuePairs.add(new BasicNameValuePair("msg_source", msgSource));
+			String dataDigest = StringUtil.encoderByMd5(xml + user.getOppositeToken());
+			basicNameValuePairs.add(new BasicNameValuePair("data_digest", dataDigest));
+			basicNameValuePairs.add(new BasicNameValuePair("version", "1.0"));
 			
-			
+			logger.info("回传SKU入库信息: logistics_interface=" + xml);
+			logger.info("回传SKU入库信息: logistics_provider_id=" + warehouse.getWarehouseNo());
+			logger.info("回传SKU入库信息: msg_type=" + EventType.WMS_SKU_STOCKIN_INFO);
+			logger.info("回传SKU入库信息: msg_source=" + msgSource);
+			logger.info("回传SKU入库信息: data_digest=" + dataDigest);
+
+			String url = "http://115.29.16.189/m.api?_mt=lp.callback";
+			try {
+				String response = HttpUtil.postRequest(url, basicNameValuePairs);
+				logger.info("顺丰返回:" + response);
+			} catch (ClientProtocolException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 }
