@@ -12,9 +12,9 @@ public interface IOutWarehouseOrderDao {
 
 	public OutWarehouseOrder getOutWarehouseOrderById(Long outWarehouseOrderId);
 
-	public List<OutWarehouseOrder> findOutWarehouseOrder(OutWarehouseOrder outWarehouseOrder,
-			Map<String, String> moreParam, Pagination page);
+	public List<OutWarehouseOrder> findOutWarehouseOrder(OutWarehouseOrder outWarehouseOrder, Map<String, String> moreParam, Pagination page);
 
 	public Long countOutWarehouseOrder(OutWarehouseOrder outWarehouseOrder, Map<String, String> moreParam);
-
+	
+	public int updateOutWarehouseOrderStatus(Long orderId, String newStatus);
 }

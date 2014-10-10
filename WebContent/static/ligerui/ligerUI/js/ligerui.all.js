@@ -8960,6 +8960,17 @@
             }
             return arr;
         },
+        getRows: function ()
+        {
+            var arr = [];
+            for (var i in this.records)
+            {
+                var o = this.records[i];
+                if (o['__id'] in this.records)
+                    arr.push(o);
+            }
+            return arr;
+        },
         getSelectedRowObj: function ()
         {
             for (var i in this.selected)

@@ -326,7 +326,7 @@ public class Storage {
 	@ResponseBody
 	@RequestMapping(value = "/saveInWarehouseRecord", method = RequestMethod.POST)
 	public String saveInWarehouseRecord(HttpServletRequest request, String trackingNo, String userLoginName, String isUnKnowCustomer,
-			String remark,Long warehouseId) throws IOException {
+			String remark, Long warehouseId) throws IOException {
 		logger.info("trackingNo:" + trackingNo + " userLoginName:" + userLoginName + " isUnKnowCustomer:" + isUnKnowCustomer + "  remark:"
 				+ remark);
 		// 操作员
@@ -335,7 +335,7 @@ public class Storage {
 		map.put(Constant.STATUS, Constant.FAIL);
 		// 校验和保存
 		Map<String, String> serviceResult = storageService.saveInWarehouseRecord(trackingNo, userLoginName, isUnKnowCustomer, remark,
-				userIdOfOperator,warehouseId);
+				userIdOfOperator, warehouseId);
 		// 成功,返回id
 		map.put("id", serviceResult.get("id"));
 		// 失败
@@ -523,7 +523,7 @@ public class Storage {
 		}
 		param.setWarehouseId(warehouseId);
 		param.setBatchNo(batchNo);
-		
+
 		// 更多参数
 		Map<String, String> moreParam = new HashMap<String, String>();
 		moreParam.put("createdTimeStart", createdTimeStart);
@@ -533,6 +533,23 @@ public class Storage {
 		map.put("Rows", pagination.rows);
 		map.put("Total", pagination.total);
 		return GsonUtil.toJson(map);
+	}
+
+	/**
+	 * 
+	 * 审核出库订单
+	 * 
+	 * checkResult:1 审核通过 2审核不通过
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/checkOutWarehouseOrder")
+	public String checkOutWarehouseOrder(HttpServletRequest request, String orderIds, Integer checkResult) throws IOException {
+		HttpSession session = request.getSession();
+		// 当前操作员
+		Long userIdOfOperator = (Long) session.getAttribute(SessionConstant.USER_ID);
+		logger.info("审核出库 操作员id:" + userIdOfOperator + " checkResult:" + checkResult + " 订单:" + orderIds);
+		Map<String, String> checkResultMap = storageService.checkOutWarehouseOrder(orderIds, checkResult, userIdOfOperator);
+		return GsonUtil.toJson(checkResultMap);
 	}
 
 }

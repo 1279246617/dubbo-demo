@@ -1,7 +1,6 @@
 package com.coe.wms.dao.warehouse.storage.impl;
 
 import java.sql.Connection;
-
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Date;
@@ -179,5 +178,11 @@ public class OutWarehouseOrderDaoImpl implements IOutWarehouseOrderDao {
 
 	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
+	}
+	
+	@Override
+	public int updateOutWarehouseOrderStatus(Long orderId, String newStatus) {
+		String sql = "update w_s_out_warehouse_order set status = '" + newStatus + "' where id = " + orderId;
+		return jdbcTemplate.update(sql);
 	}
 }
