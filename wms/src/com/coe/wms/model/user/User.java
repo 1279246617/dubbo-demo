@@ -91,6 +91,11 @@ public class User implements Serializable {
 	private String oppositeMsgSource;
 
 	/**
+	 * 我方调用对方(客户)系统(sf) url
+	 */
+	private String oppositeServiceUrl;
+	
+	/**
 	 * 电话
 	 */
 	private String phone;
@@ -119,6 +124,14 @@ public class User implements Serializable {
 
 	public void setLoginName(String loginName) {
 		this.loginName = loginName;
+	}
+
+	public String getOppositeServiceUrl() {
+		return oppositeServiceUrl;
+	}
+
+	public void setOppositeServiceUrl(String oppositeServiceUrl) {
+		this.oppositeServiceUrl = oppositeServiceUrl;
 	}
 
 	public String getPassword() {

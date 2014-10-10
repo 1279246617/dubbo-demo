@@ -864,10 +864,12 @@ public class StorageServiceImpl implements IStorageService {
 			if (StringUtil.isNull(orderId)) {
 				continue;
 			}
-			//查询订单的当前状态
-			
-			
-			
+			// 查询订单的当前状态
+			String oldStatus = outWarehouseOrderDao.getOutWarehouseOrderStatus(Long.valueOf(orderId));
+			// 如果不是等待审核状态的订单,直接跳过
+			if (!StringUtil.isEqual(oldStatus, OurWareHouseStatusCode.WWC)) {
+				continue;
+			}
 			// COE审核通过,等待称重 Wait Warehouse Weighing
 			int updateResult = outWarehouseOrderDao.updateOutWarehouseOrderStatus(Long.valueOf(orderId), OurWareHouseStatusCode.WWW);
 			if (updateResult < 1) {

@@ -91,7 +91,7 @@ public class InWarehouseRecord implements Serializable {
 	private String remark;
 	
 	/**
-	 * 回调是否成功
+	 * 回调是否成功 Y 成功 N或者空失败
 	 */
 	private String callbackIsSuccess;
 	
