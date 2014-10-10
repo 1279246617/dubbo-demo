@@ -173,16 +173,22 @@ public class OutWarehouseOrderDaoImpl implements IOutWarehouseOrderDao {
 		}
 		String sql = sb.toString();
 		logger.info("统计出库订单sql:" + sql);
-		return jdbcTemplate.queryForLong(sql);
+		return jdbcTemplate.queryForObject(sql, Long.class);
 	}
 
 	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
 	}
-	
+
 	@Override
 	public int updateOutWarehouseOrderStatus(Long orderId, String newStatus) {
 		String sql = "update w_s_out_warehouse_order set status = '" + newStatus + "' where id = " + orderId;
 		return jdbcTemplate.update(sql);
+	}
+
+	@Override
+	public String getOutWarehouseOrderStatus(Long orderId) {
+		String sql = "select status from w_s_out_warehouse_order where id = " + orderId;
+		return jdbcTemplate.queryForObject(sql, String.class);
 	}
 }

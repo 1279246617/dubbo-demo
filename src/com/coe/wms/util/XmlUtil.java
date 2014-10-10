@@ -28,7 +28,7 @@ public class XmlUtil {
 			Unmarshaller um = context.createUnmarshaller();
 			return um.unmarshal(inputStream);
 		} catch (JAXBException e) {
-			logger.error("xml :" + xml + "  转对象 异常:" + e, e);
+			logger.error("xml :" + xml + "  转对象 异常:" + e.getMessage());
 		} finally {
 			try {
 				inputStream.close();
@@ -54,7 +54,7 @@ public class XmlUtil {
 			m.marshal(object, output);
 			return output.toString();
 		} catch (JAXBException e) {
-			logger.error("对象转xml 异常:" + e, e);
+			logger.error("对象转xml 异常:" + e.getMessage());
 		} finally {
 			try {
 				output.close();

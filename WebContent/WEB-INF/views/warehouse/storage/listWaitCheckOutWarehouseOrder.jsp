@@ -173,8 +173,14 @@
 	<script type="text/javascript" src="${baseUrl}/static/jquery/jquery.showMessage.js"></script>
 	<script type="text/javascript" src="${baseUrl}/static/ligerui/ligerUI/js/core/base.js"></script>
 	<script type="text/javascript" src="${baseUrl}/static/ligerui/ligerUI/js/plugins/ligeruiPatch.js"></script>
+	
+	<script type="text/javascript" src="${baseUrl}/static/lhgdialog/prettify/prettify.js"></script>
+	<script type="text/javascript" src="${baseUrl}/static/lhgdialog/prettify/lhgdialog.js"></script>
+	
 	<script type="text/javascript" src="${baseUrl}/static/calendar/lhgcalendar.min.js"></script>
 	<script type="text/javascript" src="${baseUrl}/static/calendar/prettify.js"></script>
 	<script type="text/javascript" src="${baseUrl}/static/ligerui/ligerUI/js/ligerui.all.js"></script>
+	
+	<script type="text/javascript" src="${baseUrl}/static/js/warehouse/listOutWarehouseOrder.js"></script>
 </body>
 </html>

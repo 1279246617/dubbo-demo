@@ -1,13 +1,11 @@
 package com.coe.wms.task.impl;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
 
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.log4j.Logger;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -37,6 +35,8 @@ import com.coe.wms.pojo.api.warehouse.LogisticsDetail;
 import com.coe.wms.pojo.api.warehouse.LogisticsEvent;
 import com.coe.wms.pojo.api.warehouse.LogisticsEventsRequest;
 import com.coe.wms.pojo.api.warehouse.LogisticsOrder;
+import com.coe.wms.pojo.api.warehouse.Response;
+import com.coe.wms.pojo.api.warehouse.Responses;
 import com.coe.wms.pojo.api.warehouse.Sku;
 import com.coe.wms.pojo.api.warehouse.SkuDetail;
 import com.coe.wms.task.IStorageTask;
@@ -95,7 +95,7 @@ public class StorageTaskImpl implements IStorageTask {
 	/**
 	 * 发送仓配入库订单信息给客户
 	 */
-//	@Scheduled(cron = "0 0/1 8-18 * * ? ")
+	 @Scheduled(cron = "0 0/1 8-23 * * ? ")
 	// 早上8点到下午6点,每分钟
 	// @Scheduled(cron="0 0/30 8-18 * * ? ") //早上8点到下午6点,每半小时一次
 	@Override
@@ -179,21 +179,35 @@ public class StorageTaskImpl implements IStorageTask {
 			String dataDigest = StringUtil.encoderByMd5(xml + user.getOppositeToken());
 			basicNameValuePairs.add(new BasicNameValuePair("data_digest", dataDigest));
 			basicNameValuePairs.add(new BasicNameValuePair("version", "1.0"));
-
+			String url = user.getOppositeServiceUrl();
+			logger.info("回传SKU入库信息: url=" + url);
 			logger.info("回传SKU入库信息: logistics_interface=" + xml);
-			logger.info("回传SKU入库信息: logistics_provider_id=" + warehouse.getWarehouseNo());
-			logger.info("回传SKU入库信息: msg_type=" + serviceName);
-			logger.info("回传SKU入库信息: msg_source=" + msgSource);
-			logger.info("回传SKU入库信息: data_digest=" + dataDigest);
-
-			String url = "http://115.29.16.189/m.api?_mt=lp.callback";
+			logger.info("回传SKU入库信息: data_digest=" + dataDigest + " msg_source=" + msgSource + " msg_type=" + serviceName
+					+ " logistics_provider_id=" + warehouse.getWarehouseNo());
 			try {
 				String response = HttpUtil.postRequest(url, basicNameValuePairs);
 				logger.info("顺丰返回:" + response);
-			} catch (ClientProtocolException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
+				
+				inWarehouseRecord.setCallbackCount(inWarehouseRecord.getCallbackCount() == null ? 0: inWarehouseRecord.getCallbackCount() + 1);
+				Responses responses = (Responses) XmlUtil.toObject(response, Responses.class);
+				if(responses == null){
+					logger.error("回传SKU入库信息 返回信息无法转换成Responses对象");
+					continue;
+				}
+				List<Response> responseList = responses.getResponseItems();
+				if (responseList != null && responseList.size() > 0) {
+					if (StringUtil.isEqualIgnoreCase(responseList.get(0).getSuccess(), Constant.TRUE)) {
+						inWarehouseRecord.setCallbackIsSuccess(Constant.Y);
+					} else {
+						inWarehouseRecord.setCallbackIsSuccess(Constant.N);
+					}
+					// 更新入库记录的Callback 次数和成功状态
+					inWarehouseRecordDao.updateInWarehouseRecordCallback(inWarehouseRecord);
+				} else {
+					logger.error("回传SKU入库信息 返回无指明成功与否");
+				}
+			} catch (Exception e) {
+				logger.error("发送回传SKU入库时发生异常:" + e.getMessage());
 			}
 		}
 	}
