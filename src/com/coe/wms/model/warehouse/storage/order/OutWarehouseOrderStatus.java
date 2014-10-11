@@ -21,8 +21,17 @@ public class OutWarehouseOrderStatus implements Serializable {
 		 * COE审核通过,等待称重 Wait Warehouse Weighing
 		 */
 		public static final String WWW = "WWW";
+		
 		/**
-		 * COE称重,并已经回传出库重量,等待客户确认 Wait Customer Check
+		 * COE已称重,等待回传称重给客户
+		 * Wait Send Weighing
+		 */
+		public static final String WSW = "WSW";
+		
+		/**
+		 * COE称重,并已经回传出库重量
+		 * 
+		 * 等待客户确认 Wait Customer Check
 		 */
 		public static final String WCC = "WCC";
 		/**
