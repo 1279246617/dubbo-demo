@@ -3,6 +3,7 @@ package com.coe.wms.model.unit;
 import java.io.Serializable;
 
 import com.coe.wms.util.NumberUtil;
+import com.coe.wms.util.StringUtil;
 
 public class Weight implements Serializable {
 
@@ -61,5 +62,15 @@ public class Weight implements Serializable {
 	 */
 	public static double gTurnToKg(double g) {
 		return NumberUtil.div(g, 1000.0, 3);
+	}
+
+	public static double turnToG(double weight, String unitCode) {
+		if (StringUtil.isEqualIgnoreCase(unitCode, WeightCode.G)) {
+			return weight;
+		}
+		if (StringUtil.isEqualIgnoreCase(unitCode, WeightCode.KG)) {
+			return weight * 1000;
+		}
+		return weight;
 	}
 }

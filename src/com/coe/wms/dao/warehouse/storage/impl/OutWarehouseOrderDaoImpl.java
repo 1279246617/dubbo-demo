@@ -10,6 +10,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.simple.ParameterizedBeanPropertyRowMapper;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Repository;
 import com.coe.wms.dao.datasource.DataSource;
 import com.coe.wms.dao.datasource.DataSourceCode;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderDao;
+import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrder;
 import com.coe.wms.util.DateUtil;
 import com.coe.wms.util.Pagination;
@@ -65,8 +67,10 @@ public class OutWarehouseOrderDaoImpl implements IOutWarehouseOrderDao {
 
 	@Override
 	public OutWarehouseOrder getOutWarehouseOrderById(Long outWarehouseOrderId) {
-
-		return null;
+		String sql = "select id,warehouse_id,user_id_of_customer,user_id_of_operator,shipway_code,created_time,status,remark,customer_reference_no,callback_is_success,callback_count,out_warehouse_weight,weight_code from w_s_out_warehouse_order where id ="
+				+ outWarehouseOrderId;
+		OutWarehouseOrder order = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<OutWarehouseOrder>(OutWarehouseOrder.class));
+		return order;
 	}
 
 	/**
@@ -229,4 +233,18 @@ public class OutWarehouseOrderDaoImpl implements IOutWarehouseOrderDao {
 		List<Long> orderIdList = jdbcTemplate.queryForList(sql, Long.class);
 		return orderIdList;
 	}
+
+	/**
+	 * 更新回调顺丰状态
+	 * 
+	 * @param outWarehouseOrder
+	 * @return
+	 */
+	@Override
+	public int updateOutWarehouseOrderCallback(OutWarehouseOrder outWarehouseOrder) {
+		String sql = "update w_s_out_warehouse_order set callback_is_success='" + outWarehouseOrder.getCallbackIsSuccess()
+				+ "' ,callback_count = " + outWarehouseOrder.getCallbackCount() + " where id=" + outWarehouseOrder.getId();
+		return jdbcTemplate.update(sql);
+	}
+
 }
