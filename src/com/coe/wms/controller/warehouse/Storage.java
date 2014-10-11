@@ -559,4 +559,22 @@ public class Storage {
 		return GsonUtil.toJson(checkResultMap);
 	}
 
+	/**
+	 * 出库订单收货
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/outWarehouse", method = RequestMethod.GET)
+	public ModelAndView outWarehouse(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		HttpSession session = request.getSession();
+		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
+		ModelAndView view = new ModelAndView();
+		view.addObject("userId", userId);
+		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
+		view.setViewName("warehouse/storage/outWarehouse");
+		return view;
+	}
 }

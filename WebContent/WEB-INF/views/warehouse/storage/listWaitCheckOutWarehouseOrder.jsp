@@ -42,8 +42,8 @@
                			<input type="text" name="userLoginName" data-provide="typeahead"  id="userLoginName" style="width:93px;" title="请输入客户登录名" />
                		</span>
                		
-					<span class="pull-left" style="width:165px;">
-						单号
+					<span class="pull-left" style="width:175px;">
+						客户单号
 						<input type="text"  name="customerReferenceNo"  id="customerReferenceNo"   style="width:105px;"/>
 					</span>
                		
