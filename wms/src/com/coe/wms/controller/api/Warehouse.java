@@ -98,7 +98,7 @@ public class Warehouse {
 			}
 
 			if (StringUtil.isEqualIgnoreCase(EventType.LOGISTICS_SEND_SKU, eventType)) { // 确认创建出库订单
-				responseXml = storageService.warehouseInterfaceSaveInWarehouseOrder(eventBody, userIdOfCustomer, eventTarget);
+				responseXml = storageService.warehouseInterfaceConfirmOutWarehouseOrder(eventBody, userIdOfCustomer, eventTarget);
 			}
 
 			logger.info("eventType:" + eventType + "  responseXml:" + responseXml);
