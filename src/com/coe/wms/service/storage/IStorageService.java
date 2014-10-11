@@ -9,6 +9,7 @@ import com.coe.wms.exception.ServiceException;
 import com.coe.wms.model.user.User;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrder;
+import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecord;
 import com.coe.wms.pojo.api.warehouse.EventBody;
 import com.coe.wms.util.Pagination;
@@ -162,7 +163,7 @@ public interface IStorageService {
 	 */
 	public String warehouseInterfaceSaveOutWarehouseOrder(EventBody eventBody, Long userIdOfCustomer, String warehouseNo)
 			throws ServiceException;
-	
+
 	/**
 	 * 审核出库订单
 	 * 
@@ -171,5 +172,13 @@ public interface IStorageService {
 	 * @return
 	 * @throws ServiceException
 	 */
-	public Map<String, String> checkOutWarehouseOrder(String orderIds, Integer checkResult,Long userIdOfOperator ) throws ServiceException;
+	public Map<String, String> checkOutWarehouseOrder(String orderIds, Integer checkResult, Long userIdOfOperator) throws ServiceException;
+
+	/**
+	 * 获取所有出库状态
+	 * 
+	 * @return
+	 * @throws ServiceException
+	 */
+	public List<OutWarehouseOrderStatus> findAllOutWarehouseOrderStatus() throws ServiceException;
 }

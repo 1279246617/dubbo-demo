@@ -36,7 +36,7 @@ import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderItem;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderReceiver;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderSender;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus;
-import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus.OurWareHouseStatusCode;
+import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus.OutWarehouseOrderStatusCode;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecord;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecordItem;
 import com.coe.wms.pojo.api.warehouse.ErrorCode;
@@ -477,8 +477,7 @@ public class StorageServiceImpl implements IStorageService {
 	 */
 	@Override
 	public Pagination getOutWarehouseOrderData(OutWarehouseOrder outWarehouseOrder, Map<String, String> moreParam, Pagination pagination) {
-		List<OutWarehouseOrder> outWarehouseOrderList = outWarehouseOrderDao
-				.findOutWarehouseOrder(outWarehouseOrder, moreParam, pagination);
+		List<OutWarehouseOrder> outWarehouseOrderList = outWarehouseOrderDao.findOutWarehouseOrder(outWarehouseOrder, moreParam, pagination);
 		List<Object> list = new ArrayList<Object>();
 		for (OutWarehouseOrder order : outWarehouseOrderList) {
 			Map<String, Object> map = new HashMap<String, Object>();
@@ -725,7 +724,7 @@ public class StorageServiceImpl implements IStorageService {
 			OutWarehouseOrder outWarehouseOrder = new OutWarehouseOrder();
 			outWarehouseOrder.setCreatedTime(System.currentTimeMillis());
 			outWarehouseOrder.setRemark(logisticsOrder.getLogisticsRemark());
-			outWarehouseOrder.setStatus(OurWareHouseStatusCode.WWC);
+			outWarehouseOrder.setStatus(OutWarehouseOrderStatusCode.WWC);
 			outWarehouseOrder.setUserIdOfCustomer(userIdOfCustomer);
 			outWarehouseOrder.setWarehouseId(warehouse.getId());
 			// 客户参考号,用于后面客户对该出库订单进行修改,确认等,以及回传出库状态
@@ -867,16 +866,21 @@ public class StorageServiceImpl implements IStorageService {
 			// 查询订单的当前状态
 			String oldStatus = outWarehouseOrderDao.getOutWarehouseOrderStatus(Long.valueOf(orderId));
 			// 如果不是等待审核状态的订单,直接跳过
-			if (!StringUtil.isEqual(oldStatus, OurWareHouseStatusCode.WWC)) {
+			if (!StringUtil.isEqual(oldStatus, OutWarehouseOrderStatusCode.WWC)) {
 				continue;
 			}
 			// COE审核通过,等待称重 Wait Warehouse Weighing
-			int updateResult = outWarehouseOrderDao.updateOutWarehouseOrderStatus(Long.valueOf(orderId), OurWareHouseStatusCode.WWW);
+			int updateResult = outWarehouseOrderDao.updateOutWarehouseOrderStatus(Long.valueOf(orderId), OutWarehouseOrderStatusCode.WWW);
 			if (updateResult < 1) {
 				logger.warn("更新出库订单为审核通过时,得到结果0, orderId:" + orderId);
 			}
 		}
 		map.put(Constant.STATUS, Constant.SUCCESS);
 		return map;
+	}
+
+	@Override
+	public List<OutWarehouseOrderStatus> findAllOutWarehouseOrderStatus() throws ServiceException {
+		return outWarehouseOrderStatusDao.findAllOutWarehouseOrderStatus();
 	}
 }

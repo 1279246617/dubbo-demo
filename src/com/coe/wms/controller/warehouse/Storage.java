@@ -21,6 +21,8 @@ import com.coe.wms.controller.Application;
 import com.coe.wms.model.user.User;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrder;
+import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus;
+import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus.OutWarehouseOrderStatusCode;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecord;
 import com.coe.wms.service.storage.IStorageService;
 import com.coe.wms.service.user.IUserService;
@@ -137,6 +139,8 @@ public class Storage {
 		ModelAndView view = new ModelAndView();
 		view.addObject("userId", userId);
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
+		List<OutWarehouseOrderStatus> outWarehouseOrderStatusList = storageService.findAllOutWarehouseOrderStatus();
+		view.addObject("outWarehouseOrderStatusList", outWarehouseOrderStatusList);
 		view.addObject("todayStart", DateUtil.getTodayStart());
 		view.setViewName("warehouse/storage/listOutWarehouseOrder");
 		return view;
@@ -155,8 +159,8 @@ public class Storage {
 	@ResponseBody
 	@RequestMapping(value = "/getOutWarehouseOrderData", method = RequestMethod.POST)
 	public String getOutWarehouseOrderData(HttpServletRequest request, String sortorder, String sortname, int page, int pagesize,
-			String userLoginName, Long warehouseId, String customerReferenceNo, String createdTimeStart, String createdTimeEnd)
-			throws IOException {
+			String userLoginName, Long warehouseId, String customerReferenceNo, String createdTimeStart, String createdTimeEnd,
+			String status) throws IOException {
 		if (StringUtil.isNotNull(createdTimeStart) && createdTimeStart.contains(",")) {
 			createdTimeStart = createdTimeStart.substring(createdTimeStart.lastIndexOf(",") + 1, createdTimeStart.length());
 		}
@@ -170,6 +174,7 @@ public class Storage {
 		pagination.sortOrder = sortorder;
 
 		OutWarehouseOrder param = new OutWarehouseOrder();
+		param.setStatus(status);
 		// 客户单号
 		param.setCustomerReferenceNo(customerReferenceNo);
 		// 客户帐号
@@ -205,6 +210,7 @@ public class Storage {
 		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
 		ModelAndView view = new ModelAndView();
 		view.addObject("userId", userId);
+		view.addObject("todayStart", DateUtil.getTodayStart());
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
 		view.setViewName("warehouse/storage/listWaitCheckOutWarehouseOrder");
 		return view;
@@ -222,8 +228,8 @@ public class Storage {
 	@ResponseBody
 	@RequestMapping(value = "/getWaitCheckOutWarehouseOrderData", method = RequestMethod.POST)
 	public String getWaitCheckOutWarehouseOrderData(HttpServletRequest request, String sortorder, String sortname, int page, int pagesize,
-			String userLoginName, Long warehouseId, String customerReferenceNo, String createdTimeStart, String createdTimeEnd)
-			throws IOException {
+			String userLoginName, Long warehouseId, String customerReferenceNo, String createdTimeStart, String createdTimeEnd,
+			String status) throws IOException {
 		if (StringUtil.isNotNull(createdTimeStart) && createdTimeStart.contains(",")) {
 			createdTimeStart = createdTimeStart.substring(createdTimeStart.lastIndexOf(",") + 1, createdTimeStart.length());
 		}
@@ -237,6 +243,7 @@ public class Storage {
 		pagination.sortOrder = sortorder;
 
 		OutWarehouseOrder param = new OutWarehouseOrder();
+		param.setStatus(OutWarehouseOrderStatusCode.WWC);
 		// 客户单号
 		param.setCustomerReferenceNo(customerReferenceNo);
 		// 客户帐号

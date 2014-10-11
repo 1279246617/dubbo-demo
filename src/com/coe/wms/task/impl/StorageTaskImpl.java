@@ -95,7 +95,7 @@ public class StorageTaskImpl implements IStorageTask {
 	/**
 	 * 发送仓配入库订单信息给客户
 	 */
-	 @Scheduled(cron = "0 0/1 8-23 * * ? ")
+//	 @Scheduled(cron = "0 0/1 8-23 * * ? ")
 	// 早上8点到下午6点,每分钟
 	// @Scheduled(cron="0 0/30 8-18 * * ? ") //早上8点到下午6点,每半小时一次
 	@Override
@@ -201,11 +201,11 @@ public class StorageTaskImpl implements IStorageTask {
 					} else {
 						inWarehouseRecord.setCallbackIsSuccess(Constant.N);
 					}
-					// 更新入库记录的Callback 次数和成功状态
-					inWarehouseRecordDao.updateInWarehouseRecordCallback(inWarehouseRecord);
 				} else {
 					logger.error("回传SKU入库信息 返回无指明成功与否");
 				}
+				// 更新入库记录的Callback 次数和成功状态
+				inWarehouseRecordDao.updateInWarehouseRecordCallback(inWarehouseRecord);
 			} catch (Exception e) {
 				logger.error("发送回传SKU入库时发生异常:" + e.getMessage());
 			}
