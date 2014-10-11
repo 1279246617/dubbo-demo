@@ -41,7 +41,7 @@ public class OutWarehouseOrderDaoImpl implements IOutWarehouseOrderDao {
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public long saveOutWarehouseOrder(final OutWarehouseOrder order) {
-		final String sql = "insert into w_s_out_warehouse_order (warehouse_id,user_id_of_customer,user_id_of_operator,shipway_code,created_time,status,remark,customer_reference_no) values (?,?,?,?,?,?,?,?)";
+		final String sql = "insert into w_s_out_warehouse_order (warehouse_id,user_id_of_customer,user_id_of_operator,shipway_code,created_time,status,remark,customer_reference_no,out_warehouse_weight,weight_code) values (?,?,?,?,?,?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
@@ -54,6 +54,8 @@ public class OutWarehouseOrderDaoImpl implements IOutWarehouseOrderDao {
 				ps.setString(6, order.getStatus());
 				ps.setString(7, order.getRemark());
 				ps.setString(8, order.getCustomerReferenceNo());
+				ps.setDouble(9, order.getOutWarehouseWeight());
+				ps.setString(10, order.getWeightCode());
 				return ps;
 			}
 		}, keyHolder);
@@ -75,7 +77,7 @@ public class OutWarehouseOrderDaoImpl implements IOutWarehouseOrderDao {
 	@Override
 	public List<OutWarehouseOrder> findOutWarehouseOrder(OutWarehouseOrder outWarehouseOrder, Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select id,warehouse_id,user_id_of_customer,user_id_of_operator,shipway_code,created_time,status,remark,customer_reference_no from w_s_out_warehouse_order where 1=1 ");
+		sb.append("select id,warehouse_id,user_id_of_customer,user_id_of_operator,shipway_code,created_time,status,remark,customer_reference_no,callback_is_success,callback_count,out_warehouse_weight,weight_code from w_s_out_warehouse_order where 1=1 ");
 		if (outWarehouseOrder != null) {
 			if (outWarehouseOrder.getId() != null) {
 				sb.append(" and id = " + outWarehouseOrder.getId());
@@ -100,6 +102,18 @@ public class OutWarehouseOrderDaoImpl implements IOutWarehouseOrderDao {
 			}
 			if (StringUtil.isNotNull(outWarehouseOrder.getCustomerReferenceNo())) {
 				sb.append(" and customer_reference_no = '" + outWarehouseOrder.getCustomerReferenceNo() + "' ");
+			}
+			if (StringUtil.isNotNull(outWarehouseOrder.getCallbackIsSuccess())) {
+				sb.append(" and callback_is_success = '" + outWarehouseOrder.getCallbackIsSuccess() + "' ");
+			}
+			if (outWarehouseOrder.getCallbackCount() != null) {
+				sb.append(" and callback_count = " + outWarehouseOrder.getCallbackCount());
+			}
+			if (outWarehouseOrder.getOutWarehouseWeight() != null) {
+				sb.append(" and out_warehouse_weight = " + outWarehouseOrder.getOutWarehouseWeight());
+			}
+			if (outWarehouseOrder.getWeightCode() != null) {
+				sb.append(" and weight_code = " + outWarehouseOrder.getWeightCode());
 			}
 		}
 		if (moreParam != null) {
@@ -156,6 +170,18 @@ public class OutWarehouseOrderDaoImpl implements IOutWarehouseOrderDao {
 			if (StringUtil.isNotNull(outWarehouseOrder.getCustomerReferenceNo())) {
 				sb.append(" and customer_reference_no = '" + outWarehouseOrder.getCustomerReferenceNo() + "' ");
 			}
+			if (StringUtil.isNotNull(outWarehouseOrder.getCallbackIsSuccess())) {
+				sb.append(" and callback_is_success = '" + outWarehouseOrder.getCallbackIsSuccess() + "' ");
+			}
+			if (outWarehouseOrder.getCallbackCount() != null) {
+				sb.append(" and callback_count = " + outWarehouseOrder.getCallbackCount());
+			}
+			if (outWarehouseOrder.getOutWarehouseWeight() != null) {
+				sb.append(" and out_warehouse_weight = " + outWarehouseOrder.getOutWarehouseWeight());
+			}
+			if (outWarehouseOrder.getWeightCode() != null) {
+				sb.append(" and weight_code = " + outWarehouseOrder.getWeightCode());
+			}
 		}
 		if (moreParam != null) {
 			if (moreParam.get("createdTimeStart") != null) {
@@ -190,5 +216,17 @@ public class OutWarehouseOrderDaoImpl implements IOutWarehouseOrderDao {
 	public String getOutWarehouseOrderStatus(Long orderId) {
 		String sql = "select status from w_s_out_warehouse_order where id = " + orderId;
 		return jdbcTemplate.queryForObject(sql, String.class);
+	}
+
+	/**
+	 * 获取回调未成功的记录id
+	 * 
+	 * 1,必须有客户id, 2,必须有重量, 3回调未成功 或未回调
+	 */
+	@Override
+	public List<Long> findCallbackUnSuccessOrderId() {
+		String sql = "select id from w_s_out_warehouse_order where out_warehouse_weight is not null and user_id_of_customer is not null and (callback_is_success = 'N' or  callback_is_success is null)";
+		List<Long> orderIdList = jdbcTemplate.queryForList(sql, Long.class);
+		return orderIdList;
 	}
 }

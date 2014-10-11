@@ -26,6 +26,9 @@ import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderStatusDao;
 import com.coe.wms.model.user.User;
 import com.coe.wms.model.warehouse.Warehouse;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
+import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrder;
+import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus;
+import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus.OutWarehouseOrderStatusCode;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecord;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecordItem;
 import com.coe.wms.pojo.api.warehouse.EventBody;
@@ -95,7 +98,7 @@ public class StorageTaskImpl implements IStorageTask {
 	/**
 	 * 发送仓配入库订单信息给客户
 	 */
-//	 @Scheduled(cron = "0 0/1 8-23 * * ? ")
+	// @Scheduled(cron = "0 0/1 8-23 * * ? ")
 	// 早上8点到下午6点,每分钟
 	// @Scheduled(cron="0 0/30 8-18 * * ? ") //早上8点到下午6点,每半小时一次
 	@Override
@@ -187,10 +190,10 @@ public class StorageTaskImpl implements IStorageTask {
 			try {
 				String response = HttpUtil.postRequest(url, basicNameValuePairs);
 				logger.info("顺丰返回:" + response);
-				
-				inWarehouseRecord.setCallbackCount(inWarehouseRecord.getCallbackCount() == null ? 0: inWarehouseRecord.getCallbackCount() + 1);
+				inWarehouseRecord.setCallbackCount(inWarehouseRecord.getCallbackCount() == null ? 0
+						: inWarehouseRecord.getCallbackCount() + 1);
 				Responses responses = (Responses) XmlUtil.toObject(response, Responses.class);
-				if(responses == null){
+				if (responses == null) {
 					logger.error("回传SKU入库信息 返回信息无法转换成Responses对象");
 					continue;
 				}
@@ -209,6 +212,24 @@ public class StorageTaskImpl implements IStorageTask {
 			} catch (Exception e) {
 				logger.error("发送回传SKU入库时发生异常:" + e.getMessage());
 			}
+		}
+	}
+
+	/**
+	 * 回传出库称重给客户
+	 */
+	@Scheduled(cron = "0 0/1 8-23 * * ? ")
+	@Override
+	public void sendOutWarehouseWeightCustomer() {
+		OutWarehouseOrder param = new OutWarehouseOrder();
+		List<Long> orderIdList = outWarehouseOrderDao.findCallbackUnSuccessOrderId();
+		logger.info("找到待回传SKU出库重量,订单总数:" + orderIdList.size());
+		// 根据id 获取记录
+		for (int i = 0; i < orderIdList.size(); i++) {
+			
+			System.out.println(orderIdList.get(i));
+			
+			
 		}
 	}
 }

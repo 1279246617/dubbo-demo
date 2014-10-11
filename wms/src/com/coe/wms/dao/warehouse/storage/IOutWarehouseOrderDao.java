@@ -19,4 +19,6 @@ public interface IOutWarehouseOrderDao {
 	public int updateOutWarehouseOrderStatus(Long orderId, String newStatus);
 
 	public String getOutWarehouseOrderStatus(Long orderId);
+	
+	public List<Long> findCallbackUnSuccessOrderId();
 }

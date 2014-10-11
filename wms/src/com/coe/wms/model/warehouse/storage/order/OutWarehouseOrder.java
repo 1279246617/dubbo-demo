@@ -60,6 +60,27 @@ public class OutWarehouseOrder implements Serializable {
 	 */
 	private String customerReferenceNo;
 
+	/**
+	 * 回调是否成功 Y 成功 N或者空失败
+	 */
+	private String callbackIsSuccess;
+
+	/**
+	 * 回调次数
+	 */
+	private Integer callbackCount;
+
+	/**
+	 * 出库重量
+	 * 
+	 */
+	private Double outWarehouseWeight;
+
+	/**
+	 * 重量代码 KG/G
+	 */
+	private String weightCode;
+	
 	public Long getId() {
 		return id;
 	}
@@ -72,8 +93,24 @@ public class OutWarehouseOrder implements Serializable {
 		return warehouseId;
 	}
 
+	public String getWeightCode() {
+		return weightCode;
+	}
+
+	public void setWeightCode(String weightCode) {
+		this.weightCode = weightCode;
+	}
+
 	public void setWarehouseId(Long warehouseId) {
 		this.warehouseId = warehouseId;
+	}
+
+	public Double getOutWarehouseWeight() {
+		return outWarehouseWeight;
+	}
+
+	public void setOutWarehouseWeight(Double outWarehouseWeight) {
+		this.outWarehouseWeight = outWarehouseWeight;
 	}
 
 	public String getCustomerReferenceNo() {
@@ -82,6 +119,22 @@ public class OutWarehouseOrder implements Serializable {
 
 	public void setCustomerReferenceNo(String customerReferenceNo) {
 		this.customerReferenceNo = customerReferenceNo;
+	}
+
+	public String getCallbackIsSuccess() {
+		return callbackIsSuccess;
+	}
+
+	public void setCallbackIsSuccess(String callbackIsSuccess) {
+		this.callbackIsSuccess = callbackIsSuccess;
+	}
+
+	public Integer getCallbackCount() {
+		return callbackCount;
+	}
+
+	public void setCallbackCount(Integer callbackCount) {
+		this.callbackCount = callbackCount;
 	}
 
 	public Long getCreatedTime() {
