@@ -22,7 +22,7 @@ public class OutWarehouseOrderStatus implements Serializable {
 		 */
 		public static final String WWW = "WWW";
 		/**
-		 * COE称重,并已经回传出库重量 Wait Customer Check
+		 * COE称重,并已经回传出库重量,等待客户确认 Wait Customer Check
 		 */
 		public static final String WCC = "WCC";
 		/**

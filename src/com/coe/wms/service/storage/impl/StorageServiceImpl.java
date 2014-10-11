@@ -295,35 +295,32 @@ public class StorageServiceImpl implements IStorageService {
 
 		map.put(Constant.STATUS, Constant.FAIL);
 		// 缺少关键字段
-		// if (StringUtil.isNull(logisticsInterface) ||
-		// StringUtil.isNull(msgSource) || StringUtil.isNull(dataDigest)
-		// || StringUtil.isNull(msgType) || StringUtil.isNull(msgId)) {
-		// response.setReason(ErrorCode.S12_CODE);
-		// response.setReasonDesc("缺少关键字段,请检查以下字段:logistics_interface,data_digest,msg_type,msg_id");
-		// map.put(Constant.MESSAGE, XmlUtil.toXml(Responses.class, responses));
-		// return map;
-		// }
+		if (StringUtil.isNull(logisticsInterface) || StringUtil.isNull(msgSource) || StringUtil.isNull(dataDigest)
+				|| StringUtil.isNull(msgType) || StringUtil.isNull(msgId)) {
+			response.setReason(ErrorCode.S12_CODE);
+			response.setReasonDesc("缺少关键字段,请检查以下字段:logistics_interface,data_digest,msg_type,msg_id");
+			map.put(Constant.MESSAGE, XmlUtil.toXml(Responses.class, responses));
+			return map;
+		}
 
 		// 根据msgSource 找到客户(token),找到密钥
 		User user = userDao.findUserByMsgSource(msgSource);
 		if (user == null) {
-			response.setReason(ErrorCode.S03_CODE);
+			response.setReason(ErrorCode.B0008_CODE);
 			response.setReasonDesc("根据msg_source 找不到客户");
 			map.put(Constant.MESSAGE, XmlUtil.toXml(Responses.class, responses));
 			return map;
 		}
 
 		// 验证内容和签名字符串
-		// String md5dataDigest = StringUtil.encoderByMd5(logisticsInterface +
-		// user.getToken());
-		// if (!StringUtil.isEqual(md5dataDigest, dataDigest)) {
-		// // 签名错误
-		// response.setReason(ErrorCode.S02_CODE);
-		// response.setReasonDesc("收到消息签名:" + dataDigest + " 系统计算消息签名:" +
-		// md5dataDigest);
-		// map.put(Constant.MESSAGE, XmlUtil.toXml(Responses.class, responses));
-		// return map;
-		// }
+		String md5dataDigest = StringUtil.encoderByMd5(logisticsInterface + user.getToken());
+		if (!StringUtil.isEqual(md5dataDigest, dataDigest)) {
+			// 签名错误
+			response.setReason(ErrorCode.S02_CODE);
+			response.setReasonDesc("收到消息签名:" + dataDigest + " 系统计算消息签名:" + md5dataDigest);
+			map.put(Constant.MESSAGE, XmlUtil.toXml(Responses.class, responses));
+			return map;
+		}
 		map.put(Constant.STATUS, Constant.SUCCESS);
 		map.put(Constant.USER_ID_OF_CUSTOMER, "" + user.getId());
 		return map;
@@ -477,7 +474,8 @@ public class StorageServiceImpl implements IStorageService {
 	 */
 	@Override
 	public Pagination getOutWarehouseOrderData(OutWarehouseOrder outWarehouseOrder, Map<String, String> moreParam, Pagination pagination) {
-		List<OutWarehouseOrder> outWarehouseOrderList = outWarehouseOrderDao.findOutWarehouseOrder(outWarehouseOrder, moreParam, pagination);
+		List<OutWarehouseOrder> outWarehouseOrderList = outWarehouseOrderDao
+				.findOutWarehouseOrder(outWarehouseOrder, moreParam, pagination);
 		List<Object> list = new ArrayList<Object>();
 		for (OutWarehouseOrder order : outWarehouseOrderList) {
 			Map<String, Object> map = new HashMap<String, Object>();
@@ -883,4 +881,61 @@ public class StorageServiceImpl implements IStorageService {
 	public List<OutWarehouseOrderStatus> findAllOutWarehouseOrderStatus() throws ServiceException {
 		return outWarehouseOrderStatusDao.findAllOutWarehouseOrderStatus();
 	}
+
+	/**
+	 * API确认出库订单
+	 */
+	@Override
+	public String warehouseInterfaceConfirmOutWarehouseOrder(EventBody eventBody, Long userIdOfCustomer, String warehouseNo)
+			throws ServiceException {
+		Responses responses = new Responses();
+		List<Response> responseItems = new ArrayList<Response>();
+		Response response = new Response();
+		response.setSuccess(Constant.FALSE);
+		responseItems.add(response);
+		responses.setResponseItems(responseItems);
+		// 取 tradeDetail 中tradeOrderId 作为客户参考号
+		TradeDetail tradeDetail = eventBody.getTradeDetail();
+		if (tradeDetail == null) {
+			response.setReason(ErrorCode.S01_CODE);
+			response.setReasonDesc("EventBody对象获取TradeDetail对象得到Null");
+			return XmlUtil.toXml(Responses.class, responses);
+		}
+		List<TradeOrder> tradeOrderList = tradeDetail.getTradeOrders();
+		if (tradeOrderList == null || tradeOrderList.size() == 0) {
+			response.setReason(ErrorCode.S01_CODE);
+			response.setReasonDesc("TradeDetail对象获取TradeOrders对象得到Null");
+			return XmlUtil.toXml(Responses.class, responses);
+		}
+		// 客户参考号
+		String customerReferenceNo = tradeOrderList.get(0).getTradeOrderId();
+		if (StringUtil.isNull(customerReferenceNo)) {
+			response.setReason(ErrorCode.S01_CODE);
+			response.setReasonDesc("TradeOrder对象获取tradeOrderId得到Null");
+			return XmlUtil.toXml(Responses.class, responses);
+		}
+		// 根据客户参考号和客户帐号查找出库订单
+		OutWarehouseOrder outWarehouseOrderParam = new OutWarehouseOrder();
+		outWarehouseOrderParam.setUserIdOfCustomer(userIdOfCustomer);
+		outWarehouseOrderParam.setCustomerReferenceNo(customerReferenceNo);
+		List<OutWarehouseOrder> outWarehouseOrderList = outWarehouseOrderDao.findOutWarehouseOrder(outWarehouseOrderParam, null, null);
+		if (outWarehouseOrderList.size() < 0) {
+			response.setReason(ErrorCode.B0005_CODE);
+			response.setReasonDesc("根据客户参考号(tradeOrderId)和客户帐号(msgSource)查找订单得到Null");
+			return XmlUtil.toXml(Responses.class, responses);
+		}
+		OutWarehouseOrder outWarehouseOrder = outWarehouseOrderList.get(0);
+		// 只有当前状态 是等待顺丰确认的订单 才允许处理
+		if (!StringUtil.isEqual(outWarehouseOrder.getStatus(), OutWarehouseOrderStatusCode.WCC)) {
+			response.setReason(ErrorCode.B0100_CODE);
+			response.setReasonDesc("出库订单当前状态非等待客户确认状态,不能修改");
+			return XmlUtil.toXml(Responses.class, responses);
+		}
+		int count = outWarehouseOrderDao.updateOutWarehouseOrderStatus(outWarehouseOrder.getId(), OutWarehouseOrderStatusCode.WWO);
+		logger.info("确认出库成功: 更新状态影响行数="+count);
+		
+		response.setSuccess(Constant.TRUE);
+		return XmlUtil.toXml(Responses.class, responses);
+	}
+
 }

@@ -165,6 +165,16 @@ public interface IStorageService {
 			throws ServiceException;
 
 	/**
+	 * 顺丰确认出库订单
+	 * 
+	 * @param eventBody
+	 * @param userIdOfCustomer
+	 * @return
+	 */
+	public String warehouseInterfaceConfirmOutWarehouseOrder(EventBody eventBody, Long userIdOfCustomer, String warehouseNo)
+			throws ServiceException;
+
+	/**
 	 * 审核出库订单
 	 * 
 	 * @param orderIds
