@@ -17,9 +17,11 @@ public class LogisticsOrder implements Serializable {
 
 	private String logisticsType;
 
-	private String logisticsWeight;
+	private Double logisticsWeight;
 
 	private String logisticsFreight;
+
+	private String occurTime;
 
 	private String carrierCode;
 
@@ -38,6 +40,14 @@ public class LogisticsOrder implements Serializable {
 
 	public ReceiverDetail getReceiverDetail() {
 		return receiverDetail;
+	}
+
+	public String getOccurTime() {
+		return occurTime;
+	}
+
+	public void setOccurTime(String occurTime) {
+		this.occurTime = occurTime;
 	}
 
 	public void setReceiverDetail(ReceiverDetail receiverDetail) {
@@ -98,11 +108,11 @@ public class LogisticsOrder implements Serializable {
 		return carrierCode;
 	}
 
-	public String getLogisticsWeight() {
+	public Double getLogisticsWeight() {
 		return logisticsWeight;
 	}
 
-	public void setLogisticsWeight(String logisticsWeight) {
+	public void setLogisticsWeight(Double logisticsWeight) {
 		this.logisticsWeight = logisticsWeight;
 	}
 

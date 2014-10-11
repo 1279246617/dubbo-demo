@@ -10,6 +10,10 @@ public interface IStorageTask {
 	/**
 	 * 回传出库称重给客户
 	 */
-	public void sendOutWarehouseWeightCustomer();
-
+	public void sendOutWarehouseWeightToCustomer();
+	
+	/**
+	 * 回传出库状态给客户(出库的最后步骤)
+	 */
+	public void sendOutWarehouseStatusToCustomer(); 
 }
