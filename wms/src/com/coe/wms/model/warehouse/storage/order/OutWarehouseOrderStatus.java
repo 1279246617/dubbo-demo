@@ -12,7 +12,7 @@ import com.google.code.ssm.api.CacheKeyMethod;
  */
 public class OutWarehouseOrderStatus implements Serializable {
 
-	public class OurWareHouseStatusCode {
+	public class OutWarehouseOrderStatusCode {
 		/**
 		 * 顺丰新建出库订单,等待COE审核 Wait Warehouse Check
 		 */

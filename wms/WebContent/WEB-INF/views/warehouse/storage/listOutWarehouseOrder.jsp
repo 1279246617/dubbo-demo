@@ -36,21 +36,33 @@
 		       	 	</span>
 		    	</div>    
                <div class="pull-right searchContent">
-               		<span class="pull-left" style="width:160px;">
+               		<span class="pull-left" style="width:140px;">
                			仓库
-               			<select style="width:100px;" id="warehouseId" name="warehouseId">
+               			<select style="width:93px;" id="warehouseId" name="warehouseId">
                				<option></option>
 							<option value="1">1-香港仓</option>
 						</select>
                		</span>
-               		
-               		<span class="pull-left" style="width:170px;">
-               			客户帐号
-               			<input type="text" name="userLoginName" data-provide="typeahead"  id="userLoginName" style="width:100px;" title="请输入客户登录名" />
+               		<span class="pull-left" style="width:140px;">
+               			状态
+               			<select style="width:93px;" id="status" name="status">
+               				<option></option>
+							<c:forEach items="${outWarehouseOrderStatusList}" var="status" >
+				       	 		<option value="<c:out value='${status.code}'/>">
+				       	 			<c:out value="${status.cn}"/>
+				       		 	</option>
+				       		 </c:forEach>
+						</select>
                		</span>
-					<span class="pull-left" style="width:190px;">
-						客户单号	
-						<input type="text"  name="customerReferenceNo"  id="customerReferenceNo"   style="width:120px;"/>
+               		
+               		<span class="pull-left" style="width:140px;">
+               			客户
+               			<input type="text" name="userLoginName" data-provide="typeahead"  id="userLoginName" style="width:93px;" title="请输入客户登录名" />
+               		</span>
+               		
+					<span class="pull-left" style="width:165px;">
+						单号
+						<input type="text"  name="customerReferenceNo"  id="customerReferenceNo"   style="width:105px;"/>
 					</span>
                		
                		<span class="pull-left" style="width:175px;">
@@ -58,7 +70,7 @@
 	               		<input type="text"   style="width:120px;" name="createdTimeStart" id="createdTimeStart" value="${todayStart}" title="起始创建时间">
                		</span>
                		
-               		<span class="pull-left" style="width:200px;">
+               		<span class="pull-left" style="width:180px;">
                			至	
                			<input type="text"   style="width:120px;" name="createdTimeEnd"  id="createdTimeEnd"  title="终止创建时间">
                		</span>
