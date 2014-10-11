@@ -295,13 +295,14 @@ public class StorageServiceImpl implements IStorageService {
 
 		map.put(Constant.STATUS, Constant.FAIL);
 		// 缺少关键字段
-		if (StringUtil.isNull(logisticsInterface) || StringUtil.isNull(msgSource) || StringUtil.isNull(dataDigest)
-				|| StringUtil.isNull(msgType) || StringUtil.isNull(msgId)) {
-			response.setReason(ErrorCode.S12_CODE);
-			response.setReasonDesc("缺少关键字段,请检查以下字段:logistics_interface,data_digest,msg_type,msg_id");
-			map.put(Constant.MESSAGE, XmlUtil.toXml(Responses.class, responses));
-			return map;
-		}
+		 if (StringUtil.isNull(logisticsInterface) ||
+		 StringUtil.isNull(msgSource) || StringUtil.isNull(dataDigest)
+		 || StringUtil.isNull(msgType) || StringUtil.isNull(msgId)) {
+		 response.setReason(ErrorCode.S12_CODE);
+		 response.setReasonDesc("缺少关键字段,请检查以下字段:logistics_interface,data_digest,msg_type,msg_id");
+		 map.put(Constant.MESSAGE, XmlUtil.toXml(Responses.class, responses));
+		 return map;
+		 }
 
 		// 根据msgSource 找到客户(token),找到密钥
 		User user = userDao.findUserByMsgSource(msgSource);
@@ -688,6 +689,7 @@ public class StorageServiceImpl implements IStorageService {
 			response.setReasonDesc("根据仓库编号(eventTarget)获取仓库得到Null");
 			return XmlUtil.toXml(Responses.class, responses);
 		}
+		
 		// 保存
 		for (int i = 0; i < logisticsOrders.size(); i++) {
 			LogisticsOrder logisticsOrder = logisticsOrders.get(i);
@@ -716,8 +718,11 @@ public class StorageServiceImpl implements IStorageService {
 			outWarehouseOrderParam.setCustomerReferenceNo(customerReferenceNo);
 			Long count = outWarehouseOrderDao.countOutWarehouseOrder(outWarehouseOrderParam, null);
 			if (count > 0) {
-				throw new ServiceException("客户参考号(tradeOrderId)重复,保存失败");
+				response.setReason(ErrorCode.B0200_CODE);
+				response.setReasonDesc("客户参考号(tradeOrderId)重复,保存失败");
+				return XmlUtil.toXml(Responses.class, responses);
 			}
+			
 			// 主单
 			OutWarehouseOrder outWarehouseOrder = new OutWarehouseOrder();
 			outWarehouseOrder.setCreatedTime(System.currentTimeMillis());
@@ -919,7 +924,7 @@ public class StorageServiceImpl implements IStorageService {
 		outWarehouseOrderParam.setUserIdOfCustomer(userIdOfCustomer);
 		outWarehouseOrderParam.setCustomerReferenceNo(customerReferenceNo);
 		List<OutWarehouseOrder> outWarehouseOrderList = outWarehouseOrderDao.findOutWarehouseOrder(outWarehouseOrderParam, null, null);
-		if (outWarehouseOrderList.size() < 0) {
+		if (outWarehouseOrderList.size() <= 0) {
 			response.setReason(ErrorCode.B0005_CODE);
 			response.setReasonDesc("根据客户参考号(tradeOrderId)和客户帐号(msgSource)查找订单得到Null");
 			return XmlUtil.toXml(Responses.class, responses);
@@ -932,8 +937,8 @@ public class StorageServiceImpl implements IStorageService {
 			return XmlUtil.toXml(Responses.class, responses);
 		}
 		int count = outWarehouseOrderDao.updateOutWarehouseOrderStatus(outWarehouseOrder.getId(), OutWarehouseOrderStatusCode.WWO);
-		logger.info("确认出库成功: 更新状态影响行数="+count);
-		
+		logger.info("确认出库成功: 更新状态影响行数=" + count);
+
 		response.setSuccess(Constant.TRUE);
 		return XmlUtil.toXml(Responses.class, responses);
 	}

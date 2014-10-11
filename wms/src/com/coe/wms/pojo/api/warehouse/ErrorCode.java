@@ -101,6 +101,9 @@ public class ErrorCode {
 	public static final String B0104 = "订单状态已收货";
 	public static final String B0104_CODE = "B0104";
 
+	public static final String B0200 = "订单已存在";
+	public static final String B0200_CODE = "B0200";
+
 	public static final String UNKNOWN = "未知错误";
 	public static final String UNKNOWN_CODE = "UNKNOWN";
 
