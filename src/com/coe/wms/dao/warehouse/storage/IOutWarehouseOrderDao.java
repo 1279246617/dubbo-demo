@@ -22,5 +22,7 @@ public interface IOutWarehouseOrderDao {
 
 	public List<Long> findCallbackUnSuccessOrderId();
 
+	public List<Long> findWaitSendWeightToCustomerOrderId();
+	
 	public int updateOutWarehouseOrderCallback(OutWarehouseOrder outWarehouseOrder);
 }

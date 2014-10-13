@@ -247,4 +247,10 @@ public class OutWarehouseOrderDaoImpl implements IOutWarehouseOrderDao {
 		return jdbcTemplate.update(sql);
 	}
 
+	@Override
+	public List<Long> findWaitSendWeightToCustomerOrderId() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
