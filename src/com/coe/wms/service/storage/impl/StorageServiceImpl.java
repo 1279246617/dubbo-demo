@@ -845,6 +845,7 @@ public class StorageServiceImpl implements IStorageService {
 				map.put("userLoginNameOfOperator", userOfOperator.getLoginName());
 			}
 			map.put("trackingNo", record.getTrackingNo());
+			map.put("inWarehouseOrderId", record.getInWarehouseOrderId());
 			map.put("batchNo", record.getBatchNo());
 			if (NumberUtil.greaterThanZero(record.getWarehouseId())) {
 				Warehouse warehouse = warehouseDao.getWarehouseById(record.getWarehouseId());
