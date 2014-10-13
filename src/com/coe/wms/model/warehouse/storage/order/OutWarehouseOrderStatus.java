@@ -43,7 +43,7 @@ public class OutWarehouseOrderStatus implements Serializable {
 		 * 出库成功 Out Warehouse Success
 		 */
 		public static final String SUCCESS = "SUCCESS";
-
+		
 		/**
 		 * 出库失败 Out Warehouse Fail
 		 */
