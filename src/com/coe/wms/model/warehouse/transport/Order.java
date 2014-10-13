@@ -25,11 +25,6 @@ public class Order implements Serializable {
 	 */
 	private Long userId;
 
-	/**
-	 * 订单所在大包号(等于批次)
-	 */
-	private String packageNo;
-
 	private Integer status;
 
 	/**
@@ -88,14 +83,6 @@ public class Order implements Serializable {
 
 	public void setUserId(Long userId) {
 		this.userId = userId;
-	}
-
-	public String getPackageNo() {
-		return packageNo;
-	}
-
-	public void setPackageNo(String packageNo) {
-		this.packageNo = packageNo;
 	}
 
 	public Integer getStatus() {

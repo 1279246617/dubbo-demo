@@ -114,8 +114,9 @@
 	                columns: [
 							{ display: '客户帐号', name: 'userLoginNameOfCustomer',type:'float',width:'9%'},
 							{ display: '仓库', name: 'warehouse', type: 'float',width:'9%'},
+							{ display: '入库批次号', name: 'batchNo', type: 'int', width:'12%'},
 	  	                    { display: '跟踪单号', name: 'trackingNo',type:'float',width:'13%'},
-		  	                { display: '入库批次号', name: 'batchNo', type: 'int', width:'12%'},
+	  	                  	{ display: '入库订单Id', name: 'inWarehouseOrderId',type:'float',width:'13%'},
 		  		            { display: '预报产品数量', name: 'quantity', type: 'float',width:'9%'},
 		  		          	{ display: '实际收货数量', name: 'receivedQuantity', type: 'float',width:'9%'},
 		  		        	{ display: 'SKU预览', isSort: false, align: 'center', type: 'float',width:'16%',render: function(row) {
