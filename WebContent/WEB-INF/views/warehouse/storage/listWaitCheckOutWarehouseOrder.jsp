@@ -34,7 +34,11 @@
                			仓库
                			<select style="width:93px;" id="warehouseId" name="warehouseId">
                				<option></option>
-							<option value="1">1-香港仓</option>
+               				<c:forEach items="${warehouseList}" var="w" >
+				       	 		<option value="<c:out value='${w.id}'/>">
+				       	 			<c:out value="${w.id}-${w.warehouseName}"/>
+				       		 	</option>
+				       		</c:forEach>
 						</select>
                		</span>
                		<span class="pull-left" style="width:140px;">
@@ -118,12 +122,12 @@
 	    	 grid = $("#maingrid").ligerGrid({
 	                columns: [
 	                    { display: '客户帐号', name: 'userNameOfCustomer', align: 'center',type:'float',width:'9%'},
-	  		          	{ display: '客户单号', name: 'customerReferenceNo', align: 'center', type: 'float',width:'10%'},
+	  		          	{ display: '客户单号', name: 'customerReferenceNo', align: 'center', type: 'float',width:'14%'},
 		                { display: '仓库', name: 'warehouse', align: 'center', type: 'float',width:'8%'},
-		              	{ display: 'SKU预览', isSort: false, align: 'center', type: 'float',width:'17%',render: function(row) {
+		              	{ display: 'SKU预览', isSort: false, align: 'center', type: 'float',width:'20%',render: function(row) {
 		            		var skus = "";
 		            		if (!row._editing) {
-		            			skus += '<a href="javascript:listInWarehouseOrderItem(' + row.id + ')">'+row.items+'</a> ';
+		            			skus += '<a href="javascript:listOutWarehouseOrderItem(' + row.id + ')">'+row.items+'</a> ';
 		            		}
 		            		return skus;
 	  		          	}},

@@ -100,7 +100,7 @@ public class StorageTaskImpl implements IStorageTask {
 	 * 回传SKU出库重量
 	 */
 	private final String serviceNameSendWeight = "logistics.event.wms.weight";
-	
+
 	/**
 	 * 回传SKU出库状态
 	 */
@@ -109,9 +109,9 @@ public class StorageTaskImpl implements IStorageTask {
 	/**
 	 * 发送仓配入库订单信息给客户
 	 */
-	 @Scheduled(cron = "0 0/1 8-23 * * ? ")
+//	@Scheduled(cron = "0 0/1 8-23 * * ? ")
 	// 早上8点到下午6点,每分钟
-//	 @Scheduled(cron="0 0/30 8-18 * * ? ") //早上8点到下午6点,每半小时一次
+	// @Scheduled(cron="0 0/30 8-18 * * ? ") //早上8点到下午6点,每半小时一次
 	@Override
 	public void sendInWarehouseInfoToCustomer() {
 		InWarehouseRecord param = new InWarehouseRecord();
@@ -125,7 +125,7 @@ public class StorageTaskImpl implements IStorageTask {
 			// 仓库
 			Warehouse warehouse = warehouseDao.getWarehouseById(inWarehouseRecord.getWarehouseId());
 			// 大包跟踪号
-			String trackingNo = inWarehouseRecord.getPackageTrackingNo();
+			String trackingNo = inWarehouseRecord.getTrackingNo();
 			InWarehouseRecordItem recordItemParam = new InWarehouseRecordItem();
 			recordItemParam.setInWarehouseRecordId(recordId);
 			// 入库明细
@@ -151,7 +151,7 @@ public class StorageTaskImpl implements IStorageTask {
 			// if (inWarehouseRecord.getInWarehouseOrderId() != null) {
 			// inWarehouseOrderDao.getInWarehouseOrderById(inWarehouseRecord.getInWarehouseOrderId());
 			InWarehouseOrder inWarehouseOrderParam = new InWarehouseOrder();
-			inWarehouseOrderParam.setPackageTrackingNo(trackingNo);
+			inWarehouseOrderParam.setTrackingNo(trackingNo);
 			List<InWarehouseOrder> inWarehouseOrderList = inWarehouseOrderDao.findInWarehouseOrder(inWarehouseOrderParam, null, null);
 			if (inWarehouseOrderList.size() > 0) {
 				InWarehouseOrder inWarehouseOrder = inWarehouseOrderList.get(0);
@@ -231,7 +231,7 @@ public class StorageTaskImpl implements IStorageTask {
 	/**
 	 * 回传出库称重给客户
 	 */
-	@Scheduled(cron = "0 0/1 8-23 * * ? ")
+//	@Scheduled(cron = "0 0/1 8-23 * * ? ")
 	@Override
 	public void sendOutWarehouseWeightToCustomer() {
 		List<Long> orderIdList = outWarehouseOrderDao.findCallbackSendWeightUnSuccessOrderId();
@@ -334,7 +334,7 @@ public class StorageTaskImpl implements IStorageTask {
 	/**
 	 * 回传出库状态给客户(出库的最后步骤)
 	 */
-	 @Scheduled(cron = "0 0/1 8-23 * * ? ")
+//	@Scheduled(cron = "0 0/1 8-23 * * ? ")
 	@Override
 	public void sendOutWarehouseStatusToCustomer() {
 		List<Long> orderIdList = outWarehouseOrderDao.findCallbackSendStatusUnSuccessOrderId();
@@ -375,13 +375,13 @@ public class StorageTaskImpl implements IStorageTask {
 			List<LogisticsOrder> logisticsOrders = new ArrayList<LogisticsOrder>();
 			LogisticsOrder logisticsOrder = new LogisticsOrder();
 			logisticsOrder.setLogisticsWeight(Weight.turnToG(outWarehouseOrder.getOutWarehouseWeight(), outWarehouseOrder.getWeightCode()));
-			logisticsOrder.setLogisticsRemark("备注");
+			logisticsOrder.setLogisticsRemark("出库,地点:" + warehouse.getCountryName() + "," + warehouse.getCity());
+			// 出库
+			logisticsOrder.setLogisticsCode("STOCKOUT");
 			logisticsOrder
 					.setOccurTime(DateUtil.dateConvertString(new Date(outWarehouseOrder.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss));
-
 			logisticsOrders.add(logisticsOrder);
 			logisticsDetail.setLogisticsOrders(logisticsOrders);
-
 			eventBody.setLogisticsDetail(logisticsDetail);
 			logisticsEvent.setEventBody(eventBody);
 			logisticsEventsRequest.setLogisticsEvent(logisticsEvent);

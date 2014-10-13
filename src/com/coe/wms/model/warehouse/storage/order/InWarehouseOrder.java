@@ -33,11 +33,6 @@ public class InWarehouseOrder implements Serializable {
 	private Long userIdOfOperator;
 
 	/**
-	 * 大包号 同客户下, packageNo 不可重复
-	 */
-	private String packageNo;
-
-	/**
 	 * 如果物流类型为 2或3系统会生成一个虚拟承运商编号
 	 */
 	private String carrierCode;
@@ -51,8 +46,12 @@ public class InWarehouseOrder implements Serializable {
 	 * 
 	 * 要求客户预报的时候 大包头程 运单号 对应一个大包
 	 */
-	private String packageTrackingNo;
-
+	private String trackingNo;
+		
+	/**
+	 * 客户参考号 (跟踪号和客户参考号 同时重复时 不允许新建)
+	 */
+	private String customerReferenceNo;
 	/**
 	 * 大包重量
 	 */
@@ -87,21 +86,21 @@ public class InWarehouseOrder implements Serializable {
 	public void setId(Long id) {
 		this.id = id;
 	}
-
-	public String getPackageNo() {
-		return packageNo;
+ 
+	public String getCustomerReferenceNo() {
+		return customerReferenceNo;
 	}
 
-	public void setPackageNo(String packageNo) {
-		this.packageNo = packageNo;
+	public void setCustomerReferenceNo(String customerReferenceNo) {
+		this.customerReferenceNo = customerReferenceNo;
+	}
+	
+	public String getTrackingNo() {
+		return trackingNo;
 	}
 
-	public String getPackageTrackingNo() {
-		return packageTrackingNo;
-	}
-
-	public void setPackageTrackingNo(String packageTrackingNo) {
-		this.packageTrackingNo = packageTrackingNo;
+	public void setTrackingNo(String trackingNo) {
+		this.trackingNo = trackingNo;
 	}
 
 	public Long getWarehouseId() {

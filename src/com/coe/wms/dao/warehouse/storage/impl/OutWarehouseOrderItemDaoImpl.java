@@ -44,7 +44,7 @@ public class OutWarehouseOrderItemDaoImpl implements IOutWarehouseOrderItemDao {
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public long saveOutWarehouseOrderItem(final OutWarehouseOrderItem item) {
-		final String sql = "insert into w_s_out_warehouse_order_item (out_warehouse_order_id,quantity,sku,sku_name,sku_unit_price,sku_price_currency,remark) values (?,?,?,?,?,?,?)";
+		final String sql = "insert into w_s_out_warehouse_order_item (out_warehouse_order_id,quantity,sku,sku_name,sku_unit_price,sku_price_currency,remark,sku_net_weight) values (?,?,?,?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
@@ -56,6 +56,7 @@ public class OutWarehouseOrderItemDaoImpl implements IOutWarehouseOrderItemDao {
 				ps.setDouble(5, item.getSkuUnitPrice());
 				ps.setString(6, item.getSkuPriceCurrency());
 				ps.setString(7, item.getRemark());
+				ps.setDouble(8, item.getSkuNetWeight());
 				return ps;
 			}
 		}, keyHolder);
@@ -69,7 +70,7 @@ public class OutWarehouseOrderItemDaoImpl implements IOutWarehouseOrderItemDao {
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public int saveBatchOutWarehouseOrderItem(final List<OutWarehouseOrderItem> itemList) {
-		final String sql = "insert into w_s_out_warehouse_order_item (out_warehouse_order_id,quantity,sku,sku_name,sku_unit_price,sku_price_currency,remark) values (?,?,?,?,?,?,?)";
+		final String sql = "insert into w_s_out_warehouse_order_item (out_warehouse_order_id,quantity,sku,sku_name,sku_unit_price,sku_price_currency,remark,sku_net_weight) values (?,?,?,?,?,?,?,?)";
 		int[] batchUpdateSize = jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
 			@Override
 			public void setValues(PreparedStatement ps, int i) throws SQLException {
@@ -81,6 +82,7 @@ public class OutWarehouseOrderItemDaoImpl implements IOutWarehouseOrderItemDao {
 				ps.setDouble(5, item.getSkuUnitPrice());
 				ps.setString(6, item.getSkuPriceCurrency());
 				ps.setString(7, item.getRemark());
+				ps.setDouble(8, item.getSkuNetWeight());
 			}
 
 			@Override
@@ -94,7 +96,7 @@ public class OutWarehouseOrderItemDaoImpl implements IOutWarehouseOrderItemDao {
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public int saveBatchOutWarehouseOrderItemWithOrderId(final List<OutWarehouseOrderItem> itemList, final Long orderId) {
-		final String sql = "insert into w_s_out_warehouse_order_item (out_warehouse_order_id,quantity,sku,sku_name,sku_unit_price,sku_price_currency,remark) values (?,?,?,?,?,?,?)";
+		final String sql = "insert into w_s_out_warehouse_order_item (out_warehouse_order_id,quantity,sku,sku_name,sku_unit_price,sku_price_currency,remark,sku_net_weight) values (?,?,?,?,?,?,?,?)";
 		int[] batchUpdateSize = jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
 			@Override
 			public void setValues(PreparedStatement ps, int i) throws SQLException {
@@ -106,6 +108,7 @@ public class OutWarehouseOrderItemDaoImpl implements IOutWarehouseOrderItemDao {
 				ps.setDouble(5, item.getSkuUnitPrice());
 				ps.setString(6, item.getSkuPriceCurrency());
 				ps.setString(7, item.getRemark());
+				ps.setDouble(8, item.getSkuNetWeight());
 			}
 
 			@Override
@@ -129,7 +132,7 @@ public class OutWarehouseOrderItemDaoImpl implements IOutWarehouseOrderItemDao {
 	public List<OutWarehouseOrderItem> findOutWarehouseOrderItem(OutWarehouseOrderItem outWarehouseOrderItem,
 			Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select id,out_warehouse_order_id,quantity,sku,sku_name,sku_unit_price,sku_price_currency,remark from w_s_out_warehouse_order_item where 1=1 ");
+		sb.append("select id,out_warehouse_order_id,quantity,sku,sku_name,sku_unit_price,sku_price_currency,remark,sku_net_weight from w_s_out_warehouse_order_item where 1=1 ");
 		if (outWarehouseOrderItem != null) {
 			if (StringUtil.isNotNull(outWarehouseOrderItem.getSku())) {
 				sb.append(" and sku = '" + outWarehouseOrderItem.getSku() + "' ");
@@ -155,10 +158,13 @@ public class OutWarehouseOrderItemDaoImpl implements IOutWarehouseOrderItemDao {
 			if (outWarehouseOrderItem.getQuantity() != null) {
 				sb.append(" and quantity = '" + outWarehouseOrderItem.getQuantity() + "' ");
 			}
+			if (outWarehouseOrderItem.getSkuNetWeight() != null) {
+				sb.append(" and sku_net_weight = '" + outWarehouseOrderItem.getSkuNetWeight() + "' ");
+			}
 		}
 		// 分页sql
-		if(page!=null){
-			sb.append(page.generatePageSql());	
+		if (page != null) {
+			sb.append(page.generatePageSql());
 		}
 		String sql = sb.toString();
 		logger.info("查询出库订单明细sql:" + sql);

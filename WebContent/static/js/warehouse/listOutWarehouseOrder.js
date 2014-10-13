@@ -67,3 +67,45 @@ function checkOrder(){
   		}]
   	})
 }
+ 
+//SKU
+function listOutWarehouseOrderItem(orderId){
+	var contentArr = [];
+	contentArr.push('<table class="table" style="width:549px">');
+	contentArr.push('<tr><th>产品SKU</th><th>产品名称</th><th>出库数量</th><th>单价和币种</th><th>单件重量</th></tr>');
+	$.ajax({ 
+        type : "post", 
+        url :baseUrl + '/warehouse/storage/getOutWarehouseOrderItemByOrderId.do', 
+        data : "orderId="+orderId, 
+        async : false, 
+        success : function(msg){ 
+        	msg = eval("(" + msg + ")");
+			$.each(msg,function(i,e){
+			  	contentArr.push('<tr>');
+			  	contentArr.push('<td>'+e.sku+'</td>');
+        		contentArr.push('<td>'+e.skuName+'</td>');
+        		contentArr.push('<td>'+e.quantity+'</td>');
+        		contentArr.push('<td>'+(e.skuUnitPrice +" "+e.skuPriceCurrency)+'</td>');
+        		contentArr.push('<td>'+e.skuNetWeight+' G(克)</td>');
+			  	contentArr.push('</tr>');
+			});
+        } 
+   	});
+    contentArr.push('</table>');
+    var contentHtml = contentArr.join('');
+	$.dialog({
+  		lock: true,
+  		max: false,
+  		min: false,
+  		title: '出库订单SKU详情',
+  		width: 550,
+  		height: 350,
+  		content: contentHtml,
+  		button: [{
+  			name: '关闭',
+  			callback: function() {
+				
+  			}
+  		}]
+  	})
+}

@@ -115,10 +115,11 @@
 	                columns: [
 	                    { display: '客户帐号', name: 'userNameOfCustomer', align: 'center',type:'float',width:'9%'},
 	                    { display: '承运商', name: 'carrierCode', align: 'center', type: 'float',width:'9%'},
-	  		          	{ display: '运单号', name: 'packageTrackingNo', align: 'center', type: 'float',width:'12%'},
+	  		          	{ display: '运单号', name: 'trackingNo', align: 'center', type: 'float',width:'14%'},
+	  		          	{ display: '客户参考号', name: 'customerReferenceNo', align: 'center', type: 'float',width:'12%'},
 		                { display: '仓库', name: 'warehouse', align: 'center', type: 'float',width:'8%'},
 		                { display: '状态', name: 'status', align: 'center', type: 'float',width:'8%'},
-		            	{ display: 'SKU预览', isSort: false, align: 'center', type: 'float',width:'17%',render: function(row) {
+		            	{ display: 'SKU预览', isSort: false, align: 'center', type: 'float',width:'20%',render: function(row) {
 		            		var skus = "";
 		            		if (!row._editing) {
 		            			skus += '<a href="javascript:listInWarehouseOrderItem(' + row.id + ')">'+row.skus+'</a> ';
@@ -142,8 +143,6 @@
 	                pageSizeOptions:[10,50,100,500,1000],
 	                usePager: 'true',
 	                sortName: 'id',
-	                width: '100%',
-	                height: '99%',
 	                checkbox: false,
 	                rownumbers:true,
 	                alternatingRow:true,
@@ -151,20 +150,63 @@
 	                isScroll: true,
 	                enabledEdit: false,
 	                clickToEdit: false,
-	                enabledSort:false
+	                enabledSort:false,
+	                inWindow:true,
+	                width: '100%',
+	                height: '99%'
 	            });
 	        };		
 	        
+	        //SKU
 	        function listInWarehouseOrderItem(orderId){
-	        	alert("订单id:"+orderId);
+	        	var contentArr = [];
+	        	contentArr.push('<table class="table" style="width:549px">');
+	        	contentArr.push('<tr><th>产品SKU</th><th>产品名称</th><th>预报数量</th><th>已收数量</th></tr>');
+	        	$.ajax({ 
+	                type : "post", 
+	                url :baseUrl + '/warehouse/storage/getInWarehouseOrderItemByOrderId.do', 
+	                data : "orderId="+orderId, 
+	                async : false, 
+	                success : function(msg){ 
+	                	msg = eval("(" + msg + ")");
+	        			$.each(msg,function(i,e){
+	        			  	contentArr.push('<tr>');
+	        			  	contentArr.push('<td>'+e.sku+'</td>');
+	    	        		contentArr.push('<td>'+e.skuName+'</td>');
+	    	        		contentArr.push('<td>'+e.quantity+'</td>');
+	    	        		contentArr.push('<td>'+(e.receivedQuantity==undefined?0:e.receivedQuantity)+'</td>');
+	        			  	contentArr.push('</tr>');
+	        			});
+	                } 
+	           	});
+	            contentArr.push('</table>');
+	            var contentHtml = contentArr.join('');
+	        	$.dialog({
+	          		lock: true,
+	          		max: false,
+	          		min: false,
+	          		title: '入库订单SKU详情',
+	          		width: 550,
+	          		height: 350,
+	          		content: contentHtml,
+	          		button: [{
+	          			name: '关闭',
+	          			callback: function() {
+							
+	          			}
+	          		}]
+	          	})
 	        }
    	</script>
    	
 	<script type="text/javascript" src="${baseUrl}/static/jquery/jquery.showMessage.js"></script>
 	<script type="text/javascript" src="${baseUrl}/static/ligerui/ligerUI/js/core/base.js"></script>
+	<script type="text/javascript" src="${baseUrl}/static/ligerui/ligerUI/js/ligerui.all.js"></script>
 	<script type="text/javascript" src="${baseUrl}/static/ligerui/ligerUI/js/plugins/ligeruiPatch.js"></script>
 	<script type="text/javascript" src="${baseUrl}/static/calendar/lhgcalendar.min.js"></script>
+	<script type="text/javascript" src="${baseUrl}/static/lhgdialog/prettify/prettify.js"></script>
+	<script type="text/javascript" src="${baseUrl}/static/lhgdialog/prettify/lhgdialog.js"></script>
 	<script type="text/javascript" src="${baseUrl}/static/calendar/prettify.js"></script>
-	<script type="text/javascript" src="${baseUrl}/static/ligerui/ligerUI/js/ligerui.all.js"></script>
+	
 </body>
 </html>

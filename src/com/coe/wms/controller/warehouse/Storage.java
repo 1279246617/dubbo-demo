@@ -19,9 +19,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.coe.wms.controller.Application;
 import com.coe.wms.model.user.User;
-import com.coe.wms.model.warehouse.Warehouse;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
+import com.coe.wms.model.warehouse.storage.order.InWarehouseOrderItem;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrder;
+import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderItem;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus.OutWarehouseOrderStatusCode;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecord;
@@ -74,8 +75,8 @@ public class Storage {
 		ModelAndView view = new ModelAndView();
 		view.addObject("userId", userId);
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
-		List<Warehouse> warehouseList = storageService.findAllWarehouse();
-		view.addObject("warehouseList", warehouseList);
+		User user = userService.getUserById(userId);
+		view.addObject("warehouseList", storageService.findAllWarehouse(user.getDefaultWarehouseId()));
 		view.addObject("todayStart", DateUtil.getTodayStart());
 		view.setViewName("warehouse/storage/listInWarehouseOrder");
 		return view;
@@ -109,7 +110,7 @@ public class Storage {
 		pagination.sortOrder = sortorder;
 
 		InWarehouseOrder param = new InWarehouseOrder();
-		param.setPackageTrackingNo(trackingNo);
+		param.setTrackingNo(trackingNo);
 		if (StringUtil.isNotNull(userLoginName)) {
 			Long userIdOfCustomer = userService.findUserIdByLoginName(userLoginName);
 			param.setUserIdOfCustomer(userIdOfCustomer);
@@ -144,8 +145,8 @@ public class Storage {
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
 		List<OutWarehouseOrderStatus> outWarehouseOrderStatusList = storageService.findAllOutWarehouseOrderStatus();
 		view.addObject("outWarehouseOrderStatusList", outWarehouseOrderStatusList);
-		List<Warehouse> warehouseList = storageService.findAllWarehouse();
-		view.addObject("warehouseList", warehouseList);
+		User user = userService.getUserById(userId);
+		view.addObject("warehouseList", storageService.findAllWarehouse(user.getDefaultWarehouseId()));
 		view.addObject("todayStart", DateUtil.getTodayStart());
 		view.setViewName("warehouse/storage/listOutWarehouseOrder");
 		return view;
@@ -217,6 +218,8 @@ public class Storage {
 		view.addObject("userId", userId);
 		view.addObject("todayStart", DateUtil.getTodayStart());
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
+		User user = userService.getUserById(userId);
+		view.addObject("warehouseList", storageService.findAllWarehouse(user.getDefaultWarehouseId()));
 		view.setViewName("warehouse/storage/listWaitCheckOutWarehouseOrder");
 		return view;
 	}
@@ -285,6 +288,8 @@ public class Storage {
 		ModelAndView view = new ModelAndView();
 		view.addObject("userId", userId);
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
+		User user = userService.getUserById(userId);
+		view.addObject("warehouseList", storageService.findAllWarehouse(user.getDefaultWarehouseId()));
 		view.setViewName("warehouse/storage/inWarehouse");
 		return view;
 	}
@@ -304,7 +309,7 @@ public class Storage {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put(Constant.STATUS, Constant.FAIL);
 		InWarehouseOrder param = new InWarehouseOrder();
-		param.setPackageTrackingNo(trackingNo);
+		param.setTrackingNo(trackingNo);
 		List<InWarehouseOrder> inWarehouseOrderList = storageService.findInWarehouseOrder(param, null, null);
 		if (inWarehouseOrderList.size() < 1) {
 			map.put(Constant.STATUS, "-1");
@@ -436,6 +441,20 @@ public class Storage {
 		return GsonUtil.toJson(map);
 	}
 
+	@ResponseBody
+	@RequestMapping(value = "/getInWarehouseOrderItemByOrderId", method = RequestMethod.POST)
+	public String getInWarehouseOrderItemByOrderId(Long orderId) {
+		List<InWarehouseOrderItem> inWarehouseOrderItemList = storageService.getInWarehouseOrderItem(orderId);
+		return GsonUtil.toJson(inWarehouseOrderItemList);
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/getOutWarehouseOrderItemByOrderId", method = RequestMethod.POST)
+	public String getOutWarehouseOrderItemByOrderId(Long orderId) {
+		List<OutWarehouseOrderItem> outWarehouseOrderItemList = storageService.getOutWarehouseOrderItem(orderId);
+		return GsonUtil.toJson(outWarehouseOrderItemList);
+	}
+
 	/**
 	 * 获取入库订单明细(头程运单号下的所有SKU和数量)
 	 * 
@@ -464,7 +483,7 @@ public class Storage {
 		// 客户id
 		Long userIdOfCustomer = userService.findUserIdByLoginName(userLoginName);
 		InWarehouseOrder param = new InWarehouseOrder();
-		param.setPackageTrackingNo(trackingNo);
+		param.setTrackingNo(trackingNo);
 		param.setUserIdOfCustomer(userIdOfCustomer);
 		// 执行查询(应当只有1个结果, 多个结果,只取第一个结果. 跟踪号重复的情况 ,待处理)
 		List<InWarehouseOrder> inWarehouseOrderList = storageService.findInWarehouseOrder(param, null, null);
@@ -472,7 +491,7 @@ public class Storage {
 			return GsonUtil.toJson(map);
 		}
 		InWarehouseOrder order = inWarehouseOrderList.get(0);
-		pagination = storageService.getInWarehouseItemData(order.getId(), pagination);
+		pagination = storageService.getInWarehouseOrderItemData(order.getId(), pagination);
 		map.put("Rows", pagination.rows);
 		map.put("Total", pagination.total);
 
@@ -493,6 +512,8 @@ public class Storage {
 		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
 		ModelAndView view = new ModelAndView();
 		view.addObject("userId", userId);
+		User user = userService.getUserById(userId);
+		view.addObject("warehouseList", storageService.findAllWarehouse(user.getDefaultWarehouseId()));
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
 		view.addObject("todayStart", DateUtil.getTodayStart());
 		view.setViewName("warehouse/storage/listInWarehouseRecord");
@@ -526,9 +547,8 @@ public class Storage {
 		pagination.pageSize = pagesize;
 		pagination.sortName = sortname;
 		pagination.sortOrder = sortorder;
-
 		InWarehouseRecord param = new InWarehouseRecord();
-		param.setPackageTrackingNo(trackingNo);
+		param.setTrackingNo(trackingNo);
 		if (StringUtil.isNotNull(userLoginName)) {
 			Long userIdOfCustomer = userService.findUserIdByLoginName(userLoginName);
 			param.setUserIdOfCustomer(userIdOfCustomer);
@@ -578,6 +598,8 @@ public class Storage {
 		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
 		ModelAndView view = new ModelAndView();
 		view.addObject("userId", userId);
+		User user = userService.getUserById(userId);
+		view.addObject("warehouseList", storageService.findAllWarehouse(user.getDefaultWarehouseId()));
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
 		view.setViewName("warehouse/storage/outWarehouse");
 		return view;

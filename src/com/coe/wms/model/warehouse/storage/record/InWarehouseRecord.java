@@ -55,7 +55,7 @@ public class InWarehouseRecord implements Serializable {
 	 * 
 	 * 要求客户预报的时候 大包头程 运单号 对应一个大包
 	 */
-	private String packageTrackingNo;
+	private String trackingNo;
 	
 	/**
 	 * 入库订单id, 非必有字段,当收货时找到预报订单时,保存入库订单id
@@ -70,15 +70,6 @@ public class InWarehouseRecord implements Serializable {
 	 * Y | N
 	 */
 	private String isUnKnowCustomer;
-
-	/**
-	 * 客户下的大包号
-	 * 
-	 * 要求一个入库单中只能包含同一个大包号的sku
-	 * 
-	 * 如果无大包号, 表示是无主件,即无预报Package
-	 */
-	private String packageNo;
 
 	/**
 	 * 创建时间 (收货时间)
@@ -176,12 +167,13 @@ public class InWarehouseRecord implements Serializable {
 		return remark;
 	}
 
-	public String getPackageTrackingNo() {
-		return packageTrackingNo;
+
+	public String getTrackingNo() {
+		return trackingNo;
 	}
 
-	public void setPackageTrackingNo(String packageTrackingNo) {
-		this.packageTrackingNo = packageTrackingNo;
+	public void setTrackingNo(String trackingNo) {
+		this.trackingNo = trackingNo;
 	}
 
 	public String getIsUnKnowCustomer() {
@@ -194,14 +186,6 @@ public class InWarehouseRecord implements Serializable {
 
 	public void setRemark(String remark) {
 		this.remark = remark;
-	}
-
-	public String getPackageNo() {
-		return packageNo;
-	}
-
-	public void setPackageNo(String packageNo) {
-		this.packageNo = packageNo;
 	}
 
 	/**
