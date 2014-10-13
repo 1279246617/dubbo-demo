@@ -75,7 +75,11 @@
 		          		<span class="pull-left" style="width:30px;">仓库</span>
 		          		<span class="pull-left" style="width:110px;">
 		          			<select style="width:80px;" id="warehouseId" name="warehouseId">
-								<option value="1">1-香港仓</option>
+								<c:forEach items="${warehouseList}" var="w" >
+				       	 			<option value="<c:out value='${w.id}'/>">
+				       	 				<c:out value="${w.id}-${w.warehouseName}"/>
+				       		 		</option>
+				       			</c:forEach>
 							</select>
 		          		</span>
 						

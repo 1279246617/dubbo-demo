@@ -27,6 +27,11 @@ public class LogisticsOrder implements Serializable {
 
 	private String mailNo;
 
+	/**
+	 * Sku入库唯一ID 等于客户参考号
+	 */
+	private String skuStockInId;
+
 	private String segmentCode;
 
 	private String poNo;
@@ -34,9 +39,20 @@ public class LogisticsOrder implements Serializable {
 	private String routeId;
 
 	private String logisticsRemark;
+
+	private String logisticsCode;
+
 	private SenderDetail senderDetail;
 
 	private ReceiverDetail receiverDetail;
+
+	public String getLogisticsCode() {
+		return logisticsCode;
+	}
+
+	public void setLogisticsCode(String logisticsCode) {
+		this.logisticsCode = logisticsCode;
+	}
 
 	public ReceiverDetail getReceiverDetail() {
 		return receiverDetail;
@@ -66,6 +82,14 @@ public class LogisticsOrder implements Serializable {
 
 	public String getLogisticsType() {
 		return logisticsType;
+	}
+
+	public String getSkuStockInId() {
+		return skuStockInId;
+	}
+
+	public void setSkuStockInId(String skuStockInId) {
+		this.skuStockInId = skuStockInId;
 	}
 
 	public void setLogisticsType(String logisticsType) {

@@ -108,7 +108,14 @@ public class User implements Serializable {
 	 * 1正常 -1删除 2冻结
 	 */
 	private Integer status;
-
+	
+	/**
+	 * 用户默认仓库id
+	 * 
+	 * 在界面上,有选择仓库的,优先显示默认仓库
+	 */
+	private Long defaultWarehouseId;
+	
 	@CacheKeyMethod
 	public Long getId() {
 		return id;
@@ -136,6 +143,14 @@ public class User implements Serializable {
 
 	public String getPassword() {
 		return password;
+	}
+
+	public Long getDefaultWarehouseId() {
+		return defaultWarehouseId;
+	}
+
+	public void setDefaultWarehouseId(Long defaultWarehouseId) {
+		this.defaultWarehouseId = defaultWarehouseId;
 	}
 
 	public void setPassword(String password) {

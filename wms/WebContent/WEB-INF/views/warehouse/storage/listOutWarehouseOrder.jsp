@@ -140,12 +140,12 @@
 	    	 grid = $("#maingrid").ligerGrid({
 	                columns: [
 	                    { display: '客户帐号', name: 'userNameOfCustomer', align: 'center',type:'float',width:'9%'},
-	  		          	{ display: '客户单号', name: 'customerReferenceNo', align: 'center', type: 'float',width:'10%'},
+	  		          	{ display: '客户单号', name: 'customerReferenceNo', align: 'center', type: 'float',width:'14%'},
 		                { display: '仓库', name: 'warehouse', align: 'center', type: 'float',width:'8%'},
-		              	{ display: 'SKU预览', isSort: false, align: 'center', type: 'float',width:'17%',render: function(row) {
+		              	{ display: 'SKU预览', isSort: false, align: 'center', type: 'float',width:'20%',render: function(row) {
 		            		var skus = "";
 		            		if (!row._editing) {
-		            			skus += '<a href="javascript:listInWarehouseOrderItem(' + row.id + ')">'+row.items+'</a> ';
+		            			skus += '<a href="javascript:listOutWarehouseOrderItem(' + row.id + ')">'+row.items+'</a> ';
 		            		}
 		            		return skus;
 	  		          	}},

@@ -9,7 +9,9 @@ import com.coe.wms.exception.ServiceException;
 import com.coe.wms.model.user.User;
 import com.coe.wms.model.warehouse.Warehouse;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
+import com.coe.wms.model.warehouse.storage.order.InWarehouseOrderItem;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrder;
+import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderItem;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecord;
 import com.coe.wms.pojo.api.warehouse.EventBody;
@@ -110,7 +112,24 @@ public interface IStorageService {
 	 * @param page
 	 * @return
 	 */
-	public Pagination getInWarehouseItemData(Long orderId, Pagination page);
+	public Pagination getInWarehouseOrderItemData(Long orderId, Pagination page);
+
+	/**
+	 * 获取入库订单物品
+	 * 
+	 * @param orderId
+	 * @param page
+	 * @return
+	 */
+	public List<InWarehouseOrderItem> getInWarehouseOrderItem(Long orderId);
+
+	/**
+	 * 获取出库订单物品
+	 * 
+	 * @param orderId
+	 * @return
+	 */
+	public List<OutWarehouseOrderItem> getOutWarehouseOrderItem(Long orderId);
 
 	/**
 	 * 
@@ -200,4 +219,13 @@ public interface IStorageService {
 	 * @throws ServiceException
 	 */
 	public List<Warehouse> findAllWarehouse() throws ServiceException;
+
+	/**
+	 * 获取所有仓库,并指定排在第一位的仓库id
+	 * 
+	 * @return
+	 * @throws ServiceException
+	 */
+	public List<Warehouse> findAllWarehouse(Long firstWarehouseId) throws ServiceException;
+
 }

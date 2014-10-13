@@ -42,7 +42,7 @@ public class InWarehouseRecordDaoImpl implements IInWarehouseRecordDao {
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public long saveInWarehouseRecord(final InWarehouseRecord record) {
-		final String sql = "insert into w_s_in_warehouse_record (warehouse_id,user_id_of_customer,user_id_of_operator,batch_no,package_no,package_tracking_no,is_un_know_customer,created_time,remark,callback_is_success,callback_count,in_warehouse_order_id) values (?,?,?,?,?,?,?,?,?,?,?)";
+		final String sql = "insert into w_s_in_warehouse_record (warehouse_id,user_id_of_customer,user_id_of_operator,batch_no,tracking_no,is_un_know_customer,created_time,remark,callback_is_success,callback_count,in_warehouse_order_id) values (?,?,?,?,?,?,?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
@@ -51,14 +51,13 @@ public class InWarehouseRecordDaoImpl implements IInWarehouseRecordDao {
 				ps.setLong(2, record.getUserIdOfCustomer());
 				ps.setLong(3, record.getUserIdOfOperator());
 				ps.setString(4, record.getBatchNo());
-				ps.setString(5, record.getPackageNo());
-				ps.setString(6, record.getPackageTrackingNo());
-				ps.setString(7, record.getIsUnKnowCustomer());
-				ps.setLong(8, record.getCreatedTime());
-				ps.setString(9, record.getRemark());
-				ps.setString(10, record.getCallbackIsSuccess());
-				ps.setInt(11, record.getCallbackCount() != null ? record.getCallbackCount() : 0);
-				ps.setLong(12, record.getInWarehouseOrderId() != null ? record.getInWarehouseOrderId() : 0);
+				ps.setString(5, record.getTrackingNo());
+				ps.setString(6, record.getIsUnKnowCustomer());
+				ps.setLong(7, record.getCreatedTime());
+				ps.setString(8, record.getRemark());
+				ps.setString(9, record.getCallbackIsSuccess());
+				ps.setInt(10, record.getCallbackCount() != null ? record.getCallbackCount() : 0);
+				ps.setLong(11, record.getInWarehouseOrderId() != null ? record.getInWarehouseOrderId() : 0);
 				return ps;
 			}
 		}, keyHolder);
@@ -68,7 +67,8 @@ public class InWarehouseRecordDaoImpl implements IInWarehouseRecordDao {
 
 	@Override
 	public InWarehouseRecord getInWarehouseRecordById(Long InWarehouseRecordId) {
-		String sql = "select id,warehouse_id,user_id_of_customer,user_id_of_operator,batch_no,package_no,package_tracking_no,is_un_know_customer,created_time,remark,callback_is_success,callback_count,in_warehouse_order_id from w_s_in_warehouse_record where id= "+ InWarehouseRecordId;
+		String sql = "select id,warehouse_id,user_id_of_customer,user_id_of_operator,batch_no,tracking_no,is_un_know_customer,created_time,remark,callback_is_success,callback_count,in_warehouse_order_id from w_s_in_warehouse_record where id= "
+				+ InWarehouseRecordId;
 		InWarehouseRecord record = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<InWarehouseRecord>(InWarehouseRecord.class));
 		return record;
 	}
@@ -79,13 +79,10 @@ public class InWarehouseRecordDaoImpl implements IInWarehouseRecordDao {
 	@Override
 	public List<InWarehouseRecord> findInWarehouseRecord(InWarehouseRecord InWarehouseRecord, Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select id,warehouse_id,user_id_of_customer,user_id_of_operator,batch_no,package_no,package_tracking_no,is_un_know_customer,created_time,remark,callback_is_success,callback_count,in_warehouse_order_id from w_s_in_warehouse_record where 1=1 ");
+		sb.append("select id,warehouse_id,user_id_of_customer,user_id_of_operator,batch_no,tracking_no,is_un_know_customer,created_time,remark,callback_is_success,callback_count,in_warehouse_order_id from w_s_in_warehouse_record where 1=1 ");
 		if (InWarehouseRecord != null) {
-			if (StringUtil.isNotNull(InWarehouseRecord.getPackageNo())) {
-				sb.append(" and package_no = '" + InWarehouseRecord.getPackageNo() + "' ");
-			}
-			if (StringUtil.isNotNull(InWarehouseRecord.getPackageTrackingNo())) {
-				sb.append(" and package_tracking_no = '" + InWarehouseRecord.getPackageTrackingNo() + "' ");
+			if (StringUtil.isNotNull(InWarehouseRecord.getTrackingNo())) {
+				sb.append(" and tracking_no = '" + InWarehouseRecord.getTrackingNo() + "' ");
 			}
 			if (StringUtil.isNotNull(InWarehouseRecord.getBatchNo())) {
 				sb.append(" and batch_no = '" + InWarehouseRecord.getBatchNo() + "' ");
@@ -155,11 +152,8 @@ public class InWarehouseRecordDaoImpl implements IInWarehouseRecordDao {
 		StringBuffer sb = new StringBuffer();
 		sb.append("select count(*)  from w_s_in_warehouse_record where 1=1 ");
 		if (InWarehouseRecord != null) {
-			if (StringUtil.isNotNull(InWarehouseRecord.getPackageNo())) {
-				sb.append(" and package_no = '" + InWarehouseRecord.getPackageNo() + "' ");
-			}
-			if (StringUtil.isNotNull(InWarehouseRecord.getPackageTrackingNo())) {
-				sb.append(" and package_tracking_no = '" + InWarehouseRecord.getPackageTrackingNo() + "' ");
+			if (StringUtil.isNotNull(InWarehouseRecord.getTrackingNo())) {
+				sb.append(" and tracking_no = '" + InWarehouseRecord.getTrackingNo() + "' ");
 			}
 			if (StringUtil.isNotNull(InWarehouseRecord.getBatchNo())) {
 				sb.append(" and batch_no = '" + InWarehouseRecord.getBatchNo() + "' ");
@@ -211,7 +205,7 @@ public class InWarehouseRecordDaoImpl implements IInWarehouseRecordDao {
 		}
 		String sql = sb.toString();
 		logger.info("统计入库记录sql:" + sql);
-		return jdbcTemplate.queryForLong(sql);
+		return jdbcTemplate.queryForObject(sql, Long.class);
 	}
 
 	/**

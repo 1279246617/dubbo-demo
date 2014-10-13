@@ -5,24 +5,34 @@ import java.io.Serializable;
 public class Sku implements Serializable {
 
 	private static final long serialVersionUID = 551558947068185258L;
-	
+
 	private String skuCode;
 
 	private String skuName;
-	
+
 	private Double skuUnitPrice;
-	
+
 	private String skuPriceCurrency;
-	
+
 	/**
 	 * sku 入库数量
 	 */
 	private Integer skuInBoundQty;
-	
+
 	/**
 	 * 入库时间
 	 */
 	private String skuBoundTime;
+
+	private Double skuNetWeight;
+
+	public Double getSkuNetWeight() {
+		return skuNetWeight;
+	}
+
+	public void setSkuNetWeight(Double skuNetWeight) {
+		this.skuNetWeight = skuNetWeight;
+	}
 
 	/**
 	 * 预报数量
@@ -31,7 +41,6 @@ public class Sku implements Serializable {
 
 	private String skuRemark;
 
-	
 	public String getSkuCode() {
 		return skuCode;
 	}
@@ -40,7 +49,6 @@ public class Sku implements Serializable {
 		this.skuCode = skuCode;
 	}
 
-	
 	public String getSkuName() {
 		return skuName;
 	}
@@ -81,7 +89,6 @@ public class Sku implements Serializable {
 		this.skuName = skuName;
 	}
 
-	
 	public Integer getSkuQty() {
 		return skuQty;
 	}
@@ -90,7 +97,6 @@ public class Sku implements Serializable {
 		this.skuQty = skuQty;
 	}
 
-	
 	public String getSkuRemark() {
 		return skuRemark;
 	}
