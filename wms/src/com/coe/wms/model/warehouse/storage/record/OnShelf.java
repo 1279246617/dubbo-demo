@@ -40,13 +40,12 @@ public class OnShelf implements Serializable {
 	private String batchNo;
 
 	/**
-	 * 客户下的大包号
 	 * 
-	 * 要求一个上架记录单中只能包含同一个大包号的sku
+	 * 要求一个上架记录单中只能包含同一个入库主单的sku
 	 * 
 	 * 可空
 	 */
-	private String packageNo;
+	private String inWarehouseRecordId;
 
 	/**
 	 * 创建时间 (收货时间)
@@ -101,6 +100,14 @@ public class OnShelf implements Serializable {
 		return userId;
 	}
 
+	public String getInWarehouseRecordId() {
+		return inWarehouseRecordId;
+	}
+
+	public void setInWarehouseRecordId(String inWarehouseRecordId) {
+		this.inWarehouseRecordId = inWarehouseRecordId;
+	}
+
 	public void setUserId(Long userId) {
 		this.userId = userId;
 	}
@@ -111,14 +118,6 @@ public class OnShelf implements Serializable {
 
 	public void setBatchNo(String batchNo) {
 		this.batchNo = batchNo;
-	}
-
-	public String getPackageNo() {
-		return packageNo;
-	}
-
-	public void setPackageNo(String packageNo) {
-		this.packageNo = packageNo;
 	}
 
 	public Long getCreatedTime() {
