@@ -49,6 +49,11 @@ public class OutWarehouseOrderItem implements Serializable {
 	 * sku单价 可用于报关价值
 	 */
 	private Double skuUnitPrice;
+	
+	/**
+	 * sku 重量
+	 */
+	private Double skuNetWeight;
 
 	/**
 	 * 备注
@@ -61,6 +66,14 @@ public class OutWarehouseOrderItem implements Serializable {
 
 	public String getSkuName() {
 		return skuName;
+	}
+
+	public Double getSkuNetWeight() {
+		return skuNetWeight;
+	}
+
+	public void setSkuNetWeight(Double skuNetWeight) {
+		this.skuNetWeight = skuNetWeight;
 	}
 
 	public void setSkuName(String skuName) {
