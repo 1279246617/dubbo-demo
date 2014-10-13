@@ -26,7 +26,11 @@
                			仓库
                			<select style="width:100px;" id="warehouseId" name="warehouseId">
                				<option></option>
-							<option value="1">1-香港仓</option>
+							<c:forEach items="${warehouseList}" var="w" >
+				       	 		<option value="<c:out value='${w.id}'/>">
+				       	 			<c:out value="${w.id}-${w.warehouseName}"/>
+				       		 	</option>
+				       		 </c:forEach>
 						</select>
                		</span>
                		

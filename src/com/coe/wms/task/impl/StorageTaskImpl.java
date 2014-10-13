@@ -99,7 +99,12 @@ public class StorageTaskImpl implements IStorageTask {
 	/**
 	 * 回传SKU出库重量
 	 */
-	private final String serviceNameWeight = "logistics.event.wms.weight";
+	private final String serviceNameSendWeight = "logistics.event.wms.weight";
+	
+	/**
+	 * 回传SKU出库状态
+	 */
+	private final String serviceNameSendStatus = "logistics.event.wms.stockout";
 
 	/**
 	 * 发送仓配入库订单信息给客户
@@ -285,7 +290,7 @@ public class StorageTaskImpl implements IStorageTask {
 			basicNameValuePairs.add(new BasicNameValuePair("logistics_interface", xml));
 			// 仓库编号
 			basicNameValuePairs.add(new BasicNameValuePair("logistics_provider_id", warehouse.getWarehouseNo()));
-			basicNameValuePairs.add(new BasicNameValuePair("msg_type", serviceNameWeight));
+			basicNameValuePairs.add(new BasicNameValuePair("msg_type", serviceNameSendWeight));
 			basicNameValuePairs.add(new BasicNameValuePair("msg_source", msgSource));
 			String dataDigest = StringUtil.encoderByMd5(xml + user.getOppositeToken());
 			basicNameValuePairs.add(new BasicNameValuePair("data_digest", dataDigest));
@@ -293,7 +298,7 @@ public class StorageTaskImpl implements IStorageTask {
 			String url = user.getOppositeServiceUrl();
 			logger.info("回传SKU出库称重信息: url=" + url);
 			logger.info("回传SKU出库称重信息: logistics_interface=" + xml);
-			logger.info("回传SKU出库称重信息: data_digest=" + dataDigest + " msg_source=" + msgSource + " msg_type=" + serviceNameWeight
+			logger.info("回传SKU出库称重信息: data_digest=" + dataDigest + " msg_source=" + msgSource + " msg_type=" + serviceNameSendWeight
 					+ " logistics_provider_id=" + warehouse.getWarehouseNo());
 			try {
 				String response = HttpUtil.postRequest(url, basicNameValuePairs);
@@ -346,7 +351,7 @@ public class StorageTaskImpl implements IStorageTask {
 			LogisticsEvent logisticsEvent = new LogisticsEvent();
 			// 事件头
 			EventHeader eventHeader = new EventHeader();
-			eventHeader.setEventType(EventType.WMS_GOODS_WEIGHT);
+			eventHeader.setEventType(EventType.WMS_STOCKOUT_INFO);
 			eventHeader.setEventTime(DateUtil.dateConvertString(new Date(), DateUtil.yyyy_MM_ddHHmmss));
 			// 仓库编码
 			eventHeader.setEventSource(warehouse.getWarehouseNo());
@@ -388,7 +393,7 @@ public class StorageTaskImpl implements IStorageTask {
 			basicNameValuePairs.add(new BasicNameValuePair("logistics_interface", xml));
 			// 仓库编号
 			basicNameValuePairs.add(new BasicNameValuePair("logistics_provider_id", warehouse.getWarehouseNo()));
-			basicNameValuePairs.add(new BasicNameValuePair("msg_type", serviceNameWeight));
+			basicNameValuePairs.add(new BasicNameValuePair("msg_type", serviceNameSendStatus));
 			basicNameValuePairs.add(new BasicNameValuePair("msg_source", msgSource));
 			String dataDigest = StringUtil.encoderByMd5(xml + user.getOppositeToken());
 			basicNameValuePairs.add(new BasicNameValuePair("data_digest", dataDigest));
@@ -396,7 +401,7 @@ public class StorageTaskImpl implements IStorageTask {
 			String url = user.getOppositeServiceUrl();
 			logger.info("回传SKU出库状态信息: url=" + url);
 			logger.info("回传SKU出库状态信息: logistics_interface=" + xml);
-			logger.info("回传SKU出库状态信息: data_digest=" + dataDigest + " msg_source=" + msgSource + " msg_type=" + serviceNameWeight
+			logger.info("回传SKU出库状态信息: data_digest=" + dataDigest + " msg_source=" + msgSource + " msg_type=" + serviceNameSendStatus
 					+ " logistics_provider_id=" + warehouse.getWarehouseNo());
 			try {
 				String response = HttpUtil.postRequest(url, basicNameValuePairs);

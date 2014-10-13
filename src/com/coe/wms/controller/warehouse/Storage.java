@@ -19,6 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.coe.wms.controller.Application;
 import com.coe.wms.model.user.User;
+import com.coe.wms.model.warehouse.Warehouse;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrder;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus;
@@ -73,6 +74,8 @@ public class Storage {
 		ModelAndView view = new ModelAndView();
 		view.addObject("userId", userId);
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
+		List<Warehouse> warehouseList = storageService.findAllWarehouse();
+		view.addObject("warehouseList", warehouseList);
 		view.addObject("todayStart", DateUtil.getTodayStart());
 		view.setViewName("warehouse/storage/listInWarehouseOrder");
 		return view;
@@ -141,6 +144,8 @@ public class Storage {
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
 		List<OutWarehouseOrderStatus> outWarehouseOrderStatusList = storageService.findAllOutWarehouseOrderStatus();
 		view.addObject("outWarehouseOrderStatusList", outWarehouseOrderStatusList);
+		List<Warehouse> warehouseList = storageService.findAllWarehouse();
+		view.addObject("warehouseList", warehouseList);
 		view.addObject("todayStart", DateUtil.getTodayStart());
 		view.setViewName("warehouse/storage/listOutWarehouseOrder");
 		return view;

@@ -942,5 +942,12 @@ public class StorageServiceImpl implements IStorageService {
 		response.setSuccess(Constant.TRUE);
 		return XmlUtil.toXml(Responses.class, responses);
 	}
-
+	
+	/**
+	 * 获取所有仓库
+	 */
+	@Override
+	public List<Warehouse> findAllWarehouse() throws ServiceException {
+		return warehouseDao.findAllWarehouse();
+	}
 }

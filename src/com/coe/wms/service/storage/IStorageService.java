@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 
 import com.coe.wms.exception.ServiceException;
 import com.coe.wms.model.user.User;
+import com.coe.wms.model.warehouse.Warehouse;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrder;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus;
@@ -191,4 +192,12 @@ public interface IStorageService {
 	 * @throws ServiceException
 	 */
 	public List<OutWarehouseOrderStatus> findAllOutWarehouseOrderStatus() throws ServiceException;
+
+	/**
+	 * 获取所有仓库
+	 * 
+	 * @return
+	 * @throws ServiceException
+	 */
+	public List<Warehouse> findAllWarehouse() throws ServiceException;
 }
