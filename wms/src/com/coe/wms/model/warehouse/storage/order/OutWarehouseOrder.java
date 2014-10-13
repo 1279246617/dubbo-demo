@@ -46,11 +46,6 @@ public class OutWarehouseOrder implements Serializable {
 	private Long createdTime;
 
 	/**
-	 * 状态
-	 */
-	private String status;
-
-	/**
 	 * 出库摘要
 	 */
 	private String remark;
@@ -59,16 +54,32 @@ public class OutWarehouseOrder implements Serializable {
 	 * 客户参考号, 用于客户对该出库指令进行修改,确认等
 	 */
 	private String customerReferenceNo;
-
+	
 	/**
-	 * 回调是否成功 Y 成功 N或者空失败
+	 * 状态
 	 */
-	private String callbackIsSuccess;
+	private String status;
+	//当状态是等待回传出库称重给客户并且callbackSendWeightIsSuccess=N或Null 回传称重,  
+	//当状态是等待回传出库状态给客户并且callbackSendStatusIsSuccess=N或Null 回传状态
+	/**
+	 * 回调称重是否成功 Y 成功 N或者空失败
+	 */
+	private String callbackSendWeightIsSuccess;
+	
+	/**
+	 * 回调次数
+	 */
+	private Integer callbackSendWeighCount;
+	
+	/**
+	 * 回调出库状态是否成功 Y 成功 N或者空失败
+	 */
+	private String callbackSendStatusIsSuccess;
 
 	/**
 	 * 回调次数
 	 */
-	private Integer callbackCount;
+	private Integer callbackSendStatusCount;
 
 	/**
 	 * 出库重量
@@ -121,20 +132,36 @@ public class OutWarehouseOrder implements Serializable {
 		this.customerReferenceNo = customerReferenceNo;
 	}
 
-	public String getCallbackIsSuccess() {
-		return callbackIsSuccess;
+	public String getCallbackSendWeightIsSuccess() {
+		return callbackSendWeightIsSuccess;
 	}
 
-	public void setCallbackIsSuccess(String callbackIsSuccess) {
-		this.callbackIsSuccess = callbackIsSuccess;
+	public void setCallbackSendWeightIsSuccess(String callbackSendWeightIsSuccess) {
+		this.callbackSendWeightIsSuccess = callbackSendWeightIsSuccess;
 	}
 
-	public Integer getCallbackCount() {
-		return callbackCount;
+	public Integer getCallbackSendWeighCount() {
+		return callbackSendWeighCount;
 	}
 
-	public void setCallbackCount(Integer callbackCount) {
-		this.callbackCount = callbackCount;
+	public void setCallbackSendWeighCount(Integer callbackSendWeighCount) {
+		this.callbackSendWeighCount = callbackSendWeighCount;
+	}
+
+	public String getCallbackSendStatusIsSuccess() {
+		return callbackSendStatusIsSuccess;
+	}
+
+	public void setCallbackSendStatusIsSuccess(String callbackSendStatusIsSuccess) {
+		this.callbackSendStatusIsSuccess = callbackSendStatusIsSuccess;
+	}
+
+	public Integer getCallbackSendStatusCount() {
+		return callbackSendStatusCount;
+	}
+
+	public void setCallbackSendStatusCount(Integer callbackSendStatusCount) {
+		this.callbackSendStatusCount = callbackSendStatusCount;
 	}
 
 	public Long getCreatedTime() {
