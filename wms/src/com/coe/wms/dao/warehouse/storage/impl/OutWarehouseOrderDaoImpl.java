@@ -272,7 +272,7 @@ public class OutWarehouseOrderDaoImpl implements IOutWarehouseOrderDao {
 	public int updateOutWarehouseOrderCallbackSendWeight(OutWarehouseOrder outWarehouseOrder) {
 		String sql = "update w_s_out_warehouse_order set callback_send_weight_is_success='"
 				+ outWarehouseOrder.getCallbackSendWeightIsSuccess() + "' ,callback_send_weigh_count = "
-				+ outWarehouseOrder.getCallbackSendWeighCount() + " where id=" + outWarehouseOrder.getId();
+				+ outWarehouseOrder.getCallbackSendWeighCount() +" , status='"+outWarehouseOrder.getStatus()+  "' where id=" + outWarehouseOrder.getId();
 		return jdbcTemplate.update(sql);
 	}
 
@@ -286,7 +286,7 @@ public class OutWarehouseOrderDaoImpl implements IOutWarehouseOrderDao {
 	public int updateOutWarehouseOrderCallbackSendStatus(OutWarehouseOrder outWarehouseOrder) {
 		String sql = "update w_s_out_warehouse_order set callback_send_status_is_success='"
 				+ outWarehouseOrder.getCallbackSendStatusIsSuccess() + "' ,callback_send_status_count = "
-				+ outWarehouseOrder.getCallbackSendStatusCount() + " where id=" + outWarehouseOrder.getId();
+				+ outWarehouseOrder.getCallbackSendStatusCount() +" , status='"+outWarehouseOrder.getStatus()+ "' where id=" + outWarehouseOrder.getId();
 		return jdbcTemplate.update(sql);
 	}
 }

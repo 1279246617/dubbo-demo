@@ -28,6 +28,7 @@ import com.coe.wms.model.user.User;
 import com.coe.wms.model.warehouse.Warehouse;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrder;
+import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus.OutWarehouseOrderStatusCode;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecord;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecordItem;
 import com.coe.wms.pojo.api.warehouse.EventBody;
@@ -103,9 +104,9 @@ public class StorageTaskImpl implements IStorageTask {
 	/**
 	 * 发送仓配入库订单信息给客户
 	 */
-	// @Scheduled(cron = "0 0/1 8-23 * * ? ")
+	 @Scheduled(cron = "0 0/1 8-23 * * ? ")
 	// 早上8点到下午6点,每分钟
-	// @Scheduled(cron="0 0/30 8-18 * * ? ") //早上8点到下午6点,每半小时一次
+//	 @Scheduled(cron="0 0/30 8-18 * * ? ") //早上8点到下午6点,每半小时一次
 	@Override
 	public void sendInWarehouseInfoToCustomer() {
 		InWarehouseRecord param = new InWarehouseRecord();
@@ -297,7 +298,7 @@ public class StorageTaskImpl implements IStorageTask {
 			try {
 				String response = HttpUtil.postRequest(url, basicNameValuePairs);
 				logger.info("顺丰返回:" + response);
-				outWarehouseOrder.setCallbackSendWeighCount(outWarehouseOrder.getCallbackSendWeighCount() == null ? 0 : outWarehouseOrder
+				outWarehouseOrder.setCallbackSendWeighCount(outWarehouseOrder.getCallbackSendWeighCount() == null ? 1 : outWarehouseOrder
 						.getCallbackSendWeighCount() + 1);
 				Responses responses = (Responses) XmlUtil.toObject(response, Responses.class);
 				if (responses == null) {
@@ -308,6 +309,7 @@ public class StorageTaskImpl implements IStorageTask {
 				if (responseList != null && responseList.size() > 0) {
 					if (StringUtil.isEqualIgnoreCase(responseList.get(0).getSuccess(), Constant.TRUE)) {
 						outWarehouseOrder.setCallbackSendWeightIsSuccess(Constant.Y);
+						outWarehouseOrder.setStatus(OutWarehouseOrderStatusCode.WCC);
 						logger.info("回传SKU出库称重信息成功");
 					} else {
 						outWarehouseOrder.setCallbackSendWeightIsSuccess(Constant.N);
@@ -327,11 +329,11 @@ public class StorageTaskImpl implements IStorageTask {
 	/**
 	 * 回传出库状态给客户(出库的最后步骤)
 	 */
-	// @Scheduled(cron = "0 0/1 8-23 * * ? ")
+	 @Scheduled(cron = "0 0/1 8-23 * * ? ")
 	@Override
 	public void sendOutWarehouseStatusToCustomer() {
 		List<Long> orderIdList = outWarehouseOrderDao.findCallbackSendStatusUnSuccessOrderId();
-		logger.info("找到待回传SKU出库重量,订单总数:" + orderIdList.size());
+		logger.info("找到待回传SKU出库状态,订单总数:" + orderIdList.size());
 		// 根据id 获取记录
 		for (int i = 0; i < orderIdList.size(); i++) {
 			Long outWarehouseOrderId = orderIdList.get(i);
@@ -392,36 +394,36 @@ public class StorageTaskImpl implements IStorageTask {
 			basicNameValuePairs.add(new BasicNameValuePair("data_digest", dataDigest));
 			basicNameValuePairs.add(new BasicNameValuePair("version", "1.0"));
 			String url = user.getOppositeServiceUrl();
-			logger.info("回传SKU出库称重信息: url=" + url);
-			logger.info("回传SKU出库称重信息: logistics_interface=" + xml);
-			logger.info("回传SKU出库称重信息: data_digest=" + dataDigest + " msg_source=" + msgSource + " msg_type=" + serviceNameWeight
+			logger.info("回传SKU出库状态信息: url=" + url);
+			logger.info("回传SKU出库状态信息: logistics_interface=" + xml);
+			logger.info("回传SKU出库状态信息: data_digest=" + dataDigest + " msg_source=" + msgSource + " msg_type=" + serviceNameWeight
 					+ " logistics_provider_id=" + warehouse.getWarehouseNo());
 			try {
 				String response = HttpUtil.postRequest(url, basicNameValuePairs);
 				logger.info("顺丰返回:" + response);
-				outWarehouseOrder.setCallbackSendStatusCount(outWarehouseOrder.getCallbackSendStatusCount() == null ? 0 : outWarehouseOrder
+				outWarehouseOrder.setCallbackSendStatusCount(outWarehouseOrder.getCallbackSendStatusCount() == null ? 1 : outWarehouseOrder
 						.getCallbackSendStatusCount() + 1);
 				Responses responses = (Responses) XmlUtil.toObject(response, Responses.class);
 				if (responses == null) {
-					logger.error("回传SKU出库称重信息 返回信息无法转换成Responses对象");
+					logger.error("回传SKU出库状态信息 返回信息无法转换成Responses对象");
 					continue;
 				}
 				List<Response> responseList = responses.getResponseItems();
 				if (responseList != null && responseList.size() > 0) {
 					if (StringUtil.isEqualIgnoreCase(responseList.get(0).getSuccess(), Constant.TRUE)) {
 						outWarehouseOrder.setCallbackSendStatusIsSuccess(Constant.Y);
-						logger.info("回传SKU出库称重信息成功");
+						logger.info("回传SKU出库状态信息成功");
 					} else {
 						outWarehouseOrder.setCallbackSendStatusIsSuccess(Constant.N);
-						logger.info("回传SKU出库称重信息失败");
+						logger.info("回传SKU出库状态信息失败");
 					}
 				} else {
-					logger.error("回传SKU出库称重信息,返回无指明成功与否");
+					logger.error("回传SKU出库状态信息,返回无指明成功与否");
 				}
 				// 更新入库记录的Callback 次数和成功状态
 				outWarehouseOrderDao.updateOutWarehouseOrderCallbackSendStatus(outWarehouseOrder);
 			} catch (Exception e) {
-				logger.error("回传SKU出库称重信息时发生异常:" + e.getMessage());
+				logger.error("回传SKU出库状态信息时发生异常:" + e.getMessage());
 			}
 		}
 	}
