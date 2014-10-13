@@ -99,7 +99,7 @@ public class StorageTaskImpl implements IStorageTask {
 	 * 回传SKU出库重量
 	 */
 	private final String serviceNameWeight = "logistics.event.wms.weight";
-	
+
 	/**
 	 * 发送仓配入库订单信息给客户
 	 */
@@ -228,7 +228,7 @@ public class StorageTaskImpl implements IStorageTask {
 	@Scheduled(cron = "0 0/1 8-23 * * ? ")
 	@Override
 	public void sendOutWarehouseWeightToCustomer() {
-		List<Long> orderIdList = outWarehouseOrderDao.findCallbackUnSuccessOrderId();
+		List<Long> orderIdList = outWarehouseOrderDao.findCallbackSendWeightUnSuccessOrderId();
 		logger.info("找到待回传SKU出库重量,订单总数:" + orderIdList.size());
 		// 根据id 获取记录
 		for (int i = 0; i < orderIdList.size(); i++) {
@@ -267,8 +267,9 @@ public class StorageTaskImpl implements IStorageTask {
 			LogisticsOrder logisticsOrder = new LogisticsOrder();
 			logisticsOrder.setLogisticsWeight(Weight.turnToG(outWarehouseOrder.getOutWarehouseWeight(), outWarehouseOrder.getWeightCode()));
 			logisticsOrder.setLogisticsRemark("备注");
-			logisticsOrder.setOccurTime(DateUtil.dateConvertString(new Date(outWarehouseOrder.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss));
-			
+			logisticsOrder
+					.setOccurTime(DateUtil.dateConvertString(new Date(outWarehouseOrder.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss));
+
 			logisticsOrders.add(logisticsOrder);
 			logisticsDetail.setLogisticsOrders(logisticsOrders);
 
@@ -277,7 +278,7 @@ public class StorageTaskImpl implements IStorageTask {
 			logisticsEventsRequest.setLogisticsEvent(logisticsEvent);
 			String xml = XmlUtil.toXml(LogisticsEventsRequest.class, logisticsEventsRequest);
 			User user = userDao.getUserById(outWarehouseOrder.getUserIdOfCustomer());
-			
+
 			String msgSource = user.getOppositeMsgSource();
 			List<BasicNameValuePair> basicNameValuePairs = new ArrayList<BasicNameValuePair>();
 			basicNameValuePairs.add(new BasicNameValuePair("logistics_interface", xml));
@@ -296,8 +297,8 @@ public class StorageTaskImpl implements IStorageTask {
 			try {
 				String response = HttpUtil.postRequest(url, basicNameValuePairs);
 				logger.info("顺丰返回:" + response);
-				outWarehouseOrder.setCallbackCount(outWarehouseOrder.getCallbackCount() == null ? 0
-						: outWarehouseOrder.getCallbackCount() + 1);
+				outWarehouseOrder.setCallbackSendWeighCount(outWarehouseOrder.getCallbackSendWeighCount() == null ? 0 : outWarehouseOrder
+						.getCallbackSendWeighCount() + 1);
 				Responses responses = (Responses) XmlUtil.toObject(response, Responses.class);
 				if (responses == null) {
 					logger.error("回传SKU出库称重信息 返回信息无法转换成Responses对象");
@@ -306,31 +307,30 @@ public class StorageTaskImpl implements IStorageTask {
 				List<Response> responseList = responses.getResponseItems();
 				if (responseList != null && responseList.size() > 0) {
 					if (StringUtil.isEqualIgnoreCase(responseList.get(0).getSuccess(), Constant.TRUE)) {
-						outWarehouseOrder.setCallbackIsSuccess(Constant.Y);
+						outWarehouseOrder.setCallbackSendWeightIsSuccess(Constant.Y);
 						logger.info("回传SKU出库称重信息成功");
 					} else {
-						outWarehouseOrder.setCallbackIsSuccess(Constant.N);
+						outWarehouseOrder.setCallbackSendWeightIsSuccess(Constant.N);
 						logger.info("回传SKU出库称重信息失败");
 					}
 				} else {
 					logger.error("回传SKU出库称重信息,返回无指明成功与否");
 				}
 				// 更新入库记录的Callback 次数和成功状态
-				outWarehouseOrderDao.updateOutWarehouseOrderCallback(outWarehouseOrder);
+				outWarehouseOrderDao.updateOutWarehouseOrderCallbackSendWeight(outWarehouseOrder);
 			} catch (Exception e) {
 				logger.error("回传SKU出库称重信息时发生异常:" + e.getMessage());
 			}
 		}
 	}
-	
-	
+
 	/**
 	 * 回传出库状态给客户(出库的最后步骤)
 	 */
-//	@Scheduled(cron = "0 0/1 8-23 * * ? ")
+	// @Scheduled(cron = "0 0/1 8-23 * * ? ")
 	@Override
 	public void sendOutWarehouseStatusToCustomer() {
-		List<Long> orderIdList = outWarehouseOrderDao.findCallbackUnSuccessOrderId();
+		List<Long> orderIdList = outWarehouseOrderDao.findCallbackSendStatusUnSuccessOrderId();
 		logger.info("找到待回传SKU出库重量,订单总数:" + orderIdList.size());
 		// 根据id 获取记录
 		for (int i = 0; i < orderIdList.size(); i++) {
@@ -369,8 +369,9 @@ public class StorageTaskImpl implements IStorageTask {
 			LogisticsOrder logisticsOrder = new LogisticsOrder();
 			logisticsOrder.setLogisticsWeight(Weight.turnToG(outWarehouseOrder.getOutWarehouseWeight(), outWarehouseOrder.getWeightCode()));
 			logisticsOrder.setLogisticsRemark("备注");
-			logisticsOrder.setOccurTime(DateUtil.dateConvertString(new Date(outWarehouseOrder.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss));
-			
+			logisticsOrder
+					.setOccurTime(DateUtil.dateConvertString(new Date(outWarehouseOrder.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss));
+
 			logisticsOrders.add(logisticsOrder);
 			logisticsDetail.setLogisticsOrders(logisticsOrders);
 
@@ -379,7 +380,7 @@ public class StorageTaskImpl implements IStorageTask {
 			logisticsEventsRequest.setLogisticsEvent(logisticsEvent);
 			String xml = XmlUtil.toXml(LogisticsEventsRequest.class, logisticsEventsRequest);
 			User user = userDao.getUserById(outWarehouseOrder.getUserIdOfCustomer());
-			
+
 			String msgSource = user.getOppositeMsgSource();
 			List<BasicNameValuePair> basicNameValuePairs = new ArrayList<BasicNameValuePair>();
 			basicNameValuePairs.add(new BasicNameValuePair("logistics_interface", xml));
@@ -398,8 +399,8 @@ public class StorageTaskImpl implements IStorageTask {
 			try {
 				String response = HttpUtil.postRequest(url, basicNameValuePairs);
 				logger.info("顺丰返回:" + response);
-				outWarehouseOrder.setCallbackCount(outWarehouseOrder.getCallbackCount() == null ? 0
-						: outWarehouseOrder.getCallbackCount() + 1);
+				outWarehouseOrder.setCallbackSendStatusCount(outWarehouseOrder.getCallbackSendStatusCount() == null ? 0 : outWarehouseOrder
+						.getCallbackSendStatusCount() + 1);
 				Responses responses = (Responses) XmlUtil.toObject(response, Responses.class);
 				if (responses == null) {
 					logger.error("回传SKU出库称重信息 返回信息无法转换成Responses对象");
@@ -408,17 +409,17 @@ public class StorageTaskImpl implements IStorageTask {
 				List<Response> responseList = responses.getResponseItems();
 				if (responseList != null && responseList.size() > 0) {
 					if (StringUtil.isEqualIgnoreCase(responseList.get(0).getSuccess(), Constant.TRUE)) {
-						outWarehouseOrder.setCallbackIsSuccess(Constant.Y);
+						outWarehouseOrder.setCallbackSendStatusIsSuccess(Constant.Y);
 						logger.info("回传SKU出库称重信息成功");
 					} else {
-						outWarehouseOrder.setCallbackIsSuccess(Constant.N);
+						outWarehouseOrder.setCallbackSendStatusIsSuccess(Constant.N);
 						logger.info("回传SKU出库称重信息失败");
 					}
 				} else {
 					logger.error("回传SKU出库称重信息,返回无指明成功与否");
 				}
 				// 更新入库记录的Callback 次数和成功状态
-				outWarehouseOrderDao.updateOutWarehouseOrderCallback(outWarehouseOrder);
+				outWarehouseOrderDao.updateOutWarehouseOrderCallbackSendStatus(outWarehouseOrder);
 			} catch (Exception e) {
 				logger.error("回传SKU出库称重信息时发生异常:" + e.getMessage());
 			}

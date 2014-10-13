@@ -20,9 +20,11 @@ public interface IOutWarehouseOrderDao {
 
 	public String getOutWarehouseOrderStatus(Long orderId);
 
-	public List<Long> findCallbackUnSuccessOrderId();
+	public List<Long> findCallbackSendWeightUnSuccessOrderId();
 
-	public List<Long> findWaitSendWeightToCustomerOrderId();
+	public List<Long> findCallbackSendStatusUnSuccessOrderId();
+
+	public int updateOutWarehouseOrderCallbackSendWeight(OutWarehouseOrder outWarehouseOrder);
 	
-	public int updateOutWarehouseOrderCallback(OutWarehouseOrder outWarehouseOrder);
+	public int updateOutWarehouseOrderCallbackSendStatus(OutWarehouseOrder outWarehouseOrder);
 }
