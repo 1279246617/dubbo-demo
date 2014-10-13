@@ -44,7 +44,7 @@ public class InWarehouseOrder implements Serializable {
 	/**
 	 * 大包到货时,贴的运单号
 	 * 
-	 * 要求客户预报的时候 大包头程 运单号 对应一个大包
+	 * 要求客户预报的时候 大包头程 跟踪单号 对应一个大包
 	 */
 	private String trackingNo;
 		
