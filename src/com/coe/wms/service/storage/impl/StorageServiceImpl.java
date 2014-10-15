@@ -598,10 +598,14 @@ public class StorageServiceImpl implements IStorageService {
 		LogisticsOrder logisticsOrder = logisticsOrders.get(0);
 		logger.info("正在入库:跟踪单号(mailNo):" + logisticsOrder.getMailNo());
 		if (StringUtil.isNull(logisticsOrder.getMailNo())) {
-			throw new ServiceException("跟踪单号(mailNo)为空,订单入库失败");
+			response.setReason(ErrorCode.S13_CODE);
+			response.setReasonDesc("跟踪单号(mailNo)为空,订单入库失败");
+			return XmlUtil.toXml(Responses.class, responses);
 		}
 		if (StringUtil.isNull(logisticsOrder.getSkuStockInId())) {
-			throw new ServiceException("客户参考号(skuStockInId)为空,订单入库失败");
+			response.setReason(ErrorCode.S13_CODE);
+			response.setReasonDesc("客户参考号(skuStockInId)为空,订单入库失败");
+			return XmlUtil.toXml(Responses.class, responses);
 		}
 		// 判断是否已经存在相同的跟踪单号和承运商(目前仅判断相同的跟踪单号就不可以入库)
 		InWarehouseOrder param = new InWarehouseOrder();
@@ -1008,5 +1012,24 @@ public class StorageServiceImpl implements IStorageService {
 		param.setOutWarehouseOrderId(orderId);
 		List<OutWarehouseOrderItem> outWarehouseOrderItemList = outWarehouseOrderItemDao.findOutWarehouseOrderItem(param, null, null);
 		return outWarehouseOrderItemList;
+	}
+
+	@Override
+	public List<Map<String, String>> checkInWarehouseOrder(InWarehouseOrder inWarehouseOrder) {
+		List<InWarehouseOrder> inWarehouseOrderList = inWarehouseOrderDao.findInWarehouseOrder(inWarehouseOrder, null, null);
+		List<Map<String, String>> mapList = new ArrayList<Map<String, String>>();
+		for (InWarehouseOrder order : inWarehouseOrderList) {
+			Map<String, String> map = new HashMap<String, String>();
+			Long userId = order.getUserIdOfCustomer();
+			User user = userDao.getUserById(userId);
+			map.put("userLoginName", user.getLoginName());
+			map.put("trackingNo", order.getTrackingNo());
+			map.put("customerReferenceNo", order.getCustomerReferenceNo());
+			map.put("carrierCode", order.getCarrierCode());
+			String time = DateUtil.dateConvertString(new Date(order.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss);
+			map.put("createdTime", time);
+			mapList.add(map);
+		}
+		return mapList;
 	}
 }

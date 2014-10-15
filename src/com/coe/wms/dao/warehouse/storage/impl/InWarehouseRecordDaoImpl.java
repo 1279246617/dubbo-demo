@@ -47,7 +47,7 @@ public class InWarehouseRecordDaoImpl implements IInWarehouseRecordDao {
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
 				PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-				ps.setLong(1, record.getWarehouseId() != null ? record.getWarehouseId() : 0);
+				ps.setLong(1, record.getWarehouseId());
 				ps.setLong(2, record.getUserIdOfCustomer());
 				ps.setLong(3, record.getUserIdOfOperator());
 				ps.setString(4, record.getBatchNo());
@@ -57,7 +57,7 @@ public class InWarehouseRecordDaoImpl implements IInWarehouseRecordDao {
 				ps.setString(8, record.getRemark());
 				ps.setString(9, record.getCallbackIsSuccess());
 				ps.setInt(10, record.getCallbackCount() != null ? record.getCallbackCount() : 0);
-				ps.setLong(11, record.getInWarehouseOrderId() != null ? record.getInWarehouseOrderId() : 0);
+				ps.setLong(11, record.getInWarehouseOrderId());
 				return ps;
 			}
 		}, keyHolder);

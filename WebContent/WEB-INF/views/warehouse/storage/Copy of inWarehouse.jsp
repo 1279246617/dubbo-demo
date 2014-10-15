@@ -18,53 +18,44 @@
 <title>COE</title>
 </head>
 <body>
-	<div class="pull-left" style="width:100%;height:280px; margin-top: 1px;" >
+	<div class="pull-left" style="width:100%;height:240px; margin-top: 1px;" >
 		 <form action="${baseUrl}/warehouse/storage/getInWarehouseRecordItemData.do" id="searchform" name="searchform" method="post">
 			<table class="table table-striped" style="width:1150px;margin-bottom: 5px">
 					<tr style="height:15px;">
-							<td style="width:290px;">
+							<td>
 									<span class="pull-left" style="width:52px;">跟踪单号</span>
 									<span class="pull-left" style="width:191px;">
-										<!--  利用focus和blur 判断跟踪号是否有变化, 变化则把入库订单id清空-->
-										<input type="text"  name="trackingNo"  id="trackingNo" t="1" onfocus="trackingNoFocus()"  onblur="trackingNoBlur()" style="width:190px;"/>
-										<!-- 用户按回车时,当入库订单id 为空是第一次提交,后台返回id,或其他提示.  不为空 提示客户可输入SKU和数量进行收货 -->
-										<input type="text"  name="inWarehouseOrderId"  id="inWarehouseOrderId" t="1"  style="display: none;"/>
-									</span>
-							</td>		
-							<td style="width:300px;">
-									<span class="pull-left" style="width:52px;">入库概要</span>
-									<span class="pull-left" style="width:191px;">
-										<input type="text" t="1"  name="orderRemark"  id="orderRemark" style="width:220px;"/>
+										<input type="text"  name="trackingNo"  id="trackingNo" t="1" onfocus="trackingNoFocus()"   style="width:190px;"/>
 									</span>
 							</td>		
 							<td>
-								<span class="pull-left" style="width:55px;" id="tips"><b>操作提示:</b></span>
-								<span class="pull-left" style="width:352px;color:red;" id="tips">请输入跟踪单号并按回车!</span>
+								客户帐号&nbsp;&nbsp;<input type="text" name="userLoginName"  t="1" data-provide="typeahead"  id="userLoginName" style="width:120px;"  />
+								<select style="width:160px;display:none;" id="loginNameSelect" onchange="loginNameSelectChange()">
+								</select>
+		          				<img class="tips" id="customerNoTips" msg="根据运单号找不到唯一的入库订单时,将要求输入客户帐号" src="${baseUrl}/static/img/help.gif">
+		          				&nbsp;&nbsp;
+		          				 <input type="checkbox" name="unKnowCustomer" t="1" id="unKnowCustomer" />&nbsp;标记为无主件
+		          				&nbsp;&nbsp;&nbsp;&nbsp;
+		          				 主单备注&nbsp;&nbsp;<input type="text" t="1"  name="orderRemark"  id="orderRemark" style="width:220px;"/>
+		          				 <!-- 入库主单记录id -->
+		          				 <input type="text" name="inWarehouseRecordId" t="1" id="inWarehouseRecordId" style="display:none;">
+		          				 
+		          				 <a class="btn  btn-primary" id="enter" onclick="saveInWarehouseRecord()" style="cursor:pointer;"><i class="icon-ok icon-white"></i>保存主单</a>
+		          				 &nbsp;&nbsp;
+		          				 <button class="btn  btn-primary"   style="cursor:pointer;" type="reset"><i class="icon-ok icon-white"></i>清除</button>
+		          				 &nbsp;&nbsp;&nbsp;&nbsp;
 							</td>
 					</tr>
 			</table>
-			<table  class="table table-striped" style="width:1150px;margin-bottom: 5px;display:none;" id="inWarehouseOrdertable" >
+			<table  class="table table-striped" style="width:1150px;margin-bottom: 5px" id="inWarehouseOrdertable" >
 				<tr>
-					<th style="width:25px;text-align:center;">选择</th>
-					<th style="width:155px;text-align:center;">客户帐号</th>
-					<th style="width:225px;text-align:center;">跟踪单号</th> 
-					<th style="width:205px;text-align:center;">承运商</th>
-					<th style="width:205px;text-align:center;">客户参考号</th> 
-					<th style="width:205px;text-align:center;">创建时间</th>
+					<td>请勾选 入库订单Id</td> <td>跟踪单号</td> <td>客户参考号</td> <td>承运商</td> <td>创建时间</td>
 				</tr>
 				<tr>
-					<td style="width:25px;text-align:center;"><input type="radio" t="1" name="inWarehouseOrderRadio" value="radiobutton"></td>
-					<td style="width:155px;text-align:center;">SF</td>
-					<td style="width:225px;text-align:center;">RA12312312312</td> 
-					<td style="width:205px;text-align:center;">cnram</td>
-					<td style="width:205px;text-align:center;">11111111</td> 
-					<td style="width:205px;text-align:center;">2014-10-14 12:00:00</td>
+					
 				</tr>
 			</table>
-			<div style="height:30px;">
-			</div>
 		</form>
-		
 		<table class="table table-striped" style="width:1200px;margin-bottom: 0px">
 			<tr>
 					<td  >
@@ -124,6 +115,8 @@
                    <a class="btn btn-small btn-primary" onclick=""><i class="icon-cog icon-white"></i>设置仓库</a>
                    &nbsp;
                    <a class="btn btn-small btn-primary" onclick=""><i class="icon-cog icon-white"></i>设置货架</a>
+                   &nbsp;
+                   <a class="btn btn-small btn-primary" onclick=""><i class="icon-cog icon-white"></i>设置货位</a>
               </div>
               
               <form action="#" id="searchform2" name="searchform2" method="post">
@@ -161,13 +154,30 @@
 	    		clickEnter();
 	    		return;
 	    	}  
+	    	//空格
+			if(event.keyCode == 32 && !$(event.target).is('input,textarea')){
+				return;
+			}    	
+	    	if((event.keyCode   ==   13) &&   (event.ctrlKey)) {
+	    	}
 	    });
-		
+	
   	  $(function(){
 	  		$("input").focus(function(){
 	  			//当前获取焦点的文本框是 主单还是明细
 	  			focus = $(this).attr("t");
 	  		});
+	  		
+	    	$(".tips").each(function(i,e){
+	                var $img = $(e);
+	                var msg = $img.attr("msg");
+	                var id =  $img.attr("id");
+	                $.showTips(id,msg);
+	        });
+	       	//输入物品信息
+	     	$("#enterItem").click(function(){
+	     			
+	     	});
 	    	//客户帐号自动完成
 	        $("#userLoginName").typeahead({
 	            source: function (query, process) {
@@ -222,14 +232,22 @@
 	    	   grid = $("#maingrid").ligerGrid({
 	                columns: [
 	                    { display: '产品SKU', name: 'sku', align: 'center',width:'13%'},
-	                    { display: '本次收货数量', name: 'quantity', align: 'center', type: 'int',width:'9%'},
-	                    { display: '未收货数量', name: 'unRecivedquantity', align: 'center', type: 'int',width:'9%'},
+	  		          	{ display: '收货数量', name: 'quantity', align: 'center', type: 'int',width:'9%'},
 		                { display: '仓库', name: 'warehouse', align: 'center', type: 'float',width:'9%'},
 		                { display: '货架', name: 'shelvesNo', align: 'center', type: 'float',width:'9%'},
 		                { display: '货位', name: 'seatNo', align: 'center', type: 'float',width:'10%'},
 		                { display: '收货时间', name: 'createdTime', type: 'int', width:'12%'},
+		                { display: '备注', name: 'remark', align: 'center', type: 'float',width:'13%'},
 		                { display: '操作员', name: 'userLoginNameOfOperator',width:'10%'},
-		                { display: '备注', name: 'remark', align: 'center', type: 'float',width:'13%'}
+		                {display: '操作',isSort: false,width: '11%',render: function(row) {
+		            		var h = "";
+		            		if (!row._editing) {
+		            			h += '<a href="javascript:updateInWarehouseItem(' + row.id + ')">编辑</a> ';
+		            			h += '<a href="javascript:deleteInWarehouseItem(' + row.id + ')">删除</a>';
+		            		}
+		            		return h;
+		            	}
+		            }
 	                ],  
 	                isScroll: true,
 	                dataAction: 'server',
