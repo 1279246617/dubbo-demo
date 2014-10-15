@@ -3,6 +3,7 @@ package com.coe.wms.dao.warehouse.storage.impl;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.List;
 import java.util.Map;
 
@@ -105,10 +106,18 @@ public class OutWarehouseOrderItemDaoImpl implements IOutWarehouseOrderItemDao {
 				ps.setLong(2, item.getQuantity());
 				ps.setString(3, item.getSku());
 				ps.setString(4, item.getSkuName());
-				ps.setDouble(5, item.getSkuUnitPrice());
+				if (item.getSkuUnitPrice() == null) {
+					ps.setNull(5, Types.DOUBLE);
+				} else {
+					ps.setDouble(5, item.getSkuUnitPrice());
+				}
 				ps.setString(6, item.getSkuPriceCurrency());
 				ps.setString(7, item.getRemark());
-				ps.setDouble(8, item.getSkuNetWeight());
+				if (item.getSkuNetWeight() == null) {
+					ps.setNull(8, Types.DOUBLE);
+				} else {
+					ps.setDouble(8, item.getSkuNetWeight());
+				}
 			}
 
 			@Override

@@ -94,7 +94,7 @@ public class Warehouse {
 			}
 
 			if (StringUtil.isEqualIgnoreCase(EventType.LOGISTICS_SKU_PAID, eventType)) {// 创建出库订单
-				responseXml = storageService.warehouseInterfaceSaveOutWarehouseOrder(eventBody, userIdOfCustomer,eventTarget);
+				responseXml = storageService.warehouseInterfaceSaveOutWarehouseOrder(eventBody, userIdOfCustomer, eventTarget);
 			}
 
 			if (StringUtil.isEqualIgnoreCase(EventType.LOGISTICS_SEND_SKU, eventType)) { // 确认创建出库订单
@@ -114,7 +114,9 @@ public class Warehouse {
 
 			responseItems.add(serviceResponse);
 			responses.setResponseItems(responseItems);
-			return XmlUtil.toXml(Responses.class, responses);
+			String responseXml = XmlUtil.toXml(Responses.class, responses);
+			logger.info("API异常:"  + "  responseXml:" + responseXml);
+			return responseXml;
 		}
 	}
 }

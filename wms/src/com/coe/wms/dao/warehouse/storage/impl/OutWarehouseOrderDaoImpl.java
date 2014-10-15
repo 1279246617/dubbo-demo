@@ -3,6 +3,7 @@ package com.coe.wms.dao.warehouse.storage.impl;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -48,15 +49,24 @@ public class OutWarehouseOrderDaoImpl implements IOutWarehouseOrderDao {
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
 				PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-				ps.setLong(1, order.getWarehouseId() != null ? order.getWarehouseId() : 0);
-				ps.setLong(2, order.getUserIdOfCustomer() != null ? order.getUserIdOfCustomer() : 0);
-				ps.setLong(3, order.getUserIdOfOperator() != null ? order.getUserIdOfOperator() : 0);
+				ps.setLong(1, order.getWarehouseId());
+				ps.setLong(2, order.getUserIdOfCustomer());
+
+				if (order.getUserIdOfOperator() == null) {
+					ps.setNull(3, Types.BIGINT);
+				} else {
+					ps.setDouble(3, order.getUserIdOfOperator());
+				}
 				ps.setString(4, order.getShipwayCode());
 				ps.setLong(5, order.getCreatedTime());
 				ps.setString(6, order.getStatus());
 				ps.setString(7, order.getRemark());
 				ps.setString(8, order.getCustomerReferenceNo());
-				ps.setDouble(9, order.getOutWarehouseWeight());
+				if (order.getOutWarehouseWeight() == null) {
+					ps.setNull(9, Types.DOUBLE);
+				} else {
+					ps.setDouble(9, order.getOutWarehouseWeight());
+				}
 				ps.setString(10, order.getWeightCode());
 				return ps;
 			}
@@ -245,7 +255,8 @@ public class OutWarehouseOrderDaoImpl implements IOutWarehouseOrderDao {
 	 */
 	@Override
 	public List<Long> findCallbackSendWeightUnSuccessOrderId() {
-		String sql = "select id from w_s_out_warehouse_order where status ='"+OutWarehouseOrderStatusCode.WSW+"' and (callback_send_weight_is_success = 'N' or  callback_send_weight_is_success is null)";
+		String sql = "select id from w_s_out_warehouse_order where status ='" + OutWarehouseOrderStatusCode.WSW
+				+ "' and (callback_send_weight_is_success = 'N' or  callback_send_weight_is_success is null)";
 		List<Long> orderIdList = jdbcTemplate.queryForList(sql, Long.class);
 		return orderIdList;
 	}
@@ -257,7 +268,8 @@ public class OutWarehouseOrderDaoImpl implements IOutWarehouseOrderDao {
 	 */
 	@Override
 	public List<Long> findCallbackSendStatusUnSuccessOrderId() {
-		String sql = "select id from w_s_out_warehouse_order where status ='"+OutWarehouseOrderStatusCode.SUCCESS+"' and (callback_send_status_is_success = 'N' or  callback_send_status_is_success is null)";
+		String sql = "select id from w_s_out_warehouse_order where status ='" + OutWarehouseOrderStatusCode.SUCCESS
+				+ "' and (callback_send_status_is_success = 'N' or  callback_send_status_is_success is null)";
 		List<Long> orderIdList = jdbcTemplate.queryForList(sql, Long.class);
 		return orderIdList;
 	}
@@ -272,7 +284,8 @@ public class OutWarehouseOrderDaoImpl implements IOutWarehouseOrderDao {
 	public int updateOutWarehouseOrderCallbackSendWeight(OutWarehouseOrder outWarehouseOrder) {
 		String sql = "update w_s_out_warehouse_order set callback_send_weight_is_success='"
 				+ outWarehouseOrder.getCallbackSendWeightIsSuccess() + "' ,callback_send_weigh_count = "
-				+ outWarehouseOrder.getCallbackSendWeighCount() +" , status='"+outWarehouseOrder.getStatus()+  "' where id=" + outWarehouseOrder.getId();
+				+ outWarehouseOrder.getCallbackSendWeighCount() + " , status='" + outWarehouseOrder.getStatus() + "' where id="
+				+ outWarehouseOrder.getId();
 		return jdbcTemplate.update(sql);
 	}
 
@@ -286,7 +299,8 @@ public class OutWarehouseOrderDaoImpl implements IOutWarehouseOrderDao {
 	public int updateOutWarehouseOrderCallbackSendStatus(OutWarehouseOrder outWarehouseOrder) {
 		String sql = "update w_s_out_warehouse_order set callback_send_status_is_success='"
 				+ outWarehouseOrder.getCallbackSendStatusIsSuccess() + "' ,callback_send_status_count = "
-				+ outWarehouseOrder.getCallbackSendStatusCount() +" , status='"+outWarehouseOrder.getStatus()+ "' where id=" + outWarehouseOrder.getId();
+				+ outWarehouseOrder.getCallbackSendStatusCount() + " , status='" + outWarehouseOrder.getStatus() + "' where id="
+				+ outWarehouseOrder.getId();
 		return jdbcTemplate.update(sql);
 	}
 }

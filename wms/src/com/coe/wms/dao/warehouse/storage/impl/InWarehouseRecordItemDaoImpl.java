@@ -57,7 +57,7 @@ public class InWarehouseRecordItemDaoImpl implements IInWarehouseRecordItemDao {
 				ps.setString(3, item.getSku());
 				ps.setString(4, item.getSeatNo());
 				ps.setString(5, item.getShelvesNo());
-				ps.setLong(6, item.getWarehouseId() != null ? item.getWarehouseId() : 0);
+				ps.setLong(6, item.getWarehouseId());
 				ps.setString(7, item.getRemark());
 				ps.setLong(8, item.getCreatedTime());
 				ps.setLong(9, item.getUserIdOfOperator());

@@ -3,6 +3,7 @@ package com.coe.wms.dao.warehouse.storage.impl;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -49,11 +50,23 @@ public class InWarehouseOrderDaoImpl implements IInWarehouseOrderDao {
 				PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 				ps.setLong(1, order.getUserIdOfCustomer());
 				ps.setString(2, order.getTrackingNo());
-				ps.setDouble(3, order.getWeight() != null ? order.getWeight() : 0);
+				
+				if (order.getWeight() == null) {
+					ps.setNull(3, Types.DOUBLE);
+				} else {
+					ps.setDouble(3, order.getWeight());
+				}
+				
 				ps.setLong(4, order.getCreatedTime());
 				ps.setString(5, order.getRemark());
 				ps.setString(6, order.getStatus());
-				ps.setLong(7, order.getUserIdOfOperator() != null ? order.getUserIdOfOperator() : 0);
+				
+				if (order.getUserIdOfOperator() == null) {
+					ps.setNull(7, Types.DOUBLE);
+				} else {
+					ps.setLong(7, order.getUserIdOfOperator());
+				}
+				
 				ps.setString(8, order.getCarrierCode());
 				ps.setString(9, order.getLogisticsType());
 				ps.setLong(10, order.getWarehouseId());

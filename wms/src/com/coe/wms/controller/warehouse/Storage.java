@@ -310,23 +310,19 @@ public class Storage {
 		map.put(Constant.STATUS, Constant.FAIL);
 		InWarehouseOrder param = new InWarehouseOrder();
 		param.setTrackingNo(trackingNo);
-		List<InWarehouseOrder> inWarehouseOrderList = storageService.findInWarehouseOrder(param, null, null);
-		if (inWarehouseOrderList.size() < 1) {
+		List<Map<String, String>> mapList = storageService.checkInWarehouseOrder(param);
+		if (mapList.size() < 1) {
 			map.put(Constant.STATUS, "-1");
-			map.put(Constant.MESSAGE, "找不到订单,请输入客户帐号.");
+			map.put(Constant.MESSAGE, "该单号无预报入库订单,请先添加入库订单.");
 			return GsonUtil.toJson(map);
 		}
-		// 找到预报信息,向前台返回用户名
-		List<User> userList = storageService.findUserByInWarehouseOrder(inWarehouseOrderList);
-		map.put("userList", userList);
-		if (inWarehouseOrderList.size() > 1) {
-			// 已经控制 同一个客户下的跟踪号不可能重复,所以多个订单表示有多个客户帐号
-			map.put(Constant.MESSAGE, "找到超过一个订单,请选择客户帐号.");
+		map.put("mapList", mapList);
+		if (mapList.size() > 1) {
+			// 找到多个入库订单,返回跟踪号,承运商,参考号,客户等信息供操作员选择
+			map.put(Constant.MESSAGE, "该单号找到超过一个入库订单,请选择其中一个.");
 			map.put(Constant.STATUS, "2");
 			return GsonUtil.toJson(map);
 		}
-		// 只找到一个订单,对应一个客户
-		map.put("user", userList.get(0));
 		map.put(Constant.STATUS, Constant.SUCCESS);
 		return GsonUtil.toJson(map);
 	}

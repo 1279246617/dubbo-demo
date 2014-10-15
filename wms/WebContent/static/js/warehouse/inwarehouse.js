@@ -3,7 +3,6 @@ function saveInWarehouseRecord(){
 	var trackingNo = $("#trackingNo");
 	var trackingNoStr = trackingNo.val();
 	var userLoginName = $('#userLoginName');
-	var userLoginNameStr = userLoginName.val();
 	var unKnowCustomer = $("#unKnowCustomer");
 	var isUnKnowCustomer = unKnowCustomer.is(':checked'); //true | false
 	var remark = $("#orderRemark").val();
@@ -19,14 +18,11 @@ function saveInWarehouseRecord(){
 	}    	
 		
 	//跟踪号不为空,客户帐号为空调用clickEnterStep1();
-	if($.trim(userLoginNameStr) == ''){
-		saveInWarehouseRecordStep1(trackingNoStr,userLoginName,remark,warehouseId);		    			
-	}
+	saveInWarehouseRecordStep1(trackingNoStr,userLoginName,remark,warehouseId);
+	
 	// 若根据跟踪号 顺利找到唯一的客户帐号 自动调用clickEnterStep2
 	//跟踪号不为空,客户帐号不为空,将提交保存
-	if($.trim(userLoginNameStr) != ''){
-		saveInWarehouseRecordStep2(trackingNoStr,userLoginNameStr,isUnKnowCustomer,remark,warehouseId);
-	}
+	saveInWarehouseRecordStep2(trackingNoStr,userLoginNameStr,isUnKnowCustomer,remark,warehouseId);
 }
 
 //保存主单1(无输入客户单号)

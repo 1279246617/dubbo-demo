@@ -68,6 +68,13 @@ public interface IStorageService {
 	 */
 	public List<InWarehouseOrder> findInWarehouseOrder(InWarehouseOrder inWarehouseOrder, Map<String, String> moreParam, Pagination page);
 
+	/**	
+	 * 收货时 输入跟踪号 后查询入库订单
+	 * @param inWarehouseOrder
+	 * @return
+	 */
+	public List<Map<String,String>> checkInWarehouseOrder(InWarehouseOrder inWarehouseOrder);
+	
 	/**
 	 * 获取入库订单
 	 * 
