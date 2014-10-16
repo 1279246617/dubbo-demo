@@ -15,4 +15,5 @@ public interface IInWarehouseOrderItemDao {
 	public int saveBatchInWarehouseOrderItemWithOrderId(List<InWarehouseOrderItem> itemList,Long orderId);
 	
 	public List<InWarehouseOrderItem> findInWarehouseOrderItem(InWarehouseOrderItem inWarehouseOrder,Map<String,String> moreParam, Pagination page);
+	
 }

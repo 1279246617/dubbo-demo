@@ -20,15 +20,16 @@
 <body>
 	<div class="pull-left" style="width:100%;height:280px; margin-top: 1px;" >
 		 <form action="${baseUrl}/warehouse/storage/getInWarehouseRecordItemData.do" id="searchform" name="searchform" method="post">
-			<table class="table table-striped" style="width:1150px;margin-bottom: 5px">
+			<table class="table table-striped" style="width:100%;margin-bottom: 5px">
 					<tr style="height:15px;">
 							<td style="width:290px;">
 									<span class="pull-left" style="width:52px;">跟踪单号</span>
 									<span class="pull-left" style="width:191px;">
 										<!--  利用focus和blur 判断跟踪号是否有变化, 变化则把入库订单id清空-->
-										<input type="text"  name="trackingNo"  id="trackingNo" t="1" onfocus="trackingNoFocus()"  onblur="trackingNoBlur()" style="width:190px;"/>
+										<input type="text"  name="trackingNo"  id="trackingNo" t="1" onfocus="trackingNoFocus()"  style="width:190px;"/>
 										<!-- 用户按回车时,当入库订单id 为空是第一次提交,后台返回id,或其他提示.  不为空 提示客户可输入SKU和数量进行收货 -->
 										<input type="text"  name="inWarehouseOrderId"  id="inWarehouseOrderId" t="1"  style="display: none;"/>
+										<input type="text"  name="inWarehouseRecordId"  id="inWarehouseRecordId" t="1"  style="display: none;"/>
 									</span>
 							</td>		
 							<td style="width:300px;">
@@ -38,12 +39,12 @@
 									</span>
 							</td>		
 							<td>
-								<span class="pull-left" style="width:55px;" id="tips"><b>操作提示:</b></span>
+								<span class="pull-left" style="width:55px;" ><b>操作提示:</b></span>
 								<span class="pull-left" style="width:352px;color:red;" id="tips">请输入跟踪单号并按回车!</span>
 							</td>
 					</tr>
 			</table>
-			<table  class="table table-striped" style="width:1150px;margin-bottom: 5px;display:none;" id="inWarehouseOrdertable" >
+			<table  class="table table-striped" style="width:100%;margin-bottom: 5px;display:none;" id="inWarehouseOrdertable" >
 				<tr>
 					<th style="width:25px;text-align:center;">选择</th>
 					<th style="width:155px;text-align:center;">客户帐号</th>
@@ -52,14 +53,8 @@
 					<th style="width:205px;text-align:center;">客户参考号</th> 
 					<th style="width:205px;text-align:center;">创建时间</th>
 				</tr>
-				<tr>
-					<td style="width:25px;text-align:center;"><input type="radio" t="1" name="inWarehouseOrderRadio" value="radiobutton"></td>
-					<td style="width:155px;text-align:center;">SF</td>
-					<td style="width:225px;text-align:center;">RA12312312312</td> 
-					<td style="width:205px;text-align:center;">cnram</td>
-					<td style="width:205px;text-align:center;">11111111</td> 
-					<td style="width:205px;text-align:center;">2014-10-14 12:00:00</td>
-				</tr>
+				<tbody id="inWarehouseOrdertbody">
+				</tbody>
 			</table>
 			<div style="height:30px;">
 			</div>
@@ -168,37 +163,7 @@
 	  			//当前获取焦点的文本框是 主单还是明细
 	  			focus = $(this).attr("t");
 	  		});
-	    	//客户帐号自动完成
-	        $("#userLoginName").typeahead({
-	            source: function (query, process) {
-	            	var userResult = "";
-	                $.ajax({
-	          	      type : "post",
-	          	      url : baseUrl+'/user/searchUser.do?keyword='+query,
-	          	      async : false,
-	          	      success : function(data){
-	          	       	 data = eval("(" + data + ")");
-	          	      	userResult = data;
-	          	      }
-	          	   });
-	                return userResult;
-	            },
-	            highlighter: function(item) {
-	            	var arr = item.split("-");
-	  	          	var userId = arr[0];
-	  	          	var loginName = arr[1];
-	  	          	var keyword = arr[2];
-	  	          	var newKeyword = ("<font color='red'>"+keyword+"</font>");
-	  	          	var newItem = userId.replace(keyword,newKeyword)+"-"+loginName.replace(keyword,newKeyword);
-	  	          	return newItem;
-	            },
-	            updater: function(item) {
-            	 var itemArr = item.split("-");
-  	              return itemArr[1];
-	     	 }
-	      });
-		    	
-	     initGrid();
+	    	 initGrid();
    		});
   	  	
   	  //回车事件

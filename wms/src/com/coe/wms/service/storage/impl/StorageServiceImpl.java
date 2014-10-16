@@ -156,9 +156,11 @@ public class StorageServiceImpl implements IStorageService {
 			map.put(Constant.MESSAGE, "请输入产品数量.");
 			return map;
 		}
+		Long orderId = inWarehouseRecordDao.getInWarehouseOrderIdByRecordId(inWarehouseRecordId);
 		// 检查该SKU是否存在入库订单中
 		InWarehouseOrderItem inWarehouseOrderItemParam = new InWarehouseOrderItem();
 		inWarehouseOrderItemParam.setSku(itemSku);
+		inWarehouseOrderItemParam.setOrderId(orderId);
 		List<InWarehouseOrderItem> inWarehouseOrderItemList = inWarehouseOrderItemDao.findInWarehouseOrderItem(inWarehouseOrderItemParam,
 				null, null);
 		if (inWarehouseOrderItemList.size() <= 0) {
@@ -166,16 +168,6 @@ public class StorageServiceImpl implements IStorageService {
 			return map;
 		}
 		// 检查该SKU是否已经存在
-		InWarehouseRecordItem param = new InWarehouseRecordItem();
-		param.setInWarehouseRecordId(inWarehouseRecordId);
-		param.setSku(itemSku);
-		List<InWarehouseRecordItem> inWarehouseRecordItemList = inWarehouseRecordItemDao.findInWarehouseRecordItem(param, null, null);
-		if (inWarehouseRecordItemList.size() > 0) {
-			// 返回入库主单的id
-			map.put("id", "" + inWarehouseRecordItemList.get(0).getId());
-			map.put(Constant.MESSAGE, "该产品SKU已存在入库记录.");
-			return map;
-		}
 		InWarehouseRecordItem inWarehouseRecordItem = new InWarehouseRecordItem();
 		inWarehouseRecordItem.setCreatedTime(System.currentTimeMillis());
 		inWarehouseRecordItem.setInWarehouseRecordId(inWarehouseRecordId);
@@ -345,49 +337,25 @@ public class StorageServiceImpl implements IStorageService {
 	 * 保存入库记录主单
 	 */
 	@Override
-	public Map<String, String> saveInWarehouseRecord(String trackingNo, String userLoginName, String isUnKnowCustomer, String remark,
-			Long userIdOfOperator, Long warehouseId) {
+	public Map<String, String> saveInWarehouseRecord(String trackingNo, String remark, Long userIdOfOperator, Long warehouseId,
+			Long inWarehouseOrderId) {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put(Constant.STATUS, Constant.FAIL);
 		if (StringUtil.isNull(trackingNo)) {
 			map.put(Constant.MESSAGE, "请输入跟踪单号.");
 			return map;
 		}
-		InWarehouseRecord inWarehouseRecord = new InWarehouseRecord();
-		// 必须输入登录名, 验证用户名必须存在
-		if (StringUtil.isNotNull(userLoginName)) {
-			Long userId = userDao.findUserIdByLoginName(userLoginName);
-			if (userId == null || userId == 0) {
-				map.put(Constant.MESSAGE, "请输入正确的客户帐号.");
-				return map;
-			}
-			inWarehouseRecord.setUserIdOfCustomer(userId);
-		} else {
-			map.put(Constant.MESSAGE, "请输入客户帐号.");
-			return map;
-		}
 
-		// 检查该跟踪单号,入库主单是否已经存在
-		InWarehouseRecord param = new InWarehouseRecord();
-		param.setTrackingNo(trackingNo);
-		List<InWarehouseRecord> inWarehouseRecordList = inWarehouseRecordDao.findInWarehouseRecord(param, null, null);
-		if (inWarehouseRecordList.size() > 0) {
-			// 返回入库主单的id
-			map.put("id", "" + inWarehouseRecordList.get(0).getId());
-			map.put(Constant.MESSAGE, "跟踪单号已存在入库主单.");
-			return map;
-		}
-		if (StringUtil.isEqual(isUnKnowCustomer, Constant.TRUE)) {
-			inWarehouseRecord.setIsUnKnowCustomer(Constant.Y);
-		} else {
-			inWarehouseRecord.setIsUnKnowCustomer(Constant.N);
-		}
+		Long userIdOfCustomer = inWarehouseOrderDao.getUserIdByInWarehouseOrderId(inWarehouseOrderId);
+		InWarehouseRecord inWarehouseRecord = new InWarehouseRecord();
 		inWarehouseRecord.setCreatedTime(System.currentTimeMillis());
 		inWarehouseRecord.setTrackingNo(trackingNo);
+		inWarehouseRecord.setUserIdOfCustomer(userIdOfCustomer);
+		inWarehouseRecord.setInWarehouseOrderId(inWarehouseOrderId);
 		inWarehouseRecord.setRemark(remark);
 		inWarehouseRecord.setUserIdOfOperator(userIdOfOperator);
 		// 创建批次号
-		String batchNo = InWarehouseRecord.generateBatchNo(null, null, Constant.SYMBOL_UNDERLINE, trackingNo, null, null, isUnKnowCustomer);
+		String batchNo = InWarehouseRecord.generateBatchNo(null, null, Constant.SYMBOL_UNDERLINE, trackingNo, null, null);
 		inWarehouseRecord.setBatchNo(batchNo);
 		inWarehouseRecord.setWarehouseId(warehouseId);
 		// 返回id
@@ -1022,6 +990,7 @@ public class StorageServiceImpl implements IStorageService {
 			Map<String, String> map = new HashMap<String, String>();
 			Long userId = order.getUserIdOfCustomer();
 			User user = userDao.getUserById(userId);
+			map.put("inWarehouseOrderId", String.valueOf(order.getId()));
 			map.put("userLoginName", user.getLoginName());
 			map.put("trackingNo", order.getTrackingNo());
 			map.put("customerReferenceNo", order.getCustomerReferenceNo());

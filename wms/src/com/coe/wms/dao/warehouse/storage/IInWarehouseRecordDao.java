@@ -19,4 +19,6 @@ public interface IInWarehouseRecordDao {
 	public int updateInWarehouseRecordCallback(InWarehouseRecord InWarehouseRecord);
 
 	public List<Long> findCallbackUnSuccessRecordId();
+
+	public Long getInWarehouseOrderIdByRecordId(Long InWarehouseRecordId);
 }
