@@ -256,14 +256,16 @@ public class InWarehouseRecordItemDaoImpl implements IInWarehouseRecordItemDao {
 
 	@Override
 	public int updateInWarehouseRecordItemReceivedQuantity(Long recordItemId, int newQuantity) {
-		String sql = "update w_s_in_warehouse_record_item set quantity='" + newQuantity + "where id=" + recordItemId;
+		String sql = "update w_s_in_warehouse_record_item set quantity=" + newQuantity + " where id=" + recordItemId;
 		return jdbcTemplate.update(sql);
 	}
 
 	@Override
 	public int countInWarehouseSkuQuantity(Long inWarehouseOrderId, String sku) {
-		String sql = "select sum(quantity) from w_s_in_warehouse_record_item where sku = '" + sku + "' and in_warehouse_order_id = "
-				+ inWarehouseOrderId;
-		return jdbcTemplate.queryForObject(sql, Integer.class);
+		String sql = "select sum(quantity) from w_s_in_warehouse_record_item where sku = '" + sku
+				+ "' and in_warehouse_record_id in(select id from w_s_in_warehouse_record where in_warehouse_order_id = "
+				+ inWarehouseOrderId + ")";
+		Long count = jdbcTemplate.queryForLong(sql);
+		return count.intValue();
 	}
 }

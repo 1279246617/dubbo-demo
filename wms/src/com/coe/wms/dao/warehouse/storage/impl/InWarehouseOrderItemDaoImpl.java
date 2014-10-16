@@ -3,7 +3,6 @@ package com.coe.wms.dao.warehouse.storage.impl;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -22,8 +21,6 @@ import com.coe.wms.dao.datasource.DataSource;
 import com.coe.wms.dao.datasource.DataSourceCode;
 import com.coe.wms.dao.warehouse.storage.IInWarehouseOrderItemDao;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrderItem;
-import com.coe.wms.model.warehouse.storage.record.InWarehouseRecordItem;
-import com.coe.wms.util.DateUtil;
 import com.coe.wms.util.NumberUtil;
 import com.coe.wms.util.Pagination;
 import com.coe.wms.util.StringUtil;
@@ -126,7 +123,7 @@ public class InWarehouseOrderItemDaoImpl implements IInWarehouseOrderItemDao {
 	public List<InWarehouseOrderItem> findInWarehouseOrderItem(InWarehouseOrderItem inWarehouseOrderItem, Map<String, String> moreParam,
 			Pagination page) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select id,order_id,quantity,sku,received_quantity,sku_name,sku_remark from w_s_in_warehouse_order_item where 1=1 ");
+		sb.append("select id,order_id,quantity,sku,sku_name,sku_remark from w_s_in_warehouse_order_item where 1=1 ");
 		if (inWarehouseOrderItem != null) {
 			if (StringUtil.isNotNull(inWarehouseOrderItem.getSku())) {
 				sb.append(" and sku = '" + inWarehouseOrderItem.getSku() + "' ");

@@ -1,6 +1,7 @@
 package com.coe.wms.controller.warehouse;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -338,13 +339,15 @@ public class Storage {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/saveInWarehouseRecord")
-	public String saveInWarehouseRecord(HttpServletRequest request, String trackingNo,Long warehouseId,Long inWarehouseOrderId,String remark) throws IOException {
+	public String saveInWarehouseRecord(HttpServletRequest request, String trackingNo, Long warehouseId, Long inWarehouseOrderId,
+			String remark) throws IOException {
 		// 操作员
 		Long userIdOfOperator = (Long) request.getSession().getAttribute(SessionConstant.USER_ID);
 		Map<String, String> map = new HashMap<String, String>();
 		map.put(Constant.STATUS, Constant.FAIL);
 		// 校验和保存
-		Map<String, String> serviceResult = storageService.saveInWarehouseRecord(trackingNo, remark,userIdOfOperator, warehouseId,inWarehouseOrderId);
+		Map<String, String> serviceResult = storageService.saveInWarehouseRecord(trackingNo, remark, userIdOfOperator, warehouseId,
+				inWarehouseOrderId);
 		// 成功,返回id
 		map.put("id", serviceResult.get("id"));
 		// 失败
@@ -434,8 +437,15 @@ public class Storage {
 	@ResponseBody
 	@RequestMapping(value = "/getInWarehouseOrderItemByOrderId", method = RequestMethod.POST)
 	public String getInWarehouseOrderItemByOrderId(Long orderId) {
-		List<InWarehouseOrderItem> inWarehouseOrderItemList = storageService.getInWarehouseOrderItem(orderId);
-		return GsonUtil.toJson(inWarehouseOrderItemList);
+		List<Map<String, String>> mapList = storageService.getInWarehouseOrderItemMap(orderId);
+		return GsonUtil.toJson(mapList);
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/getInWarehouseRecordItemByRecordId", method = RequestMethod.POST)
+	public String getInWarehouseRecordItemByRecordId(Long recordId) {
+		List<Map<String, String>> mapList = storageService.getInWarehouseRecordItemMapByRecordId(recordId);
+		return GsonUtil.toJson(mapList);
 	}
 
 	@ResponseBody

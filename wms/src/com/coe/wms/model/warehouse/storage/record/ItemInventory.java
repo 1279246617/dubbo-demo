@@ -18,25 +18,36 @@ public class ItemInventory implements Serializable {
 	 */
 	private static final long serialVersionUID = 7668477948339022691L;
 
-	private Long userId;
+	private Long userIdOfCustomer;
 
 	private Long wareHouseId;
 
 	private String sku;
-	
+
+	/**
+	 * 实际库存
+	 */
 	private Integer quantity;
+
+	/**
+	 * 可用库存 客户创建了出库订单,但是出库订单并没有完成, 这时可用库存等于 实际库存 - 出库订单sku数量
+	 * 
+	 * 预扣库存
+	 */
+	private Integer availableQuantity;
 
 	/**
 	 * 入库批次号 可以查到某批次还剩余多少货
 	 */
 	private String batchNo;
 
-	public Long getUserId() {
-		return userId;
+	
+	public Long getUserIdOfCustomer() {
+		return userIdOfCustomer;
 	}
 
-	public void setUserId(Long userId) {
-		this.userId = userId;
+	public void setUserIdOfCustomer(Long userIdOfCustomer) {
+		this.userIdOfCustomer = userIdOfCustomer;
 	}
 
 	public Long getWareHouseId() {
@@ -57,6 +68,14 @@ public class ItemInventory implements Serializable {
 
 	public Integer getQuantity() {
 		return quantity;
+	}
+
+	public Integer getAvailableQuantity() {
+		return availableQuantity;
+	}
+
+	public void setAvailableQuantity(Integer availableQuantity) {
+		this.availableQuantity = availableQuantity;
 	}
 
 	public void setQuantity(Integer quantity) {

@@ -195,4 +195,11 @@ public class NumberUtil {
 		}
 		return false;
 	}
+	
+	public static String intToString(Integer i) {
+		if (i != null) {
+			return i.toString();
+		}
+		return 0 + "";
+	}
 }

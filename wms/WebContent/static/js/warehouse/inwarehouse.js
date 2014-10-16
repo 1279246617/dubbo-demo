@@ -133,8 +133,10 @@ function saveInWarehouseRecordItem() {
 			parent.$.showShortMessage({msg:"保存明细成功.",animate:true,left:"45%"});
 			// 光标移至产品SKU
 			$("#itemSku").focus();
+			$("#itemSku").select();
 			$("#tips").html("请继续输入SKU和数量,或者输入新的跟踪单号并按回车!");
 			focus = "2";
+			
 			btnSearch("#searchform",grid);
 			return;
 		}
@@ -144,7 +146,7 @@ function saveInWarehouseRecordItem() {
 var oldTrackingNo = "";
 function trackingNoFocus(){
 	oldTrackingNo = $("#trackingNo").val();
-	$("#trackingNo").val("");
+	$("#trackingNo").select();
 	$("#tips").html("请跟踪单号并按回车!");
 }
 

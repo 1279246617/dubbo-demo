@@ -140,6 +140,23 @@ public class StorageServiceImpl implements IStorageService {
 		return inWarehouseOrderItemList;
 	}
 
+	public List<Map<String, String>> getInWarehouseOrderItemMap(Long orderId) {
+		InWarehouseOrderItem param = new InWarehouseOrderItem();
+		param.setOrderId(orderId);
+		List<InWarehouseOrderItem> inWarehouseOrderItemList = inWarehouseOrderItemDao.findInWarehouseOrderItem(param, null, null);
+		List<Map<String, String>> mapList = new ArrayList<Map<String, String>>();
+		for (InWarehouseOrderItem item : inWarehouseOrderItemList) {
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("sku", item.getSku());
+			map.put("skuName", item.getSkuName());
+			map.put("quantity", NumberUtil.intToString(item.getQuantity()));
+			int receivedQuantity = inWarehouseRecordItemDao.countInWarehouseSkuQuantity(orderId, item.getSku());
+			map.put("receivedQuantity", receivedQuantity + "");
+			mapList.add(map);
+		}
+		return mapList;
+	}
+
 	/**
 	 * 保存入库明细
 	 */
@@ -410,7 +427,8 @@ public class StorageServiceImpl implements IStorageService {
 			InWarehouseRecordItem inWarehouseRecordItemParam = new InWarehouseRecordItem();
 			inWarehouseRecordItemParam.setInWarehouseRecordId(inWarehouseRecordId);
 			inWarehouseRecordItemParam.setSku(orderItem.getSku());
-			List<InWarehouseRecordItem> recordItemList = inWarehouseRecordItemDao.findInWarehouseRecordItem(inWarehouseRecordItemParam,null, null);
+			List<InWarehouseRecordItem> recordItemList = inWarehouseRecordItemDao.findInWarehouseRecordItem(inWarehouseRecordItemParam,
+					null, null);
 			if (recordItemList != null && recordItemList.size() > 0) {
 				InWarehouseRecordItem recordItem = recordItemList.get(0);
 				if (recordItem.getCreatedTime() != null) {
@@ -1032,6 +1050,24 @@ public class StorageServiceImpl implements IStorageService {
 			map.put("carrierCode", order.getCarrierCode());
 			String time = DateUtil.dateConvertString(new Date(order.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss);
 			map.put("createdTime", time);
+			mapList.add(map);
+		}
+		return mapList;
+	}
+
+	@Override
+	public List<Map<String, String>> getInWarehouseRecordItemMapByRecordId(Long recordId) {
+		InWarehouseRecordItem param = new InWarehouseRecordItem();
+		param.setInWarehouseRecordId(recordId);
+		List<InWarehouseRecordItem> inWarehouseRecordItemList = inWarehouseRecordItemDao.findInWarehouseRecordItem(param, null, null);
+		List<Map<String, String>> mapList = new ArrayList<Map<String, String>>();
+		for (InWarehouseRecordItem item : inWarehouseRecordItemList) {
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("sku", item.getSku());
+			// 待建立SKU库后,从SKU库取产品名称
+			map.put("skuName", "");
+			map.put("quantity", NumberUtil.intToString(item.getQuantity()));
+			map.put("seatNo", item.getSeatNo());
 			mapList.add(map);
 		}
 		return mapList;
