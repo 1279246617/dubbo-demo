@@ -109,7 +109,7 @@ public class StorageTaskImpl implements IStorageTask {
 	/**
 	 * 发送仓配入库订单信息给客户
 	 */
-	@Scheduled(cron = "0 0/1 8-23 * * ? ")
+//	@Scheduled(cron = "0 0/1 8-23 * * ? ")
 	// 早上8点到下午6点,每分钟
 	// @Scheduled(cron="0 0/30 8-18 * * ? ") //早上8点到下午6点,每半小时一次
 	@Override
@@ -231,7 +231,7 @@ public class StorageTaskImpl implements IStorageTask {
 	/**
 	 * 回传出库称重给客户
 	 */
-	@Scheduled(cron = "0 0/1 8-23 * * ? ")
+//	@Scheduled(cron = "0 0/1 8-23 * * ? ")
 	@Override
 	public void sendOutWarehouseWeightToCustomer() {
 		List<Long> orderIdList = outWarehouseOrderDao.findCallbackSendWeightUnSuccessOrderId();
@@ -334,7 +334,7 @@ public class StorageTaskImpl implements IStorageTask {
 	/**
 	 * 回传出库状态给客户(出库的最后步骤)
 	 */
-	@Scheduled(cron = "0 0/1 8-23 * * ? ")
+//	@Scheduled(cron = "0 0/1 8-23 * * ? ")
 	@Override
 	public void sendOutWarehouseStatusToCustomer() {
 		List<Long> orderIdList = outWarehouseOrderDao.findCallbackSendStatusUnSuccessOrderId();

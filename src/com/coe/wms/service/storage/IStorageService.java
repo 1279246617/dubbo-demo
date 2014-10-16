@@ -35,8 +35,8 @@ public interface IStorageService {
 	 * @param page
 	 * @return
 	 */
-	public Map<String, String> saveInWarehouseRecord(String trackingNo, String userLoginName, String isUnKnowCustomer, String remark,
-			Long userIdOfOperator, Long warehouseId);
+	public Map<String, String> saveInWarehouseRecord(String trackingNo, String remark, Long userIdOfOperator, Long warehouseId,
+			Long inWarehouseOrderId);
 
 	/**
 	 * 保存入库明细 返回成功,失败,错误信息
@@ -68,13 +68,14 @@ public interface IStorageService {
 	 */
 	public List<InWarehouseOrder> findInWarehouseOrder(InWarehouseOrder inWarehouseOrder, Map<String, String> moreParam, Pagination page);
 
-	/**	
+	/**
 	 * 收货时 输入跟踪号 后查询入库订单
+	 * 
 	 * @param inWarehouseOrder
 	 * @return
 	 */
-	public List<Map<String,String>> checkInWarehouseOrder(InWarehouseOrder inWarehouseOrder);
-	
+	public List<Map<String, String>> checkInWarehouseOrder(InWarehouseOrder inWarehouseOrder);
+
 	/**
 	 * 获取入库订单
 	 * 

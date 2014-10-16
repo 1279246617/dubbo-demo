@@ -56,20 +56,13 @@ public class InWarehouseRecord implements Serializable {
 	 * 要求客户预报的时候 大包头程 跟踪单号 对应一个大包
 	 */
 	private String trackingNo;
-	
+
 	/**
 	 * 入库订单id, 非必有字段,当收货时找到预报订单时,保存入库订单id
 	 * 
 	 * 当入库订单id 字段不为空时, 入库记录和入库订单的关系以入库订单id为准, 否则以跟踪号为准
 	 */
 	private Long inWarehouseOrderId;
-
-	/**
-	 * 是否是无主件(实际业务逻辑中,无预报则是无主件)
-	 * 
-	 * Y | N
-	 */
-	private String isUnKnowCustomer;
 
 	/**
 	 * 创建时间 (收货时间)
@@ -80,12 +73,12 @@ public class InWarehouseRecord implements Serializable {
 	 * 入库摘要
 	 */
 	private String remark;
-	
+
 	/**
 	 * 回调是否成功 Y 成功 N或者空失败
 	 */
 	private String callbackIsSuccess;
-	
+
 	/**
 	 * 回调次数
 	 */
@@ -167,21 +160,12 @@ public class InWarehouseRecord implements Serializable {
 		return remark;
 	}
 
-
 	public String getTrackingNo() {
 		return trackingNo;
 	}
 
 	public void setTrackingNo(String trackingNo) {
 		this.trackingNo = trackingNo;
-	}
-
-	public String getIsUnKnowCustomer() {
-		return isUnKnowCustomer;
-	}
-
-	public void setIsUnKnowCustomer(String isUnKnowCustomer) {
-		this.isUnKnowCustomer = isUnKnowCustomer;
 	}
 
 	public void setRemark(String remark) {
@@ -192,7 +176,7 @@ public class InWarehouseRecord implements Serializable {
 	 * 创建批次号
 	 */
 	public static String generateBatchNo(String prefix, String suffix, String delimiter, String trackingNo, Long userIdOfCustomer,
-			Long userIdOfOperater, String isUnKnowCustomer) {
+			Long userIdOfOperater) {
 		StringBuffer sb = new StringBuffer();
 		if (StringUtil.isNotNull(prefix)) {
 			sb.append(prefix + delimiter);

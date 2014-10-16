@@ -2,9 +2,6 @@
 function saveInWarehouseRecord(){
 	var trackingNo = $("#trackingNo");
 	var trackingNoStr = trackingNo.val();
-	var userLoginName = $('#userLoginName');
-	var unKnowCustomer = $("#unKnowCustomer");
-	var isUnKnowCustomer = unKnowCustomer.is(':checked'); //true | false
 	var remark = $("#orderRemark").val();
 	var warehouseId = $("#warehouseId").val(); 
 	if($.trim(trackingNoStr) ==""){
@@ -15,78 +12,84 @@ function saveInWarehouseRecord(){
 	if(trackingNoStr.indexOf(" ")> -1 && $.trim(trackingNoStr) !=""){
 		parent.$.showShortMessage({msg:"您输入的跟踪单号中包含空白字符已被忽略.",animate:true,left:"40%"});
 		trackingNo.val($.trim(trackingNoStr));
-	}    	
-		
-	//跟踪号不为空,客户帐号为空调用clickEnterStep1();
-	saveInWarehouseRecordStep1(trackingNoStr,userLoginName,remark,warehouseId);
-	
-	// 若根据跟踪号 顺利找到唯一的客户帐号 自动调用clickEnterStep2
-	//跟踪号不为空,客户帐号不为空,将提交保存
-	saveInWarehouseRecordStep2(trackingNoStr,userLoginNameStr,isUnKnowCustomer,remark,warehouseId);
+	}
+	//在判断跟踪号是否改变前,获取用户选择的入库订单
+	var inWarehouseOrderRadio = $('input[name="inWarehouseOrderRadio"]').filter(':checked');
+	if(inWarehouseOrderRadio.length){
+		$("#inWarehouseOrderId").val(inWarehouseOrderRadio.attr("orderId"));
+	}
+	//跟踪号失去焦点,判断跟踪号是否改变,若改变则清除inWarehouseOrderId
+	trackingNoBlur();
+	//跟踪号不为空,入库订单id为空调用clickEnterStep1();
+	if($("#inWarehouseOrderId").val() == null || $("#inWarehouseOrderId").val() == ""){
+		saveInWarehouseRecordStep1(trackingNoStr,remark,warehouseId);	
+	}else{
+		//入库订单id 不为空,可能是查到多个入库订单,选择后,开始保存主单
+		saveInWarehouseRecordStep2(trackingNoStr,remark,warehouseId);
+	}
 }
 
 //保存主单1(无输入客户单号)
-function saveInWarehouseRecordStep1(trackingNoStr,userLoginName,remark,warehouseId) {
-	var loginNameSelect = $("#loginNameSelect");
+function saveInWarehouseRecordStep1(trackingNoStr,remark,warehouseId) {
+	$("#inWarehouseOrdertbody").html("");
 	// 检查跟踪号是否能找到唯一的入库订单
-	$.getJSON(baseUrl
-			+ '/warehouse/storage/checkFindInWarehouseOrder.do?trackingNo='
-			+ trackingNoStr, function(msg) {
+	$.getJSON(baseUrl+ '/warehouse/storage/checkFindInWarehouseOrder.do?trackingNo='+ trackingNoStr, function(msg) {
 		if (msg.status == -1) {
 			// 找不到订单, 请输入客户帐号
 			parent.$.showDialogMessage(msg.message, null, null);
-			loginNameSelect.hide();
-			userLoginName.show();
-			// 标记为无主件,操作员可以手工取消标记无主件
-			$("#unKnowCustomer").attr("checked", "checked");
+			return false;
 		}
+		var table = $("#inWarehouseOrdertable");
+		table.show();
+		$.each(msg.mapList, function(i, n) {
+			var tr = "<tr>";
+			if (msg.status == 1) {
+				$("#inWarehouseOrderId").val(n.inWarehouseOrderId);
+				tr+="<td style='width:25px;text-align:center;'><input type='radio' t='1' orderId='"+n.inWarehouseOrderId+"' name='inWarehouseOrderRadio' value='radiobutton' checked></td>";	
+			}else{
+				tr+="<td style='width:25px;text-align:center;'><input type='radio' t='1' orderId='"+n.inWarehouseOrderId+"' name='inWarehouseOrderRadio' value='radiobutton'></td>";
+			}
+			tr+="<td style='width:155px;text-align:center;'>"+n.userLoginName+"</td>";
+			tr+="<td style='width:225px;text-align:center;'>"+n.trackingNo+"</td>";
+			tr+="<td style='width:205px;text-align:center;'>"+n.carrierCode+"</td>";
+			tr+="<td style='width:205px;text-align:center;'>"+n.customerReferenceNo+"</td>";
+			tr+="<td style='width:205px;text-align:center;'>"+n.createdTime+"</td>";
+			tr+="</tr>";
+			$("#inWarehouseOrdertbody").append(tr);
+		});
 		if (msg.status == 2) {
-			// 找到多条订单,请选择客户帐号
+			// 找到多条订
+			$("#tips").html("请选择其中一个入库订单并按回车!");
 			parent.$.showDialogMessage(msg.message, null, null);
-			userLoginName.hide();
-			loginNameSelect.show();
-			loginNameSelect.empty();
-			loginNameSelect.append("<option></option>");
-			$.each(msg.userList, function(i, n) {
-				loginNameSelect.append("<option value='" + this.loginName + "'>"
-						+ this.loginName + "</option>");
-			});
+			return false;
 		}
 		if (msg.status == 1) {
-			loginNameSelect.hide();
-			userLoginName.show();
-			$('#userLoginName').val(msg.user.loginName);
-			//步骤1能得到用户名,直接调用步骤2
-			saveInWarehouseRecordStep2(trackingNoStr,msg.user.loginName,null,remark,warehouseId);
+			//步骤1能得到唯一订单,直接调用步骤2
+			saveInWarehouseRecordStep2(trackingNoStr,remark,warehouseId);
 		}
 	});
 }
 
 
 //保存主单2(已输入客户单号)
-function saveInWarehouseRecordStep2(trackingNoStr,userLoginNameStr,isUnKnowCustomer,remark,warehouseId) {
-	$.post(baseUrl+ '/warehouse/storage/saveInWarehouseRecord.do?trackingNo='
-			+ trackingNoStr+'&userLoginName='+userLoginNameStr+'&isUnKnowCustomer='
-			+isUnKnowCustomer+'&warehouseId='+warehouseId+'&remark='+remark, function(msg) {
+function saveInWarehouseRecordStep2(trackingNoStr,remark,warehouseId) {
+	var inWarehouseOrderId = $("#inWarehouseOrderId").val();
+	$.post(baseUrl+ '/warehouse/storage/saveInWarehouseRecord.do?trackingNo='+ trackingNoStr
+		+'&warehouseId='+warehouseId+'&inWarehouseOrderId='+inWarehouseOrderId+'&remark='+remark, function(msg) {
 		//赋值入库记录id 到隐藏input
 		$("#inWarehouseRecordId").val(msg.id);
-		
 		if(msg.status == 0){
 			parent.$.showShortMessage({msg:msg.message,animate:true,left:"45%"});
-			// 光标移至产品SKU
-			$("#itemSku").focus();
-			focus = "2";
 			return;
 		}
-		
 		if(msg.status == 1){
 			parent.$.showShortMessage({msg:"保存主单成功.",animate:true,left:"45%"});
+			$("#tips").html("请输入SKU和数量并按回车!");
 			// 光标移至产品SKU
 			$("#itemSku").focus();
 			focus = "2";
 			return;
 		}
-		
 	},"json");
 }
 
@@ -129,20 +132,25 @@ function saveInWarehouseRecordItem() {
 			parent.$.showShortMessage({msg:"保存明细成功.",animate:true,left:"45%"});
 			// 光标移至产品SKU
 			$("#itemSku").focus();
+			$("#tips").html("请继续输入SKU和数量,或者输入新的跟踪单号并按回车!");
 			focus = "2";
 			return;
 		}
 	},"json");
 }
 
-//用户名下拉组 赋值到 input
-function loginNameSelectChange(){
-	var loginNameSelect = 	$("#loginNameSelect").val();
-	$("#userLoginName").val(loginNameSelect);
+var oldTrackingNo = "";
+function trackingNoFocus(){
+	oldTrackingNo = $("#trackingNo").val();
+	$("#trackingNo").val("");
+	$("#tips").html("请跟踪单号并按回车!");
 }
 
-//跟踪号改变, 清除用户名
-function trackingNoFocus(){
-	$("#userLoginName").val('');
-	$("#trackingNo").select();
+function trackingNoBlur(){
+	var newTrackingNo = $("#trackingNo").val();
+	if(oldTrackingNo!=newTrackingNo){
+		$("#inWarehouseOrderId").val("");
+		$("#inWarehouseRecordId").val("");
+	}
+	oldTrackingNo = newTrackingNo;
 }

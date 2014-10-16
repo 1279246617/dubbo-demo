@@ -337,18 +337,14 @@ public class Storage {
 	 * @throws IOException
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/saveInWarehouseRecord", method = RequestMethod.POST)
-	public String saveInWarehouseRecord(HttpServletRequest request, String trackingNo, String userLoginName, String isUnKnowCustomer,
-			String remark, Long warehouseId) throws IOException {
-		logger.info("trackingNo:" + trackingNo + " userLoginName:" + userLoginName + " isUnKnowCustomer:" + isUnKnowCustomer + "  remark:"
-				+ remark);
+	@RequestMapping(value = "/saveInWarehouseRecord")
+	public String saveInWarehouseRecord(HttpServletRequest request, String trackingNo,Long warehouseId,Long inWarehouseOrderId,String remark) throws IOException {
 		// 操作员
 		Long userIdOfOperator = (Long) request.getSession().getAttribute(SessionConstant.USER_ID);
 		Map<String, String> map = new HashMap<String, String>();
 		map.put(Constant.STATUS, Constant.FAIL);
 		// 校验和保存
-		Map<String, String> serviceResult = storageService.saveInWarehouseRecord(trackingNo, userLoginName, isUnKnowCustomer, remark,
-				userIdOfOperator, warehouseId);
+		Map<String, String> serviceResult = storageService.saveInWarehouseRecord(trackingNo, remark,userIdOfOperator, warehouseId,inWarehouseOrderId);
 		// 成功,返回id
 		map.put("id", serviceResult.get("id"));
 		// 失败
@@ -385,8 +381,6 @@ public class Storage {
 	@RequestMapping(value = "/saveInWarehouseRecordItem", method = RequestMethod.POST)
 	public String saveInWarehouseRecordItem(HttpServletRequest request, String itemSku, Integer itemQuantity, String itemRemark,
 			Long warehouseId, String shelvesNo, String seatNo, Long inWarehouseRecordId) throws IOException {
-		logger.info("保存入库明细: itemSku=" + itemSku + " itemQuantity=" + itemQuantity + " itemRemark=" + itemRemark + " warehouseId="
-				+ warehouseId + " shelvesId=" + shelvesNo + " seatId=" + seatNo + " inWarehouseRecordId=" + inWarehouseRecordId);
 		// 操作员
 		Long userIdOfOperator = (Long) request.getSession().getAttribute(SessionConstant.USER_ID);
 		Map<String, String> map = new HashMap<String, String>();

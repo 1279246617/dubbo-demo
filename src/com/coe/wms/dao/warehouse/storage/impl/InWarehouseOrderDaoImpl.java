@@ -50,23 +50,23 @@ public class InWarehouseOrderDaoImpl implements IInWarehouseOrderDao {
 				PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 				ps.setLong(1, order.getUserIdOfCustomer());
 				ps.setString(2, order.getTrackingNo());
-				
+
 				if (order.getWeight() == null) {
 					ps.setNull(3, Types.DOUBLE);
 				} else {
 					ps.setDouble(3, order.getWeight());
 				}
-				
+
 				ps.setLong(4, order.getCreatedTime());
 				ps.setString(5, order.getRemark());
 				ps.setString(6, order.getStatus());
-				
+
 				if (order.getUserIdOfOperator() == null) {
 					ps.setNull(7, Types.DOUBLE);
 				} else {
 					ps.setLong(7, order.getUserIdOfOperator());
 				}
-				
+
 				ps.setString(8, order.getCarrierCode());
 				ps.setString(9, order.getLogisticsType());
 				ps.setLong(10, order.getWarehouseId());
@@ -228,6 +228,12 @@ public class InWarehouseOrderDaoImpl implements IInWarehouseOrderDao {
 		String sql = "select sum(quantity) from w_s_in_warehouse_order_item where order_id = (select id from w_s_in_warehouse_order WHERE tracking_no = '"
 				+ trackingNo + "')";
 		logger.info("统计入库订单预报物品数量sql:" + sql);
+		return jdbcTemplate.queryForObject(sql, Long.class);
+	}
+
+	@Override
+	public Long getUserIdByInWarehouseOrderId(Long inWarehouseOrderId) {
+		String sql = "select user_id_of_customer from w_s_in_warehouse_order where id = " + inWarehouseOrderId;
 		return jdbcTemplate.queryForObject(sql, Long.class);
 	}
 }
