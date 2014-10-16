@@ -131,6 +131,10 @@ public interface IStorageService {
 	 */
 	public List<InWarehouseOrderItem> getInWarehouseOrderItem(Long orderId);
 
+	public List<Map<String, String>> getInWarehouseOrderItemMap(Long orderId);
+	
+	public List<Map<String, String>> getInWarehouseRecordItemMapByRecordId(Long recordId);
+
 	/**
 	 * 获取出库订单物品
 	 * 

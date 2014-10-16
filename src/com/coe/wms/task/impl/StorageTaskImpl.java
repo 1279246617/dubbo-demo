@@ -109,7 +109,7 @@ public class StorageTaskImpl implements IStorageTask {
 	/**
 	 * 发送仓配入库订单信息给客户
 	 */
-//	@Scheduled(cron = "0 0/1 8-23 * * ? ")
+	// @Scheduled(cron = "0 0/1 8-23 * * ? ")
 	// 早上8点到下午6点,每分钟
 	// @Scheduled(cron="0 0/30 8-18 * * ? ") //早上8点到下午6点,每半小时一次
 	@Override
@@ -148,8 +148,6 @@ public class StorageTaskImpl implements IStorageTask {
 			List<LogisticsOrder> logisticsOrders = new ArrayList<LogisticsOrder>();
 			LogisticsOrder logisticsOrder = new LogisticsOrder();
 			// 对应入库订单
-			// if (inWarehouseRecord.getInWarehouseOrderId() != null) {
-			// inWarehouseOrderDao.getInWarehouseOrderById(inWarehouseRecord.getInWarehouseOrderId());
 			InWarehouseOrder inWarehouseOrderParam = new InWarehouseOrder();
 			inWarehouseOrderParam.setTrackingNo(trackingNo);
 			List<InWarehouseOrder> inWarehouseOrderList = inWarehouseOrderDao.findInWarehouseOrder(inWarehouseOrderParam, null, null);
@@ -166,7 +164,12 @@ public class StorageTaskImpl implements IStorageTask {
 				Sku sku = new Sku();
 				sku.setSkuCode(recordItem.getSku());
 				sku.setSkuName(recordItem.getSku());
-				sku.setSkuInBoundQty(recordItem.getQuantity());
+
+				// 2014-10-16 当一个入库订单多次收货,产生多个入库单时,每次回传SKU入库情况,回传所有已收货数量
+				// 根据SKU和入库订单Id, 查询已经收货的SKU数量
+				int count = inWarehouseRecordItemDao.countInWarehouseSkuQuantity(inWarehouseRecord.getWarehouseId(), recordItem.getSku());
+				sku.setSkuInBoundQty(count);
+
 				sku.setSkuBoundTime(DateUtil.dateConvertString(new Date(recordItem.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss));
 				skuList.add(sku);
 			}
@@ -231,7 +234,7 @@ public class StorageTaskImpl implements IStorageTask {
 	/**
 	 * 回传出库称重给客户
 	 */
-//	@Scheduled(cron = "0 0/1 8-23 * * ? ")
+	// @Scheduled(cron = "0 0/1 8-23 * * ? ")
 	@Override
 	public void sendOutWarehouseWeightToCustomer() {
 		List<Long> orderIdList = outWarehouseOrderDao.findCallbackSendWeightUnSuccessOrderId();
@@ -334,7 +337,7 @@ public class StorageTaskImpl implements IStorageTask {
 	/**
 	 * 回传出库状态给客户(出库的最后步骤)
 	 */
-//	@Scheduled(cron = "0 0/1 8-23 * * ? ")
+	// @Scheduled(cron = "0 0/1 8-23 * * ? ")
 	@Override
 	public void sendOutWarehouseStatusToCustomer() {
 		List<Long> orderIdList = outWarehouseOrderDao.findCallbackSendStatusUnSuccessOrderId();

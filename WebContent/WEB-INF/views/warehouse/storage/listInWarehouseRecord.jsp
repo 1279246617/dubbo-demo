@@ -118,7 +118,7 @@
 	  	                    { display: '跟踪单号', name: 'trackingNo',type:'float',width:'13%'},
 	  	                  	{ display: '入库订单Id', name: 'inWarehouseOrderId',type:'float',width:'13%'},
 		  		            { display: '预报产品数量', name: 'quantity', type: 'float',width:'9%'},
-		  		          	{ display: '实际收货数量', name: 'receivedQuantity', type: 'float',width:'9%'},
+		  		          	{ display: '本次收货数量', name: 'receivedQuantity', type: 'float',width:'9%'},
 		  		        	{ display: 'SKU预览', isSort: false, align: 'center', type: 'float',width:'16%',render: function(row) {
 			            		var skus = "";
 			            		if (!row._editing) {
@@ -157,8 +157,45 @@
 	            });
 	        };		
 	        
-	        function listInWarehouseRecordItem(orderId){
-	        	alert("订单id:"+orderId);
+	      //SKU
+	        function listInWarehouseRecordItem(recordId){
+	        	var contentArr = [];
+	        	contentArr.push('<table class="table" style="width:549px">');
+	        	contentArr.push('<tr><th>产品SKU</th><th>产品名称</th><th>收货数量</th><th>货位</th></tr>');
+	        	$.ajax({ 
+	                type : "post", 
+	                url :baseUrl + '/warehouse/storage/getInWarehouseRecordItemByRecordId.do', 
+	                data : "recordId="+recordId, 
+	                async : false, 
+	                success : function(msg){ 
+	                	msg = eval("(" + msg + ")");
+	        			$.each(msg,function(i,e){
+	        			  	contentArr.push('<tr>');
+	        			  	contentArr.push('<td>'+e.sku+'</td>');
+	    	        		contentArr.push('<td>'+e.skuName+'</td>');
+	    	        		contentArr.push('<td>'+e.quantity+'</td>');
+	    	        		contentArr.push('<td>'+e.seatNo+'</td>');
+	        			  	contentArr.push('</tr>');
+	        			});
+	                } 
+	           	});
+	            contentArr.push('</table>');
+	            var contentHtml = contentArr.join('');
+	        	$.dialog({
+	          		lock: true,
+	          		max: false,
+	          		min: false,
+	          		title: '入库记录SKU详情',
+	          		width: 550,
+	          		height: 350,
+	          		content: contentHtml,
+	          		button: [{
+	          			name: '关闭',
+	          			callback: function() {
+							
+	          			}
+	          		}]
+	          	})
 	        }
    	</script>
    	
@@ -167,6 +204,8 @@
 	<script type="text/javascript" src="${baseUrl}/static/ligerui/ligerUI/js/plugins/ligeruiPatch.js"></script>
 	<script type="text/javascript" src="${baseUrl}/static/calendar/lhgcalendar.min.js"></script>
 	<script type="text/javascript" src="${baseUrl}/static/calendar/prettify.js"></script>
+	<script type="text/javascript" src="${baseUrl}/static/lhgdialog/prettify/prettify.js"></script>
+	<script type="text/javascript" src="${baseUrl}/static/lhgdialog/prettify/lhgdialog.js"></script>
 	<script type="text/javascript" src="${baseUrl}/static/ligerui/ligerUI/js/ligerui.all.js"></script>
 </body>
 </html>
