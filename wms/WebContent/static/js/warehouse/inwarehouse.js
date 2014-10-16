@@ -88,6 +88,7 @@ function saveInWarehouseRecordStep2(trackingNoStr,remark,warehouseId) {
 			// 光标移至产品SKU
 			$("#itemSku").focus();
 			focus = "2";
+			btnSearch("#searchform",grid);
 			return;
 		}
 	},"json");
@@ -134,6 +135,7 @@ function saveInWarehouseRecordItem() {
 			$("#itemSku").focus();
 			$("#tips").html("请继续输入SKU和数量,或者输入新的跟踪单号并按回车!");
 			focus = "2";
+			btnSearch("#searchform",grid);
 			return;
 		}
 	},"json");

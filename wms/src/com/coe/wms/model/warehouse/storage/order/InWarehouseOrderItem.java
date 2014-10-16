@@ -33,13 +33,6 @@ public class InWarehouseOrderItem implements Serializable {
 	 */
 	private String skuRemark;
 
-	/**
-	 * 该SKU已经入库的数量
-	 * 
-	 * 在添加入库单时,更新此字段.也显示此字段
-	 */
-	private Integer receivedQuantity;
-
 	public Long getId() {
 		return id;
 	}
@@ -86,13 +79,5 @@ public class InWarehouseOrderItem implements Serializable {
 
 	public void setSkuRemark(String skuRemark) {
 		this.skuRemark = skuRemark;
-	}
-
-	public Integer getReceivedQuantity() {
-		return receivedQuantity;
-	}
-
-	public void setReceivedQuantity(Integer receivedQuantity) {
-		this.receivedQuantity = receivedQuantity;
 	}
 }

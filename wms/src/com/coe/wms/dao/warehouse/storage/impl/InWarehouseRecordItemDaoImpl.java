@@ -3,7 +3,6 @@ package com.coe.wms.dao.warehouse.storage.impl;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Types;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -252,6 +251,19 @@ public class InWarehouseRecordItemDaoImpl implements IInWarehouseRecordItemDao {
 		}
 		String sql = sb.toString();
 		logger.info("统计入库明细记录sql:" + sql);
-		return jdbcTemplate.queryForLong(sql);
+		return jdbcTemplate.queryForObject(sql, Long.class);
+	}
+
+	@Override
+	public int updateInWarehouseRecordItemReceivedQuantity(Long recordItemId, int newQuantity) {
+		String sql = "update w_s_in_warehouse_record_item set quantity='" + newQuantity + "where id=" + recordItemId;
+		return jdbcTemplate.update(sql);
+	}
+
+	@Override
+	public int countInWarehouseSkuQuantity(Long inWarehouseOrderId, String sku) {
+		String sql = "select sum(quantity) from w_s_in_warehouse_record_item where sku = '" + sku + "' and in_warehouse_order_id = "
+				+ inWarehouseOrderId;
+		return jdbcTemplate.queryForObject(sql, Integer.class);
 	}
 }

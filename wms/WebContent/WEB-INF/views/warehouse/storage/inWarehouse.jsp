@@ -175,8 +175,6 @@
 			if(focus == '2'){
 	      		saveInWarehouseRecordItem();
 			}
-			//刷新Grid				
-    		btnSearch("#searchform",grid);
   	  }
     </script>	
     
@@ -187,14 +185,16 @@
 	    	   grid = $("#maingrid").ligerGrid({
 	                columns: [
 	                    { display: '产品SKU', name: 'sku', align: 'center',width:'13%'},
-	                    { display: '本次收货数量', name: 'quantity', align: 'center', type: 'int',width:'9%'},
-	                    { display: '未收货数量', name: 'unRecivedquantity', align: 'center', type: 'int',width:'9%'},
+	                    { display: '总预报数量', name: 'totalQuantity', align: 'center', type: 'int',width:'9%'},
+	                    { display: '总已收货数量', name: 'totalReceivedQuantity', align: 'center', type: 'int',width:'9%'},
+	                    { display: '未收货数量', name: 'unReceivedquantity', align: 'center', type: 'int',width:'9%'},
+	                    { display: '本次收货数量', name: 'receivedQuantity', align: 'center', type: 'int',width:'9%'},
 		                { display: '仓库', name: 'warehouse', align: 'center', type: 'float',width:'9%'},
 		                { display: '货架', name: 'shelvesNo', align: 'center', type: 'float',width:'9%'},
 		                { display: '货位', name: 'seatNo', align: 'center', type: 'float',width:'10%'},
 		                { display: '收货时间', name: 'createdTime', type: 'int', width:'12%'},
 		                { display: '操作员', name: 'userLoginNameOfOperator',width:'10%'},
-		                { display: '备注', name: 'remark', align: 'center', type: 'float',width:'13%'}
+		                { display: '入库明细备注', name: 'remark', align: 'center', type: 'float',width:'13%'}
 	                ],  
 	                isScroll: true,
 	                dataAction: 'server',
@@ -204,6 +204,7 @@
 	                sortName: 'sku',
 	                width: '100%',
 	                height: '99%',
+	                title:"入库订单SKU预报和实际收货详情",
 	                checkbox: true,
 	                rownumbers:true,
 	                enabledEdit: true,
