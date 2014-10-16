@@ -3,6 +3,7 @@ package com.coe.wms.dao.warehouse.storage.impl;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -21,6 +22,8 @@ import com.coe.wms.dao.datasource.DataSource;
 import com.coe.wms.dao.datasource.DataSourceCode;
 import com.coe.wms.dao.warehouse.storage.IInWarehouseOrderItemDao;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrderItem;
+import com.coe.wms.model.warehouse.storage.record.InWarehouseRecordItem;
+import com.coe.wms.util.DateUtil;
 import com.coe.wms.util.NumberUtil;
 import com.coe.wms.util.Pagination;
 import com.coe.wms.util.StringUtil;
@@ -78,6 +81,7 @@ public class InWarehouseOrderItemDaoImpl implements IInWarehouseOrderItemDao {
 				ps.setString(4, item.getSkuName());
 				ps.setString(5, item.getSkuRemark());
 			}
+
 			@Override
 			public int getBatchSize() {
 				return itemList.size();
@@ -119,8 +123,8 @@ public class InWarehouseOrderItemDaoImpl implements IInWarehouseOrderItemDao {
 	 * 参数一律使用实体类加Map . 节省QueryVO
 	 */
 	@Override
-	public List<InWarehouseOrderItem> findInWarehouseOrderItem(InWarehouseOrderItem inWarehouseOrderItem,
-			Map<String, String> moreParam, Pagination page) {
+	public List<InWarehouseOrderItem> findInWarehouseOrderItem(InWarehouseOrderItem inWarehouseOrderItem, Map<String, String> moreParam,
+			Pagination page) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("select id,order_id,quantity,sku,received_quantity,sku_name,sku_remark from w_s_in_warehouse_order_item where 1=1 ");
 		if (inWarehouseOrderItem != null) {
@@ -135,16 +139,39 @@ public class InWarehouseOrderItemDaoImpl implements IInWarehouseOrderItemDao {
 			}
 		}
 		// 分页sql
-		if(page!=null){
-			sb.append(page.generatePageSql());	
+		if (page != null) {
+			sb.append(page.generatePageSql());
 		}
 		String sql = sb.toString();
 		logger.info("查询入库订单明细sql:" + sql);
 		List<InWarehouseOrderItem> inWarehouseOrderItemList = jdbcTemplate.query(sql,
 				ParameterizedBeanPropertyRowMapper.newInstance(InWarehouseOrderItem.class));
-		
-		logger.info("查询入库订单明细sql:" + sql +" size:"+inWarehouseOrderItemList.size());
-		
+
+		logger.info("查询入库订单明细sql:" + sql + " size:" + inWarehouseOrderItemList.size());
+
 		return inWarehouseOrderItemList;
+	}
+
+	/**
+	 * 查询入库明细记录
+	 */
+	@Override
+	public Long countInWarehouseOrderItem(InWarehouseOrderItem inWarehouseOrderItem, Map<String, String> moreParam) {
+		StringBuffer sb = new StringBuffer();
+		sb.append("select count(1) from w_s_in_warehouse_order_item where 1=1 ");
+		if (inWarehouseOrderItem != null) {
+			if (StringUtil.isNotNull(inWarehouseOrderItem.getSku())) {
+				sb.append(" and sku = '" + inWarehouseOrderItem.getSku() + "' ");
+			}
+			if (StringUtil.isNotNull(inWarehouseOrderItem.getSkuName())) {
+				sb.append(" and sku_name = '" + inWarehouseOrderItem.getSkuName() + "' ");
+			}
+			if (inWarehouseOrderItem.getOrderId() != null) {
+				sb.append(" and order_id = '" + inWarehouseOrderItem.getOrderId() + "' ");
+			}
+		}
+		String sql = sb.toString();
+		logger.info("统计入库订单明细sql:" + sql);
+		return jdbcTemplate.queryForObject(sql, Long.class);
 	}
 }

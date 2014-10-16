@@ -167,12 +167,34 @@ public class StorageServiceImpl implements IStorageService {
 			map.put(Constant.MESSAGE, "该产品SKU在此订单中无预报.");
 			return map;
 		}
-		// 检查该SKU是否已经存在
+		map.put(Constant.STATUS, Constant.SUCCESS);
+
+		// 检查该SKU是否已经存在,已经存在则直接改变数量(同一个入库主单,同一个SKU只允许一个收货明细)
+		InWarehouseRecordItem param = new InWarehouseRecordItem();
+		param.setInWarehouseRecordId(inWarehouseRecordId);
+		param.setSku(itemSku);
+		List<InWarehouseRecordItem> inWarehouseRecordItemList = inWarehouseRecordItemDao.findInWarehouseRecordItem(param, null, null);
+		if (inWarehouseRecordItemList.size() > 0) {
+			// 返回入库主单的id
+			Long recordItemId = inWarehouseRecordItemList.get(0).getId();
+			map.put("id", "" + recordItemId);
+			int newQuantity = inWarehouseRecordItemList.get(0).getQuantity() + itemQuantity;
+			inWarehouseRecordItemDao.updateInWarehouseRecordItemReceivedQuantity(recordItemId, newQuantity);
+			return map;
+		}
+
 		InWarehouseRecordItem inWarehouseRecordItem = new InWarehouseRecordItem();
 		inWarehouseRecordItem.setCreatedTime(System.currentTimeMillis());
 		inWarehouseRecordItem.setInWarehouseRecordId(inWarehouseRecordId);
 		inWarehouseRecordItem.setQuantity(itemQuantity);
 		inWarehouseRecordItem.setRemark(itemRemark);
+		// 分配货架货位的逻辑
+		if (StringUtil.isNull(seatNo)) {
+			seatNo = "G1";
+		}
+		if (StringUtil.isNull(shelvesNo)) {
+			shelvesNo = "G";
+		}
 		inWarehouseRecordItem.setSeatNo(seatNo);
 		inWarehouseRecordItem.setShelvesNo(shelvesNo);
 		inWarehouseRecordItem.setSku(itemSku);
@@ -181,7 +203,6 @@ public class StorageServiceImpl implements IStorageService {
 		// 返回id
 		long id = inWarehouseRecordItemDao.saveInWarehouseRecordItem(inWarehouseRecordItem);
 		map.put("id", "" + id);
-		map.put(Constant.STATUS, Constant.SUCCESS);
 		return map;
 	}
 
@@ -366,39 +387,53 @@ public class StorageServiceImpl implements IStorageService {
 	}
 
 	/**
-	 * 获取出库记录明细数据
+	 * 获取入库记录明细数据
 	 */
 	@Override
 	public Pagination getInWarehouseRecordItemData(Long inWarehouseRecordId, Pagination pagination) {
-		InWarehouseRecordItem inWarehouseRecordItem = new InWarehouseRecordItem();
-		inWarehouseRecordItem.setInWarehouseRecordId(inWarehouseRecordId);
-		List<InWarehouseRecordItem> inWarehouseRecordItemList = inWarehouseRecordItemDao.findInWarehouseRecordItem(inWarehouseRecordItem,
-				null, pagination);
+		// 查询入库订单
+		Long inWarehouseOrderId = inWarehouseRecordDao.getInWarehouseOrderIdByRecordId(inWarehouseRecordId);
+		InWarehouseOrderItem param = new InWarehouseOrderItem();
+		param.setOrderId(inWarehouseOrderId);
+		List<InWarehouseOrderItem> orderItemList = inWarehouseOrderItemDao.findInWarehouseOrderItem(param, null, null);
 		List<Object> list = new ArrayList<Object>();
-		for (InWarehouseRecordItem item : inWarehouseRecordItemList) {
+		for (InWarehouseOrderItem orderItem : orderItemList) {
 			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("id", item.getId());
-			if (item.getCreatedTime() != null) {
-				map.put("createdTime", DateUtil.dateConvertString(new Date(item.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss));
-			}
-			map.put("quantity", item.getQuantity());
-			map.put("remark", item.getRemark());
-			map.put("seatNo", item.getSeatNo());
-			map.put("shelvesNo", item.getShelvesNo());
-			map.put("sku", item.getSku());
-			if (NumberUtil.greaterThanZero(item.getUserIdOfOperator())) {
-				User user = userDao.getUserById(item.getUserIdOfOperator());
-				map.put("userLoginNameOfOperator", user.getLoginName());
-			}
-			if (NumberUtil.greaterThanZero(item.getWarehouseId())) {
-				Warehouse warehouse = warehouseDao.getWarehouseById(item.getWarehouseId());
-				if (warehouse != null) {
-					map.put("warehouse", warehouse.getWarehouseName());
+			map.put("orderId", orderItem.getId());
+			map.put("sku", orderItem.getSku());
+			map.put("totalQuantity", orderItem.getQuantity());
+			int totalReceivedQuantity = inWarehouseRecordItemDao.countInWarehouseSkuQuantity(inWarehouseOrderId, orderItem.getSku());
+			map.put("totalReceivedQuantity", totalReceivedQuantity);
+			int unReceivedquantity = orderItem.getQuantity() - totalReceivedQuantity;
+			map.put("unReceivedquantity", unReceivedquantity);
+			// 根据SKU查询收货记录的物品明细
+			InWarehouseRecordItem inWarehouseRecordItemParam = new InWarehouseRecordItem();
+			inWarehouseRecordItemParam.setInWarehouseRecordId(inWarehouseRecordId);
+			inWarehouseRecordItemParam.setSku(orderItem.getSku());
+			List<InWarehouseRecordItem> recordItemList = inWarehouseRecordItemDao.findInWarehouseRecordItem(inWarehouseRecordItemParam,null, null);
+			if (recordItemList != null && recordItemList.size() > 0) {
+				InWarehouseRecordItem recordItem = recordItemList.get(0);
+				if (recordItem.getCreatedTime() != null) {
+					map.put("createdTime", DateUtil.dateConvertString(new Date(recordItem.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss));
+				}
+				map.put("receivedQuantity", recordItem.getQuantity());
+				map.put("remark", recordItem.getRemark());
+				map.put("seatNo", recordItem.getSeatNo());
+				map.put("shelvesNo", recordItem.getShelvesNo());
+				if (NumberUtil.greaterThanZero(recordItem.getUserIdOfOperator())) {
+					User user = userDao.getUserById(recordItem.getUserIdOfOperator());
+					map.put("userLoginNameOfOperator", user.getLoginName());
+				}
+				if (NumberUtil.greaterThanZero(recordItem.getWarehouseId())) {
+					Warehouse warehouse = warehouseDao.getWarehouseById(recordItem.getWarehouseId());
+					if (warehouse != null) {
+						map.put("warehouse", warehouse.getWarehouseName());
+					}
 				}
 			}
 			list.add(map);
 		}
-		pagination.total = inWarehouseRecordItemDao.countInWarehouseRecordItem(inWarehouseRecordItem, null);
+		pagination.total = inWarehouseOrderItemDao.countInWarehouseOrderItem(param, null);
 		pagination.rows = list;
 		return pagination;
 	}
