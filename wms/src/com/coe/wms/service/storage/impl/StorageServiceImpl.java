@@ -18,6 +18,7 @@ import com.coe.wms.dao.warehouse.storage.IInWarehouseOrderItemDao;
 import com.coe.wms.dao.warehouse.storage.IInWarehouseOrderStatusDao;
 import com.coe.wms.dao.warehouse.storage.IInWarehouseRecordDao;
 import com.coe.wms.dao.warehouse.storage.IInWarehouseRecordItemDao;
+import com.coe.wms.dao.warehouse.storage.IItemInventoryDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderItemDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderReceiverDao;
@@ -109,6 +110,9 @@ public class StorageServiceImpl implements IStorageService {
 	@Resource(name = "userDao")
 	private IUserDao userDao;
 
+	@Resource(name = "itemInventoryDao")
+	private IItemInventoryDao itemInventoryDao;
+
 	/**
 	 * 根据入库订单id, 查找入库物品明细
 	 * 
@@ -185,7 +189,10 @@ public class StorageServiceImpl implements IStorageService {
 			return map;
 		}
 		map.put(Constant.STATUS, Constant.SUCCESS);
-
+		//查询入库主单信息,用于更新库存
+//		inWarehouseRecordId
+		inWarehouseRecordDao.getInWarehouseRecordById(InWarehouseRecordId);
+		
 		// 检查该SKU是否已经存在,已经存在则直接改变数量(同一个入库主单,同一个SKU只允许一个收货明细)
 		InWarehouseRecordItem param = new InWarehouseRecordItem();
 		param.setInWarehouseRecordId(inWarehouseRecordId);
@@ -196,7 +203,12 @@ public class StorageServiceImpl implements IStorageService {
 			Long recordItemId = inWarehouseRecordItemList.get(0).getId();
 			map.put("id", "" + recordItemId);
 			int newQuantity = inWarehouseRecordItemList.get(0).getQuantity() + itemQuantity;
-			inWarehouseRecordItemDao.updateInWarehouseRecordItemReceivedQuantity(recordItemId, newQuantity);
+			int updateCount = inWarehouseRecordItemDao.updateInWarehouseRecordItemReceivedQuantity(recordItemId, newQuantity);
+			
+			// 更新入库明细成功,则添加库存
+			if (updateCount > 0) {
+				itemInventoryDao.addItemInventory(warehouseId, userIdOfCustomer, batchNo, itemSku, itemQuantity);
+			}
 			return map;
 		}
 
