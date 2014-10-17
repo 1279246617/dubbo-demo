@@ -52,13 +52,43 @@ public class Print {
 		String orderIdArray[] = orderIds.split(",");
 		for (int i = 0; i < orderIdArray.length; i++) {
 			Long orderId = Long.valueOf(orderIdArray[i]);
-			
-			
+
 		}
-		
-		// 当前时间
 		view.addObject("timeNow", DateUtil.dateConvertString(new Date(), DateUtil.yyyy_MM_ddHHmmss));
 		view.setViewName("warehouse/print/printPackageList");
 		return view;
 	}
+
+	/**
+	 * 
+	 * 打印出库发货单
+	 * 
+	 * 根据出库渠道 判断打印顺丰运单还是ETK运单
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/printShipLabel", method = RequestMethod.GET)
+	public ModelAndView printShipLabel(HttpServletRequest request, HttpServletResponse response, String orderIds) throws IOException {
+		HttpSession session = request.getSession();
+		ModelAndView view = new ModelAndView();
+		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
+		if (StringUtil.isNull(orderIds)) {
+			return view;
+		}
+		String orderIdArray[] = orderIds.split(",");
+		for (int i = 0; i < orderIdArray.length; i++) {
+			Long orderId = Long.valueOf(orderIdArray[i]);
+		}
+		
+		view.addObject("timeNow", DateUtil.dateConvertString(new Date(), DateUtil.yyyy_MM_ddHHmmss));
+		//根据出库渠判断打印顺丰运单还是ETK运单判断
+			
+		view.setViewName("warehouse/print/printSfLabel");
+//		view.setViewName("warehouse/print/printEtkLabel");
+		return view;
+	}
+
 }
