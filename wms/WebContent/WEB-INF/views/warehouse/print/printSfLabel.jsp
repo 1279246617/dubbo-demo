@@ -8,9 +8,16 @@
 
 <body>
 	<div class='print-page-label'>
-		<div class='change-page per-page-a4'>
+		<!-- 循环订单,生成DIV -->
+		<div class="label-100-150 change-page mt_2mm">
+			<div style="height:25mm;margin-left:1mm">
+					
+			</div>
 			
-			
+		</div>
+		
+		<div class="label-100-150 change-page mt_2mm">
+				
 		</div>
 	</div>
 </body>
