@@ -205,7 +205,8 @@ public class StorageServiceImpl implements IStorageService {
 			int updateCount = inWarehouseRecordItemDao.updateInWarehouseRecordItemReceivedQuantity(recordItemId, newQuantity);
 			// 更新入库明细成功,则添加库存
 			if (updateCount > 0) {
-				itemInventoryDao.addItemInventory(warehouseId, inWarehouseRecord.getUserIdOfCustomer(), inWarehouseRecord.getBatchNo(),itemSku, itemQuantity);
+				itemInventoryDao.addItemInventory(warehouseId, inWarehouseRecord.getUserIdOfCustomer(), inWarehouseRecord.getBatchNo(),
+						itemSku, itemQuantity);
 			}
 			return map;
 		}
@@ -229,9 +230,10 @@ public class StorageServiceImpl implements IStorageService {
 		inWarehouseRecordItem.setWarehouseId(warehouseId);
 		// 返回id
 		long id = inWarehouseRecordItemDao.saveInWarehouseRecordItem(inWarehouseRecordItem);
-		//保存成功,添加库存
+		// 保存成功,添加库存
 		if (id > 0) {
-			itemInventoryDao.addItemInventory(warehouseId, inWarehouseRecord.getUserIdOfCustomer(), inWarehouseRecord.getBatchNo(),itemSku, itemQuantity);
+			itemInventoryDao.addItemInventory(warehouseId, inWarehouseRecord.getUserIdOfCustomer(), inWarehouseRecord.getBatchNo(),
+					itemSku, itemQuantity);
 		}
 		map.put("id", "" + id);
 		return map;
@@ -938,6 +940,7 @@ public class StorageServiceImpl implements IStorageService {
 			// COE审核通过,等待称重 Wait Warehouse Weighing
 			int updateResult = outWarehouseOrderDao.updateOutWarehouseOrderStatus(Long.valueOf(orderId), OutWarehouseOrderStatusCode.WWW);
 			if (updateResult < 1) {
+				map.put(Constant.MESSAGE, "审核通过" + updateResult + "个订单");
 				logger.warn("更新出库订单为审核通过时,得到结果0, orderId:" + orderId);
 			}
 		}

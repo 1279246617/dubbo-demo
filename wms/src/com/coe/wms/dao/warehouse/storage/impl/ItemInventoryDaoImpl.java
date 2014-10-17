@@ -19,9 +19,9 @@ import com.coe.wms.model.warehouse.storage.record.ItemInventory;
 import com.coe.wms.util.Pagination;
 import com.mysql.jdbc.Statement;
 
-@Repository("itemInventoryDaoImpl")
+@Repository("itemInventoryDao")
 public class ItemInventoryDaoImpl implements IItemInventoryDao {
-	Logger logger = Logger.getLogger(InWarehouseRecordItemDaoImpl.class);
+	Logger logger = Logger.getLogger(ItemInventoryDaoImpl.class);
 
 	@Resource(name = "jdbcTemplate")
 	private JdbcTemplate jdbcTemplate;
@@ -49,9 +49,10 @@ public class ItemInventoryDaoImpl implements IItemInventoryDao {
 			final Integer addQuantity) {
 		// 查询库存记录是否已存在
 		String sql = "select id from w_s_item_inventory where user_id_of_customer = ? and warehouse_id = ? and sku = ? and batch_no =?";
-		Long id = jdbcTemplate.queryForLong(sql, userIdOfCustomer, wareHouseId, sku, batchNo);
-		logger.info("已存在库存记录id:" + id);
-		if (id > 0) {
+		List<Long> idList = jdbcTemplate.queryForList(sql, Long.class, userIdOfCustomer, wareHouseId, sku, batchNo);
+		if (idList.size() > 0) {
+			Long id = idList.get(0);
+			logger.info("已存在库存记录id:" + id);
 			// 更新已有库存记录
 			sql = "update w_s_item_inventory set quantity = quantity+" + addQuantity + " ,available_quantity = available_quantity+"
 					+ addQuantity + " where id = " + id;
@@ -72,7 +73,7 @@ public class ItemInventoryDaoImpl implements IItemInventoryDao {
 				return ps;
 			}
 		}, keyHolder);
-		id = keyHolder.getKey().longValue();
+		Long id = keyHolder.getKey().longValue();
 		logger.info("新建库存记录id:" + id);
 		return 1;
 	}
