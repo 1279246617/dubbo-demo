@@ -189,10 +189,9 @@ public class StorageServiceImpl implements IStorageService {
 			return map;
 		}
 		map.put(Constant.STATUS, Constant.SUCCESS);
-		//查询入库主单信息,用于更新库存
-//		inWarehouseRecordId
-		inWarehouseRecordDao.getInWarehouseRecordById(InWarehouseRecordId);
-		
+		// 查询入库主单信息,用于更新库存
+		InWarehouseRecord inWarehouseRecord = inWarehouseRecordDao.getInWarehouseRecordById(inWarehouseRecordId);
+
 		// 检查该SKU是否已经存在,已经存在则直接改变数量(同一个入库主单,同一个SKU只允许一个收货明细)
 		InWarehouseRecordItem param = new InWarehouseRecordItem();
 		param.setInWarehouseRecordId(inWarehouseRecordId);
@@ -204,10 +203,9 @@ public class StorageServiceImpl implements IStorageService {
 			map.put("id", "" + recordItemId);
 			int newQuantity = inWarehouseRecordItemList.get(0).getQuantity() + itemQuantity;
 			int updateCount = inWarehouseRecordItemDao.updateInWarehouseRecordItemReceivedQuantity(recordItemId, newQuantity);
-			
 			// 更新入库明细成功,则添加库存
 			if (updateCount > 0) {
-				itemInventoryDao.addItemInventory(warehouseId, userIdOfCustomer, batchNo, itemSku, itemQuantity);
+				itemInventoryDao.addItemInventory(warehouseId, inWarehouseRecord.getUserIdOfCustomer(), inWarehouseRecord.getBatchNo(),itemSku, itemQuantity);
 			}
 			return map;
 		}
@@ -231,6 +229,10 @@ public class StorageServiceImpl implements IStorageService {
 		inWarehouseRecordItem.setWarehouseId(warehouseId);
 		// 返回id
 		long id = inWarehouseRecordItemDao.saveInWarehouseRecordItem(inWarehouseRecordItem);
+		//保存成功,添加库存
+		if (id > 0) {
+			itemInventoryDao.addItemInventory(warehouseId, inWarehouseRecord.getUserIdOfCustomer(), inWarehouseRecord.getBatchNo(),itemSku, itemQuantity);
+		}
 		map.put("id", "" + id);
 		return map;
 	}
