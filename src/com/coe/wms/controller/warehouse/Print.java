@@ -1,7 +1,11 @@
 package com.coe.wms.controller.warehouse;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -15,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.coe.wms.controller.Application;
-import com.coe.wms.model.user.User;
 import com.coe.wms.service.storage.IStorageService;
 import com.coe.wms.service.user.IUserService;
 import com.coe.wms.util.DateUtil;
@@ -31,7 +34,8 @@ public class Print {
 
 	@Resource(name = "userService")
 	private IUserService userService;
-
+	
+	
 	/**
 	 * 
 	 * 打印捡货单
@@ -49,9 +53,12 @@ public class Print {
 		if (StringUtil.isNull(orderIds)) {
 			return view;
 		}
+		// 返回页面的list,装map 每个map 是每个订单的数据
+		List<Map<String, Object>> mapList = new ArrayList<Map<String, Object>>();
 		String orderIdArray[] = orderIds.split(",");
 		for (int i = 0; i < orderIdArray.length; i++) {
 			Long orderId = Long.valueOf(orderIdArray[i]);
+			// 查询出库订单
 
 		}
 		view.addObject("timeNow", DateUtil.dateConvertString(new Date(), DateUtil.yyyy_MM_ddHHmmss));
@@ -82,12 +89,12 @@ public class Print {
 		for (int i = 0; i < orderIdArray.length; i++) {
 			Long orderId = Long.valueOf(orderIdArray[i]);
 		}
-		
+
 		view.addObject("timeNow", DateUtil.dateConvertString(new Date(), DateUtil.yyyy_MM_ddHHmmss));
-		//根据出库渠判断打印顺丰运单还是ETK运单判断
-			
+		// 根据出库渠判断打印顺丰运单还是ETK运单判断
+
 		view.setViewName("warehouse/print/printSfLabel");
-//		view.setViewName("warehouse/print/printEtkLabel");
+		// view.setViewName("warehouse/print/printEtkLabel");
 		return view;
 	}
 
