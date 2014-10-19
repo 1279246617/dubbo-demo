@@ -585,15 +585,15 @@ public class Storage {
 	}
 
 	/**
-	 * 出库订单收货
+	 * 出库称重和打印发货单
 	 * 
 	 * @param request
 	 * @param response
 	 * @return
 	 * @throws IOException
 	 */
-	@RequestMapping(value = "/outWarehouse", method = RequestMethod.GET)
-	public ModelAndView outWarehouse(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	@RequestMapping(value = "/outWarehouseWeightAndShipping", method = RequestMethod.GET)
+	public ModelAndView outWarehouseWeightAndShipping(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		HttpSession session = request.getSession();
 		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
 		ModelAndView view = new ModelAndView();
@@ -601,7 +601,7 @@ public class Storage {
 		User user = userService.getUserById(userId);
 		view.addObject("warehouseList", storageService.findAllWarehouse(user.getDefaultWarehouseId()));
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
-		view.setViewName("warehouse/storage/outWarehouse");
+		view.setViewName("warehouse/storage/outWarehouseWeightAndShipping");
 		return view;
 	}
 }

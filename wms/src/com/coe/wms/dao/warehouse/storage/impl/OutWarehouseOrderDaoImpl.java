@@ -44,7 +44,7 @@ public class OutWarehouseOrderDaoImpl implements IOutWarehouseOrderDao {
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public long saveOutWarehouseOrder(final OutWarehouseOrder order) {
-		final String sql = "insert into w_s_out_warehouse_order (warehouse_id,user_id_of_customer,user_id_of_operator,shipway_code,created_time,status,remark,customer_reference_no,out_warehouse_weight,weight_code) values (?,?,?,?,?,?,?,?,?,?)";
+		final String sql = "insert into w_s_out_warehouse_order (warehouse_id,user_id_of_customer,user_id_of_operator,shipway_code,created_time,status,remark,customer_reference_no,out_warehouse_weight,weight_code,trade_remark,logistics_remark) values (?,?,?,?,?,?,?,?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
@@ -68,6 +68,8 @@ public class OutWarehouseOrderDaoImpl implements IOutWarehouseOrderDao {
 					ps.setDouble(9, order.getOutWarehouseWeight());
 				}
 				ps.setString(10, order.getWeightCode());
+				ps.setString(11, order.getTradeRemark());
+				ps.setString(12, order.getLogisticsRemark());
 				return ps;
 			}
 		}, keyHolder);
@@ -77,7 +79,7 @@ public class OutWarehouseOrderDaoImpl implements IOutWarehouseOrderDao {
 
 	@Override
 	public OutWarehouseOrder getOutWarehouseOrderById(Long outWarehouseOrderId) {
-		String sql = "select id,warehouse_id,user_id_of_customer,user_id_of_operator,shipway_code,created_time,status,remark,customer_reference_no,callback_send_weight_is_success,callback_send_weigh_count,callback_send_status_is_success,callback_send_status_count,out_warehouse_weight,weight_code from w_s_out_warehouse_order where id ="
+		String sql = "select id,warehouse_id,user_id_of_customer,user_id_of_operator,shipway_code,created_time,status,remark,customer_reference_no,callback_send_weight_is_success,callback_send_weigh_count,callback_send_status_is_success,callback_send_status_count,out_warehouse_weight,weight_code,trade_remark,logistics_remark from w_s_out_warehouse_order where id ="
 				+ outWarehouseOrderId;
 		OutWarehouseOrder order = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<OutWarehouseOrder>(OutWarehouseOrder.class));
 		return order;
@@ -91,7 +93,7 @@ public class OutWarehouseOrderDaoImpl implements IOutWarehouseOrderDao {
 	@Override
 	public List<OutWarehouseOrder> findOutWarehouseOrder(OutWarehouseOrder outWarehouseOrder, Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select id,warehouse_id,user_id_of_customer,user_id_of_operator,shipway_code,created_time,status,remark,customer_reference_no,callback_send_weight_is_success,callback_send_weigh_count,callback_send_status_is_success,callback_send_status_count,out_warehouse_weight,weight_code from w_s_out_warehouse_order where 1=1 ");
+		sb.append("select id,warehouse_id,user_id_of_customer,user_id_of_operator,shipway_code,created_time,status,remark,customer_reference_no,callback_send_weight_is_success,callback_send_weigh_count,callback_send_status_is_success,callback_send_status_count,out_warehouse_weight,weight_code,trade_remark,logistics_remark from w_s_out_warehouse_order where 1=1 ");
 		if (outWarehouseOrder != null) {
 			if (outWarehouseOrder.getId() != null) {
 				sb.append(" and id = " + outWarehouseOrder.getId());
@@ -137,6 +139,12 @@ public class OutWarehouseOrderDaoImpl implements IOutWarehouseOrderDao {
 			}
 			if (outWarehouseOrder.getWeightCode() != null) {
 				sb.append(" and weight_code = " + outWarehouseOrder.getWeightCode());
+			}
+			if (outWarehouseOrder.getTradeRemark() != null) {
+				sb.append(" and trade_remark = " + outWarehouseOrder.getTradeRemark());
+			}
+			if (outWarehouseOrder.getLogisticsRemark() != null) {
+				sb.append(" and logistics_remark = " + outWarehouseOrder.getLogisticsRemark());
 			}
 		}
 		if (moreParam != null) {
@@ -211,6 +219,12 @@ public class OutWarehouseOrderDaoImpl implements IOutWarehouseOrderDao {
 			}
 			if (outWarehouseOrder.getWeightCode() != null) {
 				sb.append(" and weight_code = " + outWarehouseOrder.getWeightCode());
+			}
+			if (outWarehouseOrder.getTradeRemark() != null) {
+				sb.append(" and trade_remark = " + outWarehouseOrder.getTradeRemark());
+			}
+			if (outWarehouseOrder.getLogisticsRemark() != null) {
+				sb.append(" and logistics_remark = " + outWarehouseOrder.getLogisticsRemark());
 			}
 		}
 		if (moreParam != null) {
