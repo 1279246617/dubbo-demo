@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.coe.wms.controller.Application;
+import com.coe.wms.service.print.IPrintService;
 import com.coe.wms.service.storage.IStorageService;
 import com.coe.wms.service.user.IUserService;
 import com.coe.wms.util.DateUtil;
@@ -34,8 +35,10 @@ public class Print {
 
 	@Resource(name = "userService")
 	private IUserService userService;
-	
-	
+
+	@Resource(name = "printService")
+	private IPrintService printService;
+
 	/**
 	 * 
 	 * 打印捡货单
@@ -47,7 +50,6 @@ public class Print {
 	 */
 	@RequestMapping(value = "/printPackageList", method = RequestMethod.GET)
 	public ModelAndView printPackageList(HttpServletRequest request, HttpServletResponse response, String orderIds) throws IOException {
-		HttpSession session = request.getSession();
 		ModelAndView view = new ModelAndView();
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
 		if (StringUtil.isNull(orderIds)) {
@@ -58,9 +60,12 @@ public class Print {
 		String orderIdArray[] = orderIds.split(",");
 		for (int i = 0; i < orderIdArray.length; i++) {
 			Long orderId = Long.valueOf(orderIdArray[i]);
-			// 查询出库订单
-
+			Map<String, Object> map = printService.getPrintPackageListData(orderId);
+			if (map != null) {
+				mapList.add(map);
+			}
 		}
+		view.addObject("mapList", mapList);
 		view.addObject("timeNow", DateUtil.dateConvertString(new Date(), DateUtil.yyyy_MM_ddHHmmss));
 		view.setViewName("warehouse/print/printPackageList");
 		return view;

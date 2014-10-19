@@ -52,8 +52,20 @@ public class OutWarehouseOrder implements Serializable {
 
 	/**
 	 * 客户参考号, 用于客户对该出库指令进行修改,确认等
+	 * 
+	 * 对应 顺丰 tradeOrderId
 	 */
 	private String customerReferenceNo;
+	
+	/**
+	 * 顺丰API,字段, 等于买家的备注,目前仅用于打印捡货单上的买家备注
+	 */
+	private String tradeRemark;
+	
+	/**
+	 * 顺丰API字段,等于卖家备注,用于打印捡货单上的卖家备注
+	 */
+	private String logisticsRemark;
 	
 	/**
 	 * 状态
@@ -114,6 +126,22 @@ public class OutWarehouseOrder implements Serializable {
 
 	public void setWarehouseId(Long warehouseId) {
 		this.warehouseId = warehouseId;
+	}
+
+	public String getTradeRemark() {
+		return tradeRemark;
+	}
+
+	public void setTradeRemark(String tradeRemark) {
+		this.tradeRemark = tradeRemark;
+	}
+
+	public String getLogisticsRemark() {
+		return logisticsRemark;
+	}
+
+	public void setLogisticsRemark(String logisticsRemark) {
+		this.logisticsRemark = logisticsRemark;
 	}
 
 	public Double getOutWarehouseWeight() {
