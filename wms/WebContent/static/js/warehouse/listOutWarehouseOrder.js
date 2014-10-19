@@ -73,7 +73,7 @@ function printOrder(){
     contentArr.push('       <label class="pull-left" style="margin-left: 5px;" for="all">打印当前页</label>');
     contentArr.push('   </div>');
     contentArr.push('</div>');
-    contentArr.push('<div style="color: #ff0000;margin-left: 40px;">注：请使用A4纸打印</div>');
+    contentArr.push('<div style="color: #ff0000;margin-left: 40px;">注：待仓库审核的订单不能打印捡货单</div>');
     var contentHtml = contentArr.join('');
 	$.dialog({
   		lock: true,

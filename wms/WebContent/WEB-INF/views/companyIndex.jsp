@@ -67,7 +67,9 @@
 		              		<!-- 入库明细查询 条件: SKU, 数量, 主单号,批次号,客户帐号,时间,产品描述 -->
 		              		<li><a href=# tab_id="findInWarehouseItemRecord"><i class="icon-zoom-in"></i><span class="hidden-tablet">入库明细查询</span></a></li>
 			              		
-		              		<li><a href="#${baseUrl}/warehouse/storage/outWarehouse.do" tab_id="doOutWarehouse"><i class="icon-plane"></i><span class="hidden-tablet">出库订单操作</span></a></li>
+			              	<!-- (扫SKU和数量 是否和出库订单一样) -->	
+		              		<li><a href="#${baseUrl}/warehouse/storage/outWarehouseCheckPackage.do" tab_id="doOutWarehouse"><i class="icon-plane"></i><span class="hidden-tablet">出库装箱复核</span></a></li>
+		              		<li><a href="#${baseUrl}/warehouse/storage/outWarehouseWeightAndShipping.do" tab_id="outWarehouseWeightAndShipping"><i class="icon-plane"></i><span class="hidden-tablet">出库称重发货</span></a></li>
 		              		<li><a href=# tab_id="findOutWarehouseRecord"><i class="icon-zoom-out"></i><span class="hidden-tablet">出库记录查询</span></a></li>
 		                </ul>
 		        </div>
