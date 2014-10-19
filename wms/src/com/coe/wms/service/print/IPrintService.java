@@ -2,7 +2,7 @@ package com.coe.wms.service.print;
 
 import java.util.Map;
 
-public interface PrintService {
+public interface IPrintService {
 
 	/**
 	 * 获取打印捡货单数据
