@@ -246,6 +246,18 @@ public interface IStorageService {
 	 * @return
 	 * @throws ServiceException
 	 */
-	public Map<String, String> outWarehouseShippingConfirm(String TrackingNo,Long userIdOfOperator) throws ServiceException;
+	public Map<String, String> outWarehouseShippingConfirm(String TrackingNo, Long userIdOfOperator) throws ServiceException;
+
+	/**
+	 * 
+	 * @param TrackingNo
+	 * @return
+	 * @throws ServiceException
+	 */
+	public Map<String, Object> outWarehouseSubmitCustomerReferenceNo(String customerReferenceNo, Long userIdOfOperator)
+			throws ServiceException;
+
+	public Map<String, Object> outWarehouseSubmitWeight(String customerReferenceNo, Double weight, Long userIdOfOperator)
+			throws ServiceException;
 
 }

@@ -604,6 +604,43 @@ public class Storage {
 	}
 
 	/**
+	 * 
+	 * 扫描捡货单上的清单号 (客户参考号) 进行复核重量和SKU数量
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/outWarehouseSubmitCustomerReferenceNo", method = RequestMethod.POST)
+	public String outWarehouseSubmitCustomerReferenceNo(HttpServletRequest request, HttpServletResponse response, String customerReferenceNo)
+			throws IOException {
+		HttpSession session = request.getSession();
+		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
+		Map<String, Object> checkResultMap = storageService.outWarehouseSubmitCustomerReferenceNo(customerReferenceNo, userId);
+		return GsonUtil.toJson(checkResultMap);
+	}
+
+	/**
+	 * 复核SKU数量与称重,提交称重
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/outWarehouseSubmitWeight", method = RequestMethod.POST)
+	public String outWarehouseSubmitWeight(HttpServletRequest request, HttpServletResponse response, String customerReferenceNo,
+			Double outWarehouseOrderWeight) throws IOException {
+		HttpSession session = request.getSession();
+		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
+		Map<String, Object> checkResultMap = storageService.outWarehouseSubmitWeight(customerReferenceNo, outWarehouseOrderWeight, userId);
+		return GsonUtil.toJson(checkResultMap);
+	}
+
+	/**
 	 * 出库扫描运单界面
 	 * 
 	 * @param request
@@ -635,12 +672,12 @@ public class Storage {
 	 * @throws IOException
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/outWarehouseShippingConfirm", method = RequestMethod.GET)
+	@RequestMapping(value = "/outWarehouseShippingConfirm")
 	public String outWarehouseShippingConfirm(HttpServletRequest request, HttpServletResponse response, String trackingNo)
 			throws IOException {
 		HttpSession session = request.getSession();
 		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
-		Map<String, String> checkResultMap = storageService.outWarehouseShippingConfirm(trackingNo,userId);
+		Map<String, String> checkResultMap = storageService.outWarehouseShippingConfirm(trackingNo, userId);
 		return GsonUtil.toJson(checkResultMap);
 	}
 }

@@ -265,7 +265,7 @@ public class InWarehouseRecordItemDaoImpl implements IInWarehouseRecordItemDao {
 		String sql = "select sum(quantity) from w_s_in_warehouse_record_item where sku = '" + sku
 				+ "' and in_warehouse_record_id in(select id from w_s_in_warehouse_record where in_warehouse_order_id = "
 				+ inWarehouseOrderId + ")";
-		Long count = jdbcTemplate.queryForLong(sql);
+		Long count = jdbcTemplate.queryForObject(sql, Long.class);
 		return count.intValue();
 	}
 }

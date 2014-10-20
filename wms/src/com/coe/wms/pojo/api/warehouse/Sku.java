@@ -24,6 +24,16 @@ public class Sku implements Serializable {
 	 */
 	private String skuBoundTime;
 
+	/**
+	 * 入库清点时间
+	 */
+	private String skuCheckTime;
+
+	/**
+	 * 入库清点数量
+	 */
+	private Integer skuCheckQty;
+
 	private Double skuNetWeight;
 
 	public Double getSkuNetWeight() {
@@ -55,6 +65,22 @@ public class Sku implements Serializable {
 
 	public Double getSkuUnitPrice() {
 		return skuUnitPrice;
+	}
+
+	public String getSkuCheckTime() {
+		return skuCheckTime;
+	}
+
+	public void setSkuCheckTime(String skuCheckTime) {
+		this.skuCheckTime = skuCheckTime;
+	}
+
+	public Integer getSkuCheckQty() {
+		return skuCheckQty;
+	}
+
+	public void setSkuCheckQty(Integer skuCheckQty) {
+		this.skuCheckQty = skuCheckQty;
 	}
 
 	public void setSkuUnitPrice(Double skuUnitPrice) {
