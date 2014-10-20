@@ -78,7 +78,7 @@ public class Storage {
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
 		User user = userService.getUserById(userId);
 		view.addObject("warehouseList", storageService.findAllWarehouse(user.getDefaultWarehouseId()));
-		view.addObject("todayStart", DateUtil.getTodayStart());
+		view.addObject("sevenDaysAgoStart", DateUtil.getSevenDaysAgoStart());
 		view.setViewName("warehouse/storage/listInWarehouseOrder");
 		return view;
 	}
@@ -148,7 +148,7 @@ public class Storage {
 		view.addObject("outWarehouseOrderStatusList", outWarehouseOrderStatusList);
 		User user = userService.getUserById(userId);
 		view.addObject("warehouseList", storageService.findAllWarehouse(user.getDefaultWarehouseId()));
-		view.addObject("todayStart", DateUtil.getTodayStart());
+		view.addObject("sevenDaysAgoStart", DateUtil.getSevenDaysAgoStart());
 		view.setViewName("warehouse/storage/listOutWarehouseOrder");
 		return view;
 	}
@@ -217,7 +217,7 @@ public class Storage {
 		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
 		ModelAndView view = new ModelAndView();
 		view.addObject("userId", userId);
-		view.addObject("todayStart", DateUtil.getTodayStart());
+		view.addObject("sevenDaysAgoStart", DateUtil.getSevenDaysAgoStart());
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
 		User user = userService.getUserById(userId);
 		view.addObject("warehouseList", storageService.findAllWarehouse(user.getDefaultWarehouseId()));
@@ -515,7 +515,7 @@ public class Storage {
 		User user = userService.getUserById(userId);
 		view.addObject("warehouseList", storageService.findAllWarehouse(user.getDefaultWarehouseId()));
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
-		view.addObject("todayStart", DateUtil.getTodayStart());
+		view.addObject("sevenDaysAgoStart", DateUtil.getSevenDaysAgoStart());
 		view.setViewName("warehouse/storage/listInWarehouseRecord");
 		return view;
 	}

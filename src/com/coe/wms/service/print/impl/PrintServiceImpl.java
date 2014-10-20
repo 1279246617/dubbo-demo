@@ -85,7 +85,9 @@ public class PrintServiceImpl implements IPrintService {
 		OutWarehouseOrderItem itemParam = new OutWarehouseOrderItem();
 		itemParam.setOutWarehouseOrderId(outWarehouseOrderId);
 		List<OutWarehouseOrderItem> items = outWarehouseOrderItemDao.findOutWarehouseOrderItem(itemParam, null, null);
-
+		
+		//根据批次排序,找到库位
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		// 清单号 (出库订单主键)
 		map.put("outWarehouseOrderId", String.valueOf(outWarehouseOrder.getId()));

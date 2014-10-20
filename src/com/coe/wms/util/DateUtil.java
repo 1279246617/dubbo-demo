@@ -178,12 +178,20 @@ public class DateUtil {
 		return diffDays;
 	}
 
+	public static String getSevenDaysAgoStart() {
+		Calendar calendar = Calendar.getInstance();
+		calendar.add(Calendar.DAY_OF_YEAR, -7);
+		String time = DateUtil.dateConvertString(calendar.getTime(), DateUtil.yyyy_MM_dd);
+		String timeFrom = time + " 00:00:00";
+		return timeFrom;
+	}
+
 	public static String getTodayStart() {
 		String time = DateUtil.dateConvertString(new Date(), DateUtil.yyyy_MM_dd);
 		String timeFrom = time + " 00:00:00";
 		return timeFrom;
 	}
-	
+
 	public static String getTodayEnd() {
 		String time = DateUtil.dateConvertString(new Date(), DateUtil.yyyy_MM_dd);
 		String timeTo = time + " 23:59:59";

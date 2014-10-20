@@ -46,7 +46,7 @@ public class OutWarehouseOrder implements Serializable {
 	private Long createdTime;
 
 	/**
-	 * 出库摘要
+	 * 出库摘要 COE操作备注
 	 */
 	private String remark;
 

@@ -1,13 +1,32 @@
-package com.coe.wms.pojo.api.warehouse;
+package com.coe.wms.model.warehouse.storage.order;
 
 import java.io.Serializable;
 
-public class ClearanceDetail implements Serializable {
+/**
+ * 
+ * 出库主单
+ * 
+ * 顺丰附加
+ * 
+ * @author Administrator
+ * 
+ */
+public class OutWarehouseOrderAdditionalSf implements Serializable {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 7769929815846807840L;
+	private static final long serialVersionUID = -8950306490791178866L;
+
+	private Long id;
+
+	/**
+	 * 主键
+	 */
+	private Long outWarehouseOrderId;
+	/**
+	 * 顺丰指定运输方式 , 在出库订单主表也存在此字段,名称 shipwayCode
+	 */
 	private String carrierCode;
 
 	private String mailNo;
@@ -38,6 +57,22 @@ public class ClearanceDetail implements Serializable {
 	 * 用户订单号，需要打印到顺丰运单上
 	 */
 	private String orderId;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Long getOutWarehouseOrderId() {
+		return outWarehouseOrderId;
+	}
+
+	public void setOutWarehouseOrderId(Long outWarehouseOrderId) {
+		this.outWarehouseOrderId = outWarehouseOrderId;
+	}
 
 	public String getCarrierCode() {
 		return carrierCode;
