@@ -31,7 +31,7 @@
 									</span>
 							</td>		
 							<td>
-		          				 <a class="btn  btn-primary" id="enter" onclick="clickEnter()" style="cursor:pointer;"><i class="icon-ok icon-white"></i>确认出货</a>
+		          				 <a class="btn  btn-primary" id="enter" onclick="clickEnter()" style="cursor:pointer;"><i class="icon-ok icon-white"></i>确认出库</a>
 		          				 &nbsp;&nbsp;
 		          				 <button class="btn  btn-primary"   style="cursor:pointer;" type="reset"><i class="icon-ok icon-white"></i>清除</button>
 		          				 &nbsp;&nbsp;&nbsp;&nbsp;
@@ -70,24 +70,19 @@
  
   	 	 //回车事件
   	  	function clickEnter(){
-  	  	$.post(baseUrl+ '/warehouse/storage/saveInWarehouseRecord.do?trackingNo='+ trackingNoStr
-  	  		+'&warehouseId='+warehouseId+'&inWarehouseOrderId='+inWarehouseOrderId+'&remark='+remark, function(msg) {
-  	  		//赋值入库记录id 到隐藏input
-  	  		$("#inWarehouseRecordId").val(msg.id);
-  	  		if(msg.status == 0){
-  	  			parent.$.showShortMessage({msg:msg.message,animate:true,left:"45%"});
-  	  			return;
-  	  		}
-  	  		if(msg.status == 1){
-  	  			parent.$.showShortMessage({msg:"保存主单成功.",animate:true,left:"45%"});
-  	  			$("#tips").html("请输入SKU和数量并按回车!");
-  	  			// 光标移至产品SKU
-  	  			$("#itemSku").focus();
-  	  			focus = "2";
-  	  			btnSearch("#searchform",grid);
-  	  			return;
-  	  		}
-  	  	},"json");
+	  	  	$.post(baseUrl+ '/warehouse/storage/outWarehouseShippingConfirm.do?trackingNo='+ trackingNoStr, function(msg) {
+	  	  		if(msg.status == 0){
+	  	  			parent.$.showShortMessage({msg:msg.message,animate:true,left:"45%"});
+	  	  			return;
+	  	  		}
+	  	  		if(msg.status == 1){
+	  	  			parent.$.showShortMessage({msg:"确认出库成功.",animate:true,left:"45%"});
+	  	  			// 光标移至跟踪号
+	  	  			$("#trackingNo").focus();
+	  	  			$("#trackingNo").select();
+	  	  			return;
+	  	  		}
+	  	  	},"json");
   		}
   	 	 
   	 	 function trackingNoFocus(){

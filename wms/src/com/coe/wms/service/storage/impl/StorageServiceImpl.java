@@ -544,6 +544,7 @@ public class StorageServiceImpl implements IStorageService {
 				map.put("createdTime", DateUtil.dateConvertString(new Date(order.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss));
 			}
 			map.put("shipwayCode", order.getShipwayCode());
+			map.put("trackingNo", order.getTrackingNo());
 			// 查询用户名
 			User user = userDao.getUserById(order.getUserIdOfCustomer());
 			map.put("userNameOfCustomer", user.getLoginName());
@@ -805,7 +806,12 @@ public class StorageServiceImpl implements IStorageService {
 			outWarehouseOrder.setUserIdOfCustomer(userIdOfCustomer);
 			outWarehouseOrder.setWarehouseId(warehouse.getId());
 			outWarehouseOrder.setTradeRemark(tradeRemark);
-
+			ClearanceDetail clearanceDetail = eventBody.getClearanceDetail();
+			if (clearanceDetail != null) {
+				// 顺丰指定,出货运单号和渠道
+				outWarehouseOrder.setTrackingNo(clearanceDetail.getMailNo());
+				outWarehouseOrder.setShipwayCode(clearanceDetail.getCarrierCode());
+			}
 			// 客户参考号,用于后面客户对该出库订单进行修改,确认等,以及回传出库状态
 			outWarehouseOrder.setCustomerReferenceNo(customerReferenceNo);
 			// 保存主单 得到主单Id
@@ -854,7 +860,6 @@ public class StorageServiceImpl implements IStorageService {
 			logger.info("出库订单:第" + (i + 1) + "客户参考号customerReferenceNo(tradeOrderId):" + customerReferenceNo
 					+ " 保存收件人,outWarehouseOrderReceiverId:" + outWarehouseOrderReceiverId);
 			// 顺丰标签附加内容
-			ClearanceDetail clearanceDetail = eventBody.getClearanceDetail();
 			if (clearanceDetail != null) {
 				OutWarehouseOrderAdditionalSf additionalSf = new OutWarehouseOrderAdditionalSf();
 				additionalSf.setCarrierCode(clearanceDetail.getCarrierCode());
@@ -1118,5 +1123,44 @@ public class StorageServiceImpl implements IStorageService {
 			mapList.add(map);
 		}
 		return mapList;
+	}
+
+	@Override
+	public Map<String, String> outWarehouseShippingConfirm(String trackingNo, Long userIdOfOperator) throws ServiceException {
+		Map<String, String> map = new HashMap<String, String>();
+		map.put(Constant.STATUS, Constant.FAIL);
+
+		OutWarehouseOrder param = new OutWarehouseOrder();
+		param.setTrackingNo(trackingNo);
+
+		List<OutWarehouseOrder> outWarehouseOrderList = outWarehouseOrderDao.findOutWarehouseOrder(param, null, null);
+		if (outWarehouseOrderList == null || outWarehouseOrderList.size() == 0) {
+			map.put(Constant.MESSAGE, "查询不到出库订单,请重新输入出货跟踪单号");
+			return map;
+		}
+
+		if (outWarehouseOrderList.size() > 1) {
+			// 找到多个出库订单的情况,待处理
+			map.put(Constant.MESSAGE, "查询到多个出库订单,请输入客户参考号");
+			return map;
+		}
+		OutWarehouseOrder outWarehouseOrder = outWarehouseOrderList.get(0);
+		Long orderId = outWarehouseOrder.getId();
+		// 只有等待发送重量,登录顺丰确认出库,顺丰已确认的订单 可以出库
+		if (StringUtil.isEqual(outWarehouseOrder.getStatus(), OutWarehouseOrderStatusCode.WSW)
+				|| StringUtil.isEqual(outWarehouseOrder.getStatus(), OutWarehouseOrderStatusCode.WCC)
+				|| StringUtil.isEqual(outWarehouseOrder.getStatus(), OutWarehouseOrderStatusCode.WWO)) {
+
+			// 更新出库订单状态为SUCCESS
+			int updateCount = outWarehouseOrderDao.updateOutWarehouseOrderStatus(orderId, OutWarehouseOrderStatusCode.SUCCESS);
+			if (updateCount == 1) {
+				map.put(Constant.STATUS, Constant.SUCCESS);
+			} else {
+				map.put(Constant.MESSAGE, "执行数据库更新时失败,数据库返回更新行数:" + updateCount);
+			}
+		} else {
+			map.put(Constant.MESSAGE, "出库订单当前状态不允许出库");
+		}
+		return map;
 	}
 }

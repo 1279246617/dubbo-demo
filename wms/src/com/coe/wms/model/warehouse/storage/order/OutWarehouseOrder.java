@@ -41,6 +41,11 @@ public class OutWarehouseOrder implements Serializable {
 	private String shipwayCode;
 
 	/**
+	 * 出货跟踪号
+	 */
+	private String trackingNo;
+
+	/**
 	 * 创建时间 (收货时间)
 	 */
 	private Long createdTime;
@@ -56,33 +61,33 @@ public class OutWarehouseOrder implements Serializable {
 	 * 对应 顺丰 tradeOrderId
 	 */
 	private String customerReferenceNo;
-	
+
 	/**
 	 * 顺丰API,字段, 等于买家的备注,目前仅用于打印捡货单上的买家备注
 	 */
 	private String tradeRemark;
-	
+
 	/**
 	 * 顺丰API字段,等于卖家备注,用于打印捡货单上的卖家备注
 	 */
 	private String logisticsRemark;
-	
+
 	/**
 	 * 状态
 	 */
 	private String status;
-	//当状态是等待回传出库称重给客户并且callbackSendWeightIsSuccess=N或Null 回传称重,  
-	//当状态是等待回传出库状态给客户并且callbackSendStatusIsSuccess=N或Null 回传状态
+	// 当状态是等待回传出库称重给客户并且callbackSendWeightIsSuccess=N或Null 回传称重,
+	// 当状态是等待回传出库状态给客户并且callbackSendStatusIsSuccess=N或Null 回传状态
 	/**
 	 * 回调称重是否成功 Y 成功 N或者空失败
 	 */
 	private String callbackSendWeightIsSuccess;
-	
+
 	/**
 	 * 回调次数
 	 */
 	private Integer callbackSendWeighCount;
-	
+
 	/**
 	 * 回调出库状态是否成功 Y 成功 N或者空失败
 	 */
@@ -103,7 +108,7 @@ public class OutWarehouseOrder implements Serializable {
 	 * 重量代码 KG/G
 	 */
 	private String weightCode;
-	
+
 	public Long getId() {
 		return id;
 	}
@@ -114,6 +119,14 @@ public class OutWarehouseOrder implements Serializable {
 
 	public Long getWarehouseId() {
 		return warehouseId;
+	}
+
+	public String getTrackingNo() {
+		return trackingNo;
+	}
+
+	public void setTrackingNo(String trackingNo) {
+		this.trackingNo = trackingNo;
 	}
 
 	public String getWeightCode() {

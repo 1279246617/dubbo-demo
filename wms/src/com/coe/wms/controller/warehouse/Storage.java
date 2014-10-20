@@ -1,7 +1,6 @@
 package com.coe.wms.controller.warehouse;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,7 +20,6 @@ import org.springframework.web.servlet.ModelAndView;
 import com.coe.wms.controller.Application;
 import com.coe.wms.model.user.User;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
-import com.coe.wms.model.warehouse.storage.order.InWarehouseOrderItem;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrder;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderItem;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus;
@@ -592,8 +590,8 @@ public class Storage {
 	 * @return
 	 * @throws IOException
 	 */
-	@RequestMapping(value = "/outWarehouseWeightAndShipping", method = RequestMethod.GET)
-	public ModelAndView outWarehouseWeightAndShipping(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	@RequestMapping(value = "/outWarehouseCheckPackage", method = RequestMethod.GET)
+	public ModelAndView outWarehouseCheckPackage(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		HttpSession session = request.getSession();
 		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
 		ModelAndView view = new ModelAndView();
@@ -601,7 +599,48 @@ public class Storage {
 		User user = userService.getUserById(userId);
 		view.addObject("warehouseList", storageService.findAllWarehouse(user.getDefaultWarehouseId()));
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
-		view.setViewName("warehouse/storage/outWarehouseWeightAndShipping");
+		view.setViewName("warehouse/storage/outWarehouseCheckPackage");
 		return view;
+	}
+
+	/**
+	 * 出库扫描运单界面
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/outWarehouseShipping", method = RequestMethod.GET)
+	public ModelAndView outWarehouseShipping(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		HttpSession session = request.getSession();
+		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
+		ModelAndView view = new ModelAndView();
+		view.addObject("userId", userId);
+		User user = userService.getUserById(userId);
+		view.addObject("warehouseList", storageService.findAllWarehouse(user.getDefaultWarehouseId()));
+		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
+		view.setViewName("warehouse/storage/outWarehouseShipping");
+		return view;
+	}
+
+	/**
+	 * 扫运单动作,确认出库
+	 * 
+	 * 目前采用扫描出货条码,可能重复, 待添加 当重复时,扫描客户参考号等
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/outWarehouseShippingConfirm", method = RequestMethod.GET)
+	public String outWarehouseShippingConfirm(HttpServletRequest request, HttpServletResponse response, String trackingNo)
+			throws IOException {
+		HttpSession session = request.getSession();
+		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
+		Map<String, String> checkResultMap = storageService.outWarehouseShippingConfirm(trackingNo,userId);
+		return GsonUtil.toJson(checkResultMap);
 	}
 }
