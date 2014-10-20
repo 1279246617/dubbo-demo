@@ -53,7 +53,7 @@
                		
                		<span class="pull-left" style="width:175px;">
                			创建时间
-	               		<input type="text"   style="width:120px;" name="createdTimeStart" id="createdTimeStart" value="${todayStart}" title="起始创建时间">
+	               		<input type="text"   style="width:120px;" name="createdTimeStart" id="createdTimeStart" value="${sevenDaysAgoStart}" title="起始创建时间">
                		</span>
                		
                		<span class="pull-left" style="width:180px;">
@@ -131,6 +131,7 @@
 		            		}
 		            		return skus;
 	  		          	}},
+	  		          	{ display: '发货渠道', name: 'shipwayCode', align: 'center', type: 'float',width:'8%'},
 		                { display: '收件人名', name: 'receiverName', align: 'center', type: 'float',width:'8%'},
 		                { display: '收件人街道1', name: 'receiverAddressLine1', align: 'center', type: 'float',width:'12%'},
 		                { display: '收件人街道2', name: 'receiverAddressLine2', align: 'center', type: 'float',width:'8%'},

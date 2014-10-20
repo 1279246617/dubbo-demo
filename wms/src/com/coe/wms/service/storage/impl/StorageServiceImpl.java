@@ -19,6 +19,7 @@ import com.coe.wms.dao.warehouse.storage.IInWarehouseOrderStatusDao;
 import com.coe.wms.dao.warehouse.storage.IInWarehouseRecordDao;
 import com.coe.wms.dao.warehouse.storage.IInWarehouseRecordItemDao;
 import com.coe.wms.dao.warehouse.storage.IItemInventoryDao;
+import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderAdditionalSfDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderItemDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderReceiverDao;
@@ -33,6 +34,7 @@ import com.coe.wms.model.warehouse.storage.order.InWarehouseOrderItem;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrderStatus;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrderStatus.InWarehouseOrderStatusCode;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrder;
+import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderAdditionalSf;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderItem;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderReceiver;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderSender;
@@ -40,6 +42,7 @@ import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus.OutWarehouseOrderStatusCode;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecord;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecordItem;
+import com.coe.wms.pojo.api.warehouse.ClearanceDetail;
 import com.coe.wms.pojo.api.warehouse.ErrorCode;
 import com.coe.wms.pojo.api.warehouse.EventBody;
 import com.coe.wms.pojo.api.warehouse.EventHeader;
@@ -112,6 +115,9 @@ public class StorageServiceImpl implements IStorageService {
 
 	@Resource(name = "itemInventoryDao")
 	private IItemInventoryDao itemInventoryDao;
+
+	@Resource(name = "outWarehouseOrderAdditionalSfDao")
+	private IOutWarehouseOrderAdditionalSfDao outWarehouseOrderAdditionalSfDao;
 
 	/**
 	 * 根据入库订单id, 查找入库物品明细
@@ -537,6 +543,7 @@ public class StorageServiceImpl implements IStorageService {
 			if (order.getCreatedTime() != null) {
 				map.put("createdTime", DateUtil.dateConvertString(new Date(order.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss));
 			}
+			map.put("shipwayCode", order.getShipwayCode());
 			// 查询用户名
 			User user = userDao.getUserById(order.getUserIdOfCustomer());
 			map.put("userNameOfCustomer", user.getLoginName());
@@ -557,6 +564,7 @@ public class StorageServiceImpl implements IStorageService {
 			OutWarehouseOrderReceiver outWarehouseOrderReceiver = outWarehouseOrderReceiverDao
 					.getOutWarehouseOrderReceiverByOrderId(outWarehouseOrderId);
 			if (outWarehouseOrderReceiver != null) {
+
 				map.put("receiverAddressLine1", outWarehouseOrderReceiver.getAddressLine1());
 				map.put("receiverAddressLine2", outWarehouseOrderReceiver.getAddressLine2());
 				map.put("receiverCity", outWarehouseOrderReceiver.getCity());
@@ -713,6 +721,7 @@ public class StorageServiceImpl implements IStorageService {
 		response.setSuccess(Constant.FALSE);
 		responseItems.add(response);
 		responses.setResponseItems(responseItems);
+
 		// 取 tradeDetail 中tradeOrderId 作为客户参考号
 		TradeDetail tradeDetail = eventBody.getTradeDetail();
 		if (tradeDetail == null) {
@@ -726,13 +735,17 @@ public class StorageServiceImpl implements IStorageService {
 			response.setReasonDesc("TradeDetail对象获取TradeOrders对象得到Null");
 			return XmlUtil.toXml(Responses.class, responses);
 		}
+		TradeOrder tradeOrder = tradeOrderList.get(0);
 		// 客户参考号
-		String customerReferenceNo = tradeOrderList.get(0).getTradeOrderId();
+		String customerReferenceNo = tradeOrder.getTradeOrderId();
 		if (StringUtil.isNull(customerReferenceNo)) {
 			response.setReason(ErrorCode.S01_CODE);
 			response.setReasonDesc("TradeOrder对象获取tradeOrderId得到Null");
 			return XmlUtil.toXml(Responses.class, responses);
 		}
+		// 交易备注,等于打印捡货单上的买家备注
+		String tradeRemark = tradeOrder.getTradeRemark();
+
 		// 出库订单发件人信息
 		LogisticsDetail logisticsDetail = eventBody.getLogisticsDetail();
 		if (logisticsDetail == null) {
@@ -752,7 +765,6 @@ public class StorageServiceImpl implements IStorageService {
 			response.setReasonDesc("根据仓库编号(eventTarget)获取仓库得到Null");
 			return XmlUtil.toXml(Responses.class, responses);
 		}
-
 		// 保存
 		for (int i = 0; i < logisticsOrders.size(); i++) {
 			LogisticsOrder logisticsOrder = logisticsOrders.get(i);
@@ -785,14 +797,15 @@ public class StorageServiceImpl implements IStorageService {
 				response.setReasonDesc("客户参考号(tradeOrderId)重复,保存失败");
 				return XmlUtil.toXml(Responses.class, responses);
 			}
-
 			// 主单
 			OutWarehouseOrder outWarehouseOrder = new OutWarehouseOrder();
 			outWarehouseOrder.setCreatedTime(System.currentTimeMillis());
-			outWarehouseOrder.setRemark(logisticsOrder.getLogisticsRemark());
+			outWarehouseOrder.setLogisticsRemark(logisticsOrder.getLogisticsRemark());
 			outWarehouseOrder.setStatus(OutWarehouseOrderStatusCode.WWC);
 			outWarehouseOrder.setUserIdOfCustomer(userIdOfCustomer);
 			outWarehouseOrder.setWarehouseId(warehouse.getId());
+			outWarehouseOrder.setTradeRemark(tradeRemark);
+
 			// 客户参考号,用于后面客户对该出库订单进行修改,确认等,以及回传出库状态
 			outWarehouseOrder.setCustomerReferenceNo(customerReferenceNo);
 			// 保存主单 得到主单Id
@@ -840,6 +853,23 @@ public class StorageServiceImpl implements IStorageService {
 			Long outWarehouseOrderReceiverId = outWarehouseOrderReceiverDao.saveOutWarehouseOrderReceiver(outWarehouseOrderReceiver);
 			logger.info("出库订单:第" + (i + 1) + "客户参考号customerReferenceNo(tradeOrderId):" + customerReferenceNo
 					+ " 保存收件人,outWarehouseOrderReceiverId:" + outWarehouseOrderReceiverId);
+			// 顺丰标签附加内容
+			ClearanceDetail clearanceDetail = eventBody.getClearanceDetail();
+			if (clearanceDetail != null) {
+				OutWarehouseOrderAdditionalSf additionalSf = new OutWarehouseOrderAdditionalSf();
+				additionalSf.setCarrierCode(clearanceDetail.getCarrierCode());
+				additionalSf.setCustId(clearanceDetail.getCustId());
+				additionalSf.setDeliveryCode(clearanceDetail.getDeliveryCode());
+				additionalSf.setMailNo(clearanceDetail.getMailNo());
+				additionalSf.setOrderId(clearanceDetail.getOrderId());
+				additionalSf.setOutWarehouseOrderId(outWarehouseOrderId);
+				additionalSf.setPayMethod(clearanceDetail.getPayMethod());
+				additionalSf.setSenderAddress(clearanceDetail.getSenderAddress());
+				additionalSf.setShipperCode(clearanceDetail.getShipperCode());
+				Long outWarehouseOrderAdditionalSfId = outWarehouseOrderAdditionalSfDao.saveOutWarehouseOrderAdditionalSf(additionalSf);
+				logger.info("出库订单:第" + (i + 1) + "客户参考号customerReferenceNo(tradeOrderId):" + customerReferenceNo
+						+ " 保存顺丰标签附近内容人,outWarehouseOrderAdditionalSfId:" + outWarehouseOrderAdditionalSfId);
+			}
 			// 发件人信息
 			OutWarehouseOrderSender outWarehouseOrderSender = new OutWarehouseOrderSender();
 			outWarehouseOrderSender.setAddressLine1(senderDetail.getStreetAddress());

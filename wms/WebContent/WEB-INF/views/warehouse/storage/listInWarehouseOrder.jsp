@@ -45,7 +45,7 @@
                		
                		<span class="pull-left" style="width:175px;">
                			创建时间
-	               		<input type="text"   style="width:120px;" name="createdTimeStart" id="createdTimeStart" value="${todayStart}" title="起始创建时间">
+	               		<input type="text"   style="width:120px;" name="createdTimeStart" id="createdTimeStart" value="${sevenDaysAgoStart}" title="起始创建时间">
                		</span>
                		
                		<span class="pull-left" style="width:200px;">
@@ -138,7 +138,7 @@
 		            	}}
 	                ],  
 	                dataAction: 'server',
-	                url: baseUrl+'/warehouse/storage/getInWarehouseOrderData.do?createdTimeStart=${todayStart}',
+	                url: baseUrl+'/warehouse/storage/getInWarehouseOrderData.do?createdTimeStart=${sevenDaysAgoStart}',
 	                pageSize: 50, 
 	                pageSizeOptions:[10,50,100,500,1000],
 	                usePager: 'true',
