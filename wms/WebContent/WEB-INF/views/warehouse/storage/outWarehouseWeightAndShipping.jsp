@@ -17,34 +17,25 @@
 <title>COE</title>
 </head>
 <body>
-	<div class="pull-left" style="width:100%;height:140px; margin-top: 1px;" >
-		 <form action="${baseUrl}/warehouse/storage/getInWarehouseRecordItemData.do" id="searchform" name="searchform" method="post">
-			<table class="table table-striped" style="width:1150px;margin-bottom: 5px">
+	<div class="pull-left" style="width:100%;height:80px; margin-top: 1px;" >
+		 <form>
+			<table class="table table-striped" style="width:100%;margin-bottom: 5px">
 					<tr style="height:15px;">
 							<td>
-									<span class="pull-left" style="width:172px;">客户单号(捡货单上的订单号)</span>
+									<span class="pull-left" style="width:72px;">出货运单号</span>
 									<span class="pull-left" style="width:191px;">
-										<input type="text"  name="trackingNo"  id="trackingNo" t="1" onfocus="trackingNoFocus()"   style="width:190px;"/>
+										<input type="text"  name="trackingNo"  id="trackingNo" onfocus="trackingNoFocus()"   style="width:190px;"/>
+									</span>
+									<span class="pull-left" style="margin-left: 10px;">
+										扫描出库装箱时打印的运单上的条码
 									</span>
 							</td>		
 							<td>
-								出库总重&nbsp;&nbsp;<input type="text" name="packageWeight"  t="1" data-provide="typeahead"  id="packageWeight" style="width:120px;"  />
-								KG
-												          	
-		          				&nbsp;&nbsp;&nbsp;&nbsp;
-		          				 出库备注&nbsp;&nbsp;<input type="text" t="1"  name="orderRemark"  id="orderRemark" style="width:220px;"/>
-		          				 <!-- 入库主单记录id -->
-		          				 <input type="text" name="inWarehouseRecordId" t="1" id="inWarehouseRecordId" style="display:none;">
-		          				 
-		          				 <a class="btn  btn-primary" id="enter" onclick="saveInWarehouseRecord()" style="cursor:pointer;"><i class="icon-ok icon-white"></i>保存称重</a>
+		          				 <a class="btn  btn-primary" id="enter" onclick="clickEnter()" style="cursor:pointer;"><i class="icon-ok icon-white"></i>确认出货</a>
 		          				 &nbsp;&nbsp;
 		          				 <button class="btn  btn-primary"   style="cursor:pointer;" type="reset"><i class="icon-ok icon-white"></i>清除</button>
 		          				 &nbsp;&nbsp;&nbsp;&nbsp;
 							</td>
-					</tr>
-					
-					<tr style="height:15px;">
-						<td>打印发货渠道标签</td>
 					</tr>
 			</table>
 		</form>
@@ -79,8 +70,29 @@
  
   	 	 //回车事件
   	  	function clickEnter(){
-  	 
+  	  	$.post(baseUrl+ '/warehouse/storage/saveInWarehouseRecord.do?trackingNo='+ trackingNoStr
+  	  		+'&warehouseId='+warehouseId+'&inWarehouseOrderId='+inWarehouseOrderId+'&remark='+remark, function(msg) {
+  	  		//赋值入库记录id 到隐藏input
+  	  		$("#inWarehouseRecordId").val(msg.id);
+  	  		if(msg.status == 0){
+  	  			parent.$.showShortMessage({msg:msg.message,animate:true,left:"45%"});
+  	  			return;
+  	  		}
+  	  		if(msg.status == 1){
+  	  			parent.$.showShortMessage({msg:"保存主单成功.",animate:true,left:"45%"});
+  	  			$("#tips").html("请输入SKU和数量并按回车!");
+  	  			// 光标移至产品SKU
+  	  			$("#itemSku").focus();
+  	  			focus = "2";
+  	  			btnSearch("#searchform",grid);
+  	  			return;
+  	  		}
+  	  	},"json");
   		}
+  	 	 
+  	 	 function trackingNoFocus(){
+  	 		 $("#trackingNo").select();
+  	 	 }
     </script>	
 </body>
 </html>
