@@ -132,7 +132,7 @@ public interface IStorageService {
 	public List<InWarehouseOrderItem> getInWarehouseOrderItem(Long orderId);
 
 	public List<Map<String, String>> getInWarehouseOrderItemMap(Long orderId);
-	
+
 	public List<Map<String, String>> getInWarehouseRecordItemMapByRecordId(Long recordId);
 
 	/**
@@ -239,5 +239,13 @@ public interface IStorageService {
 	 * @throws ServiceException
 	 */
 	public List<Warehouse> findAllWarehouse(Long firstWarehouseId) throws ServiceException;
+
+	/**
+	 * 
+	 * @param TrackingNo
+	 * @return
+	 * @throws ServiceException
+	 */
+	public Map<String, String> outWarehouseShippingConfirm(String TrackingNo,Long userIdOfOperator) throws ServiceException;
 
 }
