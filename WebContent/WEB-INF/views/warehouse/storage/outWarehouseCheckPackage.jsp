@@ -17,30 +17,19 @@
 <title>COE</title>
 </head>
 <body>
-	<div class="pull-left" style="width:100%;height:80px; margin-top: 1px;" >
-		 <form>
-			<table class="table table-striped" style="width:100%;margin-bottom: 5px">
-					<tr style="height:15px;">
-							<td>
-									<span class="pull-left" style="width:72px;">出货运单号</span>
-									<span class="pull-left" style="width:191px;">
-										<input type="text"  name="trackingNo"  id="trackingNo" onfocus="trackingNoFocus()"   style="width:190px;"/>
-									</span>
-									<span class="pull-left" style="margin-left: 10px;">
-										扫描出库装箱时打印的运单上的条码
-									</span>
-							</td>		
-							<td>
-		          				 <a class="btn  btn-primary" id="enter" onclick="clickEnter()" style="cursor:pointer;"><i class="icon-ok icon-white"></i>确认出货</a>
-		          				 &nbsp;&nbsp;
-		          				 <button class="btn  btn-primary"   style="cursor:pointer;" type="reset"><i class="icon-ok icon-white"></i>清除</button>
-		          				 &nbsp;&nbsp;&nbsp;&nbsp;
-							</td>
-					</tr>
-			</table>
-		</form>
+
+	<div class="pull-left" style="width:44%;height:140px; margin-top: 1px;" >
+		扫捡货单上清单号(顺丰海淘交易id)
+		扫SKU和输入数量 与 出库订单对比,复核
 	</div>
-	 
+	
+	
+	<div class="pull-right" style="width:55%;height:140px; margin-top: 1px;" >
+		
+		称总重,打出货运单
+	</div>
+	
+		
 	 <script type="text/javascript" src="${baseUrl}/static/jquery/jquery.js"></script>
     <script type="text/javascript" src="${baseUrl}/static/bootstrap/bootstrap-typeahead.js"></script>
 	<script type="text/javascript" src="${baseUrl}/static/jquery/jquery.showMessage.js"></script>
@@ -70,29 +59,8 @@
  
   	 	 //回车事件
   	  	function clickEnter(){
-  	  	$.post(baseUrl+ '/warehouse/storage/saveInWarehouseRecord.do?trackingNo='+ trackingNoStr
-  	  		+'&warehouseId='+warehouseId+'&inWarehouseOrderId='+inWarehouseOrderId+'&remark='+remark, function(msg) {
-  	  		//赋值入库记录id 到隐藏input
-  	  		$("#inWarehouseRecordId").val(msg.id);
-  	  		if(msg.status == 0){
-  	  			parent.$.showShortMessage({msg:msg.message,animate:true,left:"45%"});
-  	  			return;
-  	  		}
-  	  		if(msg.status == 1){
-  	  			parent.$.showShortMessage({msg:"保存主单成功.",animate:true,left:"45%"});
-  	  			$("#tips").html("请输入SKU和数量并按回车!");
-  	  			// 光标移至产品SKU
-  	  			$("#itemSku").focus();
-  	  			focus = "2";
-  	  			btnSearch("#searchform",grid);
-  	  			return;
-  	  		}
-  	  	},"json");
+  	 
   		}
-  	 	 
-  	 	 function trackingNoFocus(){
-  	 		 $("#trackingNo").select();
-  	 	 }
     </script>	
 </body>
 </html>
