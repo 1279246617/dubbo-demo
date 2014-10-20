@@ -46,11 +46,10 @@ function checkOrder(){
             		orderIds += row[i].id+",";
 				}
         		$.post(baseUrl + '/warehouse/storage/checkOutWarehouseOrder.do',{orderIds:orderIds,checkResult:checkResult},function(msg){
-        			if(msg.message !=''){
-        				parent.$.showShortMessage({msg:msg.message,animate:true,left:"45%"});
-        			}
         			if(msg.status == '1'){
         				grid.loadData();	
+        			}else{
+        				parent.$.showShortMessage({msg:msg.message,animate:true,left:"45%"});
         			}
                 });
   			}

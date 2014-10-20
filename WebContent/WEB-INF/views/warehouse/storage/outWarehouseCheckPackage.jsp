@@ -18,15 +18,86 @@
 </head>
 <body>
 
-	<div class="pull-left" style="width:44%;height:140px; margin-top: 1px;" >
-		扫捡货单上清单号(顺丰海淘交易id)
-		扫SKU和输入数量 与 出库订单对比,复核
-	</div>
-	
-	
-	<div class="pull-right" style="width:55%;height:140px; margin-top: 1px;" >
+	<div class="pull-left" style="width:49%;height:100%; margin-top: 5px;margin-left: 5px;'" >
+		<table class="table">
+			<tr>
+				<td colspan="3" style="height:70px;">
+					客户参考号(捡货单的清单号)&nbsp;&nbsp;
+					<input type="text"  name="customerReferenceNo"   t="1" id="customerReferenceNo"  style="width:190px;"/>
+				</td>
+			</tr>
+			
+			<tr>
+				<th colspan="3">复核SKU数量:请扫描产品SKU(按回车,继续扫描下一个产品)</th>
+			</tr>
+			<tr>
+				<td colspan="2" style="height:60px;">
+					产品SKU&nbsp;&nbsp;
+					<input type="text"  name="sku"  id="sku"  t="2"  style="width:120px;"/>
+				</td>
+				<td>
+					数量&nbsp;&nbsp;
+					<input type="text"  name="quantity"  id="quantity"   t="2" value="1"  style="width:90px;"/>
+				</td>
+			</tr>
+		</table>	
 		
-		称总重,打出货运单
+		
+		<table class="table">
+			<tr>
+				<th colspan="3">称出库总重量</th>
+			</tr>
+			<tr>
+				<td colspan="2" style="height:70px;">
+					装箱重量&nbsp;&nbsp;
+					<input type="text"  name="outWarehouseOrderWeight"  t="3"  id="outWarehouseOrderWeight"  style="width:90px;"/>KG
+				</td>
+				<td colspan="1">
+					<a class="btn  btn-primary"  onclick="saveOutWarehouseOrderWeight();"  style="cursor:pointer;">
+						<i class="icon-ok icon-white"></i>保存重量
+					</a>
+				</td>
+			</tr>
+			<tr>
+				<th colspan="3">打印出货运单</th>
+			</tr>
+			<tr>
+				<td colspan="1">
+					出货渠道&nbsp;&nbsp;
+					<input type="text"  name="shipwayCode"  id="shipwayCode"   t="4" style="width:90px;" readonly="readonly"/>
+				</td>
+				<td colspan="1">
+					跟踪单号&nbsp;&nbsp;
+					<input type="text"  name="trackingNo"  id="trackingNo"  t="4"  style="width:130px;" readonly="readonly"/>
+				</td>
+					
+				<td colspan="1">
+					<a class="btn  btn-primary"  onclick="saveOutWarehouseOrderWeight();" style="cursor:pointer;">
+						<i class="icon-ok icon-white"></i>打印出货运单
+					</a>
+				</td>
+			</tr>
+		</table>	
+		
+	</div>
+		
+		
+	<div class="pull-right" style="width:50%;height:1000px; margin-top: 1px;border-left:1px solid  #333;" >
+			<table class="table" id="skus">
+				<thead>
+					<tr>
+						<th colspan="3">复核SKU数量和出库订单SKU数量</th>
+					</tr>
+					<tr>
+						<th>产品SKU</th>
+						<th>出库订单数量</th>
+						<th>实际出库数量</th>
+					</tr>
+				</thead>
+				<tbody id="skusTbody">
+					
+				</tbody>
+			</table>
 	</div>
 	
 		
@@ -42,8 +113,9 @@
     <script type="text/javascript">
 	   var baseUrl = "${baseUrl}";
 	   //进入页面,焦点跟踪单号
-	   $("#trackingNo").focus();
-	    $(window).keydown(function(event){
+	   $("#customerReferenceNo").focus();
+	   var focus= "1";
+	   $(window).keydown(function(event){
 	    	//回车事件
 	    	if((event.keyCode   ==   13)) {
 	    		clickEnter();
@@ -56,11 +128,69 @@
 	    	if((event.keyCode   ==   13) &&   (event.ctrlKey)) {
 	    	}
 	    });
- 
+ 	
   	 	 //回车事件
   	  	function clickEnter(){
-  	 
+  	 		if(focus == "1"){
+				submitCustomerReferenceNo();
+  	 		}
+  	 		if(focus == "3"){
+  	 			saveOutWarehouseOrderWeight();
+  	 		}
   		}
+  	 	 
+ 	 	function submitCustomerReferenceNo(){
+ 	 		var customerReferenceNo  = $("#customerReferenceNo").val();
+ 	 		$("#shipwayCode").val("");
+			$("#trackingNo").val("");
+			$("#skusTbody").html("");
+ 	 		$.post(baseUrl+ '/warehouse/storage/outWarehouseSubmitCustomerReferenceNo.do?customerReferenceNo='+ customerReferenceNo, function(msg) {
+ 	 				if(msg.status == 0){
+ 	 					parent.$.showShortMessage({msg:msg.message,animate:true,left:"45%"});
+ 	 					return;
+ 	 				}
+ 	 				if(msg.status == 1){
+					$("#shipwayCode").val(msg.shipwayCode);
+					$("#trackingNo").val(msg.trackingNo);
+					
+					var skus = msg.outWarehouseOrderItemList;
+					
+					$.each(skus, function(i, n) {
+						var tr = "<tr>";
+						tr+="<td style='width:205px;text-align:left;'>"+n.sku+"</td>";
+						tr+="<td style='width:205px;text-align:left;'>"+n.quantity+"</td>";
+						tr+="<td style='width:205px;text-align:left;'>"+0+"</td>";
+						tr+="</tr>";
+						$("#skusTbody").append(tr);
+					});
+					
+ 	 					return;
+ 	 				}
+ 	 			},"json");
+ 	 		
+ 	 	 }
+ 	 	 
+ 	 	 //保存重量
+ 	 	 function saveOutWarehouseOrderWeight(){
+ 	 		var outWarehouseOrderWeight = $("#outWarehouseOrderWeight").val();
+ 	 		var customerReferenceNo  = $("#customerReferenceNo").val();
+ 	 		$.post(baseUrl+ '/warehouse/storage/outWarehouseSubmitWeight.do?customerReferenceNo='+ customerReferenceNo+'&outWarehouseOrderWeight='+outWarehouseOrderWeight, function(msg) {
+	 				if(msg.status == 0){
+	 					parent.$.showShortMessage({msg:msg.message,animate:true,left:"45%"});
+	 					return;
+	 				}
+	 				//成功后 锁定输入框
+	 				$("#outWarehouseOrderWeight").attr("readonly","true");
+	 				
+	 				
+	 		},"json");
+ 	 	 }
+  	 	 
+ 	  	 $(function(){
+ 		  		$("input").focus(function(){
+ 		  			focus = $(this).attr("t");
+ 		  		});
+ 	   	});
     </script>	
 </body>
 </html>

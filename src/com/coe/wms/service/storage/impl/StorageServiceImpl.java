@@ -1158,9 +1158,57 @@ public class StorageServiceImpl implements IStorageService {
 			} else {
 				map.put(Constant.MESSAGE, "执行数据库更新时失败,数据库返回更新行数:" + updateCount);
 			}
+		} else if (StringUtil.isEqual(outWarehouseOrder.getStatus(), OutWarehouseOrderStatusCode.SUCCESS)) {
+			map.put(Constant.MESSAGE, "出库订单当前状态已经是出库成功");
 		} else {
-			map.put(Constant.MESSAGE, "出库订单当前状态不允许出库");
+			map.put(Constant.MESSAGE, "出库订单当前状态不允许更改为出库成功");
 		}
+		return map;
+	}
+
+	@Override
+	public Map<String, Object> outWarehouseSubmitCustomerReferenceNo(String customerReferenceNo, Long userIdOfOperator)
+			throws ServiceException {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put(Constant.STATUS, Constant.FAIL);
+
+		// 根据客户参考好查询出库订单customerReferenceNo
+		OutWarehouseOrder param = new OutWarehouseOrder();
+		param.setCustomerReferenceNo(customerReferenceNo);
+		List<OutWarehouseOrder> outWarehouseOrderList = outWarehouseOrderDao.findOutWarehouseOrder(param, null, null);
+		if (outWarehouseOrderList == null || outWarehouseOrderList.size() == 0) {
+			map.put(Constant.MESSAGE, "根据客户参考号找不到出库订单,请重新输入");
+			return map;
+		}
+		OutWarehouseOrder outWarehouseOrder = outWarehouseOrderList.get(0);
+		map.put("shipwayCode", outWarehouseOrder.getShipwayCode());
+		map.put("trackingNo", outWarehouseOrder.getTrackingNo());
+		// 查询出库订单SKU
+		OutWarehouseOrderItem outWarehouseOrderItemParam = new OutWarehouseOrderItem();
+		outWarehouseOrderItemParam.setOutWarehouseOrderId(outWarehouseOrder.getId());
+		List<OutWarehouseOrderItem> outWarehouseOrderItemList = outWarehouseOrderItemDao.findOutWarehouseOrderItem(
+				outWarehouseOrderItemParam, null, null);
+		map.put("outWarehouseOrderItemList", outWarehouseOrderItemList);
+		map.put(Constant.STATUS, Constant.SUCCESS);
+		return map;
+	}
+
+	@Override
+	public Map<String, Object> outWarehouseSubmitWeight(String customerReferenceNo, Double weight, Long userIdOfOperator)
+			throws ServiceException {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put(Constant.STATUS, Constant.FAIL);
+		// 根据客户参考好查询出库订单customerReferenceNo
+		OutWarehouseOrder param = new OutWarehouseOrder();
+		param.setCustomerReferenceNo(customerReferenceNo);
+		List<OutWarehouseOrder> outWarehouseOrderList = outWarehouseOrderDao.findOutWarehouseOrder(param, null, null);
+		if (outWarehouseOrderList == null || outWarehouseOrderList.size() == 0) {
+			map.put(Constant.MESSAGE, "根据客户参考号找不到出库订单,请重新输入");
+			return map;
+		}
+		OutWarehouseOrder outWarehouseOrder = outWarehouseOrderList.get(0);
+
+		map.put(Constant.STATUS, Constant.SUCCESS);
 		return map;
 	}
 }
