@@ -324,4 +324,15 @@ public class OutWarehouseOrderDaoImpl implements IOutWarehouseOrderDao {
 				+ outWarehouseOrder.getId();
 		return jdbcTemplate.update(sql);
 	}
+
+	/**
+	 * 
+	 */
+	@Override
+	public int updateOutWarehouseOrderWeight(OutWarehouseOrder outWarehouseOrder) {
+		String sql = "update w_s_out_warehouse_order set out_warehouse_weight=" + outWarehouseOrder.getOutWarehouseWeight()
+				+ ",weight_code='" + outWarehouseOrder.getWeightCode() + "' , status='" + outWarehouseOrder.getStatus() + "' where id="
+				+ outWarehouseOrder.getId();
+		return jdbcTemplate.update(sql);
+	}
 }

@@ -180,7 +180,7 @@ public class Storage {
 
 		OutWarehouseOrder param = new OutWarehouseOrder();
 		param.setStatus(status);
-		// 客户单号
+		// 客户参考号
 		param.setCustomerReferenceNo(customerReferenceNo);
 		// 客户帐号
 		if (StringUtil.isNotNull(userLoginName)) {
@@ -251,7 +251,7 @@ public class Storage {
 
 		OutWarehouseOrder param = new OutWarehouseOrder();
 		param.setStatus(OutWarehouseOrderStatusCode.WWC);
-		// 客户单号
+		// 客户参考号
 		param.setCustomerReferenceNo(customerReferenceNo);
 		// 客户帐号
 		if (StringUtil.isNotNull(userLoginName)) {

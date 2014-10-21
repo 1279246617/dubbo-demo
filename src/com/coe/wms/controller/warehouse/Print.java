@@ -90,14 +90,21 @@ public class Print {
 		if (StringUtil.isNull(orderIds)) {
 			return view;
 		}
+		// 返回页面的list,装map 每个map 是每个订单的数据
+		List<Map<String, Object>> mapList = new ArrayList<Map<String, Object>>();
 		String orderIdArray[] = orderIds.split(",");
 		for (int i = 0; i < orderIdArray.length; i++) {
 			Long orderId = Long.valueOf(orderIdArray[i]);
+			Map<String, Object> map = printService.getPrintPackageListData(orderId);
+			if (map != null) {
+				mapList.add(map);
+			}
 		}
-
+		view.addObject("mapList", mapList);
 		view.addObject("timeNow", DateUtil.dateConvertString(new Date(), DateUtil.yyyy_MM_ddHHmmss));
+		
+		
 		// 根据出库渠判断打印顺丰运单还是ETK运单判断
-
 		view.setViewName("warehouse/print/printSfLabel");
 		// view.setViewName("warehouse/print/printEtkLabel");
 		return view;
