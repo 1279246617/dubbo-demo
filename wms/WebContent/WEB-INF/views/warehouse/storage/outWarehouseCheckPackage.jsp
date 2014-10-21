@@ -23,7 +23,11 @@
 			<tr>
 				<td colspan="3" style="height:70px;">
 					客户参考号(捡货单的清单号)&nbsp;&nbsp;
-					<input type="text"  name="customerReferenceNo"   t="1" id="customerReferenceNo"  style="width:190px;"/>
+					<input type="text"  name="customerReferenceNo"   t="1" id="customerReferenceNo"  style="width:160px;"/>
+					&nbsp;&nbsp;
+					出库订单当前状态<input type="text"  name="status"   t="1" id="status"  style="width:60px;" readonly="readonly"/>
+						
+					<input type="text" name="outWarehouseOrderId" id="outWarehouseOrderId" style="display:none;">
 				</td>
 			</tr>
 			
@@ -51,6 +55,7 @@
 				<td colspan="2" style="height:70px;">
 					装箱重量&nbsp;&nbsp;
 					<input type="text"  name="outWarehouseOrderWeight"  t="3"  id="outWarehouseOrderWeight"  style="width:90px;"/>KG
+					<i  id="weightOk" style="display:none;" class="icon-ok icon-blue">
 				</td>
 				<td colspan="1">
 					<a class="btn  btn-primary"  onclick="saveOutWarehouseOrderWeight();"  style="cursor:pointer;">
@@ -72,7 +77,7 @@
 				</td>
 					
 				<td colspan="1">
-					<a class="btn  btn-primary"  onclick="saveOutWarehouseOrderWeight();" style="cursor:pointer;">
+					<a class="btn  btn-primary"  onclick="printShipLabel();" style="cursor:pointer;">
 						<i class="icon-ok icon-white"></i>打印出货运单
 					</a>
 				</td>
@@ -95,7 +100,6 @@
 					</tr>
 				</thead>
 				<tbody id="skusTbody">
-					
 				</tbody>
 			</table>
 	</div>
@@ -134,6 +138,9 @@
   	 		if(focus == "1"){
 				submitCustomerReferenceNo();
   	 		}
+  	 		if(focus == "2"){
+  	 			countSku();
+  	 		}
   	 		if(focus == "3"){
   	 			saveOutWarehouseOrderWeight();
   	 		}
@@ -144,6 +151,9 @@
  	 		$("#shipwayCode").val("");
 			$("#trackingNo").val("");
 			$("#skusTbody").html("");
+			$("#weightOk").hide();
+			$("#outWarehouseOrderId").val("");
+			$("#status").val("");
  	 		$.post(baseUrl+ '/warehouse/storage/outWarehouseSubmitCustomerReferenceNo.do?customerReferenceNo='+ customerReferenceNo, function(msg) {
  	 				if(msg.status == 0){
  	 					parent.$.showShortMessage({msg:msg.message,animate:true,left:"45%"});
@@ -152,23 +162,33 @@
  	 				if(msg.status == 1){
 					$("#shipwayCode").val(msg.shipwayCode);
 					$("#trackingNo").val(msg.trackingNo);
-					
+					$("#outWarehouseOrderId").val(msg.outWarehouseOrderId);
+					$("#status").val(msg.outWarehouseOrderStatus);
 					var skus = msg.outWarehouseOrderItemList;
-					
 					$.each(skus, function(i, n) {
 						var tr = "<tr>";
 						tr+="<td style='width:205px;text-align:left;'>"+n.sku+"</td>";
 						tr+="<td style='width:205px;text-align:left;'>"+n.quantity+"</td>";
-						tr+="<td style='width:205px;text-align:left;'>"+0+"</td>";
+						tr+="<td style='width:205px;text-align:left;'><input readonly='readonly' type='text'  id='sku_"+n.sku+"' value='0'></td>";
 						tr+="</tr>";
 						$("#skusTbody").append(tr);
 					});
-					
- 	 					return;
+ 	 				return;
  	 				}
  	 			},"json");
  	 		
  	 	 }
+ 	 	
+ 	 	//复核SKU
+ 	 	function countSku(){
+ 	 		var sku = $("#sku").val();
+ 	 		var quantity = $("#quantity").val();
+ 	 		var oldQuantity = $("#sku_"+sku).val();
+ 	 		
+ 	 		if(oldQuantity!=undefined){
+ 	 			$("#sku_"+sku).val(parseInt(oldQuantity) + parseInt(quantity));	
+ 	 		}
+ 	 	}
  	 	 
  	 	 //保存重量
  	 	 function saveOutWarehouseOrderWeight(){
@@ -177,15 +197,26 @@
  	 		$.post(baseUrl+ '/warehouse/storage/outWarehouseSubmitWeight.do?customerReferenceNo='+ customerReferenceNo+'&outWarehouseOrderWeight='+outWarehouseOrderWeight, function(msg) {
 	 				if(msg.status == 0){
 	 					parent.$.showShortMessage({msg:msg.message,animate:true,left:"45%"});
+	 					$("#weightOk").hide();
 	 					return;
 	 				}
-	 				//成功后 锁定输入框
-	 				$("#outWarehouseOrderWeight").attr("readonly","true");
-	 				
-	 				
+	 				if(msg.status == 1){
+	 					parent.$.showShortMessage({msg:"保存出库订单总重量成功",animate:true,left:"45%"});
+	 					$("#weightOk").show();
+	 				}
 	 		},"json");
  	 	 }
-  	 	 
+  	 	 	
+ 	 	 //打印出货运单标签
+ 	 	 function printShipLabel(){
+ 	 		var customerReferenceNo  = $("#customerReferenceNo").val();
+ 	 		var outWarehouseOrderId  = $("#outWarehouseOrderId").val();
+ 	 		if(customerReferenceNo!='' &&  outWarehouseOrderId !=''){
+		 		 var url = baseUrl+'/warehouse/print/printShipLabel.do?orderIds='+outWarehouseOrderId;
+				 window.open(url); 	 			
+ 	 		}
+ 	 	 }
+ 	 	 
  	  	 $(function(){
  		  		$("input").focus(function(){
  		  			focus = $(this).attr("t");

@@ -27,6 +27,7 @@ import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderSenderDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderStatusDao;
 import com.coe.wms.exception.ServiceException;
 import com.coe.wms.model.unit.Weight;
+import com.coe.wms.model.unit.Weight.WeightCode;
 import com.coe.wms.model.user.User;
 import com.coe.wms.model.warehouse.Warehouse;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
@@ -1183,6 +1184,11 @@ public class StorageServiceImpl implements IStorageService {
 		OutWarehouseOrder outWarehouseOrder = outWarehouseOrderList.get(0);
 		map.put("shipwayCode", outWarehouseOrder.getShipwayCode());
 		map.put("trackingNo", outWarehouseOrder.getTrackingNo());
+		map.put("outWarehouseOrderId", outWarehouseOrder.getId());
+		OutWarehouseOrderStatus outWarehouseOrderStatus = outWarehouseOrderStatusDao.findOutWarehouseOrderStatusByCode(outWarehouseOrder.getStatus());
+		if(outWarehouseOrderStatus!=null){
+			map.put("outWarehouseOrderStatus", outWarehouseOrderStatus.getCn());
+		}
 		// 查询出库订单SKU
 		OutWarehouseOrderItem outWarehouseOrderItemParam = new OutWarehouseOrderItem();
 		outWarehouseOrderItemParam.setOutWarehouseOrderId(outWarehouseOrder.getId());
@@ -1207,8 +1213,22 @@ public class StorageServiceImpl implements IStorageService {
 			return map;
 		}
 		OutWarehouseOrder outWarehouseOrder = outWarehouseOrderList.get(0);
+		if (!(StringUtil.isEqual(outWarehouseOrder.getStatus(), OutWarehouseOrderStatusCode.WWW) || StringUtil.isEqual(
+				outWarehouseOrder.getStatus(), OutWarehouseOrderStatusCode.WSW))) {
+			map.put(Constant.MESSAGE, "出库订单当前状态不允许改变出库总重量");
+			return map;
+		}
+		// 称重,并改变订单状态为已经称重,等待回传给顺丰
+		outWarehouseOrder.setStatus(OutWarehouseOrderStatusCode.WSW);
 
-		map.put(Constant.STATUS, Constant.SUCCESS);
+		outWarehouseOrder.setOutWarehouseWeight(weight);
+		outWarehouseOrder.setWeightCode(WeightCode.KG);
+		int updateCount = outWarehouseOrderDao.updateOutWarehouseOrderWeight(outWarehouseOrder);
+		if (updateCount > 0) {
+			map.put(Constant.STATUS, Constant.SUCCESS);
+		} else {
+			map.put(Constant.MESSAGE, "执行数据库更新时失败,数据库返回更新行数:" + updateCount);
+		}
 		return map;
 	}
 }
