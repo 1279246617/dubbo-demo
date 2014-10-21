@@ -941,7 +941,7 @@ public class StorageServiceImpl implements IStorageService {
 			map.put("skus", skus);
 			map.put("receivedQuantity", receivedQuantity);
 			// 预报物品数量,根据跟踪单号找入库订单
-			Long orderItemsize = inWarehouseOrderDao.countInWarehouseOrderItemByTrackingNo(record.getTrackingNo());
+			Long orderItemsize = inWarehouseOrderDao.countInWarehouseOrderItemByInWarehouseOrderId(record.getInWarehouseOrderId());
 			map.put("quantity", orderItemsize);
 			list.add(map);
 		}
@@ -1185,8 +1185,9 @@ public class StorageServiceImpl implements IStorageService {
 		map.put("shipwayCode", outWarehouseOrder.getShipwayCode());
 		map.put("trackingNo", outWarehouseOrder.getTrackingNo());
 		map.put("outWarehouseOrderId", outWarehouseOrder.getId());
-		OutWarehouseOrderStatus outWarehouseOrderStatus = outWarehouseOrderStatusDao.findOutWarehouseOrderStatusByCode(outWarehouseOrder.getStatus());
-		if(outWarehouseOrderStatus!=null){
+		OutWarehouseOrderStatus outWarehouseOrderStatus = outWarehouseOrderStatusDao.findOutWarehouseOrderStatusByCode(outWarehouseOrder
+				.getStatus());
+		if (outWarehouseOrderStatus != null) {
 			map.put("outWarehouseOrderStatus", outWarehouseOrderStatus.getCn());
 		}
 		// 查询出库订单SKU

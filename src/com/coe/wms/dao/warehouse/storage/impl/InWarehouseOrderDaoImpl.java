@@ -236,4 +236,11 @@ public class InWarehouseOrderDaoImpl implements IInWarehouseOrderDao {
 		String sql = "select user_id_of_customer from w_s_in_warehouse_order where id = " + inWarehouseOrderId;
 		return jdbcTemplate.queryForObject(sql, Long.class);
 	}
+
+	@Override
+	public Long countInWarehouseOrderItemByInWarehouseOrderId(Long inWarehouseOrderId) {
+		String sql = "select sum(quantity) from w_s_in_warehouse_order_item where order_id =  " + inWarehouseOrderId;
+		logger.info("统计入库订单预报物品数量sql:" + sql);
+		return jdbcTemplate.queryForObject(sql, Long.class);
+	}
 }
