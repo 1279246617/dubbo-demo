@@ -11,4 +11,7 @@ public interface IPrintService {
 	 * @return
 	 */
 	public Map<String, Object> getPrintPackageListData(Long outWarehouseOrderId);
+
+	public Map<String, Object> getPrintShipLabelData(Long outWarehouseOrderId);
+
 }

@@ -85,8 +85,35 @@ public class PrintServiceImpl implements IPrintService {
 		OutWarehouseOrderItem itemParam = new OutWarehouseOrderItem();
 		itemParam.setOutWarehouseOrderId(outWarehouseOrderId);
 		List<OutWarehouseOrderItem> items = outWarehouseOrderItemDao.findOutWarehouseOrderItem(itemParam, null, null);
-		
-		//根据批次排序,找到库位
+
+		// 根据批次排序,找到库位
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		// 清单号 (出库订单主键)
+		map.put("outWarehouseOrderId", String.valueOf(outWarehouseOrder.getId()));
+		map.put("customerReferenceNo", outWarehouseOrder.getCustomerReferenceNo());
+		map.put("tradeRemark", outWarehouseOrder.getTradeRemark());
+		map.put("logisticsRemark", outWarehouseOrder.getLogisticsRemark());
+		map.put("receiverName", receiver.getName());
+		map.put("receiverPhoneNumber", receiver.getPhoneNumber());
+		map.put("receiverMobileNumber", receiver.getMobileNumber());
+		map.put("items", items);
+
+		return map;
+	}
+
+	@Override
+	public Map<String, Object> getPrintShipLabelData(Long outWarehouseOrderId) {
+		OutWarehouseOrder outWarehouseOrder = outWarehouseOrderDao.getOutWarehouseOrderById(outWarehouseOrderId);
+		// 等待仓库审核的订单 不能打印捡货单
+		if (StringUtil.isEqual(outWarehouseOrder.getStatus(), OutWarehouseOrderStatusCode.WWC)) {
+			return null;
+		}
+		OutWarehouseOrderReceiver receiver = outWarehouseOrderReceiverDao.getOutWarehouseOrderReceiverByOrderId(outWarehouseOrderId);
+		OutWarehouseOrderItem itemParam = new OutWarehouseOrderItem();
+		itemParam.setOutWarehouseOrderId(outWarehouseOrderId);
+		List<OutWarehouseOrderItem> items = outWarehouseOrderItemDao.findOutWarehouseOrderItem(itemParam, null, null);
+		// 根据批次排序,找到库位
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		// 清单号 (出库订单主键)
@@ -98,8 +125,6 @@ public class PrintServiceImpl implements IPrintService {
 		map.put("receiverPhoneNumber", receiver.getPhoneNumber());
 		map.put("receiverMobileNumber", receiver.getMobileNumber());
 		map.put("items", items);
-		
 		return map;
 	}
-
 }
