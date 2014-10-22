@@ -29,7 +29,8 @@
 						</div>
 						<div class="pull-left" style="width:62%;height:7mm;">
 							<span class="pull-right" style="margin-right: 1mm;">
-								<b>订单号:</b><c:out value="${map.customerReferenceNo}"/>
+								<b>订单号:</b>
+								<img  src="data:image/png;base64,<c:out value="${map.customerReferenceNoBarcodeData}"/>">									
 							</span>
 						</div>	
 					</div>
