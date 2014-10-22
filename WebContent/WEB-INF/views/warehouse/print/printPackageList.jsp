@@ -21,19 +21,29 @@
 						</div>					
 					</div>
 					<!-- 第二行 -->
-					<div style="height:7mm;weight:100%;">
-						<div style="width:38%;height:7mm;" class="pull-left">
-							<span class="pull-left" style="margin-left: 2mm;">
-								 <b>清单号:</b><c:out value="${map.outWarehouseOrderId}"/>
-							</span>	
-						</div>
-						<div class="pull-left" style="width:62%;height:7mm;">
-							<span class="pull-right" style="margin-right: 1mm;">
-								<b>订单号:</b>
-								<img  src="data:image/png;base64,<c:out value="${map.customerReferenceNoBarcodeData}"/>">									
-							</span>
-						</div>	
+					<div style="height:13mm;weight:100%;">
+						<table>
+							<tr>
+								<td style="width:100mm;height:12mm;">
+										<span class="pull-left" style="margin-left: 2mm;">
+								 				<b>清单号:</b><c:out value="${map.outWarehouseOrderId}"/>
+										</span>	
+								</td>
+								
+								<td style="width:106mm;height:12mm;">
+										<table style="" class="pull-right">
+											<tr>
+												<td><b>订单号:</b></td>
+												<td>
+														<img  src="data:image/png;base64,<c:out value="${map.customerReferenceNoBarcodeData}"/>">
+												</td>
+											</tr>
+										</table>
+								</td>
+							</tr>
+						</table>
 					</div>
+					
 					<!-- 第三行 -->
 					<div style="height:7mm;weight:100%;">
 						<span style="float:left;margin-left: 2mm;">

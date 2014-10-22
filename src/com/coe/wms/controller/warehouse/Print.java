@@ -95,7 +95,7 @@ public class Print {
 		String orderIdArray[] = orderIds.split(",");
 		for (int i = 0; i < orderIdArray.length; i++) {
 			Long orderId = Long.valueOf(orderIdArray[i]);
-			Map<String, Object> map = printService.getPrintPackageListData(orderId);
+			Map<String, Object> map = printService.getPrintShipLabelData(orderId);
 			if (map != null) {
 				mapList.add(map);
 			}

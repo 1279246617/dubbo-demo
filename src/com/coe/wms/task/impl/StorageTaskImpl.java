@@ -109,9 +109,10 @@ public class StorageTaskImpl implements IStorageTask {
 	/**
 	 * 发送仓配入库订单信息给客户
 	 */
-//	@Scheduled(cron = "0 0/1 8-23 * * ? ")
+	// @Scheduled(cron = "0 0/1 8-23 * * ? ")
 	// 早上8点到下午6点,每分钟
-	// @Scheduled(cron="0 0/30 8-18 * * ? ") //早上8点到下午6点,每半小时一次
+	@Scheduled(cron = "0 0/30 8-18 * * ? ")
+	// 早上8点到下午6点,每半小时一次
 	@Override
 	public void sendInWarehouseInfoToCustomer() {
 		InWarehouseRecord param = new InWarehouseRecord();
@@ -167,7 +168,8 @@ public class StorageTaskImpl implements IStorageTask {
 				sku.setSkuName(recordItem.getSku());
 				// 2014-10-16 当一个入库订单多次收货,产生多个入库单时,每次回传SKU入库情况,回传所有已收货数量
 				// 根据SKU和入库订单Id, 查询已经收货的SKU数量
-				int count = inWarehouseRecordItemDao.countInWarehouseSkuQuantity(inWarehouseRecord.getInWarehouseOrderId(), recordItem.getSku());
+				int count = inWarehouseRecordItemDao.countInWarehouseSkuQuantity(inWarehouseRecord.getInWarehouseOrderId(),
+						recordItem.getSku());
 				sku.setSkuInBoundQty(count);
 				sku.setSkuCheckQty(count);
 				sku.setSkuBoundTime(DateUtil.dateConvertString(new Date(recordItem.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss));
@@ -235,7 +237,7 @@ public class StorageTaskImpl implements IStorageTask {
 	/**
 	 * 回传出库称重给客户
 	 */
-//	@Scheduled(cron = "0 0/1 8-23 * * ? ")
+	@Scheduled(cron = "0 0/30 8-23 * * ? ")
 	@Override
 	public void sendOutWarehouseWeightToCustomer() {
 		List<Long> orderIdList = outWarehouseOrderDao.findCallbackSendWeightUnSuccessOrderId();
@@ -338,7 +340,7 @@ public class StorageTaskImpl implements IStorageTask {
 	/**
 	 * 回传出库状态给客户(出库的最后步骤)
 	 */
-//	@Scheduled(cron = "0 0/1 8-23 * * ? ")
+	@Scheduled(cron = "0 0/30 8-23 * * ? ")
 	@Override
 	public void sendOutWarehouseStatusToCustomer() {
 		List<Long> orderIdList = outWarehouseOrderDao.findCallbackSendStatusUnSuccessOrderId();
