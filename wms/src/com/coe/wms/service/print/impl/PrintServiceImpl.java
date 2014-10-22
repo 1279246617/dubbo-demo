@@ -17,12 +17,14 @@ import com.coe.wms.dao.warehouse.storage.IInWarehouseOrderStatusDao;
 import com.coe.wms.dao.warehouse.storage.IInWarehouseRecordDao;
 import com.coe.wms.dao.warehouse.storage.IInWarehouseRecordItemDao;
 import com.coe.wms.dao.warehouse.storage.IItemInventoryDao;
+import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderAdditionalSfDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderItemDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderReceiverDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderSenderDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderStatusDao;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrder;
+import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderAdditionalSf;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderItem;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderReceiver;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus.OutWarehouseOrderStatusCode;
@@ -59,6 +61,9 @@ public class PrintServiceImpl implements IPrintService {
 	@Resource(name = "outWarehouseOrderSenderDao")
 	private IOutWarehouseOrderSenderDao outWarehouseOrderSenderDao;
 
+	@Resource(name = "outWarehouseOrderAdditionalSfDao")
+	private IOutWarehouseOrderAdditionalSfDao outWarehouseOrderAdditionalSfDao;
+
 	@Resource(name = "outWarehouseOrderReceiverDao")
 	private IOutWarehouseOrderReceiverDao outWarehouseOrderReceiverDao;
 
@@ -93,9 +98,9 @@ public class PrintServiceImpl implements IPrintService {
 		map.put("outWarehouseOrderId", String.valueOf(outWarehouseOrder.getId()));
 		map.put("customerReferenceNo", outWarehouseOrder.getCustomerReferenceNo());
 		// 创建图片
-		String customerReferenceNoBarcodeData = BarcodeUtil.createCode128(outWarehouseOrder.getCustomerReferenceNo(), false, 12d);
+		String customerReferenceNoBarcodeData = BarcodeUtil.createCode128(outWarehouseOrder.getCustomerReferenceNo(), true, 12d);
 		map.put("customerReferenceNoBarcodeData", customerReferenceNoBarcodeData);
-		
+
 		map.put("tradeRemark", outWarehouseOrder.getTradeRemark());
 		map.put("logisticsRemark", outWarehouseOrder.getLogisticsRemark());
 		map.put("receiverName", receiver.getName());
@@ -118,15 +123,34 @@ public class PrintServiceImpl implements IPrintService {
 		List<OutWarehouseOrderItem> items = outWarehouseOrderItemDao.findOutWarehouseOrderItem(itemParam, null, null);
 		// 根据批次排序,找到库位
 
+		// 顺丰label 内容
+		OutWarehouseOrderAdditionalSf additionalSf = outWarehouseOrderAdditionalSfDao
+				.getOutWarehouseOrderAdditionalSfByOrderId(outWarehouseOrderId);
 		Map<String, Object> map = new HashMap<String, Object>();
+		if (additionalSf != null) {
+			map.put("additionalSf", additionalSf);
+		}
+		// 创建条码
+		String trackingNo = outWarehouseOrder.getTrackingNo();
+		String trackingNoBarcodeData = BarcodeUtil.createCode128(trackingNo, true, 13d);
+		map.put("trackingNoBarcodeData", trackingNoBarcodeData);
 		// 清单号 (出库订单主键)
 		map.put("outWarehouseOrderId", String.valueOf(outWarehouseOrder.getId()));
 		map.put("customerReferenceNo", outWarehouseOrder.getCustomerReferenceNo());
 		map.put("tradeRemark", outWarehouseOrder.getTradeRemark());
 		map.put("logisticsRemark", outWarehouseOrder.getLogisticsRemark());
 		map.put("receiverName", receiver.getName());
+		map.put("receiver", receiver);
 		map.put("receiverPhoneNumber", receiver.getPhoneNumber());
 		map.put("receiverMobileNumber", receiver.getMobileNumber());
+		Integer totalQuantity = 0;
+		for (OutWarehouseOrderItem item : items) {
+			totalQuantity += item.getQuantity();
+		}
+		// 寄托物品数量
+		map.put("totalQuantity", totalQuantity);
+		// 总重量
+		map.put("totalWeight", outWarehouseOrder.getOutWarehouseWeight());
 		map.put("items", items);
 		return map;
 	}
