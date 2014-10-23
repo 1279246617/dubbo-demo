@@ -103,7 +103,7 @@ public class Warehouse {
 
 			logger.info("eventType:" + eventType + "  responseXml:" + responseXml);
 			return responseXml;
-		} catch (ServiceException e) {
+		} catch (Exception e) {
 			Responses responses = new Responses();
 			List<Response> responseItems = new ArrayList<Response>();
 
