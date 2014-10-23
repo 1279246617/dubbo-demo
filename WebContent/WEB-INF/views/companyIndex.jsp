@@ -11,6 +11,20 @@
     <link href="${baseUrl}/static/bootstrap/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <style type="text/css"> 
  	</style>
+ 	
+ 	<script type="text/javascript" src="${baseUrl}/static/jquery/jquery.js"></script>
+    <script type="text/javascript" src="${baseUrl}/static/jquery/jquery.form.js"></script>
+	<script type="text/javascript" src="${baseUrl}/static/jquery/jquery.showMessage.js"></script>
+	<script type="text/javascript" src="${baseUrl}/static/bootstrap/bootstrap.min.js"></script>
+	<script type="text/javascript" src="${baseUrl}/static/jquery/jquery.cookie.js"></script>
+	<script  type="text/javascript" src="${baseUrl}/static/ligerui/ligerUI/js/core/base.js"></script>
+	<script type="text/javascript" src="${baseUrl}/static/ligerui/ligerUI/js/ligerui.all.js"></script>
+    <script type="text/javascript" src="${baseUrl}/static/ligerui/ligerUI/js/plugins/ligerTab.js"></script>
+    <script  type="text/javascript" src="${baseUrl}/static/ligerui/ligerUI/js/plugins/ligerTree.js" ></script>
+    <script  type="text/javascript" src="${baseUrl}/static/ligerui/ligerUI/js/plugins/ligerAccordion.js"></script>
+   	<script type="text/javascript" src="${baseUrl}/static/lhgdialog/prettify/prettify.js"></script>
+	<script type="text/javascript" src="${baseUrl}/static/lhgdialog/prettify/lhgdialog.js"></script>
+	<script type="text/javascript" src="${baseUrl}/static/js/index/companyIndex/main.js"></script>
 </head>
 <body>
 	 <div id="header" class="navbar-top">
@@ -68,7 +82,7 @@
 		              		<li><a href=# tab_id="findInWarehouseItemRecord"><i class="icon-zoom-in"></i><span class="hidden-tablet">入库明细查询</span></a></li>
 			              		
 			              	<!-- (扫SKU和数量 是否和出库订单一样) -->	
-		              		<li><a href="#${baseUrl}/warehouse/storage/outWarehouseCheckPackage.do" tab_id="doOutWarehouse"><i class="icon-plane"></i><span class="hidden-tablet">出库装箱称重打运单</span></a></li>
+		              		<li><a href="#${baseUrl}/warehouse/storage/outWarehouseCheckPackage.do" tab_id="doOutWarehouse"><i class="icon-plane"></i><span class="hidden-tablet">装箱称重打单</span></a></li>
 		              		<li><a href="#${baseUrl}/warehouse/storage/outWarehouseShipping.do" tab_id="outWarehouseShipping"><i class="icon-plane"></i><span class="hidden-tablet">扫描运单出货</span></a></li>
 		              		<li><a href=# tab_id="findOutWarehouseRecord"><i class="icon-zoom-out"></i><span class="hidden-tablet">出库记录查询</span></a></li>
 		                </ul>
@@ -109,26 +123,13 @@
         </div> 
     </div>  
 	</div>
-	 
-	 <script type="text/javascript" src="${baseUrl}/static/jquery/jquery.js"></script>
-    <script type="text/javascript" src="${baseUrl}/static/jquery/jquery.form.js"></script>
-	<script type="text/javascript" src="${baseUrl}/static/jquery/jquery.showMessage.js"></script>
-	<script type="text/javascript" src="${baseUrl}/static/bootstrap/bootstrap.min.js"></script>
-	<script type="text/javascript" src="${baseUrl}/static/jquery/jquery.cookie.js"></script>
-	<script  type="text/javascript" src="${baseUrl}/static/ligerui/ligerUI/js/core/base.js"></script>
-	<script type="text/javascript" src="${baseUrl}/static/ligerui/ligerUI/js/ligerui.all.js"></script>
-    <script type="text/javascript" src="${baseUrl}/static/ligerui/ligerUI/js/plugins/ligerTab.js"></script>
-    <script  type="text/javascript" src="${baseUrl}/static/ligerui/ligerUI/js/plugins/ligerTree.js" ></script>
-    <script  type="text/javascript" src="${baseUrl}/static/ligerui/ligerUI/js/plugins/ligerAccordion.js"></script>
-   	<script type="text/javascript" src="${baseUrl}/static/lhgdialog/prettify/prettify.js"></script>
-	<script type="text/javascript" src="${baseUrl}/static/lhgdialog/prettify/lhgdialog.js"></script>
+
 	<script type="text/javascript">
 		var baseUrl = "${baseUrl}",tab = null,manager=null;
 		$(function() {
 			$("#accordion1").ligerAccordion({
 				height :500
 			});
-			
 			//左侧菜单 鼠标 hover
 			$('div.main-menu li:not(.nav-header)').hover(function(){
 				$(this).animate({'margin-left':'+=5'},300);
@@ -138,6 +139,5 @@
 			});
 		});
 	</script>
-	<script type="text/javascript" src="${baseUrl}/static/js/index/companyIndex/main.js"></script>
 </body>
 </html>

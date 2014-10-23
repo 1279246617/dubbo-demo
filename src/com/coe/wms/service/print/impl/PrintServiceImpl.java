@@ -132,7 +132,7 @@ public class PrintServiceImpl implements IPrintService {
 		}
 		// 创建条码
 		String trackingNo = outWarehouseOrder.getTrackingNo();
-		String trackingNoBarcodeData = BarcodeUtil.createCode128(trackingNo, true, 13d);
+		String trackingNoBarcodeData = BarcodeUtil.createCode128C(trackingNo, true, 53d);
 		map.put("trackingNoBarcodeData", trackingNoBarcodeData);
 		// 清单号 (出库订单主键)
 		map.put("outWarehouseOrderId", String.valueOf(outWarehouseOrder.getId()));

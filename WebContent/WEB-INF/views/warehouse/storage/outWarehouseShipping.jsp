@@ -68,7 +68,7 @@
   	 		 var trackingNoStr = $("#trackingNo").val();
 	  	  	$.post(baseUrl+ '/warehouse/storage/outWarehouseShippingConfirm.do?trackingNo='+ trackingNoStr, function(msg) {
 	  	  		if(msg.status == 0){
-	  	  			parent.$.showShortMessage({msg:msg.message,animate:true,left:"45%"});
+	  	  			parent.$.showShortMessage({msg:msg.message,animate:true,left:"42%"});
 	  	  			return false;
 	  	  		}
 	  	  		if(msg.status == 1){

@@ -128,7 +128,7 @@
 					<table  rules="all" style="line-height: 4mm;width:100%;height:31mm;">
 						<tr>
 							<td rowspan="2" style="width:58mm;height:15.5mm;">
-								<img  src="data:image/png;base64,<c:out value="${map.trackingNoBarcodeData}"/>">
+								<img  style="margin-left: 1mm;" src="data:image/png;base64,<c:out value="${map.trackingNoBarcodeData}"/>">
 							</td>
 							<td>寄方</td>
 						</tr>
