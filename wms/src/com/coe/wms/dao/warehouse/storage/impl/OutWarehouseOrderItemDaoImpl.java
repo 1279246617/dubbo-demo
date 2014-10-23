@@ -159,16 +159,16 @@ public class OutWarehouseOrderItemDaoImpl implements IOutWarehouseOrderItemDao {
 				sb.append(" and remark = '" + outWarehouseOrderItem.getRemark() + "' ");
 			}
 			if (outWarehouseOrderItem.getOutWarehouseOrderId() != null) {
-				sb.append(" and out_warehouse_order_id = '" + outWarehouseOrderItem.getOutWarehouseOrderId() + "' ");
+				sb.append(" and out_warehouse_order_id = " + outWarehouseOrderItem.getOutWarehouseOrderId());
 			}
 			if (outWarehouseOrderItem.getId() != null) {
 				sb.append(" and id = '" + outWarehouseOrderItem.getId() + "' ");
 			}
 			if (outWarehouseOrderItem.getQuantity() != null) {
-				sb.append(" and quantity = '" + outWarehouseOrderItem.getQuantity() + "' ");
+				sb.append(" and quantity = " + outWarehouseOrderItem.getQuantity());
 			}
 			if (outWarehouseOrderItem.getSkuNetWeight() != null) {
-				sb.append(" and sku_net_weight = '" + outWarehouseOrderItem.getSkuNetWeight() + "' ");
+				sb.append(" and sku_net_weight = " + outWarehouseOrderItem.getSkuNetWeight());
 			}
 		}
 		// 分页sql

@@ -149,7 +149,7 @@ public class InWarehouseRecordItemDaoImpl implements IInWarehouseRecordItemDao {
 				sb.append(" and in_warehouse_record_id = '" + inWarehouseRecordItem.getInWarehouseRecordId() + "' ");
 			}
 			if (inWarehouseRecordItem.getQuantity() != null) {
-				sb.append(" and quantity = '" + inWarehouseRecordItem.getQuantity() + "' ");
+				sb.append(" and quantity = " + inWarehouseRecordItem.getQuantity() );
 			}
 			if (inWarehouseRecordItem.getSeatNo() != null) {
 				sb.append(" and seat_no = '" + inWarehouseRecordItem.getSeatNo() + "' ");
@@ -158,16 +158,16 @@ public class InWarehouseRecordItemDaoImpl implements IInWarehouseRecordItemDao {
 				sb.append(" and shelves_no = '" + inWarehouseRecordItem.getShelvesNo() + "' ");
 			}
 			if (inWarehouseRecordItem.getWarehouseId() != null) {
-				sb.append(" and warehouse_id = '" + inWarehouseRecordItem.getWarehouseId() + "' ");
+				sb.append(" and warehouse_id = " + inWarehouseRecordItem.getWarehouseId());
 			}
 			if (inWarehouseRecordItem.getCreatedTime() != null) {
-				sb.append(" and created_time = '" + inWarehouseRecordItem.getCreatedTime() + "' ");
+				sb.append(" and created_time = " + inWarehouseRecordItem.getCreatedTime() );
 			}
 			if (inWarehouseRecordItem.getUserIdOfOperator() != null) {
-				sb.append(" and user_id_of_operator = '" + inWarehouseRecordItem.getUserIdOfOperator() + "' ");
+				sb.append(" and user_id_of_operator = " + inWarehouseRecordItem.getUserIdOfOperator());
 			}
 			if (inWarehouseRecordItem.getId() != null) {
-				sb.append(" and id = '" + inWarehouseRecordItem.getId() + "' ");
+				sb.append(" and id = " + inWarehouseRecordItem.getId());
 			}
 		}
 		if (moreParam != null) {
@@ -214,7 +214,7 @@ public class InWarehouseRecordItemDaoImpl implements IInWarehouseRecordItemDao {
 				sb.append(" and in_warehouse_record_id = '" + inWarehouseRecordItem.getInWarehouseRecordId() + "' ");
 			}
 			if (inWarehouseRecordItem.getQuantity() != null) {
-				sb.append(" and quantity = '" + inWarehouseRecordItem.getQuantity() + "' ");
+				sb.append(" and quantity = " + inWarehouseRecordItem.getQuantity() );
 			}
 			if (inWarehouseRecordItem.getSeatNo() != null) {
 				sb.append(" and seat_no = '" + inWarehouseRecordItem.getSeatNo() + "' ");
@@ -223,16 +223,16 @@ public class InWarehouseRecordItemDaoImpl implements IInWarehouseRecordItemDao {
 				sb.append(" and shelves_no = '" + inWarehouseRecordItem.getShelvesNo() + "' ");
 			}
 			if (inWarehouseRecordItem.getWarehouseId() != null) {
-				sb.append(" and warehouse_id = '" + inWarehouseRecordItem.getWarehouseId() + "' ");
+				sb.append(" and warehouse_id = " + inWarehouseRecordItem.getWarehouseId());
 			}
 			if (inWarehouseRecordItem.getCreatedTime() != null) {
-				sb.append(" and created_time = '" + inWarehouseRecordItem.getCreatedTime() + "' ");
+				sb.append(" and created_time = " + inWarehouseRecordItem.getCreatedTime() );
 			}
 			if (inWarehouseRecordItem.getUserIdOfOperator() != null) {
-				sb.append(" and user_id_of_operator = '" + inWarehouseRecordItem.getUserIdOfOperator() + "' ");
+				sb.append(" and user_id_of_operator = " + inWarehouseRecordItem.getUserIdOfOperator());
 			}
 			if (inWarehouseRecordItem.getId() != null) {
-				sb.append(" and id = '" + inWarehouseRecordItem.getId() + "' ");
+				sb.append(" and id = " + inWarehouseRecordItem.getId());
 			}
 		}
 		if (moreParam != null) {

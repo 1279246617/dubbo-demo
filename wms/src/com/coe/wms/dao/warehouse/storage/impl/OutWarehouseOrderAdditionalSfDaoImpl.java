@@ -145,7 +145,7 @@ public class OutWarehouseOrderAdditionalSfDaoImpl implements IOutWarehouseOrderA
 				sb.append(" and id = '" + OutWarehouseOrderAdditionalSf.getId() + "' ");
 			}
 			if (OutWarehouseOrderAdditionalSf.getOutWarehouseOrderId() != null) {
-				sb.append(" and out_warehouse_order_id = '" + OutWarehouseOrderAdditionalSf.getOutWarehouseOrderId() + "' ");
+				sb.append(" and out_warehouse_order_id = " + OutWarehouseOrderAdditionalSf.getOutWarehouseOrderId());
 			}
 		}
 		// 分页sql
