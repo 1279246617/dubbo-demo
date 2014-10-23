@@ -204,10 +204,10 @@ public class OutWarehouseOrderReceiverDaoImpl implements IOutWarehouseOrderRecei
 				sb.append(" and email = '" + outWarehouseOrderReceiver.getEmail() + "' ");
 			}
 			if (outWarehouseOrderReceiver.getId() != null) {
-				sb.append(" and id = '" + outWarehouseOrderReceiver.getId() + "' ");
+				sb.append(" and id = " + outWarehouseOrderReceiver.getId());
 			}
 			if (outWarehouseOrderReceiver.getOutWarehouseOrderId() != null) {
-				sb.append(" and out_warehouse_order_id = '" + outWarehouseOrderReceiver.getOutWarehouseOrderId() + "' ");
+				sb.append(" and out_warehouse_order_id = " + outWarehouseOrderReceiver.getOutWarehouseOrderId());
 			}
 		}
 		// 分页sql
