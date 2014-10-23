@@ -124,13 +124,13 @@ public class InWarehouseOrderDaoImpl implements IInWarehouseOrderDao {
 				sb.append(" and weight = " + inWarehouseOrder.getWeight());
 			}
 			if (inWarehouseOrder.getCarrierCode() != null) {
-				sb.append(" and carrier_code = " + inWarehouseOrder.getCarrierCode());
+				sb.append(" and carrier_code = '" + inWarehouseOrder.getCarrierCode()+"'");
 			}
 			if (inWarehouseOrder.getLogisticsType() != null) {
-				sb.append(" and logistics_type = " + inWarehouseOrder.getLogisticsType());
+				sb.append(" and logistics_type = '" + inWarehouseOrder.getLogisticsType()+"'");
 			}
 			if (inWarehouseOrder.getCustomerReferenceNo() != null) {
-				sb.append(" and customer_reference_no = " + inWarehouseOrder.getCustomerReferenceNo());
+				sb.append(" and customer_reference_no = '" + inWarehouseOrder.getCustomerReferenceNo()+"'");
 			}
 		}
 		if (moreParam != null) {
@@ -191,13 +191,13 @@ public class InWarehouseOrderDaoImpl implements IInWarehouseOrderDao {
 				sb.append(" and weight = " + inWarehouseOrder.getWeight());
 			}
 			if (inWarehouseOrder.getCarrierCode() != null) {
-				sb.append(" and carrier_code = " + inWarehouseOrder.getCarrierCode());
+				sb.append(" and carrier_code = '" + inWarehouseOrder.getCarrierCode()+"'");
 			}
 			if (inWarehouseOrder.getLogisticsType() != null) {
-				sb.append(" and logistics_type = " + inWarehouseOrder.getLogisticsType());
+				sb.append(" and logistics_type = '" + inWarehouseOrder.getLogisticsType()+"'");
 			}
 			if (inWarehouseOrder.getCustomerReferenceNo() != null) {
-				sb.append(" and customer_reference_no = " + inWarehouseOrder.getCustomerReferenceNo());
+				sb.append(" and customer_reference_no = '" + inWarehouseOrder.getCustomerReferenceNo()+"'");
 			}
 		}
 		if (moreParam != null) {
