@@ -1147,11 +1147,8 @@ public class StorageServiceImpl implements IStorageService {
 		}
 		OutWarehouseOrder outWarehouseOrder = outWarehouseOrderList.get(0);
 		Long orderId = outWarehouseOrder.getId();
-		// 只有等待发送重量,登录顺丰确认出库,顺丰已确认的订单 可以出库
-		if (StringUtil.isEqual(outWarehouseOrder.getStatus(), OutWarehouseOrderStatusCode.WSW)
-				|| StringUtil.isEqual(outWarehouseOrder.getStatus(), OutWarehouseOrderStatusCode.WCC)
-				|| StringUtil.isEqual(outWarehouseOrder.getStatus(), OutWarehouseOrderStatusCode.WWO)) {
-
+		// 只有顺丰确认出库,顺丰已确认的订单 可以出库
+		if (StringUtil.isEqual(outWarehouseOrder.getStatus(), OutWarehouseOrderStatusCode.WWO)) {
 			// 更新出库订单状态为SUCCESS
 			int updateCount = outWarehouseOrderDao.updateOutWarehouseOrderStatus(orderId, OutWarehouseOrderStatusCode.SUCCESS);
 			if (updateCount == 1) {
@@ -1161,6 +1158,10 @@ public class StorageServiceImpl implements IStorageService {
 			}
 		} else if (StringUtil.isEqual(outWarehouseOrder.getStatus(), OutWarehouseOrderStatusCode.SUCCESS)) {
 			map.put(Constant.MESSAGE, "出库订单当前状态已经是出库成功");
+		} else if (StringUtil.isEqual(outWarehouseOrder.getStatus(), OutWarehouseOrderStatusCode.WCC)) {
+			map.put(Constant.MESSAGE, "出库订单当前状态是等待客户确认出库,不能出库");
+		} else if (StringUtil.isEqual(outWarehouseOrder.getStatus(), OutWarehouseOrderStatusCode.WSW)) {
+			map.put(Constant.MESSAGE, "出库订单当前状态是等待发送出库重量给客户,不能出库");
 		} else {
 			map.put(Constant.MESSAGE, "出库订单当前状态不允许更改为出库成功");
 		}
