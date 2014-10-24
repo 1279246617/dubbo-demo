@@ -187,17 +187,20 @@
 	     function initGrid() {
 	    	   grid = $("#maingrid").ligerGrid({
 	                columns: [
-	                    { display: '产品SKU', name: 'sku', align: 'center',width:'13%'},
+	                    { display: '产品SKU', name: 'sku', align: 'center',width:'14%'},
 	                    { display: '总预报数量', name: 'totalQuantity', align: 'center', type: 'int',width:'8%'},
 	                    { display: '总已收货数量', name: 'totalReceivedQuantity', align: 'center', type: 'int',width:'9%'},
 	                    { display: '本次收货数量', name: 'receivedQuantity', align: 'center', type: 'int',width:'9%'},
-	                    { display: '未收货数量', name: 'unReceivedquantity', align: 'center', type: 'int',width:'7%'},
-		                { display: '仓库', name: 'warehouse', align: 'center', type: 'float',width:'9%'},
+	                    { display: '未收货数量',  align: 'center', type: 'int',width:'7%',render: function(row) {
+	                    	var h = "<span style='color:red;'>"+row.unReceivedquantity+"</span>";
+	                    	return h;
+	  		          	}},
+		                { display: '仓库', name: 'warehouse', align: 'center', type: 'float',width:'11%'},
 // 		                { display: '货架', name: 'shelvesNo', align: 'center', type: 'float',width:'9%'},
 // 		                { display: '货位', name: 'seatNo', align: 'center', type: 'float',width:'10%'},
 		                { display: '收货时间', name: 'createdTime', type: 'int', width:'13%'},
-		                { display: '操作员', name: 'userLoginNameOfOperator',width:'10%'},
-		                { display: '入库明细备注', name: 'remark', align: 'center', type: 'float',width:'12%'}
+		                { display: '操作员', name: 'userLoginNameOfOperator',width:'11%'},
+		                { display: '入库明细备注', name: 'remark', align: 'center', type: 'float',width:'14%'}
 	                ],  
 	                isScroll: true,
 	                dataAction: 'server',
