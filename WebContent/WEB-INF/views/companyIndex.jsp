@@ -77,9 +77,12 @@
 		              <ul class="nav nav-tabs nav-stacked ">	
 		              		<li><a href="#${baseUrl}/warehouse/storage/inWarehouse.do" tab_id="doInWarehouse"><i class="icon-th"></i><span class="hidden-tablet">入库订单收货</span></a></li>
 		              		<!-- 入库主单查询 条件: 客户帐号,创建时间段,仓库,入库批次号 -->
-		              		<li><a href="#${baseUrl}/warehouse/storage/listInWarehouseRecord.do" tab_id="findInWarehouseOrderRecord"><i class="icon-zoom-in"></i><span class="hidden-tablet">入库主单查询</span></a></li>
+		              		<li><a href="#${baseUrl}/warehouse/storage/listInWarehouseRecord.do" tab_id="findInWarehouseOrderRecord"><i class="icon-zoom-in"></i><span class="hidden-tablet">入库收货记录</span></a></li>
 		              		<!-- 入库明细查询 条件: SKU, 数量, 主单号,批次号,客户帐号,时间,产品描述 -->
-		              		<li><a href=# tab_id="findInWarehouseItemRecord"><i class="icon-zoom-in"></i><span class="hidden-tablet">入库明细查询</span></a></li>
+		              		<li><a href=# tab_id="findInWarehouseItemRecord"><i class="icon-zoom-in"></i><span class="hidden-tablet">入库收货明细记录</span></a></li>
+		              		
+		              		<li><a href="#${baseUrl}/warehouse/storage/onShelves.do" tab_id="doOnShelves"><i class="icon-th"></i><span class="hidden-tablet">入库订单上架</span></a></li>
+		              		<li><a href="#${baseUrl}/warehouse/storage/listOnShelves.do" tab_id="listOnShelves"><i class=icon-zoom-in></i><span class="hidden-tablet">入库订单上架记录</span></a></li>
 			              		
 			              	<!-- (扫SKU和数量 是否和出库订单一样) -->	
 		              		<li><a href="#${baseUrl}/warehouse/storage/outWarehouseCheckPackage.do" tab_id="doOutWarehouse"><i class="icon-plane"></i><span class="hidden-tablet">装箱称重打单</span></a></li>

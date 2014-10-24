@@ -962,6 +962,8 @@ public class StorageServiceImpl implements IStorageService {
 			map.put(Constant.MESSAGE, "审核结果(checkResult)为空,无法处理");
 			return map;
 		}
+		int updateCount = 0;
+		int noUpdateCount = 0;
 		String orderIdArr[] = orderIds.split(",");
 		for (String orderId : orderIdArr) {
 			if (StringUtil.isNull(orderId)) {
@@ -971,15 +973,16 @@ public class StorageServiceImpl implements IStorageService {
 			String oldStatus = outWarehouseOrderDao.getOutWarehouseOrderStatus(Long.valueOf(orderId));
 			// 如果不是等待审核状态的订单,直接跳过
 			if (!StringUtil.isEqual(oldStatus, OutWarehouseOrderStatusCode.WWC)) {
+				noUpdateCount++;
 				continue;
 			}
 			// COE审核通过,等待称重 Wait Warehouse Weighing
 			int updateResult = outWarehouseOrderDao.updateOutWarehouseOrderStatus(Long.valueOf(orderId), OutWarehouseOrderStatusCode.WWW);
-			if (updateResult < 1) {
-				map.put(Constant.MESSAGE, "审核通过" + updateResult + "个订单");
-				logger.warn("更新出库订单为审核通过时,得到结果0, orderId:" + orderId);
+			if (updateResult > 0) {
+				updateCount++;
 			}
 		}
+		map.put(Constant.MESSAGE, "审核完成" + updateCount + "个订单,"+noUpdateCount+"个订单非待审核状态,审核失败");
 		map.put(Constant.STATUS, Constant.SUCCESS);
 		return map;
 	}
