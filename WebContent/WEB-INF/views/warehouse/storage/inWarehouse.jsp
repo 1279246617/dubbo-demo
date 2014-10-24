@@ -22,22 +22,34 @@
 		 <form action="${baseUrl}/warehouse/storage/getInWarehouseRecordItemData.do" id="searchform" name="searchform" method="post">
 			<table class="table table-striped" style="width:100%;margin-bottom: 5px">
 					<tr style="height:15px;">
-							<td style="width:290px;">
+							<td style="width:232px;">
 									<span class="pull-left" style="width:52px;">跟踪单号</span>
-									<span class="pull-left" style="width:191px;">
+									<span class="pull-left" style="width:170px;">
 										<!--  利用focus和blur 判断跟踪号是否有变化, 变化则把入库订单id清空-->
-										<input type="text"  name="trackingNo"  id="trackingNo" t="1" onfocus="trackingNoFocus()"  style="width:190px;"/>
+										<input type="text"  name="trackingNo"  id="trackingNo" t="1" onfocus="trackingNoFocus()"  style="width:140px;"/>
 										<!-- 用户按回车时,当入库订单id 为空是第一次提交,后台返回id,或其他提示.  不为空 提示客户可输入SKU和数量进行收货 -->
 										<input type="text"  name="inWarehouseOrderId"  id="inWarehouseOrderId" t="1"  style="display: none;"/>
 										<input type="text"  name="inWarehouseRecordId"  id="inWarehouseRecordId" t="1"  style="display: none;"/>
 									</span>
 							</td>		
-							<td style="width:300px;">
+							<td style="width:212px;">
 									<span class="pull-left" style="width:52px;">入库概要</span>
-									<span class="pull-left" style="width:191px;">
-										<input type="text" t="1"  name="orderRemark"  id="orderRemark" style="width:220px;"/>
+									<span class="pull-left" style="width:160px;">
+										<input type="text" t="1"  name="orderRemark"  id="orderRemark" style="width:130px;"/>
 									</span>
-							</td>		
+							</td>
+							<td  style="width:160px;">
+								<span class="pull-left" style="width:30px;">仓库</span>
+			          			<span class="pull-left" style="width:110px;">
+				          			<select style="width:80px;" id="warehouseId" name="warehouseId">
+										<c:forEach items="${warehouseList}" var="w" >
+						       	 			<option value="<c:out value='${w.id}'/>">
+						       	 				<c:out value="${w.id}-${w.warehouseName}"/>
+						       		 		</option>
+						       			</c:forEach>
+									</select>
+		          				</span>							
+							</td>
 							<td>
 								<span class="pull-left" style="width:55px;" ><b>操作提示:</b></span>
 								<span class="pull-left" style="width:352px;color:red;" id="tips">请输入跟踪单号并按回车!</span>
@@ -83,30 +95,21 @@
 							<a class="btn  btn-primary" id="enterItem" onclick="saveInWarehouseRecordItem();" style="cursor:pointer;"><i class="icon-ok icon-white"></i>保存明细</a>
 						</span>
 						
-						
-		          		<span class="pull-left" style="width:30px;">仓库</span>
-		          		<span class="pull-left" style="width:110px;">
-		          			<select style="width:80px;" id="warehouseId" name="warehouseId">
-								<c:forEach items="${warehouseList}" var="w" >
-				       	 			<option value="<c:out value='${w.id}'/>">
-				       	 				<c:out value="${w.id}-${w.warehouseName}"/>
-				       		 		</option>
-				       			</c:forEach>
-							</select>
-		          		</span>
-						
-						<span class="pull-left" style="width:30px;">货架</span>
-						<span class="pull-left" style="width:140px;">
-							<input type="text"  name="shelvesNo"  id="shelvesNo" t="2" style="width:70px;"/>
-							<input type="checkbox" name="1" t="2" checked="checked" />自动
-						</span>
-						
-						<span class="pull-left" style="width:30px;">货位</span>
-						<span class="pull-left" style="width:130px;">
-							<input type="text"  name="seatNo"  t="2" id="seatNo" style="width:70px;"/>
-						 	<input type="checkbox" name="2" checked="checked"  t="2"/>自动
-						</span>
-						
+						<!-- -----------隐藏 货架货位功能 -->
+						<div style="display: none;">
+								<span class="pull-left" style="width:30px;">货架</span>
+								<span class="pull-left" style="width:140px;">
+									<input type="text"  name="shelvesNo"  id="shelvesNo" t="2" style="width:70px;"/>
+									<input type="checkbox" name="1" t="2" checked="checked" />自动
+								</span>
+								
+								<span class="pull-left" style="width:30px;">货位</span>
+								<span class="pull-left" style="width:130px;">
+									<input type="text"  name="seatNo"  t="2" id="seatNo" style="width:70px;"/>
+								 	<input type="checkbox" name="2" checked="checked"  t="2"/>自动
+								</span>
+						</div>
+												
 					</td>	
 			</tr>	
 		</table>
@@ -185,16 +188,16 @@
 	    	   grid = $("#maingrid").ligerGrid({
 	                columns: [
 	                    { display: '产品SKU', name: 'sku', align: 'center',width:'13%'},
-	                    { display: '总预报数量', name: 'totalQuantity', align: 'center', type: 'int',width:'9%'},
+	                    { display: '总预报数量', name: 'totalQuantity', align: 'center', type: 'int',width:'8%'},
 	                    { display: '总已收货数量', name: 'totalReceivedQuantity', align: 'center', type: 'int',width:'9%'},
-	                    { display: '未收货数量', name: 'unReceivedquantity', align: 'center', type: 'int',width:'9%'},
 	                    { display: '本次收货数量', name: 'receivedQuantity', align: 'center', type: 'int',width:'9%'},
+	                    { display: '未收货数量', name: 'unReceivedquantity', align: 'center', type: 'int',width:'7%'},
 		                { display: '仓库', name: 'warehouse', align: 'center', type: 'float',width:'9%'},
-		                { display: '货架', name: 'shelvesNo', align: 'center', type: 'float',width:'9%'},
-		                { display: '货位', name: 'seatNo', align: 'center', type: 'float',width:'10%'},
-		                { display: '收货时间', name: 'createdTime', type: 'int', width:'12%'},
+// 		                { display: '货架', name: 'shelvesNo', align: 'center', type: 'float',width:'9%'},
+// 		                { display: '货位', name: 'seatNo', align: 'center', type: 'float',width:'10%'},
+		                { display: '收货时间', name: 'createdTime', type: 'int', width:'13%'},
 		                { display: '操作员', name: 'userLoginNameOfOperator',width:'10%'},
-		                { display: '入库明细备注', name: 'remark', align: 'center', type: 'float',width:'13%'}
+		                { display: '入库明细备注', name: 'remark', align: 'center', type: 'float',width:'12%'}
 	                ],  
 	                isScroll: true,
 	                dataAction: 'server',

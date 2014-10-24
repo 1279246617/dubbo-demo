@@ -21,4 +21,8 @@ public interface IInWarehouseOrderDao {
 	public Long countInWarehouseOrderItemByTrackingNo(String trackingNo);
 
 	public Long countInWarehouseOrderItemByInWarehouseOrderId(Long inWarehouseOrderId);
+
+	public List<Long> findUnCompleteInWarehouseOrderId();
+
+	public int   updateInWarehouseOrderStatus(Long inWarehouseOrderId, String status);
 }

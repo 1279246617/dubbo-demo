@@ -23,6 +23,8 @@ import com.coe.wms.dao.datasource.DataSource;
 import com.coe.wms.dao.datasource.DataSourceCode;
 import com.coe.wms.dao.warehouse.storage.IInWarehouseOrderDao;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
+import com.coe.wms.model.warehouse.storage.order.InWarehouseOrderStatus.InWarehouseOrderStatusCode;
+import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus.OutWarehouseOrderStatusCode;
 import com.coe.wms.util.DateUtil;
 import com.coe.wms.util.Pagination;
 import com.coe.wms.util.StringUtil;
@@ -124,13 +126,13 @@ public class InWarehouseOrderDaoImpl implements IInWarehouseOrderDao {
 				sb.append(" and weight = " + inWarehouseOrder.getWeight());
 			}
 			if (inWarehouseOrder.getCarrierCode() != null) {
-				sb.append(" and carrier_code = '" + inWarehouseOrder.getCarrierCode()+"'");
+				sb.append(" and carrier_code = '" + inWarehouseOrder.getCarrierCode() + "'");
 			}
 			if (inWarehouseOrder.getLogisticsType() != null) {
-				sb.append(" and logistics_type = '" + inWarehouseOrder.getLogisticsType()+"'");
+				sb.append(" and logistics_type = '" + inWarehouseOrder.getLogisticsType() + "'");
 			}
 			if (inWarehouseOrder.getCustomerReferenceNo() != null) {
-				sb.append(" and customer_reference_no = '" + inWarehouseOrder.getCustomerReferenceNo()+"'");
+				sb.append(" and customer_reference_no = '" + inWarehouseOrder.getCustomerReferenceNo() + "'");
 			}
 		}
 		if (moreParam != null) {
@@ -191,13 +193,13 @@ public class InWarehouseOrderDaoImpl implements IInWarehouseOrderDao {
 				sb.append(" and weight = " + inWarehouseOrder.getWeight());
 			}
 			if (inWarehouseOrder.getCarrierCode() != null) {
-				sb.append(" and carrier_code = '" + inWarehouseOrder.getCarrierCode()+"'");
+				sb.append(" and carrier_code = '" + inWarehouseOrder.getCarrierCode() + "'");
 			}
 			if (inWarehouseOrder.getLogisticsType() != null) {
-				sb.append(" and logistics_type = '" + inWarehouseOrder.getLogisticsType()+"'");
+				sb.append(" and logistics_type = '" + inWarehouseOrder.getLogisticsType() + "'");
 			}
 			if (inWarehouseOrder.getCustomerReferenceNo() != null) {
-				sb.append(" and customer_reference_no = '" + inWarehouseOrder.getCustomerReferenceNo()+"'");
+				sb.append(" and customer_reference_no = '" + inWarehouseOrder.getCustomerReferenceNo() + "'");
 			}
 		}
 		if (moreParam != null) {
@@ -242,5 +244,18 @@ public class InWarehouseOrderDaoImpl implements IInWarehouseOrderDao {
 		String sql = "select sum(quantity) from w_s_in_warehouse_order_item where order_id =  " + inWarehouseOrderId;
 		logger.info("统计入库订单预报物品数量sql:" + sql);
 		return jdbcTemplate.queryForObject(sql, Long.class);
+	}
+
+	@Override
+	public List<Long> findUnCompleteInWarehouseOrderId() {
+		String sql = "select id from w_s_in_warehouse_order where status is null or status !='" + InWarehouseOrderStatusCode.COMPLETE + "'";
+		List<Long> orderIdList = jdbcTemplate.queryForList(sql, Long.class);
+		return orderIdList;
+	}
+	
+	@Override
+	public int updateInWarehouseOrderStatus(Long inWarehouseOrderId, String status) {
+		String sql = "update w_s_in_warehouse_order set status ='" + status + "' where id=" + inWarehouseOrderId;
+		return jdbcTemplate.update(sql);
 	}
 }

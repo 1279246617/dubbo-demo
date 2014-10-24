@@ -147,7 +147,7 @@ var oldTrackingNo = "";
 function trackingNoFocus(){
 	oldTrackingNo = $("#trackingNo").val();
 	$("#trackingNo").select();
-	$("#tips").html("请跟踪单号并按回车!");
+	$("#tips").html("请输入跟踪单号并按回车!");
 }
 
 function trackingNoBlur(){
