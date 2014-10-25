@@ -161,7 +161,7 @@
 	        function listInWarehouseRecordItem(recordId){
 	        	var contentArr = [];
 	        	contentArr.push('<table class="table" style="width:549px">');
-	        	contentArr.push('<tr><th>产品SKU</th><th>产品名称</th><th>收货数量</th><th>预报数量</th></tr>');
+	        	contentArr.push('<tr><th>产品SKU</th><th>产品名称</th><th>本次收货数量</th><th>预报数量</th></tr>');
 	        	$.ajax({ 
 	                type : "post", 
 	                url :baseUrl + '/warehouse/storage/getInWarehouseRecordItemByRecordId.do', 
