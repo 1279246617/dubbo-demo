@@ -1102,12 +1102,26 @@ public class StorageServiceImpl implements IStorageService {
 		InWarehouseRecordItem param = new InWarehouseRecordItem();
 		param.setInWarehouseRecordId(recordId);
 		List<InWarehouseRecordItem> inWarehouseRecordItemList = inWarehouseRecordItemDao.findInWarehouseRecordItem(param, null, null);
+
+		// 获取入库订单id
+		Long inWarehouseOrderId = inWarehouseRecordDao.getInWarehouseOrderIdByRecordId(recordId);
 		List<Map<String, String>> mapList = new ArrayList<Map<String, String>>();
 		for (InWarehouseRecordItem item : inWarehouseRecordItemList) {
 			Map<String, String> map = new HashMap<String, String>();
 			map.put("sku", item.getSku());
-			// 待建立SKU库后,从SKU库取产品名称
-			map.put("skuName", "");
+			//获取sku产品名
+			InWarehouseOrderItem orderItemParam = new InWarehouseOrderItem();
+			orderItemParam.setOrderId(inWarehouseOrderId);
+			orderItemParam.setSku(item.getSku());
+			List<InWarehouseOrderItem> inWarehouseOrderItemList = inWarehouseOrderItemDao.findInWarehouseOrderItem(orderItemParam, null,null);
+			if (inWarehouseOrderItemList != null && inWarehouseOrderItemList.size() == 1) {
+				map.put("skuName", inWarehouseOrderItemList.get(0).getSkuName());
+				//预报数量
+				map.put("orderQuantity",inWarehouseOrderItemList.get(0).getQuantity()+"");
+			}else{
+				map.put("skuName","");
+				map.put("orderQuantity","");
+			}
 			map.put("quantity", NumberUtil.intToString(item.getQuantity()));
 			mapList.add(map);
 		}

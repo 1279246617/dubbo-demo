@@ -161,7 +161,7 @@
 	        function listInWarehouseRecordItem(recordId){
 	        	var contentArr = [];
 	        	contentArr.push('<table class="table" style="width:549px">');
-	        	contentArr.push('<tr><th>产品SKU</th><th>产品名称</th><th>收货数量</th><th>货位</th></tr>');
+	        	contentArr.push('<tr><th>产品SKU</th><th>产品名称</th><th>收货数量</th><th>预报数量</th></tr>');
 	        	$.ajax({ 
 	                type : "post", 
 	                url :baseUrl + '/warehouse/storage/getInWarehouseRecordItemByRecordId.do', 
@@ -174,7 +174,7 @@
 	        			  	contentArr.push('<td>'+e.sku+'</td>');
 	    	        		contentArr.push('<td>'+e.skuName+'</td>');
 	    	        		contentArr.push('<td>'+e.quantity+'</td>');
-	    	        		contentArr.push('<td>'+e.seatNo+'</td>');
+	    	        		contentArr.push('<td>'+e.orderQuantity+'</td>');
 	        			  	contentArr.push('</tr>');
 	        			});
 	                } 
