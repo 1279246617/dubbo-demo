@@ -101,8 +101,6 @@ function saveInWarehouseRecordItem() {
 	var itemQuantity = $("#itemQuantity").val();
 	var itemRemark = $("#itemRemark").val();
 	var warehouseId = $("#warehouseId").val();
-	var shelvesNo = $("#shelvesNo").val();
-	var seatNo = $("#seatNo").val();
 	//入库主单id
 	var inWarehouseRecordId = $("#inWarehouseRecordId").val();
 	if(inWarehouseRecordId==''){
@@ -120,7 +118,7 @@ function saveInWarehouseRecordItem() {
 	}
 	$.post(baseUrl+ '/warehouse/storage/saveInWarehouseRecordItem.do?itemSku='
 			+ itemSku+'&itemQuantity='+itemQuantity+'&itemRemark='+itemRemark+"&warehouseId="
-			+warehouseId+"&shelvesNo="+shelvesNo+"&seatNo="+seatNo+"&inWarehouseRecordId="+inWarehouseRecordId, function(msg) {
+			+warehouseId+"&inWarehouseRecordId="+inWarehouseRecordId, function(msg) {
 		if(msg.status == 0){
 			//保存失败,显示提示
 			parent.$.showShortMessage({msg:msg.message,animate:true,left:"45%"});

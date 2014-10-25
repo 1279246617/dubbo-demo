@@ -94,22 +94,6 @@
 						<span class="pull-left" style="width:105px;">
 							<a class="btn  btn-primary" id="enterItem" onclick="saveInWarehouseRecordItem();" style="cursor:pointer;"><i class="icon-ok icon-white"></i>保存明细</a>
 						</span>
-						
-						<!-- -----------隐藏 货架货位功能 -->
-						<div style="display: none;">
-								<span class="pull-left" style="width:30px;">货架</span>
-								<span class="pull-left" style="width:140px;">
-									<input type="text"  name="shelvesNo"  id="shelvesNo" t="2" style="width:70px;"/>
-									<input type="checkbox" name="1" t="2" checked="checked" />自动
-								</span>
-								
-								<span class="pull-left" style="width:30px;">货位</span>
-								<span class="pull-left" style="width:130px;">
-									<input type="text"  name="seatNo"  t="2" id="seatNo" style="width:70px;"/>
-								 	<input type="checkbox" name="2" checked="checked"  t="2"/>自动
-								</span>
-						</div>
-												
 					</td>	
 			</tr>	
 		</table>
@@ -119,10 +103,8 @@
 		<tr>
 			<td>
 				<div class="pull-left">
-                   <a class="btn btn-small btn-primary" onclick=""><i class="icon-cog icon-white"></i>设置仓库</a>
-                   &nbsp;
-                   <a class="btn btn-small btn-primary" onclick=""><i class="icon-cog icon-white"></i>设置货架</a>
-              </div>
+<!--                    <a class="btn btn-small btn-primary" onclick=""><i class="icon-cog icon-white"></i>设置仓库</a> -->
+               </div>
               
               <form action="#" id="searchform2" name="searchform2" method="post">
                   <div class="pull-right searchContent">
@@ -196,8 +178,6 @@
 	                    	return h;
 	  		          	}},
 		                { display: '仓库', name: 'warehouse', align: 'center', type: 'float',width:'11%'},
-// 		                { display: '货架', name: 'shelvesNo', align: 'center', type: 'float',width:'9%'},
-// 		                { display: '货位', name: 'seatNo', align: 'center', type: 'float',width:'10%'},
 		                { display: '收货时间', name: 'createdTime', type: 'int', width:'13%'},
 		                { display: '操作员', name: 'userLoginNameOfOperator',width:'11%'},
 		                { display: '入库明细备注', name: 'remark', align: 'center', type: 'float',width:'14%'}
