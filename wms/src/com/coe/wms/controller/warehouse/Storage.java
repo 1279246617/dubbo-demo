@@ -388,7 +388,7 @@ public class Storage {
 		map.put(Constant.STATUS, Constant.FAIL);
 		// 校验和保存
 		Map<String, String> serviceResult = storageService.saveInWarehouseRecordItem(itemSku, itemQuantity, itemRemark, warehouseId,
-				shelvesNo, seatNo, inWarehouseRecordId, userIdOfOperator);
+				inWarehouseRecordId, userIdOfOperator);
 		// 失败
 		if (!StringUtil.isEqual(serviceResult.get(Constant.STATUS), Constant.SUCCESS)) {
 			map.put(Constant.MESSAGE, serviceResult.get(Constant.MESSAGE));
@@ -680,9 +680,10 @@ public class Storage {
 		Map<String, String> checkResultMap = storageService.outWarehouseShippingConfirm(trackingNo, userId);
 		return GsonUtil.toJson(checkResultMap);
 	}
-	
+
 	/**
 	 * 上架界面
+	 * 
 	 * @param request
 	 * @param response
 	 * @return

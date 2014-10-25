@@ -46,8 +46,7 @@ public interface IStorageService {
 	 * @param page
 	 * @return
 	 */
-	public Map<String, String> saveInWarehouseRecordItem(String itemSku, Integer itemQuantity, String itemRemark, Long warehouseId,
-			String shelvesNo, String seatNo, Long inWarehouseRecordId, Long userIdOfOperator);
+	public Map<String, String> saveInWarehouseRecordItem(String itemSku, Integer itemQuantity, String itemRemark, Long warehouseId,Long inWarehouseRecordId, Long userIdOfOperator);
 
 	/**
 	 * 获取入库记录物品

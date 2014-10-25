@@ -173,7 +173,7 @@ public class StorageServiceImpl implements IStorageService {
 	 */
 	@Override
 	public Map<String, String> saveInWarehouseRecordItem(String itemSku, Integer itemQuantity, String itemRemark, Long warehouseId,
-			String shelvesNo, String seatNo, Long inWarehouseRecordId, Long userIdOfOperator) {
+			Long inWarehouseRecordId, Long userIdOfOperator) {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put(Constant.STATUS, Constant.FAIL);
 		if (StringUtil.isNull(itemSku)) {
@@ -198,7 +198,6 @@ public class StorageServiceImpl implements IStorageService {
 		map.put(Constant.STATUS, Constant.SUCCESS);
 		// 查询入库主单信息,用于更新库存
 		InWarehouseRecord inWarehouseRecord = inWarehouseRecordDao.getInWarehouseRecordById(inWarehouseRecordId);
-
 		// 检查该SKU是否已经存在,已经存在则直接改变数量(同一个入库主单,同一个SKU只允许一个收货明细)
 		InWarehouseRecordItem param = new InWarehouseRecordItem();
 		param.setInWarehouseRecordId(inWarehouseRecordId);
@@ -217,24 +216,13 @@ public class StorageServiceImpl implements IStorageService {
 			}
 			return map;
 		}
-
 		InWarehouseRecordItem inWarehouseRecordItem = new InWarehouseRecordItem();
 		inWarehouseRecordItem.setCreatedTime(System.currentTimeMillis());
 		inWarehouseRecordItem.setInWarehouseRecordId(inWarehouseRecordId);
 		inWarehouseRecordItem.setQuantity(itemQuantity);
 		inWarehouseRecordItem.setRemark(itemRemark);
-		// 分配货架货位的逻辑
-		if (StringUtil.isNull(seatNo)) {
-			seatNo = "G1";
-		}
-		if (StringUtil.isNull(shelvesNo)) {
-			shelvesNo = "G";
-		}
-		inWarehouseRecordItem.setSeatNo(seatNo);
-		inWarehouseRecordItem.setShelvesNo(shelvesNo);
 		inWarehouseRecordItem.setSku(itemSku);
 		inWarehouseRecordItem.setUserIdOfOperator(userIdOfOperator);
-		inWarehouseRecordItem.setWarehouseId(warehouseId);
 		// 返回id
 		long id = inWarehouseRecordItemDao.saveInWarehouseRecordItem(inWarehouseRecordItem);
 		// 保存成功,添加库存
@@ -431,8 +419,10 @@ public class StorageServiceImpl implements IStorageService {
 	 */
 	@Override
 	public Pagination getInWarehouseRecordItemData(Long inWarehouseRecordId, Pagination pagination) {
-		// 查询入库订单
-		Long inWarehouseOrderId = inWarehouseRecordDao.getInWarehouseOrderIdByRecordId(inWarehouseRecordId);
+		InWarehouseRecord inWarehouseRecord = inWarehouseRecordDao.getInWarehouseRecordById(inWarehouseRecordId);
+		Long inWarehouseOrderId = inWarehouseRecord.getInWarehouseOrderId();
+		Long warehouseId = inWarehouseRecord.getWarehouseId();
+
 		InWarehouseOrderItem param = new InWarehouseOrderItem();
 		param.setOrderId(inWarehouseOrderId);
 		List<InWarehouseOrderItem> orderItemList = inWarehouseOrderItemDao.findInWarehouseOrderItem(param, null, null);
@@ -459,17 +449,13 @@ public class StorageServiceImpl implements IStorageService {
 				}
 				map.put("receivedQuantity", recordItem.getQuantity());
 				map.put("remark", recordItem.getRemark());
-				map.put("seatNo", recordItem.getSeatNo());
-				map.put("shelvesNo", recordItem.getShelvesNo());
 				if (NumberUtil.greaterThanZero(recordItem.getUserIdOfOperator())) {
 					User user = userDao.getUserById(recordItem.getUserIdOfOperator());
 					map.put("userLoginNameOfOperator", user.getLoginName());
 				}
-				if (NumberUtil.greaterThanZero(recordItem.getWarehouseId())) {
-					Warehouse warehouse = warehouseDao.getWarehouseById(recordItem.getWarehouseId());
-					if (warehouse != null) {
-						map.put("warehouse", warehouse.getWarehouseName());
-					}
+				Warehouse warehouse = warehouseDao.getWarehouseById(warehouseId);
+				if (warehouse != null) {
+					map.put("warehouse", warehouse.getWarehouseName());
 				}
 			}
 			list.add(map);
@@ -982,7 +968,7 @@ public class StorageServiceImpl implements IStorageService {
 				updateCount++;
 			}
 		}
-		map.put(Constant.MESSAGE, "审核完成" + updateCount + "个订单,"+noUpdateCount+"个订单非待审核状态,审核失败");
+		map.put(Constant.MESSAGE, "审核完成" + updateCount + "个订单," + noUpdateCount + "个订单非待审核状态,审核失败");
 		map.put(Constant.STATUS, Constant.SUCCESS);
 		return map;
 	}
@@ -1123,7 +1109,6 @@ public class StorageServiceImpl implements IStorageService {
 			// 待建立SKU库后,从SKU库取产品名称
 			map.put("skuName", "");
 			map.put("quantity", NumberUtil.intToString(item.getQuantity()));
-			map.put("seatNo", item.getSeatNo());
 			mapList.add(map);
 		}
 		return mapList;
