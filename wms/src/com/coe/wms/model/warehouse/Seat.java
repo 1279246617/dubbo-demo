@@ -23,15 +23,10 @@ public class Seat implements Serializable {
 	 * 货位编号
 	 */
 	private String seatCode;
-
 	/**
-	 * 货架编号
+	 * 所属仓库
 	 */
-	private String shelvesCode;
-	
-	
-	
-
+	private Long warehoseId;
 	/**
 	 * 备注
 	 */
@@ -45,16 +40,16 @@ public class Seat implements Serializable {
 		this.id = id;
 	}
 
-	public String getSort() {
-		return sort;
-	}
-
-	public void setSort(String sort) {
-		this.sort = sort;
-	}
-
 	public String getSeatCode() {
 		return seatCode;
+	}
+
+	public Long getWarehoseId() {
+		return warehoseId;
+	}
+
+	public void setWarehoseId(Long warehoseId) {
+		this.warehoseId = warehoseId;
 	}
 
 	public void setSeatCode(String seatCode) {
