@@ -20,14 +20,17 @@ public class Seat implements Serializable {
 	private Long id;
 
 	/**
-	 * 序号
-	 */
-	private String sort;
-
-	/**
 	 * 货位编号
 	 */
 	private String seatCode;
+
+	/**
+	 * 货架编号
+	 */
+	private String shelvesCode;
+	
+	
+	
 
 	/**
 	 * 备注
