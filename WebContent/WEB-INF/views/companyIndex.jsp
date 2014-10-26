@@ -81,13 +81,15 @@
 		              		<!-- 入库明细查询 条件: SKU, 数量, 主单号,批次号,客户帐号,时间,产品描述 -->
 		              		<li><a href=# tab_id="findInWarehouseItemRecord"><i class="icon-zoom-in"></i><span class="hidden-tablet">入库收货明细记录</span></a></li>
 		              		
-		              		<li><a href="#${baseUrl}/warehouse/storage/onShelves.do" tab_id="doOnShelves"><i class="icon-th"></i><span class="hidden-tablet">入库订单上架</span></a></li>
-		              		<li><a href="#${baseUrl}/warehouse/storage/listOnShelves.do" tab_id="listOnShelves"><i class=icon-zoom-in></i><span class="hidden-tablet">入库订单上架记录</span></a></li>
+		              		<li><a href="#${baseUrl}/warehouse/shelves/onShelves.do" tab_id="doOnShelves"><i class="icon-th"></i><span class="hidden-tablet">入库订单上架</span></a></li>
+		              		<li><a href="#${baseUrl}/warehouse/shelves/listOnShelves.do" tab_id="listOnShelves"><i class=icon-zoom-in></i><span class="hidden-tablet">入库订单上架记录</span></a></li>
 			              		
 			              	<!-- (扫SKU和数量 是否和出库订单一样) -->	
 		              		<li><a href="#${baseUrl}/warehouse/storage/outWarehouseCheckPackage.do" tab_id="doOutWarehouse"><i class="icon-plane"></i><span class="hidden-tablet">装箱称重打单</span></a></li>
 		              		<li><a href="#${baseUrl}/warehouse/storage/outWarehouseShipping.do" tab_id="outWarehouseShipping"><i class="icon-plane"></i><span class="hidden-tablet">扫描运单出货</span></a></li>
 		              		<li><a href=# tab_id="findOutWarehouseRecord"><i class="icon-zoom-out"></i><span class="hidden-tablet">出库记录查询</span></a></li>
+		              		
+		              		<li><a href=# tab_id="findItemInventery"><i class="icon-zoom-out"></i><span class="hidden-tablet">产品库存查询</span></a></li>
 		                </ul>
 		        </div>
 		         <div title="用户管理" class=" nav-collapse sidebar-nav">

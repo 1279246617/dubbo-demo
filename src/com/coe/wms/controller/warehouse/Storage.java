@@ -681,24 +681,4 @@ public class Storage {
 		Map<String, String> checkResultMap = storageService.outWarehouseShippingConfirm(trackingNo, userId);
 		return GsonUtil.toJson(checkResultMap);
 	}
-
-	/**
-	 * 上架界面
-	 * 
-	 * @param request
-	 * @param response
-	 * @return
-	 * @throws IOException
-	 */
-	@RequestMapping(value = "/onShelves", method = RequestMethod.GET)
-	public ModelAndView onShelves(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		ModelAndView view = new ModelAndView();
-		HttpSession session = request.getSession();
-		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
-		User user = userService.getUserById(userId);
-		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
-		view.setViewName("warehouse/storage/onShelves");
-		view.addObject("warehouseList", storageService.findAllWarehouse(user.getDefaultWarehouseId()));
-		return view;
-	}
 }
