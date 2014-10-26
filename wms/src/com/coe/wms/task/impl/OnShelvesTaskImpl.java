@@ -1,5 +1,6 @@
 package com.coe.wms.task.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -25,6 +26,7 @@ import com.coe.wms.model.warehouse.storage.record.InWarehouseRecord;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecordItem;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecordStatus.InWarehouseRecordStatusCode;
 import com.coe.wms.task.IOnShelvesTask;
+import com.coe.wms.util.DateUtil;
 
 @Component
 public class OnShelvesTaskImpl implements IOnShelvesTask {
@@ -84,8 +86,18 @@ public class OnShelvesTaskImpl implements IOnShelvesTask {
 			InWarehouseRecordItem itemParam = new InWarehouseRecordItem();
 			itemParam.setInWarehouseRecordId(inWarehouseRecordId);
 			List<InWarehouseRecordItem> itemList = inWarehouseRecordItemDao.findInWarehouseRecordItem(itemParam, null, null);
-			String status = InWarehouseRecordStatusCode.NONE;
+			// 收货主单是否无item
+			if (itemList == null || itemList.size() < 1) {
+				InWarehouseRecord inWarehouseRecord = inWarehouseRecordDao.getInWarehouseRecordById(inWarehouseRecordId);
+				// 时间创建超过1个小时
+				long diff = DateUtil.getDiffHours(new Date(), new Date(inWarehouseRecord.getCreatedTime()));
+				if (diff > 1) {
+					inWarehouseRecordDao.deleteInWarehouseRecordById(inWarehouseRecordId);
+				}
+				continue;
+			}
 
+			String status = InWarehouseRecordStatusCode.NONE;
 			// 查看入库订单每个sku ,上架数量
 			boolean isComplete = true;
 			for (InWarehouseRecordItem item : itemList) {
@@ -107,10 +119,10 @@ public class OnShelvesTaskImpl implements IOnShelvesTask {
 				}
 			}
 			// 执行更新
-			InWarehouseRecord inWarehouseRecord = new InWarehouseRecord();
-			inWarehouseRecord.setId(inWarehouseRecordId);
-			inWarehouseRecord.setStatus(status);
-			int updateCount = inWarehouseRecordDao.updateInWarehouseRecordStatus(inWarehouseRecord);
+			InWarehouseRecord inWarehouseRecordUpdate = new InWarehouseRecord();
+			inWarehouseRecordUpdate.setId(inWarehouseRecordId);
+			inWarehouseRecordUpdate.setStatus(status);
+			int updateCount = inWarehouseRecordDao.updateInWarehouseRecordStatus(inWarehouseRecordUpdate);
 			if (updateCount > 0) {
 				logger.info("更新入库订单状态成功:recordId:" + inWarehouseRecordId + ",status:" + status);
 			} else {

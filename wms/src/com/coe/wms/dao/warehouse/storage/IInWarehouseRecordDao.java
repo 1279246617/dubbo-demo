@@ -12,6 +12,8 @@ public interface IInWarehouseRecordDao {
 
 	public InWarehouseRecord getInWarehouseRecordById(Long InWarehouseRecordId);
 
+	public int deleteInWarehouseRecordById(Long InWarehouseRecordId);
+
 	public List<InWarehouseRecord> findInWarehouseRecord(InWarehouseRecord InWarehouseRecord, Map<String, String> moreParam, Pagination page);
 
 	public Long countInWarehouseRecord(InWarehouseRecord InWarehouseRecord, Map<String, String> moreParam);
