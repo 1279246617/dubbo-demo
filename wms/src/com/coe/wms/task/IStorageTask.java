@@ -16,11 +16,4 @@ public interface IStorageTask {
 	 * 回传出库状态给客户(出库的最后步骤)
 	 */
 	public void sendOutWarehouseStatusToCustomer();
-	
-	/**
-	 * 定时更新入库订单状态
-	 * 
-	 * 部分入库,全未入库,入库完成
-	 */
-	public void updateInWarehouseOrderStatus();
 }
