@@ -20,6 +20,7 @@ import com.coe.wms.dao.warehouse.storage.IInWarehouseRecordDao;
 import com.coe.wms.dao.warehouse.storage.IInWarehouseRecordItemDao;
 import com.coe.wms.dao.warehouse.storage.IInWarehouseRecordStatusDao;
 import com.coe.wms.dao.warehouse.storage.IItemInventoryDao;
+import com.coe.wms.dao.warehouse.storage.IOnShelfDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderAdditionalSfDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderItemDao;
@@ -44,6 +45,7 @@ import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus.OutWarehouseOrderStatusCode;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecord;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecordItem;
+import com.coe.wms.model.warehouse.storage.record.OnShelf;
 import com.coe.wms.pojo.api.warehouse.ClearanceDetail;
 import com.coe.wms.pojo.api.warehouse.ErrorCode;
 import com.coe.wms.pojo.api.warehouse.EventBody;
@@ -82,15 +84,18 @@ public class StorageServiceImpl implements IStorageService {
 	@Resource(name = "warehouseDao")
 	private IWarehouseDao warehouseDao;
 
+	@Resource(name = "onShelfDao")
+	private IOnShelfDao onShelfDao;
+
 	@Resource(name = "inWarehouseOrderDao")
 	private IInWarehouseOrderDao inWarehouseOrderDao;
 
 	@Resource(name = "inWarehouseOrderStatusDao")
 	private IInWarehouseOrderStatusDao inWarehouseOrderStatusDao;
-	
+
 	@Resource(name = "inWarehouseRecordStatusDao")
 	private IInWarehouseRecordStatusDao inWarehouseRecordStatusDao;
-	
+
 	@Resource(name = "inWarehouseOrderItemDao")
 	private IInWarehouseOrderItemDao inWarehouseOrderItemDao;
 
@@ -165,7 +170,7 @@ public class StorageServiceImpl implements IStorageService {
 			map.put("sku", item.getSku());
 			map.put("skuName", item.getSkuName());
 			map.put("quantity", NumberUtil.intToString(item.getQuantity()));
-			int receivedQuantity = inWarehouseRecordItemDao.countInWarehouseSkuQuantity(orderId, item.getSku());
+			int receivedQuantity = inWarehouseRecordItemDao.countInWarehouseItemSkuQuantityByOrderId(orderId, item.getSku());
 			map.put("receivedQuantity", receivedQuantity + "");
 			mapList.add(map);
 		}
@@ -436,7 +441,8 @@ public class StorageServiceImpl implements IStorageService {
 			map.put("orderId", orderItem.getId());
 			map.put("sku", orderItem.getSku());
 			map.put("totalQuantity", orderItem.getQuantity());
-			int totalReceivedQuantity = inWarehouseRecordItemDao.countInWarehouseSkuQuantity(inWarehouseOrderId, orderItem.getSku());
+			int totalReceivedQuantity = inWarehouseRecordItemDao.countInWarehouseItemSkuQuantityByOrderId(inWarehouseOrderId,
+					orderItem.getSku());
 			map.put("totalReceivedQuantity", totalReceivedQuantity);
 			int unReceivedquantity = orderItem.getQuantity() - totalReceivedQuantity;
 			map.put("unReceivedquantity", unReceivedquantity);
@@ -1255,7 +1261,7 @@ public class StorageServiceImpl implements IStorageService {
 			Long userIdOfOperator = record.getUserIdOfOperator();
 			User userOfOperator = userDao.getUserById(userIdOfOperator);
 			map.put("userLoginNameOfOperator", userOfOperator.getLoginName());
-			
+
 			map.put("trackingNo", record.getTrackingNo());
 			map.put("batchNo", record.getBatchNo());
 
@@ -1264,5 +1270,51 @@ public class StorageServiceImpl implements IStorageService {
 			mapList.add(map);
 		}
 		return mapList;
+	}
+
+	/**
+	 * 保存上架
+	 */
+	@Override
+	public Map<String, String> saveOnShelvesItem(String itemSku, Integer itemQuantity, String seatCode, Long inWarehouseRecordId,
+			Long userIdOfOperator) {
+		Map<String, String> map = new HashMap<String, String>();
+		map.put(Constant.STATUS, Constant.FAIL);
+		if (StringUtil.isNull(itemSku)) {
+			map.put(Constant.MESSAGE, "请输入产品SKU.");
+			return map;
+		}
+		if (itemQuantity == null) {
+			map.put(Constant.MESSAGE, "请输入产品数量.");
+			return map;
+		}
+		InWarehouseRecord inWarehouseRecord = inWarehouseRecordDao.getInWarehouseRecordById(inWarehouseRecordId);
+		// 检查该SKU是否存在入库订单收货中
+		int countInWarehouseItemSkuQuantityByRecordId = inWarehouseRecordItemDao.countInWarehouseItemSkuQuantityByRecordId(
+				inWarehouseRecordId, itemSku);
+		if (countInWarehouseItemSkuQuantityByRecordId <= 0) {
+			map.put(Constant.MESSAGE, "该产品SKU在此收货记录未找到.");
+			return map;
+		}
+		// 先统计该入库订单收货记录中,是否包含此,SKU,数量
+		int countOnShelfSkuQuantity = onShelfDao.countOnShelfSkuQuantity(inWarehouseRecordId, itemSku);
+		if (countOnShelfSkuQuantity >= countInWarehouseItemSkuQuantityByRecordId) {
+			map.put(Constant.MESSAGE, "该产品SKU在此收货记录已经完全上架.");
+			return map;
+		}
+		// 保存新的上架记录
+		OnShelf onShelf = new OnShelf();
+		onShelf.setBatchNo(inWarehouseRecord.getBatchNo());
+		onShelf.setCreatedTime(System.currentTimeMillis());
+		onShelf.setInWarehouseRecordId(inWarehouseRecordId);
+		onShelf.setQuantity(itemQuantity);
+		onShelf.setSeatCode(seatCode);
+		onShelf.setSku(itemSku);
+		onShelf.setUserIdOfCustomer(inWarehouseRecord.getUserIdOfCustomer());
+		onShelf.setUserIdOfOperator(userIdOfOperator);
+		onShelf.setWarehouseId(inWarehouseRecord.getWarehouseId());
+		Long id = onShelfDao.saveOnShelf(onShelf);
+		map.put(Constant.STATUS, Constant.SUCCESS);
+		return map;
 	}
 }

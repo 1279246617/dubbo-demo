@@ -170,7 +170,7 @@ public class StorageTaskImpl implements IStorageTask {
 				sku.setSkuName(recordItem.getSku());
 				// 2014-10-16 当一个入库订单多次收货,产生多个入库单时,每次回传SKU入库情况,回传所有已收货数量
 				// 根据SKU和入库订单Id, 查询已经收货的SKU数量
-				int count = inWarehouseRecordItemDao.countInWarehouseSkuQuantity(inWarehouseRecord.getInWarehouseOrderId(),
+				int count = inWarehouseRecordItemDao.countInWarehouseItemSkuQuantityByOrderId(inWarehouseRecord.getInWarehouseOrderId(),
 						recordItem.getSku());
 				sku.setSkuInBoundQty(count);
 				sku.setSkuCheckQty(count);
@@ -461,7 +461,7 @@ public class StorageTaskImpl implements IStorageTask {
 			for (InWarehouseOrderItem item : itemList) {
 				String sku = item.getSku();
 				int skuQuantity = item.getQuantity();
-				int receivedQuantity = inWarehouseRecordItemDao.countInWarehouseSkuQuantity(inWarehouseOrderId, sku);
+				int receivedQuantity = inWarehouseRecordItemDao.countInWarehouseItemSkuQuantityByOrderId(inWarehouseOrderId, sku);
 				if (receivedQuantity >= skuQuantity && isComplete) {
 					status = InWarehouseOrderStatusCode.COMPLETE;
 				} else {

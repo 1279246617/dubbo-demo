@@ -234,10 +234,18 @@ public class InWarehouseRecordItemDaoImpl implements IInWarehouseRecordItemDao {
 	}
 
 	@Override
-	public int countInWarehouseSkuQuantity(Long inWarehouseOrderId, String sku) {
+	public int countInWarehouseItemSkuQuantityByOrderId(Long inWarehouseOrderId, String sku) {
 		String sql = "select sum(quantity) from w_s_in_warehouse_record_item where sku = '" + sku
 				+ "' and in_warehouse_record_id in(select id from w_s_in_warehouse_record where in_warehouse_order_id = "
 				+ inWarehouseOrderId + ")";
+		Long count = jdbcTemplate.queryForObject(sql, Long.class);
+		return count.intValue();
+	}
+
+	@Override
+	public int countInWarehouseItemSkuQuantityByRecordId(Long inWarehouseRecordId, String sku) {
+		String sql = "select sum(quantity) from w_s_in_warehouse_record_item where sku = '" + sku + "' and in_warehouse_record_"
+				+ inWarehouseRecordId;
 		Long count = jdbcTemplate.queryForObject(sql, Long.class);
 		return count.intValue();
 	}

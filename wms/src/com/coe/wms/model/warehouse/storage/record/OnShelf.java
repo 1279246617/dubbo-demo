@@ -20,17 +20,22 @@ public class OnShelf implements Serializable {
 	/**
 	 * 仓库id
 	 */
-	private Long wareHouseId;
-
-	/**
-	 * 货架id
-	 */
-	private Long shelfId;
+	private Long warehouseId;
 
 	/**
 	 * 操作员Id
 	 */
-	private Long userId;
+	private Long userIdOfOperator;
+
+	/**
+	 * 操作员Id
+	 */
+	private Long userIdOfCustomer;
+
+	/**
+	 * 
+	 */
+	private Long inWarehouseRecordId;
 
 	/**
 	 * 批次号
@@ -40,29 +45,16 @@ public class OnShelf implements Serializable {
 	private String batchNo;
 
 	/**
-	 * 
-	 * 要求一个上架记录单中只能包含同一个入库主单的sku
-	 * 
-	 * 可空
+	 * 货位
 	 */
-	private String inWarehouseRecordId;
-
-	/**
-	 * 创建时间 (收货时间)
-	 */
-	private Long createdTime;
-
-	/**
-	 * 上架摘要
-	 */
-	private String remark;
+	private String seatCode;
 
 	/**
 	 * sku下产品数量
 	 * 
 	 * 必填
 	 */
-	private int quantity;
+	private Integer quantity;
 
 	/**
 	 * 
@@ -72,6 +64,11 @@ public class OnShelf implements Serializable {
 	 */
 	private String sku;
 
+	/**
+	 * 创建时间 (收货时间)
+	 */
+	private Long createdTime;
+
 	public Long getId() {
 		return id;
 	}
@@ -80,36 +77,36 @@ public class OnShelf implements Serializable {
 		this.id = id;
 	}
 
-	public Long getWareHouseId() {
-		return wareHouseId;
+	public Long getWarehouseId() {
+		return warehouseId;
 	}
 
-	public void setWareHouseId(Long wareHouseId) {
-		this.wareHouseId = wareHouseId;
+	public void setWarehouseId(Long warehouseId) {
+		this.warehouseId = warehouseId;
 	}
 
-	public Long getShelfId() {
-		return shelfId;
+	public Long getUserIdOfOperator() {
+		return userIdOfOperator;
 	}
 
-	public void setShelfId(Long shelfId) {
-		this.shelfId = shelfId;
+	public void setUserIdOfOperator(Long userIdOfOperator) {
+		this.userIdOfOperator = userIdOfOperator;
 	}
 
-	public Long getUserId() {
-		return userId;
+	public Long getUserIdOfCustomer() {
+		return userIdOfCustomer;
 	}
 
-	public String getInWarehouseRecordId() {
+	public void setUserIdOfCustomer(Long userIdOfCustomer) {
+		this.userIdOfCustomer = userIdOfCustomer;
+	}
+
+	public Long getInWarehouseRecordId() {
 		return inWarehouseRecordId;
 	}
 
-	public void setInWarehouseRecordId(String inWarehouseRecordId) {
+	public void setInWarehouseRecordId(Long inWarehouseRecordId) {
 		this.inWarehouseRecordId = inWarehouseRecordId;
-	}
-
-	public void setUserId(Long userId) {
-		this.userId = userId;
 	}
 
 	public String getBatchNo() {
@@ -120,27 +117,19 @@ public class OnShelf implements Serializable {
 		this.batchNo = batchNo;
 	}
 
-	public Long getCreatedTime() {
-		return createdTime;
+	public String getSeatCode() {
+		return seatCode;
 	}
 
-	public void setCreatedTime(Long createdTime) {
-		this.createdTime = createdTime;
+	public void setSeatCode(String seatCode) {
+		this.seatCode = seatCode;
 	}
 
-	public String getRemark() {
-		return remark;
-	}
-
-	public void setRemark(String remark) {
-		this.remark = remark;
-	}
-
-	public int getQuantity() {
+	public Integer getQuantity() {
 		return quantity;
 	}
 
-	public void setQuantity(int quantity) {
+	public void setQuantity(Integer quantity) {
 		this.quantity = quantity;
 	}
 
@@ -151,4 +140,13 @@ public class OnShelf implements Serializable {
 	public void setSku(String sku) {
 		this.sku = sku;
 	}
+
+	public Long getCreatedTime() {
+		return createdTime;
+	}
+
+	public void setCreatedTime(Long createdTime) {
+		this.createdTime = createdTime;
+	}
+
 }

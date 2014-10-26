@@ -185,9 +185,28 @@
 	  			return false;
 	  		}
 	  		
-	  		
-	  		
+	  		$.post(baseUrl+ '/warehouse/shelves/saveOnShelvesItem.do?itemSku='
+	  				+ itemSku+'&itemQuantity='+itemQuantity+'&seatCode='+seatCode+"&inWarehouseRecordId="+inWarehouseRecordId, function(msg) {
+	  			if(msg.status == 0){
+	  				//保存失败,显示提示
+	  				parent.$.showShortMessage({msg:msg.message,animate:true,left:"45%"});
+	  				// 光标移至产品SKU
+	  				$("#itemSku").focus();
+	  				focus = "2";
+	  				return;
+	  			}
+	  			
+	  			if(msg.status == 1){
+	  				parent.$.showShortMessage({msg:"保存上架记录成功.",animate:true,left:"45%"});
+	  				// 光标移至产品SKU
+	  				$("#itemSku").focus();
+	  				$("#itemSku").select();
+	  				focus = "2";
+	  				return;
+	  			}
+	  		},"json");
   	  }
+	   
     </script>	
 </body>
 </html>
