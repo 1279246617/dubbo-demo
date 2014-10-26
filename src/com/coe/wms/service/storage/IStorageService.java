@@ -46,7 +46,8 @@ public interface IStorageService {
 	 * @param page
 	 * @return
 	 */
-	public Map<String, String> saveInWarehouseRecordItem(String itemSku, Integer itemQuantity, String itemRemark, Long warehouseId,Long inWarehouseRecordId, Long userIdOfOperator);
+	public Map<String, String> saveInWarehouseRecordItem(String itemSku, Integer itemQuantity, String itemRemark, Long warehouseId,
+			Long inWarehouseRecordId, Long userIdOfOperator);
 
 	/**
 	 * 获取入库记录物品
@@ -74,6 +75,14 @@ public interface IStorageService {
 	 * @return
 	 */
 	public List<Map<String, String>> checkInWarehouseOrder(InWarehouseOrder inWarehouseOrder);
+
+	/**
+	 * 上架时 输入跟踪号 后查询入库记录
+	 * 
+	 * @param inWarehouseOrder
+	 * @return
+	 */
+	public List<Map<String, String>> checkInWarehouseRecord(InWarehouseRecord inWarehouseRecord);
 
 	/**
 	 * 获取入库订单

@@ -28,7 +28,7 @@ public class LogisticsOrder implements Serializable {
 	private String mailNo;
 
 	/**
-	 * Sku入库唯一ID 等于客户参考号
+	 * Sku入库唯一ID 等于客户订单号
 	 */
 	private String skuStockInId;
 

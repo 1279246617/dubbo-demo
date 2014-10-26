@@ -265,7 +265,7 @@ public class StorageTaskImpl implements IStorageTask {
 			logisticsEvent.setEventHeader(eventHeader);
 			// 事件body
 			EventBody eventBody = new EventBody();
-			// 客户参考号(顺丰交易id)
+			// 客户订单号(顺丰交易id)
 			TradeDetail tradeDetail = new TradeDetail();
 			List<TradeOrder> tradeOrders = new ArrayList<TradeOrder>();
 			TradeOrder tradeOrder = new TradeOrder();
@@ -368,7 +368,7 @@ public class StorageTaskImpl implements IStorageTask {
 			logisticsEvent.setEventHeader(eventHeader);
 			// 事件body
 			EventBody eventBody = new EventBody();
-			// 客户参考号(顺丰交易id)
+			// 客户订单号(顺丰交易id)
 			TradeDetail tradeDetail = new TradeDetail();
 			List<TradeOrder> tradeOrders = new ArrayList<TradeOrder>();
 			TradeOrder tradeOrder = new TradeOrder();

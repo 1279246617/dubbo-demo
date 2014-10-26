@@ -65,7 +65,7 @@
                		</span>
                		
 					<span class="pull-left" style="width:175px;">
-						客户参考号
+						客户订单号
 						<input type="text"  name="customerReferenceNo"  id="customerReferenceNo"   style="width:105px;"/>
 					</span>
                		
@@ -140,7 +140,7 @@
 	    	 grid = $("#maingrid").ligerGrid({
 	                columns: [
 	                    { display: '客户帐号', name: 'userNameOfCustomer', align: 'center',type:'float',width:'9%'},
-	  		          	{ display: '客户参考号', name: 'customerReferenceNo', align: 'center', type: 'float',width:'14%'},
+	  		          	{ display: '客户订单号', name: 'customerReferenceNo', align: 'center', type: 'float',width:'14%'},
 		                { display: '仓库', name: 'warehouse', align: 'center', type: 'float',width:'8%'},
 		              	{ display: 'SKU预览', isSort: false, align: 'center', type: 'float',width:'20%',render: function(row) {
 		            		var skus = "";
