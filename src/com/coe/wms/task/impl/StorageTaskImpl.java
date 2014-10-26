@@ -440,46 +440,4 @@ public class StorageTaskImpl implements IStorageTask {
 			}
 		}
 	}
-
-	/**
-	 * 定时更新入库订单状态 部分入库,全未入库,入库完成
-	 */
-	@Scheduled(cron = "0 0/60 8-23 * * ? ")
-	@Override
-	public void updateInWarehouseOrderStatus() {
-		List<Long> orderIdList = inWarehouseOrderDao.findUnCompleteInWarehouseOrderId();
-		logger.info("找到待更新状态的入库订单,订单总数:" + orderIdList.size());
-		for (int i = 0; i < orderIdList.size(); i++) {
-			Long inWarehouseOrderId = orderIdList.get(i);
-			// 查出入库订单的物品明细
-			InWarehouseOrderItem itemParam = new InWarehouseOrderItem();
-			itemParam.setOrderId(inWarehouseOrderId);
-			List<InWarehouseOrderItem> itemList = inWarehouseOrderItemDao.findInWarehouseOrderItem(itemParam, null, null);
-			String status = InWarehouseOrderStatusCode.NONE;
-			// 查看入库订单每个sku ,收货数量
-			boolean isComplete = true;
-			for (InWarehouseOrderItem item : itemList) {
-				String sku = item.getSku();
-				int skuQuantity = item.getQuantity();
-				int receivedQuantity = inWarehouseRecordItemDao.countInWarehouseItemSkuQuantityByOrderId(inWarehouseOrderId, sku);
-				if (receivedQuantity >= skuQuantity && isComplete) {
-					status = InWarehouseOrderStatusCode.COMPLETE;
-				} else {
-					isComplete = false;
-					// 只要任何一个sku 不是全部收货, 后续的sku就只需区分,部分收货和全未收货
-					if (receivedQuantity > 0) {
-						status = InWarehouseOrderStatusCode.PART;
-						// 如果已经有收货,也无需再区分部分收货和全未收货
-						break;
-					}
-				}
-			}
-			int updateCount = inWarehouseOrderDao.updateInWarehouseOrderStatus(inWarehouseOrderId, status);
-			if (updateCount > 0) {
-				logger.info("更新入库订单状态成功:orderId:" + inWarehouseOrderId + ",status:" + status);
-			} else {
-				logger.info("更新入库订单状态失败:orderId:" + inWarehouseOrderId + ",status:" + status);
-			}
-		}
-	}
 }
