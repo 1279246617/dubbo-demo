@@ -45,6 +45,7 @@ import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus.OutWarehouseOrderStatusCode;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecord;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecordItem;
+import com.coe.wms.model.warehouse.storage.record.InWarehouseRecordStatus;
 import com.coe.wms.model.warehouse.storage.record.OnShelf;
 import com.coe.wms.pojo.api.warehouse.ClearanceDetail;
 import com.coe.wms.pojo.api.warehouse.ErrorCode;
@@ -1264,7 +1265,14 @@ public class StorageServiceImpl implements IStorageService {
 
 			map.put("trackingNo", record.getTrackingNo());
 			map.put("batchNo", record.getBatchNo());
-
+			String status = "";
+			if (record.getStatus() != null) {
+				InWarehouseRecordStatus inWarehouseRecordStatus = inWarehouseRecordStatusDao.findInWarehouseRecordStatusByCode(record.getStatus());
+				if (inWarehouseRecordStatus != null) {
+					status =  inWarehouseRecordStatus.getCn();
+				}
+			}
+			map.put("status",status);
 			String time = DateUtil.dateConvertString(new Date(record.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss);
 			map.put("createdTime", time);
 			mapList.add(map);
@@ -1310,11 +1318,54 @@ public class StorageServiceImpl implements IStorageService {
 		onShelf.setQuantity(itemQuantity);
 		onShelf.setSeatCode(seatCode);
 		onShelf.setSku(itemSku);
+		onShelf.setTrackingNo(inWarehouseRecord.getTrackingNo());
 		onShelf.setUserIdOfCustomer(inWarehouseRecord.getUserIdOfCustomer());
 		onShelf.setUserIdOfOperator(userIdOfOperator);
 		onShelf.setWarehouseId(inWarehouseRecord.getWarehouseId());
 		Long id = onShelfDao.saveOnShelf(onShelf);
 		map.put(Constant.STATUS, Constant.SUCCESS);
 		return map;
+	}
+
+	/**
+	 * 获取上架订单数据
+	 */
+	@Override
+	public Pagination getOnShelvesData(OnShelf onShelf, Map<String, String> moreParam, Pagination page) {
+		List<OnShelf> onShelfList = onShelfDao.findOnShelf(onShelf, moreParam, page);
+		List<Object> list = new ArrayList<Object>();
+		for (OnShelf onShelfTemp : onShelfList) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("id", onShelfTemp.getId());
+			if (onShelfTemp.getCreatedTime() != null) {
+				map.put("createdTime", DateUtil.dateConvertString(new Date(onShelfTemp.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss));
+			}
+			// 查询用户名
+			User user = userDao.getUserById(onShelfTemp.getUserIdOfCustomer());
+			map.put("userLoginNameOfCustomer", user.getLoginName());
+
+			if (onShelfTemp.getWarehouseId() != null) {
+				Warehouse warehouse = warehouseDao.getWarehouseById(onShelfTemp.getWarehouseId());
+				if (warehouse != null) {
+					map.put("warehouse", warehouse.getWarehouseName());
+				}
+			}
+			map.put("trackingNo", onShelfTemp.getTrackingNo());
+			map.put("batchNo", onShelfTemp.getBatchNo());
+			map.put("seatCode", onShelfTemp.getSeatCode());
+			map.put("sku", onShelfTemp.getSku());
+			map.put("quantity", onShelfTemp.getQuantity());
+			map.put("inWarehouseRecordId", onShelfTemp.getInWarehouseRecordId());
+			int receivedQuantity = inWarehouseRecordItemDao.countInWarehouseItemSkuQuantityByRecordId(onShelfTemp.getInWarehouseRecordId(),
+					onShelfTemp.getSku());
+			map.put("receivedQuantity", receivedQuantity);
+			// 查询用户名
+			User userOfOperator = userDao.getUserById(onShelfTemp.getUserIdOfOperator());
+			map.put("userLoginNameOfOperator", userOfOperator.getLoginName());
+			list.add(map);
+		}
+		page.total = onShelfDao.countOnShelf(onShelf, moreParam);
+		page.rows = list;
+		return page;
 	}
 }

@@ -51,6 +51,7 @@
 					<th style="width:205px;text-align:center;">批次号</th>
 					<th style="width:205px;text-align:center;">收货操作员</th> 
 					<th style="width:205px;text-align:center;">收货时间</th>
+					<th style="width:205px;text-align:center;">上架状态</th>
 				</tr>
 				<tbody id="inWarehouseRecordtbody">
 				</tbody>
@@ -148,6 +149,7 @@
    				tr+="<td style='width:205px;text-align:center;'>"+n.batchNo+"</td>";
    				tr+="<td style='width:205px;text-align:center;'>"+n.userLoginNameOfOperator+"</td>";
    				tr+="<td style='width:205px;text-align:center;'>"+n.createdTime+"</td>";
+   				tr+="<td style='width:205px;text-align:center;'>"+n.status+"</td>";
    				tr+="</tr>";
    				$("#inWarehouseRecordtbody").append(tr);
    			});
