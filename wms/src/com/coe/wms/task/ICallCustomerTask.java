@@ -1,6 +1,6 @@
 package com.coe.wms.task;
 
-public interface IStorageTask {
+public interface ICallCustomerTask {
 
 	/**
 	 * 发送入库仓配信息给客户

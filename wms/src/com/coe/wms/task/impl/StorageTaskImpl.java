@@ -46,7 +46,7 @@ import com.coe.wms.pojo.api.warehouse.Sku;
 import com.coe.wms.pojo.api.warehouse.SkuDetail;
 import com.coe.wms.pojo.api.warehouse.TradeDetail;
 import com.coe.wms.pojo.api.warehouse.TradeOrder;
-import com.coe.wms.task.IStorageTask;
+import com.coe.wms.task.ICallCustomerTask;
 import com.coe.wms.util.Constant;
 import com.coe.wms.util.DateUtil;
 import com.coe.wms.util.HttpUtil;
@@ -54,7 +54,7 @@ import com.coe.wms.util.StringUtil;
 import com.coe.wms.util.XmlUtil;
 
 @Component
-public class StorageTaskImpl implements IStorageTask {
+public class StorageTaskImpl implements ICallCustomerTask {
 
 	private static final Logger logger = Logger.getLogger(StorageTaskImpl.class);
 
