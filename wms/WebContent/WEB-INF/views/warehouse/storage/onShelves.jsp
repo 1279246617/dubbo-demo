@@ -186,7 +186,7 @@
 	  		}
 	  		
 	  		$.post(baseUrl+ '/warehouse/shelves/saveOnShelvesItem.do?itemSku='
-	  				+ itemSku+'&itemQuantity='+itemQuantity+'&seatCode='+seatCode+"&inWarehouseRecordId="+inWarehouseRecordId, function(msg) {
+	  				+ itemSku+'&itemQuantity='+itemQuantity+'&seatCode='+seatCode+"&inWarehouseRecordId="+recordId, function(msg) {
 	  			if(msg.status == 0){
 	  				//保存失败,显示提示
 	  				parent.$.showShortMessage({msg:msg.message,animate:true,left:"45%"});
