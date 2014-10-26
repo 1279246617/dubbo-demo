@@ -50,6 +50,12 @@ public class InWarehouseRecord implements Serializable {
 	 */
 	private String batchNo;
 
+
+	/**
+	 * 状态
+	 */
+	private String status;
+	
 	/**
 	 * 大包到货时,贴的运单号
 	 * 
@@ -106,6 +112,14 @@ public class InWarehouseRecord implements Serializable {
 
 	public void setWarehouseId(Long warehouseId) {
 		this.warehouseId = warehouseId;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 	public Long getUserIdOfOperator() {
