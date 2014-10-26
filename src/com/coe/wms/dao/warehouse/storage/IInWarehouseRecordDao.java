@@ -23,4 +23,6 @@ public interface IInWarehouseRecordDao {
 	public List<Long> findCallbackUnSuccessRecordId();
 
 	public Long getInWarehouseOrderIdByRecordId(Long InWarehouseRecordId);
+
+	public List<Long> findUnCompleteInWarehouseRecordId();
 }

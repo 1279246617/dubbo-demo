@@ -21,7 +21,9 @@ import org.springframework.stereotype.Repository;
 import com.coe.wms.dao.datasource.DataSource;
 import com.coe.wms.dao.datasource.DataSourceCode;
 import com.coe.wms.dao.warehouse.storage.IInWarehouseRecordDao;
+import com.coe.wms.model.warehouse.storage.order.InWarehouseOrderStatus.InWarehouseOrderStatusCode;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecord;
+import com.coe.wms.model.warehouse.storage.record.InWarehouseRecordStatus.InWarehouseRecordStatusCode;
 import com.coe.wms.util.DateUtil;
 import com.coe.wms.util.Pagination;
 import com.coe.wms.util.StringUtil;
@@ -239,5 +241,12 @@ public class InWarehouseRecordDaoImpl implements IInWarehouseRecordDao {
 		String sql = "update w_s_in_warehouse_record set status='" + InWarehouseRecord.getStatus() + "' where id="
 				+ InWarehouseRecord.getId();
 		return jdbcTemplate.update(sql);
+	}
+
+	@Override
+	public List<Long> findUnCompleteInWarehouseRecordId() {
+		String sql = "select id from w_s_in_warehouse_record where status is null or status !='" + InWarehouseRecordStatusCode.COMPLETE+ "'";
+		List<Long> orderIdList = jdbcTemplate.queryForList(sql, Long.class);
+		return orderIdList;
 	}
 }

@@ -27,8 +27,6 @@ import com.coe.wms.model.unit.Weight;
 import com.coe.wms.model.user.User;
 import com.coe.wms.model.warehouse.Warehouse;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
-import com.coe.wms.model.warehouse.storage.order.InWarehouseOrderItem;
-import com.coe.wms.model.warehouse.storage.order.InWarehouseOrderStatus.InWarehouseOrderStatusCode;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrder;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus.OutWarehouseOrderStatusCode;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecord;
@@ -54,9 +52,9 @@ import com.coe.wms.util.StringUtil;
 import com.coe.wms.util.XmlUtil;
 
 @Component
-public class StorageTaskImpl implements ICallCustomerTask {
+public class CallCustomerTaskImpl implements ICallCustomerTask {
 
-	private static final Logger logger = Logger.getLogger(StorageTaskImpl.class);
+	private static final Logger logger = Logger.getLogger(CallCustomerTaskImpl.class);
 
 	@Resource(name = "warehouseDao")
 	private IWarehouseDao warehouseDao;
