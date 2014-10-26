@@ -50,6 +50,16 @@ public interface IStorageService {
 			Long inWarehouseRecordId, Long userIdOfOperator);
 
 	/**
+	 * 保存上架
+	 * 
+	 * @param inWarehouseOrder
+	 * @param moreParam
+	 * @param page
+	 * @return
+	 */
+	public Map<String, String> saveOnShelvesItem(String itemSku, Integer itemQuantity, String seatCode, Long inWarehouseRecordId,Long userIdOfOperator);
+
+	/**
 	 * 获取入库记录物品
 	 * 
 	 * @param inWarehouseRecordId

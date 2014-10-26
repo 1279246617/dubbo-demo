@@ -19,7 +19,9 @@ public interface IInWarehouseRecordItemDao {
 
 	public Long countInWarehouseRecordItem(InWarehouseRecordItem inWarehouseRecordItem, Map<String, String> moreParam);
 
-	public int countInWarehouseSkuQuantity(Long inWarehouseOrderId, String sku);
+	public int countInWarehouseItemSkuQuantityByRecordId(Long inWarehouseRecordId, String sku);
+
+	public int countInWarehouseItemSkuQuantityByOrderId(Long inWarehouseOrderId, String sku);
 
 	public int updateInWarehouseRecordItemReceivedQuantity(Long recordItemId, int newQuantity);
 }

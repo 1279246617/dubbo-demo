@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
@@ -19,6 +20,8 @@ import com.coe.wms.service.storage.IStorageService;
 import com.coe.wms.service.user.IUserService;
 import com.coe.wms.util.Constant;
 import com.coe.wms.util.GsonUtil;
+import com.coe.wms.util.SessionConstant;
+import com.coe.wms.util.StringUtil;
 
 @Controller("shelves")
 @RequestMapping("/warehouse/shelves")
@@ -58,6 +61,24 @@ public class Shelves {
 			// 找到多个入库订单,返回跟踪号,承运商,参考号,客户等信息供操作员选择
 			map.put(Constant.MESSAGE, "该单号找到超过一个入库收货记录,请选择其中一个.");
 			map.put(Constant.STATUS, "2");
+			return GsonUtil.toJson(map);
+		}
+		map.put(Constant.STATUS, Constant.SUCCESS);
+		return GsonUtil.toJson(map);
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/saveOnShelvesItem", method = RequestMethod.POST)
+	public String saveOnShelvesItem(HttpServletRequest request, String itemSku, Integer itemQuantity, String seatCode, Long inWarehouseRecordId) throws IOException {
+		// 操作员
+		Long userIdOfOperator = (Long) request.getSession().getAttribute(SessionConstant.USER_ID);
+		Map<String, String> map = new HashMap<String, String>();
+		map.put(Constant.STATUS, Constant.FAIL);
+		// 校验和保存
+		Map<String, String> serviceResult = storageService.saveOnShelvesItem(itemSku, itemQuantity, seatCode,inWarehouseRecordId, userIdOfOperator);
+		// 失败
+		if (!StringUtil.isEqual(serviceResult.get(Constant.STATUS), Constant.SUCCESS)) {
+			map.put(Constant.MESSAGE, serviceResult.get(Constant.MESSAGE));
 			return GsonUtil.toJson(map);
 		}
 		map.put(Constant.STATUS, Constant.SUCCESS);
