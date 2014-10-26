@@ -18,6 +18,7 @@ import com.coe.wms.dao.warehouse.storage.IInWarehouseOrderItemDao;
 import com.coe.wms.dao.warehouse.storage.IInWarehouseOrderStatusDao;
 import com.coe.wms.dao.warehouse.storage.IInWarehouseRecordDao;
 import com.coe.wms.dao.warehouse.storage.IInWarehouseRecordItemDao;
+import com.coe.wms.dao.warehouse.storage.IInWarehouseRecordStatusDao;
 import com.coe.wms.dao.warehouse.storage.IItemInventoryDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderAdditionalSfDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderDao;
@@ -86,7 +87,10 @@ public class StorageServiceImpl implements IStorageService {
 
 	@Resource(name = "inWarehouseOrderStatusDao")
 	private IInWarehouseOrderStatusDao inWarehouseOrderStatusDao;
-
+	
+	@Resource(name = "inWarehouseRecordStatusDao")
+	private IInWarehouseRecordStatusDao inWarehouseRecordStatusDao;
+	
 	@Resource(name = "inWarehouseOrderItemDao")
 	private IInWarehouseOrderItemDao inWarehouseOrderItemDao;
 

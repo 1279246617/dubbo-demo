@@ -171,19 +171,20 @@
 	  		}
 	  		var itemSku = $("#itemSku").val();
 	  		if(itemSku == null || itemSku ==''){
-	  			parent.$.showShortMessage({msg:"请输入产品SKU",animate:true,left:"40%"});
+	  			parent.$.showShortMessage({msg:"请输入产品SKU",animate:true,left:"43%"});
 	  			return false;
 	  		}
 	  		var itemQuantity = $("#itemQuantity").val();
 	  		if(itemQuantity == null || itemQuantity ==''){
-	  			parent.$.showShortMessage({msg:"请输入产品数量",animate:true,left:"40%"});
+	  			parent.$.showShortMessage({msg:"请输入产品数量",animate:true,left:"43%"});
 	  			return false;
 	  		}
 	  		var seatCode = $("#seatCode").val();
 	  		if(seatCode == null || seatCode ==''){
-	  			parent.$.showShortMessage({msg:"请输入库位",animate:true,left:"40%"});
+	  			parent.$.showShortMessage({msg:"请输入库位",animate:true,left:"45%"});
 	  			return false;
 	  		}
+	  		
 	  		
 	  		
   	  }
