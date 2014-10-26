@@ -62,7 +62,7 @@
 					<th style="width:155px;text-align:center;">客户帐号</th>
 					<th style="width:225px;text-align:center;">跟踪单号</th> 
 					<th style="width:205px;text-align:center;">承运商</th>
-					<th style="width:205px;text-align:center;">客户参考号</th> 
+					<th style="width:205px;text-align:center;">客户订单号</th> 
 					<th style="width:205px;text-align:center;">创建时间</th>
 				</tr>
 				<tbody id="inWarehouseOrdertbody">

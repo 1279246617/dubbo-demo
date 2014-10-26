@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.coe.wms.controller.Application;
+import com.coe.wms.dao.user.impl.UserDaoImpl;
 import com.coe.wms.model.user.User;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrder;
@@ -180,7 +181,7 @@ public class Storage {
 
 		OutWarehouseOrder param = new OutWarehouseOrder();
 		param.setStatus(status);
-		// 客户参考号
+		// 客户订单号
 		param.setCustomerReferenceNo(customerReferenceNo);
 		// 客户帐号
 		if (StringUtil.isNotNull(userLoginName)) {
@@ -251,7 +252,7 @@ public class Storage {
 
 		OutWarehouseOrder param = new OutWarehouseOrder();
 		param.setStatus(OutWarehouseOrderStatusCode.WWC);
-		// 客户参考号
+		// 客户订单号
 		param.setCustomerReferenceNo(customerReferenceNo);
 		// 客户帐号
 		if (StringUtil.isNotNull(userLoginName)) {
@@ -304,7 +305,7 @@ public class Storage {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/checkFindInWarehouseOrder")
-	public String checkFindInWarehouseOrder(HttpServletRequest request, String trackingNo, String userLoginName) throws IOException {
+	public String checkFindInWarehouseOrder(HttpServletRequest request, String trackingNo) throws IOException {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put(Constant.STATUS, Constant.FAIL);
 		InWarehouseOrder param = new InWarehouseOrder();
@@ -605,7 +606,7 @@ public class Storage {
 
 	/**
 	 * 
-	 * 扫描捡货单上的清单号 (客户参考号) 进行复核重量和SKU数量
+	 * 扫描捡货单上的清单号 (客户订单号) 进行复核重量和SKU数量
 	 * 
 	 * @param request
 	 * @param response
@@ -664,7 +665,7 @@ public class Storage {
 	/**
 	 * 扫运单动作,确认出库
 	 * 
-	 * 目前采用扫描出货条码,可能重复, 待添加 当重复时,扫描客户参考号等
+	 * 目前采用扫描出货条码,可能重复, 待添加 当重复时,扫描客户订单号等
 	 * 
 	 * @param request
 	 * @param response
@@ -692,8 +693,12 @@ public class Storage {
 	@RequestMapping(value = "/onShelves", method = RequestMethod.GET)
 	public ModelAndView onShelves(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		ModelAndView view = new ModelAndView();
+		HttpSession session = request.getSession();
+		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
+		User user = userService.getUserById(userId);
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
 		view.setViewName("warehouse/storage/onShelves");
+		view.addObject("warehouseList", storageService.findAllWarehouse(user.getDefaultWarehouseId()));
 		return view;
 	}
 }

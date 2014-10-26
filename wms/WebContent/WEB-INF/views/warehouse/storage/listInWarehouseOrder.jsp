@@ -116,7 +116,7 @@
 	                    { display: '客户帐号', name: 'userNameOfCustomer', align: 'center',type:'float',width:'9%'},
 	                    { display: '承运商', name: 'carrierCode', align: 'center', type: 'float',width:'9%'},
 	  		          	{ display: '跟踪单号', name: 'trackingNo', align: 'center', type: 'float',width:'14%'},
-	  		          	{ display: '客户参考号', name: 'customerReferenceNo', align: 'center', type: 'float',width:'12%'},
+	  		          	{ display: '客户订单号', name: 'customerReferenceNo', align: 'center', type: 'float',width:'12%'},
 		                { display: '仓库', name: 'warehouse', align: 'center', type: 'float',width:'8%'},
 		                { display: '状态', name: 'status', align: 'center', type: 'float',width:'8%'},
 		            	{ display: 'SKU预览', isSort: false, align: 'center', type: 'float',width:'20%',render: function(row) {

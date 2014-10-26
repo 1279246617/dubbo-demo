@@ -49,7 +49,7 @@ public class InWarehouseOrder implements Serializable {
 	private String trackingNo;
 		
 	/**
-	 * 客户参考号 (跟踪号和客户参考号 同时重复时 不允许新建)
+	 * 客户订单号 (跟踪号和客户订单号 同时重复时 不允许新建)
 	 */
 	private String customerReferenceNo;
 	/**
