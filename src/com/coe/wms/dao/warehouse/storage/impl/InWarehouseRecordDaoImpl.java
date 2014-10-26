@@ -245,8 +245,15 @@ public class InWarehouseRecordDaoImpl implements IInWarehouseRecordDao {
 
 	@Override
 	public List<Long> findUnCompleteInWarehouseRecordId() {
-		String sql = "select id from w_s_in_warehouse_record where status is null or status !='" + InWarehouseRecordStatusCode.COMPLETE+ "'";
+		String sql = "select id from w_s_in_warehouse_record where status is null or status !='" + InWarehouseRecordStatusCode.COMPLETE
+				+ "'";
 		List<Long> orderIdList = jdbcTemplate.queryForList(sql, Long.class);
 		return orderIdList;
+	}
+
+	@Override
+	public int deleteInWarehouseRecordById(Long InWarehouseRecordId) {
+		String sql = "delete from w_s_in_warehouse_record where id=" + InWarehouseRecordId;
+		return jdbcTemplate.update(sql);
 	}
 }

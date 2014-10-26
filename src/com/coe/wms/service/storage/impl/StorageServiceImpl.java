@@ -46,6 +46,7 @@ import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus.OutWare
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecord;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecordItem;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecordStatus;
+import com.coe.wms.model.warehouse.storage.record.InWarehouseRecordStatus.InWarehouseRecordStatusCode;
 import com.coe.wms.model.warehouse.storage.record.OnShelf;
 import com.coe.wms.pojo.api.warehouse.ClearanceDetail;
 import com.coe.wms.pojo.api.warehouse.ErrorCode;
@@ -413,6 +414,7 @@ public class StorageServiceImpl implements IStorageService {
 		inWarehouseRecord.setInWarehouseOrderId(inWarehouseOrderId);
 		inWarehouseRecord.setRemark(remark);
 		inWarehouseRecord.setUserIdOfOperator(userIdOfOperator);
+		inWarehouseRecord.setStatus(InWarehouseRecordStatusCode.NONE);
 		// 创建批次号
 		String batchNo = InWarehouseRecord.generateBatchNo(null, null, Constant.SYMBOL_UNDERLINE, trackingNo, null, null);
 		inWarehouseRecord.setBatchNo(batchNo);
@@ -940,6 +942,16 @@ public class StorageServiceImpl implements IStorageService {
 			// 预报物品数量,根据跟踪单号找入库订单
 			Long orderItemsize = inWarehouseOrderDao.countInWarehouseOrderItemByInWarehouseOrderId(record.getInWarehouseOrderId());
 			map.put("quantity", orderItemsize);
+
+			String status = "";
+			if (record.getStatus() != null) {
+				InWarehouseRecordStatus inWarehouseRecordStatus = inWarehouseRecordStatusDao.findInWarehouseRecordStatusByCode(record
+						.getStatus());
+				if (inWarehouseRecordStatus != null) {
+					status = inWarehouseRecordStatus.getCn();
+				}
+			}
+			map.put("status", status);
 			list.add(map);
 		}
 		pagination.total = inWarehouseRecordDao.countInWarehouseRecord(inWarehouseRecord, moreParam);
@@ -1267,12 +1279,13 @@ public class StorageServiceImpl implements IStorageService {
 			map.put("batchNo", record.getBatchNo());
 			String status = "";
 			if (record.getStatus() != null) {
-				InWarehouseRecordStatus inWarehouseRecordStatus = inWarehouseRecordStatusDao.findInWarehouseRecordStatusByCode(record.getStatus());
+				InWarehouseRecordStatus inWarehouseRecordStatus = inWarehouseRecordStatusDao.findInWarehouseRecordStatusByCode(record
+						.getStatus());
 				if (inWarehouseRecordStatus != null) {
-					status =  inWarehouseRecordStatus.getCn();
+					status = inWarehouseRecordStatus.getCn();
 				}
 			}
-			map.put("status",status);
+			map.put("status", status);
 			String time = DateUtil.dateConvertString(new Date(record.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss);
 			map.put("createdTime", time);
 			mapList.add(map);
@@ -1308,6 +1321,10 @@ public class StorageServiceImpl implements IStorageService {
 		int countOnShelfSkuQuantity = onShelfDao.countOnShelfSkuQuantity(inWarehouseRecordId, itemSku);
 		if (countOnShelfSkuQuantity >= countInWarehouseItemSkuQuantityByRecordId) {
 			map.put(Constant.MESSAGE, "该产品SKU在此收货记录已经完全上架.");
+			return map;
+		}
+		if (itemQuantity > countInWarehouseItemSkuQuantityByRecordId) {
+			map.put(Constant.MESSAGE, "上架数量不能大于收货数量.");
 			return map;
 		}
 		// 保存新的上架记录

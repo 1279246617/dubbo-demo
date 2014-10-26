@@ -126,6 +126,7 @@
 			            		}
 			            		return skus;
 		  		          	}},
+		  		          	{ display: '上架状态', name: 'status', width:'12%'},
 			                { display: '入库备注', name: 'remark', width:'12%'},
 			                { display: '操作员', name: 'userLoginNameOfOperator',type:'float',width:'9%'},
 			                {display: '操作',isSort: false,width: '8%',render: function(row) {
