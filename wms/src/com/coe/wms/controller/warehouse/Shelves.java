@@ -21,10 +21,13 @@ import com.coe.wms.controller.Application;
 import com.coe.wms.model.user.User;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecord;
+import com.coe.wms.model.warehouse.storage.record.OnShelf;
 import com.coe.wms.service.storage.IStorageService;
 import com.coe.wms.service.user.IUserService;
 import com.coe.wms.util.Constant;
+import com.coe.wms.util.DateUtil;
 import com.coe.wms.util.GsonUtil;
+import com.coe.wms.util.Pagination;
 import com.coe.wms.util.SessionConstant;
 import com.coe.wms.util.StringUtil;
 
@@ -54,8 +57,30 @@ public class Shelves {
 		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
 		User user = userService.getUserById(userId);
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
-		view.setViewName("warehouse/storage/onShelves");
+		view.setViewName("warehouse/shelves/onShelves");
 		view.addObject("warehouseList", storageService.findAllWarehouse(user.getDefaultWarehouseId()));
+		return view;
+	}
+
+	/**
+	 * 上架 查询
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/listOnShelves", method = RequestMethod.GET)
+	public ModelAndView listOnShelves(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		HttpSession session = request.getSession();
+		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
+		ModelAndView view = new ModelAndView();
+		view.addObject("userId", userId);
+		User user = userService.getUserById(userId);
+		view.addObject("warehouseList", storageService.findAllWarehouse(user.getDefaultWarehouseId()));
+		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
+		view.addObject("sevenDaysAgoStart", DateUtil.getSevenDaysAgoStart());
+		view.setViewName("warehouse/shelves/listOnShelves");
 		return view;
 	}
 
@@ -111,4 +136,54 @@ public class Shelves {
 		map.put(Constant.STATUS, Constant.SUCCESS);
 		return GsonUtil.toJson(map);
 	}
+
+	/**
+	 * 获取上架数据
+	 * 
+	 * @param request
+	 * @param response
+	 * @param userLoginName
+	 *            客户登录名,仅当根据跟踪号无法找到订单时,要求输入
+	 * @return
+	 * @throws IOException
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/getOnShelvesData")
+	public String getOnShelvesData(HttpServletRequest request, String sortorder, String sortname, int page, int pagesize,
+			String userLoginName, Long warehouseId, String trackingNo, String batchNo, String createdTimeStart, String createdTimeEnd)
+			throws IOException {
+		if (StringUtil.isNotNull(createdTimeStart) && createdTimeStart.contains(",")) {
+			createdTimeStart = createdTimeStart.substring(createdTimeStart.lastIndexOf(",") + 1, createdTimeStart.length());
+		}
+
+		HttpSession session = request.getSession();
+		// 当前操作员
+		Long userIdOfOperator = (Long) session.getAttribute(SessionConstant.USER_ID);
+		Pagination pagination = new Pagination();
+		pagination.curPage = page;
+		pagination.pageSize = pagesize;
+		pagination.sortName = sortname;
+		pagination.sortOrder = sortorder;
+
+		OnShelf param = new OnShelf();
+		param.setWarehouseId(warehouseId);
+		param.setTrackingNo(trackingNo);
+		if (StringUtil.isNotNull(userLoginName)) {
+			Long userIdOfCustomer = userService.findUserIdByLoginName(userLoginName);
+			param.setUserIdOfCustomer(userIdOfCustomer);
+		}
+		param.setWarehouseId(warehouseId);
+		param.setBatchNo(batchNo);
+		// 更多参数
+		Map<String, String> moreParam = new HashMap<String, String>();
+		moreParam.put("createdTimeStart", createdTimeStart);
+		moreParam.put("createdTimeEnd", createdTimeEnd);
+
+		pagination = storageService.getOnShelvesData(param, moreParam, pagination);
+		Map map = new HashMap();
+		map.put("Rows", pagination.rows);
+		map.put("Total", pagination.total);
+		return GsonUtil.toJson(map);
+	}
+
 }

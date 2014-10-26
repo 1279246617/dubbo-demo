@@ -46,7 +46,7 @@ public class OnShelfDaoImpl implements IOnShelfDao {
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public long saveOnShelf(final OnShelf item) {
-		final String sql = "insert into w_s_on_shelf (warehouse_id,user_id_of_operator,user_id_of_customer,in_warehouse_record_id,batch_no,seat_code,quantity,sku,created_time) values (?,?,?,?,?,?,?,?,?)";
+		final String sql = "insert into w_s_on_shelf (warehouse_id,user_id_of_operator,user_id_of_customer,in_warehouse_record_id,batch_no,seat_code,quantity,sku,created_time,tracking_no) values (?,?,?,?,?,?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
@@ -60,6 +60,7 @@ public class OnShelfDaoImpl implements IOnShelfDao {
 				ps.setInt(7, item.getQuantity());
 				ps.setString(8, item.getSku());
 				ps.setLong(9, item.getCreatedTime());
+				ps.setString(10, item.getTrackingNo());
 				return ps;
 			}
 		}, keyHolder);
@@ -79,7 +80,7 @@ public class OnShelfDaoImpl implements IOnShelfDao {
 	@Override
 	public List<OnShelf> findOnShelf(OnShelf onShelf, Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select id,warehouse_id,user_id_of_operator,user_id_of_customer,in_warehouse_record_id,batch_no,seat_code,quantity,sku,created_time from w_s_on_shelf where 1=1 ");
+		sb.append("select id,warehouse_id,user_id_of_operator,user_id_of_customer,in_warehouse_record_id,batch_no,seat_code,quantity,sku,created_time,tracking_no from w_s_on_shelf where 1=1 ");
 		if (onShelf != null) {
 			if (onShelf.getId() != null) {
 				sb.append(" and id = " + onShelf.getId());
@@ -89,6 +90,9 @@ public class OnShelfDaoImpl implements IOnShelfDao {
 			}
 			if (StringUtil.isNotNull(onShelf.getBatchNo())) {
 				sb.append(" and batch_no = '" + onShelf.getBatchNo() + "' ");
+			}
+			if (StringUtil.isNotNull(onShelf.getTrackingNo())) {
+				sb.append(" and tracking_no = '" + onShelf.getTrackingNo() + "' ");
 			}
 			if (StringUtil.isNotNull(onShelf.getSeatCode())) {
 				sb.append(" and seat_code = '" + onShelf.getSeatCode() + "' ");
@@ -154,6 +158,9 @@ public class OnShelfDaoImpl implements IOnShelfDao {
 			if (StringUtil.isNotNull(onShelf.getBatchNo())) {
 				sb.append(" and batch_no = '" + onShelf.getBatchNo() + "' ");
 			}
+			if (StringUtil.isNotNull(onShelf.getTrackingNo())) {
+				sb.append(" and tracking_no = '" + onShelf.getTrackingNo() + "' ");
+			}
 			if (StringUtil.isNotNull(onShelf.getSeatCode())) {
 				sb.append(" and seat_code = '" + onShelf.getSeatCode() + "' ");
 			}
@@ -197,8 +204,11 @@ public class OnShelfDaoImpl implements IOnShelfDao {
 
 	@Override
 	public Integer countOnShelfSkuQuantity(Long inWarehouseRecordId, String sku) {
-		String sql = "select sum(quantity) from w_s_on_shelf where sku = '" + sku + "' and in_warehouse_record_" + inWarehouseRecordId;
+		String sql = "select sum(quantity) from w_s_on_shelf where sku = '" + sku + "' and in_warehouse_record_id = " + inWarehouseRecordId;
 		Long count = jdbcTemplate.queryForObject(sql, Long.class);
+		if (count == null) {
+			return 0;
+		}
 		return count.intValue();
 	}
 }

@@ -42,7 +42,7 @@ public class InWarehouseRecordDaoImpl implements IInWarehouseRecordDao {
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public long saveInWarehouseRecord(final InWarehouseRecord record) {
-		final String sql = "insert into w_s_in_warehouse_record (warehouse_id,user_id_of_customer,user_id_of_operator,batch_no,tracking_no,created_time,remark,callback_is_success,callback_count,in_warehouse_order_id) values (?,?,?,?,?,?,?,?,?,?)";
+		final String sql = "insert into w_s_in_warehouse_record (warehouse_id,user_id_of_customer,user_id_of_operator,batch_no,tracking_no,created_time,remark,callback_is_success,callback_count,in_warehouse_order_id,status) values (?,?,?,?,?,?,?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
@@ -57,6 +57,7 @@ public class InWarehouseRecordDaoImpl implements IInWarehouseRecordDao {
 				ps.setString(8, record.getCallbackIsSuccess());
 				ps.setInt(9, record.getCallbackCount() != null ? record.getCallbackCount() : 0);
 				ps.setLong(10, record.getInWarehouseOrderId());
+				ps.setString(11, record.getStatus());
 				return ps;
 			}
 		}, keyHolder);
@@ -66,7 +67,7 @@ public class InWarehouseRecordDaoImpl implements IInWarehouseRecordDao {
 
 	@Override
 	public InWarehouseRecord getInWarehouseRecordById(Long InWarehouseRecordId) {
-		String sql = "select id,warehouse_id,user_id_of_customer,user_id_of_operator,batch_no,tracking_no,created_time,remark,callback_is_success,callback_count,in_warehouse_order_id from w_s_in_warehouse_record where id= "
+		String sql = "select id,warehouse_id,user_id_of_customer,user_id_of_operator,batch_no,tracking_no,created_time,remark,callback_is_success,callback_count,in_warehouse_order_id,status from w_s_in_warehouse_record where id= "
 				+ InWarehouseRecordId;
 		InWarehouseRecord record = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<InWarehouseRecord>(InWarehouseRecord.class));
 		return record;
@@ -78,7 +79,7 @@ public class InWarehouseRecordDaoImpl implements IInWarehouseRecordDao {
 	@Override
 	public List<InWarehouseRecord> findInWarehouseRecord(InWarehouseRecord InWarehouseRecord, Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select id,warehouse_id,user_id_of_customer,user_id_of_operator,batch_no,tracking_no,created_time,remark,callback_is_success,callback_count,in_warehouse_order_id from w_s_in_warehouse_record where 1=1 ");
+		sb.append("select id,warehouse_id,user_id_of_customer,user_id_of_operator,batch_no,tracking_no,created_time,remark,callback_is_success,callback_count,in_warehouse_order_id,status from w_s_in_warehouse_record where 1=1 ");
 		if (InWarehouseRecord != null) {
 			if (StringUtil.isNotNull(InWarehouseRecord.getTrackingNo())) {
 				sb.append(" and tracking_no = '" + InWarehouseRecord.getTrackingNo() + "' ");
@@ -112,6 +113,9 @@ public class InWarehouseRecordDaoImpl implements IInWarehouseRecordDao {
 			}
 			if (InWarehouseRecord.getInWarehouseOrderId() != null) {
 				sb.append(" and in_warehouse_order_id = " + InWarehouseRecord.getInWarehouseOrderId());
+			}
+			if (StringUtil.isNotNull(InWarehouseRecord.getStatus())) {
+				sb.append(" and status = '" + InWarehouseRecord.getStatus() + "' ");
 			}
 		}
 		if (moreParam != null) {
@@ -181,6 +185,9 @@ public class InWarehouseRecordDaoImpl implements IInWarehouseRecordDao {
 			if (InWarehouseRecord.getInWarehouseOrderId() != null) {
 				sb.append(" and in_warehouse_order_id = " + InWarehouseRecord.getInWarehouseOrderId());
 			}
+			if (StringUtil.isNotNull(InWarehouseRecord.getStatus())) {
+				sb.append(" and status = '" + InWarehouseRecord.getStatus() + "' ");
+			}
 		}
 		if (moreParam != null) {
 			if (moreParam.get("createdTimeStart") != null) {
@@ -225,5 +232,12 @@ public class InWarehouseRecordDaoImpl implements IInWarehouseRecordDao {
 	public Long getInWarehouseOrderIdByRecordId(Long InWarehouseRecordId) {
 		String sql = "select in_warehouse_order_id from w_s_in_warehouse_record where id= " + InWarehouseRecordId;
 		return jdbcTemplate.queryForObject(sql, Long.class);
+	}
+
+	@Override
+	public int updateInWarehouseRecordStatus(InWarehouseRecord InWarehouseRecord) {
+		String sql = "update w_s_in_warehouse_record set status='" + InWarehouseRecord.getStatus() + "' where id="
+				+ InWarehouseRecord.getId();
+		return jdbcTemplate.update(sql);
 	}
 }

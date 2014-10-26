@@ -43,6 +43,16 @@ public class OnShelf implements Serializable {
 	 * 可空
 	 */
 	private String batchNo;
+	
+	private String trackingNo;
+	
+	public String getTrackingNo() {
+		return trackingNo;
+	}
+
+	public void setTrackingNo(String trackingNo) {
+		this.trackingNo = trackingNo;
+	}
 
 	/**
 	 * 货位
