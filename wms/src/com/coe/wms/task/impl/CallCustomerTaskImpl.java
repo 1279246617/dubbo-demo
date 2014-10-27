@@ -111,7 +111,7 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 	 */
 	// @Scheduled(cron = "0 0/1 8-23 * * ? ")
 	// 早上8点到下午6点,每分钟
-	@Scheduled(cron = "0 0/30 8-18 * * ? ")
+	@Scheduled(cron = "0 0/30 8-23 * * ? ")
 	// 早上8点到下午6点,每半小时一次
 	@Override
 	public void sendInWarehouseInfoToCustomer() {

@@ -21,6 +21,7 @@ import com.coe.wms.dao.warehouse.storage.IInWarehouseRecordItemDao;
 import com.coe.wms.dao.warehouse.storage.IInWarehouseRecordStatusDao;
 import com.coe.wms.dao.warehouse.storage.IItemInventoryDao;
 import com.coe.wms.dao.warehouse.storage.IOnShelfDao;
+import com.coe.wms.dao.warehouse.storage.IOnShelfStatusDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderAdditionalSfDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderItemDao;
@@ -48,6 +49,8 @@ import com.coe.wms.model.warehouse.storage.record.InWarehouseRecordItem;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecordStatus;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecordStatus.InWarehouseRecordStatusCode;
 import com.coe.wms.model.warehouse.storage.record.OnShelf;
+import com.coe.wms.model.warehouse.storage.record.OnShelfStatus;
+import com.coe.wms.model.warehouse.storage.record.OnShelfStatus.OnShelfStatusCode;
 import com.coe.wms.pojo.api.warehouse.ClearanceDetail;
 import com.coe.wms.pojo.api.warehouse.ErrorCode;
 import com.coe.wms.pojo.api.warehouse.EventBody;
@@ -127,6 +130,9 @@ public class StorageServiceImpl implements IStorageService {
 
 	@Resource(name = "itemInventoryDao")
 	private IItemInventoryDao itemInventoryDao;
+
+	@Resource(name = "onShelfStatusDao")
+	private IOnShelfStatusDao onShelfStatusDao;
 
 	@Resource(name = "outWarehouseOrderAdditionalSfDao")
 	private IOutWarehouseOrderAdditionalSfDao outWarehouseOrderAdditionalSfDao;
@@ -1338,6 +1344,7 @@ public class StorageServiceImpl implements IStorageService {
 		onShelf.setTrackingNo(inWarehouseRecord.getTrackingNo());
 		onShelf.setUserIdOfCustomer(inWarehouseRecord.getUserIdOfCustomer());
 		onShelf.setUserIdOfOperator(userIdOfOperator);
+		onShelf.setStatus(OnShelfStatusCode.NONE);
 		onShelf.setWarehouseId(inWarehouseRecord.getWarehouseId());
 		Long id = onShelfDao.saveOnShelf(onShelf);
 		map.put(Constant.STATUS, Constant.SUCCESS);
@@ -1372,6 +1379,7 @@ public class StorageServiceImpl implements IStorageService {
 			map.put("seatCode", onShelfTemp.getSeatCode());
 			map.put("sku", onShelfTemp.getSku());
 			map.put("quantity", onShelfTemp.getQuantity());
+			map.put("outQuantity", onShelfTemp.getOutQuantity());
 			map.put("inWarehouseRecordId", onShelfTemp.getInWarehouseRecordId());
 			int receivedQuantity = inWarehouseRecordItemDao.countInWarehouseItemSkuQuantityByRecordId(onShelfTemp.getInWarehouseRecordId(),
 					onShelfTemp.getSku());
@@ -1379,6 +1387,10 @@ public class StorageServiceImpl implements IStorageService {
 			// 查询用户名
 			User userOfOperator = userDao.getUserById(onShelfTemp.getUserIdOfOperator());
 			map.put("userLoginNameOfOperator", userOfOperator.getLoginName());
+			OnShelfStatus onShelfStatus = onShelfStatusDao.findOnShelfStatusByCode(onShelfTemp.getStatus());
+			if (onShelfStatus != null) {
+				map.put("status", onShelfStatus.getCn());
+			}
 			list.add(map);
 		}
 		page.total = onShelfDao.countOnShelf(onShelf, moreParam);

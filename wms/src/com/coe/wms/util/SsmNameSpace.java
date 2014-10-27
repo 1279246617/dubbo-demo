@@ -15,8 +15,10 @@ public class SsmNameSpace {
 	public static final String INDEX = "INDEX";
 
 	public static final String IN_WAREHOUSE_ORDER_STATUS = "IN_WAREHOUSE_ORDER_STATUS";
-	
+
 	public static final String IN_WAREHOUSE_RECORD_STATUS = "IN_WAREHOUSE_RECORD_STATUS";
 
 	public static final String OUT_WAREHOUSE_ORDER_STATUS = "OUT_WAREHOUSE_ORDER_STATUS";
+
+	public static final String ON_SHELF_STATUS = "ON_SHELF_STATUS";
 }

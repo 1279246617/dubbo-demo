@@ -86,7 +86,7 @@
 									<td style="width:60mm;">${item.skuName }</td>
 									
 									<td style="width:25mm;"></td>
-									<td style="width:25mm;"></td>
+									<td style="width:25mm;">${item.seatCode}</td>
 									<td style="width:15mm;">${item.quantity }</td>
 									<td style="width:auto;">${item.skuUnitPrice}</td>
 								</tr>
