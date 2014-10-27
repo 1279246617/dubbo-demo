@@ -44,7 +44,7 @@ import com.coe.wms.util.Pagination;
  * @author Administrator
  * 
  */
-@Service("inventoryService")
+@Service("itemInventoryService")
 public class ItemInventoryServiceImpl implements IItemInventoryService {
 
 	private static final Logger logger = Logger.getLogger(ItemInventoryServiceImpl.class);
@@ -109,7 +109,7 @@ public class ItemInventoryServiceImpl implements IItemInventoryService {
 			}
 			// 查询用户名
 			User user = userDao.getUserById(itemInventory.getUserIdOfCustomer());
-			map.put("userNameOfCustomer", user.getLoginName());
+			map.put("userLoginNameOfCustomer", user.getLoginName());
 			map.put("batchNo", itemInventory.getBatchNo());
 			map.put("quantity", itemInventory.getQuantity());
 			map.put("availableQuantity", itemInventory.getAvailableQuantity());
