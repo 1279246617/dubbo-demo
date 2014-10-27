@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -39,8 +40,10 @@ public class ItemInventoryDaoImpl implements IItemInventoryDao {
 	}
 
 	@Override
-	public List<ItemInventory> findItemInventory(ItemInventory itemInventory, Pagination page) {
-		// TODO Auto-generated method stub
+	public List<ItemInventory> findItemInventory(ItemInventory itemInventory, Map<String, String> moreParam, Pagination page) {
+		
+		
+		
 		return null;
 	}
 
@@ -55,7 +58,7 @@ public class ItemInventoryDaoImpl implements IItemInventoryDao {
 			logger.info("已存在库存记录id:" + id);
 			// 更新已有库存记录
 			sql = "update w_s_item_inventory set quantity = quantity+" + addQuantity + " ,available_quantity = available_quantity+"
-					+ addQuantity +" ,last_update_time = "+System.currentTimeMillis()+ " where id = " + id;
+					+ addQuantity + " ,last_update_time = " + System.currentTimeMillis() + " where id = " + id;
 			return jdbcTemplate.update(sql);
 		}
 		// 插入新库存记录
@@ -77,5 +80,11 @@ public class ItemInventoryDaoImpl implements IItemInventoryDao {
 		Long id = keyHolder.getKey().longValue();
 		logger.info("新建库存记录id:" + id);
 		return 1;
+	}
+
+	@Override
+	public Long countItemInventory(ItemInventory itemInventory, Map<String, String> moreParam) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

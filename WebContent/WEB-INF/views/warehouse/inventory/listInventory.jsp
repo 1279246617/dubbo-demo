@@ -114,10 +114,10 @@
 	                columns: [
 							{ display: '客户帐号', name: 'userLoginNameOfCustomer',type:'float',width:'8%'},
 							{ display: '仓库', name: 'warehouse', type: 'float',width:'9%'},
-							{ display: '入库批次号', name: 'batch_no', type: 'int', width:'12%'},
+							{ display: '入库批次号', name: 'batchNo', type: 'int', width:'12%'},
 	  	                  	{ display: '产品SKU', name: 'sku',type:'float',width:'13%'},
-	  	                  	{ display: '实际库存数量', name: 'in_warehouse_order_id',type:'float',width:'8%'},
-	  	                  	{ display: '可用库存数量', name: 'in_warehouse_record_id',type:'float',width:'8%'},
+	  	                  	{ display: '实际库存数量', name: 'quantity',type:'float',width:'8%'},
+	  	                  	{ display: '可用库存数量', name: 'availableQuantity',type:'float',width:'8%'},
 			                { display: '最后更新时间', name: 'lastUpdateTime',type:'float',width:'9%'}
 		             ],   
 	                dataAction: 'server',

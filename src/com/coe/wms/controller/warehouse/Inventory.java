@@ -18,8 +18,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.coe.wms.controller.Application;
 import com.coe.wms.model.user.User;
-import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
 import com.coe.wms.model.warehouse.storage.record.ItemInventory;
+import com.coe.wms.service.inventory.IItemInventoryService;
 import com.coe.wms.service.storage.IStorageService;
 import com.coe.wms.service.user.IUserService;
 import com.coe.wms.util.GsonUtil;
@@ -35,6 +35,9 @@ public class Inventory {
 
 	@Resource(name = "storageService")
 	private IStorageService storageService;
+
+	@Resource(name = "itemInventoryService")
+	private IItemInventoryService itemInventoryService;
 
 	@Resource(name = "userService")
 	private IUserService userService;
@@ -91,14 +94,10 @@ public class Inventory {
 		Map<String, String> moreParam = new HashMap<String, String>();
 		moreParam.put("lastUpdateTimeStart", timeStart);
 		moreParam.put("lastUpdateTimeEnd", timeEnd);
-		
-		
-		
-		pagination = storageService.getInWarehouseOrderData(param, moreParam, pagination);
+		pagination = itemInventoryService.getListInventoryData(param, moreParam, pagination);
 		Map map = new HashMap();
 		map.put("Rows", pagination.rows);
 		map.put("Total", pagination.total);
 		return GsonUtil.toJson(map);
 	}
-
 }
