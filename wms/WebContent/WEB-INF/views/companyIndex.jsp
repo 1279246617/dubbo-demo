@@ -79,7 +79,7 @@
 		              		<!-- 入库主单查询 条件: 客户帐号,创建时间段,仓库,入库批次号 -->
 		              		<li><a href="#${baseUrl}/warehouse/storage/listInWarehouseRecord.do" tab_id="findInWarehouseOrderRecord"><i class="icon-zoom-in"></i><span class="hidden-tablet">入库收货记录</span></a></li>
 		              		<!-- 入库明细查询 条件: SKU, 数量, 主单号,批次号,客户帐号,时间,产品描述 -->
-		              		<li><a href=# tab_id="findInWarehouseItemRecord"><i class="icon-zoom-in"></i><span class="hidden-tablet">入库收货明细记录</span></a></li>
+		              		<li><a href="#${baseUrl}/warehouse/storage/listInWarehouseRecordItem.do"tab_id="findInWarehouseItemRecordItem"><i class="icon-zoom-in"></i><span class="hidden-tablet">入库收货明细记录</span></a></li>
 		              		
 		              		<li><a href="#${baseUrl}/warehouse/shelves/onShelves.do" tab_id="doOnShelves"><i class="icon-th"></i><span class="hidden-tablet">入库订单上架</span></a></li>
 		              		<li><a href="#${baseUrl}/warehouse/shelves/listOnShelves.do" tab_id="listOnShelves"><i class=icon-zoom-in></i><span class="hidden-tablet">入库订单上架记录</span></a></li>

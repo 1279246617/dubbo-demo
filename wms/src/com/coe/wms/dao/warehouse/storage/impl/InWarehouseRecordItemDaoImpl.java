@@ -255,4 +255,90 @@ public class InWarehouseRecordItemDaoImpl implements IInWarehouseRecordItemDao {
 		}
 		return count.intValue();
 	}
+
+	@Override
+	public List<Map<String, Object>> getInWarehouseRecordItemListData(Map<String, String> moreParam, Pagination pagination) {
+		String userIdOfCustomer = moreParam.get("userIdOfCustomer");
+		String trackingNo = moreParam.get("trackingNo");
+		String batchNo = moreParam.get("batchNo");
+		String sku = moreParam.get("sku");
+		String warehouseId = moreParam.get("warehouseId");
+		StringBuffer sb = new StringBuffer();
+		sb.append("select r.warehouse_id,r.in_warehouse_order_id,r.user_id_of_customer,r.batch_no,r.tracking_no,i.sku,i.quantity,i.remark,i.created_time,i.user_id_of_operator,i.in_warehouse_record_id from w_s_in_warehouse_record_item i inner join w_s_in_warehouse_record r on i.in_warehouse_record_id=r.id where 1=1 ");
+		if (StringUtil.isNotNull(userIdOfCustomer)) {
+			sb.append(" and r.user_id_of_customer = " + userIdOfCustomer);
+		}
+		if (StringUtil.isNotNull(trackingNo)) {
+			sb.append(" and r.tracking_no = '" + trackingNo + "'");
+		}
+		if (StringUtil.isNotNull(batchNo)) {
+			sb.append(" and r.batch_no = '" + batchNo + "'");
+		}
+		if (StringUtil.isNotNull(warehouseId)) {
+			sb.append(" and r.warehouse_id = " + warehouseId);
+		}
+		if (StringUtil.isNotNull(sku)) {
+			sb.append(" and i.sku = '" + sku + "'");
+		}
+		if (moreParam.get("createdTimeStart") != null) {
+			Date date = DateUtil.stringConvertDate(moreParam.get("createdTimeStart"), DateUtil.yyyy_MM_ddHHmmss);
+			if (date != null) {
+				sb.append(" and i.created_time >= " + date.getTime());
+			}
+		}
+		if (moreParam.get("createdTimeEnd") != null) {
+			Date date = DateUtil.stringConvertDate(moreParam.get("createdTimeEnd"), DateUtil.yyyy_MM_ddHHmmss);
+			if (date != null) {
+				sb.append(" and i.created_time <= " + date.getTime());
+			}
+		}
+		if (pagination != null) {
+			sb.append(pagination.generatePageSqlOnTable("i"));
+		}
+		List<Map<String, Object>> mapList = jdbcTemplate.queryForList(sb.toString());
+		return mapList;
+	}
+
+	@Override
+	public Long countInWarehouseRecordItemList(Map<String, String> moreParam) {
+		String userIdOfCustomer = moreParam.get("userIdOfCustomer");
+		String trackingNo = moreParam.get("trackingNo");
+		String batchNo = moreParam.get("batchNo");
+		String sku = moreParam.get("sku");
+		String warehouseId = moreParam.get("warehouseId");
+		StringBuffer sb = new StringBuffer();
+		sb.append("select count(1) from w_s_in_warehouse_record_item i inner join w_s_in_warehouse_record r on i.in_warehouse_record_id=r.id where 1=1 ");
+		if (StringUtil.isNotNull(userIdOfCustomer)) {
+			sb.append(" and r.user_id_of_customer = " + userIdOfCustomer);
+		}
+		if (StringUtil.isNotNull(trackingNo)) {
+			sb.append(" and r.tracking_no = '" + trackingNo + "'");
+		}
+		if (StringUtil.isNotNull(batchNo)) {
+			sb.append(" and r.batch_no = '" + batchNo + "'");
+		}
+		if (StringUtil.isNotNull(warehouseId)) {
+			sb.append(" and r.warehouse_id = " + warehouseId);
+		}
+		if (StringUtil.isNotNull(sku)) {
+			sb.append(" and i.sku = '" + sku + "'");
+		}
+		if (moreParam.get("createdTimeStart") != null) {
+			Date date = DateUtil.stringConvertDate(moreParam.get("createdTimeStart"), DateUtil.yyyy_MM_ddHHmmss);
+			if (date != null) {
+				sb.append(" and i.created_time >= " + date.getTime());
+			}
+		}
+		if (moreParam.get("createdTimeEnd") != null) {
+			Date date = DateUtil.stringConvertDate(moreParam.get("createdTimeEnd"), DateUtil.yyyy_MM_ddHHmmss);
+			if (date != null) {
+				sb.append(" and i.created_time <= " + date.getTime());
+			}
+		}
+		Long count = jdbcTemplate.queryForObject(sb.toString(), Long.class);
+		if (count == null) {
+			return 0l;
+		}
+		return count;
+	}
 }

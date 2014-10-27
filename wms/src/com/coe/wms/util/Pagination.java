@@ -54,6 +54,29 @@ public class Pagination {
 	 * 
 	 * @return
 	 */
+	public String generatePageSqlOnTable(String table) {
+		String sql = "";
+		if (StringUtil.isNotNull(this.sortName)) {
+			sql += " order by ";
+			sql += table + "." + this.sortName + " ";
+			if (StringUtil.isNotNull(this.sortOrder)) {
+				sql += this.sortOrder + " ";
+			}
+		}
+		if (curPage < 1) {
+			return sql;
+		}
+		// 起始数字
+		int start = (curPage - 1) * pageSize;
+		sql += " limit " + start + "," + pageSize;
+		return sql;
+	}
+
+	/**
+	 * 生成 分页sql
+	 * 
+	 * @return
+	 */
 	public String generatePageSql() {
 		String sql = "";
 		if (StringUtil.isNotNull(this.sortName)) {

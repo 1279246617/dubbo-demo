@@ -1385,4 +1385,29 @@ public class StorageServiceImpl implements IStorageService {
 		page.rows = list;
 		return page;
 	}
+
+	@Override
+	public Pagination getInWarehouseRecordItemListData(Map<String, String> moreParam, Pagination pagination) {
+		List<Map<String, Object>> recordItemList = inWarehouseRecordItemDao.getInWarehouseRecordItemListData(moreParam, pagination);
+		List<Object> list = new ArrayList<Object>();
+		for (Map<String, Object> recordItem : recordItemList) {
+			Long warehouseId = (Long) recordItem.get("warehouse_id");
+			Long userIdOfOperator = (Long) recordItem.get("user_id_of_operator");
+			Long userIdOfCustomer = (Long) recordItem.get("user_id_of_customer");
+			// 查询用户名
+			User userOfOperator = userDao.getUserById(Long.valueOf(userIdOfOperator));
+			recordItem.put("userLoginNameOfOperator", userOfOperator.getLoginName());
+			// 查询用户名
+			User userOfCustomer = userDao.getUserById(Long.valueOf(userIdOfCustomer));
+			recordItem.put("userLoginNameOfCustomer", userOfCustomer.getLoginName());
+			Warehouse warehouse = warehouseDao.getWarehouseById(Long.valueOf(warehouseId));
+			if (warehouse != null) {
+				recordItem.put("warehouse", warehouse.getWarehouseName());
+			}
+			list.add(recordItem);
+		}
+		pagination.total = inWarehouseRecordItemDao.countInWarehouseRecordItemList(moreParam);
+		pagination.rows = list;
+		return pagination;
+	}
 }

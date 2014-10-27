@@ -24,4 +24,8 @@ public interface IInWarehouseRecordItemDao {
 	public int countInWarehouseItemSkuQuantityByOrderId(Long inWarehouseOrderId, String sku);
 
 	public int updateInWarehouseRecordItemReceivedQuantity(Long recordItemId, int newQuantity);
+
+	public Long countInWarehouseRecordItemList(Map<String, String> moreParam);
+	
+	public List<Map<String, Object>> getInWarehouseRecordItemListData(Map<String, String> moreParam, Pagination pagination);
 }
