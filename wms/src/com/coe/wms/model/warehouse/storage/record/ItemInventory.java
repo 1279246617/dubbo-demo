@@ -20,7 +20,7 @@ public class ItemInventory implements Serializable {
 
 	private Long userIdOfCustomer;
 
-	private Long wareHouseId;
+	private Long warehouseId;
 
 	private String sku;
 
@@ -36,12 +36,12 @@ public class ItemInventory implements Serializable {
 	 */
 	private Integer availableQuantity;
 
+	private Long lastUpdateTime;
 	/**
 	 * 入库批次号 可以查到某批次还剩余多少货
 	 */
 	private String batchNo;
 
-	
 	public Long getUserIdOfCustomer() {
 		return userIdOfCustomer;
 	}
@@ -50,20 +50,20 @@ public class ItemInventory implements Serializable {
 		this.userIdOfCustomer = userIdOfCustomer;
 	}
 
-	public Long getWareHouseId() {
-		return wareHouseId;
-	}
-
-	public void setWareHouseId(Long wareHouseId) {
-		this.wareHouseId = wareHouseId;
-	}
-
 	public String getSku() {
 		return sku;
 	}
 
 	public void setSku(String sku) {
 		this.sku = sku;
+	}
+
+	public Long getLastUpdateTime() {
+		return lastUpdateTime;
+	}
+
+	public void setLastUpdateTime(Long lastUpdateTime) {
+		this.lastUpdateTime = lastUpdateTime;
 	}
 
 	public Integer getQuantity() {
@@ -88,5 +88,13 @@ public class ItemInventory implements Serializable {
 
 	public void setBatchNo(String batchNo) {
 		this.batchNo = batchNo;
+	}
+
+	public Long getWarehouseId() {
+		return warehouseId;
+	}
+
+	public void setWarehouseId(Long warehouseId) {
+		this.warehouseId = warehouseId;
 	}
 }
