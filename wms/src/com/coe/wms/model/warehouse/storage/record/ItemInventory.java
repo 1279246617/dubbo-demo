@@ -17,6 +17,7 @@ public class ItemInventory implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 7668477948339022691L;
+	private Long id;
 
 	private Long userIdOfCustomer;
 
@@ -68,6 +69,14 @@ public class ItemInventory implements Serializable {
 
 	public Integer getQuantity() {
 		return quantity;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public Integer getAvailableQuantity() {

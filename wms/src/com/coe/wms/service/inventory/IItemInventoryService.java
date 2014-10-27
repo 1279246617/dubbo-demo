@@ -1,5 +1,9 @@
 package com.coe.wms.service.inventory;
 
+import java.util.Map;
+
+import com.coe.wms.model.warehouse.storage.record.ItemInventory;
+import com.coe.wms.util.Pagination;
 
 /**
  * 
@@ -7,5 +11,13 @@ package com.coe.wms.service.inventory;
  * 
  */
 public interface IItemInventoryService {
-	
+
+	/**
+	 * 
+	 * @param itemInventory
+	 * @param moreParam
+	 * @param page
+	 * @return
+	 */
+	public Pagination getListInventoryData(ItemInventory itemInventory, Map<String, String> moreParam, Pagination page);
 }
