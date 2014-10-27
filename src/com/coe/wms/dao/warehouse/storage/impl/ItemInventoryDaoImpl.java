@@ -55,11 +55,11 @@ public class ItemInventoryDaoImpl implements IItemInventoryDao {
 			logger.info("已存在库存记录id:" + id);
 			// 更新已有库存记录
 			sql = "update w_s_item_inventory set quantity = quantity+" + addQuantity + " ,available_quantity = available_quantity+"
-					+ addQuantity + " where id = " + id;
+					+ addQuantity +" ,last_update_time = "+System.currentTimeMillis()+ " where id = " + id;
 			return jdbcTemplate.update(sql);
 		}
 		// 插入新库存记录
-		final String newSql = "insert into w_s_item_inventory (user_id_of_customer,warehouse_id,sku,batch_no,quantity,available_quantity) values (?,?,?,?,?,?)";
+		final String newSql = "insert into w_s_item_inventory (user_id_of_customer,warehouse_id,sku,batch_no,quantity,available_quantity,last_update_time) values (?,?,?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
@@ -70,6 +70,7 @@ public class ItemInventoryDaoImpl implements IItemInventoryDao {
 				ps.setString(4, batchNo);
 				ps.setLong(5, addQuantity);
 				ps.setLong(6, addQuantity);
+				ps.setLong(7, System.currentTimeMillis());
 				return ps;
 			}
 		}, keyHolder);
