@@ -138,7 +138,7 @@ public class ItemInventoryDaoImpl implements IItemInventoryDao {
 	@Override
 	public Long countItemInventory(ItemInventory itemInventory, Map<String, String> moreParam) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select id,user_id_of_customer,warehouse_id,quantity,sku,batch_no,available_quantity,last_update_time from w_s_item_inventory where 1=1 ");
+		sb.append("select count(1) from w_s_item_inventory where 1=1 ");
 		if (itemInventory != null) {
 			if (StringUtil.isNotNull(itemInventory.getSku())) {
 				sb.append(" and sku = '" + itemInventory.getSku() + "' ");

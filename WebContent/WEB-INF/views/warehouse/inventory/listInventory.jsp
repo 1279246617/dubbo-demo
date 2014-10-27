@@ -42,7 +42,7 @@
                			 <input type="text"   style="width:100px;" name="batchNo" title="可输入入库批次号">
                		</span>
                		
-               		<span class="pull-left" style="width:175px;">
+               		<span class="pull-left" style="width:200px;">
                			上次更新时间
 	               		<input type="text"   style="width:120px;" name="timeStart" id="timeStart">
                		</span>
@@ -112,13 +112,13 @@
 	     function initGrid() {
 	    	 grid = $("#maingrid").ligerGrid({
 	                columns: [
-							{ display: '客户帐号', name: 'userLoginNameOfCustomer',type:'float',width:'8%'},
-							{ display: '仓库', name: 'warehouse', type: 'float',width:'9%'},
-							{ display: '入库批次号', name: 'batchNo', type: 'int', width:'12%'},
-	  	                  	{ display: '产品SKU', name: 'sku',type:'float',width:'13%'},
-	  	                  	{ display: '实际库存数量', name: 'quantity',type:'float',width:'8%'},
-	  	                  	{ display: '可用库存数量', name: 'availableQuantity',type:'float',width:'8%'},
-			                { display: '最后更新时间', name: 'lastUpdateTime',type:'float',width:'9%'}
+							{ display: '客户帐号', name: 'userLoginNameOfCustomer',type:'float',width:'15%'},
+							{ display: '仓库', name: 'warehouse', type: 'float',width:'15%'},
+							{ display: '入库批次号', name: 'batchNo', type: 'int', width:'14%'},
+	  	                  	{ display: '产品SKU', name: 'sku',type:'float',width:'16%'},
+	  	                  	{ display: '实际库存数量', name: 'quantity',type:'float',width:'11%'},
+	  	                  	{ display: '可用库存数量', name: 'availableQuantity',type:'float',width:'11%'},
+			                { display: '最后更新时间', name: 'lastUpdateTime',type:'float',width:'16%'}
 		             ],   
 	                dataAction: 'server',
 	                url: baseUrl+'/warehouse/inventory/getListInventoryData.do',
