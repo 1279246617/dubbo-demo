@@ -25,8 +25,10 @@ public interface IOutWarehouseOrderDao {
 	public List<Long> findCallbackSendStatusUnSuccessOrderId();
 
 	public int updateOutWarehouseOrderCallbackSendWeight(OutWarehouseOrder outWarehouseOrder);
-	
+
+	public int updateOutWarehouseOrderIsPrinted(Long id, String isPrinted);
+
 	public int updateOutWarehouseOrderCallbackSendStatus(OutWarehouseOrder outWarehouseOrder);
-	
+
 	public int updateOutWarehouseOrderWeight(OutWarehouseOrder outWarehouseOrder);
 }

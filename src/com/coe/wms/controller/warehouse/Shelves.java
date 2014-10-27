@@ -186,4 +186,7 @@ public class Shelves {
 		return GsonUtil.toJson(map);
 	}
 
+	public void listSeat(){
+		
+	}
 }
