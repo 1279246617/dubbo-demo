@@ -1380,6 +1380,7 @@ public class StorageServiceImpl implements IStorageService {
 			map.put("sku", onShelfTemp.getSku());
 			map.put("quantity", onShelfTemp.getQuantity());
 			map.put("outQuantity", onShelfTemp.getOutQuantity());
+			map.put("preOutQuantity", onShelfTemp.getPreOutQuantity());
 			map.put("inWarehouseRecordId", onShelfTemp.getInWarehouseRecordId());
 			int receivedQuantity = inWarehouseRecordItemDao.countInWarehouseItemSkuQuantityByRecordId(onShelfTemp.getInWarehouseRecordId(),
 					onShelfTemp.getSku());
