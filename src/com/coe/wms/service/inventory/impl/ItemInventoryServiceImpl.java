@@ -109,6 +109,9 @@ public class ItemInventoryServiceImpl implements IItemInventoryService {
 				map.put("lastUpdateTime",
 						DateUtil.dateConvertString(new Date(itemInventory.getLastUpdateTime()), DateUtil.yyyy_MM_ddHHmmss));
 			}
+			if (itemInventory.getCreatedTime() != null) {
+				map.put("createdTime", DateUtil.dateConvertString(new Date(itemInventory.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss));
+			}
 			// 查询用户名
 			User user = userDao.getUserById(itemInventory.getUserIdOfCustomer());
 			map.put("userLoginNameOfCustomer", user.getLoginName());
@@ -140,10 +143,14 @@ public class ItemInventoryServiceImpl implements IItemInventoryService {
 				map.put("lastUpdateTime",
 						DateUtil.dateConvertString(new Date(itemInventory.getLastUpdateTime()), DateUtil.yyyy_MM_ddHHmmss));
 			}
+			if (itemInventory.getCreatedTime() != null) {
+				map.put("createdTime", DateUtil.dateConvertString(new Date(itemInventory.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss));
+			}
 			// 查询用户名
 			User user = userDao.getUserById(itemInventory.getUserIdOfCustomer());
 			map.put("userLoginNameOfCustomer", user.getLoginName());
 			map.put("seatCode", itemInventory.getSeatCode());
+			map.put("batchNo", itemInventory.getBatchNo());
 			map.put("quantity", itemInventory.getQuantity());
 			map.put("availableQuantity", itemInventory.getAvailableQuantity());
 			map.put("sku", itemInventory.getSku());

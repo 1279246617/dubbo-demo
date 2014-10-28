@@ -19,8 +19,14 @@ public interface IItemShelfInventoryDao {
 	 * @param page
 	 * @return
 	 */
-	public List<ItemShelfInventory> findItemShelfInventory(ItemShelfInventory itemShelfInventory, Map<String, String> moreParam,
-			Pagination page);
+	public List<ItemShelfInventory> findItemShelfInventory(ItemShelfInventory itemShelfInventory, Map<String, String> moreParam, Pagination page);
+
+	/**
+	 * 查找库位 库存用于打印捡货单 , 被查出的库位库存将减去可用库存
+	 * 
+	 * @return
+	 */
+	public List<ItemShelfInventory> findItemShelfInventoryForPreOutShelf(Long userIdOfCustomer, Long warehouseId, String sku);
 
 	public Long countItemShelfInventory(ItemShelfInventory itemShelfInventory, Map<String, String> moreParam);
 
@@ -36,5 +42,9 @@ public interface IItemShelfInventoryDao {
 	 * @param addQuantity
 	 * @return
 	 */
-	public int addItemShelfInventory(Long wareHouseId, Long userIdOfCustomer, String seatCode, String sku, Integer addQuantity);
+	public int addItemShelfInventory(Long wareHouseId, Long userIdOfCustomer, String seatCode, String sku, Integer addQuantity, String batchNo);
+	
+	public int updateItemShelfInventoryAvailableQuantity(Long id, Integer availableQuantity);
+
+	public int updateItemShelfInventoryQuantity(Long id, Integer quantity);
 }

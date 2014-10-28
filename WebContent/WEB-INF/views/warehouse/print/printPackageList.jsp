@@ -85,10 +85,10 @@
 									<td style="width:40mm;">${item.sku }</td>
 									<td style="width:60mm;">${item.skuName }</td>
 									
-									<td style="width:25mm;"></td>
-									<td style="width:25mm;">${item.seatCode}</td>
-									<td style="width:15mm;">${item.quantity }</td>
-									<td style="width:auto;">${item.skuUnitPrice}</td>
+									<td style="width:24mm;"></td>
+									<td style="width:24mm;">${item.seatCode}</td>
+									<td style="width:14mm;">${item.quantity }</td>
+									<td style="width:auto;">${item.skuUnitPrice}  ${item.skuPriceCurrency} </td>
 								</tr>
 							</c:forEach>
 						</table>
@@ -96,7 +96,7 @@
 					<!-- 第七行 -->
 					<div style="height:8mm;weight:100%;" >
 						<span style="float:left;margin-left: 2mm;">
-							商品数量：1
+							商品数量：${map.totalQuantity}
 						</span>
 					</div>		
 					<!-- 第八行 -->

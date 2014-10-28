@@ -47,7 +47,7 @@ public class ItemInventoryDaoImpl implements IItemInventoryDao {
 	@Override
 	public List<ItemInventory> findItemInventory(ItemInventory itemInventory, Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select id,user_id_of_customer,warehouse_id,quantity,sku,batch_no,available_quantity,last_update_time from w_s_item_inventory where 1=1 ");
+		sb.append("select id,user_id_of_customer,warehouse_id,quantity,sku,batch_no,available_quantity,last_update_time,created_time from w_s_item_inventory where 1=1 ");
 		if (itemInventory != null) {
 			if (StringUtil.isNotNull(itemInventory.getSku())) {
 				sb.append(" and sku = '" + itemInventory.getSku() + "' ");
@@ -115,7 +115,7 @@ public class ItemInventoryDaoImpl implements IItemInventoryDao {
 			return jdbcTemplate.update(sql);
 		}
 		// 插入新库存记录
-		final String newSql = "insert into w_s_item_inventory (user_id_of_customer,warehouse_id,sku,batch_no,quantity,available_quantity,last_update_time) values (?,?,?,?,?,?,?)";
+		final String newSql = "insert into w_s_item_inventory (user_id_of_customer,warehouse_id,sku,batch_no,quantity,available_quantity,last_update_time,created_time) values (?,?,?,?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
@@ -127,6 +127,7 @@ public class ItemInventoryDaoImpl implements IItemInventoryDao {
 				ps.setLong(5, addQuantity);
 				ps.setLong(6, addQuantity);
 				ps.setLong(7, System.currentTimeMillis());
+				ps.setLong(8, System.currentTimeMillis());
 				return ps;
 			}
 		}, keyHolder);
