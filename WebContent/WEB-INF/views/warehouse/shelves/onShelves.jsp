@@ -62,7 +62,7 @@
 		<table class="table table-striped" style="width:1200px;margin-bottom: 0px">
 			<tr>
 					<td  >
-						<span class="pull-left" style="width:52px;">库位</span>
+						<span class="pull-left" style="width:52px;">货位</span>
 						<span class="pull-left" style="width:160px;">
 							<input type="text"  name="seatCode" t="2"  id="seatCode" style="width:130px;"/>
 						</span>
@@ -183,7 +183,7 @@
 	  		}
 	  		var seatCode = $("#seatCode").val();
 	  		if(seatCode == null || seatCode ==''){
-	  			parent.$.showShortMessage({msg:"请输入库位",animate:true,left:"45%"});
+	  			parent.$.showShortMessage({msg:"请输入货位",animate:true,left:"45%"});
 	  			return false;
 	  		}
 	  		

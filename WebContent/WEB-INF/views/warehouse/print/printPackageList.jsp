@@ -73,7 +73,7 @@
 								<th style="text-align:left">商品编号</th>
 								<th style="text-align:left">商品名称</th>
 								<th style="text-align:left">型号规格</th>
-								<th style="text-align:left">库位信息</th>
+								<th style="text-align:left">货位信息</th>
 								<th style="text-align:left">数量</th>
 								<th style="text-align:left">金额</th>
 							</tr>

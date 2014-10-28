@@ -115,7 +115,7 @@
 							{ display: '客户帐号', name: 'userLoginNameOfCustomer',type:'float',width:'9%'},
 							{ display: '仓库', name: 'warehouse', type: 'float',width:'9%'},
 							{ display: '入库批次号', name: 'batchNo', type: 'int', width:'10%'},
-							{ display: '库位', name: 'seatCode', type: 'int', width:'10%'},
+							{ display: '货位', name: 'seatCode', type: 'int', width:'10%'},
 	  	                  	{ display: '产品SKU', name: 'sku', type: 'float',width:'12%'},
 		  	                { display: '本次上架数量', name: 'quantity', type: 'float',width:'8%'},
 		  		            { display: '收货产品数量', name: 'receivedQuantity', type: 'float',width:'8%'},
