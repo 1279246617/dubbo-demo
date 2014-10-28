@@ -141,9 +141,6 @@ public class StorageServiceImpl implements IStorageService {
 	@Resource(name = "outWarehouseOrderAdditionalSfDao")
 	private IOutWarehouseOrderAdditionalSfDao outWarehouseOrderAdditionalSfDao;
 
-	@Resource(name = "itemShelftInventoryDao")
-	private IItemShelfInventoryDao itemShelftInventoryDao;
-
 	/**
 	 * 根据入库订单id, 查找入库物品明细
 	 * 
@@ -985,9 +982,10 @@ public class StorageServiceImpl implements IStorageService {
 			OutWarehouseOrderItem itemParam = new OutWarehouseOrderItem();
 			itemParam.setOutWarehouseOrderId(orderIdLong);
 			List<OutWarehouseOrderItem> outWarehouseOrderItemList = outWarehouseOrderItemDao.findOutWarehouseOrderItem(itemParam, null, null);
+			boolean isNotEnough = false;
 			for (OutWarehouseOrderItem item : outWarehouseOrderItemList) {
 				// 根据出库订单物品 SKU和数量,按批次,SKU查找上架表
-				List<ItemShelfInventory> itemShelfInventoryList = itemShelftInventoryDao.findItemShelfInventoryForPreOutShelf(outWarehouseOrder.getUserIdOfCustomer(), outWarehouseOrder.getWarehouseId(), item.getSku());
+				List<ItemShelfInventory> itemShelfInventoryList = itemShelfInventoryDao.findItemShelfInventoryForPreOutShelf(outWarehouseOrder.getUserIdOfCustomer(), outWarehouseOrder.getWarehouseId(), item.getSku());
 				int needQuantity = item.getQuantity();// 需要预下架的产品数量
 				int isEnoughQuantity = needQuantity;// 循环执行完后,isEnoughQuantity大于0,代表可用库存不足,审核失败
 				for (ItemShelfInventory itemShelfInventory : itemShelfInventoryList) {
@@ -1025,19 +1023,24 @@ public class StorageServiceImpl implements IStorageService {
 				}
 				// 如果所有库位的可用库存都不足,不允许出库,审核失败
 				if (isEnoughQuantity > 0) {
-					notEnougnQuantity++;
+					isNotEnough = true;
 				}
 			}
-			// 更新库位的可用库存
-			itemShelftInventoryDao.updateBatchItemShelfInventoryAvailableQuantity(waitUpdateavAilableQuantityList);
-			// 保存打印捡货单需要的库位和物品信息
-			outWarehouseOrderItemShelfDao.saveBatchOutWarehouseOrderItemShelf(outWarehouseOrderItemShelfList);
-			// COE审核通过,等待称重 Wait Warehouse Weighing
-			int updateResult = outWarehouseOrderDao.updateOutWarehouseOrderStatus(orderIdLong, OutWarehouseOrderStatusCode.WWW);
-			updateQuantity++;
+			
+			if (!isNotEnough) {
+				// 更新库位的可用库存
+				itemShelfInventoryDao.updateBatchItemShelfInventoryAvailableQuantity(waitUpdateavAilableQuantityList);
+				// 保存打印捡货单需要的库位和物品信息
+				outWarehouseOrderItemShelfDao.saveBatchOutWarehouseOrderItemShelf(outWarehouseOrderItemShelfList);
+				// COE审核通过,等待称重 Wait Warehouse Weighing
+				int updateResult = outWarehouseOrderDao.updateOutWarehouseOrderStatus(orderIdLong, OutWarehouseOrderStatusCode.WWW);
+				updateQuantity++;
+			} else {
+				notEnougnQuantity++;
+			}
 			// ==========================================================================================================================================================================
 		}
-		map.put(Constant.MESSAGE, "审核完成" + updateQuantity + "个订单," + noUpdateQuantity + "个订单非待审核状态,审核失败," + notEnougnQuantity + "个订单库存不足,审核失败");
+		map.put(Constant.MESSAGE, "审核通过:" + updateQuantity + "个订单,  审核不通过:" + noUpdateQuantity + "个非待审核状态订单," + notEnougnQuantity + "个库存不足订单");
 		map.put(Constant.STATUS, Constant.SUCCESS);
 		return map;
 	}
