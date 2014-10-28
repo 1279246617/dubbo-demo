@@ -115,10 +115,10 @@
 							{ display: '客户帐号', name: 'userLoginNameOfCustomer',type:'float',width:'14%'},
 							{ display: '仓库', name: 'warehouse', type: 'float',width:'14%'},
 							{ display: '入库批次号', name: 'batchNo', type: 'int', width:'12%'},
-	  	                  	{ display: '产品SKU', name: 'sku',type:'float',width:'13%'},
+	  	                  	{ display: '产品SKU', name: 'sku',type:'float',width:'14%'},
 	  	                  	{ display: '实际库存数量', name: 'quantity',type:'float',width:'9%'},
 	  	                  	{ display: '可用库存数量', name: 'availableQuantity',type:'float',width:'9%'},
-			                { display: '最后更新时间', name: 'lastUpdateTime',type:'float',width:'13%'},
+			                { display: '上次更新时间', name: 'lastUpdateTime',type:'float',width:'13%'},
 	  	                  	{ display: '创建时间', name: 'createdTime',type:'float',width:'13%'}
 		             ],   
 	                dataAction: 'server',

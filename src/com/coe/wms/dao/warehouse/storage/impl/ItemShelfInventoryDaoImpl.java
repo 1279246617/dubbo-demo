@@ -51,7 +51,7 @@ public class ItemShelfInventoryDaoImpl implements IItemShelfInventoryDao {
 	@Override
 	public List<ItemShelfInventory> findItemShelfInventory(ItemShelfInventory itemShelfInventory, Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select id,user_id_of_customer,warehouse_id,quantity,sku,seat_code,available_quantity,last_update_time,batch_no from w_s_item_shelf_inventory where 1=1 ");
+		sb.append("select id,user_id_of_customer,warehouse_id,quantity,sku,seat_code,available_quantity,last_update_time,batch_no,created_time from w_s_item_shelf_inventory where 1=1 ");
 		if (itemShelfInventory != null) {
 			if (StringUtil.isNotNull(itemShelfInventory.getSku())) {
 				sb.append(" and sku = '" + itemShelfInventory.getSku() + "' ");
