@@ -57,60 +57,8 @@ public class OnShelf implements Serializable {
 	 * 必填
 	 */
 	private Integer quantity;
-
-	/**
-	 * sku下产品数量 下架产品数量
-	 */
-	private Integer outQuantity;
-
-	/**
-	 * 预下架数量(打印捡货单,预下架的产品数量,用于连续打印捡货单,时不会使用同样的货位的产品)
-	 * 
-	 *使用定时任务,清空此字段
-	 */
-	private Integer preOutQuantity;
-
-	private String status;
-
-	/**
-	 * 
-	 * sku
-	 * 
-	 * 必填
-	 */
-	private String sku;
-
-	/**
-	 * 创建时间 (收货时间)
-	 */
-	private Long createdTime;
-
 	public Long getId() {
 		return id;
-	}
-
-	public Integer getPreOutQuantity() {
-		return preOutQuantity;
-	}
-
-	public void setPreOutQuantity(Integer preOutQuantity) {
-		this.preOutQuantity = preOutQuantity;
-	}
-
-	public Integer getOutQuantity() {
-		return outQuantity;
-	}
-
-	public void setOutQuantity(Integer outQuantity) {
-		this.outQuantity = outQuantity;
-	}
-
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
 	}
 
 	public void setId(Long id) {
@@ -127,14 +75,6 @@ public class OnShelf implements Serializable {
 
 	public Long getUserIdOfOperator() {
 		return userIdOfOperator;
-	}
-
-	public String getTrackingNo() {
-		return trackingNo;
-	}
-
-	public void setTrackingNo(String trackingNo) {
-		this.trackingNo = trackingNo;
 	}
 
 	public void setUserIdOfOperator(Long userIdOfOperator) {
@@ -163,6 +103,14 @@ public class OnShelf implements Serializable {
 
 	public void setBatchNo(String batchNo) {
 		this.batchNo = batchNo;
+	}
+
+	public String getTrackingNo() {
+		return trackingNo;
+	}
+
+	public void setTrackingNo(String trackingNo) {
+		this.trackingNo = trackingNo;
 	}
 
 	public String getSeatCode() {
@@ -197,4 +145,16 @@ public class OnShelf implements Serializable {
 		this.createdTime = createdTime;
 	}
 
+	/**
+	 * 
+	 * sku
+	 * 
+	 * 必填
+	 */
+	private String sku;
+
+	/**
+	 * 创建时间 (收货时间)
+	 */
+	private Long createdTime;
 }

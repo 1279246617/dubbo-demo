@@ -89,9 +89,6 @@ public class PrintServiceImpl implements IPrintService {
 	@Resource(name = "itemInventoryDao")
 	private IItemInventoryDao itemInventoryDao;
 
-	@Resource(name = "onShelfStatusDao")
-	private IOnShelfStatusDao onShelfStatusDao;
-
 	@Resource(name = "onShelfDao")
 	private IOnShelfDao onShelfDao;
 
