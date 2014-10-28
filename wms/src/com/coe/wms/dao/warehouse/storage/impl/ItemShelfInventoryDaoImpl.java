@@ -19,6 +19,7 @@ import org.springframework.stereotype.Repository;
 
 import com.coe.wms.dao.warehouse.storage.IItemShelfInventoryDao;
 import com.coe.wms.model.warehouse.storage.record.ItemShelfInventory;
+import com.coe.wms.model.warehouse.storage.record.OnShelf;
 import com.coe.wms.util.DateUtil;
 import com.coe.wms.util.Pagination;
 import com.coe.wms.util.StringUtil;
@@ -45,13 +46,15 @@ public class ItemShelfInventoryDaoImpl implements IItemShelfInventoryDao {
 	}
 
 	@Override
-	public List<ItemShelfInventory> findItemShelfInventory(ItemShelfInventory itemShelfInventory, Map<String, String> moreParam,
-			Pagination page) {
+	public List<ItemShelfInventory> findItemShelfInventory(ItemShelfInventory itemShelfInventory, Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select id,user_id_of_customer,warehouse_id,quantity,sku,seat_code,available_quantity,last_update_time from w_s_item_shelf_inventory where 1=1 ");
+		sb.append("select id,user_id_of_customer,warehouse_id,quantity,sku,seat_code,available_quantity,last_update_time,batch_no from w_s_item_shelf_inventory where 1=1 ");
 		if (itemShelfInventory != null) {
 			if (StringUtil.isNotNull(itemShelfInventory.getSku())) {
 				sb.append(" and sku = '" + itemShelfInventory.getSku() + "' ");
+			}
+			if (StringUtil.isNotNull(itemShelfInventory.getBatchNo())) {
+				sb.append(" and batch_no = '" + itemShelfInventory.getBatchNo() + "' ");
 			}
 			if (StringUtil.isNotNull(itemShelfInventory.getSeatCode())) {
 				sb.append(" and seat_code = '" + itemShelfInventory.getSeatCode() + "' ");
@@ -95,28 +98,25 @@ public class ItemShelfInventoryDaoImpl implements IItemShelfInventoryDao {
 		}
 		String sql = sb.toString();
 		logger.info("查询库存记录sql:" + sql);
-		List<ItemShelfInventory> itemShelfInventoryList = jdbcTemplate.query(sql,
-				ParameterizedBeanPropertyRowMapper.newInstance(ItemShelfInventory.class));
+		List<ItemShelfInventory> itemShelfInventoryList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(ItemShelfInventory.class));
 		logger.info("查询库存记录sql:" + sql + " size:" + itemShelfInventoryList.size());
 		return itemShelfInventoryList;
 	}
 
 	@Override
-	public int addItemShelfInventory(final Long warehouseId, final Long userIdOfCustomer, final String seatCode, final String sku,
-			final Integer addQuantity) {
+	public int addItemShelfInventory(final Long warehouseId, final Long userIdOfCustomer, final String seatCode, final String sku, final Integer addQuantity, final String batchNo) {
 		// 查询库存记录是否已存在
-		String sql = "select id from w_s_item_shelf_inventory where user_id_of_customer = ? and warehouse_id = ? and sku = ? and seat_code =?";
-		List<Long> idList = jdbcTemplate.queryForList(sql, Long.class, userIdOfCustomer, warehouseId, sku, seatCode);
+		String sql = "select id from w_s_item_shelf_inventory where user_id_of_customer = ? and warehouse_id = ? and sku = ? and seat_code =? and batch_no = ?";
+		List<Long> idList = jdbcTemplate.queryForList(sql, Long.class, userIdOfCustomer, warehouseId, sku, seatCode, batchNo);
 		if (idList.size() > 0) {
 			Long id = idList.get(0);
 			logger.info("已存在库存记录id:" + id);
 			// 更新已有库存记录
-			sql = "update w_s_item_shelf_inventory set quantity = quantity+" + addQuantity + " ,available_quantity = available_quantity+"
-					+ addQuantity + " ,last_update_time = " + System.currentTimeMillis() + " where id = " + id;
+			sql = "update w_s_item_shelf_inventory set quantity = quantity+" + addQuantity + " ,available_quantity = available_quantity+" + addQuantity + " ,last_update_time = " + System.currentTimeMillis() + " where id = " + id;
 			return jdbcTemplate.update(sql);
 		}
 		// 插入新库存记录
-		final String newSql = "insert into w_s_item_shelf_inventory (user_id_of_customer,warehouse_id,sku,seat_code,quantity,available_quantity,last_update_time) values (?,?,?,?,?,?,?)";
+		final String newSql = "insert into w_s_item_shelf_inventory (user_id_of_customer,warehouse_id,sku,seat_code,quantity,available_quantity,last_update_time,batch_no,created_time) values (?,?,?,?,?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
@@ -128,6 +128,8 @@ public class ItemShelfInventoryDaoImpl implements IItemShelfInventoryDao {
 				ps.setLong(5, addQuantity);
 				ps.setLong(6, addQuantity);
 				ps.setLong(7, System.currentTimeMillis());
+				ps.setString(8, batchNo);
+				ps.setLong(9, System.currentTimeMillis());
 				return ps;
 			}
 		}, keyHolder);
@@ -143,6 +145,9 @@ public class ItemShelfInventoryDaoImpl implements IItemShelfInventoryDao {
 		if (itemShelfInventory != null) {
 			if (StringUtil.isNotNull(itemShelfInventory.getSku())) {
 				sb.append(" and sku = '" + itemShelfInventory.getSku() + "' ");
+			}
+			if (StringUtil.isNotNull(itemShelfInventory.getBatchNo())) {
+				sb.append(" and batch_no = '" + itemShelfInventory.getBatchNo() + "' ");
 			}
 			if (StringUtil.isNotNull(itemShelfInventory.getSeatCode())) {
 				sb.append(" and seat_code = '" + itemShelfInventory.getSeatCode() + "' ");
@@ -187,5 +192,38 @@ public class ItemShelfInventoryDaoImpl implements IItemShelfInventoryDao {
 			return 0l;
 		}
 		return count;
+	}
+
+	@Override
+	public List<ItemShelfInventory> findItemShelfInventoryForPreOutShelf(Long userIdOfCustomer, Long warehouseId, String sku) {
+		StringBuffer sb = new StringBuffer();
+		sb.append("select id,user_id_of_customer,warehouse_id,sku,seat_code,quantity,available_quantity,last_update_time,batch_no,created_time from w_s_item_shelf_inventory where quantity>0 and available_quantity >0  ");
+		if (StringUtil.isNotNull(sku)) {
+			sb.append(" and sku = '" + sku + "' ");
+		}
+		if (warehouseId != null) {
+			sb.append(" and warehouse_id = " + warehouseId);
+		}
+		if (userIdOfCustomer != null) {
+			sb.append(" and user_id_of_customer = " + userIdOfCustomer);
+		}
+		sb.append(" order by batch_no asc,created_time asc;");
+		String sql = sb.toString();
+		logger.info("查询库位库存记录明细sql:" + sql);
+		List<ItemShelfInventory> itemShelfInventoryList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(ItemShelfInventory.class));
+		logger.info("查询库位库存记录明细sql:" + sql + " size:" + itemShelfInventoryList.size());
+		return itemShelfInventoryList;
+	}
+
+	@Override
+	public int updateItemShelfInventoryAvailableQuantity(Long id, Integer availableQuantity) {
+		String sql = "update w_s_item_shelf_inventory set available_quantity=" + availableQuantity + " where id=" + id;
+		return jdbcTemplate.update(sql);
+	}
+
+	@Override
+	public int updateItemShelfInventoryQuantity(Long id, Integer quantity) {
+		String sql = "update w_s_item_shelf_inventory set quantity=" + quantity + " where id=" + id;
+		return jdbcTemplate.update(sql);
 	}
 }

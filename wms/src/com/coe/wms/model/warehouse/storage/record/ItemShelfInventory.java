@@ -28,6 +28,11 @@ public class ItemShelfInventory implements Serializable {
 	private String sku;
 
 	/**
+	 * sku所属的批次号
+	 */
+	private String batchNo;
+
+	/**
 	 * 实际库存
 	 */
 	private Integer quantity;
@@ -40,6 +45,8 @@ public class ItemShelfInventory implements Serializable {
 	private Integer availableQuantity;
 
 	private Long lastUpdateTime;
+
+	private Long createdTime;
 	/**
 	 * 货位号,可以查到货位上的SKU数量
 	 */
@@ -53,6 +60,14 @@ public class ItemShelfInventory implements Serializable {
 		this.userIdOfCustomer = userIdOfCustomer;
 	}
 
+	public Long getCreatedTime() {
+		return createdTime;
+	}
+
+	public void setCreatedTime(Long createdTime) {
+		this.createdTime = createdTime;
+	}
+
 	public String getSku() {
 		return sku;
 	}
@@ -63,6 +78,14 @@ public class ItemShelfInventory implements Serializable {
 
 	public Long getLastUpdateTime() {
 		return lastUpdateTime;
+	}
+
+	public String getBatchNo() {
+		return batchNo;
+	}
+
+	public void setBatchNo(String batchNo) {
+		this.batchNo = batchNo;
 	}
 
 	public void setLastUpdateTime(Long lastUpdateTime) {

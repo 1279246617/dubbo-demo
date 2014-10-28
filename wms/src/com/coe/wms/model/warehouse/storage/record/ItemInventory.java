@@ -38,6 +38,8 @@ public class ItemInventory implements Serializable {
 	private Integer availableQuantity;
 
 	private Long lastUpdateTime;
+	
+	private Long createdTime;
 	/**
 	 * 入库批次号 可以查到某批次还剩余多少货
 	 */
@@ -81,6 +83,14 @@ public class ItemInventory implements Serializable {
 
 	public Integer getAvailableQuantity() {
 		return availableQuantity;
+	}
+
+	public Long getCreatedTime() {
+		return createdTime;
+	}
+
+	public void setCreatedTime(Long createdTime) {
+		this.createdTime = createdTime;
 	}
 
 	public void setAvailableQuantity(Integer availableQuantity) {
