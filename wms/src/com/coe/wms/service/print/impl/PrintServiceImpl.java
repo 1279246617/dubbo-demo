@@ -135,7 +135,7 @@ public class PrintServiceImpl implements IPrintService {
 				itemMap.put("skuUnitPrice", item.getSkuUnitPrice() + " " + item.getSkuPriceCurrency());
 				itemMap.put("seatCode", onShelf.getSeatCode());
 				itemMapList.add(itemMap);
-				// 打印捡货单,记录出库订单对应的库位和物品.下次打印时 使用已经保存的库位和物品信息
+				// 打印捡货单,记录出库订单对应的货位和物品.下次打印时 使用已经保存的货位和物品信息
 				OutWarehouseOrderItemShelf itemShelf = new OutWarehouseOrderItemShelf();
 				itemShelf.setOutWarehouseOrderId(outWarehouseOrderId);
 				itemShelf.setQuantity(item.getQuantity());
@@ -158,7 +158,7 @@ public class PrintServiceImpl implements IPrintService {
 				needQuantity = needQuantity - unOutQuantity;
 				// 在此货位捡货的数量,不是此出库订单的产品数量
 				if (needQuantity == 0) {
-					// 如果需要下架的产品大于库位上的产品数量,全部下架
+					// 如果需要下架的产品大于货位上的产品数量,全部下架
 					itemMap.put("quantity", unOutQuantity + "");
 					// 更新此上架记录为全部已预下架
 					if (isNotPrinted) {
@@ -184,7 +184,7 @@ public class PrintServiceImpl implements IPrintService {
 		
 		map.put("items", itemMapList);
 		if (isNotPrinted) {
-			// 更新为已经打印,并保存库位信息
+			// 更新为已经打印,并保存货位信息
 			outWarehouseOrderItemShelfDao.saveBatchOutWarehouseOrderItemShelf(itemShelfList);
 			outWarehouseOrderDao.updateOutWarehouseOrderIsPrinted(outWarehouseOrderId, Constant.Y);
 		}
@@ -202,7 +202,7 @@ public class PrintServiceImpl implements IPrintService {
 		OutWarehouseOrderItem itemParam = new OutWarehouseOrderItem();
 		itemParam.setOutWarehouseOrderId(outWarehouseOrderId);
 		List<OutWarehouseOrderItem> items = outWarehouseOrderItemDao.findOutWarehouseOrderItem(itemParam, null, null);
-		// 根据批次排序,找到库位
+		// 根据批次排序,找到货位
 
 		// 顺丰label 内容
 		OutWarehouseOrderAdditionalSf additionalSf = outWarehouseOrderAdditionalSfDao

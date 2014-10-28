@@ -3,7 +3,7 @@ package com.coe.wms.model.warehouse.storage.order;
 import java.io.Serializable;
 
 /**
- * 出库详情单,打印捡货单时生成的库位信息
+ * 出库详情单,打印捡货单时生成的货位信息
  * 
  * @author Administrator
  * 
@@ -56,7 +56,7 @@ public class OutWarehouseOrderItemShelf implements Serializable {
 	private Double skuNetWeight;
 
 	/**
-	 * 库位
+	 * 货位
 	 */
 	private String seatCode;
 

@@ -83,15 +83,19 @@
 		              		
 		              		<li><a href="#${baseUrl}/warehouse/shelves/onShelves.do" tab_id="doOnShelves"><i class="icon-th"></i><span class="hidden-tablet">入库订单上架</span></a></li>
 		              		<li><a href="#${baseUrl}/warehouse/shelves/listOnShelves.do" tab_id="listOnShelves"><i class=icon-zoom-in></i><span class="hidden-tablet">入库订单上架记录</span></a></li>
+		              		
+			              	<li><a href="#${baseUrl}/warehouse/shelves/outShelves.do" tab_id="doOutShelves"><i class="icon-th"></i><span class="hidden-tablet">出库订单下架</span></a></li>
+		              		<li><a href="#${baseUrl}/warehouse/shelves/listOutShelves.do" tab_id="listOutShelves"><i class=icon-zoom-in></i><span class="hidden-tablet">出库订单下架记录</span></a></li>
 			              		
 			              	<!-- (扫SKU和数量 是否和出库订单一样) -->	
 		              		<li><a href="#${baseUrl}/warehouse/storage/outWarehouseCheckPackage.do" tab_id="doOutWarehouse"><i class="icon-plane"></i><span class="hidden-tablet">装箱称重打单</span></a></li>
 		              		<li><a href="#${baseUrl}/warehouse/storage/outWarehouseShipping.do" tab_id="outWarehouseShipping"><i class="icon-plane"></i><span class="hidden-tablet">扫描运单出货</span></a></li>
 		              		<li><a href=# tab_id="findOutWarehouseRecord"><i class="icon-zoom-out"></i><span class="hidden-tablet">出库记录查询</span></a></li>
 		              		
-		              		<li><a href="#${baseUrl}/warehouse/inventory/listInventory.do" tab_id="findItemInventory"><i class="icon-zoom-out"></i><span class="hidden-tablet">产品库存查询</span></a></li>
+		              		<li><a href="#${baseUrl}/warehouse/inventory/listInventory.do" tab_id="findItemInventory"><i class="icon-zoom-out"></i><span class="hidden-tablet">产品批次库存</span></a></li>
+		              		<li><a href="#${baseUrl}/warehouse/inventory/listItemShelfInventory.do" tab_id="findItemShelfInventory"><i class="icon-zoom-out"></i><span class="hidden-tablet">产品货位库存</span></a></li>
 		              		
-		              		<li><a href="#${baseUrl}/warehouse/shelves/listSeat.do" tab_id="findSeat"><i class="icon-zoom-out"></i><span class="hidden-tablet">库位使用情况</span></a></li>
+		              		<li><a href="#${baseUrl}/warehouse/shelves/listSeat.do" tab_id="findSeat"><i class="icon-zoom-out"></i><span class="hidden-tablet">空闲货位查询</span></a></li>
 		                </ul>
 		        </div>
 		         <div title="用户管理" class=" nav-collapse sidebar-nav">

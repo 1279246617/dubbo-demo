@@ -64,7 +64,7 @@ public class OnShelf implements Serializable {
 	private Integer outQuantity;
 
 	/**
-	 * 预下架数量(打印捡货单,预下架的产品数量,用于连续打印捡货单,时不会使用同样的库位的产品)
+	 * 预下架数量(打印捡货单,预下架的产品数量,用于连续打印捡货单,时不会使用同样的货位的产品)
 	 * 
 	 *使用定时任务,清空此字段
 	 */
