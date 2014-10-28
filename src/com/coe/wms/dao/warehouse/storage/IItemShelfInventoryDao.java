@@ -43,7 +43,9 @@ public interface IItemShelfInventoryDao {
 	 * @return
 	 */
 	public int addItemShelfInventory(Long wareHouseId, Long userIdOfCustomer, String seatCode, String sku, Integer addQuantity, String batchNo);
-	
+
+	public int updateBatchItemShelfInventoryAvailableQuantity(List<ItemShelfInventory> itemShelfInventoryList);
+
 	public int updateItemShelfInventoryAvailableQuantity(Long id, Integer availableQuantity);
 
 	public int updateItemShelfInventoryQuantity(Long id, Integer quantity);
