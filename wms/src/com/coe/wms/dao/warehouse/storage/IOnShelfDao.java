@@ -12,8 +12,6 @@ public interface IOnShelfDao {
 
 	public List<OnShelf> findOnShelf(OnShelf onShelf, Map<String, String> moreParam, Pagination page);
 
-	public List<OnShelf> findOnShelfForOutShelf(String sku, Long warehouseId, Long useIdOfCustomer);
-
 	public Long countOnShelf(OnShelf onShelf, Map<String, String> moreParam);
 
 	public Integer countOnShelfSkuQuantity(Long inWarehouseRecordId, String sku);
