@@ -20,7 +20,6 @@ import org.springframework.stereotype.Repository;
 import com.coe.wms.dao.datasource.DataSource;
 import com.coe.wms.dao.datasource.DataSourceCode;
 import com.coe.wms.dao.warehouse.storage.IOnShelfDao;
-import com.coe.wms.model.warehouse.storage.record.InWarehouseRecord;
 import com.coe.wms.model.warehouse.storage.record.OnShelf;
 import com.coe.wms.util.DateUtil;
 import com.coe.wms.util.Pagination;
@@ -45,7 +44,7 @@ public class OnShelfDaoImpl implements IOnShelfDao {
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public long saveOnShelf(final OnShelf item) {
-		final String sql = "insert into w_s_on_shelf (warehouse_id,user_id_of_operator,user_id_of_customer,in_warehouse_record_id,batch_no,seat_code,quantity,sku,created_time,tracking_no,status,out_quantity,pre_out_quantity) values (?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		final String sql = "insert into w_s_on_shelf (warehouse_id,user_id_of_operator,user_id_of_customer,in_warehouse_record_id,batch_no,seat_code,quantity,sku,created_time,tracking_no) values (?,?,?,?,?,?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
@@ -60,8 +59,6 @@ public class OnShelfDaoImpl implements IOnShelfDao {
 				ps.setString(8, item.getSku());
 				ps.setLong(9, item.getCreatedTime());
 				ps.setString(10, item.getTrackingNo());
-				ps.setInt(11, 0);
-				ps.setInt(12, 0);
 				return ps;
 			}
 		}, keyHolder);
@@ -81,7 +78,7 @@ public class OnShelfDaoImpl implements IOnShelfDao {
 	@Override
 	public List<OnShelf> findOnShelf(OnShelf onShelf, Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select id,warehouse_id,user_id_of_operator,user_id_of_customer,in_warehouse_record_id,batch_no,seat_code,quantity,sku,created_time,tracking_no,status,out_quantity,pre_out_quantity from w_s_on_shelf where 1=1 ");
+		sb.append("select id,warehouse_id,user_id_of_operator,user_id_of_customer,in_warehouse_record_id,batch_no,seat_code,quantity,sku,created_time,tracking_no from w_s_on_shelf where 1=1 ");
 		if (onShelf != null) {
 			if (onShelf.getId() != null) {
 				sb.append(" and id = " + onShelf.getId());
@@ -106,15 +103,6 @@ public class OnShelfDaoImpl implements IOnShelfDao {
 			}
 			if (onShelf.getQuantity() != null) {
 				sb.append(" and quantity = " + onShelf.getQuantity());
-			}
-			if (onShelf.getOutQuantity() != null) {
-				sb.append(" and out_quantity = " + onShelf.getOutQuantity());
-			}
-			if (onShelf.getPreOutQuantity() != null) {
-				sb.append(" and pre_out_quantity = " + onShelf.getPreOutQuantity());
-			}
-			if (StringUtil.isNotNull(onShelf.getStatus())) {
-				sb.append(" and status = '" + onShelf.getStatus() + "' ");
 			}
 			if (onShelf.getCreatedTime() != null) {
 				sb.append(" and created_time = " + onShelf.getCreatedTime());
@@ -183,15 +171,6 @@ public class OnShelfDaoImpl implements IOnShelfDao {
 			if (onShelf.getQuantity() != null) {
 				sb.append(" and quantity = " + onShelf.getQuantity());
 			}
-			if (onShelf.getOutQuantity() != null) {
-				sb.append(" and out_quantity = " + onShelf.getOutQuantity());
-			}
-			if (onShelf.getPreOutQuantity() != null) {
-				sb.append(" and pre_out_quantity = " + onShelf.getPreOutQuantity());
-			}
-			if (StringUtil.isNotNull(onShelf.getStatus())) {
-				sb.append(" and status = '" + onShelf.getStatus() + "' ");
-			}
 			if (onShelf.getCreatedTime() != null) {
 				sb.append(" and created_time = " + onShelf.getCreatedTime());
 			}
@@ -234,7 +213,7 @@ public class OnShelfDaoImpl implements IOnShelfDao {
 	@Override
 	public List<OnShelf> findOnShelfForOutShelf(String sku, Long warehouseId, Long useIdOfCustomer) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select id,warehouse_id,user_id_of_operator,user_id_of_customer,in_warehouse_record_id,batch_no,seat_code,quantity,sku,created_time,tracking_no,status,out_quantity,pre_out_quantity from w_s_on_shelf where status != 'COMPLETE' ");
+		sb.append("select id,warehouse_id,user_id_of_operator,user_id_of_customer,in_warehouse_record_id,batch_no,seat_code,quantity,sku,created_time,tracking_no from w_s_on_shelf where status != 'COMPLETE' ");
 		if (StringUtil.isNotNull(sku)) {
 			sb.append(" and sku = '" + sku + "' ");
 		}
@@ -250,17 +229,5 @@ public class OnShelfDaoImpl implements IOnShelfDao {
 		List<OnShelf> onShelfList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(OnShelf.class));
 		logger.info("查询上架记录明细sql:" + sql + " size:" + onShelfList.size());
 		return onShelfList;
-	}
-
-	@Override
-	public Integer updateOnShelfOutQuantityAndStatus(Long id, int outQuantity, String status) {
-		String sql = "update w_s_on_shelf set status='" + status + "',out_quantity = " + outQuantity + " where id=" + id;
-		return jdbcTemplate.update(sql);
-	}
-
-	@Override
-	public Integer updateOnShelfPreOutQuantity(Long id, int preOutQuantity) {
-		String sql = "update w_s_on_shelf set pre_out_quantity=" + preOutQuantity + " where id=" + id;
-		return jdbcTemplate.update(sql);
 	}
 }

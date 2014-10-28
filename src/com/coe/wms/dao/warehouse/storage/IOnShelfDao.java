@@ -17,8 +17,4 @@ public interface IOnShelfDao {
 	public Long countOnShelf(OnShelf onShelf, Map<String, String> moreParam);
 
 	public Integer countOnShelfSkuQuantity(Long inWarehouseRecordId, String sku);
-	
-	public Integer updateOnShelfOutQuantityAndStatus(Long id, int outQuantity, String status);
-	
-	public Integer updateOnShelfPreOutQuantity(Long id, int preOutQuantity);
 }
