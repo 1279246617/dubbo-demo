@@ -19,6 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.coe.wms.controller.Application;
 import com.coe.wms.model.user.User;
 import com.coe.wms.model.warehouse.storage.record.ItemInventory;
+import com.coe.wms.model.warehouse.storage.record.ItemShelfInventory;
 import com.coe.wms.service.inventory.IItemInventoryService;
 import com.coe.wms.service.storage.IStorageService;
 import com.coe.wms.service.user.IUserService;
@@ -63,6 +64,26 @@ public class Inventory {
 	}
 
 	/**
+	 * 库存
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/listItemShelfInventory", method = RequestMethod.GET)
+	public ModelAndView listItemShelfInventory(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		ModelAndView view = new ModelAndView();
+		HttpSession session = request.getSession();
+		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
+		User user = userService.getUserById(userId);
+		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
+		view.setViewName("warehouse/inventory/listItemShelfInventory");
+		view.addObject("warehouseList", storageService.findAllWarehouse(user.getDefaultWarehouseId()));
+		return view;
+	}
+
+	/**
 	 * 获取库存信息
 	 * 
 	 * @return
@@ -100,4 +121,45 @@ public class Inventory {
 		map.put("Total", pagination.total);
 		return GsonUtil.toJson(map);
 	}
+
+	/**
+	 * 获取库存信息
+	 * 
+	 * @return
+	 * @throws IOException
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/getListItemShelfInventoryData")
+	public String getListItemShelfInventoryData(HttpServletRequest request, String sortorder, String sortname, int page, int pagesize,
+			String userLoginName, Long warehouseId, String sku, String seatCode, String timeStart, String timeEnd) throws IOException {
+		HttpSession session = request.getSession();
+		// 当前操作员
+		Long userIdOfOperator = (Long) session.getAttribute(SessionConstant.USER_ID);
+		Pagination pagination = new Pagination();
+		pagination.curPage = page;
+		pagination.pageSize = pagesize;
+		pagination.sortName = sortname;
+		pagination.sortOrder = sortorder;
+
+		ItemShelfInventory param = new ItemShelfInventory();
+		param.setWarehouseId(warehouseId);
+		param.setSeatCode(seatCode);
+
+		param.setSku(sku);
+		// 客户帐号
+		if (StringUtil.isNotNull(userLoginName)) {
+			Long userIdOfCustomer = userService.findUserIdByLoginName(userLoginName);
+			param.setUserIdOfCustomer(userIdOfCustomer);
+		}
+		// 更多参数
+		Map<String, String> moreParam = new HashMap<String, String>();
+		moreParam.put("lastUpdateTimeStart", timeStart);
+		moreParam.put("lastUpdateTimeEnd", timeEnd);
+		pagination = itemInventoryService.getListItemShelfInventoryData(param, moreParam, pagination);
+		Map map = new HashMap();
+		map.put("Rows", pagination.rows);
+		map.put("Total", pagination.total);
+		return GsonUtil.toJson(map);
+	}
+
 }

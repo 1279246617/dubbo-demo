@@ -139,7 +139,7 @@
 		var baseUrl = "${baseUrl}",tab = null,manager=null;
 		$(function() {
 			$("#accordion1").ligerAccordion({
-				height :500
+				height :560
 			});
 			//左侧菜单 鼠标 hover
 			$('div.main-menu li:not(.nav-header)').hover(function(){
