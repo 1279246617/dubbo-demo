@@ -20,6 +20,7 @@ import com.coe.wms.dao.warehouse.storage.IInWarehouseRecordDao;
 import com.coe.wms.dao.warehouse.storage.IInWarehouseRecordItemDao;
 import com.coe.wms.dao.warehouse.storage.IInWarehouseRecordStatusDao;
 import com.coe.wms.dao.warehouse.storage.IItemInventoryDao;
+import com.coe.wms.dao.warehouse.storage.IItemShelfInventoryDao;
 import com.coe.wms.dao.warehouse.storage.IOnShelfDao;
 import com.coe.wms.dao.warehouse.storage.IOnShelfStatusDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderAdditionalSfDao;
@@ -130,6 +131,9 @@ public class StorageServiceImpl implements IStorageService {
 
 	@Resource(name = "itemInventoryDao")
 	private IItemInventoryDao itemInventoryDao;
+
+	@Resource(name = "itemShelfInventoryDao")
+	private IItemShelfInventoryDao itemShelfInventoryDao;
 
 	@Resource(name = "onShelfStatusDao")
 	private IOnShelfStatusDao onShelfStatusDao;
@@ -1347,6 +1351,8 @@ public class StorageServiceImpl implements IStorageService {
 		onShelf.setStatus(OnShelfStatusCode.NONE);
 		onShelf.setWarehouseId(inWarehouseRecord.getWarehouseId());
 		Long id = onShelfDao.saveOnShelf(onShelf);
+		// 添加库位库存
+		int upateCount = itemShelfInventoryDao.addItemShelfInventory(inWarehouseRecord.getWarehouseId(), inWarehouseRecord.getUserIdOfCustomer(), seatCode,itemSku, itemQuantity);
 		map.put(Constant.STATUS, Constant.SUCCESS);
 		return map;
 	}
