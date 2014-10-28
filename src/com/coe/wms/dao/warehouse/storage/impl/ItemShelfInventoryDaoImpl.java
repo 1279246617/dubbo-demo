@@ -232,12 +232,12 @@ public class ItemShelfInventoryDaoImpl implements IItemShelfInventoryDao {
 
 	@Override
 	public int updateBatchItemShelfInventoryAvailableQuantity(final List<ItemShelfInventory> itemShelfInventoryList) {
-		final String sql = "update w_s_item_shelf_inventory set quantity= ? where id = ?";
+		final String sql = "update w_s_item_shelf_inventory set available_quantity = ? where id = ?";
 		int[] batchUpdateSize = jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
 			@Override
 			public void setValues(PreparedStatement ps, int i) throws SQLException {
 				ItemShelfInventory item = itemShelfInventoryList.get(i);
-				ps.setInt(1, item.getQuantity());
+				ps.setInt(1, item.getAvailableQuantity());
 				ps.setLong(2, item.getId());
 			}
 			
