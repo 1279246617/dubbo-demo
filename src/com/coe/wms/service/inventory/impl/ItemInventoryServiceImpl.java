@@ -106,8 +106,7 @@ public class ItemInventoryServiceImpl implements IItemInventoryService {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("id", itemInventory.getId());
 			if (itemInventory.getLastUpdateTime() != null) {
-				map.put("lastUpdateTime",
-						DateUtil.dateConvertString(new Date(itemInventory.getLastUpdateTime()), DateUtil.yyyy_MM_ddHHmmss));
+				map.put("lastUpdateTime", DateUtil.dateConvertString(new Date(itemInventory.getLastUpdateTime()), DateUtil.yyyy_MM_ddHHmmss));
 			}
 			if (itemInventory.getCreatedTime() != null) {
 				map.put("createdTime", DateUtil.dateConvertString(new Date(itemInventory.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss));
@@ -117,7 +116,13 @@ public class ItemInventoryServiceImpl implements IItemInventoryService {
 			map.put("userLoginNameOfCustomer", user.getLoginName());
 			map.put("batchNo", itemInventory.getBatchNo());
 			map.put("quantity", itemInventory.getQuantity());
-			map.put("availableQuantity", itemInventory.getAvailableQuantity());
+			// 从库位库存 获得可用库存
+			ItemShelfInventory itemShelfInventory = new ItemShelfInventory();
+			itemShelfInventory.setBatchNo(itemInventory.getBatchNo());
+			itemShelfInventory.setSku(itemInventory.getSku());
+			itemShelfInventory.setUserIdOfCustomer(itemInventory.getUserIdOfCustomer());
+			itemShelfInventory.setWarehouseId(itemInventory.getWarehouseId());
+			map.put("availableQuantity", itemShelfInventoryDao.sumItemAvailableQuantity(itemShelfInventory));
 			map.put("sku", itemInventory.getSku());
 			if (itemInventory.getWarehouseId() != null) {
 				Warehouse warehouse = warehouseDao.getWarehouseById(itemInventory.getWarehouseId());
@@ -140,8 +145,7 @@ public class ItemInventoryServiceImpl implements IItemInventoryService {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("id", itemInventory.getId());
 			if (itemInventory.getLastUpdateTime() != null) {
-				map.put("lastUpdateTime",
-						DateUtil.dateConvertString(new Date(itemInventory.getLastUpdateTime()), DateUtil.yyyy_MM_ddHHmmss));
+				map.put("lastUpdateTime", DateUtil.dateConvertString(new Date(itemInventory.getLastUpdateTime()), DateUtil.yyyy_MM_ddHHmmss));
 			}
 			if (itemInventory.getCreatedTime() != null) {
 				map.put("createdTime", DateUtil.dateConvertString(new Date(itemInventory.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss));

@@ -29,6 +29,13 @@ public interface IItemShelfInventoryDao {
 	public List<ItemShelfInventory> findItemShelfInventoryForPreOutShelf(Long userIdOfCustomer, Long warehouseId, String sku);
 
 	public Long countItemShelfInventory(ItemShelfInventory itemShelfInventory, Map<String, String> moreParam);
+	
+	/**
+	 * 
+	 * @param itemShelfInventory
+	 * @return
+	 */
+	public Long sumItemAvailableQuantity(ItemShelfInventory itemShelfInventory);
 
 	/**
 	 * 添加库存 所有参数都是必须. wareHouseId,userIdOfCustomer,batchNo,sku 4个参数作为查询条件

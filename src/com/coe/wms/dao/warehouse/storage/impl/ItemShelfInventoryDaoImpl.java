@@ -240,12 +240,54 @@ public class ItemShelfInventoryDaoImpl implements IItemShelfInventoryDao {
 				ps.setInt(1, item.getAvailableQuantity());
 				ps.setLong(2, item.getId());
 			}
-			
+
 			@Override
 			public int getBatchSize() {
 				return itemShelfInventoryList.size();
 			}
 		});
 		return NumberUtil.sumArry(batchUpdateSize);
+	}
+
+	@Override
+	public Long sumItemAvailableQuantity(ItemShelfInventory itemShelfInventory) {
+		StringBuffer sb = new StringBuffer();
+		sb.append("select sum(available_quantity) from w_s_item_shelf_inventory where 1=1 ");
+		if (itemShelfInventory != null) {
+			if (StringUtil.isNotNull(itemShelfInventory.getSku())) {
+				sb.append(" and sku = '" + itemShelfInventory.getSku() + "' ");
+			}
+			if (StringUtil.isNotNull(itemShelfInventory.getBatchNo())) {
+				sb.append(" and batch_no = '" + itemShelfInventory.getBatchNo() + "' ");
+			}
+			if (StringUtil.isNotNull(itemShelfInventory.getSeatCode())) {
+				sb.append(" and seat_code = '" + itemShelfInventory.getSeatCode() + "' ");
+			}
+			if (itemShelfInventory.getQuantity() != null) {
+				sb.append(" and quantity = " + itemShelfInventory.getQuantity());
+			}
+			if (itemShelfInventory.getAvailableQuantity() != null) {
+				sb.append(" and available_quantity = " + itemShelfInventory.getAvailableQuantity());
+			}
+			if (itemShelfInventory.getLastUpdateTime() != null) {
+				sb.append(" and last_update_time = " + itemShelfInventory.getLastUpdateTime());
+			}
+			if (itemShelfInventory.getUserIdOfCustomer() != null) {
+				sb.append(" and user_id_of_customer = " + itemShelfInventory.getUserIdOfCustomer());
+			}
+			if (itemShelfInventory.getId() != null) {
+				sb.append(" and id = " + itemShelfInventory.getId());
+			}
+			if (itemShelfInventory.getWarehouseId() != null) {
+				sb.append(" and warehouse_id = " + itemShelfInventory.getWarehouseId());
+			}
+		}
+		String sql = sb.toString();
+		logger.info("统计库位可用库存数量sql:" + sql);
+		Long count = jdbcTemplate.queryForObject(sql, Long.class);
+		if (count == null) {
+			return 0l;
+		}
+		return count;
 	}
 }
