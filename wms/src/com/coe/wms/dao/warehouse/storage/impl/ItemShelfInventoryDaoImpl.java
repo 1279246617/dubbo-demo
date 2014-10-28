@@ -10,6 +10,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.simple.ParameterizedBeanPropertyRowMapper;
@@ -18,9 +19,11 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import com.coe.wms.dao.warehouse.storage.IItemShelfInventoryDao;
+import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderItemShelf;
 import com.coe.wms.model.warehouse.storage.record.ItemShelfInventory;
 import com.coe.wms.model.warehouse.storage.record.OnShelf;
 import com.coe.wms.util.DateUtil;
+import com.coe.wms.util.NumberUtil;
 import com.coe.wms.util.Pagination;
 import com.coe.wms.util.StringUtil;
 import com.mysql.jdbc.Statement;
@@ -225,5 +228,24 @@ public class ItemShelfInventoryDaoImpl implements IItemShelfInventoryDao {
 	public int updateItemShelfInventoryQuantity(Long id, Integer quantity) {
 		String sql = "update w_s_item_shelf_inventory set quantity=" + quantity + " where id=" + id;
 		return jdbcTemplate.update(sql);
+	}
+
+	@Override
+	public int updateBatchItemShelfInventoryAvailableQuantity(final List<ItemShelfInventory> itemShelfInventoryList) {
+		final String sql = "update w_s_item_shelf_inventory set quantity= ? where id = ?";
+		int[] batchUpdateSize = jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+			@Override
+			public void setValues(PreparedStatement ps, int i) throws SQLException {
+				ItemShelfInventory item = itemShelfInventoryList.get(i);
+				ps.setInt(1, item.getQuantity());
+				ps.setLong(2, item.getId());
+			}
+			
+			@Override
+			public int getBatchSize() {
+				return itemShelfInventoryList.size();
+			}
+		});
+		return NumberUtil.sumArry(batchUpdateSize);
 	}
 }
