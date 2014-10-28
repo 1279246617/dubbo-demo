@@ -209,25 +209,4 @@ public class OnShelfDaoImpl implements IOnShelfDao {
 		}
 		return count.intValue();
 	}
-
-	@Override
-	public List<OnShelf> findOnShelfForOutShelf(String sku, Long warehouseId, Long useIdOfCustomer) {
-		StringBuffer sb = new StringBuffer();
-		sb.append("select id,warehouse_id,user_id_of_operator,user_id_of_customer,in_warehouse_record_id,batch_no,seat_code,quantity,sku,created_time,tracking_no from w_s_on_shelf where status != 'COMPLETE' ");
-		if (StringUtil.isNotNull(sku)) {
-			sb.append(" and sku = '" + sku + "' ");
-		}
-		if (warehouseId != null) {
-			sb.append(" and warehouse_id = " + warehouseId);
-		}
-		if (useIdOfCustomer != null) {
-			sb.append(" and user_id_of_customer = " + useIdOfCustomer);
-		}
-		sb.append(" order by batch_no asc,created_time asc;");
-		String sql = sb.toString();
-		logger.info("查询上架记录明细sql:" + sql);
-		List<OnShelf> onShelfList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(OnShelf.class));
-		logger.info("查询上架记录明细sql:" + sql + " size:" + onShelfList.size());
-		return onShelfList;
-	}
 }
