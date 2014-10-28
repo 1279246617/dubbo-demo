@@ -23,16 +23,17 @@ import com.coe.wms.dao.warehouse.storage.IOnShelfStatusDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderAdditionalSfDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderItemDao;
+import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderItemShelfDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderReceiverDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderSenderDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderStatusDao;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrder;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderAdditionalSf;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderItem;
+import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderItemShelf;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderReceiver;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus.OutWarehouseOrderStatusCode;
 import com.coe.wms.model.warehouse.storage.record.OnShelf;
-import com.coe.wms.model.warehouse.storage.record.OnShelfStatus.OnShelfStatusCode;
 import com.coe.wms.service.print.IPrintService;
 import com.coe.wms.util.BarcodeUtil;
 import com.coe.wms.util.Constant;
@@ -63,6 +64,9 @@ public class PrintServiceImpl implements IPrintService {
 
 	@Resource(name = "outWarehouseOrderItemDao")
 	private IOutWarehouseOrderItemDao outWarehouseOrderItemDao;
+
+	@Resource(name = "outWarehouseOrderItemShelfDao")
+	private IOutWarehouseOrderItemShelfDao outWarehouseOrderItemShelfDao;
 
 	@Resource(name = "outWarehouseOrderSenderDao")
 	private IOutWarehouseOrderSenderDao outWarehouseOrderSenderDao;
@@ -116,9 +120,10 @@ public class PrintServiceImpl implements IPrintService {
 		itemParam.setOutWarehouseOrderId(outWarehouseOrderId);
 		List<OutWarehouseOrderItem> items = outWarehouseOrderItemDao.findOutWarehouseOrderItem(itemParam, null, null);
 		// 此出库订单是否已经打印过捡货单,用于判断是否需要预扣上架数量, true-需要, false-不需要
-		boolean bool = StringUtil.isEqual(Constant.N, outWarehouseOrder.getIsPrinted());
+		boolean isNotPrinted = StringUtil.isEqual(Constant.N, outWarehouseOrder.getIsPrinted());
 		// 根据出库订单物品 SKU和数量,按批次,SKU查找上架表
 		List<Map<String, String>> itemMapList = new ArrayList<Map<String, String>>();
+		List<OutWarehouseOrderItemShelf> itemShelfList = new ArrayList<OutWarehouseOrderItemShelf>();
 		for (OutWarehouseOrderItem item : items) {
 			List<OnShelf> onShelfList = onShelfDao.findOnShelfForOutShelf(item.getSku(), outWarehouseOrder.getWarehouseId(),
 					outWarehouseOrder.getUserIdOfCustomer());
@@ -130,6 +135,18 @@ public class PrintServiceImpl implements IPrintService {
 				itemMap.put("skuUnitPrice", item.getSkuUnitPrice() + " " + item.getSkuPriceCurrency());
 				itemMap.put("seatCode", onShelf.getSeatCode());
 				itemMapList.add(itemMap);
+				// 打印捡货单,记录出库订单对应的库位和物品.下次打印时 使用已经保存的库位和物品信息
+				OutWarehouseOrderItemShelf itemShelf = new OutWarehouseOrderItemShelf();
+				itemShelf.setOutWarehouseOrderId(outWarehouseOrderId);
+				itemShelf.setQuantity(item.getQuantity());
+				itemShelf.setSeatCode(onShelf.getSeatCode());
+				itemShelf.setSku(item.getSku());
+				itemShelf.setSkuName(item.getSkuName());
+				itemShelf.setSkuNetWeight(item.getSkuNetWeight());
+				itemShelf.setSkuPriceCurrency(item.getSkuPriceCurrency());
+				itemShelf.setSkuUnitPrice(item.getSkuUnitPrice());
+				itemShelfList.add(itemShelf);
+
 				// 预下架的数量
 				int preOutQuantity = onShelf.getPreOutQuantity();
 				// 此上架记录未下架的产品数量
@@ -144,29 +161,31 @@ public class PrintServiceImpl implements IPrintService {
 					// 如果需要下架的产品大于库位上的产品数量,全部下架
 					itemMap.put("quantity", unOutQuantity + "");
 					// 更新此上架记录为全部已预下架
-					if (bool) {
+					if (isNotPrinted) {
 						onShelfDao.updateOnShelfPreOutQuantity(onShelf.getId(), unOutQuantity);
 					}
 					break;
 				} else if (needQuantity > 0) {
 					itemMap.put("quantity", unOutQuantity + "");
 					// 更新此上架记录为全部已预下架
-					if (bool) {
+					if (isNotPrinted) {
 						onShelfDao.updateOnShelfPreOutQuantity(onShelf.getId(), unOutQuantity);
 					}
 				} else if (needQuantity < 0) {
 					itemMap.put("quantity", -needQuantity + "");
 					// 更新此上架记录为部分已预下架
-					if (bool) {
+					if (isNotPrinted) {
 						onShelfDao.updateOnShelfPreOutQuantity(onShelf.getId(), preOutQuantity - needQuantity);
 					}
 					break;
 				}
 			}
 		}
+		
 		map.put("items", itemMapList);
-		// 更新为已经打印
-		if (bool) {
+		if (isNotPrinted) {
+			// 更新为已经打印,并保存库位信息
+			outWarehouseOrderItemShelfDao.saveBatchOutWarehouseOrderItemShelf(itemShelfList);
 			outWarehouseOrderDao.updateOutWarehouseOrderIsPrinted(outWarehouseOrderId, Constant.Y);
 		}
 		return map;

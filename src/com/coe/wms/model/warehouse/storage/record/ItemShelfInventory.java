@@ -3,7 +3,9 @@ package com.coe.wms.model.warehouse.storage.record;
 import java.io.Serializable;
 
 /**
- * 产品批次库存
+ * 产品货位库存
+ * 
+ * 
  * 
  * 
  * 通过触发器 在入库 出库时 修改此表记录. 定时和流水记录统计对比
@@ -11,7 +13,7 @@ import java.io.Serializable;
  * @author Administrator
  * 
  */
-public class ItemInventory implements Serializable {
+public class ItemShelfInventory implements Serializable {
 
 	/**
 	 * 
@@ -24,7 +26,7 @@ public class ItemInventory implements Serializable {
 	private Long warehouseId;
 
 	private String sku;
-	
+
 	/**
 	 * 实际库存
 	 */
@@ -39,9 +41,9 @@ public class ItemInventory implements Serializable {
 
 	private Long lastUpdateTime;
 	/**
-	 * 入库批次号 可以查到某批次还剩余多少货
+	 * 货位号,可以查到货位上的SKU数量
 	 */
-	private String batchNo;
+	private String seatCode;
 
 	public Long getUserIdOfCustomer() {
 		return userIdOfCustomer;
@@ -91,12 +93,12 @@ public class ItemInventory implements Serializable {
 		this.quantity = quantity;
 	}
 
-	public String getBatchNo() {
-		return batchNo;
+	public String getSeatCode() {
+		return seatCode;
 	}
 
-	public void setBatchNo(String batchNo) {
-		this.batchNo = batchNo;
+	public void setSeatCode(String seatCode) {
+		this.seatCode = seatCode;
 	}
 
 	public Long getWarehouseId() {
@@ -107,4 +109,3 @@ public class ItemInventory implements Serializable {
 		this.warehouseId = warehouseId;
 	}
 }
-
