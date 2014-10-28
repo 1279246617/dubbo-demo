@@ -47,7 +47,7 @@ function checkOrder(){
 				}
         		$.post(baseUrl + '/warehouse/storage/checkOutWarehouseOrder.do',{orderIds:orderIds,checkResult:checkResult},function(msg){
         			if(msg.status == "1"){
-        				parent.$.showShortMessage({msg:msg.message,animate:true,left:"40%"});
+        				parent.$.showShortMessage({msg:msg.message,animate:true,left:"38%"});
         				grid.loadData();	
         			}else{
         				parent.$.showShortMessage({msg:msg.message,animate:true,left:"43%"});
