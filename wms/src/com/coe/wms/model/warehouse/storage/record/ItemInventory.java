@@ -3,7 +3,7 @@ package com.coe.wms.model.warehouse.storage.record;
 import java.io.Serializable;
 
 /**
- * 产品库存
+ * 产品批次库存
  * 
  * 
  * 通过触发器 在入库 出库时 修改此表记录. 定时和流水记录统计对比
@@ -24,7 +24,7 @@ public class ItemInventory implements Serializable {
 	private Long warehouseId;
 
 	private String sku;
-
+	
 	/**
 	 * 实际库存
 	 */
@@ -107,3 +107,4 @@ public class ItemInventory implements Serializable {
 		this.warehouseId = warehouseId;
 	}
 }
+
