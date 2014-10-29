@@ -1032,8 +1032,8 @@ public class StorageServiceImpl implements IStorageService {
 				itemShelfInventoryDao.updateBatchItemShelfInventoryAvailableQuantity(waitUpdateavAilableQuantityList);
 				// 保存打印捡货单需要的库位和物品信息
 				outWarehouseOrderItemShelfDao.saveBatchOutWarehouseOrderItemShelf(outWarehouseOrderItemShelfList);
-				// COE审核通过,等待称重 Wait Warehouse Weighing
-				int updateResult = outWarehouseOrderDao.updateOutWarehouseOrderStatus(orderIdLong, OutWarehouseOrderStatusCode.WWW);
+				// COE审核通过,等待打印捡货单
+				int updateResult = outWarehouseOrderDao.updateOutWarehouseOrderStatus(orderIdLong, OutWarehouseOrderStatusCode.WPP);
 				updateQuantity++;
 			} else {
 				notEnougnQuantity++;

@@ -71,15 +71,13 @@ public class OutWarehouseOrder implements Serializable {
 	 * 顺丰API字段,等于卖家备注,用于打印捡货单上的卖家备注
 	 */
 	private String logisticsRemark;
-	
+
 	/**
 	 * 
-	 * 标识是否已经打印捡货单
-	 * 
-	 *  是否已经预扣上架产品数量
+	 * 标识是否已经打印捡货单 打印次数
 	 */
-	private String isPrinted;
-	
+	private Integer printedCount;
+
 	/**
 	 * 状态
 	 */
@@ -165,12 +163,14 @@ public class OutWarehouseOrder implements Serializable {
 		this.logisticsRemark = logisticsRemark;
 	}
 
-	public String getIsPrinted() {
-		return isPrinted;
+ 
+
+	public Integer getPrintedCount() {
+		return printedCount;
 	}
 
-	public void setIsPrinted(String isPrinted) {
-		this.isPrinted = isPrinted;
+	public void setPrintedCount(Integer printedCount) {
+		this.printedCount = printedCount;
 	}
 
 	public Double getOutWarehouseWeight() {
