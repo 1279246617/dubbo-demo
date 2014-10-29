@@ -17,17 +17,27 @@ public class OutWarehouseOrderStatus implements Serializable {
 		 * 顺丰新建出库订单,等待COE审核 Wait Warehouse Check
 		 */
 		public static final String WWC = "WWC";
+
 		/**
-		 * COE审核通过,等待称重 Wait Warehouse Weighing
+		 * 审核通过,等待打印捡货单
+		 */
+		public static final String WPP = "WPP";
+
+		/**
+		 * 打印捡货单,等待下架捡货
+		 */
+		public static final String WOS = "WOS";
+
+		/**
+		 * 下架捡货完成,等待称重 Wait Warehouse Weighing
 		 */
 		public static final String WWW = "WWW";
-		
+
 		/**
-		 * COE已称重,等待回传称重给客户
-		 * Wait Send Weighing
+		 * COE已称重,等待回传称重给客户 Wait Send Weighing
 		 */
 		public static final String WSW = "WSW";
-		
+
 		/**
 		 * COE称重,并已经回传出库重量
 		 * 
@@ -43,7 +53,7 @@ public class OutWarehouseOrderStatus implements Serializable {
 		 * 出库成功 Out Warehouse Success
 		 */
 		public static final String SUCCESS = "SUCCESS";
-		
+
 		/**
 		 * 出库失败 Out Warehouse Fail
 		 */

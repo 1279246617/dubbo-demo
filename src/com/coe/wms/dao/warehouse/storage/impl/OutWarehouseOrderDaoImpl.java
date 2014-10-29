@@ -45,7 +45,7 @@ public class OutWarehouseOrderDaoImpl implements IOutWarehouseOrderDao {
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public long saveOutWarehouseOrder(final OutWarehouseOrder order) {
-		final String sql = "insert into w_s_out_warehouse_order (warehouse_id,user_id_of_customer,user_id_of_operator,shipway_code,created_time,status,remark,customer_reference_no,out_warehouse_weight,weight_code,trade_remark,logistics_remark,tracking_no,is_printed) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		final String sql = "insert into w_s_out_warehouse_order (warehouse_id,user_id_of_customer,user_id_of_operator,shipway_code,created_time,status,remark,customer_reference_no,out_warehouse_weight,weight_code,trade_remark,logistics_remark,tracking_no,printed_count) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
@@ -82,7 +82,7 @@ public class OutWarehouseOrderDaoImpl implements IOutWarehouseOrderDao {
 
 	@Override
 	public OutWarehouseOrder getOutWarehouseOrderById(Long outWarehouseOrderId) {
-		String sql = "select id,warehouse_id,user_id_of_customer,user_id_of_operator,shipway_code,created_time,status,remark,customer_reference_no,callback_send_weight_is_success,callback_send_weigh_count,callback_send_status_is_success,callback_send_status_count,out_warehouse_weight,weight_code,trade_remark,logistics_remark,tracking_no,is_printed from w_s_out_warehouse_order where id ="
+		String sql = "select id,warehouse_id,user_id_of_customer,user_id_of_operator,shipway_code,created_time,status,remark,customer_reference_no,callback_send_weight_is_success,callback_send_weigh_count,callback_send_status_is_success,callback_send_status_count,out_warehouse_weight,weight_code,trade_remark,logistics_remark,tracking_no,printed_count from w_s_out_warehouse_order where id ="
 				+ outWarehouseOrderId;
 		OutWarehouseOrder order = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<OutWarehouseOrder>(OutWarehouseOrder.class));
 		return order;
@@ -96,7 +96,7 @@ public class OutWarehouseOrderDaoImpl implements IOutWarehouseOrderDao {
 	@Override
 	public List<OutWarehouseOrder> findOutWarehouseOrder(OutWarehouseOrder outWarehouseOrder, Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select id,warehouse_id,user_id_of_customer,user_id_of_operator,shipway_code,created_time,status,remark,customer_reference_no,callback_send_weight_is_success,callback_send_weigh_count,callback_send_status_is_success,callback_send_status_count,out_warehouse_weight,weight_code,trade_remark,logistics_remark,tracking_no,is_printed from w_s_out_warehouse_order where 1=1 ");
+		sb.append("select id,warehouse_id,user_id_of_customer,user_id_of_operator,shipway_code,created_time,status,remark,customer_reference_no,callback_send_weight_is_success,callback_send_weigh_count,callback_send_status_is_success,callback_send_status_count,out_warehouse_weight,weight_code,trade_remark,logistics_remark,tracking_no,printed_count from w_s_out_warehouse_order where 1=1 ");
 		if (outWarehouseOrder != null) {
 			if (outWarehouseOrder.getId() != null) {
 				sb.append(" and id = " + outWarehouseOrder.getId());
@@ -141,19 +141,19 @@ public class OutWarehouseOrderDaoImpl implements IOutWarehouseOrderDao {
 				sb.append(" and out_warehouse_weight = " + outWarehouseOrder.getOutWarehouseWeight());
 			}
 			if (outWarehouseOrder.getWeightCode() != null) {
-				sb.append(" and weight_code = " + outWarehouseOrder.getWeightCode());
+				sb.append(" and weight_code = '" + outWarehouseOrder.getWeightCode() + "'");
 			}
 			if (outWarehouseOrder.getTradeRemark() != null) {
-				sb.append(" and trade_remark = " + outWarehouseOrder.getTradeRemark());
+				sb.append(" and trade_remark = '" + outWarehouseOrder.getTradeRemark() + "'");
 			}
 			if (outWarehouseOrder.getLogisticsRemark() != null) {
-				sb.append(" and logistics_remark = " + outWarehouseOrder.getLogisticsRemark());
+				sb.append(" and logistics_remark = '" + outWarehouseOrder.getLogisticsRemark() + "'");
 			}
 			if (outWarehouseOrder.getTrackingNo() != null) {
-				sb.append(" and tracking_no = " + outWarehouseOrder.getTrackingNo());
+				sb.append(" and tracking_no = '" + outWarehouseOrder.getTrackingNo() + "'");
 			}
-			if (outWarehouseOrder.getIsPrinted() != null) {
-				sb.append(" and is_printed = " + outWarehouseOrder.getIsPrinted());
+			if (outWarehouseOrder.getPrintedCount() != null) {
+				sb.append(" and printed_count = " + outWarehouseOrder.getPrintedCount());
 			}
 		}
 		if (moreParam != null) {
@@ -176,8 +176,7 @@ public class OutWarehouseOrderDaoImpl implements IOutWarehouseOrderDao {
 		}
 		String sql = sb.toString();
 		logger.info("查询出库订单sql:" + sql);
-		List<OutWarehouseOrder> outWarehouseOrderList = jdbcTemplate.query(sql,
-				ParameterizedBeanPropertyRowMapper.newInstance(OutWarehouseOrder.class));
+		List<OutWarehouseOrder> outWarehouseOrderList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(OutWarehouseOrder.class));
 		return outWarehouseOrderList;
 	}
 
@@ -210,6 +209,7 @@ public class OutWarehouseOrderDaoImpl implements IOutWarehouseOrderDao {
 			if (StringUtil.isNotNull(outWarehouseOrder.getCustomerReferenceNo())) {
 				sb.append(" and customer_reference_no = '" + outWarehouseOrder.getCustomerReferenceNo() + "' ");
 			}
+
 			if (StringUtil.isNotNull(outWarehouseOrder.getCallbackSendWeightIsSuccess())) {
 				sb.append(" and callback_send_weight_is_success = '" + outWarehouseOrder.getCallbackSendWeightIsSuccess() + "' ");
 			}
@@ -223,23 +223,24 @@ public class OutWarehouseOrderDaoImpl implements IOutWarehouseOrderDao {
 			if (outWarehouseOrder.getCallbackSendStatusCount() != null) {
 				sb.append(" and callback_send_status_count = " + outWarehouseOrder.getCallbackSendStatusCount());
 			}
+
 			if (outWarehouseOrder.getOutWarehouseWeight() != null) {
 				sb.append(" and out_warehouse_weight = " + outWarehouseOrder.getOutWarehouseWeight());
 			}
 			if (outWarehouseOrder.getWeightCode() != null) {
-				sb.append(" and weight_code = " + outWarehouseOrder.getWeightCode());
+				sb.append(" and weight_code = '" + outWarehouseOrder.getWeightCode() + "'");
 			}
 			if (outWarehouseOrder.getTradeRemark() != null) {
-				sb.append(" and trade_remark = " + outWarehouseOrder.getTradeRemark());
+				sb.append(" and trade_remark = '" + outWarehouseOrder.getTradeRemark() + "'");
 			}
 			if (outWarehouseOrder.getLogisticsRemark() != null) {
-				sb.append(" and logistics_remark = " + outWarehouseOrder.getLogisticsRemark());
+				sb.append(" and logistics_remark = '" + outWarehouseOrder.getLogisticsRemark() + "'");
 			}
 			if (outWarehouseOrder.getTrackingNo() != null) {
-				sb.append(" and tracking_no = " + outWarehouseOrder.getTrackingNo());
+				sb.append(" and tracking_no = '" + outWarehouseOrder.getTrackingNo() + "'");
 			}
-			if (outWarehouseOrder.getIsPrinted() != null) {
-				sb.append(" and is_printed = " + outWarehouseOrder.getIsPrinted());
+			if (outWarehouseOrder.getPrintedCount() != null) {
+				sb.append(" and printed_count = " + outWarehouseOrder.getPrintedCount());
 			}
 		}
 		if (moreParam != null) {
@@ -284,8 +285,7 @@ public class OutWarehouseOrderDaoImpl implements IOutWarehouseOrderDao {
 	 */
 	@Override
 	public List<Long> findCallbackSendWeightUnSuccessOrderId() {
-		String sql = "select id from w_s_out_warehouse_order where status ='" + OutWarehouseOrderStatusCode.WSW
-				+ "' and (callback_send_weight_is_success = 'N' or  callback_send_weight_is_success is null)";
+		String sql = "select id from w_s_out_warehouse_order where status ='" + OutWarehouseOrderStatusCode.WSW + "' and (callback_send_weight_is_success = 'N' or  callback_send_weight_is_success is null)";
 		List<Long> orderIdList = jdbcTemplate.queryForList(sql, Long.class);
 		return orderIdList;
 	}
@@ -297,8 +297,7 @@ public class OutWarehouseOrderDaoImpl implements IOutWarehouseOrderDao {
 	 */
 	@Override
 	public List<Long> findCallbackSendStatusUnSuccessOrderId() {
-		String sql = "select id from w_s_out_warehouse_order where status ='" + OutWarehouseOrderStatusCode.SUCCESS
-				+ "' and (callback_send_status_is_success = 'N' or  callback_send_status_is_success is null)";
+		String sql = "select id from w_s_out_warehouse_order where status ='" + OutWarehouseOrderStatusCode.SUCCESS + "' and (callback_send_status_is_success = 'N' or  callback_send_status_is_success is null)";
 		List<Long> orderIdList = jdbcTemplate.queryForList(sql, Long.class);
 		return orderIdList;
 	}
@@ -311,10 +310,8 @@ public class OutWarehouseOrderDaoImpl implements IOutWarehouseOrderDao {
 	 */
 	@Override
 	public int updateOutWarehouseOrderCallbackSendWeight(OutWarehouseOrder outWarehouseOrder) {
-		String sql = "update w_s_out_warehouse_order set callback_send_weight_is_success='"
-				+ outWarehouseOrder.getCallbackSendWeightIsSuccess() + "' ,callback_send_weigh_count = "
-				+ outWarehouseOrder.getCallbackSendWeighCount() + " , status='" + outWarehouseOrder.getStatus() + "' where id="
-				+ outWarehouseOrder.getId();
+		String sql = "update w_s_out_warehouse_order set callback_send_weight_is_success='" + outWarehouseOrder.getCallbackSendWeightIsSuccess() + "' ,callback_send_weigh_count = " + outWarehouseOrder.getCallbackSendWeighCount() + " , status='"
+				+ outWarehouseOrder.getStatus() + "' where id=" + outWarehouseOrder.getId();
 		return jdbcTemplate.update(sql);
 	}
 
@@ -326,10 +323,8 @@ public class OutWarehouseOrderDaoImpl implements IOutWarehouseOrderDao {
 	 */
 	@Override
 	public int updateOutWarehouseOrderCallbackSendStatus(OutWarehouseOrder outWarehouseOrder) {
-		String sql = "update w_s_out_warehouse_order set callback_send_status_is_success='"
-				+ outWarehouseOrder.getCallbackSendStatusIsSuccess() + "' ,callback_send_status_count = "
-				+ outWarehouseOrder.getCallbackSendStatusCount() + " , status='" + outWarehouseOrder.getStatus() + "' where id="
-				+ outWarehouseOrder.getId();
+		String sql = "update w_s_out_warehouse_order set callback_send_status_is_success='" + outWarehouseOrder.getCallbackSendStatusIsSuccess() + "' ,callback_send_status_count = " + outWarehouseOrder.getCallbackSendStatusCount() + " , status='"
+				+ outWarehouseOrder.getStatus() + "' where id=" + outWarehouseOrder.getId();
 		return jdbcTemplate.update(sql);
 	}
 
@@ -338,15 +333,14 @@ public class OutWarehouseOrderDaoImpl implements IOutWarehouseOrderDao {
 	 */
 	@Override
 	public int updateOutWarehouseOrderWeight(OutWarehouseOrder outWarehouseOrder) {
-		String sql = "update w_s_out_warehouse_order set out_warehouse_weight=" + outWarehouseOrder.getOutWarehouseWeight()
-				+ ",weight_code='" + outWarehouseOrder.getWeightCode() + "' , status='" + outWarehouseOrder.getStatus() + "' where id="
+		String sql = "update w_s_out_warehouse_order set out_warehouse_weight=" + outWarehouseOrder.getOutWarehouseWeight() + ",weight_code='" + outWarehouseOrder.getWeightCode() + "' , status='" + outWarehouseOrder.getStatus() + "' where id="
 				+ outWarehouseOrder.getId();
 		return jdbcTemplate.update(sql);
 	}
 
 	@Override
-	public int updateOutWarehouseOrderIsPrinted(Long id, String isPrinted) {
-		String sql = "update w_s_out_warehouse_order set is_printed= '" + isPrinted + "' where id=" + id;
+	public int updateOutWarehouseOrderPrintedCount(Long id, Integer newPrintedCount) {
+		String sql = "update w_s_out_warehouse_order set printed_count= " + newPrintedCount + " where id=" + id;
 		return jdbcTemplate.update(sql);
 	}
 }

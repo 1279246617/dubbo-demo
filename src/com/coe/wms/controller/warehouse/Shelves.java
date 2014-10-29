@@ -119,15 +119,13 @@ public class Shelves {
 
 	@ResponseBody
 	@RequestMapping(value = "/saveOnShelvesItem", method = RequestMethod.POST)
-	public String saveOnShelvesItem(HttpServletRequest request, String itemSku, Integer itemQuantity, String seatCode,
-			Long inWarehouseRecordId) throws IOException {
+	public String saveOnShelvesItem(HttpServletRequest request, String itemSku, Integer itemQuantity, String seatCode, Long inWarehouseRecordId) throws IOException {
 		// 操作员
 		Long userIdOfOperator = (Long) request.getSession().getAttribute(SessionConstant.USER_ID);
 		Map<String, String> map = new HashMap<String, String>();
 		map.put(Constant.STATUS, Constant.FAIL);
 		// 校验和保存
-		Map<String, String> serviceResult = storageService.saveOnShelvesItem(itemSku, itemQuantity, seatCode, inWarehouseRecordId,
-				userIdOfOperator);
+		Map<String, String> serviceResult = storageService.saveOnShelvesItem(itemSku, itemQuantity, seatCode, inWarehouseRecordId, userIdOfOperator);
 		// 失败
 		if (!StringUtil.isEqual(serviceResult.get(Constant.STATUS), Constant.SUCCESS)) {
 			map.put(Constant.MESSAGE, serviceResult.get(Constant.MESSAGE));
@@ -149,8 +147,7 @@ public class Shelves {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/getOnShelvesData")
-	public String getOnShelvesData(HttpServletRequest request, String sortorder, String sortname, int page, int pagesize,
-			String userLoginName, Long warehouseId, String trackingNo, String batchNo, String createdTimeStart, String createdTimeEnd)
+	public String getOnShelvesData(HttpServletRequest request, String sortorder, String sortname, int page, int pagesize, String userLoginName, Long warehouseId, String trackingNo, String batchNo, String createdTimeStart, String createdTimeEnd)
 			throws IOException {
 		if (StringUtil.isNotNull(createdTimeStart) && createdTimeStart.contains(",")) {
 			createdTimeStart = createdTimeStart.substring(createdTimeStart.lastIndexOf(",") + 1, createdTimeStart.length());
@@ -186,7 +183,28 @@ public class Shelves {
 		return GsonUtil.toJson(map);
 	}
 
-	public void listSeat(){
-		
+	public void listSeat() {
+
 	}
+
+	/**
+	 * 上架界面
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/outShelves", method = RequestMethod.GET)
+	public ModelAndView outShelves(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		ModelAndView view = new ModelAndView();
+		HttpSession session = request.getSession();
+		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
+		User user = userService.getUserById(userId);
+		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
+		view.setViewName("warehouse/shelves/outShelves");
+		view.addObject("warehouseList", storageService.findAllWarehouse(user.getDefaultWarehouseId()));
+		return view;
+	}
+
 }

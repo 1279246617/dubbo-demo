@@ -26,7 +26,7 @@ public interface IOutWarehouseOrderDao {
 
 	public int updateOutWarehouseOrderCallbackSendWeight(OutWarehouseOrder outWarehouseOrder);
 
-	public int updateOutWarehouseOrderIsPrinted(Long id, String isPrinted);
+	public int updateOutWarehouseOrderPrintedCount(Long id, Integer newPrintedCount);
 
 	public int updateOutWarehouseOrderCallbackSendStatus(OutWarehouseOrder outWarehouseOrder);
 

@@ -128,7 +128,16 @@ public class PrintServiceImpl implements IPrintService {
 			totalQuantity += itemShelf.getQuantity();
 		}
 		map.put("totalQuantity", totalQuantity);
-		outWarehouseOrderDao.updateOutWarehouseOrderIsPrinted(outWarehouseOrderId, Constant.Y);
+		if (outWarehouseOrder.getPrintedCount() == null) {
+			outWarehouseOrderDao.updateOutWarehouseOrderPrintedCount(outWarehouseOrderId, 1);
+		} else {
+			outWarehouseOrderDao.updateOutWarehouseOrderPrintedCount(outWarehouseOrderId, outWarehouseOrder.getPrintedCount() + 1);
+		}
+		// 如果当前订单状态是等待打印
+		if (StringUtil.isEqual(outWarehouseOrder.getStatus(), OutWarehouseOrderStatusCode.WPP)) {
+			// 更新状态为已经打印捡货单,等待下架
+			outWarehouseOrderDao.updateOutWarehouseOrderStatus(outWarehouseOrderId, OutWarehouseOrderStatusCode.WOS);
+		}
 		return map;
 	}
 
