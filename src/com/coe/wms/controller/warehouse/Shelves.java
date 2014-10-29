@@ -200,10 +200,8 @@ public class Shelves {
 		ModelAndView view = new ModelAndView();
 		HttpSession session = request.getSession();
 		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
-		User user = userService.getUserById(userId);
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
 		view.setViewName("warehouse/shelves/outShelves");
-		view.addObject("warehouseList", storageService.findAllWarehouse(user.getDefaultWarehouseId()));
 		return view;
 	}
 

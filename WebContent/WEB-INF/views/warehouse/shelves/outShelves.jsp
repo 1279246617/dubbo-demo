@@ -96,15 +96,16 @@
   	  //回车事件
   	  function clickEnter(){
   		  	if(focus == '1'){
-  		  		enterTrackingNoStep();	
+  		  	enterCustomerReferenceNoStep();	
   		  	}
     		//保存明细
 			if(focus == '2'){
 				saveOnShelvesItem();
 			}
   	  }
-	  	 
-  	 function enterTrackingNoStep(){
+	  	
+  	  //输入客户参考号回车事件
+  	 function enterCustomerReferenceNoStep(){
    		$("#inWarehouseRecordtbody").html("");
    		var trackingNoStr  = $("#trackingNo").val();
    		// 检查跟踪号是否能找到唯一的入库订单
