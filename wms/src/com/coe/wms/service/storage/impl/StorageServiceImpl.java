@@ -554,6 +554,7 @@ public class StorageServiceImpl implements IStorageService {
 				}
 			}
 			map.put("remark", order.getRemark());
+			map.put("printedCount", order.getPrintedCount());
 			OutWarehouseOrderStatus outWarehouseOrderStatus = outWarehouseOrderStatusDao.findOutWarehouseOrderStatusByCode(order.getStatus());
 			if (outWarehouseOrderStatus != null) {
 				map.put("status", outWarehouseOrderStatus.getCn());
@@ -1003,6 +1004,7 @@ public class StorageServiceImpl implements IStorageService {
 						// 否则此库位的可用库存全部使用,并继续找下一库位
 						// 需要下架的产品减去此货架可用库存
 						needQuantity = needQuantity - availableQuantity;
+						quantity = availableQuantity;
 						// 更新可用库存=0
 						availableQuantity = 0;
 						if (needQuantity <= 0) {
@@ -1026,7 +1028,7 @@ public class StorageServiceImpl implements IStorageService {
 					isNotEnough = true;
 				}
 			}
-			
+
 			if (!isNotEnough) {
 				// 更新库位的可用库存
 				itemShelfInventoryDao.updateBatchItemShelfInventoryAvailableQuantity(waitUpdateavAilableQuantityList);

@@ -164,6 +164,7 @@
 		                { display: '收件人电话', name: 'receiverMobileNumber', align: 'center', type: 'float',width:'8%'},
 		                { display: '发件人名', name: 'senderName', align: 'center', type: 'float',width:'8%'},
 		                { display: '备注', name: 'remark', align: 'center', type: 'float',width:'15%'},
+		                { display: '打印次数', name: 'printedCount', align: 'center', type: 'float',width:'8%'},
 		                { display: '创建时间', name: 'createdTime', align: 'center', type: 'float',width:'12%'},
 		                {display: '操作',isSort: false,width: '10%',render: function(row) {
 		            		var h = "";
