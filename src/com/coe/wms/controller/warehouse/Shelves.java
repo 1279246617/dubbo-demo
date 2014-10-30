@@ -20,6 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.coe.wms.controller.Application;
 import com.coe.wms.model.user.User;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
+import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrder;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecord;
 import com.coe.wms.model.warehouse.storage.record.OnShelf;
 import com.coe.wms.service.storage.IStorageService;
@@ -188,7 +189,7 @@ public class Shelves {
 	}
 
 	/**
-	 * 上架界面
+	 * 下架界面
 	 * 
 	 * @param request
 	 * @param response
@@ -205,4 +206,29 @@ public class Shelves {
 		return view;
 	}
 
+	@ResponseBody
+	@RequestMapping(value = "/submitOutShelfItems")
+	public String submitOutShelfItems(HttpServletRequest request, String customerReferenceNo, String outShelfItems) throws IOException {
+		Map<String, String> map = new HashMap<String, String>();
+
+		logger.info("提交下架:customerReferenceNo:" + customerReferenceNo + " outShelfItems:" + outShelfItems);
+		return GsonUtil.toJson(map);
+	}
+
+	/**
+	 * 
+	 * 找到唯一的出库订单,并且是待下架的
+	 * 
+	 * @param request
+	 * @param trackingNo
+	 * @param userLoginName
+	 * @return
+	 * @throws IOException
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/checkFindOutWarehouseOrder")
+	public String checkFindOutWarehouseOrder(HttpServletRequest request, String customerReferenceNo) throws IOException {
+		Map<String, String> map = storageService.checkOutWarehouseOrderByCustomerReferenceNo(customerReferenceNo);
+		return GsonUtil.toJson(map);
+	}
 }
