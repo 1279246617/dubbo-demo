@@ -18,7 +18,7 @@
 <title>COE</title>
 </head>
 <body>
-	<div class="pull-left" style="width:100%;height:280px; margin-top: 1px;" >
+	<div class="pull-left" style="width:100%;margin-top: 1px;overflow-x: hidden;overflow-y: auto;height: 205px;" >
 			<table class="table table-striped" style="width:100%;margin-bottom: 5px">
 					<tr style="height:15px;">
 							<td style="width:252px;">
@@ -47,19 +47,38 @@
 						
 						<span class="pull-left" style="width:52px;">产品SKU</span>
 						<span class="pull-left" style="width:160px;">
-							<input type="text"  name="itemSku" t="2"  id="itemSku" style="width:130px;"/>
+							<input type="text"  name="sku" t="3"  id="sku" style="width:130px;"/>
 						</span>
 						
 						<span class="pull-left" style="width:52px;">产品数量</span>
 						<span class="pull-left" style="width:102px;">
-							<input type="text"  name="itemQuantity"  id="itemQuantity" t="2" style="width:90px;" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"/>
+							<input type="text"  name="quantity"  id="quantity" t="4" style="width:90px;" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"/>
 						</span>
 						
-						<span class="pull-left" style="width:105px;">
-							<a class="btn  btn-primary" id="enterItem" onclick="saveOnShelvesItem();" style="cursor:pointer;"><i class="icon-ok icon-white"></i>保存下架</a>
+						<span class="pull-left" style="width:145px;">
+							<a class="btn  btn-primary" id="enterItem" onclick="saveOnShelvesItem();" style="cursor:pointer;"><i class="icon-ok icon-white"></i>继续下一货位</a>
 						</span>
 					</td>	
 			</tr>	
+		</table>
+		
+		<span class="pull-left" style="width:145px;height:50px; margin-top: 20px;margin-left: 7px;">
+				<a class="btn  btn-primary" id="enterItem" onclick="submitOutShelf();" style="cursor:pointer;"><i class="icon-ok icon-white"></i>保存本订单下架</a>
+		</span>
+	</div>
+	
+	<div class="pull-left" style="width:100%; margin-top: 1px;overflow-x: hidden;overflow-y: auto;height: 345px;" >
+		<table class="table table-striped" style="width:1200px;margin-bottom: 0px">
+			<thead>
+					<tr>
+					<th>货位</th>
+					<th>产品SKU</th>
+					<th>产品数量</th>
+				</tr>
+			</thead>
+			<tbody id="outShelfItemTbody">
+				
+			</tbody>	
 		</table>
 	</div>
 	
@@ -96,67 +115,65 @@
   	  //回车事件
   	  function clickEnter(){
   		  	if(focus == '1'){
-  		  	enterCustomerReferenceNoStep();	
+  		  		enterCustomerReferenceNoStep();
+  		  		return false;
   		  	}
-    		//保存明细
 			if(focus == '2'){
-				saveOnShelvesItem();
+				//输入货位后按回车,去到sku
+				$("#sku").focus();
+				focus = '3';
+				return false;
+			}
+			if(focus == '3'){
+				//输入sku后按回车,去到quantity
+				$("#quantity").focus();
+				focus = '4';
+				return false;
+			}
+			if(focus == '4'){
+				//输入数量,提交一次sku下架
+				saveOutShelvesItem();
+				return false;
 			}
   	  }
 	  	
   	  //输入客户参考号回车事件
   	 function enterCustomerReferenceNoStep(){
-   		$("#inWarehouseRecordtbody").html("");
-   		var trackingNoStr  = $("#trackingNo").val();
-   		// 检查跟踪号是否能找到唯一的入库订单
-   		$.getJSON(baseUrl+ '/warehouse/shelves/checkFindInWarehouseRecord.do?trackingNo='+ trackingNoStr, function(msg) {
-   			if (msg.status == -1) {
-   				parent.$.showDialogMessage(msg.message, null, null);
+   		var customerReferenceNo  = $("#customerReferenceNo").val();
+   		$("#outShelfItemTbody").html("");
+   		outShelfItems = "";
+   		// 检查客户订单号是否能找到唯一的出库订单
+   		$.getJSON(baseUrl+ '/warehouse/shelves/checkFindOutWarehouseOrder.do?customerReferenceNo='+ customerReferenceNo, function(msg) {
+   			if (msg.status == 1) {
+   				//成功,并锁定输入框
+   				$("#customerReferenceNo").attr("readonly","readonly");
+   				$("#tips").html("请输入货位号并按回车!");
+   				$("#seatCode").focus();
+   				focus = '2';
    				return false;
    			}
-   			var table = $("#inWarehouseRecordtable");
-   			table.show();
-   			$.each(msg.mapList, function(i, n) {
-   				var tr = "<tr>";
-   				if (msg.status == 1) {
-   					tr+="<td style='width:25px;text-align:center;'><input type='radio' t='1' recordId='"+n.recordId+"' name='inWarehouseOrderRadio' value='radiobutton' checked></td>";	
-   				}else{
-   					tr+="<td style='width:25px;text-align:center;'><input type='radio' t='1' recordId='"+n.recordId+"' name='inWarehouseOrderRadio' value='radiobutton'></td>";
-   				}
-   				tr+="<td style='width:155px;text-align:center;'>"+n.userLoginName+"</td>";
-   				tr+="<td style='width:225px;text-align:center;'>"+n.trackingNo+"</td>";
-   				tr+="<td style='width:205px;text-align:center;'>"+n.batchNo+"</td>";
-   				tr+="<td style='width:205px;text-align:center;'>"+n.userLoginNameOfOperator+"</td>";
-   				tr+="<td style='width:205px;text-align:center;'>"+n.createdTime+"</td>";
-   				tr+="<td style='width:205px;text-align:center;'>"+n.status+"</td>";
-   				tr+="</tr>";
-   				$("#inWarehouseRecordtbody").append(tr);
-   			});
-   			if (msg.status == 2) {
+   			if (msg.status == 0) {
    				parent.$.showDialogMessage(msg.message, null, null);
    				return false;
    			}
    		});
    	  }
-	  	  
-  	  function saveOnShelvesItem(){
-	  		//在判断跟踪号是否改变前,获取用户选择的入库订单
-	  		var inWarehouseOrderRadio = $('input[name="inWarehouseOrderRadio"]').filter(':checked');
-	  		var recordId = '';
-	  		if(inWarehouseOrderRadio.length){
-	  			recordId = inWarehouseOrderRadio.attr("recordId");
-	  		}
-	  		if(recordId == ''){
-	  			parent.$.showDialogMessage("请输入正确跟踪单号,并选择一个收货记录", null, null);
+	  
+  	  
+  	  var outShelfItems = "";//用于提交
+  	  function saveOutShelvesItem(){
+  			var customerReferenceNo  = $("#customerReferenceNo").val();
+  			if(customerReferenceNo == null || customerReferenceNo ==''){
+  				parent.$.showDialogMessage("请先输入客户订单号", null, null);
 	  			return false;
-	  		}
-	  		var itemSku = $("#itemSku").val();
-	  		if(itemSku == null || itemSku ==''){
+  			}
+	  		var sku = $("#sku").val();
+	  		if(sku == null || sku ==''){
 	  			parent.$.showShortMessage({msg:"请输入产品SKU",animate:true,left:"43%"});
 	  			return false;
 	  		}
-	  		var itemQuantity = $("#itemQuantity").val();
-	  		if(itemQuantity == null || itemQuantity ==''){
+	  		var quantity = $("#quantity").val();
+	  		if(quantity == null || quantity ==''){
 	  			parent.$.showShortMessage({msg:"请输入产品数量",animate:true,left:"43%"});
 	  			return false;
 	  		}
@@ -165,29 +182,31 @@
 	  			parent.$.showShortMessage({msg:"请输入货位",animate:true,left:"45%"});
 	  			return false;
 	  		}
-	  		
-	  		$.post(baseUrl+ '/warehouse/shelves/saveOnShelvesItem.do?itemSku='
-	  				+ itemSku+'&itemQuantity='+itemQuantity+'&seatCode='+seatCode+"&inWarehouseRecordId="+recordId, function(msg) {
-	  			if(msg.status == 0){
-	  				//保存失败,显示提示
-	  				parent.$.showShortMessage({msg:msg.message,animate:true,left:"45%"});
-	  				// 光标移至产品SKU
-	  				$("#itemSku").focus();
-	  				focus = "2";
-	  				return;
-	  			}
-	  			
-	  			if(msg.status == 1){
-	  				parent.$.showShortMessage({msg:"保存上架记录成功.",animate:true,left:"45%"});
-	  				// 光标移至产品SKU
-	  				$("#itemSku").focus();
-	  				$("#itemSku").select();
-	  				focus = "2";
-	  				return;
-	  			}
-	  		},"json");
+	  		var tr = "<tr>";
+		  		tr += "<td>"+seatCode+"</td>";
+		  		tr += "<td>"+sku+"</td>";
+		  		tr += "<td>"+quantity+"</td>";
+		  		tr += "</tr>";
+	  		$("#outShelfItemTbody").append(tr);
+	  		outShelfItems +="seatCode:"+seatCode + ",sku:"+sku+",quantity:"+quantity+"||";
+	  		//保存一个sku下架, 重置焦点,进入扫描货位
+	  		$("#seatCode").focus();
   	  }
-	   
+	
+  	  function submitOutShelf(){
+  		var customerReferenceNo  = $("#customerReferenceNo").val();
+		if(customerReferenceNo == null || customerReferenceNo ==''){
+			parent.$.showDialogMessage("请先输入客户订单号", null, null);
+ 			return false;
+		}
+  		$.post(baseUrl+ '/warehouse/shelves/submitOutShelfItems.do?customerReferenceNo='+customerReferenceNo, {
+  			outShelfItems:outShelfItems
+		}, function(map) {
+			
+			
+		});
+  	  }
+  	  
     </script>	
 </body>
 </html>
