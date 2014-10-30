@@ -72,7 +72,7 @@ public class OutWarehouseOrderDaoImpl implements IOutWarehouseOrderDao {
 				ps.setString(11, order.getTradeRemark());
 				ps.setString(12, order.getLogisticsRemark());
 				ps.setString(13, order.getTrackingNo());
-				ps.setString(14, Constant.N);
+				ps.setInt(14,0);
 				return ps;
 			}
 		}, keyHolder);
