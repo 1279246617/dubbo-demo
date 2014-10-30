@@ -39,8 +39,8 @@
                			 <input type="text"   style="width:100px;" name="batchNo" title="可输入入库批次号">
                		</span>
 					<span class="pull-left" style="width:195px;">
-						跟踪单号	
-						<input type="text"  name="trackingNo"  id="trackingNo"   style="width:120px;"/>
+						客户订单号
+						<input type="text"  name="customerReferenceNo"  id="customerReferenceNo"   style="width:120px;"/>
 					</span>
                		<span class="pull-left" style="width:175px;">
                			创建时间
