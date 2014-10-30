@@ -1371,7 +1371,9 @@ public class StorageServiceImpl implements IStorageService {
 			map.put(Constant.MESSAGE, "该产品SKU在此收货记录已经完全上架.");
 			return map;
 		}
-		if (itemQuantity > countInWarehouseItemSkuQuantityByRecordId) {
+		// 计算全部已上架数
+		int allQuantity = onShelfDao.countOnShelfSkuQuantity(inWarehouseRecordId, itemSku) + itemQuantity;
+		if (allQuantity > countInWarehouseItemSkuQuantityByRecordId) {
 			map.put(Constant.MESSAGE, "上架数量不能大于收货数量.");
 			return map;
 		}

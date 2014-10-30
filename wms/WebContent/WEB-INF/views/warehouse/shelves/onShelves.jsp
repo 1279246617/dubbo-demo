@@ -69,12 +69,12 @@
 						
 						<span class="pull-left" style="width:52px;">产品SKU</span>
 						<span class="pull-left" style="width:160px;">
-							<input type="text"  name="itemSku" t="2"  id="itemSku" style="width:130px;"/>
+							<input type="text"  name="itemSku" t="3"  id="itemSku" style="width:130px;"/>
 						</span>
 						
 						<span class="pull-left" style="width:52px;">产品数量</span>
 						<span class="pull-left" style="width:102px;">
-							<input type="text"  name="itemQuantity"  id="itemQuantity" t="2" style="width:90px;" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"/>
+							<input type="text"  name="itemQuantity"  id="itemQuantity" t="4" style="width:90px;" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"/>
 						</span>
 						
 						<span class="pull-left" style="width:105px;">
@@ -117,12 +117,26 @@
   	  	
   	  //回车事件
   	  function clickEnter(){
-  		  	if(focus == '1'){
-  		  		enterTrackingNoStep();	
-  		  	}
-    		//保存明细
-			if(focus == '2'){
+  		  if(focus == '1'){
+  		  		enterTrackingNoStep();
+  		  		return false;
+  		  }
+  		  if(focus == '2'){
+				//输入货位后按回车,去到sku
+				$("#itemSku").focus();
+				focus = '3';
+				return false;
+			}
+			if(focus == '3'){
+				//输入sku后按回车,去到quantity
+				$("#itemQuantity").focus();
+				focus = '4';
+				return false;
+			}
+			if(focus == '4'){
+				//输入数量,提交一次sku下架
 				saveOnShelvesItem();
+				return false;
 			}
   	  }
 	  	 
@@ -152,6 +166,9 @@
    				tr+="<td style='width:205px;text-align:center;'>"+n.status+"</td>";
    				tr+="</tr>";
    				$("#inWarehouseRecordtbody").append(tr);
+  				$("#seatCode").focus();
+  				$("#seatCode").select();
+  				focus = "2";
    			});
    			if (msg.status == 2) {
    				parent.$.showDialogMessage(msg.message, null, null);
@@ -201,8 +218,8 @@
 	  			if(msg.status == 1){
 	  				parent.$.showShortMessage({msg:"保存上架记录成功.",animate:true,left:"45%"});
 	  				// 光标移至产品SKU
-	  				$("#itemSku").focus();
-	  				$("#itemSku").select();
+	  				$("#seatCode").focus();
+	  				$("#seatCode").select();
 	  				focus = "2";
 	  				return;
 	  			}
