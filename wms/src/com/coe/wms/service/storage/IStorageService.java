@@ -103,6 +103,15 @@ public interface IStorageService {
 	public Map<String, String> checkOutWarehouseOrderByCustomerReferenceNo(String customerReferenceNo);
 
 	/**
+	 * 提交下架
+	 * 
+	 * @param customerReferenceNo
+	 * @param outShelfItems
+	 * @return
+	 */
+	public Map<String, String> submitOutShelfItems(String customerReferenceNo, String outShelfItems);
+
+	/**
 	 * 获取入库订单
 	 * 
 	 * @param inWarehouseRecordId
