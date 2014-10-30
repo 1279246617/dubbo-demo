@@ -1446,10 +1446,35 @@ public class StorageServiceImpl implements IStorageService {
 			if (warehouse != null) {
 				recordItem.put("warehouse", warehouse.getWarehouseName());
 			}
+
 			list.add(recordItem);
 		}
 		pagination.total = inWarehouseRecordItemDao.countInWarehouseRecordItemList(moreParam);
 		pagination.rows = list;
 		return pagination;
+	}
+
+	@Override
+	public Map<String, String> checkOutWarehouseOrderByCustomerReferenceNo(String customerReferenceNo) {
+		Map<String, String> map = new HashMap<String, String>();
+		map.put(Constant.STATUS, Constant.FAIL);
+		OutWarehouseOrder outWarehouseOrder = new OutWarehouseOrder();
+		outWarehouseOrder.setCustomerReferenceNo(customerReferenceNo);
+		outWarehouseOrder.setStatus(OutWarehouseOrderStatusCode.WOS);
+		long count = outWarehouseOrderDao.countOutWarehouseOrder(outWarehouseOrder, null);
+		if (count <= 0) {
+			outWarehouseOrder.setStatus(null);
+			count = outWarehouseOrderDao.countOutWarehouseOrder(outWarehouseOrder, null);
+			// 区分是找不到出库订单还是找不到等待下架状态的出库订单
+			if (count > 0) {
+				map.put(Constant.MESSAGE, "根据该客户订单号找不到待捡货下架的出库订单");
+			} else {
+				map.put(Constant.MESSAGE, "根据该客户订单号找不到出库订单");
+			}
+		} else {
+			// 成功
+			map.put(Constant.STATUS, Constant.SUCCESS);
+		}
+		return map;
 	}
 }
