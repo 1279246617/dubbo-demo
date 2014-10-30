@@ -1510,7 +1510,7 @@ public class StorageServiceImpl implements IStorageService {
 		OutWarehouseOrderItemShelf outWarehouseOrderItemShelfParam = new OutWarehouseOrderItemShelf();
 		outWarehouseOrderItemShelfParam.setOutWarehouseOrderId(outWarehouseOrder.getId());
 		List<OutWarehouseOrderItemShelf> outWarehouseOrderItemShelfList = outWarehouseOrderItemShelfDao.findOutWarehouseOrderItemShelf(outWarehouseOrderItemShelfParam, null, null);
-		String[] outShelfItemArry = outShelfItems.split("||");
+		String[] outShelfItemArry = outShelfItems.split("\\|\\|");
 		Pattern p = Pattern.compile("seatCode:(\\w+),sku:(\\w+),quantity:(\\w+)");
 		for (String outShelfIten : outShelfItemArry) {
 			Matcher m = p.matcher(outShelfIten);
@@ -1558,23 +1558,22 @@ public class StorageServiceImpl implements IStorageService {
 			itemShelfInventoryParam.setWarehouseId(outWarehouseOrder.getWarehouseId());
 			itemShelfInventoryParam.setUserIdOfCustomer(outWarehouseOrder.getUserIdOfCustomer());
 			List<ItemShelfInventory> itemShelfInventoryList = itemShelfInventoryDao.findItemShelfInventory(itemShelfInventoryParam, null, null);
-			if (itemShelfInventoryList == null || itemShelfInventoryList.size() <= 0) {
+			if (itemShelfInventoryList != null && itemShelfInventoryList.size() > 0) {
 				ItemShelfInventory itemShelfInventory = itemShelfInventoryList.get(0);
 				int outQuantity = outShelf.getQuantity();
 				itemShelfInventoryDao.updateItemShelfInventoryQuantity(itemShelfInventory.getId(), itemShelfInventory.getQuantity() - outQuantity);
-				itemShelfInventoryDao.updateItemShelfInventoryAvailableQuantity(itemShelfInventory.getId(), itemShelfInventory.getAvailableQuantity() - outQuantity);
+				int updateCount = outWarehouseOrderDao.updateOutWarehouseOrderStatus(outWarehouseOrder.getId(), OutWarehouseOrderStatusCode.WWW);
+				if (updateCount > 0) {
+					map.put(Constant.STATUS, Constant.SUCCESS);
+				} else {
+					map.put(Constant.MESSAGE, "执行数据库更新失败,请重试保存");
+				}
 			} else {
 				map.put(Constant.MESSAGE, "找不到库位库存记录,出库订单Id:" + outWarehouseOrder.getId());
 				// 待添加事务回滚
 				// throw new ServiceException("找不到库位库存记录,出库订单Id:"
 				// +outWarehouseOrder.getId());
 			}
-		}
-		int updateCount = outWarehouseOrderDao.updateOutWarehouseOrderStatus(outWarehouseOrder.getId(), OutWarehouseOrderStatusCode.WWW);
-		if (updateCount > 0) {
-			map.put(Constant.STATUS, Constant.SUCCESS);
-		} else {
-			map.put(Constant.MESSAGE, "执行数据库更新失败,请重试保存");
 		}
 		return map;
 	}
