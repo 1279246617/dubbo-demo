@@ -20,7 +20,7 @@
 </head>
 <body>
 	  <div class="toolbar1">
-           <form action="${baseUrl}/warehouse/storage/getInWarehouseRecordData.do" id="searchform" name="searchform" method="post">
+           <form action="${baseUrl}/warehouse/storage/getOnShelvesData..do" id="searchform" name="searchform" method="post">
                <div class="pull-right searchContent">
                		<span class="pull-left" style="width:175px;">
                			仓库

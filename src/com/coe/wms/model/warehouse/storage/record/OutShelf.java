@@ -51,6 +51,19 @@ public class OutShelf implements Serializable {
 	 */
 	private Integer quantity;
 
+	/**
+	 * 
+	 * sku
+	 * 
+	 * 必填
+	 */
+	private String sku;
+
+	/**
+	 * 创建时间 (收货时间)
+	 */
+	private Long createdTime;
+
 	public Long getId() {
 		return id;
 	}
@@ -139,16 +152,4 @@ public class OutShelf implements Serializable {
 		this.createdTime = createdTime;
 	}
 
-	/**
-	 * 
-	 * sku
-	 * 
-	 * 必填
-	 */
-	private String sku;
-
-	/**
-	 * 创建时间 (收货时间)
-	 */
-	private Long createdTime;
 }

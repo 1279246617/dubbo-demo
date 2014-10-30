@@ -16,6 +16,7 @@ import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecord;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecordItem;
 import com.coe.wms.model.warehouse.storage.record.OnShelf;
+import com.coe.wms.model.warehouse.storage.record.OutShelf;
 import com.coe.wms.pojo.api.warehouse.EventBody;
 import com.coe.wms.util.Pagination;
 
@@ -109,7 +110,7 @@ public interface IStorageService {
 	 * @param outShelfItems
 	 * @return
 	 */
-	public Map<String, String> submitOutShelfItems(String customerReferenceNo, String outShelfItems);
+	public Map<String, String> submitOutShelfItems(String customerReferenceNo, String outShelfItems, Long userIdOfOperator);
 
 	/**
 	 * 获取入库订单
@@ -121,6 +122,8 @@ public interface IStorageService {
 	public Pagination getInWarehouseOrderData(InWarehouseOrder inWarehouseOrder, Map<String, String> moreParam, Pagination page);
 
 	public Pagination getOnShelvesData(OnShelf onShelf, Map<String, String> moreParam, Pagination page);
+	
+	public Pagination getOutShelvesData(OutShelf outShelf, Map<String, String> moreParam, Pagination page);
 
 	/**
 	 * 获取入库记录

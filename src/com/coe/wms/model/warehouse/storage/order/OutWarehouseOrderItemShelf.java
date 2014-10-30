@@ -36,6 +36,11 @@ public class OutWarehouseOrderItemShelf implements Serializable {
 	private String sku;
 
 	/**
+	 * 批次
+	 */
+	private String batchNo;
+
+	/**
 	 * 可用于报关描述(申报品名)
 	 */
 	private String skuName;
@@ -70,6 +75,14 @@ public class OutWarehouseOrderItemShelf implements Serializable {
 
 	public Double getSkuNetWeight() {
 		return skuNetWeight;
+	}
+
+	public String getBatchNo() {
+		return batchNo;
+	}
+
+	public void setBatchNo(String batchNo) {
+		this.batchNo = batchNo;
 	}
 
 	public void setSkuNetWeight(Double skuNetWeight) {
@@ -132,8 +145,7 @@ public class OutWarehouseOrderItemShelf implements Serializable {
 		this.seatCode = seatCode;
 	}
 
-	public static OutWarehouseOrderItemShelf createOutWarehouseOrderItemShelf(Long outWarehouseOrderId, int quantity, String seatCode,
-			String sku, String skuName, Double skuNetWeight, String skuPriceCurrency, Double skuUnitPrice) {
+	public static OutWarehouseOrderItemShelf createOutWarehouseOrderItemShelf(Long outWarehouseOrderId, int quantity, String seatCode, String sku, String skuName, Double skuNetWeight, String skuPriceCurrency, Double skuUnitPrice, String batchNo) {
 		OutWarehouseOrderItemShelf itemShelf = new OutWarehouseOrderItemShelf();
 		itemShelf.setOutWarehouseOrderId(outWarehouseOrderId);
 		itemShelf.setQuantity(quantity);
@@ -143,6 +155,7 @@ public class OutWarehouseOrderItemShelf implements Serializable {
 		itemShelf.setSkuNetWeight(skuNetWeight);
 		itemShelf.setSkuPriceCurrency(skuPriceCurrency);
 		itemShelf.setSkuUnitPrice(skuUnitPrice);
+		itemShelf.setBatchNo(batchNo);
 		return itemShelf;
 	}
 }

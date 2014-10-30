@@ -20,7 +20,7 @@
 </head>
 <body>
 	  <div class="toolbar1">
-           <form action="${baseUrl}/warehouse/storage/getInWarehouseRecordData.do" id="searchform" name="searchform" method="post">
+           <form action="${baseUrl}/warehouse/storage/getOutShelvesData.do" id="searchform" name="searchform" method="post">
                <div class="pull-right searchContent">
                		<span class="pull-left" style="width:175px;">
                			仓库
@@ -113,15 +113,14 @@
 	    	 grid = $("#maingrid").ligerGrid({
 	                columns: [
 							{ display: '客户帐号', name: 'userLoginNameOfCustomer',type:'float',width:'9%'},
-							{ display: '仓库', name: 'warehouse', type: 'float',width:'9%'},
-							{ display: '入库批次号', name: 'batchNo', type: 'int', width:'10%'},
+							{ display: '仓库', name: 'warehouse', type: 'float',width:'10%'},
+							{ display: '入库批次号', name: 'batchNo', type: 'int', width:'11%'},
 							{ display: '货位', name: 'seatCode', type: 'int', width:'10%'},
-	  	                  	{ display: '产品SKU', name: 'sku', type: 'float',width:'12%'},
-		  	                { display: '本次下架数量', name: 'quantity', type: 'float',width:'8%'},
-		  		            { display: '收货产品数量', name: 'receivedQuantity', type: 'float',width:'8%'},
-			                { display: '下架操作员', name: 'userLoginNameOfOperator',type:'float',width:'9%'},
-			                { display: '客户订单号', name: 'trackingNo',type:'float',width:'11%'},
-			                { display: '出库订单Id', name: 'outWarehouseOrderId',type:'float',width:'6%'},
+	  	                  	{ display: '产品SKU', name: 'sku', type: 'float',width:'13%'},
+		  	                { display: '本次下架数量', name: 'quantity', type: 'float',width:'10%'},
+			                { display: '下架操作员', name: 'userLoginNameOfOperator',type:'float',width:'11%'},
+			                { display: '客户订单号', name: 'customerReferenceNo',type:'float',width:'11%'},
+			                { display: '出库订单Id', name: 'outWarehouseOrderId',type:'float',width:'8%'},
 			                {display: '操作',isSort: false,width: '8%',render: function(row) {
 			            		var h = "";
 			            		if (!row._editing) {
@@ -132,7 +131,7 @@
 			            }
 		             ],   
 	                dataAction: 'server',
-	                url: baseUrl+'/warehouse/shelves/getOnShelvesData.do?createdTimeStart=${sevenDaysAgoStart}',
+	                url: baseUrl+'/warehouse/shelves/getOutShelvesData.do?createdTimeStart=${sevenDaysAgoStart}',
 	                pageSize: 50, 
 	                pageSizeOptions:[10,50,100,500,1000],
 	                usePager: 'true',
