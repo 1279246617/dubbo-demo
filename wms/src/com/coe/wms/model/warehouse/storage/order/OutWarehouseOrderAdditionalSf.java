@@ -55,6 +55,8 @@ public class OutWarehouseOrderAdditionalSf implements Serializable {
 
 	/**
 	 * 用户订单号，需要打印到顺丰运单上
+	 * 
+	 * 用户订单号 非本系统出库订单的id
 	 */
 	private String orderId;
 

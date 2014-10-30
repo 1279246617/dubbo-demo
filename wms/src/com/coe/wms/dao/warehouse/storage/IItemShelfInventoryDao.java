@@ -56,4 +56,5 @@ public interface IItemShelfInventoryDao {
 	public int updateItemShelfInventoryAvailableQuantity(Long id, Integer availableQuantity);
 
 	public int updateItemShelfInventoryQuantity(Long id, Integer quantity);
+	
 }

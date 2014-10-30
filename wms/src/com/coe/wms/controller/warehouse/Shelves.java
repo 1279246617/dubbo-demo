@@ -86,6 +86,76 @@ public class Shelves {
 	}
 
 	/**
+	 * 下架 查询
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/listOutShelves", method = RequestMethod.GET)
+	public ModelAndView listOutShelves(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		HttpSession session = request.getSession();
+		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
+		ModelAndView view = new ModelAndView();
+		view.addObject("userId", userId);
+		User user = userService.getUserById(userId);
+		view.addObject("warehouseList", storageService.findAllWarehouse(user.getDefaultWarehouseId()));
+		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
+		view.addObject("sevenDaysAgoStart", DateUtil.getSevenDaysAgoStart());
+		view.setViewName("warehouse/shelves/listOutShelves");
+		return view;
+	}
+
+	/**
+	 * 获取下架数据
+	 * 
+	 * @param request
+	 * @param response
+	 * @param userLoginName
+	 *            客户登录名,仅当根据跟踪号无法找到订单时,要求输入
+	 * @return
+	 * @throws IOException
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/getOutShelvesData")
+	public String getOutShelvesData(HttpServletRequest request, String sortorder, String sortname, int page, int pagesize, String userLoginName, Long warehouseId, String trackingNo, String batchNo, String createdTimeStart, String createdTimeEnd)
+			throws IOException {
+		if (StringUtil.isNotNull(createdTimeStart) && createdTimeStart.contains(",")) {
+			createdTimeStart = createdTimeStart.substring(createdTimeStart.lastIndexOf(",") + 1, createdTimeStart.length());
+		}
+
+		HttpSession session = request.getSession();
+		// 当前操作员
+		Long userIdOfOperator = (Long) session.getAttribute(SessionConstant.USER_ID);
+		Pagination pagination = new Pagination();
+		pagination.curPage = page;
+		pagination.pageSize = pagesize;
+		pagination.sortName = sortname;
+		pagination.sortOrder = sortorder;
+
+		OnShelf param = new OnShelf();
+		param.setWarehouseId(warehouseId);
+		param.setTrackingNo(trackingNo);
+		if (StringUtil.isNotNull(userLoginName)) {
+			Long userIdOfCustomer = userService.findUserIdByLoginName(userLoginName);
+			param.setUserIdOfCustomer(userIdOfCustomer);
+		}
+		param.setWarehouseId(warehouseId);
+		param.setBatchNo(batchNo);
+		// 更多参数
+		Map<String, String> moreParam = new HashMap<String, String>();
+		moreParam.put("createdTimeStart", createdTimeStart);
+		moreParam.put("createdTimeEnd", createdTimeEnd);
+
+		pagination = storageService.getOnShelvesData(param, moreParam, pagination);
+		Map map = new HashMap();
+		map.put("Rows", pagination.rows);
+		map.put("Total", pagination.total);
+		return GsonUtil.toJson(map);
+	}
+
+	/**
 	 * 检查 跟踪号和客户帐号是否能找到唯一的入库订单
 	 * 
 	 * @param request
@@ -210,7 +280,9 @@ public class Shelves {
 	@RequestMapping(value = "/submitOutShelfItems")
 	public String submitOutShelfItems(HttpServletRequest request, String customerReferenceNo, String outShelfItems) throws IOException {
 		logger.info("提交下架:customerReferenceNo:" + customerReferenceNo + " outShelfItems:" + outShelfItems);
-		Map<String, String> map = storageService.submitOutShelfItems(customerReferenceNo, outShelfItems);
+		HttpSession session = request.getSession();
+		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
+		Map<String, String> map = storageService.submitOutShelfItems(customerReferenceNo, outShelfItems, userId);
 		return GsonUtil.toJson(map);
 	}
 

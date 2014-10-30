@@ -96,7 +96,7 @@ public class OutWarehouseOrderAdditionalSfDaoImpl implements IOutWarehouseOrderA
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public int saveBatchOutWarehouseOrderAdditionalSfWithOrderId(final List<OutWarehouseOrderAdditionalSf> receiverList, final Long orderId) {
-		final String sql = "insert into w_s_out_warehouse_order_additional_sf (out_warehouse_order_id,name,company,first_name,last_name,address_line1,state_or_province,city,county,postal_code,country_code,country_name,phone_number,email,mobile_number,address_line2) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		final String sql = "insert into w_s_out_warehouse_order_additional_sf (out_warehouse_order_id,carrier_code,mail_no,sender_address,cust_id,pay_method,shipper_code,delivery_code,order_id) values (?,?,?,?,?,?,?,?,?)";
 		int[] batchUpdateSize = jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
 			@Override
 			public void setValues(PreparedStatement ps, int i) throws SQLException {

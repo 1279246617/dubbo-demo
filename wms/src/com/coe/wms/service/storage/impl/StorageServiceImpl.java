@@ -24,6 +24,7 @@ import com.coe.wms.dao.warehouse.storage.IInWarehouseRecordStatusDao;
 import com.coe.wms.dao.warehouse.storage.IItemInventoryDao;
 import com.coe.wms.dao.warehouse.storage.IItemShelfInventoryDao;
 import com.coe.wms.dao.warehouse.storage.IOnShelfDao;
+import com.coe.wms.dao.warehouse.storage.IOutShelfDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderAdditionalSfDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderItemDao;
@@ -54,6 +55,7 @@ import com.coe.wms.model.warehouse.storage.record.InWarehouseRecordStatus;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecordStatus.InWarehouseRecordStatusCode;
 import com.coe.wms.model.warehouse.storage.record.ItemShelfInventory;
 import com.coe.wms.model.warehouse.storage.record.OnShelf;
+import com.coe.wms.model.warehouse.storage.record.OutShelf;
 import com.coe.wms.pojo.api.warehouse.ClearanceDetail;
 import com.coe.wms.pojo.api.warehouse.ErrorCode;
 import com.coe.wms.pojo.api.warehouse.EventBody;
@@ -94,6 +96,9 @@ public class StorageServiceImpl implements IStorageService {
 
 	@Resource(name = "onShelfDao")
 	private IOnShelfDao onShelfDao;
+
+	@Resource(name = "outShelfDao")
+	private IOutShelfDao outShelfDao;
 
 	@Resource(name = "inWarehouseOrderDao")
 	private IInWarehouseOrderDao inWarehouseOrderDao;
@@ -1019,7 +1024,7 @@ public class StorageServiceImpl implements IStorageService {
 					waitUpdateavAilableQuantityList.add(itemShelfInventory);
 					// 打印捡货单,记录出库订单对应的货位和物品.下次打印时 使用已经保存的货位和物品信息
 					OutWarehouseOrderItemShelf outWarehouseOrderItemShelf = OutWarehouseOrderItemShelf.createOutWarehouseOrderItemShelf(orderIdLong, quantity, itemShelfInventory.getSeatCode(), item.getSku(), item.getSkuName(),
-							item.getSkuNetWeight(), item.getSkuPriceCurrency(), item.getSkuUnitPrice());
+							item.getSkuNetWeight(), item.getSkuPriceCurrency(), item.getSkuUnitPrice(), itemShelfInventory.getBatchNo());
 					outWarehouseOrderItemShelfList.add(outWarehouseOrderItemShelf);
 					if (isBreak) {
 						break;
@@ -1481,7 +1486,7 @@ public class StorageServiceImpl implements IStorageService {
 	}
 
 	@Override
-	public Map<String, String> submitOutShelfItems(String customerReferenceNo, String outShelfItems) {
+	public Map<String, String> submitOutShelfItems(String customerReferenceNo, String outShelfItems, Long userIdOfOperator) {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put(Constant.STATUS, Constant.FAIL);
 		if (StringUtil.isNull(customerReferenceNo)) {
@@ -1505,7 +1510,6 @@ public class StorageServiceImpl implements IStorageService {
 		OutWarehouseOrderItemShelf outWarehouseOrderItemShelfParam = new OutWarehouseOrderItemShelf();
 		outWarehouseOrderItemShelfParam.setOutWarehouseOrderId(outWarehouseOrder.getId());
 		List<OutWarehouseOrderItemShelf> outWarehouseOrderItemShelfList = outWarehouseOrderItemShelfDao.findOutWarehouseOrderItemShelf(outWarehouseOrderItemShelfParam, null, null);
-
 		String[] outShelfItemArry = outShelfItems.split("||");
 		Pattern p = Pattern.compile("seatCode:(\\w+),sku:(\\w+),quantity:(\\w+)");
 		for (String outShelfIten : outShelfItemArry) {
@@ -1531,12 +1535,41 @@ public class StorageServiceImpl implements IStorageService {
 				return map;
 			}
 		}
-		
-		//下架准确,开始执行下架
-		
-		
-		
-		
+		// 下架准确,开始执行下架
+		for (OutWarehouseOrderItemShelf oItemShelf : outWarehouseOrderItemShelfList) {
+			OutShelf outShelf = new OutShelf();
+			outShelf.setBatchNo(oItemShelf.getBatchNo());
+			outShelf.setCreatedTime(System.currentTimeMillis());
+			outShelf.setCustomerReferenceNo(customerReferenceNo);
+			outShelf.setOutWarehouseOrderId(outWarehouseOrder.getId());
+			outShelf.setQuantity(Integer.valueOf(oItemShelf.getQuantity()));
+			outShelf.setSeatCode(oItemShelf.getSeatCode());
+			outShelf.setSku(oItemShelf.getSku());
+			outShelf.setUserIdOfCustomer(outWarehouseOrder.getUserIdOfCustomer());
+			outShelf.setUserIdOfOperator(userIdOfOperator);
+			outShelf.setWarehouseId(outWarehouseOrder.getWarehouseId());
+			outShelfDao.saveOutShelf(outShelf);
+			// 改变库位库存(ItemShelfInventory) ,不改变仓库sku库存(出货时改变ItemInventory)
+
+			ItemShelfInventory itemShelfInventoryParam = new ItemShelfInventory();
+			itemShelfInventoryParam.setBatchNo(oItemShelf.getBatchNo());
+			itemShelfInventoryParam.setSeatCode(oItemShelf.getSeatCode());
+			itemShelfInventoryParam.setSku(oItemShelf.getSku());
+			itemShelfInventoryParam.setWarehouseId(outWarehouseOrder.getWarehouseId());
+			itemShelfInventoryParam.setUserIdOfCustomer(outWarehouseOrder.getUserIdOfCustomer());
+			List<ItemShelfInventory> itemShelfInventoryList = itemShelfInventoryDao.findItemShelfInventory(itemShelfInventoryParam, null, null);
+			if (itemShelfInventoryList == null || itemShelfInventoryList.size() <= 0) {
+				ItemShelfInventory itemShelfInventory = itemShelfInventoryList.get(0);
+				int outQuantity = outShelf.getQuantity();
+				itemShelfInventoryDao.updateItemShelfInventoryQuantity(itemShelfInventory.getId(), itemShelfInventory.getQuantity() - outQuantity);
+				itemShelfInventoryDao.updateItemShelfInventoryAvailableQuantity(itemShelfInventory.getId(), itemShelfInventory.getAvailableQuantity() - outQuantity);
+			} else {
+				map.put(Constant.MESSAGE, "找不到库位库存记录,出库订单Id:" + outWarehouseOrder.getId());
+				// 待添加事务回滚
+				// throw new ServiceException("找不到库位库存记录,出库订单Id:"
+				// +outWarehouseOrder.getId());
+			}
+		}
 		int updateCount = outWarehouseOrderDao.updateOutWarehouseOrderStatus(outWarehouseOrder.getId(), OutWarehouseOrderStatusCode.WWW);
 		if (updateCount > 0) {
 			map.put(Constant.STATUS, Constant.SUCCESS);
@@ -1544,5 +1577,44 @@ public class StorageServiceImpl implements IStorageService {
 			map.put(Constant.MESSAGE, "执行数据库更新失败,请重试保存");
 		}
 		return map;
+	}
+
+	/**
+	 * 获取下架订单数据
+	 */
+	@Override
+	public Pagination getOutShelvesData(OutShelf outShelf, Map<String, String> moreParam, Pagination page) {
+		List<OutShelf> outShelfList = outShelfDao.findOutShelf(outShelf, moreParam, page);
+		List<Object> list = new ArrayList<Object>();
+		for (OutShelf outShelfTemp : outShelfList) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("id", outShelfTemp.getId());
+			if (outShelfTemp.getCreatedTime() != null) {
+				map.put("createdTime", DateUtil.dateConvertString(new Date(outShelfTemp.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss));
+			}
+			// 查询用户名
+			User user = userDao.getUserById(outShelfTemp.getUserIdOfCustomer());
+			map.put("userLoginNameOfCustomer", user.getLoginName());
+
+			if (outShelfTemp.getWarehouseId() != null) {
+				Warehouse warehouse = warehouseDao.getWarehouseById(outShelfTemp.getWarehouseId());
+				if (warehouse != null) {
+					map.put("warehouse", warehouse.getWarehouseName());
+				}
+			}
+			map.put("customerReferenceNo", outShelfTemp.getCustomerReferenceNo());
+			map.put("batchNo", outShelfTemp.getBatchNo());
+			map.put("seatCode", outShelfTemp.getSeatCode());
+			map.put("sku", outShelfTemp.getSku());
+			map.put("quantity", outShelfTemp.getQuantity());
+			map.put("outWarehouseOrderId", outShelfTemp.getOutWarehouseOrderId());
+			// 查询用户名
+			User userOfOperator = userDao.getUserById(outShelfTemp.getUserIdOfOperator());
+			map.put("userLoginNameOfOperator", userOfOperator.getLoginName());
+			list.add(map);
+		}
+		page.total = outShelfDao.countOutShelf(outShelf, moreParam);
+		page.rows = list;
+		return page;
 	}
 }
