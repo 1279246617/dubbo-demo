@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 
@@ -1474,6 +1476,72 @@ public class StorageServiceImpl implements IStorageService {
 		} else {
 			// 成功
 			map.put(Constant.STATUS, Constant.SUCCESS);
+		}
+		return map;
+	}
+
+	@Override
+	public Map<String, String> submitOutShelfItems(String customerReferenceNo, String outShelfItems) {
+		Map<String, String> map = new HashMap<String, String>();
+		map.put(Constant.STATUS, Constant.FAIL);
+		if (StringUtil.isNull(customerReferenceNo)) {
+			map.put(Constant.MESSAGE, "根据该客户订单号不能为空");
+			return map;
+		}
+		if (StringUtil.isNull(outShelfItems) || StringUtil.isNull(customerReferenceNo)) {
+			map.put(Constant.MESSAGE, "下架明细不能为空");
+			return map;
+		}
+		OutWarehouseOrder param = new OutWarehouseOrder();
+		param.setCustomerReferenceNo(customerReferenceNo);
+		param.setStatus(OutWarehouseOrderStatusCode.WOS);
+		List<OutWarehouseOrder> outWarehouseOrderList = outWarehouseOrderDao.findOutWarehouseOrder(param, null, null);
+		if (outWarehouseOrderList == null || outWarehouseOrderList.size() < 0) {
+			map.put(Constant.MESSAGE, "根据该客户订单号找不到待捡货下架的出库订单");
+			return map;
+		}
+		OutWarehouseOrder outWarehouseOrder = outWarehouseOrderList.get(0);
+		// 查找预分配的货位,对比下架是否准确
+		OutWarehouseOrderItemShelf outWarehouseOrderItemShelfParam = new OutWarehouseOrderItemShelf();
+		outWarehouseOrderItemShelfParam.setOutWarehouseOrderId(outWarehouseOrder.getId());
+		List<OutWarehouseOrderItemShelf> outWarehouseOrderItemShelfList = outWarehouseOrderItemShelfDao.findOutWarehouseOrderItemShelf(outWarehouseOrderItemShelfParam, null, null);
+
+		String[] outShelfItemArry = outShelfItems.split("||");
+		Pattern p = Pattern.compile("seatCode:(\\w+),sku:(\\w+),quantity:(\\w+)");
+		for (String outShelfIten : outShelfItemArry) {
+			Matcher m = p.matcher(outShelfIten);
+			if (!m.find()) {
+				continue;
+			}
+			String seatCode = m.group(1);
+			String sku = m.group(2);
+			String quantity = m.group(3);
+			// 循环outWarehouseOrderItemShelfList
+			int subQuantity = -1;
+			for (OutWarehouseOrderItemShelf oItemShelf : outWarehouseOrderItemShelfList) {
+				if (StringUtil.isEqual(seatCode, oItemShelf.getSeatCode()) || StringUtil.isEqual(sku, oItemShelf.getSku())) {
+					// 库位号和sku相同,数量相减,最后outWarehouseOrderItemShelfList的内容数量都等于0
+					subQuantity = oItemShelf.getQuantity() - Integer.valueOf(quantity);
+					break;
+				}
+			}
+			if (subQuantity != 0) {
+				// 下架数量不准确
+				map.put(Constant.MESSAGE, "下架货位,SKU,数量和捡货单上的数量不对应,请重新下架");
+				return map;
+			}
+		}
+		
+		//下架准确,开始执行下架
+		
+		
+		
+		
+		int updateCount = outWarehouseOrderDao.updateOutWarehouseOrderStatus(outWarehouseOrder.getId(), OutWarehouseOrderStatusCode.WWW);
+		if (updateCount > 0) {
+			map.put(Constant.STATUS, Constant.SUCCESS);
+		} else {
+			map.put(Constant.MESSAGE, "执行数据库更新失败,请重试保存");
 		}
 		return map;
 	}

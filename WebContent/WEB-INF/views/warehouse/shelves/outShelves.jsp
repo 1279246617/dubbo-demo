@@ -56,7 +56,7 @@
 						</span>
 						
 						<span class="pull-left" style="width:145px;">
-							<a class="btn  btn-primary" id="enterItem" onclick="saveOnShelvesItem();" style="cursor:pointer;"><i class="icon-ok icon-white"></i>继续下一货位</a>
+							<a class="btn  btn-primary" id="enterItem" onclick="saveOutShelvesItem();" style="cursor:pointer;"><i class="icon-ok icon-white"></i>继续下一货位</a>
 						</span>
 					</td>	
 			</tr>	
@@ -202,9 +202,18 @@
   		$.post(baseUrl+ '/warehouse/shelves/submitOutShelfItems.do?customerReferenceNo='+customerReferenceNo, {
   			outShelfItems:outShelfItems
 		}, function(map) {
-			
-			
-		});
+			if(map.status == '0'){
+				parent.$.showDialogMessage(msg.message, null, null);
+				return false;
+			}
+			if(map.status == '1'){
+				parent.$.showShortMessage({msg:"保存本订单下架成功,请继续下一个订单",animate:true,left:"45%"});
+				//输入框解锁,焦点回
+				 $("#customerReferenceNo").removeAttr("readonly");
+				 $("#customerReferenceNo").focus();
+				return false;
+			}
+		},"json");
   	  }
   	  
     </script>	

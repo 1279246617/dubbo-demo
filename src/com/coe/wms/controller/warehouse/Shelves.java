@@ -209,9 +209,8 @@ public class Shelves {
 	@ResponseBody
 	@RequestMapping(value = "/submitOutShelfItems")
 	public String submitOutShelfItems(HttpServletRequest request, String customerReferenceNo, String outShelfItems) throws IOException {
-		Map<String, String> map = new HashMap<String, String>();
-
 		logger.info("提交下架:customerReferenceNo:" + customerReferenceNo + " outShelfItems:" + outShelfItems);
+		Map<String, String> map = storageService.submitOutShelfItems(customerReferenceNo, outShelfItems);
 		return GsonUtil.toJson(map);
 	}
 
