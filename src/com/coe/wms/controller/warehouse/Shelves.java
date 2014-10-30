@@ -19,10 +19,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.coe.wms.controller.Application;
 import com.coe.wms.model.user.User;
-import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
-import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrder;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecord;
 import com.coe.wms.model.warehouse.storage.record.OnShelf;
+import com.coe.wms.model.warehouse.storage.record.OutShelf;
 import com.coe.wms.service.storage.IStorageService;
 import com.coe.wms.service.user.IUserService;
 import com.coe.wms.util.Constant;
@@ -119,12 +118,11 @@ public class Shelves {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/getOutShelvesData")
-	public String getOutShelvesData(HttpServletRequest request, String sortorder, String sortname, int page, int pagesize, String userLoginName, Long warehouseId, String trackingNo, String batchNo, String createdTimeStart, String createdTimeEnd)
+	public String getOutShelvesData(HttpServletRequest request, String sortorder, String sortname, int page, int pagesize, String userLoginName, Long warehouseId, String customerReferenceNo, String batchNo, String createdTimeStart, String createdTimeEnd)
 			throws IOException {
 		if (StringUtil.isNotNull(createdTimeStart) && createdTimeStart.contains(",")) {
 			createdTimeStart = createdTimeStart.substring(createdTimeStart.lastIndexOf(",") + 1, createdTimeStart.length());
 		}
-
 		HttpSession session = request.getSession();
 		// 当前操作员
 		Long userIdOfOperator = (Long) session.getAttribute(SessionConstant.USER_ID);
@@ -134,9 +132,9 @@ public class Shelves {
 		pagination.sortName = sortname;
 		pagination.sortOrder = sortorder;
 
-		OnShelf param = new OnShelf();
+		OutShelf param = new OutShelf();
 		param.setWarehouseId(warehouseId);
-		param.setTrackingNo(trackingNo);
+		param.setCustomerReferenceNo(customerReferenceNo);
 		if (StringUtil.isNotNull(userLoginName)) {
 			Long userIdOfCustomer = userService.findUserIdByLoginName(userLoginName);
 			param.setUserIdOfCustomer(userIdOfCustomer);
@@ -147,8 +145,7 @@ public class Shelves {
 		Map<String, String> moreParam = new HashMap<String, String>();
 		moreParam.put("createdTimeStart", createdTimeStart);
 		moreParam.put("createdTimeEnd", createdTimeEnd);
-
-		pagination = storageService.getOnShelvesData(param, moreParam, pagination);
+		pagination = storageService.getOutShelvesData(param, moreParam, pagination);
 		Map map = new HashMap();
 		map.put("Rows", pagination.rows);
 		map.put("Total", pagination.total);
