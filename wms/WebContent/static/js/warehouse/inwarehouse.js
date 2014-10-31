@@ -116,6 +116,15 @@ function saveInWarehouseRecordItem() {
 		$("#itemQuantity").focus();
 		return;
 	}
+	
+	if(itemQuantity >100 || itemQuantity<-100){
+		var mymes = confirm("你确定输入数量:"+itemQuantity+"吗?");
+		if(mymes != true){
+			return;
+		}
+	}
+	
+	
 	$.post(baseUrl+ '/warehouse/storage/saveInWarehouseRecordItem.do?itemSku='
 			+ itemSku+'&itemQuantity='+itemQuantity+'&itemRemark='+itemRemark+"&warehouseId="
 			+warehouseId+"&inWarehouseRecordId="+inWarehouseRecordId, function(msg) {
@@ -153,7 +162,6 @@ function trackingNoBlur(){
 	if(oldTrackingNo!=newTrackingNo){
 		$("#inWarehouseOrderId").val("");
 		$("#inWarehouseRecordId").val("");
-		alert("跟踪阿红改变了");
 	}
 	oldTrackingNo = newTrackingNo;
 }

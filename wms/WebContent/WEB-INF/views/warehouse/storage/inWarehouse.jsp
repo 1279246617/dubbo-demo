@@ -82,7 +82,7 @@
 						
 						<span class="pull-left" style="width:52px;">产品数量</span>
 						<span class="pull-left" style="width:102px;">
-							<input type="text"  name="itemQuantity"  id="itemQuantity" t="3" style="width:90px;" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"/>
+							<input type="text"  name="itemQuantity"  id="itemQuantity" t="3" style="width:90px;" onkeyup="this.value=this.value.replace(/[^\d\-]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d\-]/g,'')"/>
 						</span>
 						
 						
