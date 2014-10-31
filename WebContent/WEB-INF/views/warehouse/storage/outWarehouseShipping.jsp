@@ -17,7 +17,7 @@
 <title>COE</title>
 </head>
 <body>
-	<div class="pull-left" style="width:100%;height:80px; margin-top: 1px;" >
+	<div class="pull-left" style="width:50%;height:80px; margin-top: 1px;" >
 			<table class="table table-striped" style="width:100%;margin-bottom: 5px">
 					<tr style="height:15px;">
 							<td>
@@ -35,7 +35,34 @@
 					</tr>
 			</table>
 	</div>
+	
+	<div class="pull-right" style="width:50%;height:80px; margin-top: 1px;" >
+			<h3>已扫描的出货单号记录</h3>
+			<table class="table table-striped" style="width:100%;margin-bottom: 5px">
+					<tr style="height:15px;">
+							<th>SF111111111111</th>
+							<th><i class="icon-remove"></i></th>	
+					</tr>
+					<tr style="height:15px;">
+						<th>SF222222222222</th>
+						<th><i class="icon-remove"></i></th>	
+					</tr>
+					<tr style="height:15px;">
+						<th>SF222222222222</th>
+						<th><i class="icon-remove"></i></th>	
+					</tr>
+					<tr style="height:15px;">
+						<th>SF333333333333</th>
+						<th><i class="icon-remove"></i></th>	
+					</tr>
+					<tr style="height:15px;">
+						<th>SF333333333333</th>
+						<th><i class="icon-remove"></i></th>
+					</tr>
+			</table>
+	</div>
 	 
+	  
 	 <script type="text/javascript" src="${baseUrl}/static/jquery/jquery.js"></script>
     <script type="text/javascript" src="${baseUrl}/static/bootstrap/bootstrap-typeahead.js"></script>
 	<script type="text/javascript" src="${baseUrl}/static/jquery/jquery.showMessage.js"></script>
