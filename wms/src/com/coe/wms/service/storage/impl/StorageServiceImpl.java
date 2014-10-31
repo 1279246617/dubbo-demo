@@ -550,6 +550,28 @@ public class StorageServiceImpl implements IStorageService {
 			}
 			map.put("shipwayCode", order.getShipwayCode());
 			map.put("trackingNo", order.getTrackingNo());
+			//回传称重
+			if (StringUtil.isEqual(order.getCallbackSendWeightIsSuccess(), Constant.Y)) {
+				map.put("callbackSendWeightIsSuccess", "成功");
+			} else {
+				if (order.getCallbackSendWeighCount() != null && order.getCallbackSendWeighCount() > 0) {
+					map.put("callbackSendWeightIsSuccess", "失败次数:" + order.getCallbackSendWeighCount());
+				} else {
+					map.put("callbackSendWeightIsSuccess", "未回传");
+				}
+			}
+
+			// 回传出库
+			if (StringUtil.isEqual(order.getCallbackSendStatusIsSuccess(), Constant.Y)) {
+				map.put("callbackSendStatusIsSuccess", "成功");
+			} else {
+				if (order.getCallbackSendWeighCount() != null && order.getCallbackSendStatusCount() > 0) {
+					map.put("callbackSendStatusIsSuccess", "失败次数:" + order.getCallbackSendStatusCount());
+				} else {
+					map.put("callbackSendStatusIsSuccess", "未回传");
+				}
+			}
+
 			// 查询用户名
 			User user = userDao.getUserById(order.getUserIdOfCustomer());
 			map.put("userNameOfCustomer", user.getLoginName());
@@ -945,6 +967,16 @@ public class StorageServiceImpl implements IStorageService {
 				}
 			}
 			map.put("status", status);
+			// 回传成功
+			if (StringUtil.isEqual(record.getCallbackIsSuccess(), Constant.Y)) {
+				map.put("callbackIsSuccess", "成功");
+			} else {
+				if (record.getCallbackCount() != null && record.getCallbackCount() > 0) {
+					map.put("callbackIsSuccess", "失败次数:" + record.getCallbackCount());
+				} else {
+					map.put("callbackIsSuccess", "未回传");
+				}
+			}
 			list.add(map);
 		}
 		pagination.total = inWarehouseRecordDao.countInWarehouseRecord(inWarehouseRecord, moreParam);
