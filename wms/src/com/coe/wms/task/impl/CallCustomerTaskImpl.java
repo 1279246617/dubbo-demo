@@ -109,10 +109,7 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 	/**
 	 * 发送仓配入库订单信息给客户
 	 */
-	// @Scheduled(cron = "0 0/1 8-23 * * ? ")
-	// 早上8点到下午6点,每分钟
 	@Scheduled(cron = "0 0/10 8-23 * * ? ")
-	// 早上8点到下午6点,每半小时一次
 	@Override
 	public void sendInWarehouseInfoToCustomer() {
 		InWarehouseRecord param = new InWarehouseRecord();
@@ -340,7 +337,7 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 	/**
 	 * 回传出库状态给客户(出库的最后步骤)
 	 */
-	@Scheduled(cron = "0 0/5 8-23 * * ? ")
+	@Scheduled(cron = "0 0/30 * * * ? ")
 	@Override
 	public void sendOutWarehouseStatusToCustomer() {
 		List<Long> orderIdList = outWarehouseOrderDao.findCallbackSendStatusUnSuccessOrderId();

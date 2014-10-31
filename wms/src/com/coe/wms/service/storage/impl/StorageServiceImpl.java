@@ -565,7 +565,7 @@ public class StorageServiceImpl implements IStorageService {
 			if (StringUtil.isEqual(order.getCallbackSendStatusIsSuccess(), Constant.Y)) {
 				map.put("callbackSendStatusIsSuccess", "成功");
 			} else {
-				if (order.getCallbackSendWeighCount() != null && order.getCallbackSendStatusCount() > 0) {
+				if (order.getCallbackSendStatusCount() != null && order.getCallbackSendStatusCount() > 0) {
 					map.put("callbackSendStatusIsSuccess", "失败次数:" + order.getCallbackSendStatusCount());
 				} else {
 					map.put("callbackSendStatusIsSuccess", "未回传");

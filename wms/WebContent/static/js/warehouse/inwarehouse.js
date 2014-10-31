@@ -117,7 +117,7 @@ function saveInWarehouseRecordItem() {
 		return;
 	}
 	
-	if(itemQuantity >100 || itemQuantity<-100){
+	if(itemQuantity >500 || itemQuantity<-500){
 		var mymes = confirm("你确定输入数量:"+itemQuantity+"吗?");
 		if(mymes != true){
 			return;
