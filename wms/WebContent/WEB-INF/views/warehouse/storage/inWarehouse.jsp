@@ -26,7 +26,7 @@
 									<span class="pull-left" style="width:52px;">跟踪单号</span>
 									<span class="pull-left" style="width:170px;">
 										<!--  利用focus和blur 判断跟踪号是否有变化, 变化则把入库订单id清空-->
-										<input type="text"  name="trackingNo"  id="trackingNo" t="1" onfocus="trackingNoFocus()"  style="width:140px;"/>
+										<input type="text"  name="trackingNo"  id="trackingNo" t="1" onfocus="trackingNoFocus()"  onblur="trackingNoBlur()" style="width:140px;"/>
 										<!-- 用户按回车时,当入库订单id 为空是第一次提交,后台返回id,或其他提示.  不为空 提示客户可输入SKU和数量进行收货 -->
 										<input type="text"  name="inWarehouseOrderId"  id="inWarehouseOrderId" t="1"  style="display: none;"/>
 										<input type="text"  name="inWarehouseRecordId"  id="inWarehouseRecordId" t="1"  style="display: none;"/>
@@ -82,13 +82,13 @@
 						
 						<span class="pull-left" style="width:52px;">产品数量</span>
 						<span class="pull-left" style="width:102px;">
-							<input type="text"  name="itemQuantity"  id="itemQuantity" t="2" style="width:90px;" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"/>
+							<input type="text"  name="itemQuantity"  id="itemQuantity" t="3" style="width:90px;" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"/>
 						</span>
 						
 						
 						<span class="pull-left" style="width:52px;">明细备注</span>
 						<span class="pull-left" style="width:180px;">
-							<input type="text"  name="itemRemark"  id="itemRemark" t="2" style="width:160px;"/>
+							<input type="text"  name="itemRemark"  id="itemRemark" t="4" style="width:160px;"/>
 						</span>
 						
 						<span class="pull-left" style="width:105px;">
@@ -154,13 +154,27 @@
   	  //回车事件
   	  function clickEnter(){
   		  	if(focus == '1'){
-	  		  	saveInWarehouseRecord();	
+	  		  	saveInWarehouseRecord();
+	  		  	return false;
   		  	}
-    		//保存明细
+    		//sku焦点,回车,切换quantity焦点
 			if(focus == '2'){
+				$("#itemQuantity").val("");
+				$("#itemQuantity").focus();
+				return false;
+			}
+			//quantity焦点,回车,提交保存明细
+			if(focus == '3'){
 	      		saveInWarehouseRecordItem();
+	      		return false;
+			}
+			//remark 焦点,回车,提交保存明细
+			if(focus == '4'){
+	      		saveInWarehouseRecordItem();
+	      		return false;
 			}
   	  }
+  	  
     </script>	
     
     

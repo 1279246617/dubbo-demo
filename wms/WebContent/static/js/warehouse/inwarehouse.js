@@ -104,7 +104,7 @@ function saveInWarehouseRecordItem() {
 	//入库主单id
 	var inWarehouseRecordId = $("#inWarehouseRecordId").val();
 	if(inWarehouseRecordId==''){
-		parent.$.showShortMessage({msg:"无主单id,不能保存明细",animate:true,left:"45%"});
+		parent.$.showShortMessage({msg:"请先输入正确在跟踪单号,按回车,再保存明细",animate:true,left:"42%"});
 		return;
 	}
 	if(itemSku == ''){
@@ -121,7 +121,7 @@ function saveInWarehouseRecordItem() {
 			+warehouseId+"&inWarehouseRecordId="+inWarehouseRecordId, function(msg) {
 		if(msg.status == 0){
 			//保存失败,显示提示
-			parent.$.showShortMessage({msg:msg.message,animate:true,left:"45%"});
+			parent.$.showDialogMessage(msg.message, null, null);
 			// 光标移至产品SKU
 			$("#itemSku").focus();
 			focus = "2";
@@ -130,8 +130,8 @@ function saveInWarehouseRecordItem() {
 		if(msg.status == 1){
 			parent.$.showShortMessage({msg:"保存明细成功.",animate:true,left:"45%"});
 			// 光标移至产品SKU
+			$("#itemSku").val("");
 			$("#itemSku").focus();
-			$("#itemSku").select();
 			$("#tips").html("请继续输入SKU和数量,或者输入新的跟踪单号并按回车!");
 			focus = "2";
 			
@@ -153,6 +153,7 @@ function trackingNoBlur(){
 	if(oldTrackingNo!=newTrackingNo){
 		$("#inWarehouseOrderId").val("");
 		$("#inWarehouseRecordId").val("");
+		alert("跟踪阿红改变了");
 	}
 	oldTrackingNo = newTrackingNo;
 }
