@@ -162,6 +162,7 @@ function trackingNoBlur(){
 	if(oldTrackingNo!=newTrackingNo){
 		$("#inWarehouseOrderId").val("");
 		$("#inWarehouseRecordId").val("");
+		$("#inWarehouseOrdertbody").html("");
 	}
 	oldTrackingNo = newTrackingNo;
 }

@@ -194,7 +194,7 @@
 		                { display: '仓库', name: 'warehouse', align: 'center', type: 'float',width:'11%'},
 		                { display: '收货时间', name: 'createdTime', type: 'int', width:'13%'},
 		                { display: '操作员', name: 'userLoginNameOfOperator',width:'11%'},
-		                { display: '入库明细备注', name: 'remark', align: 'center', type: 'float',width:'14%'}
+		                { display: '入库明细备注', name: 'remark', align: 'center', type: 'float',width:'16%'}
 	                ],  
 	                isScroll: true,
 	                dataAction: 'server',
@@ -205,7 +205,7 @@
 	                width: '100%',
 	                height: '99%',
 	                title:"入库订单SKU预报和实际收货详情",
-	                checkbox: true,
+	                checkbox: false,
 	                rownumbers:true,
 	                enabledEdit: true,
 	                clickToEdit: true
