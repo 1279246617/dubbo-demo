@@ -159,14 +159,16 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 			// sku 详情
 			SkuDetail skuDetail = new SkuDetail();
 			List<Sku> skuList = new ArrayList<Sku>();
+			if (recordItemList == null || recordItemList.size() == 0) {
+				continue;
+			}
 			for (InWarehouseRecordItem recordItem : recordItemList) {
 				Sku sku = new Sku();
 				sku.setSkuCode(recordItem.getSku());
 				sku.setSkuName(recordItem.getSku());
 				// 2014-10-16 当一个入库订单多次收货,产生多个入库单时,每次回传SKU入库情况,回传所有已收货数量
 				// 根据SKU和入库订单Id, 查询已经收货的SKU数量
-				int count = inWarehouseRecordItemDao.countInWarehouseItemSkuQuantityByOrderId(inWarehouseRecord.getInWarehouseOrderId(),
-						recordItem.getSku());
+				int count = inWarehouseRecordItemDao.countInWarehouseItemSkuQuantityByOrderId(inWarehouseRecord.getInWarehouseOrderId(), recordItem.getSku());
 				sku.setSkuInBoundQty(count);
 				sku.setSkuCheckQty(count);
 				sku.setSkuBoundTime(DateUtil.dateConvertString(new Date(recordItem.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss));
@@ -199,13 +201,11 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 			String url = user.getOppositeServiceUrl();
 			logger.info("回传SKU入库信息: url=" + url);
 			logger.info("回传SKU入库信息: logistics_interface=" + xml);
-			logger.info("回传SKU入库信息: data_digest=" + dataDigest + " msg_source=" + msgSource + " msg_type=" + serviceNameSkuStockin
-					+ " logistics_provider_id=" + warehouse.getWarehouseNo());
+			logger.info("回传SKU入库信息: data_digest=" + dataDigest + " msg_source=" + msgSource + " msg_type=" + serviceNameSkuStockin + " logistics_provider_id=" + warehouse.getWarehouseNo());
 			try {
 				String response = HttpUtil.postRequest(url, basicNameValuePairs);
 				logger.info("顺丰返回:" + response);
-				inWarehouseRecord.setCallbackCount(inWarehouseRecord.getCallbackCount() == null ? 0
-						: inWarehouseRecord.getCallbackCount() + 1);
+				inWarehouseRecord.setCallbackCount(inWarehouseRecord.getCallbackCount() == null ? 0 : inWarehouseRecord.getCallbackCount() + 1);
 				Responses responses = (Responses) XmlUtil.toObject(response, Responses.class);
 				if (responses == null) {
 					logger.error("回传SKU入库信息 返回信息无法转换成Responses对象");
@@ -275,9 +275,8 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 			List<LogisticsOrder> logisticsOrders = new ArrayList<LogisticsOrder>();
 			LogisticsOrder logisticsOrder = new LogisticsOrder();
 			logisticsOrder.setLogisticsWeight(Weight.turnToG(outWarehouseOrder.getOutWarehouseWeight(), outWarehouseOrder.getWeightCode()));
-			logisticsOrder.setLogisticsRemark("备注");
-			logisticsOrder
-					.setOccurTime(DateUtil.dateConvertString(new Date(outWarehouseOrder.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss));
+			logisticsOrder.setLogisticsRemark("出库称重");
+			logisticsOrder.setOccurTime(DateUtil.dateConvertString(new Date(outWarehouseOrder.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss));
 
 			logisticsOrders.add(logisticsOrder);
 			logisticsDetail.setLogisticsOrders(logisticsOrders);
@@ -301,13 +300,11 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 			String url = user.getOppositeServiceUrl();
 			logger.info("回传SKU出库称重信息: url=" + url);
 			logger.info("回传SKU出库称重信息: logistics_interface=" + xml);
-			logger.info("回传SKU出库称重信息: data_digest=" + dataDigest + " msg_source=" + msgSource + " msg_type=" + serviceNameSendWeight
-					+ " logistics_provider_id=" + warehouse.getWarehouseNo());
+			logger.info("回传SKU出库称重信息: data_digest=" + dataDigest + " msg_source=" + msgSource + " msg_type=" + serviceNameSendWeight + " logistics_provider_id=" + warehouse.getWarehouseNo());
 			try {
 				String response = HttpUtil.postRequest(url, basicNameValuePairs);
 				logger.info("顺丰返回:" + response);
-				outWarehouseOrder.setCallbackSendWeighCount(outWarehouseOrder.getCallbackSendWeighCount() == null ? 1 : outWarehouseOrder
-						.getCallbackSendWeighCount() + 1);
+				outWarehouseOrder.setCallbackSendWeighCount(outWarehouseOrder.getCallbackSendWeighCount() == null ? 1 : outWarehouseOrder.getCallbackSendWeighCount() + 1);
 				Responses responses = (Responses) XmlUtil.toObject(response, Responses.class);
 				if (responses == null) {
 					logger.error("回传SKU出库称重信息 返回信息无法转换成Responses对象");
@@ -381,8 +378,7 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 			logisticsOrder.setLogisticsRemark("出库,地点:" + warehouse.getCountryName() + "," + warehouse.getCity());
 			// 出库
 			logisticsOrder.setLogisticsCode("STOCKOUT");
-			logisticsOrder
-					.setOccurTime(DateUtil.dateConvertString(new Date(outWarehouseOrder.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss));
+			logisticsOrder.setOccurTime(DateUtil.dateConvertString(new Date(outWarehouseOrder.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss));
 			logisticsOrders.add(logisticsOrder);
 			logisticsDetail.setLogisticsOrders(logisticsOrders);
 			eventBody.setLogisticsDetail(logisticsDetail);
@@ -404,13 +400,11 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 			String url = user.getOppositeServiceUrl();
 			logger.info("回传SKU出库状态信息: url=" + url);
 			logger.info("回传SKU出库状态信息: logistics_interface=" + xml);
-			logger.info("回传SKU出库状态信息: data_digest=" + dataDigest + " msg_source=" + msgSource + " msg_type=" + serviceNameSendStatus
-					+ " logistics_provider_id=" + warehouse.getWarehouseNo());
+			logger.info("回传SKU出库状态信息: data_digest=" + dataDigest + " msg_source=" + msgSource + " msg_type=" + serviceNameSendStatus + " logistics_provider_id=" + warehouse.getWarehouseNo());
 			try {
 				String response = HttpUtil.postRequest(url, basicNameValuePairs);
 				logger.info("顺丰返回:" + response);
-				outWarehouseOrder.setCallbackSendStatusCount(outWarehouseOrder.getCallbackSendStatusCount() == null ? 1 : outWarehouseOrder
-						.getCallbackSendStatusCount() + 1);
+				outWarehouseOrder.setCallbackSendStatusCount(outWarehouseOrder.getCallbackSendStatusCount() == null ? 1 : outWarehouseOrder.getCallbackSendStatusCount() + 1);
 				Responses responses = (Responses) XmlUtil.toObject(response, Responses.class);
 				if (responses == null) {
 					logger.error("回传SKU出库状态信息 返回信息无法转换成Responses对象");
