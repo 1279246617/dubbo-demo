@@ -109,7 +109,7 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 	/**
 	 * 发送仓配入库订单信息给客户
 	 */
-//	@Scheduled(cron = "0 0/10 8-23 * * ? ")
+	@Scheduled(cron = "0 0/10 8-23 * * ? ")
 	@Override
 	public void sendInWarehouseInfoToCustomer() {
 		InWarehouseRecord param = new InWarehouseRecord();
@@ -234,7 +234,7 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 	/**
 	 * 回传出库称重给客户
 	 */
-//	@Scheduled(cron = "0 0/5 8-23 * * ? ")
+	@Scheduled(cron = "0 0/10 8-23 * * ? ")
 	@Override
 	public void sendOutWarehouseWeightToCustomer() {
 		List<Long> orderIdList = outWarehouseOrderDao.findCallbackSendWeightUnSuccessOrderId();
@@ -337,7 +337,7 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 	/**
 	 * 回传出库状态给客户(出库的最后步骤)
 	 */
-//	@Scheduled(cron = "0 0/30 * * * ? ")
+	@Scheduled(cron = "0 0/15 * * * ? ")
 	@Override
 	public void sendOutWarehouseStatusToCustomer() {
 		List<Long> orderIdList = outWarehouseOrderDao.findCallbackSendStatusUnSuccessOrderId();
