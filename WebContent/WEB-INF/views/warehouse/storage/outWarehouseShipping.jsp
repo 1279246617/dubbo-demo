@@ -27,7 +27,7 @@
 					</tr>
 					<tr style="height:65px;">
 							<td>
-								<span style="width:100px;" class="pull-left" >出库发货单号</span>
+								<span style="width:100px;" class="pull-left" >出货跟踪单号</span>
 								<input type="text"  name="trackingNo"  id="trackingNo"   style="width:150px;" title="扫描出库装箱时打印的运单上的条码"/>
 							</td>		
 							
@@ -50,7 +50,7 @@
 	<div class="pull-right" style="width:50%;margin-top: 1px;" >
 			<table class="table table-striped" style="width:100%;">
 					<tr>
-							<td colspan="2" style="height:28px;">已扫描的出货单号记录</td>
+							<td colspan="2" style="height:28px;">已扫描的出货跟踪单号记录</td>
 					</tr>
 					<tr style="height:25px;">
 							<td>SF111111111111</td>
@@ -84,22 +84,23 @@
 	    		return;
 	    	}
 	    });
- 
+ 	
   	 	 //回车事件
   	  	function next(){
   	 		 var trackingNo = $("#trackingNo").val();
   	 		 if(trackingNo == null || trackingNo==''){
-  	 			parent.$.showShortMessage({msg:"请输入出库发货单号再按回车!",animate:false,left:"43%"});
+  	 			parent.$.showShortMessage({msg:"请输入出货跟踪单号再按回车!",animate:false,left:"43%"});
   	 			return false;	 
   	 		 }
   	 		 
-	  	  	$.post(baseUrl+ '/warehouse/storage/outWarehouseShippingConfirm.do?trackingNo='+ trackingNo, function(msg) {
+	  	  	$.post(baseUrl+ '/warehouse/storage/checkOutWarehouseShipping.do?trackingNo='+ trackingNo, function(msg) {
 	  	  		if(msg.status == 0){
 	  	  			parent.$.showShortMessage({msg:msg.message,animate:false,left:"42%"});
 	  	  			return false;
 	  	  		}
 	  	  		if(msg.status == 1){
-	  	  			parent.$.showShortMessage({msg:"确认出库成功.",animate:false,left:"45%"});
+	  	  			//添加一行运单
+						  	  			
 	  	  			// 光标移至跟踪号
 	  	  			$("#trackingNo").focus();
 	  	  			$("#trackingNo").select();

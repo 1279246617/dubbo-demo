@@ -285,13 +285,21 @@ public interface IStorageService {
 	public List<Warehouse> findAllWarehouse(Long firstWarehouseId) throws ServiceException;
 
 	/**
-	 * 
+	 * 出库确认
 	 * @param TrackingNo
 	 * @return
 	 * @throws ServiceException
 	 */
-	public Map<String, String> outWarehouseShippingConfirm(String TrackingNo, Long userIdOfOperator) throws ServiceException;
-
+	public Map<String, String> outWarehouseShippingConfirm(String coeTrackingNo, String[] TrackingNo, Long userIdOfOperator) throws ServiceException;
+	
+	/**
+	 * 检查出库时扫描每单
+	 * @param TrackingNo
+	 * @return
+	 * @throws ServiceException
+	 */
+	public Map<String, String> checkOutWarehouseShipping(String trackingNo, Long userIdOfOperator) throws ServiceException;
+	
 	/**
 	 * 
 	 * @param TrackingNo

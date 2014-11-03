@@ -664,9 +664,7 @@ public class Storage {
 	}
 
 	/**
-	 * 扫运单动作,确认出库
-	 * 
-	 * 目前采用扫描出货条码,可能重复, 待添加 当重复时,扫描客户订单号等
+	 * 扫运单动作, 检查每个运单
 	 * 
 	 * @param request
 	 * @param response
@@ -674,12 +672,12 @@ public class Storage {
 	 * @throws IOException
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/outWarehouseShippingConfirm")
-	public String outWarehouseShippingConfirm(HttpServletRequest request, HttpServletResponse response, String trackingNo)
+	@RequestMapping(value = "/checkOutWarehouseShipping")
+	public String checkOutWarehouseShipping(HttpServletRequest request, HttpServletResponse response, String trackingNo)
 			throws IOException {
 		HttpSession session = request.getSession();
 		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
-		Map<String, String> checkResultMap = storageService.outWarehouseShippingConfirm(trackingNo, userId);
+		Map<String, String> checkResultMap = storageService.checkOutWarehouseShipping(trackingNo, userId);
 		return GsonUtil.toJson(checkResultMap);
 	}
 
