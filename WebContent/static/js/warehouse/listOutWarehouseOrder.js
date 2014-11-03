@@ -37,7 +37,7 @@ function checkOrder(){
                 	row = grid.getRows();	 
                 }
 	            if(row.length < 1){
-	                parent.$.showShortMessage({msg:"请最少选择一条数据",animate:true,left:"45%"});
+	                parent.$.showShortMessage({msg:"请最少选择一条数据",animate:false,left:"45%"});
 	                return false;
 	            }
                 var checkResult = parent.$("#checkSuccess").attr("checked")?1:2;//1是审核通过 2是审核不通过
@@ -47,10 +47,10 @@ function checkOrder(){
 				}
         		$.post(baseUrl + '/warehouse/storage/checkOutWarehouseOrder.do',{orderIds:orderIds,checkResult:checkResult},function(msg){
         			if(msg.status == "1"){
-        				parent.$.showShortMessage({msg:msg.message,animate:true,left:"38%"});
+        				parent.$.showShortMessage({msg:msg.message,animate:false,left:"38%"});
         				grid.loadData();	
         			}else{
-        				parent.$.showShortMessage({msg:msg.message,animate:true,left:"43%"});
+        				parent.$.showShortMessage({msg:msg.message,animate:false,left:"43%"});
         			}
                 },"json");
   			}
@@ -92,7 +92,7 @@ function printOrder(){
                 	row = grid.getRows();	 
                 }
 	            if(row.length < 1){
-	                parent.$.showShortMessage({msg:"请最少选择一条数据",animate:true,left:"45%"});
+	                parent.$.showShortMessage({msg:"请最少选择一条数据",animate:false,left:"45%"});
 	                return false;
 	            }
 	            var orderIds = "";
