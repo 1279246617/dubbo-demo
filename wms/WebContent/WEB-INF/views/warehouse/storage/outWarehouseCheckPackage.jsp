@@ -156,7 +156,7 @@
 			$("#status").val("");
  	 		$.post(baseUrl+ '/warehouse/storage/outWarehouseSubmitCustomerReferenceNo.do?customerReferenceNo='+ customerReferenceNo, function(msg) {
  	 				if(msg.status == 0){
- 	 					parent.$.showShortMessage({msg:msg.message,animate:true,left:"45%"});
+ 	 					parent.$.showShortMessage({msg:msg.message,animate:false,left:"45%"});
  	 					return;
  	 				}
  	 				if(msg.status == 1){
@@ -196,12 +196,12 @@
  	 		var customerReferenceNo  = $("#customerReferenceNo").val();
  	 		$.post(baseUrl+ '/warehouse/storage/outWarehouseSubmitWeight.do?customerReferenceNo='+ customerReferenceNo+'&outWarehouseOrderWeight='+outWarehouseOrderWeight, function(msg) {
 	 				if(msg.status == 0){
-	 					parent.$.showShortMessage({msg:msg.message,animate:true,left:"45%"});
+	 					parent.$.showShortMessage({msg:msg.message,animate:false,left:"45%"});
 	 					$("#weightOk").hide();
 	 					return;
 	 				}
 	 				if(msg.status == 1){
-	 					parent.$.showShortMessage({msg:"保存出库订单总重量成功",animate:true,left:"45%"});
+	 					parent.$.showShortMessage({msg:"保存出库订单总重量成功",animate:false,left:"45%"});
 	 					$("#weightOk").show();
 	 				}
 	 		},"json");

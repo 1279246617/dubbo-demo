@@ -18,46 +18,43 @@
 </head>
 <body>
 	<div class="pull-left" style="width:50%;height:80px; margin-top: 1px;" >
-			<table class="table table-striped" style="width:100%;margin-bottom: 5px">
-					<tr style="height:15px;">
+			<table class="table table-striped" style="width:100%;">
+					<tr>
+						<td colspan="2" style="height:28px;">
+								<span style="width:100px;" class="pull-left">COE交接单号</span>
+								<input id="coeTrackingNo" name="coeTrackingNo" value="COE1111111111" style="width:150px;" readonly="readonly"/>
+						</td>
+					</tr>
+					<tr style="height:65px;">
 							<td>
-									<span class="pull-left" style="width:72px;">出货运单号</span>
-									<span class="pull-left" style="width:191px;">
-										<input type="text"  name="trackingNo"  id="trackingNo"   style="width:190px;"/>
-									</span>
-									<span class="pull-left" style="margin-left: 10px;">
-										扫描出库装箱时打印的运单上的条码
-									</span>
+								<span style="width:100px;" class="pull-left" >出库发货单号</span>
+								<input type="text"  name="trackingNo"  id="trackingNo"   style="width:150px;" title="扫描出库装箱时打印的运单上的条码"/>
 							</td>		
+							
 							<td>
-		          				 <a class="btn  btn-primary" id="enter" onclick="clickEnter()" style="cursor:pointer;"><i class="icon-ok icon-white"></i>确认出库</a>
+		          				 <a class="btn  btn-primary" id="enter" onclick="next()" style="cursor:pointer;"><i class="icon-ok icon-white"></i>继续下一票</a>
 							</td>
 					</tr>
+					<tr>
+						<td colspan="2" rowspan="2" style="height:25px;">
+							<a class="btn  btn-primary" id="enter" onclick="submitAll()" style="cursor:pointer;height:20px;"><i class="icon-ok icon-white"></i>
+								完成出货总单
+							</a>
+						</td>
+					</tr>
 			</table>
+			
+			
 	</div>
 	
-	<div class="pull-right" style="width:50%;height:80px; margin-top: 1px;" >
-			<h3>已扫描的出货单号记录</h3>
-			<table class="table table-striped" style="width:100%;margin-bottom: 5px">
-					<tr style="height:15px;">
-							<th>SF111111111111</th>
-							<th><i class="icon-remove"></i></th>	
+	<div class="pull-right" style="width:50%;margin-top: 1px;" >
+			<table class="table table-striped" style="width:100%;">
+					<tr>
+							<td colspan="2" style="height:28px;">已扫描的出货单号记录</td>
 					</tr>
-					<tr style="height:15px;">
-						<th>SF222222222222</th>
-						<th><i class="icon-remove"></i></th>	
-					</tr>
-					<tr style="height:15px;">
-						<th>SF222222222222</th>
-						<th><i class="icon-remove"></i></th>	
-					</tr>
-					<tr style="height:15px;">
-						<th>SF333333333333</th>
-						<th><i class="icon-remove"></i></th>	
-					</tr>
-					<tr style="height:15px;">
-						<th>SF333333333333</th>
-						<th><i class="icon-remove"></i></th>
+					<tr style="height:25px;">
+							<td>SF111111111111</td>
+							<td><i class="icon-remove"></i></td>	
 					</tr>
 			</table>
 	</div>
@@ -79,27 +76,30 @@
 	    $(window).keydown(function(event){
 	    	//回车事件
 	    	if((event.keyCode   ==   13)) {
-	    		clickEnter();
+	    		next();
 	    		return;
 	    	}  
-	    	//空格
-			if(event.keyCode == 32 && !$(event.target).is('input,textarea')){
-				return;
-			}    	
 	    	if((event.keyCode   ==   13) &&   (event.ctrlKey)) {
+	    		submitAll();
+	    		return;
 	    	}
 	    });
  
   	 	 //回车事件
-  	  	function clickEnter(){
-  	 		 var trackingNoStr = $("#trackingNo").val();
-	  	  	$.post(baseUrl+ '/warehouse/storage/outWarehouseShippingConfirm.do?trackingNo='+ trackingNoStr, function(msg) {
+  	  	function next(){
+  	 		 var trackingNo = $("#trackingNo").val();
+  	 		 if(trackingNo == null || trackingNo==''){
+  	 			parent.$.showShortMessage({msg:"请输入出库发货单号再按回车!",animate:false,left:"43%"});
+  	 			return false;	 
+  	 		 }
+  	 		 
+	  	  	$.post(baseUrl+ '/warehouse/storage/outWarehouseShippingConfirm.do?trackingNo='+ trackingNo, function(msg) {
 	  	  		if(msg.status == 0){
-	  	  			parent.$.showShortMessage({msg:msg.message,animate:true,left:"42%"});
+	  	  			parent.$.showShortMessage({msg:msg.message,animate:false,left:"42%"});
 	  	  			return false;
 	  	  		}
 	  	  		if(msg.status == 1){
-	  	  			parent.$.showShortMessage({msg:"确认出库成功.",animate:true,left:"45%"});
+	  	  			parent.$.showShortMessage({msg:"确认出库成功.",animate:false,left:"45%"});
 	  	  			// 光标移至跟踪号
 	  	  			$("#trackingNo").focus();
 	  	  			$("#trackingNo").select();

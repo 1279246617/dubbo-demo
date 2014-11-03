@@ -131,6 +131,7 @@
 			                { display: '操作员', name: 'userLoginNameOfOperator',type:'float',width:'9%'},
 			                
 			                { display: '回传入库状态', name: 'callbackIsSuccess',type:'float',width:'8%'},
+			                { display: '创建时间', name: 'createdTime', align: 'center', type: 'float',width:'12%'},
 			                {display: '操作',isSort: false,width: '8%',render: function(row) {
 			            		var h = "";
 			            		if (!row._editing) {

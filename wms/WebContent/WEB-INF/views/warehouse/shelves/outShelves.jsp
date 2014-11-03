@@ -169,17 +169,17 @@
   			}
 	  		var sku = $("#sku").val();
 	  		if(sku == null || sku ==''){
-	  			parent.$.showShortMessage({msg:"请输入产品SKU",animate:true,left:"43%"});
+	  			parent.$.showShortMessage({msg:"请输入产品SKU",animate:false,left:"43%"});
 	  			return false;
 	  		}
 	  		var quantity = $("#quantity").val();
 	  		if(quantity == null || quantity ==''){
-	  			parent.$.showShortMessage({msg:"请输入产品数量",animate:true,left:"43%"});
+	  			parent.$.showShortMessage({msg:"请输入产品数量",animate:false,left:"43%"});
 	  			return false;
 	  		}
 	  		var seatCode = $("#seatCode").val();
 	  		if(seatCode == null || seatCode ==''){
-	  			parent.$.showShortMessage({msg:"请输入货位",animate:true,left:"45%"});
+	  			parent.$.showShortMessage({msg:"请输入货位",animate:false,left:"45%"});
 	  			return false;
 	  		}
 	  		var tr = "<tr>";
@@ -207,7 +207,7 @@
 				return false;
 			}
 			if(map.status == '1'){
-				parent.$.showShortMessage({msg:"保存本订单下架成功,请继续下一个订单",animate:true,left:"45%"});
+				parent.$.showShortMessage({msg:"保存本订单下架成功,请继续下一个订单",animate:false,left:"45%"});
 				//输入框解锁,焦点回
 				 $("#customerReferenceNo").removeAttr("readonly");
 				 $("#customerReferenceNo").focus();
