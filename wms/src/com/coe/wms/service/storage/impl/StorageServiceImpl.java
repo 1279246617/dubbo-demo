@@ -550,7 +550,7 @@ public class StorageServiceImpl implements IStorageService {
 			}
 			map.put("shipwayCode", order.getShipwayCode());
 			map.put("trackingNo", order.getTrackingNo());
-			//回传称重
+			// 回传称重
 			if (StringUtil.isEqual(order.getCallbackSendWeightIsSuccess(), Constant.Y)) {
 				map.put("callbackSendWeightIsSuccess", "成功");
 			} else {
@@ -1241,44 +1241,10 @@ public class StorageServiceImpl implements IStorageService {
 	}
 
 	@Override
-	public Map<String, String> outWarehouseShippingConfirm(String trackingNo, Long userIdOfOperator) throws ServiceException {
+	public Map<String, String> outWarehouseShippingConfirm(String coeTrackingNo, String[] trackingNo, Long userIdOfOperator) throws ServiceException {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put(Constant.STATUS, Constant.FAIL);
 
-		OutWarehouseOrder param = new OutWarehouseOrder();
-		param.setTrackingNo(trackingNo);
-
-		List<OutWarehouseOrder> outWarehouseOrderList = outWarehouseOrderDao.findOutWarehouseOrder(param, null, null);
-		if (outWarehouseOrderList == null || outWarehouseOrderList.size() == 0) {
-			map.put(Constant.MESSAGE, "查询不到出库订单,请重新输入出货跟踪单号");
-			return map;
-		}
-
-		if (outWarehouseOrderList.size() > 1) {
-			// 找到多个出库订单的情况,待处理
-			map.put(Constant.MESSAGE, "查询到多个出库订单,请输入客户订单号");
-			return map;
-		}
-		OutWarehouseOrder outWarehouseOrder = outWarehouseOrderList.get(0);
-		Long orderId = outWarehouseOrder.getId();
-		// 只有顺丰确认出库,顺丰已确认的订单 可以出库
-		if (StringUtil.isEqual(outWarehouseOrder.getStatus(), OutWarehouseOrderStatusCode.WWO)) {
-			// 更新出库订单状态为SUCCESS
-			int updateCount = outWarehouseOrderDao.updateOutWarehouseOrderStatus(orderId, OutWarehouseOrderStatusCode.SUCCESS);
-			if (updateCount == 1) {
-				map.put(Constant.STATUS, Constant.SUCCESS);
-			} else {
-				map.put(Constant.MESSAGE, "执行数据库更新时失败,数据库返回更新行数:" + updateCount);
-			}
-		} else if (StringUtil.isEqual(outWarehouseOrder.getStatus(), OutWarehouseOrderStatusCode.SUCCESS)) {
-			map.put(Constant.MESSAGE, "出库订单当前状态已经是出库成功");
-		} else if (StringUtil.isEqual(outWarehouseOrder.getStatus(), OutWarehouseOrderStatusCode.WCC)) {
-			map.put(Constant.MESSAGE, "出库订单当前状态是等待客户确认出库,不能出库");
-		} else if (StringUtil.isEqual(outWarehouseOrder.getStatus(), OutWarehouseOrderStatusCode.WSW)) {
-			map.put(Constant.MESSAGE, "出库订单当前状态是等待发送出库重量给客户,不能出库");
-		} else {
-			map.put(Constant.MESSAGE, "出库订单当前状态不允许更改为出库成功");
-		}
 		return map;
 	}
 
@@ -1649,5 +1615,37 @@ public class StorageServiceImpl implements IStorageService {
 		page.total = outShelfDao.countOutShelf(outShelf, moreParam);
 		page.rows = list;
 		return page;
+	}
+
+	@Override
+	public Map<String, String> checkOutWarehouseShipping(String trackingNo, Long userIdOfOperator) throws ServiceException {
+		Map<String, String> map = new HashMap<String, String>();
+		map.put(Constant.STATUS, Constant.FAIL);
+		OutWarehouseOrder param = new OutWarehouseOrder();
+		param.setTrackingNo(trackingNo);
+		List<OutWarehouseOrder> outWarehouseOrderList = outWarehouseOrderDao.findOutWarehouseOrder(param, null, null);
+		if (outWarehouseOrderList == null || outWarehouseOrderList.size() == 0) {
+			map.put(Constant.MESSAGE, "查询不到出库订单,请重新输入出货跟踪单号");
+			return map;
+		}
+		if (outWarehouseOrderList.size() > 1) {
+			// 找到多个出库订单的情况,待处理
+			map.put(Constant.MESSAGE, "查询到多个出库订单,请输入客户订单号");
+			return map;
+		}
+		OutWarehouseOrder outWarehouseOrder = outWarehouseOrderList.get(0);
+		// 只有顺丰确认出库,顺丰已确认的订单 可以出库
+		if (StringUtil.isEqual(outWarehouseOrder.getStatus(), OutWarehouseOrderStatusCode.WWO)) {
+			map.put(Constant.STATUS, Constant.SUCCESS);
+		} else if (StringUtil.isEqual(outWarehouseOrder.getStatus(), OutWarehouseOrderStatusCode.SUCCESS)) {
+			map.put(Constant.MESSAGE, "出库订单当前状态已经是出库成功");
+		} else if (StringUtil.isEqual(outWarehouseOrder.getStatus(), OutWarehouseOrderStatusCode.WCC)) {
+			map.put(Constant.MESSAGE, "出库订单当前状态是等待客户确认出库,不能出库");
+		} else if (StringUtil.isEqual(outWarehouseOrder.getStatus(), OutWarehouseOrderStatusCode.WSW)) {
+			map.put(Constant.MESSAGE, "出库订单当前状态是等待发送出库重量给客户,不能出库");
+		} else {
+			map.put(Constant.MESSAGE, "出库订单当前状态不能出库");
+		}
+		return map;
 	}
 }
