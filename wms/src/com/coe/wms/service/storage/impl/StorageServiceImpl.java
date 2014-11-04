@@ -1241,10 +1241,31 @@ public class StorageServiceImpl implements IStorageService {
 	}
 
 	@Override
-	public Map<String, String> outWarehouseShippingConfirm(String coeTrackingNo, String[] trackingNo, Long userIdOfOperator) throws ServiceException {
+	public Map<String, String> outWarehouseShippingConfirm(String coeTrackingNo, String orderIds, Long userIdOfOperator) throws ServiceException {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put(Constant.STATUS, Constant.FAIL);
-
+		if (StringUtil.isNull(orderIds)) {
+			map.put(Constant.MESSAGE, "请输入出货跟踪单号再按完成出货总单!");
+			return map;
+		}
+		// 前端用||分割多个跟踪单号
+		String orderIdsArray[] = orderIds.split("\\|\\|");
+		if (orderIdsArray.length < 1) {
+			map.put(Constant.MESSAGE, "请输入出货跟踪单号再按完成出货总单!");
+			return map;
+		}
+		if (StringUtil.isNull(coeTrackingNo)) {
+			map.put(Constant.MESSAGE, "COE交接单号不能为空,请刷新页面重试!");
+			return map;
+		}
+		// 迭代,检查跟踪号
+		for (String orderId : orderIdsArray) {
+			System.out.println("orderId = " + orderId);
+		}
+		// 返回新COE单号,供下一批出库
+		String newCoeTrackingNo = "new1111111111111";
+		map.put(Constant.STATUS, Constant.SUCCESS);
+		map.put("coeTrackingNo", newCoeTrackingNo);
 		return map;
 	}
 
@@ -1646,6 +1667,7 @@ public class StorageServiceImpl implements IStorageService {
 		} else {
 			map.put(Constant.MESSAGE, "出库订单当前状态不能出库");
 		}
+		map.put("orderId", outWarehouseOrder.getId() + "");
 		return map;
 	}
 }

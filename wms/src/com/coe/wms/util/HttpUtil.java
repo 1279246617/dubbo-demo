@@ -12,6 +12,8 @@ import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
@@ -50,6 +52,34 @@ import org.apache.http.util.EntityUtils;
 public class HttpUtil {
 
 	/**
+	 * post请求
+	 * 
+	 * @param url
+	 * @param parames
+	 * @return
+	 * @throws IOException
+	 */
+	public static String post(String url, Map<String, String> parames) throws IOException {
+		DefaultHttpClient http = new DefaultHttpClient();
+		HttpPost post = new HttpPost(url);
+		try {
+			List<BasicNameValuePair> nvps = new ArrayList<BasicNameValuePair>();
+			Set<String> keySet = parames.keySet();
+			for (String key : keySet) {
+				String value = parames.get(key);
+				nvps.add(new BasicNameValuePair(key, value));
+			}
+			post.setEntity(new UrlEncodedFormEntity(nvps, "UTF-8"));
+			HttpResponse httpResponse = http.execute(post);
+			return EntityUtils.toString(httpResponse.getEntity());
+		} catch (IOException e) {
+			throw e;
+		} finally {
+			http.getConnectionManager().shutdown();
+		}
+	}
+
+	/**
 	 * 发送post请求
 	 * 
 	 * @param urlPath
@@ -60,8 +90,7 @@ public class HttpUtil {
 	 * @throws ClientProtocolException
 	 * @throws Exception
 	 */
-	public static String postRequest(String urlPath, List<BasicNameValuePair> basicNameValuePairs) throws ClientProtocolException,
-			IOException {
+	public static String postRequest(String urlPath, List<BasicNameValuePair> basicNameValuePairs) throws ClientProtocolException, IOException {
 
 		DefaultHttpClient httpClient = new DefaultHttpClient();
 		HttpPost httpPost = new HttpPost(urlPath);
@@ -204,8 +233,7 @@ public class HttpUtil {
 	 * @throws ClientProtocolException
 	 * @throws IOException
 	 */
-	public static String postRquest(HttpClient httpClient, final String strUrl, List<BasicNameValuePair> basicNameValuePairs)
-			throws ClientProtocolException, IOException {
+	public static String postRquest(HttpClient httpClient, final String strUrl, List<BasicNameValuePair> basicNameValuePairs) throws ClientProtocolException, IOException {
 		HttpPost httpPost = new HttpPost(strUrl);
 		UrlEncodedFormEntity entity = new UrlEncodedFormEntity(basicNameValuePairs, Constant.UTF_8);
 		httpPost.setEntity(entity);
@@ -236,8 +264,7 @@ public class HttpUtil {
 
 				String strReslut = null;
 				int statuscode = response.getStatusLine().getStatusCode();
-				if ((statuscode == HttpStatus.SC_MOVED_TEMPORARILY) || (statuscode == HttpStatus.SC_MOVED_PERMANENTLY)
-						|| (statuscode == HttpStatus.SC_SEE_OTHER) || (statuscode == HttpStatus.SC_TEMPORARY_REDIRECT)) {
+				if ((statuscode == HttpStatus.SC_MOVED_TEMPORARILY) || (statuscode == HttpStatus.SC_MOVED_PERMANENTLY) || (statuscode == HttpStatus.SC_SEE_OTHER) || (statuscode == HttpStatus.SC_TEMPORARY_REDIRECT)) {
 
 					Header locationHeader = response.getFirstHeader("Location");
 					if (locationHeader != null) {
@@ -386,8 +413,7 @@ public class HttpUtil {
 		return result.toString();
 	}
 
-	private static HttpURLConnection getHttpURLConnection(String url, String postData, String methodType, String contentType)
-			throws MalformedURLException, IOException {
+	private static HttpURLConnection getHttpURLConnection(String url, String postData, String methodType, String contentType) throws MalformedURLException, IOException {
 		HttpURLConnection httpConnection = (HttpURLConnection) new URL(url).openConnection();
 		httpConnection.setRequestMethod(methodType);
 		httpConnection.setRequestProperty("Content-Type", contentType);

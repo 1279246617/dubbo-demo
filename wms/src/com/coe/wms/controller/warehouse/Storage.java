@@ -1,6 +1,7 @@
 package com.coe.wms.controller.warehouse;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,7 +19,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.coe.wms.controller.Application;
-import com.coe.wms.dao.user.impl.UserDaoImpl;
 import com.coe.wms.model.user.User;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrder;
@@ -26,7 +26,6 @@ import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderItem;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus.OutWarehouseOrderStatusCode;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecord;
-import com.coe.wms.model.warehouse.storage.record.InWarehouseRecordItem;
 import com.coe.wms.service.storage.IStorageService;
 import com.coe.wms.service.user.IUserService;
 import com.coe.wms.util.Constant;
@@ -95,8 +94,8 @@ public class Storage {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/getInWarehouseOrderData")
-	public String getInWarehouseOrderData(HttpServletRequest request, String sortorder, String sortname, int page, int pagesize,
-			String userLoginName, Long warehouseId, String trackingNo, String createdTimeStart, String createdTimeEnd) throws IOException {
+	public String getInWarehouseOrderData(HttpServletRequest request, String sortorder, String sortname, int page, int pagesize, String userLoginName, Long warehouseId, String trackingNo, String createdTimeStart, String createdTimeEnd)
+			throws IOException {
 		if (StringUtil.isNotNull(createdTimeStart) && createdTimeStart.contains(",")) {
 			createdTimeStart = createdTimeStart.substring(createdTimeStart.lastIndexOf(",") + 1, createdTimeStart.length());
 		}
@@ -165,8 +164,7 @@ public class Storage {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/getOutWarehouseOrderData", method = RequestMethod.POST)
-	public String getOutWarehouseOrderData(HttpServletRequest request, String sortorder, String sortname, int page, int pagesize,
-			String userLoginName, Long warehouseId, String customerReferenceNo, String createdTimeStart, String createdTimeEnd,
+	public String getOutWarehouseOrderData(HttpServletRequest request, String sortorder, String sortname, int page, int pagesize, String userLoginName, Long warehouseId, String customerReferenceNo, String createdTimeStart, String createdTimeEnd,
 			String status) throws IOException {
 		if (StringUtil.isNotNull(createdTimeStart) && createdTimeStart.contains(",")) {
 			createdTimeStart = createdTimeStart.substring(createdTimeStart.lastIndexOf(",") + 1, createdTimeStart.length());
@@ -236,9 +234,8 @@ public class Storage {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/getWaitCheckOutWarehouseOrderData", method = RequestMethod.POST)
-	public String getWaitCheckOutWarehouseOrderData(HttpServletRequest request, String sortorder, String sortname, int page, int pagesize,
-			String userLoginName, Long warehouseId, String customerReferenceNo, String createdTimeStart, String createdTimeEnd,
-			String status) throws IOException {
+	public String getWaitCheckOutWarehouseOrderData(HttpServletRequest request, String sortorder, String sortname, int page, int pagesize, String userLoginName, Long warehouseId, String customerReferenceNo, String createdTimeStart,
+			String createdTimeEnd, String status) throws IOException {
 		if (StringUtil.isNotNull(createdTimeStart) && createdTimeStart.contains(",")) {
 			createdTimeStart = createdTimeStart.substring(createdTimeStart.lastIndexOf(",") + 1, createdTimeStart.length());
 		}
@@ -339,15 +336,13 @@ public class Storage {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/saveInWarehouseRecord")
-	public String saveInWarehouseRecord(HttpServletRequest request, String trackingNo, Long warehouseId, Long inWarehouseOrderId,
-			String remark) throws IOException {
+	public String saveInWarehouseRecord(HttpServletRequest request, String trackingNo, Long warehouseId, Long inWarehouseOrderId, String remark) throws IOException {
 		// 操作员
 		Long userIdOfOperator = (Long) request.getSession().getAttribute(SessionConstant.USER_ID);
 		Map<String, String> map = new HashMap<String, String>();
 		map.put(Constant.STATUS, Constant.FAIL);
 		// 校验和保存
-		Map<String, String> serviceResult = storageService.saveInWarehouseRecord(trackingNo, remark, userIdOfOperator, warehouseId,
-				inWarehouseOrderId);
+		Map<String, String> serviceResult = storageService.saveInWarehouseRecord(trackingNo, remark, userIdOfOperator, warehouseId, inWarehouseOrderId);
 		// 成功,返回id
 		map.put("id", serviceResult.get("id"));
 		// 失败
@@ -382,15 +377,13 @@ public class Storage {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/saveInWarehouseRecordItem", method = RequestMethod.POST)
-	public String saveInWarehouseRecordItem(HttpServletRequest request, String itemSku, Integer itemQuantity, String itemRemark,
-			Long warehouseId, String shelvesNo, String seatNo, Long inWarehouseRecordId) throws IOException {
+	public String saveInWarehouseRecordItem(HttpServletRequest request, String itemSku, Integer itemQuantity, String itemRemark, Long warehouseId, String shelvesNo, String seatNo, Long inWarehouseRecordId) throws IOException {
 		// 操作员
 		Long userIdOfOperator = (Long) request.getSession().getAttribute(SessionConstant.USER_ID);
 		Map<String, String> map = new HashMap<String, String>();
 		map.put(Constant.STATUS, Constant.FAIL);
 		// 校验和保存
-		Map<String, String> serviceResult = storageService.saveInWarehouseRecordItem(itemSku, itemQuantity, itemRemark, warehouseId,
-				inWarehouseRecordId, userIdOfOperator);
+		Map<String, String> serviceResult = storageService.saveInWarehouseRecordItem(itemSku, itemQuantity, itemRemark, warehouseId, inWarehouseRecordId, userIdOfOperator);
 		// 失败
 		if (!StringUtil.isEqual(serviceResult.get(Constant.STATUS), Constant.SUCCESS)) {
 			map.put(Constant.MESSAGE, serviceResult.get(Constant.MESSAGE));
@@ -411,8 +404,7 @@ public class Storage {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/getInWarehouseRecordItemData")
-	public String getInWarehouseRecordItemData(HttpServletRequest request, String sortorder, String sortname, int page, int pagesize,
-			Long inWarehouseRecordId) throws IOException {
+	public String getInWarehouseRecordItemData(HttpServletRequest request, String sortorder, String sortname, int page, int pagesize, Long inWarehouseRecordId) throws IOException {
 		Map map = new HashMap();
 		if (inWarehouseRecordId == null) {
 			return GsonUtil.toJson(map);
@@ -467,8 +459,7 @@ public class Storage {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/getInWarehouseOrderItem", method = RequestMethod.POST)
-	public String getInWarehouseOrderItem(HttpServletRequest request, String sortorder, String sortname, int page, int pagesize,
-			String trackingNo, String userLoginName) throws IOException {
+	public String getInWarehouseOrderItem(HttpServletRequest request, String sortorder, String sortname, int page, int pagesize, String trackingNo, String userLoginName) throws IOException {
 		Map map = new HashMap();
 		logger.info("trackingNo:" + trackingNo + "  userLoginName:" + userLoginName);
 		logger.info("sortorder:" + sortorder + "  sortname:" + sortname + " page:" + page + " pagesize:" + pagesize);
@@ -532,9 +523,8 @@ public class Storage {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/getInWarehouseRecordData")
-	public String getInWarehouseRecordData(HttpServletRequest request, String sortorder, String sortname, int page, int pagesize,
-			String userLoginName, Long warehouseId, String trackingNo, String batchNo, String createdTimeStart, String createdTimeEnd)
-			throws IOException {
+	public String getInWarehouseRecordData(HttpServletRequest request, String sortorder, String sortname, int page, int pagesize, String userLoginName, Long warehouseId, String trackingNo, String batchNo, String createdTimeStart,
+			String createdTimeEnd) throws IOException {
 		if (StringUtil.isNotNull(createdTimeStart) && createdTimeStart.contains(",")) {
 			createdTimeStart = createdTimeStart.substring(createdTimeStart.lastIndexOf(",") + 1, createdTimeStart.length());
 		}
@@ -616,8 +606,7 @@ public class Storage {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/outWarehouseSubmitCustomerReferenceNo", method = RequestMethod.POST)
-	public String outWarehouseSubmitCustomerReferenceNo(HttpServletRequest request, HttpServletResponse response, String customerReferenceNo)
-			throws IOException {
+	public String outWarehouseSubmitCustomerReferenceNo(HttpServletRequest request, HttpServletResponse response, String customerReferenceNo) throws IOException {
 		HttpSession session = request.getSession();
 		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
 		Map<String, Object> checkResultMap = storageService.outWarehouseSubmitCustomerReferenceNo(customerReferenceNo, userId);
@@ -634,8 +623,7 @@ public class Storage {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/outWarehouseSubmitWeight", method = RequestMethod.POST)
-	public String outWarehouseSubmitWeight(HttpServletRequest request, HttpServletResponse response, String customerReferenceNo,
-			Double outWarehouseOrderWeight) throws IOException {
+	public String outWarehouseSubmitWeight(HttpServletRequest request, HttpServletResponse response, String customerReferenceNo, Double outWarehouseOrderWeight) throws IOException {
 		HttpSession session = request.getSession();
 		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
 		Map<String, Object> checkResultMap = storageService.outWarehouseSubmitWeight(customerReferenceNo, outWarehouseOrderWeight, userId);
@@ -673,11 +661,27 @@ public class Storage {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/checkOutWarehouseShipping")
-	public String checkOutWarehouseShipping(HttpServletRequest request, HttpServletResponse response, String trackingNo)
-			throws IOException {
+	public String checkOutWarehouseShipping(HttpServletRequest request, HttpServletResponse response, String trackingNo) throws IOException {
 		HttpSession session = request.getSession();
 		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
 		Map<String, String> checkResultMap = storageService.checkOutWarehouseShipping(trackingNo, userId);
+		return GsonUtil.toJson(checkResultMap);
+	}
+
+	/**
+	 * 提交出货总单
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/submitOutWarehouseShipping")
+	public String submitOutWarehouseShipping(HttpServletRequest request, HttpServletResponse response, String orderIds, String coeTrackingNo) throws IOException {
+		HttpSession session = request.getSession();
+		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
+		Map<String, String> checkResultMap = storageService.outWarehouseShippingConfirm(coeTrackingNo, orderIds, userId);
 		return GsonUtil.toJson(checkResultMap);
 	}
 
@@ -715,9 +719,8 @@ public class Storage {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/getInWarehouseRecordItemListData")
-	public String getInWarehouseRecordItemListData(HttpServletRequest request, String sortorder, String sortname, int page, int pagesize,
-			String userLoginName, Long warehouseId, String trackingNo, String batchNo, String sku,String createdTimeStart, String createdTimeEnd)
-			throws IOException {
+	public String getInWarehouseRecordItemListData(HttpServletRequest request, String sortorder, String sortname, int page, int pagesize, String userLoginName, Long warehouseId, String trackingNo, String batchNo, String sku, String createdTimeStart,
+			String createdTimeEnd) throws IOException {
 		if (StringUtil.isNotNull(createdTimeStart) && createdTimeStart.contains(",")) {
 			createdTimeStart = createdTimeStart.substring(createdTimeStart.lastIndexOf(",") + 1, createdTimeStart.length());
 		}
@@ -745,7 +748,7 @@ public class Storage {
 		if (warehouseId != null) {
 			moreParam.put("warehouseId", warehouseId.toString());
 		}
-		
+
 		pagination = storageService.getInWarehouseRecordItemListData(moreParam, pagination);
 		Map map = new HashMap();
 		map.put("Rows", pagination.rows);
