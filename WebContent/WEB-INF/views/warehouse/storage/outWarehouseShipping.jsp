@@ -50,12 +50,10 @@
 	<div class="pull-right" style="width:50%;margin-top: 1px;" >
 			<table class="table table-striped" style="width:100%;">
 					<tr>
-							<td colspan="2" style="height:28px;">已扫描的出货跟踪单号记录</td>
+							<td colspan="1" style="height:28px;text-align: center">已扫描的出货跟踪单号记录, 数量:<span id="total" style="margin-left: 5px;">0</span></td>
 					</tr>
-					<tr style="height:25px;">
-							<td>SF111111111111</td>
-							<td><i class="icon-remove"></i></td>	
-					</tr>
+					<tbody id="trackingNos">
+					</tbody>
 			</table>
 	</div>
 	 
@@ -71,6 +69,7 @@
     
     <script type="text/javascript">
 	   var baseUrl = "${baseUrl}";
+	   var orderIds = "";
 	   //进入页面,焦点跟踪单号
 	   $("#trackingNo").focus();
 	    $(window).keydown(function(event){
@@ -92,7 +91,6 @@
   	 			parent.$.showShortMessage({msg:"请输入出货跟踪单号再按回车!",animate:false,left:"43%"});
   	 			return false;	 
   	 		 }
-  	 		 
 	  	  	$.post(baseUrl+ '/warehouse/storage/checkOutWarehouseShipping.do?trackingNo='+ trackingNo, function(msg) {
 	  	  		if(msg.status == 0){
 	  	  			parent.$.showShortMessage({msg:msg.message,animate:false,left:"42%"});
@@ -100,7 +98,14 @@
 	  	  		}
 	  	  		if(msg.status == 1){
 	  	  			//添加一行运单
-						  	  			
+					var tr = "<tr style='height:25px;'>";
+			  		tr += "<td style='text-align: center'>"+trackingNo+"</td>";
+			  		tr += "</tr>";
+		  			$("#trackingNos").append(tr);
+		  			$("#total").html( parseInt($("#total").html()) + 1);
+		  			
+		  			orderIds +=msg.orderId+"||";
+		  			
 	  	  			// 光标移至跟踪号
 	  	  			$("#trackingNo").focus();
 	  	  			$("#trackingNo").select();
@@ -108,6 +113,33 @@
 	  	  		}
 	  	  	},"json");
   		}
+  	 	 
+  	 	 function submitAll(){
+  	 		 if(trackingNos == null || trackingNos ==''){
+  	 			parent.$.showShortMessage({msg:"请输入出货跟踪单号再按完成出货总单!",animate:false,left:"43%"});
+  	 			return false;
+  	 		 }
+  	 		 var coeTrackingNo = $("#coeTrackingNo").val();
+  	 		$.post(baseUrl+ '/warehouse/storage/submitOutWarehouseShipping.do?orderIds='+ orderIds+'&coeTrackingNo='+coeTrackingNo, function(msg) {
+  	 			if(msg.status == 0){
+  	 				parent.$.showDialogMessage(msg.message, null, null);
+	  	  			return false;
+  	 			}
+				if(msg.status ==1){
+					//成功,清空输入,进入下一批,重新分配COE单号
+					$("#coeTrackingNo").val(msg.coeTrackingNo);
+					$("#trackingNo").val("");
+					orderIds = "";
+					$("#trackingNos").html("");
+					
+					// 光标移至跟踪号
+	  	  			$("#trackingNo").focus();
+	  	  			$("#trackingNo").select();
+					parent.$.showShortMessage({msg:"完成出货总单成功,请继续下一批!",animate:false,left:"43%"});
+					return false;
+				}
+  	 		});
+  	 	 }
     </script>	
 </body>
 </html>

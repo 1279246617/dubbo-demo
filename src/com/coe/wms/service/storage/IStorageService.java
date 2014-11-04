@@ -290,7 +290,7 @@ public interface IStorageService {
 	 * @return
 	 * @throws ServiceException
 	 */
-	public Map<String, String> outWarehouseShippingConfirm(String coeTrackingNo, String[] TrackingNo, Long userIdOfOperator) throws ServiceException;
+	public Map<String, String> outWarehouseShippingConfirm(String coeTrackingNo, String orderIds, Long userIdOfOperator) throws ServiceException;
 	
 	/**
 	 * 检查出库时扫描每单
