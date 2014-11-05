@@ -34,7 +34,7 @@ public class TrackingNoDaoImpl implements ITrackingNoDao {
 		pagination.pageSize = 1;
 		pagination.sortName = "created_time";
 		pagination.sortOrder = "asc";
-		String sql = "select id,type,tracking_no,tracking_no,created_time,is_used,used_time from w_w_tracking_no where type = '" + type + "' and (is_used is null or is_used = 'N') " + pagination.generatePageSql();
+		String sql = "select id,type,tracking_no,created_time,status,used_time,locked_time from w_w_tracking_no where type = '" + type + "' and (status is null or status = '0') " + pagination.generatePageSql();
 		logger.info("查询跟踪号sql:" + sql);
 		List<TrackingNo> trackingNoList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(TrackingNo.class));
 		if (trackingNoList.size() > 0) {
@@ -43,13 +43,17 @@ public class TrackingNoDaoImpl implements ITrackingNoDao {
 		return null;
 	}
 
-	/**
-	 * 更新是否已经使用
-	 */
 	@Override
 	@DataSource(DataSourceCode.WMS)
-	public int updateTrackingNo(TrackingNo trackingNo) {
-		String sql = "update w_w_tracking_no set is_used ='" + trackingNo.getIsUsed() + "' , used_time = " + trackingNo.getUsedTime() + " where id=" + trackingNo.getId();
+	public int usedTrackingNo(Long trackingNoId) {
+		String sql = "update w_w_tracking_no set status = " + TrackingNo.STATUS_USED + " , used_time = " + System.currentTimeMillis() + " where id=" + trackingNoId;
+		return jdbcTemplate.update(sql);
+	}
+
+	@Override
+	@DataSource(DataSourceCode.WMS)
+	public int lockTrackingNo(Long trackingNoId) {
+		String sql = "update w_w_tracking_no set status = " + TrackingNo.STATUS_LOCKED + " , locked_time = " + System.currentTimeMillis() + " where id=" + trackingNoId;
 		return jdbcTemplate.update(sql);
 	}
 
