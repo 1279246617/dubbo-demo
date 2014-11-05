@@ -114,9 +114,9 @@
 	    	 grid = $("#maingrid").ligerGrid({
 	                columns: [
 	                    { display: '客户帐号', name: 'userNameOfCustomer', align: 'center',type:'float',width:'9%'},
+	                  	{ display: '客户订单号', name: 'customerReferenceNo', align: 'center', type: 'float',width:'12%'},
 	                    { display: '承运商', name: 'carrierCode', align: 'center', type: 'float',width:'9%'},
 	  		          	{ display: '跟踪单号', name: 'trackingNo', align: 'center', type: 'float',width:'14%'},
-	  		          	{ display: '客户订单号', name: 'customerReferenceNo', align: 'center', type: 'float',width:'12%'},
 		                { display: '仓库', name: 'warehouse', align: 'center', type: 'float',width:'8%'},
 		                { display: '状态', name: 'status', align: 'center', type: 'float',width:'8%'},
 		            	{ display: 'SKU预览', isSort: false, align: 'center', type: 'float',width:'20%',render: function(row) {
@@ -129,12 +129,9 @@
 		                { display: '备注', name: 'remark', align: 'center', type: 'float',width:'13%'},
 		                { display: '创建时间', name: 'createdTime', align: 'center', type: 'float',width:'12%'},
 		                {display: '操作',isSort: false,width: '10%',render: function(row) {
-		            		var h = "";
 		            		if (!row._editing) {
-		            			h += '<a href="javascript:updateInWarehouseItem(' + row.id + ')">备注</a> ';
-		            			h += '<a href="javascript:deleteInWarehouseItem(' + row.id + ')">删除</a>';
+		            			return '<a href="javascript:addRemark(' + row.id + ','+row.remark+')">备注</a> ';
 		            		}
-		            		return h;
 		            	}}
 	                ],  
 	                dataAction: 'server',
@@ -197,6 +194,31 @@
 	          		}]
 	          	})
 	        }
+	        
+	        function addRemark(id,remark){
+	        	   $.dialog({
+	        	          lock: true,
+	        	          title: '备注',
+	        	          width: '450px',
+	        	          height: '290px',
+	        	          content: 'url:' + baseUrl + '/warehouse/storage/editInWarehouseOrderRemark.do?id='+id+"&remark="+remark,
+	        	          button: [{
+	        	            name: '确定',
+	        	            callback: function() {
+	        	              var objRemark = this.content.document.getElementById("remark");
+	        	              var remark = $(objRemark).val();
+	        	              $.post(baseUrl + '/warehouse.storage/saveInWarehouseOrderRemark.do', {
+	        	            	  remark:remark,
+	        	            	  id:id
+	        	              },
+	        	              function(msg) {
+	        	                	grid.loadData();
+	        	              });
+	        	            }
+	        	          }],
+	        	          cancel: true
+	        	        });
+	           }
    	</script>
    	
 	<script type="text/javascript" src="${baseUrl}/static/jquery/jquery.showMessage.js"></script>
