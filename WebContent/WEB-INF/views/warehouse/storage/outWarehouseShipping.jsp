@@ -22,7 +22,8 @@
 					<tr>
 						<td colspan="2" style="height:28px;">
 								<span style="width:100px;" class="pull-left">COE交接单号</span>
-								<input id="coeTrackingNo" name="coeTrackingNo" value="COE1111111111" style="width:150px;" readonly="readonly"/>
+								<input id="coeTrackingNo" name="coeTrackingNo" value="${coeTrackingNo}" style="width:150px;" readonly="readonly"/>
+								<input id="coeTrackingNoId" name="coeTrackingNoId" value="${coeTrackingNoId}" style="display: none;"/>
 						</td>
 					</tr>
 					<tr style="height:65px;">
@@ -73,19 +74,24 @@
 	   //进入页面,焦点跟踪单号
 	   $("#trackingNo").focus();
 	    $(window).keydown(function(event){
+	    	if((event.keyCode   ==   13) &&   (event.ctrlKey)) {
+	    		submitAll();
+	    		return;
+	    	}
 	    	//回车事件
 	    	if((event.keyCode   ==   13)) {
 	    		next();
 	    		return;
 	    	}  
-	    	if((event.keyCode   ==   13) &&   (event.ctrlKey)) {
-	    		submitAll();
-	    		return;
-	    	}
 	    });
  	
   	 	 //回车事件
   	  	function next(){
+	 		 var coeTrackingNo = $("#coeTrackingNo").val();
+	 		 if(coeTrackingNo == null || coeTrackingNo == ""){
+	 			parent.$.showDialogMessage("COE单号不足,不能完成出库!", null, null);
+	 			return false;
+	 		 }
   	 		 var trackingNo = $("#trackingNo").val();
   	 		 if(trackingNo == null || trackingNo==''){
   	 			parent.$.showShortMessage({msg:"请输入出货跟踪单号再按回车!",animate:false,left:"43%"});
@@ -119,26 +125,37 @@
   	 			parent.$.showShortMessage({msg:"请输入出货跟踪单号再按完成出货总单!",animate:false,left:"43%"});
   	 			return false;
   	 		 }
+  	 		 var coeTrackingNoId = $("#coeTrackingNoId").val();
   	 		 var coeTrackingNo = $("#coeTrackingNo").val();
-  	 		$.post(baseUrl+ '/warehouse/storage/submitOutWarehouseShipping.do?orderIds='+ orderIds+'&coeTrackingNo='+coeTrackingNo, function(msg) {
+  	 		 if(coeTrackingNo == null || coeTrackingNo == ""){
+  	 			parent.$.showDialogMessage("COE单号不足,不能完成出库!", null, null);
+  	 			return false;
+  	 		 }
+  	 		 
+  	 		$.post(baseUrl+ '/warehouse/storage/submitOutWarehouseShipping.do?orderIds='+ orderIds+'&coeTrackingNo='+coeTrackingNo+"&coeTrackingNoId="+coeTrackingNoId, function(msg) {
   	 			if(msg.status == 0){
   	 				parent.$.showDialogMessage(msg.message, null, null);
 	  	  			return false;
   	 			}
-				if(msg.status ==1){
+				if(msg.status >0){
 					//成功,清空输入,进入下一批,重新分配COE单号
 					$("#coeTrackingNo").val(msg.coeTrackingNo);
+					$("#coeTrackingNoId").val(msg.coeTrackingNoId);
+					if(msg.status == 2){
+						parent.$.showDialogMessage(msg.message, null, null);	
+					}else{
+						parent.$.showShortMessage({msg:msg.message,animate:false,left:"43%"});
+					}
+					$("#total").html(0);
 					$("#trackingNo").val("");
-					orderIds = "";
 					$("#trackingNos").html("");
-					
+					orderIds = "";					
 					// 光标移至跟踪号
 	  	  			$("#trackingNo").focus();
 	  	  			$("#trackingNo").select();
-					parent.$.showShortMessage({msg:"完成出货总单成功,请继续下一批!",animate:false,left:"43%"});
 					return false;
 				}
-  	 		});
+  	 		},"json");
   	 	 }
     </script>	
 </body>

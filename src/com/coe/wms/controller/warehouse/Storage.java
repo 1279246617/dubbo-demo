@@ -20,6 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.coe.wms.controller.Application;
 import com.coe.wms.model.user.User;
+import com.coe.wms.model.warehouse.TrackingNo;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrder;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderItem;
@@ -646,6 +647,12 @@ public class Storage {
 		view.addObject("userId", userId);
 		User user = userService.getUserById(userId);
 		view.addObject("warehouseList", storageService.findAllWarehouse(user.getDefaultWarehouseId()));
+		// 进入界面 分配coe单号,并锁定coe单号,下次不能再使用
+		TrackingNo trackingNo = storageService.getCoeTrackingNoforOutWarehouseShipping();
+		if (trackingNo != null) {
+			view.addObject("coeTrackingNo", trackingNo.getTrackingNo());
+			view.addObject("coeTrackingNoId", trackingNo.getId());
+		}
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
 		view.setViewName("warehouse/storage/outWarehouseShipping");
 		return view;
@@ -678,10 +685,10 @@ public class Storage {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/submitOutWarehouseShipping")
-	public String submitOutWarehouseShipping(HttpServletRequest request, HttpServletResponse response, String orderIds, String coeTrackingNo) throws IOException {
+	public String submitOutWarehouseShipping(HttpServletRequest request, HttpServletResponse response, String orderIds, String coeTrackingNo,Long coeTrackingNoId) throws IOException {
 		HttpSession session = request.getSession();
 		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
-		Map<String, String> checkResultMap = storageService.outWarehouseShippingConfirm(coeTrackingNo, orderIds, userId);
+		Map<String, String> checkResultMap = storageService.outWarehouseShippingConfirm(coeTrackingNo, coeTrackingNoId,orderIds, userId);
 		return GsonUtil.toJson(checkResultMap);
 	}
 

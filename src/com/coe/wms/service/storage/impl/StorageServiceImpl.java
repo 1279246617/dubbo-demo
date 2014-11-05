@@ -1246,7 +1246,7 @@ public class StorageServiceImpl implements IStorageService {
 	}
 
 	@Override
-	public Map<String, String> outWarehouseShippingConfirm(String coeTrackingNo, String orderIds, Long userIdOfOperator) throws ServiceException {
+	public Map<String, String> outWarehouseShippingConfirm(String coeTrackingNo, Long coeTrackingNoId, String orderIds, Long userIdOfOperator) throws ServiceException {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put(Constant.STATUS, Constant.FAIL);
 		if (StringUtil.isNull(orderIds)) {
@@ -1266,21 +1266,28 @@ public class StorageServiceImpl implements IStorageService {
 
 		// 迭代,检查跟踪号
 		for (String orderId : orderIdsArray) {
+			//改变状态 ,发送到哲盟
 			System.out.println("orderId = " + orderId);
 		}
-		
+
+		// 标记coe单号已经使用
+		trackingNoDao.usedTrackingNo(coeTrackingNoId);
+
 		// 返回新COE单号,供下一批出库
-		TrackingNo trackingNo = trackingNoDao.getAvailableTrackingNoByType(TrackingNo.TYPE_COE);
-		if (trackingNo == null) {
+		TrackingNo nextTrackingNo = trackingNoDao.getAvailableTrackingNoByType(TrackingNo.TYPE_COE);
+		if (nextTrackingNo == null) {
 			map.put(Constant.MESSAGE, "本次出货总单已完成,但COE单号不足,不能继续操作出库!");
 			map.put(Constant.STATUS, "2");
+			map.put("coeTrackingNo", "");
+			map.put("coeTrackingNoId", "");
 			return map;
 		}
-		
-//		trackingNoDao.usedTrackingNo(trackingNoId);
+		trackingNoDao.lockTrackingNo(nextTrackingNo.getId());
+		map.put("coeTrackingNo", nextTrackingNo.getTrackingNo());
+		map.put("coeTrackingNoId", nextTrackingNo.getId().toString());
 		
 		map.put(Constant.STATUS, Constant.SUCCESS);
-		map.put("coeTrackingNo", trackingNo.getTrackingNo());
+		map.put(Constant.MESSAGE, "完成出货总单成功,请继续下一批!");
 		return map;
 	}
 
@@ -1684,5 +1691,16 @@ public class StorageServiceImpl implements IStorageService {
 		}
 		map.put("orderId", outWarehouseOrder.getId() + "");
 		return map;
+	}
+
+	@Override
+	public TrackingNo getCoeTrackingNoforOutWarehouseShipping() throws ServiceException {
+		TrackingNo trackingNo = trackingNoDao.getAvailableTrackingNoByType(TrackingNo.TYPE_COE);
+		if (trackingNo == null) {
+			return null;
+		}
+		// lock
+		trackingNoDao.lockTrackingNo(trackingNo.getId());
+		return trackingNo;
 	}
 }
