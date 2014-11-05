@@ -14,6 +14,22 @@ public class TrackingNo implements Serializable {
 	private static final long serialVersionUID = 309830851812517207L;
 
 	/**
+	 * 可用的
+	 */
+	public static int STATUS_AVAILABLE = 0;
+
+	/**
+	 * 锁定的
+	 */
+	public static int STATUS_LOCKED = 1;
+
+	/**
+	 * 已经使用的
+	 * 
+	 */
+	public static int STATUS_USED = 2;
+
+	/**
 	 * COE单号
 	 */
 	public static String TYPE_COE = "COE";
@@ -45,9 +61,14 @@ public class TrackingNo implements Serializable {
 	private Long createdTime;
 
 	/**
-	 * 是否已使用
+	 * 是否已使用 0.未使用的 1.被锁定的 2.已经使用了
 	 */
-	private String isUsed;
+	private String status;
+
+	/**
+	 * 锁定时间
+	 */
+	private Long lockedTime;
 
 	/**
 	 * 使用时间
@@ -86,12 +107,20 @@ public class TrackingNo implements Serializable {
 		this.createdTime = createdTime;
 	}
 
-	public String getIsUsed() {
-		return isUsed;
+	public String getStatus() {
+		return status;
 	}
 
-	public void setIsUsed(String isUsed) {
-		this.isUsed = isUsed;
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public Long getLockedTime() {
+		return lockedTime;
+	}
+
+	public void setLockedTime(Long lockedTime) {
+		this.lockedTime = lockedTime;
 	}
 
 	public Long getUsedTime() {

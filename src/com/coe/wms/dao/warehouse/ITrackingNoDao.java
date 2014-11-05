@@ -17,5 +17,13 @@ public interface ITrackingNoDao {
 	 * @param trackingNo
 	 * @return
 	 */
-	public int updateTrackingNo(TrackingNo trackingNo);
+	public int usedTrackingNo(Long trackingNoId);
+
+	/**
+	 * 锁定跟踪号
+	 * 
+	 * @param trackingNo
+	 * @return
+	 */
+	public int lockTrackingNo(Long trackingNoId);
 }

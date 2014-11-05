@@ -14,6 +14,7 @@ import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import com.coe.wms.dao.user.IUserDao;
+import com.coe.wms.dao.warehouse.ITrackingNoDao;
 import com.coe.wms.dao.warehouse.IWarehouseDao;
 import com.coe.wms.dao.warehouse.storage.IInWarehouseOrderDao;
 import com.coe.wms.dao.warehouse.storage.IInWarehouseOrderItemDao;
@@ -36,6 +37,7 @@ import com.coe.wms.exception.ServiceException;
 import com.coe.wms.model.unit.Weight;
 import com.coe.wms.model.unit.Weight.WeightCode;
 import com.coe.wms.model.user.User;
+import com.coe.wms.model.warehouse.TrackingNo;
 import com.coe.wms.model.warehouse.Warehouse;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrderItem;
@@ -93,6 +95,9 @@ public class StorageServiceImpl implements IStorageService {
 
 	@Resource(name = "warehouseDao")
 	private IWarehouseDao warehouseDao;
+
+	@Resource(name = "trackingNoDao")
+	private ITrackingNoDao trackingNoDao;
 
 	@Resource(name = "onShelfDao")
 	private IOnShelfDao onShelfDao;
@@ -1258,14 +1263,24 @@ public class StorageServiceImpl implements IStorageService {
 			map.put(Constant.MESSAGE, "COE交接单号不能为空,请刷新页面重试!");
 			return map;
 		}
+
 		// 迭代,检查跟踪号
 		for (String orderId : orderIdsArray) {
 			System.out.println("orderId = " + orderId);
 		}
+		
 		// 返回新COE单号,供下一批出库
-		String newCoeTrackingNo = "new1111111111111";
+		TrackingNo trackingNo = trackingNoDao.getAvailableTrackingNoByType(TrackingNo.TYPE_COE);
+		if (trackingNo == null) {
+			map.put(Constant.MESSAGE, "本次出货总单已完成,但COE单号不足,不能继续操作出库!");
+			map.put(Constant.STATUS, "2");
+			return map;
+		}
+		
+//		trackingNoDao.usedTrackingNo(trackingNoId);
+		
 		map.put(Constant.STATUS, Constant.SUCCESS);
-		map.put("coeTrackingNo", newCoeTrackingNo);
+		map.put("coeTrackingNo", trackingNo.getTrackingNo());
 		return map;
 	}
 
