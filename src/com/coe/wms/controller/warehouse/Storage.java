@@ -685,10 +685,10 @@ public class Storage {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/submitOutWarehouseShipping")
-	public String submitOutWarehouseShipping(HttpServletRequest request, HttpServletResponse response, String orderIds, String coeTrackingNo,Long coeTrackingNoId) throws IOException {
+	public String submitOutWarehouseShipping(HttpServletRequest request, HttpServletResponse response, String orderIds, String coeTrackingNo, Long coeTrackingNoId) throws IOException {
 		HttpSession session = request.getSession();
 		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
-		Map<String, String> checkResultMap = storageService.outWarehouseShippingConfirm(coeTrackingNo, coeTrackingNoId,orderIds, userId);
+		Map<String, String> checkResultMap = storageService.outWarehouseShippingConfirm(coeTrackingNo, coeTrackingNoId, orderIds, userId);
 		return GsonUtil.toJson(checkResultMap);
 	}
 
@@ -763,4 +763,37 @@ public class Storage {
 		return GsonUtil.toJson(map);
 	}
 
+	/**
+	 * 添加入库订单备注
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/editInWarehouseOrderRemark", method = RequestMethod.GET)
+	public ModelAndView addInWarehouseOrderRemark(HttpServletRequest request, HttpServletResponse response, Long id, String remark) throws IOException {
+		ModelAndView view = new ModelAndView();
+		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
+		view.addObject("remark", remark);
+		view.setViewName("warehouse/storage/editInWarehouseOrderRemark");
+		return view;
+	}
+
+	/**
+	 * 获取入库记录
+	 * 
+	 * @param request
+	 * @param response
+	 * @param userLoginName
+	 *            客户登录名,仅当根据跟踪号无法找到订单时,要求输入
+	 * @return
+	 * @throws IOException
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/saveInWarehouseOrderRemark")
+	public String saveInWarehouseOrderRemark(HttpServletRequest request, Long id, String remark) throws IOException {
+		Map<String, String> map = storageService.saveInWarehouseOrderRemark(remark, id);
+		return GsonUtil.toJson(map);
+	}
 }
