@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 
 import com.coe.wms.exception.ServiceException;
 import com.coe.wms.model.user.User;
+import com.coe.wms.model.warehouse.TrackingNo;
 import com.coe.wms.model.warehouse.Warehouse;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrderItem;
@@ -14,7 +15,6 @@ import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrder;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderItem;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecord;
-import com.coe.wms.model.warehouse.storage.record.InWarehouseRecordItem;
 import com.coe.wms.model.warehouse.storage.record.OnShelf;
 import com.coe.wms.model.warehouse.storage.record.OutShelf;
 import com.coe.wms.pojo.api.warehouse.EventBody;
@@ -122,7 +122,7 @@ public interface IStorageService {
 	public Pagination getInWarehouseOrderData(InWarehouseOrder inWarehouseOrder, Map<String, String> moreParam, Pagination page);
 
 	public Pagination getOnShelvesData(OnShelf onShelf, Map<String, String> moreParam, Pagination page);
-	
+
 	public Pagination getOutShelvesData(OutShelf outShelf, Map<String, String> moreParam, Pagination page);
 
 	/**
@@ -285,21 +285,31 @@ public interface IStorageService {
 	public List<Warehouse> findAllWarehouse(Long firstWarehouseId) throws ServiceException;
 
 	/**
+	 * 获取coe跟踪单号供出库发货界面使用
+	 * 
+	 * @return
+	 * @throws ServiceException
+	 */
+	public TrackingNo getCoeTrackingNoforOutWarehouseShipping() throws ServiceException;
+
+	/**
 	 * 出库确认
+	 * 
 	 * @param TrackingNo
 	 * @return
 	 * @throws ServiceException
 	 */
-	public Map<String, String> outWarehouseShippingConfirm(String coeTrackingNo, String orderIds, Long userIdOfOperator) throws ServiceException;
-	
+	public Map<String, String> outWarehouseShippingConfirm(String coeTrackingNo, Long coeTrackingNoId, String orderIds, Long userIdOfOperator) throws ServiceException;
+
 	/**
 	 * 检查出库时扫描每单
+	 * 
 	 * @param TrackingNo
 	 * @return
 	 * @throws ServiceException
 	 */
 	public Map<String, String> checkOutWarehouseShipping(String trackingNo, Long userIdOfOperator) throws ServiceException;
-	
+
 	/**
 	 * 
 	 * @param TrackingNo
