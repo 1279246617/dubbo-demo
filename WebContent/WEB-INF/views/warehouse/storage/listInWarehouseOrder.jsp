@@ -130,7 +130,7 @@
 		                { display: '创建时间', name: 'createdTime', align: 'center', type: 'float',width:'12%'},
 		                {display: '操作',isSort: false,width: '10%',render: function(row) {
 		            		if (!row._editing) {
-		            			return '<a href="javascript:addRemark(' + row.id + ','+row.remark+')">备注</a> ';
+		            			return "<a href=javascript:addRemark(" + row.id + ",'"+row.remark+"')>备注</a>";
 		            		}
 		            	}}
 	                ],  
