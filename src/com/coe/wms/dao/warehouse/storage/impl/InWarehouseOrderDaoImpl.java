@@ -82,8 +82,7 @@ public class InWarehouseOrderDaoImpl implements IInWarehouseOrderDao {
 
 	@Override
 	public InWarehouseOrder getInWarehouseOrderById(Long inWarehouseOrderId) {
-		String sql = "select id,user_id_of_customer,user_id_of_operator,tracking_no,weight,created_time,remark,status,carrier_code,logistics_type,warehouse_id,customer_reference_no from w_s_in_warehouse_order where id= "
-				+ inWarehouseOrderId;
+		String sql = "select id,user_id_of_customer,user_id_of_operator,tracking_no,weight,created_time,remark,status,carrier_code,logistics_type,warehouse_id,customer_reference_no from w_s_in_warehouse_order where id= " + inWarehouseOrderId;
 		InWarehouseOrder order = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<InWarehouseOrder>(InWarehouseOrder.class));
 		return order;
 	}
@@ -155,8 +154,7 @@ public class InWarehouseOrderDaoImpl implements IInWarehouseOrderDao {
 		}
 		String sql = sb.toString();
 		logger.info("查询入库订单sql:" + sql);
-		List<InWarehouseOrder> inWarehouseOrderList = jdbcTemplate.query(sql,
-				ParameterizedBeanPropertyRowMapper.newInstance(InWarehouseOrder.class));
+		List<InWarehouseOrder> inWarehouseOrderList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(InWarehouseOrder.class));
 		return inWarehouseOrderList;
 	}
 
@@ -227,8 +225,7 @@ public class InWarehouseOrderDaoImpl implements IInWarehouseOrderDao {
 
 	@Override
 	public Long countInWarehouseOrderItemByTrackingNo(String trackingNo) {
-		String sql = "select sum(quantity) from w_s_in_warehouse_order_item where order_id = (select id from w_s_in_warehouse_order WHERE tracking_no = '"
-				+ trackingNo + "')";
+		String sql = "select sum(quantity) from w_s_in_warehouse_order_item where order_id = (select id from w_s_in_warehouse_order WHERE tracking_no = '" + trackingNo + "')";
 		logger.info("统计入库订单预报物品数量sql:" + sql);
 		return jdbcTemplate.queryForObject(sql, Long.class);
 	}
@@ -252,10 +249,16 @@ public class InWarehouseOrderDaoImpl implements IInWarehouseOrderDao {
 		List<Long> orderIdList = jdbcTemplate.queryForList(sql, Long.class);
 		return orderIdList;
 	}
-	
+
 	@Override
 	public int updateInWarehouseOrderStatus(Long inWarehouseOrderId, String status) {
 		String sql = "update w_s_in_warehouse_order set status ='" + status + "' where id=" + inWarehouseOrderId;
+		return jdbcTemplate.update(sql);
+	}
+
+	@Override
+	public int updateInWarehouseOrderRemark(Long inWarehouseOrderId, String remark) {
+		String sql = "update w_s_in_warehouse_order set remark ='" + remark + "' where id=" + inWarehouseOrderId;
 		return jdbcTemplate.update(sql);
 	}
 }

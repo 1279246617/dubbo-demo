@@ -1266,7 +1266,7 @@ public class StorageServiceImpl implements IStorageService {
 
 		// 迭代,检查跟踪号
 		for (String orderId : orderIdsArray) {
-			//改变状态 ,发送到哲盟
+			// 改变状态 ,发送到哲盟
 			System.out.println("orderId = " + orderId);
 		}
 
@@ -1285,7 +1285,7 @@ public class StorageServiceImpl implements IStorageService {
 		trackingNoDao.lockTrackingNo(nextTrackingNo.getId());
 		map.put("coeTrackingNo", nextTrackingNo.getTrackingNo());
 		map.put("coeTrackingNoId", nextTrackingNo.getId().toString());
-		
+
 		map.put(Constant.STATUS, Constant.SUCCESS);
 		map.put(Constant.MESSAGE, "完成出货总单成功,请继续下一批!");
 		return map;
@@ -1702,5 +1702,16 @@ public class StorageServiceImpl implements IStorageService {
 		// lock
 		trackingNoDao.lockTrackingNo(trackingNo.getId());
 		return trackingNo;
+	}
+
+	@Override
+	public Map<String, String> saveInWarehouseOrderRemark(String remark, Long id) throws ServiceException {
+		Map<String, String> map = new HashMap<String, String>();
+		if (inWarehouseOrderDao.updateInWarehouseOrderRemark(id, remark) > 0) {
+			map.put(Constant.STATUS, Constant.SUCCESS);
+		} else {
+			map.put(Constant.STATUS, Constant.FAIL);
+		}
+		return map;
 	}
 }

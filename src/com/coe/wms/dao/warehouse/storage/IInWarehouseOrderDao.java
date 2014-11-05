@@ -24,5 +24,7 @@ public interface IInWarehouseOrderDao {
 
 	public List<Long> findUnCompleteInWarehouseOrderId();
 
-	public int   updateInWarehouseOrderStatus(Long inWarehouseOrderId, String status);
+	public int updateInWarehouseOrderStatus(Long inWarehouseOrderId, String status);
+
+	public int updateInWarehouseOrderRemark(Long inWarehouseOrderId, String remark);
 }
