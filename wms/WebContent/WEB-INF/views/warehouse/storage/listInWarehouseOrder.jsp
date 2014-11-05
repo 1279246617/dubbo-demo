@@ -207,7 +207,7 @@
 	        	            callback: function() {
 	        	              var objRemark = this.content.document.getElementById("remark");
 	        	              var remark = $(objRemark).val();
-	        	              $.post(baseUrl + '/warehouse.storage/saveInWarehouseOrderRemark.do', {
+	        	              $.post(baseUrl + '/warehouse/storage/saveInWarehouseOrderRemark.do', {
 	        	            	  remark:remark,
 	        	            	  id:id
 	        	              },
