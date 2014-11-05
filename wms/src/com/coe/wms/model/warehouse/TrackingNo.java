@@ -6,7 +6,7 @@ import java.util.List;
 
 import com.coe.wms.util.StringUtil;
 
-public class TrackingNos implements Serializable {
+public class TrackingNo implements Serializable {
 
 	/**
 	 * 
@@ -27,7 +27,7 @@ public class TrackingNos implements Serializable {
 	 * etk单号
 	 */
 	public static String TYPE_ETK = "ETK";
-
+	private Long id;
 	/**
 	 * 单号类型; 如 COE,SF,ETK
 	 * 
