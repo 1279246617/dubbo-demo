@@ -1,12 +1,8 @@
 package com.coe.wms.dao.warehouse;
 
-import java.util.List;
-
 import com.coe.wms.model.warehouse.TrackingNo;
 
 public interface ITrackingNoDao {
-
-	public List<TrackingNo> findTrackingNos();
 
 	/**
 	 * 获取一个可用的跟踪号
