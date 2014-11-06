@@ -321,4 +321,6 @@ public interface IStorageService {
 	public Map<String, Object> outWarehouseSubmitWeight(String customerReferenceNo, Double weight, Long userIdOfOperator) throws ServiceException;
 
 	public Map<String, String> saveInWarehouseOrderRemark(String remark, Long id) throws ServiceException;
+
+	public Map<String, String> saveInWarehouseRecordRemark(String remark, Long id) throws ServiceException;
 }

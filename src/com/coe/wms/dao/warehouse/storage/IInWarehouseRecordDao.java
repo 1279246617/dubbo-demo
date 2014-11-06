@@ -27,4 +27,6 @@ public interface IInWarehouseRecordDao {
 	public Long getInWarehouseOrderIdByRecordId(Long InWarehouseRecordId);
 
 	public List<Long> findUnCompleteInWarehouseRecordId();
+
+	public int updateInWarehouseRecordRemark(Long inWarehouseRecordId, String remark);
 }
