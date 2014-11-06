@@ -17,19 +17,19 @@
 
 <title>COE</title>
 </head>
-<body>
+<body style="font-size: 16px;">
 	<div class="pull-left" style="width:100%;margin-top: 1px;overflow-x: hidden;overflow-y: auto;height: 205px;" >
 			<table class="table table-striped" style="width:100%;margin-bottom: 5px">
 					<tr style="height:15px;">
-							<td style="width:252px;">
-									<span class="pull-left" style="width:66px;">客户订单号</span>
-									<span class="pull-left" style="width:170px;">
+							<td style="width:302px;">
+									<span class="pull-left" style="width:85px;">客户订单号</span>
+									<span class="pull-left" style="width:190px;">
 										<!--  利用focus和blur 判断跟踪号是否有变化, 变化则把入库订单id清空-->
-										<input type="text"  name="customerReferenceNo"  id="customerReferenceNo" t="1"   style="width:140px;"/>
+										<input type="text"  name="customerReferenceNo"  id="customerReferenceNo" t="1"   style="width:170px;"/>
 									</span>
 							</td>		
 							<td>
-								<span class="pull-left" style="width:55px;" ><b>操作提示:</b></span>
+								<span class="pull-left" style="width:75px;" ><b>操作提示:</b></span>
 								<span class="pull-left" style="width:352px;color:red;" id="tips">请输入捡货单上右上角的订单号并按回车!</span>
 							</td>
 					</tr>
@@ -40,22 +40,22 @@
 		<table class="table table-striped" style="width:1200px;margin-bottom: 0px">
 			<tr>
 					<td  >
-						<span class="pull-left" style="width:52px;">货位</span>
-						<span class="pull-left" style="width:160px;">
-							<input type="text"  name="seatCode" t="2"  id="seatCode" style="width:130px;"/>
+						<span class="pull-left" style="width:45px;">货位</span>
+						<span class="pull-left" style="width:175px;">
+							<input type="text"  name="seatCode" t="2"  id="seatCode" style="width:140px;"/>
 						</span>
 						
-						<span class="pull-left" style="width:52px;">产品SKU</span>
-						<span class="pull-left" style="width:160px;">
-							<input type="text"  name="sku" t="3"  id="sku" style="width:130px;"/>
+						<span class="pull-left" style="width:70px;">产品SKU</span>
+						<span class="pull-left" style="width:175px;">
+							<input type="text"  name="sku" t="3"  id="sku" style="width:140px;"/>
 						</span>
 						
-						<span class="pull-left" style="width:52px;">产品数量</span>
+						<span class="pull-left" style="width:75px;">产品数量</span>
 						<span class="pull-left" style="width:102px;">
 							<input type="text"  name="quantity"  id="quantity" t="4" style="width:90px;" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"/>
 						</span>
 						
-						<span class="pull-left" style="width:145px;">
+						<span class="pull-left" style="width:165px;">
 							<a class="btn  btn-primary" id="enterItem" onclick="saveOutShelvesItem();" style="cursor:pointer;"><i class="icon-ok icon-white"></i>继续下一货位</a>
 						</span>
 					</td>	

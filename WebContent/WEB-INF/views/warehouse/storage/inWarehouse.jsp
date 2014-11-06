@@ -17,29 +17,29 @@
 
 <title>COE</title>
 </head>
-<body>
+<body style="font-size: 16px;">
 	<div class="pull-left" style="width:100%;height:280px; margin-top: 1px;" >
 		 <form action="${baseUrl}/warehouse/storage/getInWarehouseRecordItemData.do" id="searchform" name="searchform" method="post">
 			<table class="table table-striped" style="width:100%;margin-bottom: 5px">
 					<tr style="height:15px;">
-							<td style="width:232px;">
-									<span class="pull-left" style="width:52px;">跟踪单号</span>
-									<span class="pull-left" style="width:170px;">
+							<td style="width:290px;">
+									<span class="pull-left" style="width:75px;">跟踪单号</span>
+									<span class="pull-left" style="width:200px;">
 										<!--  利用focus和blur 判断跟踪号是否有变化, 变化则把入库订单id清空-->
-										<input type="text"  name="trackingNo"  id="trackingNo" t="1" onfocus="trackingNoFocus()"  onblur="trackingNoBlur()" style="width:140px;"/>
+										<input type="text"  name="trackingNo"  id="trackingNo" t="1" onfocus="trackingNoFocus()"  onblur="trackingNoBlur()" style="width:170px;"/>
 										<!-- 用户按回车时,当入库订单id 为空是第一次提交,后台返回id,或其他提示.  不为空 提示客户可输入SKU和数量进行收货 -->
 										<input type="text"  name="inWarehouseOrderId"  id="inWarehouseOrderId" t="1"  style="display: none;"/>
 										<input type="text"  name="inWarehouseRecordId"  id="inWarehouseRecordId" t="1"  style="display: none;"/>
 									</span>
 							</td>		
-							<td style="width:212px;">
-									<span class="pull-left" style="width:52px;">入库概要</span>
-									<span class="pull-left" style="width:160px;">
-										<input type="text" t="1"  name="orderRemark"  id="orderRemark" style="width:130px;"/>
+							<td style="width:290px;">
+									<span class="pull-left" style="width:75px;">入库概要</span>
+									<span class="pull-left" style="width:200px;">
+										<input type="text" t="1"  name="orderRemark"  id="orderRemark" style="width:170px;"/>
 									</span>
 							</td>
-							<td  style="width:160px;">
-								<span class="pull-left" style="width:30px;">仓库</span>
+							<td  style="width:180px;">
+								<span class="pull-left" style="width:50px;">仓库</span>
 			          			<span class="pull-left" style="width:110px;">
 				          			<select style="width:80px;" id="warehouseId" name="warehouseId">
 										<c:forEach items="${warehouseList}" var="w" >
@@ -51,8 +51,8 @@
 		          				</span>							
 							</td>
 							<td>
-								<span class="pull-left" style="width:55px;" ><b>操作提示:</b></span>
-								<span class="pull-left" style="width:352px;color:red;" id="tips">请输入跟踪单号并按回车!</span>
+								<span class="pull-left" style="width:70px;" ><b>操作提示:</b></span>
+								<span class="pull-left" style="width:300px;color:red;" id="tips">请输入跟踪单号并按回车!</span>
 							</td>
 					</tr>
 			</table>
@@ -75,18 +75,18 @@
 		<table class="table table-striped" style="width:1200px;margin-bottom: 0px">
 			<tr>
 					<td  >
-						<span class="pull-left" style="width:52px;">产品SKU</span>
-						<span class="pull-left" style="width:160px;">
+						<span class="pull-left" style="width:75px;">产品SKU</span>
+						<span class="pull-left" style="width:170px;">
 							<input type="text"  name="itemSku" t="2"  id="itemSku" style="width:130px;"/>
 						</span>
 						
-						<span class="pull-left" style="width:52px;">产品数量</span>
-						<span class="pull-left" style="width:102px;">
+						<span class="pull-left" style="width:75px;">产品数量</span>
+						<span class="pull-left" style="width:112px;">
 							<input type="text"  name="itemQuantity"  id="itemQuantity" t="3" style="width:90px;" onkeyup="this.value=this.value.replace(/[^\d\-]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d\-]/g,'')"/>
 						</span>
 						
 						
-						<span class="pull-left" style="width:52px;">明细备注</span>
+						<span class="pull-left" style="width:75px;">明细备注</span>
 						<span class="pull-left" style="width:180px;">
 							<input type="text"  name="itemRemark"  id="itemRemark" t="4" style="width:160px;"/>
 						</span>

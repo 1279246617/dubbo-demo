@@ -16,7 +16,7 @@
 
 <title>COE</title>
 </head>
-<body>
+<body style="font-size: 16px;">
 	<div class="pull-left" style="width:50%;height:80px; margin-top: 1px;" >
 			<table class="table table-striped" style="width:100%;">
 					<tr>
