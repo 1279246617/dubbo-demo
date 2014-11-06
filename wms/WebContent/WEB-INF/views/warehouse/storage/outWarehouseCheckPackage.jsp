@@ -16,7 +16,7 @@
 
 <title>COE</title>
 </head>
-<body>
+<body style="font-size: 16px;">
 
 	<div class="pull-left" style="width:49%;height:100%; margin-top: 5px;margin-left: 5px;'" >
 		<table class="table">
@@ -25,7 +25,7 @@
 					客户订单号(捡货单的订单号)&nbsp;&nbsp;
 					<input type="text"  name="customerReferenceNo"   t="1" id="customerReferenceNo"  style="width:160px;"/>
 					&nbsp;&nbsp;
-					出库订单当前状态<input type="text"  name="status"   t="1" id="status"  style="width:60px;" readonly="readonly"/>
+					订单状态<input type="text"  name="status"   t="1" id="status"  style="width:60px;" readonly="readonly"/>
 						
 					<input type="text" name="outWarehouseOrderId" id="outWarehouseOrderId" style="display:none;">
 				</td>

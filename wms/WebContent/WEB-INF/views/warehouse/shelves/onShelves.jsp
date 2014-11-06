@@ -17,21 +17,21 @@
 
 <title>COE</title>
 </head>
-<body>
+<body style="font-size: 16px;">
 	<div class="pull-left" style="width:100%;height:280px; margin-top: 1px;" >
 			<table class="table table-striped" style="width:100%;margin-bottom: 5px">
 					<tr style="height:15px;">
-							<td style="width:232px;">
-									<span class="pull-left" style="width:52px;">跟踪单号</span>
-									<span class="pull-left" style="width:170px;">
+							<td style="width:290px;">
+									<span class="pull-left" style="width:75px;">跟踪单号</span>
+									<span class="pull-left" style="width:180px;">
 										<!--  利用focus和blur 判断跟踪号是否有变化, 变化则把入库订单id清空-->
 										<input type="text"  name="trackingNo"  id="trackingNo" t="1"   style="width:140px;"/>
 									</span>
 							</td>		
-							<td  style="width:160px;">
-								<span class="pull-left" style="width:30px;">仓库</span>
-			          			<span class="pull-left" style="width:110px;">
-				          			<select style="width:80px;" id="warehouseId" name="warehouseId">
+							<td  style="width:200px;">
+								<span class="pull-left" style="width:50px;">仓库</span>
+			          			<span class="pull-left" style="width:150px;">
+				          			<select style="width:140px;" id="warehouseId" name="warehouseId">
 										<c:forEach items="${warehouseList}" var="w" >
 						       	 			<option value="<c:out value='${w.id}'/>">
 						       	 				<c:out value="${w.id}-${w.warehouseName}"/>
@@ -62,19 +62,19 @@
 		<table class="table table-striped" style="width:1200px;margin-bottom: 0px">
 			<tr>
 					<td  >
-						<span class="pull-left" style="width:52px;">货位</span>
-						<span class="pull-left" style="width:160px;">
-							<input type="text"  name="seatCode" t="2"  id="seatCode" style="width:130px;"/>
+						<span class="pull-left" style="width:50px;">货位</span>
+						<span class="pull-left" style="width:190px;">
+							<input type="text"  name="seatCode" t="2"  id="seatCode" style="width:170px;"/>
 						</span>
 						
-						<span class="pull-left" style="width:52px;">产品SKU</span>
-						<span class="pull-left" style="width:160px;">
-							<input type="text"  name="itemSku" t="3"  id="itemSku" style="width:130px;"/>
+						<span class="pull-left" style="width:75px;">产品SKU</span>
+						<span class="pull-left" style="width:190px;">
+							<input type="text"  name="itemSku" t="3"  id="itemSku" style="width:170px;"/>
 						</span>
 						
-						<span class="pull-left" style="width:52px;">产品数量</span>
-						<span class="pull-left" style="width:102px;">
-							<input type="text"  name="itemQuantity"  id="itemQuantity" t="4" style="width:90px;" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"/>
+						<span class="pull-left" style="width:75px;">产品数量</span>
+						<span class="pull-left" style="width:120px;">
+							<input type="text"  name="itemQuantity"  id="itemQuantity" t="4" style="width:100px;" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"/>
 						</span>
 						
 						<span class="pull-left" style="width:105px;">
