@@ -140,8 +140,7 @@ public class InWarehouseRecordDaoImpl implements IInWarehouseRecordDao {
 		}
 		String sql = sb.toString();
 		logger.info("查询入库记录sql:" + sql);
-		List<InWarehouseRecord> InWarehouseRecordList = jdbcTemplate.query(sql,
-				ParameterizedBeanPropertyRowMapper.newInstance(InWarehouseRecord.class));
+		List<InWarehouseRecord> InWarehouseRecordList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(InWarehouseRecord.class));
 		return InWarehouseRecordList;
 	}
 
@@ -215,8 +214,7 @@ public class InWarehouseRecordDaoImpl implements IInWarehouseRecordDao {
 	 */
 	@Override
 	public int updateInWarehouseRecordCallback(InWarehouseRecord InWarehouseRecord) {
-		String sql = "update w_s_in_warehouse_record set callback_is_success='" + InWarehouseRecord.getCallbackIsSuccess()
-				+ "' ,callback_count = " + InWarehouseRecord.getCallbackCount() + " where id=" + InWarehouseRecord.getId();
+		String sql = "update w_s_in_warehouse_record set callback_is_success='" + InWarehouseRecord.getCallbackIsSuccess() + "' ,callback_count = " + InWarehouseRecord.getCallbackCount() + " where id=" + InWarehouseRecord.getId();
 		return jdbcTemplate.update(sql);
 	}
 
@@ -238,15 +236,13 @@ public class InWarehouseRecordDaoImpl implements IInWarehouseRecordDao {
 
 	@Override
 	public int updateInWarehouseRecordStatus(InWarehouseRecord InWarehouseRecord) {
-		String sql = "update w_s_in_warehouse_record set status='" + InWarehouseRecord.getStatus() + "' where id="
-				+ InWarehouseRecord.getId();
+		String sql = "update w_s_in_warehouse_record set status='" + InWarehouseRecord.getStatus() + "' where id=" + InWarehouseRecord.getId();
 		return jdbcTemplate.update(sql);
 	}
 
 	@Override
 	public List<Long> findUnCompleteInWarehouseRecordId() {
-		String sql = "select id from w_s_in_warehouse_record where status is null or status !='" + InWarehouseRecordStatusCode.COMPLETE
-				+ "'";
+		String sql = "select id from w_s_in_warehouse_record where status is null or status !='" + InWarehouseRecordStatusCode.COMPLETE + "'";
 		List<Long> orderIdList = jdbcTemplate.queryForList(sql, Long.class);
 		return orderIdList;
 	}
@@ -254,6 +250,12 @@ public class InWarehouseRecordDaoImpl implements IInWarehouseRecordDao {
 	@Override
 	public int deleteInWarehouseRecordById(Long InWarehouseRecordId) {
 		String sql = "delete from w_s_in_warehouse_record where id=" + InWarehouseRecordId;
+		return jdbcTemplate.update(sql);
+	}
+
+	@Override
+	public int updateInWarehouseRecordRemark(Long inWarehouseRecordId, String remark) {
+		String sql = "update w_s_in_warehouse_record set remark ='" + remark + "' where id=" + inWarehouseRecordId;
 		return jdbcTemplate.update(sql);
 	}
 }

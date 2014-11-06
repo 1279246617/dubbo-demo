@@ -133,12 +133,9 @@
 			                { display: '回传入库状态', name: 'callbackIsSuccess',type:'float',width:'8%'},
 			                { display: '创建时间', name: 'createdTime', align: 'center', type: 'float',width:'12%'},
 			                {display: '操作',isSort: false,width: '8%',render: function(row) {
-			            		var h = "";
 			            		if (!row._editing) {
-			            			h += '<a href="javascript:updateInWarehouseItem(' + row.id + ')">详情</a> ';
-			            			h += '<a href="javascript:deleteInWarehouseItem(' + row.id + ')">删除</a>';
+			            			return "<a href=javascript:addRemark(" + row.id + ",'"+row.remark+"')>备注</a>";
 			            		}
-			            		return h;
 			            	}
 			            }
 		             ],   
@@ -201,6 +198,31 @@
 	          		}]
 	          	})
 	        }
+	      
+	        function addRemark(id,remark){
+	        	   $.dialog({
+	        	          lock: true,
+	        	          title: '备注',
+	        	          width: '450px',
+	        	          height: '290px',
+	        	          content: 'url:' + baseUrl + '/warehouse/storage/editInWarehouseRecordRemark.do?id='+id+"&remark="+remark,
+	        	          button: [{
+	        	            name: '确定',
+	        	            callback: function() {
+	        	              var objRemark = this.content.document.getElementById("remark");
+	        	              var remark = $(objRemark).val();
+	        	              $.post(baseUrl + '/warehouse/storage/saveInWarehouseRecordRemark.do', {
+	        	            	  remark:remark,
+	        	            	  id:id
+	        	              },
+	        	              function(msg) {
+	        	                	grid.loadData();
+	        	              });
+	        	            }
+	        	          }],
+	        	          cancel: true
+	        	        });
+	           }
    	</script>
    	
 	<script type="text/javascript" src="${baseUrl}/static/jquery/jquery.showMessage.js"></script>

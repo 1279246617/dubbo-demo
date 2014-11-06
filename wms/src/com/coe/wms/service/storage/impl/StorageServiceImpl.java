@@ -1714,4 +1714,15 @@ public class StorageServiceImpl implements IStorageService {
 		}
 		return map;
 	}
+
+	@Override
+	public Map<String, String> saveInWarehouseRecordRemark(String remark, Long id) throws ServiceException {
+		Map<String, String> map = new HashMap<String, String>();
+		if (inWarehouseRecordDao.updateInWarehouseRecordRemark(id, remark) > 0) {
+			map.put(Constant.STATUS, Constant.SUCCESS);
+		} else {
+			map.put(Constant.STATUS, Constant.FAIL);
+		}
+		return map;
+	}
 }
