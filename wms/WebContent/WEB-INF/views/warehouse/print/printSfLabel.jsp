@@ -159,31 +159,45 @@
 					</table>
 				</div>	
 				<div style="height:auto;width:100%; border-bottom:0px solid  #000;">
-						<table style="height:auto;width:100%;border-color: #000;" rules="rows">
-							<tr  style="height:4mm;">
-								<th style="width:19">寄托物</th>
-								<th style="width:19">SKU</th>
-								<th style="width:19">数量</th>
-								<th>备注</th>
-							</tr>
-							
-							<c:forEach var="item"  items="${map.items}">  
-								<tr style="height:4mm;">
-									<td style="text-align: center;">
-										<c:out value="${item.skuName}"/>
-									</td>
-									<td style="text-align: center;">
-										<c:out value="${item.sku}"/>
-									</td>
-									<td style="text-align: center;">
-										<c:out value="${item.quantity}"/>
-									</td>
-									<td style="text-align: center;">
-										<c:out value="${item.remark}"/>
-									</td>						
-								</tr>		
+						<div style="line-height: 3.2mm;width:100%;">
+							<c:forEach var="item"  items="${map.items}">
+									<c:if test="${item.skuName != ''}">
+										<c:out value="${item.skuName}"/>,
+									</c:if>
+									<c:if test="${item.sku != ''}">
+										<c:out value="${item.sku}"/>,
+									</c:if>
+									<c:out value="${item.quantity}"/>,
+									<c:out value="${item.remark}"/>
+									&nbsp;&nbsp;&nbsp;&nbsp;
 							</c:forEach>
-						</table>
+							
+						</div>
+						
+<!-- 						<table style="height:auto;width:100%;border-color: #000;" rules="rows"> -->
+<!-- 							<tr  style="height:4mm;"> -->
+<!-- 								<th style="width:19">寄托物</th> -->
+<!-- 								<th style="width:19">SKU</th> -->
+<!-- 								<th style="width:19">数量</th> -->
+<!-- 								<th>备注</th> -->
+<!-- 							</tr> -->
+<%-- 							<c:forEach var="item"  items="${map.items}">   --%>
+<!-- 								<tr style="height:4mm;"> -->
+<!-- 									<td style="text-align: center;"> -->
+<%-- 										<c:out value="${item.skuName}"/> --%>
+<!-- 									</td> -->
+<!-- 									<td style="text-align: center;"> -->
+<%-- 										<c:out value="${item.sku}"/> --%>
+<!-- 									</td> -->
+<!-- 									<td style="text-align: center;"> -->
+<%-- 										<c:out value="${item.quantity}"/> --%>
+<!-- 									</td> -->
+<!-- 									<td style="text-align: center;"> -->
+<%-- 										<c:out value="${item.remark}"/> --%>
+<!-- 									</td>						 -->
+<!-- 								</tr>		 -->
+<%-- 							</c:forEach> --%>
+<!-- 						</table> -->
 				</div>	
 			</div>
 		</c:forEach>

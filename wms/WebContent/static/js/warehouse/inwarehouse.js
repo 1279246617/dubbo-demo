@@ -143,7 +143,7 @@ function saveInWarehouseRecordItem() {
 			// 光标移至产品SKU
 			$("#itemSku").val("");
 			$("#itemSku").focus();
-			$("#tips").html("请继续输入SKU和数量,或者输入新的跟踪单号并按回车!");
+			$("#tips").html("请继续输入SKU和数量,或者点击完成本次收货!");
 			focus = "2";
 			
 			btnSearch("#searchform",grid);
@@ -185,4 +185,16 @@ function unLockTrackingNo(){
 	$("input[name='inWarehouseOrderRadio']").each(function(){
 		  $(this).removeAttr("readonly");
 	 });
+}
+
+function nextInWarehouseRecord(){
+	unLockTrackingNo();
+	$("#trackingNo").val("");
+	$("#orderRemark").val("");
+	$("#inWarehouseOrderId").val("");
+	$("#inWarehouseRecordId").val("");
+	$("#inWarehouseOrdertbody").html("");
+	parent.$.showShortMessage({msg:"请继续下一批收货",animate:false,left:"45%"});
+	$("#tips").html("请输入新的跟踪单号并按回车!");
+	$("#trackingNo").focus();
 }

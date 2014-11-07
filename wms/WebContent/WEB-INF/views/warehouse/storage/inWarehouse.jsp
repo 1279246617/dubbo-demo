@@ -94,6 +94,9 @@
 						<span class="pull-left" style="width:105px;">
 							<a class="btn  btn-primary" id="enterItem" onclick="saveInWarehouseRecordItem();" style="cursor:pointer;"><i class="icon-ok icon-white"></i>保存明细</a>
 						</span>
+						<span class="pull-left" style="width:135px;">
+							<a class="btn  btn-primary" id="enterItem" onclick="nextInWarehouseRecord();" style="cursor:pointer;height: 15px;"><i class="icon-ok icon-white"></i>完成本次收货</a>
+						</span>
 					</td>	
 			</tr>	
 		</table>
@@ -136,11 +139,16 @@
 	   $("#trackingNo").focus();
 	   var focus = "1";
 	    $(window).keydown(function(event){
+	    	if((event.keyCode   ==   13) &&   (event.ctrlKey)) {
+	    		nextInWarehouseRecord();
+	    		return;
+	    	}
 	    	//回车事件
 	    	if((event.keyCode   ==   13)) {
 	    		clickEnter();
 	    		return;
 	    	}  
+	    	
 	    });
 		
   	  $(function(){
