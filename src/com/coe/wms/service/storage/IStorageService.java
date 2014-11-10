@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 
 import com.coe.wms.exception.ServiceException;
 import com.coe.wms.model.user.User;
+import com.coe.wms.model.warehouse.Seat;
 import com.coe.wms.model.warehouse.TrackingNo;
 import com.coe.wms.model.warehouse.Warehouse;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
@@ -323,4 +324,6 @@ public interface IStorageService {
 	public Map<String, String> saveInWarehouseOrderRemark(String remark, Long id) throws ServiceException;
 
 	public Map<String, String> saveInWarehouseRecordRemark(String remark, Long id) throws ServiceException;
+	
+	public Pagination getSeatData(Seat seat, Map<String, String> moreParam, Pagination page);
 }

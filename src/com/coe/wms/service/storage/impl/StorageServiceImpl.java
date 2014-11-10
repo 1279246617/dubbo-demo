@@ -38,6 +38,7 @@ import com.coe.wms.exception.ServiceException;
 import com.coe.wms.model.unit.Weight;
 import com.coe.wms.model.unit.Weight.WeightCode;
 import com.coe.wms.model.user.User;
+import com.coe.wms.model.warehouse.Seat;
 import com.coe.wms.model.warehouse.TrackingNo;
 import com.coe.wms.model.warehouse.Warehouse;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
@@ -1728,5 +1729,28 @@ public class StorageServiceImpl implements IStorageService {
 			map.put(Constant.STATUS, Constant.FAIL);
 		}
 		return map;
+	}
+
+	@Override
+	public Pagination getSeatData(Seat seat, Map<String, String> moreParam, Pagination page) {
+		List<Seat> seatList = seatDao.findSeat(seat, page);
+		List<Object> list = new ArrayList<Object>();
+		for (Seat seatTemp : seatList) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("id", seatTemp.getId());
+			if (seatTemp.getWarehouseId() != null) {
+				Warehouse warehouse = warehouseDao.getWarehouseById(seatTemp.getWarehouseId());
+				if (warehouse != null) {
+					map.put("warehouse_id", warehouse.getWarehouseName());
+				}
+			}
+			map.put("shelf_code", seatTemp.getShelfCode());
+			map.put("seat_code", seatTemp.getSeatCode());
+			map.put("remark", seatTemp.getRemark());
+			list.add(map);
+		}
+		page.total = seatDao.countSeat(seat);
+		page.rows = list;
+		return page;
 	}
 }
