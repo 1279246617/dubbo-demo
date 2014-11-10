@@ -18,6 +18,8 @@
 
 .label-100-150{border:1px solid  #000;width: 96mm;height: 146mm;}
 
+.label-100-70{border:1px solid  #000;width: 96mm;height: 68mm;}
+
 .a4-100-100{border:1px solid  #000;width: 96mm;height: 90mm;}
 
 /*a4样式 ,打印捡货单专用. 不控制整体高度,防止有物品信息没打全*/

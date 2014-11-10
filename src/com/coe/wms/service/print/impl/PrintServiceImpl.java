@@ -28,6 +28,8 @@ import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderItemShelfDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderReceiverDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderSenderDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderStatusDao;
+import com.coe.wms.model.warehouse.Seat;
+import com.coe.wms.model.warehouse.Warehouse;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrder;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderAdditionalSf;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderItem;
@@ -48,10 +50,9 @@ public class PrintServiceImpl implements IPrintService {
 
 	@Resource(name = "warehouseDao")
 	private IWarehouseDao warehouseDao;
-	
+
 	@Resource(name = "seatDao")
 	private ISeatDao seatDao;
-
 
 	@Resource(name = "inWarehouseOrderDao")
 	private IInWarehouseOrderDao inWarehouseOrderDao;
@@ -187,6 +188,27 @@ public class PrintServiceImpl implements IPrintService {
 		// 总重量
 		map.put("totalWeight", outWarehouseOrder.getOutWarehouseWeight());
 		map.put("items", items);
+		return map;
+	}
+
+	@Override
+	public Map<String, Object> getPrintSeatCodeLabelData(Long seatId) {
+		Seat param = new Seat();
+		param.setId(seatId);
+		List<Seat> seatList = seatDao.findSeat(param, null);
+		Map<String, Object> map = new HashMap<String, Object>();
+		if (seatList != null && seatList.size() > 0) {
+			Seat seat = seatList.get(0);
+			map.put("seatCode", seat.getSeatCode());
+			// 创建图片
+			String seatCodeBarcodeData = BarcodeUtil.createCode39(seat.getSeatCode(), false, 16d);
+			map.put("seatCodeBarcodeData", seatCodeBarcodeData);
+			// 仓库
+			Warehouse warehouse = warehouseDao.getWarehouseById(seat.getWarehouseId());
+			if (warehouse != null) {
+				map.put("warehouse", warehouse.getWarehouseName());
+			}
+		}
 		return map;
 	}
 }

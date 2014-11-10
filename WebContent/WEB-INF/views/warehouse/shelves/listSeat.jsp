@@ -20,6 +20,15 @@
 </head>
 <body>
 	  <div class="toolbar1">
+	  	<div class="pull-left">
+           			<span class="pull-left" style="width:55px;">
+			       		<a class="btn btn-primary btn-small" onclick="printBatch()" title="打印货位条码">
+			           		 <i class="icon-folder-open"></i>打印货位条码
+			       	 	</a>
+			       	 	<input style=" visibility:hidden;">
+		       	 	</span>
+		  </div>    
+		    	
            <form action="${baseUrl}/warehouse/shelves/getSeatData.do" id="searchform" name="searchform" method="post">
                <div class="pull-right searchContent">
                		<span class="pull-left" style="width:175px;">
@@ -60,7 +69,14 @@
 							{ display: '仓库', name: 'warehouse_id', type: 'float',width:'13%'},
 	  	                  	{ display: '货架号', name: 'shelf_code', type: 'float',width:'14%'},
 	  	                  	{ display: '货位号', name: 'seat_code', type: 'int', width:'14%'},
-			                { display: '备注', name: 'remark',type:'float',width:'20%'}
+			                { display: '备注', name: 'remark',type:'float',width:'20%'},
+	  	                  	{display: '操作',isSort: false,width: '10%',render: function(row) {
+			            		var h = "";
+			            		if (!row._editing) {
+			            			h += '<a href="javascript:print(' + row.id + ')">打印货位条码</a> ';
+			            		}
+			            		return h;
+			            	}}
 		             ],   
 	                dataAction: 'server',
 	                url: baseUrl+'/warehouse/shelves/getSeatData.do',
@@ -70,7 +86,7 @@
 	                sortName: 'id',
 	                width: '100%',
 	                height: '99%',
-	                checkbox: false,
+	                checkbox: true,
 	                rownumbers:true,
 	                alternatingRow:true,
 	                minColToggle:20,
@@ -87,6 +103,61 @@
    			$("#btn_search").click(function(){
    				btnSearch("#searchform",grid);
    			});
+	    	
+	    	//批量打印
+	    	function printBatch(){
+	    		  var contentArr = [];
+	    		    contentArr.push('<div id="changeContent" style="padding:10px;width: 240px;">');
+	    		    contentArr.push('   <div class="pull-left" style="width: 100%">');
+	    		    contentArr.push('       <input class="pull-left" name="chooseOption" style="margin-left: 30px;" type="radio" checked="checked" value="selected" id="selected">');
+	    		    contentArr.push('       <label class="pull-left" style="margin-left: 5px" for="selected">打印选中</label>');
+	    		    contentArr.push('       <input class="pull-left" name="chooseOption" style="margin-left: 30px;" type="radio" value="all" id="all">');
+	    		    contentArr.push('       <label class="pull-left" style="margin-left: 5px;" for="all">打印当前页</label>');
+	    		    contentArr.push('   </div>');
+	    		    contentArr.push('</div>');
+	    		    contentArr.push('<div style="color: #ff0000;margin-left: 40px;">注：请使用100*100标签纸打印</div>');
+	    		    var contentHtml = contentArr.join('');
+	    			$.dialog({
+	    		  		lock: true,
+	    		  		max: false,
+	    		  		min: false,
+	    		  		title: '打印货位条码',
+	    		  	     width: 260,
+	    		         height: 60,
+	    		  		content: contentHtml,
+	    		  		button: [{
+	    		  			name: '确认',
+	    		  			callback: function() {
+	    		  				var  row = grid.getSelectedRows();
+	    		                var all = parent.$("#all").attr("checked");
+	    		                if(all){
+	    		                	row = grid.getRows();	 
+	    		                }
+	    			            if(row.length < 1){
+	    			                parent.$.showShortMessage({msg:"请最少选择一条数据",animate:false,left:"45%"});
+	    			                return false;
+	    			            }
+	    			            var seatIds = "";
+	    		            	for ( var i = 0; i < row.length; i++) {
+	    		            		seatIds += row[i].id+",";
+	    						}
+	    		            	if(seatIds!=""){
+	    		    			    var url = baseUrl+'/warehouse/print/printSeatCode.do?seatIds='+seatIds;
+	    		      			  	window.open(url);
+	    		            	}
+	    		  			}
+	    		  		},
+	    		  		{
+	    		  			name: '取消'
+	    		  		}]
+	    		  	});
+	    	}
+	    	
+	    	//打印
+	    	function print(id){
+	    		  var url = baseUrl+'/warehouse/print/printSeatCode.do?seatIds='+id;
+     			  window.open(url);
+	    	}
    	</script>
    	
 	<script type="text/javascript" src="${baseUrl}/static/jquery/jquery.showMessage.js"></script>

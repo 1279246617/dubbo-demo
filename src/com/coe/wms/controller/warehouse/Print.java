@@ -59,6 +59,9 @@ public class Print {
 		List<Map<String, Object>> mapList = new ArrayList<Map<String, Object>>();
 		String orderIdArray[] = orderIds.split(",");
 		for (int i = 0; i < orderIdArray.length; i++) {
+			if (StringUtil.isNull(orderIdArray[i])) {
+				continue;
+			}
 			Long orderId = Long.valueOf(orderIdArray[i]);
 			Map<String, Object> map = printService.getPrintPackageListData(orderId);
 			if (map != null) {
@@ -94,6 +97,9 @@ public class Print {
 		List<Map<String, Object>> mapList = new ArrayList<Map<String, Object>>();
 		String orderIdArray[] = orderIds.split(",");
 		for (int i = 0; i < orderIdArray.length; i++) {
+			if (StringUtil.isNull(orderIdArray[i])) {
+				continue;
+			}
 			Long orderId = Long.valueOf(orderIdArray[i]);
 			Map<String, Object> map = printService.getPrintShipLabelData(orderId);
 			if (map != null) {
@@ -102,11 +108,45 @@ public class Print {
 		}
 		view.addObject("mapList", mapList);
 		view.addObject("timeNow", DateUtil.dateConvertString(new Date(), DateUtil.yyyy_MM_ddHHmmss));
-		
-		
+
 		// 根据出库渠判断打印顺丰运单还是ETK运单判断
 		view.setViewName("warehouse/print/printSfLabel");
 		// view.setViewName("warehouse/print/printEtkLabel");
+		return view;
+	}
+
+	/**
+	 * 
+	 * 打印货位号
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/printSeatCode", method = RequestMethod.GET)
+	public ModelAndView printSeatCode(HttpServletRequest request, HttpServletResponse response, String seatIds) throws IOException {
+		ModelAndView view = new ModelAndView();
+		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
+		if (StringUtil.isNull(seatIds)) {
+			return view;
+		}
+		// 返回页面的list,装map 每个map 是每个订单的数据
+		List<Map<String, Object>> mapList = new ArrayList<Map<String, Object>>();
+		String seatIdArray[] = seatIds.split(",");
+		for (int i = 0; i < seatIdArray.length; i++) {
+			if (StringUtil.isNull(seatIdArray[i])) {
+				continue;
+			}
+			Long id = Long.valueOf(seatIdArray[i]);
+			Map<String, Object> map = printService.getPrintSeatCodeLabelData(id);
+			if (map != null) {
+				mapList.add(map);
+			}
+		}
+		view.addObject("mapList", mapList);
+		view.addObject("timeNow", DateUtil.dateConvertString(new Date(), DateUtil.yyyy_MM_ddHHmmss));
+		view.setViewName("warehouse/print/printSeatCode");
 		return view;
 	}
 
