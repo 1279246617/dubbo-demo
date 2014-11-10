@@ -14,6 +14,7 @@ import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import com.coe.wms.dao.user.IUserDao;
+import com.coe.wms.dao.warehouse.ISeatDao;
 import com.coe.wms.dao.warehouse.ITrackingNoDao;
 import com.coe.wms.dao.warehouse.IWarehouseDao;
 import com.coe.wms.dao.warehouse.storage.IInWarehouseOrderDao;
@@ -98,6 +99,9 @@ public class StorageServiceImpl implements IStorageService {
 
 	@Resource(name = "trackingNoDao")
 	private ITrackingNoDao trackingNoDao;
+
+	@Resource(name = "seatDao")
+	private ISeatDao seatDao;
 
 	@Resource(name = "onShelfDao")
 	private IOnShelfDao onShelfDao;

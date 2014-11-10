@@ -23,6 +23,9 @@ public class Seat implements Serializable {
 	 * 货位编号
 	 */
 	private String seatCode;
+
+	private String shelfCode;
+
 	/**
 	 * 所属仓库
 	 */
@@ -62,5 +65,13 @@ public class Seat implements Serializable {
 
 	public void setRemark(String remark) {
 		this.remark = remark;
+	}
+
+	public String getShelfCode() {
+		return shelfCode;
+	}
+
+	public void setShelfCode(String shelfCode) {
+		this.shelfCode = shelfCode;
 	}
 }

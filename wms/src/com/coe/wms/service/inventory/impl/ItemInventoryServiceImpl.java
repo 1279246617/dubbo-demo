@@ -12,6 +12,7 @@ import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import com.coe.wms.dao.user.IUserDao;
+import com.coe.wms.dao.warehouse.ISeatDao;
 import com.coe.wms.dao.warehouse.IWarehouseDao;
 import com.coe.wms.dao.warehouse.storage.IInWarehouseOrderDao;
 import com.coe.wms.dao.warehouse.storage.IInWarehouseOrderItemDao;
@@ -46,6 +47,8 @@ import com.coe.wms.util.Pagination;
 public class ItemInventoryServiceImpl implements IItemInventoryService {
 
 	private static final Logger logger = Logger.getLogger(ItemInventoryServiceImpl.class);
+	@Resource(name = "seatDao")
+	private ISeatDao seatDao;
 
 	@Resource(name = "warehouseDao")
 	private IWarehouseDao warehouseDao;
