@@ -11,6 +11,7 @@ import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import com.coe.wms.dao.user.IUserDao;
+import com.coe.wms.dao.warehouse.ISeatDao;
 import com.coe.wms.dao.warehouse.IWarehouseDao;
 import com.coe.wms.dao.warehouse.storage.IInWarehouseOrderDao;
 import com.coe.wms.dao.warehouse.storage.IInWarehouseOrderItemDao;
@@ -47,6 +48,10 @@ public class PrintServiceImpl implements IPrintService {
 
 	@Resource(name = "warehouseDao")
 	private IWarehouseDao warehouseDao;
+	
+	@Resource(name = "seatDao")
+	private ISeatDao seatDao;
+
 
 	@Resource(name = "inWarehouseOrderDao")
 	private IInWarehouseOrderDao inWarehouseOrderDao;
