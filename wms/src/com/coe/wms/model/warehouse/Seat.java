@@ -29,7 +29,7 @@ public class Seat implements Serializable {
 	/**
 	 * 所属仓库
 	 */
-	private Long warehoseId;
+	private Long warehouseId;
 	/**
 	 * 备注
 	 */
@@ -47,12 +47,12 @@ public class Seat implements Serializable {
 		return seatCode;
 	}
 
-	public Long getWarehoseId() {
-		return warehoseId;
+	public Long getWarehouseId() {
+		return warehouseId;
 	}
 
-	public void setWarehoseId(Long warehoseId) {
-		this.warehoseId = warehoseId;
+	public void setWarehouseId(Long warehouseId) {
+		this.warehouseId = warehouseId;
 	}
 
 	public void setSeatCode(String seatCode) {

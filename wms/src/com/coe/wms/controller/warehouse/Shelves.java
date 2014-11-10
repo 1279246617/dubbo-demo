@@ -19,6 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.coe.wms.controller.Application;
 import com.coe.wms.model.user.User;
+import com.coe.wms.model.warehouse.Seat;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecord;
 import com.coe.wms.model.warehouse.storage.record.OnShelf;
 import com.coe.wms.model.warehouse.storage.record.OutShelf;
@@ -118,8 +119,8 @@ public class Shelves {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/getOutShelvesData")
-	public String getOutShelvesData(HttpServletRequest request, String sortorder, String sortname, int page, int pagesize, String userLoginName, Long warehouseId, String customerReferenceNo, String batchNo, String createdTimeStart, String createdTimeEnd)
-			throws IOException {
+	public String getOutShelvesData(HttpServletRequest request, String sortorder, String sortname, int page, int pagesize, String userLoginName, Long warehouseId, String customerReferenceNo, String batchNo, String createdTimeStart,
+			String createdTimeEnd) throws IOException {
 		if (StringUtil.isNotNull(createdTimeStart) && createdTimeStart.contains(",")) {
 			createdTimeStart = createdTimeStart.substring(createdTimeStart.lastIndexOf(",") + 1, createdTimeStart.length());
 		}
@@ -251,8 +252,58 @@ public class Shelves {
 		return GsonUtil.toJson(map);
 	}
 
-	public void listSeat() {
+	/**
+	 * 货位 查询
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/listSeat", method = RequestMethod.GET)
+	public ModelAndView listSeat(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		HttpSession session = request.getSession();
+		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
+		ModelAndView view = new ModelAndView();
+		view.addObject("userId", userId);
+		User user = userService.getUserById(userId);
+		view.addObject("warehouseList", storageService.findAllWarehouse(user.getDefaultWarehouseId()));
+		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
+		view.setViewName("warehouse/shelves/listSeat");
+		return view;
+	}
 
+	/**
+	 * 获取货位
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/getSeatData")
+	public String getSeatData(HttpServletRequest request, String sortorder, String sortname, int page, int pagesize, String seatCode, String shelfCode, Long warehouseId) throws IOException {
+		HttpSession session = request.getSession();
+		// 当前操作员
+		Long userIdOfOperator = (Long) session.getAttribute(SessionConstant.USER_ID);
+		Pagination pagination = new Pagination();
+		pagination.curPage = page;
+		pagination.pageSize = pagesize;
+		pagination.sortName = sortname;
+		pagination.sortOrder = sortorder;
+		Seat param = new Seat();
+		param.setWarehouseId(warehouseId);
+		param.setSeatCode(seatCode);
+		param.setShelfCode(shelfCode);
+
+		// 更多参数
+		Map<String, String> moreParam = new HashMap<String, String>();
+		pagination = storageService.getSeatData(param, moreParam, pagination);
+		Map map = new HashMap();
+		map.put("Rows", pagination.rows);
+		map.put("Total", pagination.total);
+		return GsonUtil.toJson(map);
 	}
 
 	/**
