@@ -37,9 +37,9 @@ import sun.misc.BASE64Encoder;
 public class BarcodeUtil {
 
 	private static Logger logger = Logger.getLogger(BarcodeUtil.class);
-	
+
 	public static String createCode39(String barcodeText, boolean isShowBarcodeText, Double height) {
-		JBarcode jbcode = new JBarcode(EAN8Encoder.getInstance(), WidthCodedPainter.getInstance(), EAN8TextPainter.getInstance());
+		JBarcode jbcode = new JBarcode(EAN13Encoder.getInstance(), WidthCodedPainter.getInstance(), EAN13TextPainter.getInstance());
 		jbcode.setEncoder(Code39Encoder.getInstance());
 		jbcode.setTextPainter(BaseLineTextPainter.getInstance());
 		jbcode.setCheckDigit(false);
@@ -48,7 +48,7 @@ public class BarcodeUtil {
 		jbcode.setBarHeight(height);
 		ByteArrayOutputStream bos = null;
 		try {
-			jbcode.setWideRatio(3d);
+			// jbcode.setWideRatio(1d);
 			BufferedImage img = jbcode.createBarcode(barcodeText.toUpperCase());
 			bos = new ByteArrayOutputStream();
 			ImageUtil.encodeAndWrite(img, ImageUtil.PNG, bos, 96, 96);
@@ -70,8 +70,8 @@ public class BarcodeUtil {
 		}
 		return null;
 	}
-	
-	public static String createCode128(String barcodeText, boolean isShowBarcodeText, Double height) {
+
+	public static String createCode128(String barcodeText, boolean isShowBarcodeText, Double height, Double xd) {
 		JBarcode jbcode = new JBarcode(EAN13Encoder.getInstance(), WidthCodedPainter.getInstance(), EAN13TextPainter.getInstance());
 		jbcode.setEncoder(Code128Encoder.getInstance());
 		jbcode.setTextPainter(BaseLineTextPainter.getInstance());
@@ -82,6 +82,9 @@ public class BarcodeUtil {
 		ByteArrayOutputStream bos = null;
 		try {
 			jbcode.setWideRatio(3d);
+			if(xd!=null){
+				jbcode.setXDimension(xd);	
+			}
 			BufferedImage img = jbcode.createBarcode(barcodeText.toUpperCase());
 			bos = new ByteArrayOutputStream();
 			ImageUtil.encodeAndWrite(img, ImageUtil.PNG, bos, 96, 96);
