@@ -14,4 +14,11 @@ public interface IPrintService {
 
 	public Map<String, Object> getPrintShipLabelData(Long outWarehouseOrderId);
 
+	/**
+	 * 获取打印货位号数据
+	 * 
+	 * @param seatId
+	 * @return
+	 */
+	public Map<String, Object> getPrintSeatCodeLabelData(Long seatId);
 }

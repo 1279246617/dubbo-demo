@@ -109,7 +109,6 @@ public class StorageServiceImpl implements IStorageService {
 
 	@Resource(name = "outShelfDao")
 	private IOutShelfDao outShelfDao;
-
 	@Resource(name = "inWarehouseOrderDao")
 	private IInWarehouseOrderDao inWarehouseOrderDao;
 
