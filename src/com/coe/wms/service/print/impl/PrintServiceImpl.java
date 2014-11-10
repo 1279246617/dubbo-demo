@@ -115,7 +115,7 @@ public class PrintServiceImpl implements IPrintService {
 		map.put("outWarehouseOrderId", String.valueOf(outWarehouseOrder.getId()));
 		map.put("customerReferenceNo", outWarehouseOrder.getCustomerReferenceNo());
 		// 创建图片
-		String customerReferenceNoBarcodeData = BarcodeUtil.createCode128(outWarehouseOrder.getCustomerReferenceNo(), true, 12d);
+		String customerReferenceNoBarcodeData = BarcodeUtil.createCode128(outWarehouseOrder.getCustomerReferenceNo(), true, 12d,null);
 		map.put("customerReferenceNoBarcodeData", customerReferenceNoBarcodeData);
 		map.put("tradeRemark", outWarehouseOrder.getTradeRemark());
 		map.put("logisticsRemark", outWarehouseOrder.getLogisticsRemark());
@@ -201,7 +201,7 @@ public class PrintServiceImpl implements IPrintService {
 			Seat seat = seatList.get(0);
 			map.put("seatCode", seat.getSeatCode());
 			// 创建图片
-			String seatCodeBarcodeData = BarcodeUtil.createCode39(seat.getSeatCode(), false, 16d);
+			String seatCodeBarcodeData = BarcodeUtil.createCode128(seat.getSeatCode(), false, 16d,0.5d);
 			map.put("seatCodeBarcodeData", seatCodeBarcodeData);
 			// 仓库
 			Warehouse warehouse = warehouseDao.getWarehouseById(seat.getWarehouseId());
