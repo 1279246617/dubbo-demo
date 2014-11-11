@@ -150,4 +150,39 @@ public class Print {
 		return view;
 	}
 
+	/**
+	 * 
+	 * 打印出货交接单
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/printOutWarehouseEIR", method = RequestMethod.GET)
+	public ModelAndView printOutWarehouseEIR(HttpServletRequest request, HttpServletResponse response, String orderIds, String coeTrackingNo, Long coeTrackingNoId) throws IOException {
+		ModelAndView view = new ModelAndView();
+		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
+		if (StringUtil.isNull(orderIds)) {
+			return view;
+		}
+		// 返回页面的list,装map 每个map 是每个订单的数据
+		List<Map<String, Object>> mapList = new ArrayList<Map<String, Object>>();
+		String orderIdArray[] = orderIds.split(",");
+		for (int i = 0; i < orderIdArray.length; i++) {
+			if (StringUtil.isNull(orderIdArray[i])) {
+				continue;
+			}
+			Long orderId = Long.valueOf(orderIdArray[i]);
+			Map<String, Object> map = printService.getPrintPackageListData(orderId);
+			if (map != null) {
+				mapList.add(map);
+			}
+		}
+		view.addObject("mapList", mapList);
+		view.addObject("timeNow", DateUtil.dateConvertString(new Date(), DateUtil.yyyy_MM_ddHHmmss));
+		view.setViewName("warehouse/print/printOutWarehouseEIR");
+		return view;
+	}
+
 }

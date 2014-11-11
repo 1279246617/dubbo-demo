@@ -13,5 +13,5 @@ public interface IShelfDao {
 
 	public Long countShelf(Shelf shelf);
 
-	public Integer addShelf(Shelf shelf);
+	public Long saveShelf(Shelf shelf);
 }
