@@ -33,13 +33,18 @@
 							</td>		
 							
 							<td>
-		          				 <a class="btn  btn-primary" id="enter" onclick="next()" style="cursor:pointer;"><i class="icon-ok icon-white"></i>继续下一票</a>
+<!-- 		          				 <a class="btn  btn-primary" id="enter" onclick="next()" style="cursor:pointer;"><i class="icon-ok icon-white"></i>继续下一票</a> -->
 							</td>
 					</tr>
 					<tr>
-						<td colspan="2" rowspan="2" style="height:25px;">
-							<a class="btn  btn-primary" id="enter" onclick="submitAll()" style="cursor:pointer;height:20px;"><i class="icon-ok icon-white"></i>
-								完成出货总单
+						<td colspan="1" rowspan="2" style="height:25px;">
+							<a class="btn  btn-primary" id="enter" onclick="submitAll(1)" style="cursor:pointer;height:20px;"><i class="icon-ok icon-white"></i>
+								完成(并打印出货交接单)
+							</a>
+						</td>
+						<td colspan="1" rowspan="2" style="height:25px;">
+							<a class="btn  btn-primary" id="enter" onclick="submitAll(0)" style="cursor:pointer;height:20px;"><i class="icon-ok icon-white"></i>
+								完成(不打印出货交接单)
 							</a>
 						</td>
 					</tr>
@@ -120,7 +125,7 @@
 	  	  	},"json");
   		}
   	 	 
-  	 	 function submitAll(){
+  	 	 function submitAll(isPrint){
   	 		 if(trackingNos == null || trackingNos ==''){
   	 			parent.$.showShortMessage({msg:"请输入出货跟踪单号再按完成出货总单!",animate:false,left:"43%"});
   	 			return false;
@@ -153,6 +158,11 @@
 					// 光标移至跟踪号
 	  	  			$("#trackingNo").focus();
 	  	  			$("#trackingNo").select();
+	  	  			//是否打印出货交接单
+	  	  			if(isPrint ==1){
+	  	  			  var url = baseUrl+'/warehouse/print/printOutWarehouseEIR.do?orderIds='+ orderIds+'&coeTrackingNo='+coeTrackingNo+"&coeTrackingNoId="+coeTrackingNoId;
+	     			  window.open(url);
+	  	 			}	  	  			
 					return false;
 				}
   	 		},"json");
