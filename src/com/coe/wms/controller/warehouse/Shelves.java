@@ -20,6 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.coe.wms.controller.Application;
 import com.coe.wms.model.user.User;
 import com.coe.wms.model.warehouse.Seat;
+import com.coe.wms.model.warehouse.Shelf;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecord;
 import com.coe.wms.model.warehouse.storage.record.OnShelf;
 import com.coe.wms.model.warehouse.storage.record.OutShelf;
@@ -253,6 +254,51 @@ public class Shelves {
 	}
 
 	/**
+	 * 下架界面
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/outShelves", method = RequestMethod.GET)
+	public ModelAndView outShelves(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		ModelAndView view = new ModelAndView();
+		HttpSession session = request.getSession();
+		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
+		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
+		view.setViewName("warehouse/shelves/outShelves");
+		return view;
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/submitOutShelfItems")
+	public String submitOutShelfItems(HttpServletRequest request, String customerReferenceNo, String outShelfItems) throws IOException {
+		logger.info("提交下架:customerReferenceNo:" + customerReferenceNo + " outShelfItems:" + outShelfItems);
+		HttpSession session = request.getSession();
+		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
+		Map<String, String> map = storageService.submitOutShelfItems(customerReferenceNo, outShelfItems, userId);
+		return GsonUtil.toJson(map);
+	}
+
+	/**
+	 * 
+	 * 找到唯一的出库订单,并且是待下架的
+	 * 
+	 * @param request
+	 * @param trackingNo
+	 * @param userLoginName
+	 * @return
+	 * @throws IOException
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/checkFindOutWarehouseOrder")
+	public String checkFindOutWarehouseOrder(HttpServletRequest request, String customerReferenceNo) throws IOException {
+		Map<String, String> map = storageService.checkOutWarehouseOrderByCustomerReferenceNo(customerReferenceNo);
+		return GsonUtil.toJson(map);
+	}
+
+	/**
 	 * 货位 查询
 	 * 
 	 * @param request
@@ -307,47 +353,34 @@ public class Shelves {
 	}
 
 	/**
-	 * 下架界面
+	 * 获取货位
 	 * 
 	 * @param request
 	 * @param response
 	 * @return
 	 * @throws IOException
 	 */
-	@RequestMapping(value = "/outShelves", method = RequestMethod.GET)
-	public ModelAndView outShelves(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		ModelAndView view = new ModelAndView();
-		HttpSession session = request.getSession();
-		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
-		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
-		view.setViewName("warehouse/shelves/outShelves");
-		return view;
-	}
-
 	@ResponseBody
-	@RequestMapping(value = "/submitOutShelfItems")
-	public String submitOutShelfItems(HttpServletRequest request, String customerReferenceNo, String outShelfItems) throws IOException {
-		logger.info("提交下架:customerReferenceNo:" + customerReferenceNo + " outShelfItems:" + outShelfItems);
+	@RequestMapping(value = "/getShelfData")
+	public String getShelfData(HttpServletRequest request, String sortorder, String sortname, int page, int pagesize, String shelfType, String shelfCode, Long warehouseId) throws IOException {
 		HttpSession session = request.getSession();
-		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
-		Map<String, String> map = storageService.submitOutShelfItems(customerReferenceNo, outShelfItems, userId);
-		return GsonUtil.toJson(map);
-	}
-
-	/**
-	 * 
-	 * 找到唯一的出库订单,并且是待下架的
-	 * 
-	 * @param request
-	 * @param trackingNo
-	 * @param userLoginName
-	 * @return
-	 * @throws IOException
-	 */
-	@ResponseBody
-	@RequestMapping(value = "/checkFindOutWarehouseOrder")
-	public String checkFindOutWarehouseOrder(HttpServletRequest request, String customerReferenceNo) throws IOException {
-		Map<String, String> map = storageService.checkOutWarehouseOrderByCustomerReferenceNo(customerReferenceNo);
+		// 当前操作员
+		Long userIdOfOperator = (Long) session.getAttribute(SessionConstant.USER_ID);
+		Pagination pagination = new Pagination();
+		pagination.curPage = page;
+		pagination.pageSize = pagesize;
+		pagination.sortName = sortname;
+		pagination.sortOrder = sortorder;
+		Shelf param = new Shelf();
+		param.setWarehouseId(warehouseId);
+		param.setShelfType(shelfType);
+		param.setShelfCode(shelfCode);
+		// 更多参数
+		Map<String, String> moreParam = new HashMap<String, String>();
+		pagination = storageService.getShelfData(param, moreParam, pagination);
+		Map map = new HashMap();
+		map.put("Rows", pagination.rows);
+		map.put("Total", pagination.total);
 		return GsonUtil.toJson(map);
 	}
 }

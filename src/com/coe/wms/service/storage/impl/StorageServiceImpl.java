@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import com.coe.wms.dao.user.IUserDao;
 import com.coe.wms.dao.warehouse.ISeatDao;
+import com.coe.wms.dao.warehouse.IShelfDao;
 import com.coe.wms.dao.warehouse.ITrackingNoDao;
 import com.coe.wms.dao.warehouse.IWarehouseDao;
 import com.coe.wms.dao.warehouse.storage.IInWarehouseOrderDao;
@@ -39,6 +40,7 @@ import com.coe.wms.model.unit.Weight;
 import com.coe.wms.model.unit.Weight.WeightCode;
 import com.coe.wms.model.user.User;
 import com.coe.wms.model.warehouse.Seat;
+import com.coe.wms.model.warehouse.Shelf;
 import com.coe.wms.model.warehouse.TrackingNo;
 import com.coe.wms.model.warehouse.Warehouse;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
@@ -103,6 +105,9 @@ public class StorageServiceImpl implements IStorageService {
 
 	@Resource(name = "seatDao")
 	private ISeatDao seatDao;
+
+	@Resource(name = "shelfDao")
+	private IShelfDao shelfDao;
 
 	@Resource(name = "onShelfDao")
 	private IOnShelfDao onShelfDao;
@@ -1749,6 +1754,32 @@ public class StorageServiceImpl implements IStorageService {
 			list.add(map);
 		}
 		page.total = seatDao.countSeat(seat);
+		page.rows = list;
+		return page;
+	}
+
+	@Override
+	public Pagination getShelfData(Shelf shelf, Map<String, String> moreParam, Pagination page) {
+		List<Shelf> shelfList = shelfDao.findShelf(shelf, page);
+		List<Object> list = new ArrayList<Object>();
+		for (Shelf shelfTemp : shelfList) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("id", shelfTemp.getId());
+			if (shelfTemp.getWarehouseId() != null) {
+				Warehouse warehouse = warehouseDao.getWarehouseById(shelfTemp.getWarehouseId());
+				if (warehouse != null) {
+					map.put("warehouse_id", warehouse.getWarehouseName());
+				}
+			}
+			map.put("shelf_code", shelfTemp.getShelfCode());
+			map.put("shelf_type", shelfTemp.getShelfType());
+			map.put("seat_quantity", shelfTemp.getSeatQuantity());
+			map.put("remark", shelfTemp.getRemark());
+			map.put("cols", shelfTemp.getCols());
+			map.put("rows", shelfTemp.getRows());
+			list.add(map);
+		}
+		page.total = shelfDao.countShelf(shelf);
 		page.rows = list;
 		return page;
 	}
