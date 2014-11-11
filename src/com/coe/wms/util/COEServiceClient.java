@@ -57,21 +57,21 @@ public class COEServiceClient {
 		sb.append("<orders>");
 		// 订单信息
 		sb.append("<order>");
-		// 运单号码：如果为空则coe返回
+		// 运单号码 
 		sb.append("<jobNo>" + coeTrackingNo + "</jobNo>");
 		sb.append("<date>" + DateUtil.dateConvertString(new Date(), DateUtil.yyyy_MM_ddHHmmss) + "</date>");
 		// 客户账号
-		sb.append("<custNo></custNo>");
+		sb.append("<custNo>ECM1833M</custNo>");
 		// 渠道路线
-		sb.append("<hub></hub>");
+		sb.append("<hub>HKG</hub>");
 		// 件数
 		sb.append("<pcs>" + quantity + "</pcs>");
 		// 收费重kg
 		sb.append("<weight>" + NumberUtil.getNumPrecision(weight, 2) + "</weight>");
 		// 发货人信息
 		sb.append("<sendContact>");
-		sb.append("<companyName></companyName>");
-		sb.append("<personName></personName>");
+		sb.append("<companyName>COE香港仓</companyName>");
+		sb.append("<personName>COE香港仓</personName>");
 		sb.append("<countryCode>CN</countryCode>");
 		sb.append("<countryName>中国</countryName>");
 		sb.append("<phoneNumber></phoneNumber>");
@@ -82,6 +82,7 @@ public class COEServiceClient {
 		sb.append("<address3></address3>");
 		sb.append("<postalCode></postalCode>");
 		sb.append("</sendContact>");
+		
 		// 收货人信息
 		sb.append("<receiverContact>");
 		sb.append("<companyName></companyName>");
@@ -89,7 +90,7 @@ public class COEServiceClient {
 		sb.append("<countryCode></countryCode>");
 		sb.append("<countryName></countryName>");
 		sb.append("<phoneNumber></phoneNumber>");
-		sb.append("<divisioinCode></divisioinCode>");
+		sb.append("<divisioinCode>HK</divisioinCode>");
 		sb.append("<city></city>");
 		sb.append("<address1></address1>");
 		sb.append("<address2></address2>");
