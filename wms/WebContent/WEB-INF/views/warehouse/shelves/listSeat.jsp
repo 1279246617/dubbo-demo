@@ -115,7 +115,7 @@
 	    		    contentArr.push('       <label class="pull-left" style="margin-left: 5px;" for="all">打印当前页</label>');
 	    		    contentArr.push('   </div>');
 	    		    contentArr.push('</div>');
-	    		    contentArr.push('<div style="color: #ff0000;margin-left: 40px;">注：请使用100*100标签纸打印</div>');
+	    		    contentArr.push('<div style="color: #ff0000;margin-left: 40px;">注：请使用大于等于100*70标签纸打印</div>');
 	    		    var contentHtml = contentArr.join('');
 	    			$.dialog({
 	    		  		lock: true,
