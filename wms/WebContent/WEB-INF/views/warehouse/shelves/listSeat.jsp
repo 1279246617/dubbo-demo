@@ -23,8 +23,11 @@
 		<div class="toolbar1" style="width:98%;">
 			  	<div class="pull-left">
 		           			<span class="pull-left" style="width:55px;">
-					       		<a class="btn btn-primary btn-small" onclick="printBatch()" title="添加货架">
+					       		<a class="btn btn-primary btn-small" onclick="addShelf()" title="添加货架">
 					           		 <i class="icon-folder-open"></i>添加货架
+					       	 	</a>
+					       	 	<a class="btn btn-primary btn-small" onclick="deleteShelf()" title="删除货架">
+					           		 <i class="icon-folder-open"></i>删除货架
 					       	 	</a>
 					       	 	<input style=" visibility:hidden;">
 				       	 	</span>
@@ -51,8 +54,6 @@
 		</div>
 		<div id="maingridShelf" class="pull-left" style="width:100%;"></div>
 	</div>
-		
-		
 		
 	<div name="rightdiv" class="pull-right" style="width:49%">
 			<div class="toolbar1" style="width:100%;">
@@ -242,6 +243,36 @@
 		function print(id){
 			  var url = baseUrl+'/warehouse/print/printSeatCode.do?seatIds='+id;
 				  window.open(url);
+		}
+		
+		function addShelf(){
+			   $.dialog({
+     	          lock: true,
+     	          title: '添加货架',
+     	          width: '550px',
+     	          height: '390px',
+     	          content: 'url:' + baseUrl + '/warehouse/shelves/addShelf.do',
+     	          button: [{
+     	            name: '确定',
+     	            callback: function() {
+     	              var objRemark = this.content.document.getElementById("remark");
+     	              var remark = $(objRemark).val();
+     	              $.post(baseUrl + '/warehouse/shelf/saveAddShelf.do', {
+     	            	  remark:remark,
+     	            	  id:id
+     	              },
+     	              function(msg) {
+     	                	grid.loadData();
+     	              });
+     	            }
+     	          }],
+     	          cancel: true
+     	        });
+		}
+		
+		
+		function deleteShelf(){
+			alert("删除货架");
 		}
    	</script>
 	<script type="text/javascript" src="${baseUrl}/static/jquery/jquery.showMessage.js"></script>
