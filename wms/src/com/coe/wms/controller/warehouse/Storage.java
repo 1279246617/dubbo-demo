@@ -661,6 +661,8 @@ public class Storage {
 	/**
 	 * 扫运单动作, 检查每个运单
 	 * 
+	 * 检查通过,保存至出货单
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
@@ -668,10 +670,10 @@ public class Storage {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/checkOutWarehouseShipping")
-	public String checkOutWarehouseShipping(HttpServletRequest request, HttpServletResponse response, String trackingNo) throws IOException {
+	public String checkOutWarehouseShipping(HttpServletRequest request, HttpServletResponse response, String trackingNo, Long coeTrackingNoId, String coeTrackingNo, String addOrSub) throws IOException {
 		HttpSession session = request.getSession();
 		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
-		Map<String, String> checkResultMap = storageService.checkOutWarehouseShipping(trackingNo, userId);
+		Map<String, String> checkResultMap = storageService.checkOutWarehouseShipping(trackingNo, userId, coeTrackingNoId, coeTrackingNo,addOrSub);
 		return GsonUtil.toJson(checkResultMap);
 	}
 
@@ -796,7 +798,6 @@ public class Storage {
 		Map<String, String> map = storageService.saveInWarehouseOrderRemark(remark, id);
 		return GsonUtil.toJson(map);
 	}
-	
 
 	/**
 	 * 添加入库订单备注
@@ -814,7 +815,7 @@ public class Storage {
 		view.setViewName("warehouse/storage/editInWarehouseRecordRemark");
 		return view;
 	}
-	
+
 	/**
 	 * @throws IOException
 	 */

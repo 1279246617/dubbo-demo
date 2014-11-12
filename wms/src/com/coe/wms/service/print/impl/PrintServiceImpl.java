@@ -118,6 +118,7 @@ public class PrintServiceImpl implements IPrintService {
 		String customerReferenceNoBarcodeData = BarcodeUtil.createCode128(outWarehouseOrder.getCustomerReferenceNo(), true, 12d,null);
 		map.put("customerReferenceNoBarcodeData", customerReferenceNoBarcodeData);
 		map.put("tradeRemark", outWarehouseOrder.getTradeRemark());
+		map.put("trackingNo", outWarehouseOrder.getTrackingNo());
 		map.put("logisticsRemark", outWarehouseOrder.getLogisticsRemark());
 		map.put("receiverName", receiver.getName());
 		map.put("receiverPhoneNumber", receiver.getPhoneNumber());
