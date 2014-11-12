@@ -35,6 +35,8 @@ import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderItemShelfDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderReceiverDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderSenderDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderStatusDao;
+import com.coe.wms.dao.warehouse.storage.IOutWarehouseShippingDao;
+import com.coe.wms.dao.warehouse.storage.impl.OutWarehouseShippingDaoImpl;
 import com.coe.wms.exception.ServiceException;
 import com.coe.wms.model.unit.Weight;
 import com.coe.wms.model.unit.Weight.WeightCode;
@@ -62,6 +64,7 @@ import com.coe.wms.model.warehouse.storage.record.InWarehouseRecordStatus.InWare
 import com.coe.wms.model.warehouse.storage.record.ItemShelfInventory;
 import com.coe.wms.model.warehouse.storage.record.OnShelf;
 import com.coe.wms.model.warehouse.storage.record.OutShelf;
+import com.coe.wms.model.warehouse.storage.record.OutWarehouseShipping;
 import com.coe.wms.pojo.api.warehouse.ClearanceDetail;
 import com.coe.wms.pojo.api.warehouse.ErrorCode;
 import com.coe.wms.pojo.api.warehouse.EventBody;
@@ -149,6 +152,9 @@ public class StorageServiceImpl implements IStorageService {
 
 	@Resource(name = "inWarehouseRecordItemDao")
 	private IInWarehouseRecordItemDao inWarehouseRecordItemDao;
+
+	@Resource(name = "outWarehouseShippingDao")
+	private IOutWarehouseShippingDao outWarehouseShippingDao;
 
 	@Resource(name = "userDao")
 	private IUserDao userDao;
@@ -1254,6 +1260,76 @@ public class StorageServiceImpl implements IStorageService {
 		return mapList;
 	}
 
+	/**
+	 * 出货检查每个跟踪号是否有效,并保存到出货单OutWarehouseShipping表;
+	 * 
+	 */
+	@Override
+	public Map<String, String> checkOutWarehouseShipping(String trackingNo, Long userIdOfOperator, Long coeTrackingNoId, String coeTrackingNo, String addOrSub) throws ServiceException {
+		Map<String, String> map = new HashMap<String, String>();
+		map.put(Constant.STATUS, Constant.FAIL);
+		OutWarehouseOrder param = new OutWarehouseOrder();
+		param.setTrackingNo(trackingNo);
+		List<OutWarehouseOrder> outWarehouseOrderList = outWarehouseOrderDao.findOutWarehouseOrder(param, null, null);
+		if (outWarehouseOrderList == null || outWarehouseOrderList.size() == 0) {
+			map.put(Constant.MESSAGE, "查询不到出库订单,请重新输入出货跟踪单号");
+			return map;
+		}
+		if (outWarehouseOrderList.size() > 1) {
+			// 找到多个出库订单的情况,待处理
+			map.put(Constant.MESSAGE, "查询到多个出库订单,请输入客户订单号");
+			return map;
+		}
+		OutWarehouseOrder outWarehouseOrder = outWarehouseOrderList.get(0);
+		map.put("orderId", outWarehouseOrder.getId() + "");
+
+		// 1 = 添加出货运单号 ,2 是减去
+		if (!StringUtil.isEqual(addOrSub, "1")) {
+			map.put(Constant.STATUS, "2");
+			// 根据出货运单号+coe单号查找出货记录
+			OutWarehouseShipping shippingParam = new OutWarehouseShipping();
+			shippingParam.setCoeTrackingNoId(coeTrackingNoId);
+			shippingParam.setCoeTrackingNo(coeTrackingNo);
+			shippingParam.setOurWarehouseOrderTrackingNo(trackingNo);
+			List<OutWarehouseShipping> outWarehouseShippingList = outWarehouseShippingDao.findOutWarehouseShipping(shippingParam, null, null);
+			String deleteShippingIds = "";
+			for (OutWarehouseShipping shipping : outWarehouseShippingList) {
+				outWarehouseShippingDao.deleteOutWarehouseShippingById(shipping.getId());
+				//加#是为了 jquery可以直接$("#id1,#id2,#id3,#id4")
+				deleteShippingIds += ("#" + shipping.getId() + ",");
+			}
+			map.put("deleteShippingIds", deleteShippingIds);
+			return map;
+		}
+
+		// 只有顺丰确认出库,顺丰已确认的订单 可以出库
+		if (StringUtil.isEqual(outWarehouseOrder.getStatus(), OutWarehouseOrderStatusCode.WWO)) {
+			// 保存到OutWarehouseShipping,但不改变出库订单的状态.
+			// 只有当操作员点击完成出货总单才改变一个COE单号下面对应的所有出库订单的状态
+			OutWarehouseShipping outWarehouseShipping = new OutWarehouseShipping();
+			outWarehouseShipping.setCoeTrackingNo(coeTrackingNo);
+			outWarehouseShipping.setCoeTrackingNoId(coeTrackingNoId);
+			outWarehouseShipping.setCreatedTime(System.currentTimeMillis());
+			outWarehouseShipping.setOurWarehouseOrderTrackingNo(trackingNo);
+			outWarehouseShipping.setOutWarehouseOrderId(outWarehouseOrder.getId());
+			outWarehouseShipping.setUserIdOfCustomer(outWarehouseOrder.getUserIdOfCustomer());
+			outWarehouseShipping.setUserIdOfOperator(userIdOfOperator);
+			outWarehouseShipping.setWarehouseId(outWarehouseOrder.getWarehouseId());
+			long outShippingId = outWarehouseShippingDao.saveOutWarehouseShipping(outWarehouseShipping);
+			map.put("outWarehouseShippingId", outShippingId + "");
+			map.put(Constant.STATUS, Constant.SUCCESS);
+		} else if (StringUtil.isEqual(outWarehouseOrder.getStatus(), OutWarehouseOrderStatusCode.SUCCESS)) {
+			map.put(Constant.MESSAGE, "出库订单当前状态已经是出库成功");
+		} else if (StringUtil.isEqual(outWarehouseOrder.getStatus(), OutWarehouseOrderStatusCode.WCC)) {
+			map.put(Constant.MESSAGE, "出库订单当前状态是等待客户确认出库,不能出库");
+		} else if (StringUtil.isEqual(outWarehouseOrder.getStatus(), OutWarehouseOrderStatusCode.WSW)) {
+			map.put(Constant.MESSAGE, "出库订单当前状态是等待发送出库重量给客户,不能出库");
+		} else {
+			map.put(Constant.MESSAGE, "出库订单当前状态不能出库");
+		}
+		return map;
+	}
+
 	@Override
 	public Map<String, String> outWarehouseShippingConfirm(String coeTrackingNo, Long coeTrackingNoId, String orderIds, Long userIdOfOperator) throws ServiceException {
 		Map<String, String> map = new HashMap<String, String>();
@@ -1667,39 +1743,6 @@ public class StorageServiceImpl implements IStorageService {
 		page.total = outShelfDao.countOutShelf(outShelf, moreParam);
 		page.rows = list;
 		return page;
-	}
-
-	@Override
-	public Map<String, String> checkOutWarehouseShipping(String trackingNo, Long userIdOfOperator) throws ServiceException {
-		Map<String, String> map = new HashMap<String, String>();
-		map.put(Constant.STATUS, Constant.FAIL);
-		OutWarehouseOrder param = new OutWarehouseOrder();
-		param.setTrackingNo(trackingNo);
-		List<OutWarehouseOrder> outWarehouseOrderList = outWarehouseOrderDao.findOutWarehouseOrder(param, null, null);
-		if (outWarehouseOrderList == null || outWarehouseOrderList.size() == 0) {
-			map.put(Constant.MESSAGE, "查询不到出库订单,请重新输入出货跟踪单号");
-			return map;
-		}
-		if (outWarehouseOrderList.size() > 1) {
-			// 找到多个出库订单的情况,待处理
-			map.put(Constant.MESSAGE, "查询到多个出库订单,请输入客户订单号");
-			return map;
-		}
-		OutWarehouseOrder outWarehouseOrder = outWarehouseOrderList.get(0);
-		// 只有顺丰确认出库,顺丰已确认的订单 可以出库
-		if (StringUtil.isEqual(outWarehouseOrder.getStatus(), OutWarehouseOrderStatusCode.WWO)) {
-			map.put(Constant.STATUS, Constant.SUCCESS);
-		} else if (StringUtil.isEqual(outWarehouseOrder.getStatus(), OutWarehouseOrderStatusCode.SUCCESS)) {
-			map.put(Constant.MESSAGE, "出库订单当前状态已经是出库成功");
-		} else if (StringUtil.isEqual(outWarehouseOrder.getStatus(), OutWarehouseOrderStatusCode.WCC)) {
-			map.put(Constant.MESSAGE, "出库订单当前状态是等待客户确认出库,不能出库");
-		} else if (StringUtil.isEqual(outWarehouseOrder.getStatus(), OutWarehouseOrderStatusCode.WSW)) {
-			map.put(Constant.MESSAGE, "出库订单当前状态是等待发送出库重量给客户,不能出库");
-		} else {
-			map.put(Constant.MESSAGE, "出库订单当前状态不能出库");
-		}
-		map.put("orderId", outWarehouseOrder.getId() + "");
-		return map;
 	}
 
 	@Override

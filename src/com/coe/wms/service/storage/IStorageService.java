@@ -310,7 +310,7 @@ public interface IStorageService {
 	 * @return
 	 * @throws ServiceException
 	 */
-	public Map<String, String> checkOutWarehouseShipping(String trackingNo, Long userIdOfOperator) throws ServiceException;
+	public Map<String, String> checkOutWarehouseShipping(String trackingNo, Long userIdOfOperator,Long coeTrackingNoId,String coeTrackingNo,String addOrSub) throws ServiceException;
 
 	/**
 	 * 

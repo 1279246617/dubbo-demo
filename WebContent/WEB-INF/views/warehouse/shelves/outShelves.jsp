@@ -56,14 +56,14 @@
 						</span>
 						
 						<span class="pull-left" style="width:165px;">
-							<a class="btn  btn-primary" id="enterItem" onclick="saveOutShelvesItem();" style="cursor:pointer;"><i class="icon-ok icon-white"></i>继续下一货位</a>
+<!-- 							<a class="btn  btn-primary" id="enterItem" onclick="saveOutShelvesItem();" style="cursor:pointer;"><i class="icon-ok icon-white"></i>继续下一货位</a> -->
 						</span>
 					</td>	
 			</tr>	
 		</table>
 		
-		<span class="pull-left" style="width:145px;height:50px; margin-top: 20px;margin-left: 7px;">
-				<a class="btn  btn-primary" id="enterItem" onclick="submitOutShelf();" style="cursor:pointer;"><i class="icon-ok icon-white"></i>保存本订单下架</a>
+		<span class="pull-left" style="width:145px;height:70px; margin-top: 20px;margin-left: 7px;">
+				<a class="btn  btn-primary" id="enterItem" onclick="submitOutShelf();" style="cursor:pointer;height:28px;"><i class="icon-ok icon-white"></i>完成本订单下架</a>
 		</span>
 	</div>
 	
@@ -120,12 +120,14 @@
   		  	}
 			if(focus == '2'){
 				//输入货位后按回车,去到sku
+				$("#tips").html("请输入产品SKU并按回车!");
 				$("#sku").focus();
 				focus = '3';
 				return false;
 			}
 			if(focus == '3'){
 				//输入sku后按回车,去到quantity
+				$("#tips").html("请输入产品数量并按回车!");
 				$("#quantity").focus();
 				focus = '4';
 				return false;
@@ -140,6 +142,9 @@
   	  //输入客户参考号回车事件
   	 function enterCustomerReferenceNoStep(){
    		var customerReferenceNo  = $("#customerReferenceNo").val();
+   		if(customerReferenceNo == ''){
+   			return false;
+   		}
    		$("#outShelfItemTbody").html("");
    		outShelfItems = "";
    		// 检查客户订单号是否能找到唯一的出库订单
@@ -202,11 +207,11 @@
   		$.post(baseUrl+ '/warehouse/shelves/submitOutShelfItems.do?customerReferenceNo='+customerReferenceNo, {
   			outShelfItems:outShelfItems
 		}, function(map) {
-			if(map.status == '0'){
-				parent.$.showDialogMessage(msg.message, null, null);
+			if(map.status == 0){
+				parent.$.showDialogMessage(map.message, null, null);
 				return false;
 			}
-			if(map.status == '1'){
+			if(map.status == 1){
 				parent.$.showShortMessage({msg:"保存本订单下架成功,请继续下一个订单",animate:false,left:"45%"});
 				//输入框解锁,焦点回
 				 $("#customerReferenceNo").removeAttr("readonly");

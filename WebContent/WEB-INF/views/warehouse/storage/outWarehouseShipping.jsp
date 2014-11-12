@@ -30,6 +30,8 @@
 							<td>
 								<span style="width:100px;" class="pull-left" >出货跟踪单号</span>
 								<input type="text"  name="trackingNo"  id="trackingNo"   style="width:150px;" title="扫描出库装箱时打印的运单上的条码"/>
+								 <input   style="margin-left: 30px;" id="add"  name="addOrSub"  type="radio" checked>加
+								 <input   style="margin-left: 30px;" id="sub" name="addOrSub"  type="radio">减
 							</td>		
 							
 							<td>
@@ -92,7 +94,8 @@
  	
   	 	 //回车事件
   	  	function next(){
-	 		 var coeTrackingNo = $("#coeTrackingNo").val();
+	 		var coeTrackingNo = $("#coeTrackingNo").val();
+	 		var coeTrackingNoId = $("#coeTrackingNoId").val();
 	 		 if(coeTrackingNo == null || coeTrackingNo == ""){
 	 			parent.$.showDialogMessage("COE单号不足,不能完成出库!", null, null);
 	 			return false;
@@ -102,14 +105,19 @@
   	 			parent.$.showShortMessage({msg:"请输入出货跟踪单号再按回车!",animate:false,left:"43%"});
   	 			return false;	 
   	 		 }
-	  	  	$.post(baseUrl+ '/warehouse/storage/checkOutWarehouseShipping.do?trackingNo='+ trackingNo, function(msg) {
+ 	 		var addOrSub = 1; //1标识加,2表示减
+  	 		if(!$("#add").attr("checked")){
+  	 			addOrSub = 2;
+  	 		}
+ 	 		
+	  	  	$.post(baseUrl+ '/warehouse/storage/checkOutWarehouseShipping.do?trackingNo='+ trackingNo+'&coeTrackingNoId='+coeTrackingNoId+'&coeTrackingNo='+coeTrackingNo+'&addOrSub='+addOrSub, function(msg) {
 	  	  		if(msg.status == 0){
 	  	  			parent.$.showShortMessage({msg:msg.message,animate:false,left:"42%"});
 	  	  			return false;
 	  	  		}
 	  	  		if(msg.status == 1){
 	  	  			//添加一行运单
-					var tr = "<tr style='height:25px;'>";
+					var tr = "<tr style='height:25px;' id="+msg.outWarehouseShippingId+">";
 			  		tr += "<td style='text-align: center'>"+trackingNo+"</td>";
 			  		tr += "</tr>";
 		  			$("#trackingNos").append(tr);
@@ -121,6 +129,10 @@
 	  	  			$("#trackingNo").focus();
 	  	  			$("#trackingNo").select();
 	  	  			return false;
+	  	  		}
+	  	  		if(msg.status ==2){
+	  	  			//减去
+	  	  			$(msg.deleteShippingIds).html("");
 	  	  		}
 	  	  	},"json");
   		}

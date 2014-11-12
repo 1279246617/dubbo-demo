@@ -26,7 +26,7 @@
 							<tr>
 								<td style="width:100mm;height:12mm;">
 										<span class="pull-left" style="margin-left: 2mm;">
-								 				<b>清单号:</b><c:out value="${map.outWarehouseOrderId}"/>
+								 				<b>运单号:</b><c:out value="${map.trackingNo}"/>
 										</span>	
 								</td>
 								
