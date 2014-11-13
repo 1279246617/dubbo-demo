@@ -36,7 +36,6 @@ import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderReceiverDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderSenderDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderStatusDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseShippingDao;
-import com.coe.wms.dao.warehouse.storage.impl.OutWarehouseShippingDaoImpl;
 import com.coe.wms.exception.ServiceException;
 import com.coe.wms.model.unit.Weight;
 import com.coe.wms.model.unit.Weight.WeightCode;
@@ -1265,7 +1264,7 @@ public class StorageServiceImpl implements IStorageService {
 	 * 
 	 */
 	@Override
-	public Map<String, String> checkOutWarehouseShipping(String trackingNo, Long userIdOfOperator, Long coeTrackingNoId, String coeTrackingNo, String addOrSub) throws ServiceException {
+	public Map<String, String> checkOutWarehouseShipping(String trackingNo, Long userIdOfOperator, Long coeTrackingNoId, String coeTrackingNo, String addOrSub, String orderIds) throws ServiceException {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put(Constant.STATUS, Constant.FAIL);
 		OutWarehouseOrder param = new OutWarehouseOrder();
@@ -1293,12 +1292,17 @@ public class StorageServiceImpl implements IStorageService {
 			shippingParam.setOurWarehouseOrderTrackingNo(trackingNo);
 			List<OutWarehouseShipping> outWarehouseShippingList = outWarehouseShippingDao.findOutWarehouseShipping(shippingParam, null, null);
 			String deleteShippingIds = "";
+			int sub = 0;
 			for (OutWarehouseShipping shipping : outWarehouseShippingList) {
 				outWarehouseShippingDao.deleteOutWarehouseShippingById(shipping.getId());
-				//加#是为了 jquery可以直接$("#id1,#id2,#id3,#id4")
+				// 加#是为了 jquery可以直接$("#id1,#id2,#id3,#id4")
 				deleteShippingIds += ("#" + shipping.getId() + ",");
+				orderIds = orderIds.replaceAll(shipping.getOutWarehouseOrderId() + "\\|\\|", "");
+				sub++;
 			}
+			map.put("sub", sub + "");
 			map.put("deleteShippingIds", deleteShippingIds);
+			map.put("orderIds", orderIds);
 			return map;
 		}
 
@@ -1348,16 +1352,13 @@ public class StorageServiceImpl implements IStorageService {
 			map.put(Constant.MESSAGE, "COE交接单号不能为空,请刷新页面重试!");
 			return map;
 		}
-
 		// 迭代,检查跟踪号
 		for (String orderId : orderIdsArray) {
 			// 改变状态 ,发送到哲盟
-			System.out.println("orderId = " + orderId);
+			logger.info("出货,待发送到哲盟新系统的出库订单id: = " + orderId);
 		}
-
 		// 标记coe单号已经使用
 		trackingNoDao.usedTrackingNo(coeTrackingNoId);
-
 		// 返回新COE单号,供下一批出库
 		TrackingNo nextTrackingNo = trackingNoDao.getAvailableTrackingNoByType(TrackingNo.TYPE_COE);
 		if (nextTrackingNo == null) {
@@ -1825,5 +1826,34 @@ public class StorageServiceImpl implements IStorageService {
 		page.total = shelfDao.countShelf(shelf);
 		page.rows = list;
 		return page;
+	}
+
+	@Override
+	public Map<String, Object> outWarehouseShippingEnterCoeTrackingNo(String coeTrackingNo) throws ServiceException {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put(Constant.STATUS, Constant.FAIL);
+		OutWarehouseShipping outWarehouseShipping = new OutWarehouseShipping();
+		outWarehouseShipping.setCoeTrackingNo(coeTrackingNo);
+		List<OutWarehouseShipping> outWarehouseShippingList = outWarehouseShippingDao.findOutWarehouseShipping(outWarehouseShipping, null, null);
+		List<TrackingNo> trackingNos = trackingNoDao.findTrackingNo(coeTrackingNo, TrackingNo.TYPE_COE);
+		// 暂不处理,单号可能重复问题
+		if (trackingNos == null || trackingNos.size() <= 0) {
+			map.put(Constant.MESSAGE, "该COE交接单号无效,请输入新单号");
+			return map;
+		}
+		TrackingNo trackingNo = trackingNos.get(0);
+		if (StringUtil.isEqual(trackingNo.getStatus(), TrackingNo.STATUS_USED + "")) {
+			map.put(Constant.MESSAGE, "该COE交接单号已经使用,请输入新单号");
+			return map;
+		}
+		map.put("coeTrackingNo", trackingNo);
+		map.put(Constant.STATUS, Constant.SUCCESS);
+		map.put("outWarehouseShippingList", outWarehouseShippingList);
+		return map;
+	}
+
+	@Override
+	public Warehouse getWarehouseById(Long fwarehouseId) throws ServiceException {
+		return warehouseDao.getWarehouseById(fwarehouseId);
 	}
 }

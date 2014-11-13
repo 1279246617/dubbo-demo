@@ -1,5 +1,7 @@
 package com.coe.wms.dao.warehouse;
 
+import java.util.List;
+
 import com.coe.wms.model.warehouse.TrackingNo;
 
 public interface ITrackingNoDao {
@@ -10,6 +12,8 @@ public interface ITrackingNoDao {
 	 * @return
 	 */
 	public TrackingNo getAvailableTrackingNoByType(String type);
+	
+	public List<TrackingNo> findTrackingNo(String trackingNo, String type);
 
 	/**
 	 * 更新跟踪号

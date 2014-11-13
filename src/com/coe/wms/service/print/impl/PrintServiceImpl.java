@@ -28,6 +28,7 @@ import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderItemShelfDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderReceiverDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderSenderDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderStatusDao;
+import com.coe.wms.dao.warehouse.storage.IOutWarehouseShippingDao;
 import com.coe.wms.model.warehouse.Seat;
 import com.coe.wms.model.warehouse.Warehouse;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrder;
@@ -38,6 +39,7 @@ import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderReceiver;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus.OutWarehouseOrderStatusCode;
 import com.coe.wms.model.warehouse.storage.record.ItemShelfInventory;
 import com.coe.wms.model.warehouse.storage.record.OnShelf;
+import com.coe.wms.model.warehouse.storage.record.OutWarehouseShipping;
 import com.coe.wms.service.print.IPrintService;
 import com.coe.wms.util.BarcodeUtil;
 import com.coe.wms.util.Constant;
@@ -50,6 +52,9 @@ public class PrintServiceImpl implements IPrintService {
 
 	@Resource(name = "warehouseDao")
 	private IWarehouseDao warehouseDao;
+
+	@Resource(name = "outWarehouseShippingDao")
+	private IOutWarehouseShippingDao outWarehouseShippingDao;
 
 	@Resource(name = "seatDao")
 	private ISeatDao seatDao;
@@ -115,7 +120,7 @@ public class PrintServiceImpl implements IPrintService {
 		map.put("outWarehouseOrderId", String.valueOf(outWarehouseOrder.getId()));
 		map.put("customerReferenceNo", outWarehouseOrder.getCustomerReferenceNo());
 		// 创建图片
-		String customerReferenceNoBarcodeData = BarcodeUtil.createCode128(outWarehouseOrder.getCustomerReferenceNo(), true, 12d,null);
+		String customerReferenceNoBarcodeData = BarcodeUtil.createCode128(outWarehouseOrder.getCustomerReferenceNo(), true, 12d, null);
 		map.put("customerReferenceNoBarcodeData", customerReferenceNoBarcodeData);
 		map.put("tradeRemark", outWarehouseOrder.getTradeRemark());
 		map.put("trackingNo", outWarehouseOrder.getTrackingNo());
@@ -202,7 +207,7 @@ public class PrintServiceImpl implements IPrintService {
 			Seat seat = seatList.get(0);
 			map.put("seatCode", seat.getSeatCode());
 			// 创建图片
-			String seatCodeBarcodeData = BarcodeUtil.createCode128(seat.getSeatCode(), false, 16d,0.5d);
+			String seatCodeBarcodeData = BarcodeUtil.createCode128(seat.getSeatCode(), false, 16d, 0.5d);
 			map.put("seatCodeBarcodeData", seatCodeBarcodeData);
 			// 仓库
 			Warehouse warehouse = warehouseDao.getWarehouseById(seat.getWarehouseId());
@@ -211,5 +216,12 @@ public class PrintServiceImpl implements IPrintService {
 			}
 		}
 		return map;
+	}
+
+	@Override
+	public List<OutWarehouseShipping> getOutWarehouseShippings(Long coeTrackingNoId) {
+		OutWarehouseShipping outWarehouseShipping = new OutWarehouseShipping();
+		outWarehouseShipping.setCoeTrackingNoId(coeTrackingNoId);
+		return outWarehouseShippingDao.findOutWarehouseShipping(outWarehouseShipping, null, null);
 	}
 }
