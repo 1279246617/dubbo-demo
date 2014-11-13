@@ -3,7 +3,6 @@ package com.coe.wms.controller.warehouse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.coe.wms.controller.Application;
+import com.coe.wms.model.warehouse.Warehouse;
+import com.coe.wms.model.warehouse.storage.record.OutWarehouseShipping;
 import com.coe.wms.service.print.IPrintService;
 import com.coe.wms.service.storage.IStorageService;
 import com.coe.wms.service.user.IUserService;
@@ -160,26 +161,23 @@ public class Print {
 	 * @throws IOException
 	 */
 	@RequestMapping(value = "/printOutWarehouseEIR", method = RequestMethod.GET)
-	public ModelAndView printOutWarehouseEIR(HttpServletRequest request, HttpServletResponse response, String orderIds, String coeTrackingNo, Long coeTrackingNoId) throws IOException {
+	public ModelAndView printOutWarehouseEIR(HttpServletRequest request, HttpServletResponse response, String coeTrackingNo, Long coeTrackingNoId) throws IOException {
 		ModelAndView view = new ModelAndView();
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
-		if (StringUtil.isNull(orderIds)) {
-			return view;
+		List<OutWarehouseShipping> outWarehouseShippingList = printService.getOutWarehouseShippings(coeTrackingNoId);
+		if (outWarehouseShippingList != null && outWarehouseShippingList.size() > 0) {
+			OutWarehouseShipping outWarehouseShipping = outWarehouseShippingList.get(0);
+			Long warehouseId = outWarehouseShipping.getWarehouseId();
+			Warehouse warehouse = storageService.getWarehouseById(warehouseId);
+			view.addObject("warehouse", warehouse);
+			
+			System.out.println(warehouse.getWarehouseName());
 		}
-		// 返回页面的list,装map 每个map 是每个订单的数据
-		List<Map<String, Object>> mapList = new ArrayList<Map<String, Object>>();
-		String orderIdArray[] = orderIds.split(",");
-		for (int i = 0; i < orderIdArray.length; i++) {
-			if (StringUtil.isNull(orderIdArray[i])) {
-				continue;
-			}
-			Long orderId = Long.valueOf(orderIdArray[i]);
-			Map<String, Object> map = printService.getPrintPackageListData(orderId);
-			if (map != null) {
-				mapList.add(map);
-			}
-		}
-		view.addObject("mapList", mapList);
+		view.addObject("outWarehouseShippingList", outWarehouseShippingList);
+		view.addObject("coeTrackingNo", coeTrackingNo);
+		
+		System.out.println(DateUtil.dateConvertString(new Date(), DateUtil.yyyy_MM_ddHHmmss));
+		
 		view.addObject("timeNow", DateUtil.dateConvertString(new Date(), DateUtil.yyyy_MM_ddHHmmss));
 		view.setViewName("warehouse/print/printOutWarehouseEIR");
 		return view;

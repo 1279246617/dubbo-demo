@@ -19,6 +19,7 @@ import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecord;
 import com.coe.wms.model.warehouse.storage.record.OnShelf;
 import com.coe.wms.model.warehouse.storage.record.OutShelf;
+import com.coe.wms.model.warehouse.storage.record.OutWarehouseShipping;
 import com.coe.wms.pojo.api.warehouse.EventBody;
 import com.coe.wms.util.Pagination;
 
@@ -285,7 +286,9 @@ public interface IStorageService {
 	 * @throws ServiceException
 	 */
 	public List<Warehouse> findAllWarehouse(Long firstWarehouseId) throws ServiceException;
-
+	
+	public Warehouse getWarehouseById(Long fwarehouseId) throws ServiceException;
+	
 	/**
 	 * 获取coe跟踪单号供出库发货界面使用
 	 * 
@@ -310,7 +313,16 @@ public interface IStorageService {
 	 * @return
 	 * @throws ServiceException
 	 */
-	public Map<String, String> checkOutWarehouseShipping(String trackingNo, Long userIdOfOperator,Long coeTrackingNoId,String coeTrackingNo,String addOrSub) throws ServiceException;
+	public Map<String, String> checkOutWarehouseShipping(String trackingNo, Long userIdOfOperator, Long coeTrackingNoId, String coeTrackingNo, String addOrSub,String orderIds) throws ServiceException;
+
+	/**
+	 * 出货重新输入coe交接单号
+	 * 
+	 * @param TrackingNo
+	 * @return
+	 * @throws ServiceException
+	 */
+	public 	Map<String, Object>  outWarehouseShippingEnterCoeTrackingNo(String coeTrackingNo) throws ServiceException;
 
 	/**
 	 * 
@@ -325,8 +337,8 @@ public interface IStorageService {
 	public Map<String, String> saveInWarehouseOrderRemark(String remark, Long id) throws ServiceException;
 
 	public Map<String, String> saveInWarehouseRecordRemark(String remark, Long id) throws ServiceException;
-	
+
 	public Pagination getSeatData(Seat seat, Map<String, String> moreParam, Pagination page);
-	
+
 	public Pagination getShelfData(Shelf shelf, Map<String, String> moreParam, Pagination page);
 }

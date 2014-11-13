@@ -43,7 +43,7 @@ public class OutWarehouseShippingDaoImpl implements IOutWarehouseShippingDao {
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public long saveOutWarehouseShipping(final OutWarehouseShipping shipping) {
-		final String sql = "insert into w_s_out_warehouse_shipping (warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,our_warehouse_order_trackingNo,out_warehouse_order_id) values (?,?,?,?,?,?,?,?)";
+		final String sql = "insert into w_s_out_warehouse_shipping (warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,our_warehouse_order_tracking_no,out_warehouse_order_id) values (?,?,?,?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
@@ -69,7 +69,7 @@ public class OutWarehouseShippingDaoImpl implements IOutWarehouseShippingDao {
 
 	@Override
 	public OutWarehouseShipping getOutWarehouseShippingById(Long outWarehouseShippingId) {
-		String sql = "select id,warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,our_warehouse_order_trackingNo,out_warehouse_order_id from w_s_out_warehouse_shipping where id ="
+		String sql = "select id,warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,our_warehouse_order_tracking_no,out_warehouse_order_id from w_s_out_warehouse_shipping where id ="
 				+ outWarehouseShippingId;
 		OutWarehouseShipping shipping = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<OutWarehouseShipping>(OutWarehouseShipping.class));
 		return shipping;
@@ -83,7 +83,7 @@ public class OutWarehouseShippingDaoImpl implements IOutWarehouseShippingDao {
 	@Override
 	public List<OutWarehouseShipping> findOutWarehouseShipping(OutWarehouseShipping outWarehouseShipping, Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select id,warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,our_warehouse_order_trackingNo,out_warehouse_order_id from w_s_out_warehouse_shipping where 1=1 ");
+		sb.append("select id,warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,our_warehouse_order_tracking_no,out_warehouse_order_id from w_s_out_warehouse_shipping where 1=1 ");
 		if (outWarehouseShipping != null) {
 			if (outWarehouseShipping.getId() != null) {
 				sb.append(" and id = " + outWarehouseShipping.getId());
@@ -110,7 +110,7 @@ public class OutWarehouseShippingDaoImpl implements IOutWarehouseShippingDao {
 				sb.append(" and created_time = " + outWarehouseShipping.getCreatedTime());
 			}
 			if (StringUtil.isNotNull(outWarehouseShipping.getOurWarehouseOrderTrackingNo())) {
-				sb.append(" and our_warehouse_order_trackingNo = '" + outWarehouseShipping.getOurWarehouseOrderTrackingNo() + "' ");
+				sb.append(" and our_warehouse_order_tracking_no = '" + outWarehouseShipping.getOurWarehouseOrderTrackingNo() + "' ");
 			}
 		}
 		if (moreParam != null) {
@@ -166,7 +166,7 @@ public class OutWarehouseShippingDaoImpl implements IOutWarehouseShippingDao {
 				sb.append(" and created_time = " + outWarehouseShipping.getCreatedTime());
 			}
 			if (StringUtil.isNotNull(outWarehouseShipping.getOurWarehouseOrderTrackingNo())) {
-				sb.append(" and our_warehouse_order_trackingNo = '" + outWarehouseShipping.getOurWarehouseOrderTrackingNo() + "' ");
+				sb.append(" and our_warehouse_order_tracking_no = '" + outWarehouseShipping.getOurWarehouseOrderTrackingNo() + "' ");
 			}
 		}
 		if (moreParam != null) {

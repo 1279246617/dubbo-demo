@@ -27,6 +27,7 @@ import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderItem;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus.OutWarehouseOrderStatusCode;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecord;
+import com.coe.wms.model.warehouse.storage.record.OutWarehouseShipping;
 import com.coe.wms.service.storage.IStorageService;
 import com.coe.wms.service.user.IUserService;
 import com.coe.wms.util.Constant;
@@ -659,6 +660,30 @@ public class Storage {
 	}
 
 	/**
+	 * 
+	 * 出货重新输入coe交接单号
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/outWarehouseShippingEnterCoeTrackingNo")
+	public String outWarehouseShippingEnterCoeTrackingNo(HttpServletRequest request, HttpServletResponse response, String coeTrackingNo) throws IOException {
+		HttpSession session = request.getSession();
+		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
+		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> objectMap = storageService.outWarehouseShippingEnterCoeTrackingNo(coeTrackingNo);
+		List<OutWarehouseShipping> outWarehouseShippingList = (List<OutWarehouseShipping>) objectMap.get("outWarehouseShippingList");
+		map.put("outWarehouseShippingList", outWarehouseShippingList);
+		map.put(Constant.STATUS, objectMap.get(Constant.STATUS));
+		map.put(Constant.MESSAGE, objectMap.get(Constant.MESSAGE));
+		map.put("coeTrackingNo", objectMap.get("coeTrackingNo"));
+		return GsonUtil.toJson(map);
+	}
+
+	/**
 	 * 扫运单动作, 检查每个运单
 	 * 
 	 * 检查通过,保存至出货单
@@ -670,10 +695,10 @@ public class Storage {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/checkOutWarehouseShipping")
-	public String checkOutWarehouseShipping(HttpServletRequest request, HttpServletResponse response, String trackingNo, Long coeTrackingNoId, String coeTrackingNo, String addOrSub) throws IOException {
+	public String checkOutWarehouseShipping(HttpServletRequest request, HttpServletResponse response, String trackingNo, Long coeTrackingNoId, String coeTrackingNo, String addOrSub,String orderIds) throws IOException {
 		HttpSession session = request.getSession();
 		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
-		Map<String, String> checkResultMap = storageService.checkOutWarehouseShipping(trackingNo, userId, coeTrackingNoId, coeTrackingNo,addOrSub);
+		Map<String, String> checkResultMap = storageService.checkOutWarehouseShipping(trackingNo, userId, coeTrackingNoId, coeTrackingNo, addOrSub,orderIds);
 		return GsonUtil.toJson(checkResultMap);
 	}
 
