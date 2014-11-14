@@ -3,6 +3,7 @@ package com.coe.wms.controller.warehouse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -164,23 +165,24 @@ public class Print {
 	public ModelAndView printOutWarehouseEIR(HttpServletRequest request, HttpServletResponse response, String coeTrackingNo, Long coeTrackingNoId) throws IOException {
 		ModelAndView view = new ModelAndView();
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
-		List<OutWarehouseShipping> outWarehouseShippingList = printService.getOutWarehouseShippings(coeTrackingNoId);
-		if (outWarehouseShippingList != null && outWarehouseShippingList.size() > 0) {
-			OutWarehouseShipping outWarehouseShipping = outWarehouseShippingList.get(0);
-			Long warehouseId = outWarehouseShipping.getWarehouseId();
+		List<Map<String, String>> mapList = printService.getOutWarehouseShippings(coeTrackingNoId);
+		int total = 0;
+		double totalWeight = 0;
+		if (mapList != null && mapList.size() > 0) {
+			Long warehouseId = Long.valueOf(mapList.get(0).get("warehouseId"));
 			Warehouse warehouse = storageService.getWarehouseById(warehouseId);
 			view.addObject("warehouse", warehouse);
-			
-			System.out.println(warehouse.getWarehouseName());
+			for (Map<String, String> map : mapList) {
+				totalWeight += Double.valueOf(map.get("outWarehouseWeight"));
+				total++;
+			}
 		}
-		view.addObject("outWarehouseShippingList", outWarehouseShippingList);
+		view.addObject("totalWeight", totalWeight);
+		view.addObject("total", total);
+		view.addObject("mapList", mapList);
 		view.addObject("coeTrackingNo", coeTrackingNo);
-		
-		System.out.println(DateUtil.dateConvertString(new Date(), DateUtil.yyyy_MM_ddHHmmss));
-		
 		view.addObject("timeNow", DateUtil.dateConvertString(new Date(), DateUtil.yyyy_MM_ddHHmmss));
 		view.setViewName("warehouse/print/printOutWarehouseEIR");
 		return view;
 	}
-
 }

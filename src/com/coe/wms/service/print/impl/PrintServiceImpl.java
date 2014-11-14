@@ -37,12 +37,9 @@ import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderItem;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderItemShelf;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderReceiver;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus.OutWarehouseOrderStatusCode;
-import com.coe.wms.model.warehouse.storage.record.ItemShelfInventory;
-import com.coe.wms.model.warehouse.storage.record.OnShelf;
 import com.coe.wms.model.warehouse.storage.record.OutWarehouseShipping;
 import com.coe.wms.service.print.IPrintService;
 import com.coe.wms.util.BarcodeUtil;
-import com.coe.wms.util.Constant;
 import com.coe.wms.util.StringUtil;
 
 @Service("printService")
@@ -219,9 +216,24 @@ public class PrintServiceImpl implements IPrintService {
 	}
 
 	@Override
-	public List<OutWarehouseShipping> getOutWarehouseShippings(Long coeTrackingNoId) {
-		OutWarehouseShipping outWarehouseShipping = new OutWarehouseShipping();
-		outWarehouseShipping.setCoeTrackingNoId(coeTrackingNoId);
-		return outWarehouseShippingDao.findOutWarehouseShipping(outWarehouseShipping, null, null);
+	public List<Map<String, String>> getOutWarehouseShippings(Long coeTrackingNoId) {
+		OutWarehouseShipping outWarehouseShippingParam = new OutWarehouseShipping();
+		outWarehouseShippingParam.setCoeTrackingNoId(coeTrackingNoId);
+		List<OutWarehouseShipping> outWarehouseShippingList = outWarehouseShippingDao.findOutWarehouseShipping(outWarehouseShippingParam, null, null);
+		List<Map<String, String>> mapList = new ArrayList<Map<String, String>>();
+		for (OutWarehouseShipping outWarehouseShipping : outWarehouseShippingList) {
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("ourWarehouseOrderTrackingNo", outWarehouseShipping.getOurWarehouseOrderTrackingNo());
+			Long outWarehouseOrderId = outWarehouseShipping.getOutWarehouseOrderId();
+			OutWarehouseOrder outWarehouseOrder = outWarehouseOrderDao.getOutWarehouseOrderById(outWarehouseOrderId);
+			if (outWarehouseOrder == null) {
+				continue;
+			}
+			map.put("warehouseId", outWarehouseOrder.getWarehouseId()+"");
+			map.put("customerReferenceNo", outWarehouseOrder.getCustomerReferenceNo());
+			map.put("outWarehouseWeight", outWarehouseOrder.getOutWarehouseWeight() + "");
+			mapList.add(map);
+		}
+		return mapList;
 	}
 }
