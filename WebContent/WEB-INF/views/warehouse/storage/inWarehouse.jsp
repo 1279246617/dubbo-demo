@@ -56,18 +56,21 @@
 							</td>
 					</tr>
 			</table>
-			<table  class="table table-striped" style="width:100%;margin-bottom: 5px;display:none;" id="inWarehouseOrdertable" >
-				<tr>
-					<th style="width:25px;text-align:center;">选择</th>
-					<th style="width:155px;text-align:center;">客户帐号</th>
-					<th style="width:225px;text-align:center;">跟踪单号</th> 
-					<th style="width:205px;text-align:center;">承运商</th>
-					<th style="width:205px;text-align:center;">客户订单号</th> 
-					<th style="width:205px;text-align:center;">创建时间</th>
-				</tr>
-				<tbody id="inWarehouseOrdertbody">
-				</tbody>
-			</table>
+			<div style="height:120px;width:100%;">
+					<table  class="table table-striped" style="width:100%;margin-bottom: 5px;display:none;" id="inWarehouseOrdertable" >
+						<tr>
+							<th style="width:25px;text-align:center;">选择</th>
+							<th style="width:155px;text-align:center;">客户帐号</th>
+							<th style="width:225px;text-align:center;">跟踪单号</th> 
+							<th style="width:205px;text-align:center;">承运商</th>
+							<th style="width:205px;text-align:center;">客户订单号</th> 
+							<th style="width:205px;text-align:center;">创建时间</th>
+						</tr>
+						<tbody id="inWarehouseOrdertbody">
+						</tbody>
+				</table>
+			</div>
+			
 			<div style="height:30px;">
 			</div>
 		</form>
