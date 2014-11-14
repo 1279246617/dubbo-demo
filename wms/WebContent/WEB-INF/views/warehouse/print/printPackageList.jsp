@@ -21,20 +21,21 @@
 						</div>					
 					</div>
 					<!-- 第二行 -->
-					<div style="height:13mm;weight:100%;">
-						<table>
+					<div style="height:13mm;width:100%;">
+						<table style="width:100%;">
 							<tr>
-								<td style="width:100mm;height:12mm;">
+								<td style=" height:12mm;">
 										<span class="pull-left" style="margin-left: 2mm;">
-								 				<b>运单号:</b><c:out value="${map.trackingNo}"/>
-										</span>	
-										<span class="pull-left" style="margin-left: 3mm;">
-											<b>海淘订单号:</b>
-											<c:out value="${map.customerOrderNo}"/>
+								 				<b>清单号:</b><c:out value="${map.trackingNo}"/>
 										</span>	
 								</td>
-								
-								<td style="width:106mm;height:12mm;">
+								<td>
+									<span class="pull-left" style="margin-left: 3mm;">
+											<b>海淘订单号:</b>
+											<c:out value="${map.customerOrderNo}"/>
+									</span>	
+								</td>
+								<td style="height:12mm;">
 										<table style="" class="pull-right">
 											<tr>
 												<td><b>客户订单号:</b></td>
