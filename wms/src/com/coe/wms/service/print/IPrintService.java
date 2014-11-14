@@ -30,6 +30,6 @@ public interface IPrintService {
 	 * 
 	 * @return
 	 */
-	public List<OutWarehouseShipping> getOutWarehouseShippings(Long coeTrackingNoId);
+	public List<Map<String, String>> getOutWarehouseShippings(Long coeTrackingNoId);
 	
 }
