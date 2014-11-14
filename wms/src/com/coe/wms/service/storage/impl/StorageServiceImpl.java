@@ -64,6 +64,7 @@ import com.coe.wms.model.warehouse.storage.record.ItemShelfInventory;
 import com.coe.wms.model.warehouse.storage.record.OnShelf;
 import com.coe.wms.model.warehouse.storage.record.OutShelf;
 import com.coe.wms.model.warehouse.storage.record.OutWarehouseShipping;
+import com.coe.wms.pojo.api.warehouse.Buyer;
 import com.coe.wms.pojo.api.warehouse.ClearanceDetail;
 import com.coe.wms.pojo.api.warehouse.ErrorCode;
 import com.coe.wms.pojo.api.warehouse.EventBody;
@@ -786,7 +787,13 @@ public class StorageServiceImpl implements IStorageService {
 		}
 		// 交易备注,等于打印捡货单上的买家备注
 		String tradeRemark = tradeOrder.getTradeRemark();
-
+		Buyer buyer = tradeOrder.getBuyer();
+		if (buyer == null) {
+			response.setReason(ErrorCode.S01_CODE);
+			response.setReasonDesc("TradeOrder对象获取Buyer对象得到Null");
+			return XmlUtil.toXml(Responses.class, responses);
+		}
+		
 		// 出库订单发件人信息
 		LogisticsDetail logisticsDetail = eventBody.getLogisticsDetail();
 		if (logisticsDetail == null) {
@@ -824,6 +831,7 @@ public class StorageServiceImpl implements IStorageService {
 			if (skuDetail == null) {
 				throw new ServiceException("LogisticsOrder对象获取SkuDetail对象得到Null");
 			}
+
 			List<Sku> skus = skuDetail.getSkus();
 			if (skus == null) {
 				throw new ServiceException("SkuDetail对象获取List<Sku>对象得到Null");
@@ -881,18 +889,19 @@ public class StorageServiceImpl implements IStorageService {
 			long itemCount = outWarehouseOrderItemDao.saveBatchOutWarehouseOrderItemWithOrderId(itemList, outWarehouseOrderId);
 			logger.info("出库订单:第" + (i + 1) + "客户订单号customerReferenceNo(tradeOrderId):" + customerReferenceNo + " 保存出库订单明细条数:" + itemCount);
 			// 收件人
+			
 			OutWarehouseOrderReceiver outWarehouseOrderReceiver = new OutWarehouseOrderReceiver();
-			outWarehouseOrderReceiver.setAddressLine1(receiverDetail.getStreetAddress());
-			outWarehouseOrderReceiver.setCity(receiverDetail.getCity());
+			outWarehouseOrderReceiver.setAddressLine1(buyer.getStreetAddress());
+			outWarehouseOrderReceiver.setCity(buyer.getCity());
 			outWarehouseOrderReceiver.setCountryCode(OutWarehouseOrderReceiver.CN);
 			outWarehouseOrderReceiver.setCountryName(OutWarehouseOrderReceiver.CN_VALUE);
-			outWarehouseOrderReceiver.setCounty(receiverDetail.getDistrict());
-			outWarehouseOrderReceiver.setEmail(receiverDetail.getEmail());
-			outWarehouseOrderReceiver.setName(receiverDetail.getName());
-			outWarehouseOrderReceiver.setPhoneNumber(receiverDetail.getPhone());
-			outWarehouseOrderReceiver.setPostalCode(receiverDetail.getZipCode());
-			outWarehouseOrderReceiver.setStateOrProvince(receiverDetail.getProvince());
-			outWarehouseOrderReceiver.setMobileNumber(receiverDetail.getMobile());
+			outWarehouseOrderReceiver.setCounty(buyer.getDistrict());
+			outWarehouseOrderReceiver.setEmail(buyer.getEmail());
+			outWarehouseOrderReceiver.setName(buyer.getName());
+			outWarehouseOrderReceiver.setPhoneNumber(buyer.getPhone());
+			outWarehouseOrderReceiver.setPostalCode(buyer.getZipCode());
+			outWarehouseOrderReceiver.setStateOrProvince(buyer.getProvince());
+			outWarehouseOrderReceiver.setMobileNumber(buyer.getMobile());
 			outWarehouseOrderReceiver.setOutWarehouseOrderId(outWarehouseOrderId);
 			// 保存收件人
 			Long outWarehouseOrderReceiverId = outWarehouseOrderReceiverDao.saveOutWarehouseOrderReceiver(outWarehouseOrderReceiver);
@@ -1356,7 +1365,9 @@ public class StorageServiceImpl implements IStorageService {
 		for (String orderId : orderIdsArray) {
 			// 改变状态 ,发送到哲盟
 			logger.info("出货,待发送到哲盟新系统的出库订单id: = " + orderId);
+			outWarehouseOrderDao.updateOutWarehouseOrderStatus(Long.valueOf(orderId), OutWarehouseOrderStatusCode.SUCCESS);
 		}
+
 		// 标记coe单号已经使用
 		trackingNoDao.usedTrackingNo(coeTrackingNoId);
 		// 返回新COE单号,供下一批出库
