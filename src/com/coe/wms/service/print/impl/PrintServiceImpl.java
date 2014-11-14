@@ -116,6 +116,10 @@ public class PrintServiceImpl implements IPrintService {
 		// 清单号 (出库订单主键)
 		map.put("outWarehouseOrderId", String.valueOf(outWarehouseOrder.getId()));
 		map.put("customerReferenceNo", outWarehouseOrder.getCustomerReferenceNo());
+		OutWarehouseOrderAdditionalSf outWarehouseOrderAdditionalSf = outWarehouseOrderAdditionalSfDao.getOutWarehouseOrderAdditionalSfByOrderId(outWarehouseOrderId);
+		if (outWarehouseOrderAdditionalSf != null) {
+			map.put("customerOrderNo", outWarehouseOrderAdditionalSf.getOrderId());
+		}
 		// 创建图片
 		String customerReferenceNoBarcodeData = BarcodeUtil.createCode128(outWarehouseOrder.getCustomerReferenceNo(), true, 12d, null);
 		map.put("customerReferenceNoBarcodeData", customerReferenceNoBarcodeData);
@@ -229,7 +233,7 @@ public class PrintServiceImpl implements IPrintService {
 			if (outWarehouseOrder == null) {
 				continue;
 			}
-			map.put("warehouseId", outWarehouseOrder.getWarehouseId()+"");
+			map.put("warehouseId", outWarehouseOrder.getWarehouseId() + "");
 			map.put("customerReferenceNo", outWarehouseOrder.getCustomerReferenceNo());
 			map.put("outWarehouseWeight", outWarehouseOrder.getOutWarehouseWeight() + "");
 			mapList.add(map);
