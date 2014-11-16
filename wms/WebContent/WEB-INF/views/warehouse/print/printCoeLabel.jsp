@@ -8,168 +8,51 @@
 
 <body class="print-page-label">
 			<div class="label-100-150 change-page mt_1mm">
-				<div style="height:11mm;width:100%; border-bottom:1px solid  #000;" >
-						<div style="width:54mm;float: left;margin-top: 2mm;margin-left: 2mm;">
-<%-- 							<img src="${baseUrl}/static/img/print/sflogo.png" style="height:7mm;width: 19mm;float: left;"> --%>
-						</div>
-						<div style="width: 8mm;float: left;margin-top: -1.5mm;font-size: 10mm;;">
-							E
-						</div>
-						<div style="width: 32mm;float: right;margin-top: 3mm;">
-							<div style="height:2mm;line-height: 2mm;">
-<!-- 								0800 088 830 -->
-							</div>
-							<div style="height:2mm;line-height: 2mm;">
-<!-- 								www.sf-express.com -->
-							</div>
+				<div style="height:10mm;width:100%; border-bottom:0px solid  #000;text-align: center" >
+						<div style="width: 38mm;float: left;margin-top: 0.5mm;margin-left:25mm; font-size: 5mm;;">
+							${map.outWarehouseRecord.coeTrackingNo}
 						</div>
 				</div>
-				
-				<div style="height:11mm;width:96mm; border-bottom:1px solid  #000;">
-						<div style="height:12mm;width:57mm; border-right:1px solid  #000;" class="pull-left">
-							<span style="margin-top:2mm;margin-left: 2mm;"  class="pull-left">
-								寄方:<c:out value="${map.additionalSf.senderAddress}"/>
-							</span>
-						</div>
-						
-						<div style="height:12mm;width:38mm;" class="pull-right">
-							<span style="margin-top:2mm;; width: 16mm;"  class="pull-left">
-								原寄地
-							</span>
-							<span  style="margin-top:2mm;"  class="pull-left">
-								<c:out value="${map.additionalSf.shipperCode}"/>
-							</span>
-						</div>
+				<div style="height:23mm;width:96mm; border-bottom:0px solid  #000;">
+						 <div style="width:4mm;line-height:3.5mm;font-weight: bold;" class="pull-left">
+						 		<font size="3.5">F<br>R</font><br>/<br>寄件人
+						 </div>
+						 
+						 <div style="width:90mm;line-height:3.5mm;"  class="pull-left">
+						 		COE香港仓
+						 </div>
 				</div>
 				
-				<div style="height:12mm;width:100%; border-bottom:1mm solid  #000;">
-						<div style="height:12mm;width:57mm; border-right:1px solid  #000;" class="pull-left">
-							<span style="margin-top:3mm;margin-left: 2mm;"  class="pull-left">
-								收方:<b>自取</b>
-							</span>
-						</div>
-						<div style="height:12mm;width:38mm;" class="pull-right">
-							<span style="margin-top:3mm; width: 16mm;"  class="pull-left">
-								目的地
-							</span>
-							<span  style="margin-top:1mm;font-size: 8mm;font-weight: bold;"  class="pull-left">
-								<c:out value="${map.additionalSf.deliveryCode}"/>
-							</span>
-						</div>
-				</div>	
-					
-				<div style="height:22mm;width:100%; border-bottom:1mm solid  #000;">
-						<div style="height:22mm;width:57mm; border-right:1px solid  #000;" class="pull-left">
-							<span style="margin-top:3mm;margin-left: 2mm;"  class="pull-left">
-									<img  src="data:image/png;base64,<c:out value="${map.trackingNoBarcodeData}"/>">
-							</span>
-						</div>
-						
-						<div style="height:12mm;width:38mm;" class="pull-left">
-							<table rules="all"style="width:100%;">
-								<tr><td style="text-align: center;"><font style="font-weight: bold;font-size: 5mm;">全球顺</font></td></tr>
-								<tr><td>收件员</td></tr>
-								<tr><td>寄件日期</td></tr>
-								<tr><td>派件员</td></tr>
+				<div style="height:23mm;width:96mm; border-bottom:2px solid  #000;font-size: 12px;">
+					<div style="margin-left: 2mm;" >
+							<table style="line-height: 3mm;width:80mm;" class="pull-left">
+								<tr>	
+									<td >ShipDate/發貨日:${map.shipdate}</td>
+									<td>WT/實重: ${map.totalWeight}kg</td>
+								</tr>
+								<tr>	
+									<td >Origin ID/始發地:HK</td>
+									<td>DWT/體積重: ${map.totalWeight}kg</td>
+								</tr>
+								<tr>	
+									<td >SVC/服務:HKG</td>
+									<td>Payment/付費方式:PP</td>
+								</tr>
+								<tr>	
+									<td >&nbsp;</td>
+									<td>CC Charge/到付款:0</td>
+								</tr>
+								<tr>	
+									<td >&nbsp;</td>
+									<td>DC Charge/代付款:0</td>
+								</tr>
 							</table>
-						</div>
-				</div>	
-				
-				<div style="height:10mm;width:100%; border-bottom:1px solid  #000;">
-					<table rules="all"style="width:100%;height:10mm;border-color: #000;">
-						<tr>
-							<th style="width:22mm;">寄托物品数量</th>
-							<th style="width:18mm;">实际重量</th>
-							<th style="width:18mm;">计费重量</th>
-							<th style="width:15mm;">运费</th>
-							<th>费用合计</th>
-						</tr>
-						<tr>
-							<td style="text-align: center;"><c:out value="${map.totalQuantity}"/></td>
-							<td style="text-align: center;"><c:out value="${map.totalWeight}"/></td>
-							<td style="text-align: center;"><c:out value="${map.totalWeight}"/></td>
-							<td style="text-align: center;"></td>
-							<td style="text-align: center;"></td>
-						</tr>
-					</table>
-				</div>	
-				<div style="height:20mm;width:100%; border-bottom:1px dashed  #000;">
-					<table  rules="none" style="line-height: 4mm;border-color: #000;">
-						<tr>
-							<td style="width:31mm;">付款方式:<c:out value="${map.additionalSf.payMethod}"/></td>
-							<td style="width:34mm;">月结帐号:<c:out value="${map.additionalSf.custId}"/></td>
-							<td>第三方地区:<c:out value="${map.additionalSf.deliveryCode}"/></td>
-						</tr>
-						
-						<tr>
-							<td style="width:31mm;">保价声明值:</td>
-							<td style="width:34mm;">保费:</td>
-							<td></td>
-						</tr>
-						
-						<tr>
-							<td style="width:31mm;">代收货款金额:</td>
-							<td style="width:34mm;">卡号:</td>
-							<td>收方签署:</td>
-						</tr>
-						
-						<tr>
-							<td colspan="3"><span class="pull-right">日期:
-							&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;月
-							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;日</span></td>
-						</tr>
-						
-					</table>
-				</div>	
-				
-				<div style="height:32mm;width:100%; border-bottom:1px solid  #000;">
-					<table  rules="all" style="line-height: 4mm;width:100%;height:31mm;border-color: #000;">
-						<tr>
-							<td rowspan="2" style="width:58mm;height:15.5mm;">
-								<img  style="margin-left: 1mm;" src="data:image/png;base64,<c:out value="${map.trackingNoBarcodeData}"/>">
-							</td>
-							<td>寄方</td>
-						</tr>
-						<tr>
-							<td>518000</td>
-						</tr>
-						
-						<tr>
-							<td rowspan="2" style="width:58mm;height:15.5mm;">
-								收件:
-								<c:out value="${map.receiver.countryName}"/>
-								<c:out value="${map.receiver.stateOrProvince}"/>
-								<c:out value="${map.receiver.city}"/>
-								<c:out value="${map.receiver.addressLine1}"/>
-								<c:out value="${map.receiver.addressLine2}"/>
-								<c:out value="${map.receiver.name}"/>
-								&nbsp;&nbsp;&nbsp;&nbsp;
-								<c:out value="${map.receiver.phoneNumber}"/>
-								&nbsp;&nbsp;&nbsp;
-								<c:out value="${map.receiver.mobileNumber}"/>
-							</td>
-							<td>订单号</td>
-						</tr>
-						<tr>
-							<td><c:out value="${map.additionalSf.orderId}"/></td>
-						</tr>
-						
-					</table>
-				</div>	
-				<div style="height:auto;width:100%; border-bottom:0px solid  #000;">
-						<div style="line-height: 3.2mm;width:100%;">
-							<c:forEach var="item"  items="${map.items}">
-									<c:if test="${item.skuName != ''}">
-										<c:out value="${item.skuName}"/>,
-									</c:if>
-									<c:if test="${item.sku != ''}">
-										<c:out value="${item.sku}"/>,
-									</c:if>
-									<c:out value="${item.quantity}"/>,
-									<c:out value="${item.remark}"/>
-									&nbsp;&nbsp;&nbsp;&nbsp;
-							</c:forEach>
-						</div>
-				</div>	
+							
+							<div style="widht:15mm;text-align: left" class="pull-left">
+								品名:
+							</div>
+					</div>
+				</div>
+		</div>
 </body>
 </html>

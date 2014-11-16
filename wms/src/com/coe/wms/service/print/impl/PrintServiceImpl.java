@@ -1,6 +1,7 @@
 package com.coe.wms.service.print.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +29,7 @@ import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderItemShelfDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderReceiverDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderSenderDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderStatusDao;
+import com.coe.wms.dao.warehouse.storage.IOutWarehouseRecordDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseShippingDao;
 import com.coe.wms.model.warehouse.Seat;
 import com.coe.wms.model.warehouse.Warehouse;
@@ -37,9 +39,11 @@ import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderItem;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderItemShelf;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderReceiver;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus.OutWarehouseOrderStatusCode;
+import com.coe.wms.model.warehouse.storage.record.OutWarehouseRecord;
 import com.coe.wms.model.warehouse.storage.record.OutWarehouseShipping;
 import com.coe.wms.service.print.IPrintService;
 import com.coe.wms.util.BarcodeUtil;
+import com.coe.wms.util.DateUtil;
 import com.coe.wms.util.StringUtil;
 
 @Service("printService")
@@ -52,6 +56,9 @@ public class PrintServiceImpl implements IPrintService {
 
 	@Resource(name = "outWarehouseShippingDao")
 	private IOutWarehouseShippingDao outWarehouseShippingDao;
+
+	@Resource(name = "outWarehouseRecordDao")
+	private IOutWarehouseRecordDao outWarehouseRecordDao;
 
 	@Resource(name = "seatDao")
 	private ISeatDao seatDao;
@@ -244,7 +251,27 @@ public class PrintServiceImpl implements IPrintService {
 	@Override
 	public Map<String, Object> getPrintCoeLabelData(Long coeTrackingNoId) {
 		Map<String, Object> map = new HashMap<String, Object>();
-
+		OutWarehouseRecord outWarehouseRecordParam = new OutWarehouseRecord();
+		outWarehouseRecordParam.setCoeTrackingNoId(coeTrackingNoId);
+		List<OutWarehouseRecord> outWarehouseRecordList = outWarehouseRecordDao.findOutWarehouseRecord(outWarehouseRecordParam, null, null);
+		if (outWarehouseRecordList == null || outWarehouseRecordList.size() == 0) {
+			return map;
+		}
+		OutWarehouseRecord outWarehouseRecord = outWarehouseRecordList.get(0);
+		// 出貨詳情
+		OutWarehouseShipping outWarehouseShippingParam = new OutWarehouseShipping();
+		outWarehouseShippingParam.setCoeTrackingNoId(coeTrackingNoId);
+		List<OutWarehouseShipping> outWarehouseShippingList = outWarehouseShippingDao.findOutWarehouseShipping(outWarehouseShippingParam, null, null);
+		//總重量
+		double totalWeight = 0d;
+		for (OutWarehouseShipping outWarehouseShipping : outWarehouseShippingList) {
+			OutWarehouseOrder outWarehouseOrder = outWarehouseOrderDao.getOutWarehouseOrderById(outWarehouseShipping.getOutWarehouseOrderId());
+			totalWeight += outWarehouseOrder.getOutWarehouseWeight();
+		}
+		
+		map.put("totalWeight", totalWeight);
+		map.put("outWarehouseRecord", outWarehouseRecord);
+		map.put("shipdate", DateUtil.dateConvertString(new Date(outWarehouseRecord.getCreatedTime()), DateUtil.yyyy_MM_dd));
 		return map;
 	}
 }
