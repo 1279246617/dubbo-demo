@@ -120,9 +120,9 @@
 			            		}
 			            		return skus;
 		  		          	}},
-			                { display: '出库备注', name: 'remark', width:'12%'},
 			                { display: '操作员', name: 'userLoginNameOfOperator',type:'float',width:'9%'},
 			                { display: '出库时间', name: 'createdTime', align: 'center', type: 'float',width:'12%'},
+			                { display: '出库备注', name: 'remark', width:'13%'},
 			                {display: '操作',isSort: false,width: '8%',render: function(row) {
 			            		if (!row._editing) {
 			            			return "<a href=javascript:addRemark(" + row.id + ",'"+row.remark+"')>备注</a>";
@@ -153,7 +153,7 @@
 	        function listInWarehouseRecordItem(recordId){
 	        	var contentArr = [];
 	        	contentArr.push('<table class="table" style="width:549px">');
-	        	contentArr.push('<tr><th>出库订单Id</th><th>出库订单跟踪单号</th><th>出库订单重量</th><th>出库订单客户帐号</th></tr>');
+	        	contentArr.push('<tr><th>出库订单Id</th><th>出库订单跟踪单号</th><th>出库订单重量KG</th><th>出库订单客户帐号</th></tr>');
 	        	$.ajax({ 
 	                type : "post", 
 	                url :baseUrl + '/warehouse/storage/getOutWarehouseShipppingByRecordId.do', 
@@ -196,13 +196,13 @@
 	        	          title: '备注',
 	        	          width: '450px',
 	        	          height: '290px',
-	        	          content: 'url:' + baseUrl + '/warehouse/storage/editInWarehouseRecordRemark.do?id='+id+"&remark="+remark,
+	        	          content: 'url:' + baseUrl + '/warehouse/storage/editOutWarehouseRecordRemark.do?id='+id+"&remark="+remark,
 	        	          button: [{
 	        	            name: '确定',
 	        	            callback: function() {
 	        	              var objRemark = this.content.document.getElementById("remark");
 	        	              var remark = $(objRemark).val();
-	        	              $.post(baseUrl + '/warehouse/storage/saveInWarehouseRecordRemark.do', {
+	        	              $.post(baseUrl + '/warehouse/storage/saveOutWarehouseRecordRemark.do', {
 	        	            	  remark:remark,
 	        	            	  id:id
 	        	              },

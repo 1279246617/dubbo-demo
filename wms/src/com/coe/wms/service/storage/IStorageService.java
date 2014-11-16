@@ -349,6 +349,8 @@ public interface IStorageService {
 	public Map<String, String> saveInWarehouseOrderRemark(String remark, Long id) throws ServiceException;
 
 	public Map<String, String> saveInWarehouseRecordRemark(String remark, Long id) throws ServiceException;
+	
+	public Map<String, String> saveOutWarehouseRecordRemark(String remark, Long id) throws ServiceException;
 
 	public Pagination getSeatData(Seat seat, Map<String, String> moreParam, Pagination page);
 

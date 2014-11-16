@@ -174,7 +174,13 @@ public class OutWarehouseRecordDaoImpl implements IOutWarehouseRecordDao {
 		logger.info("统计出库记录sql:" + sql);
 		return jdbcTemplate.queryForObject(sql, Long.class);
 	}
-
+	
+	@Override
+	public int updateOutWarehouseRecordRemark(Long outWarehouseRecordId, String remark) {
+		String sql = "update w_s_out_warehouse_record set remark ='" + remark + "' where id=" + outWarehouseRecordId;
+		return jdbcTemplate.update(sql);
+	}
+	
 	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
 	}

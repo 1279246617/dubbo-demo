@@ -1810,6 +1810,18 @@ public class StorageServiceImpl implements IStorageService {
 	}
 
 	@Override
+	public Map<String, String> saveOutWarehouseRecordRemark(String remark, Long id) throws ServiceException {
+		Map<String, String> map = new HashMap<String, String>();
+		if (inWarehouseRecordDao.updateInWarehouseRecordRemark(id, remark) > 0) {
+			map.put(Constant.STATUS, Constant.SUCCESS);
+		} else {
+			map.put(Constant.STATUS, Constant.FAIL);
+		}
+		return map;
+	}
+
+	
+	@Override
 	public Pagination getSeatData(Seat seat, Map<String, String> moreParam, Pagination page) {
 		List<Seat> seatList = seatDao.findSeat(seat, page);
 		List<Object> list = new ArrayList<Object>();

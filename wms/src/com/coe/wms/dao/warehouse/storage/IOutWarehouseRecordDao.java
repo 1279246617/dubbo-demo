@@ -15,5 +15,6 @@ public interface IOutWarehouseRecordDao {
 	public List<OutWarehouseRecord> findOutWarehouseRecord(OutWarehouseRecord outWarehouseRecord, Map<String, String> moreParam, Pagination page);
 
 	public Long countOutWarehouseRecord(OutWarehouseRecord outWarehouseRecord, Map<String, String> moreParam);
-
+	
+	public int updateOutWarehouseRecordRemark(Long outWarehouseRecordId, String remark);
 }
