@@ -54,6 +54,8 @@ public class OutWarehouseRecord implements Serializable {
 	 */
 	private Long createdTime;
 
+	private String remark;
+
 	public Long getId() {
 		return id;
 	}
@@ -96,6 +98,14 @@ public class OutWarehouseRecord implements Serializable {
 
 	public Long getCoeTrackingNoId() {
 		return coeTrackingNoId;
+	}
+
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
 	}
 
 	public void setCoeTrackingNoId(Long coeTrackingNoId) {

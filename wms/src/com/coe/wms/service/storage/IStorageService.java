@@ -19,6 +19,7 @@ import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecord;
 import com.coe.wms.model.warehouse.storage.record.OnShelf;
 import com.coe.wms.model.warehouse.storage.record.OutShelf;
+import com.coe.wms.model.warehouse.storage.record.OutWarehouseRecord;
 import com.coe.wms.model.warehouse.storage.record.OutWarehouseShipping;
 import com.coe.wms.pojo.api.warehouse.EventBody;
 import com.coe.wms.util.Pagination;
@@ -137,6 +138,15 @@ public interface IStorageService {
 	 */
 	public Pagination getInWarehouseRecordData(InWarehouseRecord inWarehouseRecord, Map<String, String> moreParam, Pagination page);
 
+	/**
+	 * 获取出库记录
+	 * 
+	 * @param inWarehouseRecordId
+	 * @param page
+	 * @return
+	 */
+	public Pagination getOutWarehouseRecordData(OutWarehouseRecord outWarehouseRecord, Map<String, String> moreParam, Pagination page);
+	
 	/**
 	 * 获取入库明细记录
 	 * 
@@ -286,9 +296,9 @@ public interface IStorageService {
 	 * @throws ServiceException
 	 */
 	public List<Warehouse> findAllWarehouse(Long firstWarehouseId) throws ServiceException;
-	
+
 	public Warehouse getWarehouseById(Long fwarehouseId) throws ServiceException;
-	
+
 	/**
 	 * 获取coe跟踪单号供出库发货界面使用
 	 * 
@@ -313,7 +323,7 @@ public interface IStorageService {
 	 * @return
 	 * @throws ServiceException
 	 */
-	public Map<String, String> checkOutWarehouseShipping(String trackingNo, Long userIdOfOperator, Long coeTrackingNoId, String coeTrackingNo, String addOrSub,String orderIds) throws ServiceException;
+	public Map<String, String> checkOutWarehouseShipping(String trackingNo, Long userIdOfOperator, Long coeTrackingNoId, String coeTrackingNo, String addOrSub, String orderIds) throws ServiceException;
 
 	/**
 	 * 出货重新输入coe交接单号
@@ -322,7 +332,7 @@ public interface IStorageService {
 	 * @return
 	 * @throws ServiceException
 	 */
-	public 	Map<String, Object>  outWarehouseShippingEnterCoeTrackingNo(String coeTrackingNo) throws ServiceException;
+	public Map<String, Object> outWarehouseShippingEnterCoeTrackingNo(String coeTrackingNo) throws ServiceException;
 
 	/**
 	 * 

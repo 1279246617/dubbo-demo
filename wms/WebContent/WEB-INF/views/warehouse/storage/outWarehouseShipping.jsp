@@ -205,7 +205,7 @@
 	 			return false;
 	 		}
   	 		 
-  	 		$.post(baseUrl+ '/warehouse/storage/submitOutWarehouseShipping.do?orderIds='+ orderIds+'&coeTrackingNo='+coeTrackingNo+"&coeTrackingNoId="+coeTrackingNoId, function(msg) {
+  	 		$.post(baseUrl+ '/warehouse/storage/outWarehouseShippingConfirm.do?orderIds='+ orderIds+'&coeTrackingNo='+coeTrackingNo+"&coeTrackingNoId="+coeTrackingNoId, function(msg) {
   	 			if(msg.status == 0){
   	 				parent.$.showDialogMessage(msg.message, null, null);
 	  	  			return false;
