@@ -35,6 +35,7 @@ import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderItemShelfDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderReceiverDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderSenderDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderStatusDao;
+import com.coe.wms.dao.warehouse.storage.IOutWarehouseRecordDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseShippingDao;
 import com.coe.wms.exception.ServiceException;
 import com.coe.wms.model.unit.Weight;
@@ -63,6 +64,7 @@ import com.coe.wms.model.warehouse.storage.record.InWarehouseRecordStatus.InWare
 import com.coe.wms.model.warehouse.storage.record.ItemShelfInventory;
 import com.coe.wms.model.warehouse.storage.record.OnShelf;
 import com.coe.wms.model.warehouse.storage.record.OutShelf;
+import com.coe.wms.model.warehouse.storage.record.OutWarehouseRecord;
 import com.coe.wms.model.warehouse.storage.record.OutWarehouseShipping;
 import com.coe.wms.pojo.api.warehouse.Buyer;
 import com.coe.wms.pojo.api.warehouse.ClearanceDetail;
@@ -134,6 +136,8 @@ public class StorageServiceImpl implements IStorageService {
 
 	@Resource(name = "outWarehouseOrderDao")
 	private IOutWarehouseOrderDao outWarehouseOrderDao;
+	@Resource(name = "outWarehouseRecordDao")
+	private IOutWarehouseRecordDao outWarehouseRecordDao;
 
 	@Resource(name = "outWarehouseOrderStatusDao")
 	private IOutWarehouseOrderStatusDao outWarehouseOrderStatusDao;
@@ -793,7 +797,7 @@ public class StorageServiceImpl implements IStorageService {
 			response.setReasonDesc("TradeOrder对象获取Buyer对象得到Null");
 			return XmlUtil.toXml(Responses.class, responses);
 		}
-		
+
 		// 出库订单发件人信息
 		LogisticsDetail logisticsDetail = eventBody.getLogisticsDetail();
 		if (logisticsDetail == null) {
@@ -889,7 +893,7 @@ public class StorageServiceImpl implements IStorageService {
 			long itemCount = outWarehouseOrderItemDao.saveBatchOutWarehouseOrderItemWithOrderId(itemList, outWarehouseOrderId);
 			logger.info("出库订单:第" + (i + 1) + "客户订单号customerReferenceNo(tradeOrderId):" + customerReferenceNo + " 保存出库订单明细条数:" + itemCount);
 			// 收件人
-			
+
 			OutWarehouseOrderReceiver outWarehouseOrderReceiver = new OutWarehouseOrderReceiver();
 			outWarehouseOrderReceiver.setAddressLine1(buyer.getStreetAddress());
 			outWarehouseOrderReceiver.setCity(buyer.getCity());
@@ -1361,12 +1365,28 @@ public class StorageServiceImpl implements IStorageService {
 			map.put(Constant.MESSAGE, "COE交接单号不能为空,请刷新页面重试!");
 			return map;
 		}
+		Long userIdOfCustomer = null;
+		Long warehouseId = null;
 		// 迭代,检查跟踪号
 		for (String orderId : orderIdsArray) {
 			// 改变状态 ,发送到哲盟
 			logger.info("出货,待发送到哲盟新系统的出库订单id: = " + orderId);
+			if (userIdOfCustomer == null) {
+				OutWarehouseOrder outWarehouseOrder = outWarehouseOrderDao.getOutWarehouseOrderById(Long.valueOf(orderId));
+				userIdOfCustomer = outWarehouseOrder.getUserIdOfCustomer();
+				warehouseId = outWarehouseOrder.getWarehouseId();
+			}
 			outWarehouseOrderDao.updateOutWarehouseOrderStatus(Long.valueOf(orderId), OutWarehouseOrderStatusCode.SUCCESS);
 		}
+		// 保存出库记录
+		OutWarehouseRecord outWarehouseRecord = new OutWarehouseRecord();
+		outWarehouseRecord.setCoeTrackingNo(coeTrackingNo);
+		outWarehouseRecord.setCoeTrackingNoId(coeTrackingNoId);
+		outWarehouseRecord.setCreatedTime(System.currentTimeMillis());
+		outWarehouseRecord.setUserIdOfCustomer(userIdOfCustomer);
+		outWarehouseRecord.setUserIdOfOperator(userIdOfOperator);
+		outWarehouseRecord.setWarehouseId(warehouseId);
+		outWarehouseRecordDao.saveOutWarehouseRecord(outWarehouseRecord);
 
 		// 标记coe单号已经使用
 		trackingNoDao.usedTrackingNo(coeTrackingNoId);
@@ -1382,7 +1402,6 @@ public class StorageServiceImpl implements IStorageService {
 		trackingNoDao.lockTrackingNo(nextTrackingNo.getId());
 		map.put("coeTrackingNo", nextTrackingNo.getTrackingNo());
 		map.put("coeTrackingNoId", nextTrackingNo.getId().toString());
-
 		map.put(Constant.STATUS, Constant.SUCCESS);
 		map.put(Constant.MESSAGE, "完成出货总单成功,请继续下一批!");
 		return map;
@@ -1867,4 +1886,50 @@ public class StorageServiceImpl implements IStorageService {
 	public Warehouse getWarehouseById(Long fwarehouseId) throws ServiceException {
 		return warehouseDao.getWarehouseById(fwarehouseId);
 	}
+
+	/**
+	 * 获取出库记录
+	 */
+	@Override
+	public Pagination getOutWarehouseRecordData(OutWarehouseRecord outWarehouseRecord, Map<String, String> moreParam, Pagination page) {
+		List<OutWarehouseRecord> outWarehouseRecordList = outWarehouseRecordDao.findOutWarehouseRecord(outWarehouseRecord, moreParam, page);
+		List<Object> list = new ArrayList<Object>();
+		for (OutWarehouseRecord record : outWarehouseRecordList) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("id", record.getId());
+			if (record.getCreatedTime() != null) {
+				map.put("createdTime", DateUtil.dateConvertString(new Date(record.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss));
+			}
+			// 查询用户名
+			User user = userDao.getUserById(record.getUserIdOfCustomer());
+			map.put("userLoginNameOfCustomer", user.getLoginName());
+			// 查询操作员
+			if (NumberUtil.greaterThanZero(record.getUserIdOfOperator())) {
+				User userOfOperator = userDao.getUserById(record.getUserIdOfOperator());
+				map.put("userLoginNameOfOperator", userOfOperator.getLoginName());
+			}
+			map.put("coeTrackingNo", record.getCoeTrackingNo());
+			if (NumberUtil.greaterThanZero(record.getWarehouseId())) {
+				Warehouse warehouse = warehouseDao.getWarehouseById(record.getWarehouseId());
+				map.put("warehouse", warehouse.getWarehouseName());
+			}
+			map.put("remark", record.getRemark());
+			OutWarehouseShipping param = new OutWarehouseShipping();
+			param.setCoeTrackingNoId(record.getCoeTrackingNoId());
+			List<OutWarehouseShipping> outWarehouseShippingList = outWarehouseShippingDao.findOutWarehouseShipping(param, null, null);
+			Integer receivedQuantity = 0;
+			String skus = "";
+			for (OutWarehouseShipping item : outWarehouseShippingList) {
+				skus += item.getOurWarehouseOrderTrackingNo();
+				receivedQuantity++;
+			}
+			map.put("skus", skus);
+			map.put("quantity", receivedQuantity);
+			list.add(map);
+		}
+		page.total = outWarehouseRecordDao.countOutWarehouseRecord(outWarehouseRecord, moreParam);
+		page.rows = list;
+		return page;
+	}
+
 }

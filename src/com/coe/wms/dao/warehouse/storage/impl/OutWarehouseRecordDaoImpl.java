@@ -43,7 +43,7 @@ public class OutWarehouseRecordDaoImpl implements IOutWarehouseRecordDao {
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public long saveOutWarehouseRecord(final OutWarehouseRecord record) {
-		final String sql = "insert into w_s_out_warehouse_record (warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time) values (?,?,?,?,?,?)";
+		final String sql = "insert into w_s_out_warehouse_record (warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,remark) values (?,?,?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
@@ -58,6 +58,7 @@ public class OutWarehouseRecordDaoImpl implements IOutWarehouseRecordDao {
 				ps.setString(4, record.getCoeTrackingNo());
 				ps.setLong(5, record.getCoeTrackingNoId());
 				ps.setLong(6, record.getCreatedTime());
+				ps.setString(7, record.getRemark());
 				return ps;
 			}
 		}, keyHolder);
@@ -67,7 +68,7 @@ public class OutWarehouseRecordDaoImpl implements IOutWarehouseRecordDao {
 
 	@Override
 	public OutWarehouseRecord getOutWarehouseRecordById(Long outWarehouseRecordId) {
-		String sql = "select id,warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time from w_s_out_warehouse_record where id =" + outWarehouseRecordId;
+		String sql = "select id,warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,remark from w_s_out_warehouse_record where id =" + outWarehouseRecordId;
 		OutWarehouseRecord record = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<OutWarehouseRecord>(OutWarehouseRecord.class));
 		return record;
 	}
@@ -80,7 +81,7 @@ public class OutWarehouseRecordDaoImpl implements IOutWarehouseRecordDao {
 	@Override
 	public List<OutWarehouseRecord> findOutWarehouseRecord(OutWarehouseRecord outWarehouseRecord, Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select id,warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time from w_s_out_warehouse_record where 1=1 ");
+		sb.append("select id,warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,remark from w_s_out_warehouse_record where 1=1 ");
 		if (outWarehouseRecord != null) {
 			if (outWarehouseRecord.getId() != null) {
 				sb.append(" and id = " + outWarehouseRecord.getId());
@@ -99,6 +100,9 @@ public class OutWarehouseRecordDaoImpl implements IOutWarehouseRecordDao {
 			}
 			if (outWarehouseRecord.getCreatedTime() != null) {
 				sb.append(" and created_time = " + outWarehouseRecord.getCreatedTime());
+			}
+			if (StringUtil.isNotNull(outWarehouseRecord.getRemark())) {
+				sb.append(" and remark = '" + outWarehouseRecord.getRemark() + "' ");
 			}
 		}
 		if (moreParam != null) {
@@ -147,6 +151,9 @@ public class OutWarehouseRecordDaoImpl implements IOutWarehouseRecordDao {
 			}
 			if (outWarehouseRecord.getCreatedTime() != null) {
 				sb.append(" and created_time = " + outWarehouseRecord.getCreatedTime());
+			}
+			if (StringUtil.isNotNull(outWarehouseRecord.getRemark())) {
+				sb.append(" and remark = '" + outWarehouseRecord.getRemark() + "' ");
 			}
 		}
 		if (moreParam != null) {
