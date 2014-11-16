@@ -491,7 +491,7 @@ public class StorageServiceImpl implements IStorageService {
 					map.put("createdTime", DateUtil.dateConvertString(new Date(recordItem.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss));
 				}
 				map.put("receivedQuantity", recordItem.getQuantity());
-				map.put("remark", recordItem.getRemark());
+				map.put("remark", recordItem.getRemark() ==null?"":recordItem.getRemark());
 				if (NumberUtil.greaterThanZero(recordItem.getUserIdOfOperator())) {
 					User user = userDao.getUserById(recordItem.getUserIdOfOperator());
 					map.put("userLoginNameOfOperator", user.getLoginName());
@@ -1926,7 +1926,7 @@ public class StorageServiceImpl implements IStorageService {
 				Warehouse warehouse = warehouseDao.getWarehouseById(record.getWarehouseId());
 				map.put("warehouse", warehouse.getWarehouseName());
 			}
-			map.put("remark", record.getRemark());
+			map.put("remark", record.getRemark() ==null?"":record.getRemark());
 			OutWarehouseShipping param = new OutWarehouseShipping();
 			param.setCoeTrackingNoId(record.getCoeTrackingNoId());
 			List<OutWarehouseShipping> outWarehouseShippingList = outWarehouseShippingDao.findOutWarehouseShipping(param, null, null);
