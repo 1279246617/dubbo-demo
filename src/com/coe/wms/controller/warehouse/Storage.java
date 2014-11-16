@@ -922,4 +922,31 @@ public class Storage {
 		Map<String, String> map = storageService.saveInWarehouseRecordRemark(remark, id);
 		return GsonUtil.toJson(map);
 	}
+	
+	/**
+	 * 添加入库订单备注
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/editOutWarehouseRecordRemark", method = RequestMethod.GET)
+	public ModelAndView editOutWarehouseRecordRemark(HttpServletRequest request, HttpServletResponse response, Long id, String remark) throws IOException {
+		ModelAndView view = new ModelAndView();
+		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
+		view.addObject("remark", remark);
+		view.setViewName("warehouse/storage/editOutWarehouseRecordRemark");
+		return view;
+	}
+	
+	/**
+	 * @throws IOException
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/saveOutWarehouseRecordRemark")
+	public String saveOutWarehouseRecordRemark(HttpServletRequest request, Long id, String remark) throws IOException {
+		Map<String, String> map = storageService.saveOutWarehouseRecordRemark(remark, id);
+		return GsonUtil.toJson(map);
+	}
 }
