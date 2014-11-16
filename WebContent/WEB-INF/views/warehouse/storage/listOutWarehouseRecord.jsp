@@ -79,7 +79,8 @@
     
     <script type="text/javascript">
  		var baseUrl = "${baseUrl}";
- 		 var printEIRUrl= (baseUrl+'/warehouse/print/printOutWarehouseEIR.do?coeTrackingNoId=');
+ 		var printEIRUrl= (baseUrl+'/warehouse/print/printOutWarehouseEIR.do?coeTrackingNoId=');
+ 		var printLabelUrl= (baseUrl+'/warehouse/print/printCoeLabel.do?coeTrackingNoId=');
    		$(function(){
    			//客户帐号自动完成
 	        $("#userLoginName").typeahead({
@@ -147,7 +148,7 @@
 			            		}
 			           		 },
 			                {display: '打印',isSort: false,width: '15%',render: function(row) {
-			                		var print = '<a target=blank  href='+printEIRUrl+row.coeTrackingNoId+'>COE运单</a>&nbsp;&nbsp;&nbsp;';
+			                		var print = '<a target=blank  href='+printLabelUrl+row.coeTrackingNoId+'>COE运单</a>&nbsp;&nbsp;&nbsp;';
 			                		print += '<a target=blank  href='+printEIRUrl+row.coeTrackingNoId+'>出货交接单</a>';
 			            			return print;
 			            		}
