@@ -37,7 +37,7 @@
 <!-- 		    	</div>     -->
 		    	
                <div class="pull-right searchContent">
-               		<span class="pull-left" style="width:170px;">
+               		<span class="pull-left" style="width:175px;">
                			仓库
                			<select style="width:100px;" id="warehouseId" name="warehouseId">
                				<option></option>
@@ -45,16 +45,16 @@
 						</select>
                		</span>
                		
-               		<span class="pull-left" style="width:170px;">
+               		<span class="pull-left" style="width:175px;">
                			客户帐号
                			<input type="text" name="userLoginName" data-provide="typeahead"  id="userLoginName" style="width:100px;" title="请输入客户登录名" />
                		</span>
                		
-					<span class="pull-left" style="width:190px;">
+					<span class="pull-left" style="width:195px;">
 						交接单号	
 						<input type="text"  name="coeTrackingNo"  id="coeTrackingNo"   style="width:120px;"/>
 					</span>
-               		<span class="pull-left" style="width:170px;">
+               		<span class="pull-left" style="width:175px;">
                			创建时间
 	               		<input type="text"   style="width:120px;" name="createdTimeStart" id="createdTimeStart" value="${sevenDaysAgoStart}" title="起始创建时间">
                		</span>
