@@ -116,7 +116,7 @@
 		  		        	{ display: '出库详情', isSort: false, align: 'center', type: 'float',width:'16%',render: function(row) {
 			            		var skus = "";
 			            		if (!row._editing) {
-			            			skus += '<a href="javascript:listInWarehouseRecordItem(' + row.id + ')">'+row.skus+'</a> ';
+			            			skus += '<a href="javascript:listInWarehouseRecordItem(' + row.id + ')">'+row.orders+'</a> ';
 			            		}
 			            		return skus;
 		  		          	}},
@@ -153,20 +153,20 @@
 	        function listInWarehouseRecordItem(recordId){
 	        	var contentArr = [];
 	        	contentArr.push('<table class="table" style="width:549px">');
-	        	contentArr.push('<tr><th>产品SKU</th><th>产品名称</th><th>本次收货数量</th><th>预报数量</th></tr>');
+	        	contentArr.push('<tr><th>出库订单Id</th><th>出库订单跟踪单号</th><th>出库订单重量</th><th>出库订单客户帐号</th></tr>');
 	        	$.ajax({ 
 	                type : "post", 
-	                url :baseUrl + '/warehouse/storage/getInWarehouseRecordItemByRecordId.do', 
+	                url :baseUrl + '/warehouse/storage/getOutWarehouseShipppingByRecordId.do', 
 	                data : "recordId="+recordId, 
 	                async : false, 
 	                success : function(msg){ 
 	                	msg = eval("(" + msg + ")");
 	        			$.each(msg,function(i,e){
 	        			  	contentArr.push('<tr>');
-	        			  	contentArr.push('<td>'+e.sku+'</td>');
-	    	        		contentArr.push('<td>'+e.skuName+'</td>');
-	    	        		contentArr.push('<td>'+e.quantity+'</td>');
-	    	        		contentArr.push('<td>'+e.orderQuantity+'</td>');
+	        			  	contentArr.push('<td>'+e.orderId+'</td>');
+	    	        		contentArr.push('<td>'+e.trackingNo+'</td>');
+	    	        		contentArr.push('<td>'+e.weight+'</td>');
+	    	        		contentArr.push('<td>'+e.customer+'</td>');
 	        			  	contentArr.push('</tr>');
 	        			});
 	                } 
@@ -177,7 +177,7 @@
 	          		lock: true,
 	          		max: false,
 	          		min: false,
-	          		title: '入库记录SKU详情',
+	          		title: '出库记录详情',
 	          		width: 550,
 	          		height: 350,
 	          		content: contentHtml,

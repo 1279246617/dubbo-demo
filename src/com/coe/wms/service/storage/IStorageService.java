@@ -197,6 +197,8 @@ public interface IStorageService {
 
 	public List<Map<String, String>> getInWarehouseRecordItemMapByRecordId(Long recordId);
 
+	public List<Map<String, String>> getOutWarehouseRecordShippingMapByRecordId(Long recordId);
+	
 	/**
 	 * 获取出库订单物品
 	 * 

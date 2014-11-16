@@ -350,6 +350,13 @@ public class Storage {
 	}
 
 	@ResponseBody
+	@RequestMapping(value = "/getOutWarehouseShipppingByRecordId", method = RequestMethod.POST)
+	public String getOutWarehouseShipppingByRecordId(Long recordId) {
+		List<Map<String, String>> mapList = storageService.getOutWarehouseRecordShippingMapByRecordId(recordId);
+		return GsonUtil.toJson(mapList);
+	}
+	
+	@ResponseBody
 	@RequestMapping(value = "/getInWarehouseRecordItemByRecordId", method = RequestMethod.POST)
 	public String getInWarehouseRecordItemByRecordId(Long recordId) {
 		List<Map<String, String>> mapList = storageService.getInWarehouseRecordItemMapByRecordId(recordId);

@@ -1917,14 +1917,14 @@ public class StorageServiceImpl implements IStorageService {
 			OutWarehouseShipping param = new OutWarehouseShipping();
 			param.setCoeTrackingNoId(record.getCoeTrackingNoId());
 			List<OutWarehouseShipping> outWarehouseShippingList = outWarehouseShippingDao.findOutWarehouseShipping(param, null, null);
-			Integer receivedQuantity = 0;
-			String skus = "";
+			Integer quantity = 0;
+			String orders = "";
 			for (OutWarehouseShipping item : outWarehouseShippingList) {
-				skus += item.getOurWarehouseOrderTrackingNo();
-				receivedQuantity++;
+				orders += item.getOurWarehouseOrderTrackingNo();
+				quantity++;
 			}
-			map.put("skus", skus);
-			map.put("quantity", receivedQuantity);
+			map.put("orders", orders);
+			map.put("quantity", quantity);
 			list.add(map);
 		}
 		page.total = outWarehouseRecordDao.countOutWarehouseRecord(outWarehouseRecord, moreParam);
@@ -1932,4 +1932,23 @@ public class StorageServiceImpl implements IStorageService {
 		return page;
 	}
 
+	@Override
+	public List<Map<String, String>> getOutWarehouseRecordShippingMapByRecordId(Long recordId) {
+		OutWarehouseRecord outWarehouseRecord = outWarehouseRecordDao.getOutWarehouseRecordById(recordId);
+		OutWarehouseShipping param = new OutWarehouseShipping();
+		param.setCoeTrackingNoId(outWarehouseRecord.getCoeTrackingNoId());
+		List<OutWarehouseShipping> outWarehouseShippingList = outWarehouseShippingDao.findOutWarehouseShipping(param, null, null);
+		List<Map<String, String>> mapList = new ArrayList<Map<String, String>>();
+		for (OutWarehouseShipping item : outWarehouseShippingList) {
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("orderId", item.getOutWarehouseOrderId() + "");
+			map.put("trackingNo", item.getOurWarehouseOrderTrackingNo());
+			User user = userDao.getUserById(item.getUserIdOfCustomer());
+			map.put("customer", user.getLoginName());
+			OutWarehouseOrder outWarehouseOrder = outWarehouseOrderDao.getOutWarehouseOrderById(item.getOutWarehouseOrderId());
+			map.put("weight", outWarehouseOrder.getOutWarehouseWeight() + "");
+			mapList.add(map);
+		}
+		return mapList;
+	}
 }
