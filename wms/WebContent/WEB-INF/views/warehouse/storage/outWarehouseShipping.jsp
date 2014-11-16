@@ -81,7 +81,7 @@
 	   var orderIds = "";
 	   //进入页面,焦点跟踪单号
 	   $("#trackingNo").focus();
-	   var focus ="";
+	   var focus ="2";
 		$(function(){
 		  		$("input").focus(function(){
 		  			//当前获取焦点的文本框是 主单还是明细
@@ -189,7 +189,7 @@
 	  	  	},"json");
   		}
   	 	 
-  	 	 function submitAll(isPrint){
+  	 	 function submitAll(){
   	 		 if(trackingNos == null || trackingNos ==''){
   	 			parent.$.showShortMessage({msg:"请输入出货跟踪单号再按完成出货总单!",animate:false,left:"43%"});
   	 			return false;
@@ -212,38 +212,48 @@
   	 			}
 				if(msg.status >0){
 	  	  			//是否打印出货交接单
-	  	  			if(isPrint ==1){
-	  	  			 	 var contentArr = [];
-		  	  		    contentArr.push('<div id="changeContent" style="padding:10px;width: 240px;">');
-		  	  		    contentArr.push('   <div class="pull-left" style="width: 100%"><b>');
-		  	  		    contentArr.push(msg.message);
-		  	  		    contentArr.push('  </b></div>');
-		  	  		    contentArr.push('</div>');
-		  	  		    var contentHtml = contentArr.join('');
-		  	  			$.dialog({
-		  	  		  		lock: true,
-		  	  		  		max: false,
-		  	  		  		min: false,
-		  	  		  		title: '是否打印出货交接单',
-		  	  		  	     width: 260,
-		  	  		         height: 60,
-		  	  		  		content: contentHtml,
-		  	  		  		button: [{
-		  	  		  			name: '打印',
-		  	  		  			callback: function() {
+  	  			 	 var contentArr = [];
+	  	  		    contentArr.push('<div id="changeContent" style="padding:10px;width: 380px;">');
+		  	  		contentArr.push('   <div class="pull-left" style="width: 100%height:40px;"><b>');
+	  	  		    contentArr.push(msg.message);
+	  	  		    contentArr.push('  </b></div><br/>');
+	  	  		    
+	  	           	contentArr.push('<div class="pull-left" style="margin-top:5px;text-align:center;line-height:20px;height:50px;width: 100%">');
+	  	          	contentArr.push('   <span class="pull-left">打印内容：</span>');
+	  	          	contentArr.push('   <input class="pull-left" style="margin-left:30px;vertical-align: middle;" id="printLabel" type="checkbox" checked>');
+	  	          	contentArr.push('   <label class="pull-left" style="margin-left: 5px;line-height:20px;vertical-align: middle;" for="printLabel">COE运单标签</label>');
+	  	          	contentArr.push('   <input class="pull-left" style="margin-left:30px;vertical-align: middle;" id="printCustoms" type="checkbox" checked>');
+	  	          	contentArr.push('   <label class="pull-left" style="margin-left: 5px;line-height:20px;vertical-align: middle;" for="printCustoms">出货交接单</label>');
+	  	          	contentArr.push('</div>');
+	  	          	contentArr.push('<div style="color: #ff0000;margin-left: 0px;">注：在出库记录查询页面也可以打印</div>');
+	  	  		    contentArr.push('</div>');
+	  	  		    var contentHtml = contentArr.join('');
+	  	  			$.dialog({
+	  	  		  		lock: true,
+	  	  		  		max: false,
+	  	  		  		min: false,
+	  	  		  		title: '是否打印',
+	  	  		  	     width: 380,
+	  	  		         height: 160,
+	  	  		  		content: contentHtml,
+	  	  		  		button: [{
+	  	  		  			name: '打印',
+	  	  		  			callback: function() {
+	  	  		  	      		//打印COE运单
+	  	                    	var isPrintLabel = parent.$("#printLabel").attr("checked")=="checked"?true:false;
+								if(isPrintLabel){
+									var url = baseUrl+'/warehouse/print/printCoeLabel.do?coeTrackingNoId='+coeTrackingNoId;
+		  	     			  		window.open(url);
+	  	                      	}
+	  	                      	//打印出货交接单
+	  	                   	   	var isPrintCustoms = parent.$("#printCustoms").attr("checked")=="checked"?true:false;
+	  	                      	if(isPrintCustoms){
 		  	  		            	var url = baseUrl+'/warehouse/print/printOutWarehouseEIR.do?coeTrackingNo='+coeTrackingNo+'&coeTrackingNoId='+coeTrackingNoId;
 		  	     			  		window.open(url);
-		  	  		  			}
-		  	  		  		},{name: '取消'}]
-		  	  		  	});
-	  	 			}	
-	  	  			if(isPrint!=1){
-						if(msg.status == 2){
-							parent.$.showDialogMessage(msg.message, null, null);	
-						}else{
-							parent.$.showShortMessage({msg:msg.message,animate:false,left:"43%"});
-						}
-	  	  			}
+	  	                      	}
+	  	  		  			}
+	  	  		  		},{name: '取消'}]
+	  	  		  	});
 	  	  			orderIds = "";
 	  	  			//成功,清空输入,进入下一批,重新分配COE单号
 					$("#coeTrackingNo").val(msg.coeTrackingNo);

@@ -185,4 +185,36 @@ public class Print {
 		view.setViewName("warehouse/print/printOutWarehouseEIR");
 		return view;
 	}
+
+	/**
+	 * 
+	 * 打印出库COE标签
+	 * 
+	 * 根据出库渠道 判断打印顺丰运单还是ETK运单
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/printCoeLabel", method = RequestMethod.GET)
+	public ModelAndView printCoeLabel(HttpServletRequest request, HttpServletResponse response, Long coeTrackingNoId) throws IOException {
+		HttpSession session = request.getSession();
+		ModelAndView view = new ModelAndView();
+		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
+		if (coeTrackingNoId == null) {
+			return view;
+		}
+		// 返回页面的list,装map 每个map 是每个订单的数据
+		List<Map<String, Object>> mapList = new ArrayList<Map<String, Object>>();
+		Map<String, Object> map = printService.getPrintCoeLabelData(coeTrackingNoId);
+		if (map != null) {
+			mapList.add(map);
+		}
+		view.addObject("mapList", mapList);
+		view.addObject("timeNow", DateUtil.dateConvertString(new Date(), DateUtil.yyyy_MM_ddHHmmss));
+		view.setViewName("warehouse/print/printCoeLabel");
+		return view;
+	}
+
 }

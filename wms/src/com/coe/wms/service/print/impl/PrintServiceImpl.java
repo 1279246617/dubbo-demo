@@ -240,4 +240,11 @@ public class PrintServiceImpl implements IPrintService {
 		}
 		return mapList;
 	}
+
+	@Override
+	public Map<String, Object> getPrintCoeLabelData(Long coeTrackingNoId) {
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		return map;
+	}
 }
