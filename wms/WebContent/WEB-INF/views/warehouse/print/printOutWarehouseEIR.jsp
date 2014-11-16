@@ -41,8 +41,22 @@
 							<td></td>
 							<td></td>					
 							<td colspan="1">
-								 合计重量:${totalWeight}
+								 合计重量:${totalWeight} KG
 							</td>		
+						</tr>
+						
+						<tr>
+							<td colspan="4">
+								<div class="pull-left" style="width:320px; height:30px;">
+										<div class="pull-left" style="height:30px; width:130px;">收件人签章（签字）:</div>
+										<div  class="pull-left" style="height:30px; width:140px;border-bottom: 1px solid  #000;"></div>
+								</div>
+								
+								<div class="pull-left" style="width:350px; height:30px;">
+									<div class="pull-left" style="height:30px; width:50px;">日期:</div>
+									<div  class="pull-left" style="height:30px; width:150px;border-bottom: 1px solid  #000;"></div>
+								</div>
+							</td>	
 						</tr>
 					</table>	
 			</div>
