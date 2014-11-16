@@ -21,8 +21,23 @@
 <body>
 	  <div class="toolbar1">
            <form action="${baseUrl}/warehouse/storage/getOutWarehouseRecordData.do" id="searchform" name="searchform" method="post">
+           		<div class="pull-left">
+		       	 	<span class="pull-left" style="width:105px;">
+			       		<a class="btn btn-primary btn-small" onclick="printOrder()" title="打印COE运单">
+			           		 <i class="icon-folder-open"></i>打印COE运单
+			       	 	</a>
+			       	 		<input style=" visibility:hidden;">
+		       	 	</span>
+		       	 	<span class="pull-left" style="width:105px;">
+			       		<a class="btn btn-primary btn-small" onclick="printOrder()" title="打印出货交接单">
+			           		 <i class="icon-folder-open"></i>打印出货交接单
+			       	 	</a>
+			       	 	<input style=" visibility:hidden;">
+		       	 	</span>
+		    	</div>    
+		    	
                <div class="pull-right searchContent">
-               		<span class="pull-left" style="width:175px;">
+               		<span class="pull-left" style="width:170px;">
                			仓库
                			<select style="width:100px;" id="warehouseId" name="warehouseId">
                				<option></option>
@@ -30,16 +45,16 @@
 						</select>
                		</span>
                		
-               		<span class="pull-left" style="width:175px;">
+               		<span class="pull-left" style="width:170px;">
                			客户帐号
                			<input type="text" name="userLoginName" data-provide="typeahead"  id="userLoginName" style="width:100px;" title="请输入客户登录名" />
                		</span>
                		
-					<span class="pull-left" style="width:195px;">
+					<span class="pull-left" style="width:190px;">
 						交接单号	
 						<input type="text"  name="coeTrackingNo"  id="coeTrackingNo"   style="width:120px;"/>
 					</span>
-               		<span class="pull-left" style="width:175px;">
+               		<span class="pull-left" style="width:170px;">
                			创建时间
 	               		<input type="text"   style="width:120px;" name="createdTimeStart" id="createdTimeStart" value="${sevenDaysAgoStart}" title="起始创建时间">
                		</span>
@@ -109,7 +124,7 @@
 	     function initGrid() {
 	    	 grid = $("#maingrid").ligerGrid({
 	                columns: [
-							{ display: '客户帐号', name: 'userLoginNameOfCustomer',type:'float',width:'9%'},
+							{ display: '客户帐号', name: 'userLoginNameOfCustomer',type:'float',width:'8%'},
 							{ display: '仓库', name: 'warehouse', type: 'float',width:'9%'},
 	  	                    { display: '交接单号', name: 'coeTrackingNo',type:'float',width:'13%'},
 		  		            { display: '出库订单数量', name: 'quantity', type: 'float',width:'9%'},
@@ -120,7 +135,7 @@
 			            		}
 			            		return skus;
 		  		          	}},
-			                { display: '操作员', name: 'userLoginNameOfOperator',type:'float',width:'9%'},
+			                { display: '操作员', name: 'userLoginNameOfOperator',type:'float',width:'8%'},
 			                { display: '出库时间', name: 'createdTime', align: 'center', type: 'float',width:'12%'},
 			                { display: '出库备注', name: 'remark', width:'13%'},
 			                {display: '操作',isSort: false,width: '8%',render: function(row) {
@@ -138,7 +153,7 @@
 	                sortName: 'id',
 	                width: '100%',
 	                height: '99%',
-	                checkbox: false,
+	                checkbox: true,
 	                rownumbers:true,
 	                alternatingRow:true,
 	                minColToggle:20,

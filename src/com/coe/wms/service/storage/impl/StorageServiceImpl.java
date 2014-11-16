@@ -1812,7 +1812,7 @@ public class StorageServiceImpl implements IStorageService {
 	@Override
 	public Map<String, String> saveOutWarehouseRecordRemark(String remark, Long id) throws ServiceException {
 		Map<String, String> map = new HashMap<String, String>();
-		if (inWarehouseRecordDao.updateInWarehouseRecordRemark(id, remark) > 0) {
+		if (outWarehouseRecordDao.updateOutWarehouseRecordRemark(id, remark) > 0) {
 			map.put(Constant.STATUS, Constant.SUCCESS);
 		} else {
 			map.put(Constant.STATUS, Constant.FAIL);
@@ -1932,7 +1932,7 @@ public class StorageServiceImpl implements IStorageService {
 			Integer quantity = 0;
 			String orders = "";
 			for (OutWarehouseShipping item : outWarehouseShippingList) {
-				orders += item.getOurWarehouseOrderTrackingNo();
+				orders += item.getOurWarehouseOrderTrackingNo() +" ; ";
 				quantity++;
 			}
 			map.put("orders", orders);

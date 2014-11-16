@@ -74,6 +74,9 @@ public class Storage {
 	public ModelAndView addInWarehouseOrderRemark(HttpServletRequest request, HttpServletResponse response, Long id, String remark) throws IOException {
 		ModelAndView view = new ModelAndView();
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
+		if(remark == null){
+			remark = "";
+		}
 		view.addObject("remark", remark);
 		view.setViewName("warehouse/storage/editInWarehouseOrderRemark");
 		return view;
@@ -160,6 +163,9 @@ public class Storage {
 	public ModelAndView editInWarehouseRecordRemark(HttpServletRequest request, HttpServletResponse response, Long id, String remark) throws IOException {
 		ModelAndView view = new ModelAndView();
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
+		if(remark == null){
+			remark = "";
+		}
 		view.addObject("remark", remark);
 		view.setViewName("warehouse/storage/editInWarehouseRecordRemark");
 		return view;
@@ -935,6 +941,9 @@ public class Storage {
 	public ModelAndView editOutWarehouseRecordRemark(HttpServletRequest request, HttpServletResponse response, Long id, String remark) throws IOException {
 		ModelAndView view = new ModelAndView();
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
+		if(remark == null){
+			remark = "";
+		}
 		view.addObject("remark", remark);
 		view.setViewName("warehouse/storage/editOutWarehouseRecordRemark");
 		return view;
