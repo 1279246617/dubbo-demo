@@ -61,10 +61,8 @@
 				</div>	
 					
 				<div style="height:22mm;width:100%; border-bottom:1mm solid  #000;">
-						<div style="height:22mm;width:57mm; border-right:1px solid  #000;" class="pull-left">
-							<span style="margin-top:3mm;margin-left: 2mm;"  class="pull-left">
-									<img  src="data:image/png;base64,<c:out value="${map.trackingNoBarcodeData}"/>">
-							</span>
+						<div style="height:22mm;width:57mm;text-align: center; border-right:1px solid  #000;" class="pull-left">
+									<img  style="margin-top:3mm;margin-left: 2mm;" src="data:image/png;base64,<c:out value="${map.trackingNoBarcodeData}"/>">
 						</div>
 						
 						<div style="height:12mm;width:38mm;" class="pull-left">
@@ -127,7 +125,7 @@
 				<div style="height:32mm;width:100%; border-bottom:1px solid  #000;">
 					<table  rules="all" style="line-height: 4mm;width:100%;height:31mm;border-color: #000;">
 						<tr>
-							<td rowspan="2" style="width:58mm;height:15.5mm;">
+							<td rowspan="2" style="width:58mm;height:15.5mm;text-align: center;">
 								<img  style="margin-left: 1mm;" src="data:image/png;base64,<c:out value="${map.trackingNoBarcodeData}"/>">
 							</td>
 							<td>寄方</td>

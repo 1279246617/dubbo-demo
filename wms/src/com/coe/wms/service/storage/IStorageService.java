@@ -55,16 +55,6 @@ public interface IStorageService {
 	public Map<String, String> saveInWarehouseRecordItem(String itemSku, Integer itemQuantity, String itemRemark, Long warehouseId, Long inWarehouseRecordId, Long userIdOfOperator);
 
 	/**
-	 * 保存上架
-	 * 
-	 * @param inWarehouseOrder
-	 * @param moreParam
-	 * @param page
-	 * @return
-	 */
-	public Map<String, String> saveOnShelvesItem(String itemSku, Integer itemQuantity, String seatCode, Long inWarehouseRecordId, Long userIdOfOperator);
-
-	/**
 	 * 获取入库记录物品
 	 * 
 	 * @param inWarehouseRecordId
@@ -92,31 +82,6 @@ public interface IStorageService {
 	public List<Map<String, String>> checkInWarehouseOrder(InWarehouseOrder inWarehouseOrder);
 
 	/**
-	 * 上架时 输入跟踪号 后查询入库记录
-	 * 
-	 * @param inWarehouseOrder
-	 * @return
-	 */
-	public List<Map<String, String>> checkInWarehouseRecord(InWarehouseRecord inWarehouseRecord);
-
-	/**
-	 * 下架时 输入跟踪号 后查询入库记录
-	 * 
-	 * @param inWarehouseOrder
-	 * @return
-	 */
-	public Map<String, String> checkOutWarehouseOrderByCustomerReferenceNo(String customerReferenceNo);
-
-	/**
-	 * 提交下架
-	 * 
-	 * @param customerReferenceNo
-	 * @param outShelfItems
-	 * @return
-	 */
-	public Map<String, String> submitOutShelfItems(String customerReferenceNo, String outShelfItems, Long userIdOfOperator);
-
-	/**
 	 * 获取入库订单
 	 * 
 	 * @param inWarehouseRecordId
@@ -124,10 +89,6 @@ public interface IStorageService {
 	 * @return
 	 */
 	public Pagination getInWarehouseOrderData(InWarehouseOrder inWarehouseOrder, Map<String, String> moreParam, Pagination page);
-
-	public Pagination getOnShelvesData(OnShelf onShelf, Map<String, String> moreParam, Pagination page);
-
-	public Pagination getOutShelvesData(OutShelf outShelf, Map<String, String> moreParam, Pagination page);
 
 	/**
 	 * 获取入库记录
@@ -146,7 +107,7 @@ public interface IStorageService {
 	 * @return
 	 */
 	public Pagination getOutWarehouseRecordData(OutWarehouseRecord outWarehouseRecord, Map<String, String> moreParam, Pagination page);
-	
+
 	/**
 	 * 获取入库明细记录
 	 * 
@@ -198,7 +159,7 @@ public interface IStorageService {
 	public List<Map<String, String>> getInWarehouseRecordItemMapByRecordId(Long recordId);
 
 	public List<Map<String, String>> getOutWarehouseRecordShippingMapByRecordId(Long recordId);
-	
+
 	/**
 	 * 获取出库订单物品
 	 * 
@@ -349,10 +310,6 @@ public interface IStorageService {
 	public Map<String, String> saveInWarehouseOrderRemark(String remark, Long id) throws ServiceException;
 
 	public Map<String, String> saveInWarehouseRecordRemark(String remark, Long id) throws ServiceException;
-	
+
 	public Map<String, String> saveOutWarehouseRecordRemark(String remark, Long id) throws ServiceException;
-
-	public Pagination getSeatData(Seat seat, Map<String, String> moreParam, Pagination page);
-
-	public Pagination getShelfData(Shelf shelf, Map<String, String> moreParam, Pagination page);
 }

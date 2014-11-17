@@ -38,7 +38,7 @@ public class BarcodeUtil {
 
 	private static Logger logger = Logger.getLogger(BarcodeUtil.class);
 
-	public static String createCode39(String barcodeText, boolean isShowBarcodeText, Double height) {
+	public static String createCode39(String barcodeText, boolean isShowBarcodeText, Double height, Double xd) {
 		JBarcode jbcode = new JBarcode(EAN13Encoder.getInstance(), WidthCodedPainter.getInstance(), EAN13TextPainter.getInstance());
 		jbcode.setEncoder(Code39Encoder.getInstance());
 		jbcode.setTextPainter(BaseLineTextPainter.getInstance());
@@ -48,6 +48,9 @@ public class BarcodeUtil {
 		jbcode.setBarHeight(height);
 		ByteArrayOutputStream bos = null;
 		try {
+			if (xd != null) {
+				jbcode.setXDimension(xd);
+			}
 			// jbcode.setWideRatio(1d);
 			BufferedImage img = jbcode.createBarcode(barcodeText.toUpperCase());
 			bos = new ByteArrayOutputStream();
@@ -127,7 +130,7 @@ public class BarcodeUtil {
 			_barcode.setExtraTextPosition(BarcodeExtraTextPosition.above);
 			_barcode.setCheckCharShowMode(CheckCharShowMode.hide);
 			_barcode.setOrientation(BarcodeOrientation.bottomFacing);
-			_barcode.setBarTypeWidth(1, 3);
+//			_barcode.setBarTypeWidth(1, 3);
 			int width = _barcode.getModuleCount();
 			int barcodeHeight = height.intValue();
 			int scale = 1;
