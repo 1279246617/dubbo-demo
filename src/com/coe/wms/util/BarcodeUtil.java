@@ -82,8 +82,8 @@ public class BarcodeUtil {
 		ByteArrayOutputStream bos = null;
 		try {
 			jbcode.setWideRatio(3d);
-			if(xd!=null){
-				jbcode.setXDimension(xd);	
+			if (xd != null) {
+				jbcode.setXDimension(xd);
 			}
 			BufferedImage img = jbcode.createBarcode(barcodeText.toUpperCase());
 			bos = new ByteArrayOutputStream();
@@ -119,7 +119,11 @@ public class BarcodeUtil {
 		try {
 			Barcode _barcode = new Barcode(Barcode.BCT_CODE128C);
 			_barcode.setData(barcodeText);
-			_barcode.setTextAlign(BarcodeTextPosition.below);
+			if (isShowBarcodeText) {
+				_barcode.setTextAlign(BarcodeTextPosition.below);
+			} else {
+				_barcode.setTextAlign(BarcodeTextPosition.notShown);
+			}
 			_barcode.setExtraTextPosition(BarcodeExtraTextPosition.above);
 			_barcode.setCheckCharShowMode(CheckCharShowMode.hide);
 			_barcode.setOrientation(BarcodeOrientation.bottomFacing);
