@@ -32,8 +32,8 @@
 							<td>
 								<span style="width:100px;" class="pull-left" >出货跟踪单号</span>
 								<input type="text"  name="trackingNo"  id="trackingNo"    t="2"  style="width:150px;" title="扫描出库装箱时打印的运单上的条码"/>
-								 <input   style="margin-left: 30px;" id="add"  name="addOrSub"  t="2" type="radio" checked>加
-								 <input   style="margin-left: 30px;" id="sub" name="addOrSub"  t="2" type="radio">减
+								 <input   style="margin-left: 30px;" id="add"  name="addOrSub"  t="2" type="radio" checked>绑定
+								 <input   style="margin-left: 30px;" id="sub" name="addOrSub"  t="2" type="radio">解绑
 							</td>		
 							
 							<td>
