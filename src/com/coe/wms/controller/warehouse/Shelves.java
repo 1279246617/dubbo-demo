@@ -24,6 +24,7 @@ import com.coe.wms.model.warehouse.Shelf;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecord;
 import com.coe.wms.model.warehouse.storage.record.OnShelf;
 import com.coe.wms.model.warehouse.storage.record.OutShelf;
+import com.coe.wms.service.inventory.IShelfService;
 import com.coe.wms.service.storage.IStorageService;
 import com.coe.wms.service.user.IUserService;
 import com.coe.wms.util.Constant;
@@ -40,6 +41,9 @@ public class Shelves {
 
 	@Resource(name = "storageService")
 	private IStorageService storageService;
+
+	@Resource(name = "shelfService")
+	private IShelfService shelfService;
 
 	@Resource(name = "userService")
 	private IUserService userService;
@@ -147,7 +151,7 @@ public class Shelves {
 		Map<String, String> moreParam = new HashMap<String, String>();
 		moreParam.put("createdTimeStart", createdTimeStart);
 		moreParam.put("createdTimeEnd", createdTimeEnd);
-		pagination = storageService.getOutShelvesData(param, moreParam, pagination);
+		pagination = shelfService.getOutShelvesData(param, moreParam, pagination);
 		Map map = new HashMap();
 		map.put("Rows", pagination.rows);
 		map.put("Total", pagination.total);
@@ -170,7 +174,7 @@ public class Shelves {
 		map.put(Constant.STATUS, Constant.FAIL);
 		InWarehouseRecord param = new InWarehouseRecord();
 		param.setTrackingNo(trackingNo);
-		List<Map<String, String>> mapList = storageService.checkInWarehouseRecord(param);
+		List<Map<String, String>> mapList = shelfService.checkInWarehouseRecord(param);
 		if (mapList.size() < 1) {
 			map.put(Constant.STATUS, "-1");
 			map.put(Constant.MESSAGE, "该单号无收货记录,请先进行入库订单收货.");
@@ -195,7 +199,7 @@ public class Shelves {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put(Constant.STATUS, Constant.FAIL);
 		// 校验和保存
-		Map<String, String> serviceResult = storageService.saveOnShelvesItem(itemSku, itemQuantity, seatCode, inWarehouseRecordId, userIdOfOperator);
+		Map<String, String> serviceResult = shelfService.saveOnShelvesItem(itemSku, itemQuantity, seatCode, inWarehouseRecordId, userIdOfOperator);
 		// 失败
 		if (!StringUtil.isEqual(serviceResult.get(Constant.STATUS), Constant.SUCCESS)) {
 			map.put(Constant.MESSAGE, serviceResult.get(Constant.MESSAGE));
@@ -246,7 +250,7 @@ public class Shelves {
 		moreParam.put("createdTimeStart", createdTimeStart);
 		moreParam.put("createdTimeEnd", createdTimeEnd);
 
-		pagination = storageService.getOnShelvesData(param, moreParam, pagination);
+		pagination = shelfService.getOnShelvesData(param, moreParam, pagination);
 		Map map = new HashMap();
 		map.put("Rows", pagination.rows);
 		map.put("Total", pagination.total);
@@ -277,7 +281,7 @@ public class Shelves {
 		logger.info("提交下架:customerReferenceNo:" + customerReferenceNo + " outShelfItems:" + outShelfItems);
 		HttpSession session = request.getSession();
 		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
-		Map<String, String> map = storageService.submitOutShelfItems(customerReferenceNo, outShelfItems, userId);
+		Map<String, String> map = shelfService.submitOutShelfItems(customerReferenceNo, outShelfItems, userId);
 		return GsonUtil.toJson(map);
 	}
 
@@ -294,7 +298,7 @@ public class Shelves {
 	@ResponseBody
 	@RequestMapping(value = "/checkFindOutWarehouseOrder")
 	public String checkFindOutWarehouseOrder(HttpServletRequest request, String customerReferenceNo) throws IOException {
-		Map<String, String> map = storageService.checkOutWarehouseOrderByCustomerReferenceNo(customerReferenceNo);
+		Map<String, String> map = shelfService.checkOutWarehouseOrderByCustomerReferenceNo(customerReferenceNo);
 		return GsonUtil.toJson(map);
 	}
 
@@ -345,7 +349,7 @@ public class Shelves {
 
 		// 更多参数
 		Map<String, String> moreParam = new HashMap<String, String>();
-		pagination = storageService.getSeatData(param, moreParam, pagination);
+		pagination = shelfService.getSeatData(param, moreParam, pagination);
 		Map map = new HashMap();
 		map.put("Rows", pagination.rows);
 		map.put("Total", pagination.total);
@@ -353,7 +357,7 @@ public class Shelves {
 	}
 
 	/**
-	 * 获取货位
+	 * 获取货架
 	 * 
 	 * @param request
 	 * @param response
@@ -377,7 +381,7 @@ public class Shelves {
 		param.setShelfCode(shelfCode);
 		// 更多参数
 		Map<String, String> moreParam = new HashMap<String, String>();
-		pagination = storageService.getShelfData(param, moreParam, pagination);
+		pagination = shelfService.getShelfData(param, moreParam, pagination);
 		Map map = new HashMap();
 		map.put("Rows", pagination.rows);
 		map.put("Total", pagination.total);

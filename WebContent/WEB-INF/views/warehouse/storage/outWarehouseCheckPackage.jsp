@@ -173,6 +173,10 @@
 						tr+="</tr>";
 						$("#skusTbody").append(tr);
 					});
+					
+					//切换焦点
+					$("#outWarehouseOrderWeight").focus();
+					focus = "3";
  	 				return;
  	 				}
  	 			},"json");
