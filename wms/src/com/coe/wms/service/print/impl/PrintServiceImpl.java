@@ -262,14 +262,18 @@ public class PrintServiceImpl implements IPrintService {
 		OutWarehouseShipping outWarehouseShippingParam = new OutWarehouseShipping();
 		outWarehouseShippingParam.setCoeTrackingNoId(coeTrackingNoId);
 		List<OutWarehouseShipping> outWarehouseShippingList = outWarehouseShippingDao.findOutWarehouseShipping(outWarehouseShippingParam, null, null);
-		//總重量
+		// 總重量
 		double totalWeight = 0d;
+		int quantity = 0;
 		for (OutWarehouseShipping outWarehouseShipping : outWarehouseShippingList) {
 			OutWarehouseOrder outWarehouseOrder = outWarehouseOrderDao.getOutWarehouseOrderById(outWarehouseShipping.getOutWarehouseOrderId());
 			totalWeight += outWarehouseOrder.getOutWarehouseWeight();
+			quantity++;
 		}
-		
+		String trackingNoBarcodeData = BarcodeUtil.createCode128(outWarehouseRecord.getCoeTrackingNo(), false, 29d, 0.5d);
+		map.put("coeTrackingNoBarcodeData", trackingNoBarcodeData);
 		map.put("totalWeight", totalWeight);
+		map.put("quantity", quantity);
 		map.put("outWarehouseRecord", outWarehouseRecord);
 		map.put("shipdate", DateUtil.dateConvertString(new Date(outWarehouseRecord.getCreatedTime()), DateUtil.yyyy_MM_dd));
 		return map;
