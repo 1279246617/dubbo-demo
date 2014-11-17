@@ -491,7 +491,7 @@ public class StorageServiceImpl implements IStorageService {
 					map.put("createdTime", DateUtil.dateConvertString(new Date(recordItem.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss));
 				}
 				map.put("receivedQuantity", recordItem.getQuantity());
-				map.put("remark", recordItem.getRemark() ==null?"":recordItem.getRemark());
+				map.put("remark", recordItem.getRemark() == null ? "" : recordItem.getRemark());
 				if (NumberUtil.greaterThanZero(recordItem.getUserIdOfOperator())) {
 					User user = userDao.getUserById(recordItem.getUserIdOfOperator());
 					map.put("userLoginNameOfOperator", user.getLoginName());
@@ -969,6 +969,10 @@ public class StorageServiceImpl implements IStorageService {
 				map.put("userLoginNameOfOperator", userOfOperator.getLoginName());
 			}
 			map.put("trackingNo", record.getTrackingNo());
+			InWarehouseOrder inWarehouseOrder = inWarehouseOrderDao.getInWarehouseOrderById(record.getInWarehouseOrderId());
+			if (inWarehouseOrder != null) {
+				map.put("customerReferenceNo", inWarehouseOrder.getCustomerReferenceNo());
+			}
 			map.put("inWarehouseOrderId", record.getInWarehouseOrderId());
 			map.put("batchNo", record.getBatchNo());
 			if (NumberUtil.greaterThanZero(record.getWarehouseId())) {
@@ -1468,8 +1472,6 @@ public class StorageServiceImpl implements IStorageService {
 		return map;
 	}
 
-	 
-
 	@Override
 	public Pagination getInWarehouseRecordItemListData(Map<String, String> moreParam, Pagination pagination) {
 		List<Map<String, Object>> recordItemList = inWarehouseRecordItemDao.getInWarehouseRecordItemListData(moreParam, pagination);
@@ -1495,7 +1497,6 @@ public class StorageServiceImpl implements IStorageService {
 		pagination.rows = list;
 		return pagination;
 	}
-
 
 	@Override
 	public TrackingNo getCoeTrackingNoforOutWarehouseShipping() throws ServiceException {
@@ -1540,7 +1541,6 @@ public class StorageServiceImpl implements IStorageService {
 		}
 		return map;
 	}
-
 
 	@Override
 	public Map<String, Object> outWarehouseShippingEnterCoeTrackingNo(String coeTrackingNo) throws ServiceException {
@@ -1598,14 +1598,14 @@ public class StorageServiceImpl implements IStorageService {
 				Warehouse warehouse = warehouseDao.getWarehouseById(record.getWarehouseId());
 				map.put("warehouse", warehouse.getWarehouseName());
 			}
-			map.put("remark", record.getRemark() ==null?"":record.getRemark());
+			map.put("remark", record.getRemark() == null ? "" : record.getRemark());
 			OutWarehouseShipping param = new OutWarehouseShipping();
 			param.setCoeTrackingNoId(record.getCoeTrackingNoId());
 			List<OutWarehouseShipping> outWarehouseShippingList = outWarehouseShippingDao.findOutWarehouseShipping(param, null, null);
 			Integer quantity = 0;
 			String orders = "";
 			for (OutWarehouseShipping item : outWarehouseShippingList) {
-				orders += item.getOurWarehouseOrderTrackingNo() +" ; ";
+				orders += item.getOurWarehouseOrderTrackingNo() + " ; ";
 				quantity++;
 			}
 			map.put("orders", orders);

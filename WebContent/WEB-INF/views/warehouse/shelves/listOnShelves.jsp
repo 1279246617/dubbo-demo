@@ -120,7 +120,9 @@
 		  	                { display: '本次上架数量', name: 'quantity', type: 'float',width:'8%'},
 		  		            { display: '收货产品数量', name: 'receivedQuantity', type: 'float',width:'8%'},
 			                { display: '上架操作员', name: 'userLoginNameOfOperator',type:'float',width:'9%'},
+// 			                { display: '客户订单号', name: 'customerReferenceNo', align: 'center', type: 'float',width:'12%'},
 			                { display: '跟踪单号', name: 'trackingNo',type:'float',width:'11%'},
+			                { display: '上架时间', name: 'createdTime', align: 'center', type: 'float',width:'12%'},
 			                { display: '收货记录Id', name: 'inWarehouseRecordId',type:'float',width:'6%'},
 			                {display: '操作',isSort: false,width: '8%',render: function(row) {
 			            		var h = "";
