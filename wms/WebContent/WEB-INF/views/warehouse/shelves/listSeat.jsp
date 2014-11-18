@@ -23,7 +23,7 @@
 		<div class="toolbar1" style="width:98%;">
 			  	<div class="pull-left">
 		           			<span class="pull-left" style="width:55px;">
-					       		<a class="btn btn-primary btn-small" onclick="addShelf()" title="添加货架">
+					       		<a class="btn btn-primary btn-small" id="addButton" onclick="addShelf()" title="添加货架">
 					           		 <i class="icon-folder-open"></i>添加货架
 					       	 	</a>
 					       	 	<a class="btn btn-primary btn-small" onclick="deleteShelf()" title="删除货架">
@@ -105,11 +105,11 @@
 	    function initShelfGrid() {
 	    	gridShelf = $("#maingridShelf").ligerGrid({
 	                columns: [
-							{ display: '仓库', name: 'warehouse_id', type: 'float',width:'13%'},
+							{ display: '仓库', name: 'warehouse_id', type: 'float',width:'12%'},
 	  	                  	{ display: '货架号', name: 'shelf_code', type: 'float',width:'11%'},
-	  	                  	{ display: '货架类型', name: 'shelf_type', type: 'int', width:'12%'},
-	  	                  	{ display: '行数', name: 'rows', type: 'int', width:'10%'},
-	  	                	{ display: '列数', name: 'cols', type: 'int', width:'10%'},
+	  	                  	{ display: '类型', name: 'shelf_type', type: 'int', width:'8%'},
+	  	                  	{ display: '行数', name: 'rows', type: 'int', width:'8%'},
+	  	                	{ display: '列数', name: 'cols', type: 'int', width:'8%'},
 	  	              		{ display: '货位起始', name: 'seat_start', type: 'int', width:'12%'},
 	  	              		{ display: '货位终止', name: 'seat_end', type: 'int', width:'12%'},
 			                { display: '备注', name: 'remark',type:'float',width:'12%'},
@@ -258,31 +258,39 @@
 	     	             var warehouseId = this.content.$("#warehouseId").val();
 	     	             //货架类型 G/B
 	     	             var shelfType = this.content.$("#shelfType").val();
+	     	             var shelfTypeName = this.content.$("#shelfTypeName").val();
+	     	             var shelfNoStart = this.content.$("#shelfNoStart").val();
+	     	         	 var shelfNoEnd = this.content.$("#shelfNoEnd").val();
 	     	          	 var start = this.content.$("#start").val();
 	     	           	 var end = this.content.$("#end").val();
 	     	           	 var rows = this.content.$("#rows").val();
 	     	           	 var cols= this.content.$("#cols").val();
-						 var shelfNo = this.content.$("#shelfNo").val();
+// 	     	           	parent.$.showShortMessage({msg:"创建货架可能需要比较长时间,请耐心等待!",animate:false,left:"45%"});
+	     	           	$("#addButton").attr("disabled","disabled");
 	     	         	 var remark = this.content.$("#remark").val();
 	     	             $.post(baseUrl + '/warehouse/shelves/saveAddShelf.do', {
 	     	            	warehouseId:warehouseId,
+	     	            	shelfTypeName:shelfTypeName,
 	     	            	shelfType:shelfType,
 	     	            	start:start,
 	     	            	end:end,
 	     	            	rows:rows,
 	     	            	cols:cols,
-	     	            	shelfNo:shelfNo,
+	     	            	shelfNoStart:shelfNoStart,
+	     	            	shelfNoEnd:shelfNoEnd,
 	     	            	remark:remark
 	     	             },
 	     	             function(msg) {
-	     	            	if(msg.status == 1){
-	     	            		parent.$.showShortMessage({msg:msg.message,animate:false,left:"45%"});
+	     	            	if(msg.status == '1'){
+	     	            		parent.$.showDialogMessage(msg.message,null,null);
 	     	            		gridShelf.loadData();	 //保存成功,重新加载货架,但不重新加载货位,避免打乱货位界面
+	     	            		
 	     	            	}
-							if(msg.status ==0){
+							if(msg.status =='0'){
 								parent.$.showDialogMessage(msg.message,null,null);
 							}
-	     	             },"gson");
+							$("#addButton").removeAttr("disabled");
+	     	             },"json");
      	            }
      	          }],
      	          cancel: true

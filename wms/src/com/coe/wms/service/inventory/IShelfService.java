@@ -51,6 +51,6 @@ public interface IShelfService {
 	public Pagination getSeatData(Seat seat, Map<String, String> moreParam, Pagination page);
 
 	public Pagination getShelfData(Shelf shelf, Map<String, String> moreParam, Pagination page);
-	
-	public Map<String,String> saveAddShelf(Long warehouseId, String shelfType, int start, int end, int rows, int cols, String shelofNo, String remark);
+
+	public Map<String, String> saveAddShelf(Long warehouseId, String shelfType, String shelfTypeName, Integer start, Integer end, Integer rows, Integer cols, Integer shelfNoStart, Integer shelfNoEnd, String remark);
 }

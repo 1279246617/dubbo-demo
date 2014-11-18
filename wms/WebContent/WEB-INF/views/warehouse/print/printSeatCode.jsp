@@ -7,8 +7,8 @@
 <link href="${baseUrl}/static/css/print/common.css" rel="stylesheet" type="text/css" />
 <body class="print-page-label" style="font-size: 12px;">
 	<c:forEach var="map"  items="${mapList}">  
-	<div class="label-100-70 change-page mt_1mm">
-			<table style="width: 100%;text-align: center;margin-top: 8mm;">
+	<div class="label-100-60 change-page mt_1mm">
+			<table style="width: 100%;text-align: center;margin-top: 3mm;">
 				<tr><td >
 					<font style="font-size: 9mm;">
 						<c:out value="${map.warehouse}"/>
