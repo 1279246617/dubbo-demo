@@ -159,21 +159,22 @@ function advancedSearch(){
 	   $.dialog({
 	          lock: true,
 	          title: '高级搜索',
-	          width: '450px',
-	          height: '290px',
+	          width: '600px',
+	          height: '400px',
 	          content: 'url:' + baseUrl + '/warehouse/storage/searchOutWarehouseOrder.do',
 	          button: [{
 	            name: '确定',
 	            callback: function() {
-	              var objRemark = this.content.document.getElementById("remark");
-	              var remark = $(objRemark).val();
-	              $.post(baseUrl + '/warehouse/storage/saveInWarehouseRecordRemark.do', {
-	            	  remark:remark,
-	            	  id:id
+	              var batchCustomerReferenceNo = this.content.document.getElementById("batchCustomerReferenceNo").val();
+	              //执行查询,返回不能查到出库订单的 客户订单号
+	              $.post(baseUrl + '/warehouse/storage/executeSearchOutWarehouseOrder.do', {
+	            	  batchCustomerReferenceNo:batchCustomerReferenceNo
 	              },
 	              function(msg) {
-	                	grid.loadData();
+	            	  
+//	                	grid.loadData();
 	              });
+	              
 	            }
 	          }],
 	          cancel: true

@@ -1636,4 +1636,13 @@ public class StorageServiceImpl implements IStorageService {
 		}
 		return mapList;
 	}
+
+	@Override
+	public Map<String, String> executeSearchOutWarehouseOrder(String executeSearchOutWarehouseOrder) throws ServiceException {
+		OutWarehouseOrder param = new OutWarehouseOrder();
+		
+//		outWarehouseOrderDao.countOutWarehouseOrder(outWarehouseOrder, null);
+
+		return null;
+	}
 }
