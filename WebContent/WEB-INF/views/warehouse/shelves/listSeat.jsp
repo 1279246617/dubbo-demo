@@ -146,7 +146,8 @@
 	  	                  	{ display: '货架类型', name: 'shelf_type', type: 'int', width:'12%'},
 	  	                  	{ display: '行数', name: 'rows', type: 'int', width:'10%'},
 	  	                	{ display: '列数', name: 'cols', type: 'int', width:'10%'},
-	  	              		{ display: '货位数', name: 'seat_quantity', type: 'int', width:'12%'},
+	  	              		{ display: '货位起始', name: 'seat_start', type: 'int', width:'12%'},
+	  	              		{ display: '货位终止', name: 'seat_end', type: 'int', width:'12%'},
 			                { display: '备注', name: 'remark',type:'float',width:'12%'},
 	  	                  	{display: '操作',isSort: false,width: '10%',render: function(row) {
 			            		var h = "";
@@ -255,15 +256,30 @@
      	          button: [{
      	            name: '确定',
      	            callback: function() {
-     	              var objRemark = this.content.document.getElementById("remark");
-     	              var remark = $(objRemark).val();
-     	              $.post(baseUrl + '/warehouse/shelf/saveAddShelf.do', {
-     	            	  remark:remark,
-     	            	  id:id
-     	              },
-     	              function(msg) {
-     	                	grid.loadData();
-     	              });
+	     	             var warehouseId = this.content.$("#warehouseId").val();
+	     	             //货架类型 G/B
+	     	             var shelfType = this.content.$("#shelfType").val();
+	     	          	 var start = this.content.$("#start").val();
+	     	           	 var end = this.content.$("#end").val();
+	     	           	 var rows = this.content.$("#rows").val();
+	     	           	 var cols= this.content.$("#cols").val();
+						 var shelofNo = this.content.$("#shelofNo").val();
+	     	         	 var remark = this.content.$("#remark").val();
+	     	             $.post(baseUrl + '/warehouse/shelves/saveAddShelf.do', {
+	     	            	warehouseId:warehouseId,
+	     	            	shelfType:shelfType,
+	     	            	start:start,
+	     	            	end:end,
+	     	            	rows:rows,
+	     	            	cols:cols,
+	     	            	shelofNo:shelofNo,
+	     	            	remark:remark
+	     	             },
+	     	             function(msg) {
+	     	            	 
+	     	                grid.loadData();
+	     	                
+	     	             },"gson");
      	            }
      	          }],
      	          cancel: true
