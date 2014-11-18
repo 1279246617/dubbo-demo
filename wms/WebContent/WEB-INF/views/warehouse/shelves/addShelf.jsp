@@ -85,17 +85,36 @@
 	
 	<div id="step7" style="margin-top: 10mm;width:100%;display: none;" class="pull-left" >
 		<div class="pull-left" style="width:95%;margin-left: 2mm;color: red;font-weight: bold;line-height: 6mm;" >
-				注:货位命名将以货架编号+货位层数+货位列数(不足2位将自动补0). 如货架B001的货位编号层数是3(对应C),列数是2. 将会生成B001 A01,B001 A02,B001 B01
-				,B001 B02,B001 C01,B001 C02; 一共6个货位.
+				<table style="color: red;" class="table">
+					<tr>
+						<th>注:</th>
+						<th>货架编号:B + 大于0小于999的数字</th>
+					</tr>
+					<tr>
+						<th>&nbsp;</th>
+						<th>列数:请填写大于0,小于99的数字;层数:请填写大于0小于26的数字</th>
+					</tr>
+				</table>			
 		</div>
 	</div>	
 	
 	<div id="step8" style="margin-top: 10mm;width:100%;" class="pull-left">
 		<div class="pull-left" style="width:95%;margin-left: 2mm;color: red;font-weight: bold;line-height: 6mm;" >
-				注:货位命名将以货架编号+(货位起始 至 货位截止). 如货架G001 货位编号起始是1,截止是5. 将会生成G001 101,G001 102,G001 103,G001 104,G001 105 一共5个货位.
+				<table style="color: red;" class="table">
+					<tr>
+						<th>注:</th>
+						<th>货架编号:G + 大于0小于9的数字</th>
+					</tr>
+					<tr>
+						<th>&nbsp;</th>
+						<th>起始:请填写大于0,小于999的数字;截止:请填写大于0,小于999的数字</th>
+					</tr>
+				</table>		
 		</div>
 	</div>	
-	
+	. 
+
+
 	
 	<script type="text/javascript" src="${baseUrl}/static/jquery/jquery.js"></script>
     <script type="text/javascript" src="${baseUrl}/static/bootstrap/bootstrap-typeahead.js"></script>

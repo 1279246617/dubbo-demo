@@ -499,51 +499,55 @@ public class ShelfServiceImpl implements IShelfService {
 			map.put(Constant.MESSAGE, "货架编号类型不能为空");
 			return map;
 		}
+		if (shelfNoStart == null || shelfNoEnd == null || shelfNoStart <= 0 || shelfNoEnd <= 0) {
+			map.put(Constant.MESSAGE, "货架编号起始截止数必须是正整数");
+			return map;
+		}
 
 		if (StringUtil.isEqual(shelfType, Shelf.TYPE_BUILD)) {
 			if (rows == null || cols == null || rows <= 0 || cols <= 0) {
 				map.put(Constant.MESSAGE, "层数列数必须是正整数");
 				return map;
 			}
-			if (rows > 24) {
-				map.put(Constant.MESSAGE, "货位层数不能大于24");
+			if (rows > 26) {
+				map.put(Constant.MESSAGE, "货位层数不能大于26");
 				return map;
 			}
 			if (cols > 99) {
 				map.put(Constant.MESSAGE, "货位列数能超过2位数");
 				return map;
 			}
+			if (shelfNoEnd > 999) {
+				map.put(Constant.MESSAGE, "货架编号不能超过3位数");
+				return map;
+			}
 		}
 
 		if (StringUtil.isEqual(shelfType, Shelf.TYPE_GROUND)) {
 			if (start == null || end == null || start <= 0 || end <= 0) {
-				map.put(Constant.MESSAGE, "起始终止数必须是正整数");
+				map.put(Constant.MESSAGE, "起始截止数必须是正整数");
 				return map;
 			}
 			if (end > 999) {
-				map.put(Constant.MESSAGE, "货位终止数不能超过3位数");
+				map.put(Constant.MESSAGE, "货位截止数不能超过3位数");
 				return map;
 			}
-		}
-
-		if (shelfNoStart == null || shelfNoEnd == null || shelfNoStart <= 0 || shelfNoEnd <= 0) {
-			map.put(Constant.MESSAGE, "货架编号起始终止数必须是正整数");
-			return map;
-		}
-
-		if (shelfNoEnd > 999) {
-			map.put(Constant.MESSAGE, "货架编号不能超过3位数");
-			return map;
+			if (shelfNoEnd > 9) {
+				map.put(Constant.MESSAGE, "货架编号不能超过1位数");
+				return map;
+			}
 		}
 
 		// 循环检查货架
 		for (int s = shelfNoStart; s <= shelfNoEnd; s++) {
 			String str = "" + s;
-			if (str.length() == 1) {
-				str = "00" + str;
-			}
-			if (str.length() == 2) {
-				str = "0" + str;
+			if (StringUtil.isEqual(shelfType, Shelf.TYPE_BUILD)) {
+				if (str.length() == 1) {
+					str = "00" + str;
+				}
+				if (str.length() == 2) {
+					str = "0" + str;
+				}
 			}
 			String shelfCode = shelfTypeName + str;
 			Shelf shelf = new Shelf();
@@ -560,11 +564,13 @@ public class ShelfServiceImpl implements IShelfService {
 		for (int s = shelfNoStart; s <= shelfNoEnd; s++) {
 			Shelf shelf = new Shelf();
 			String str = "" + s;
-			if (str.length() == 1) {
-				str = "00" + str;
-			}
-			if (str.length() == 2) {
-				str = "0" + str;
+			if (StringUtil.isEqual(shelfType, Shelf.TYPE_BUILD)) {
+				if (str.length() == 1) {
+					str = "00" + str;
+				}
+				if (str.length() == 2) {
+					str = "0" + str;
+				}
 			}
 			String shelfCode = shelfTypeName + str;
 			shelf.setShelfCode(shelfCode);
