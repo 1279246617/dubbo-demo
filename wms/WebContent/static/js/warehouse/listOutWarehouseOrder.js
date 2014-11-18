@@ -154,3 +154,29 @@ function listOutWarehouseOrderItem(orderId){
   		}]
   	})
 }
+
+function advancedSearch(){
+	   $.dialog({
+	          lock: true,
+	          title: '高级搜索',
+	          width: '450px',
+	          height: '290px',
+	          content: 'url:' + baseUrl + '/warehouse/storage/searchOutWarehouseOrder.do',
+	          button: [{
+	            name: '确定',
+	            callback: function() {
+	              var objRemark = this.content.document.getElementById("remark");
+	              var remark = $(objRemark).val();
+	              $.post(baseUrl + '/warehouse/storage/saveInWarehouseRecordRemark.do', {
+	            	  remark:remark,
+	            	  id:id
+	              },
+	              function(msg) {
+	                	grid.loadData();
+	              });
+	            }
+	          }],
+	          cancel: true
+	        });
+}
+
