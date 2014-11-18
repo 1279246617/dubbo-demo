@@ -133,9 +133,21 @@ public class ShelfDaoImpl implements IShelfDao {
 				} else {
 					ps.setInt(4, shelf.getCols());
 				}
-				ps.setInt(5, shelf.getRows());
-				ps.setInt(6, shelf.getSeatStart());
-				ps.setInt(7, shelf.getSeatEnd());
+				if (shelf.getRows() == null) {
+					ps.setNull(5, Types.INTEGER);
+				} else {
+					ps.setInt(5, shelf.getRows());
+				}
+				if (shelf.getSeatStart() == null) {
+					ps.setNull(6, Types.INTEGER);
+				} else {
+					ps.setInt(6, shelf.getSeatStart());
+				}
+				if (shelf.getSeatEnd() == null) {
+					ps.setNull(7, Types.INTEGER);
+				} else {
+					ps.setInt(7, shelf.getSeatEnd());
+				}
 				ps.setString(8, shelf.getRemark());
 				return ps;
 			}

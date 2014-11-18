@@ -15,7 +15,7 @@
 				<span class="badge badge-success">1</span>所属仓库:	
 		</div>
 		<div class="pull-left" style="width:200px;">
-             <select style="width:80px;" id="warehouseId" name="warehouseId">
+             <select style="width:100px;" id="warehouseId" name="warehouseId">
 					<c:forEach items="${warehouseList}" var="w" >
 	       	 			<option value="<c:out value='${w.id}'/>">
 	       	 				<c:out value="${w.id}-${w.warehouseName}"/>
@@ -37,10 +37,22 @@
 			<input  type="radio" name="shelfType"  id="typeB" onclick="changeType()">立体货架
 		</div>
 	</div>	
+	
+	<div id="step5" style="margin-top: 6mm;width:100%;" class="pull-left">
+		<div class="pull-left" style="width:100px;margin-left: 2mm;" >
+						<span class="badge badge-success">3</span>货架编号:
+		</div>
+		<div class="pull-left" style="width:400px;">
+			<input name="shelfTypeName" id="shelfTypeName" style="width:40px;" type="text" value="G" readonly="readonly">
+			货架起始:<input type="text" name="shelfNoStart" id="shelfNoStart" style="width:70px;" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"  >
+			货架截止:<input type="text" name="shelfNoEnd" id="shelfNoEnd" style="width:70px;"  onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" >
+		</div>
+	</div>	
+	
 		
 	<div id="step3" style="margin-top:6mm;width:100%;" class="pull-left">
 		<div class="pull-left" style="width:100px;margin-left: 2mm;" >
-				<span class="badge badge-success">3</span>货位设置:
+				<span class="badge badge-success">4</span>货位设置:
 		</div>
 		<div class="pull-left" style="width:180px;">
 			货位起始:<input type="text" name="start" id="start" style="width:80px;"  onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" >
@@ -52,7 +64,7 @@
 	
 	<div id="step4" style="margin-top:6mm;width:100%;display: none;" class="pull-left">
 		<div class="pull-left" style="width:100px;margin-left: 2mm;" >
-				<span class="badge badge-success">3</span>货位设置:
+				<span class="badge badge-success">4</span>货位设置:
 		</div>
 		<div class="pull-left" style="width:180px;">
 			货位层数:<input type="text" name="rows" id="rows" style="width:80px;"  onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" >
@@ -62,18 +74,9 @@
 		</div>
 	</div>
 	
-	<div id="step5" style="margin-top: 6mm;width:100%;" class="pull-left">
-		<div class="pull-left" style="width:100px;margin-left: 2mm;" >
-						<span class="badge badge-success">4</span>货架编号:
-		</div>
-		<div class="pull-left" style="width:200px;">
-			<input type="text" name="shelfNo" id="shelfNo" style="width:100px;" >
-		</div>
-	</div>	
-	
 	<div id="step6" style="margin-top: 6mm;width:100%;" class="pull-left">
 		<div class="pull-left" style="width:100px;margin-left: 2mm;" >
-				<span class="badge badge-success">5</span>货架备注:
+				<span class="badge badge-success">6</span>货架备注:
 		</div>
 		<div class="pull-left" style="width:200px;">
 			<input type="text" name="remark" id="remark" style="width:100px;">
@@ -82,14 +85,14 @@
 	
 	<div id="step7" style="margin-top: 10mm;width:100%;display: none;" class="pull-left" >
 		<div class="pull-left" style="width:95%;margin-left: 2mm;color: red;font-weight: bold;line-height: 6mm;" >
-				注:货位命名将以货架编号+货位层数+货位列数. 如货位编号是B001,层数是2,列数是3. 将会生成B00111,B00112,B00113
-				,B00121,B00122,B00123; 一共6个货位.
+				注:货位命名将以货架编号+货位层数+货位列数(不足2位将自动补0). 如货架B001的货位编号层数是3(对应C),列数是2. 将会生成B001 A01,B001 A02,B001 B01
+				,B001 B02,B001 C01,B001 C02; 一共6个货位.
 		</div>
 	</div>	
 	
 	<div id="step8" style="margin-top: 10mm;width:100%;" class="pull-left">
 		<div class="pull-left" style="width:95%;margin-left: 2mm;color: red;font-weight: bold;line-height: 6mm;" >
-				注:货位命名将以货架编号+(货位起始 至 货位截止). 如货位编号是G1,起始是1,截止是5. 将会生成G11,G12,G13,G14,G15 一共5个货位.
+				注:货位命名将以货架编号+(货位起始 至 货位截止). 如货架G001 货位编号起始是1,截止是5. 将会生成G001 101,G001 102,G001 103,G001 104,G001 105 一共5个货位.
 		</div>
 	</div>	
 	
@@ -106,6 +109,7 @@
 					   $("#step7").hide();
 					   $("#step8").show();
 					   $("#shelfType").val("G");
+					   $("#shelfTypeName").val("G");
 					}else{
 						//选中立体货架
 						$("#step3").hide();
@@ -113,6 +117,7 @@
 						$("#step8").hide();
 						$("#step7").show();
 						$("#shelfType").val("B");
+						 $("#shelfTypeName").val("B");
 					}
 			   }
 			   

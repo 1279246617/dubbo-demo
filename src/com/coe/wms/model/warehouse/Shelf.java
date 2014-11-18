@@ -2,7 +2,9 @@ package com.coe.wms.model.warehouse;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.coe.wms.util.StringUtil;
 
@@ -29,6 +31,36 @@ public class Shelf implements Serializable {
 	 */
 	private static final long serialVersionUID = 5963221596346743409L;
 
+	private static Map<String, String> numberToABC = new HashMap<String, String>();
+
+	static {
+		numberToABC.put("1", "A");
+		numberToABC.put("2", "B");
+		numberToABC.put("3", "C");
+		numberToABC.put("4", "D");
+		numberToABC.put("5", "E");
+		numberToABC.put("6", "F");
+		numberToABC.put("7", "G");
+		numberToABC.put("8", "H");
+		numberToABC.put("9", "I");
+		numberToABC.put("10", "J");
+		numberToABC.put("11", "K");
+		numberToABC.put("12", "L");
+		numberToABC.put("13", "M");
+		numberToABC.put("14", "N");
+		numberToABC.put("15", "O");
+		numberToABC.put("16", "P");
+		numberToABC.put("17", "Q");
+		numberToABC.put("18", "R");
+		numberToABC.put("19", "S");
+		numberToABC.put("20", "T");
+		numberToABC.put("21", "U");
+		numberToABC.put("22", "V");
+		numberToABC.put("23", "W");
+		numberToABC.put("24", "X");
+		numberToABC.put("25", "Y");
+		numberToABC.put("26", "Z");
+	}
 	/**
 	 * 主键
 	 */
@@ -157,7 +189,14 @@ public class Shelf implements Serializable {
 		if (StringUtil.isEqual(shelf.getShelfType(), TYPE_GROUND)) {
 			for (int i = shelf.getSeatStart(); i <= shelf.getSeatEnd(); i++) {
 				Seat seat = new Seat();
-				seat.setSeatCode(shelf.getShelfCode() + "" + i);
+				String str = "" + i;
+				if (str.length() == 1) {
+					str = "00" + str;
+				}
+				if (str.length() == 2) {
+					str = "0" + str;
+				}
+				seat.setSeatCode(shelf.getShelfCode() + "" + str);
 				seat.setShelfCode(shelf.getShelfCode());
 				seat.setWarehouseId(shelf.getWarehouseId());
 				seatList.add(seat);
@@ -168,7 +207,14 @@ public class Shelf implements Serializable {
 			for (int i = 1; i <= shelf.getRows(); i++) {
 				for (int j = 1; j <= shelf.getCols(); j++) {
 					Seat seat = new Seat();
-					seat.setSeatCode(shelf.getShelfCode() + "" + i + j);
+
+					String strJ = "" + j;// 列数最大2位数
+					if (strJ.length() == 1) {
+						strJ = "0" + strJ;
+					}
+					// i 是数字,切换成 ABDEF
+					String strI = numberToABC.get("" + i);
+					seat.setSeatCode(shelf.getShelfCode() + "" + strI + strJ);
 					seat.setShelfCode(shelf.getShelfCode());
 					seat.setWarehouseId(shelf.getWarehouseId());
 					seatList.add(seat);

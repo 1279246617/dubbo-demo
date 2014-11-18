@@ -487,43 +487,102 @@ public class ShelfServiceImpl implements IShelfService {
 	}
 
 	@Override
-	public Map<String, String> saveAddShelf(Long warehouseId, String shelfType, int start, int end, int rows, int cols, String shelofNo, String remark) {
+	public Map<String, String> saveAddShelf(Long warehouseId, String shelfType, String shelfTypeName, Integer start, Integer end, Integer rows, Integer cols, Integer shelfNoStart, Integer shelfNoEnd, String remark) {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put(Constant.STATUS, Constant.FAIL);
 		if (StringUtil.isNull(shelfType)) {
 			map.put(Constant.MESSAGE, "货架类型不能为空");
 			return map;
 		}
-		if (StringUtil.isNull(shelofNo)) {
-			map.put(Constant.MESSAGE, "货架编号不能为空");
+
+		if (StringUtil.isNull(shelfTypeName)) {
+			map.put(Constant.MESSAGE, "货架编号类型不能为空");
 			return map;
 		}
+
 		if (StringUtil.isEqual(shelfType, Shelf.TYPE_BUILD)) {
-			if (rows <= 0 || cols <= 0) {
+			if (rows == null || cols == null || rows <= 0 || cols <= 0) {
 				map.put(Constant.MESSAGE, "层数列数必须是正整数");
 				return map;
 			}
-		}
-		if (StringUtil.isEqual(shelfType, Shelf.TYPE_GROUND)) {
-			if (start <= 0 || end <= 0) {
-				map.put(Constant.MESSAGE, "起始终止数必须是正整数");
+			if (rows > 24) {
+				map.put(Constant.MESSAGE, "货位层数不能大于24");
+				return map;
+			}
+			if (cols > 99) {
+				map.put(Constant.MESSAGE, "货位列数能超过2位数");
 				return map;
 			}
 		}
-		Shelf shelf = new Shelf();
-		shelf.setCols(cols);
-		shelf.setRemark(remark);
-		shelf.setRows(rows);
-		shelf.setSeatStart(start);
-		shelf.setSeatEnd(end);
-		shelf.setShelfCode(shelofNo);
-		shelf.setShelfType(shelfType);
-		shelf.setWarehouseId(warehouseId);
-		// 创建货位
-		List<Seat> seatList = Shelf.createSeatsByShelf(shelf);
-		long shelfId = shelfDao.saveShelf(shelf);
-		int seatQuantity = seatDao.saveBatchSeat(seatList);
-		map.put(Constant.MESSAGE, "货架创建成功,并生成" + seatQuantity + "个货位");
+
+		if (StringUtil.isEqual(shelfType, Shelf.TYPE_GROUND)) {
+			if (start == null || end == null || start <= 0 || end <= 0) {
+				map.put(Constant.MESSAGE, "起始终止数必须是正整数");
+				return map;
+			}
+			if (end > 999) {
+				map.put(Constant.MESSAGE, "货位终止数不能超过3位数");
+				return map;
+			}
+		}
+
+		if (shelfNoStart == null || shelfNoEnd == null || shelfNoStart <= 0 || shelfNoEnd <= 0) {
+			map.put(Constant.MESSAGE, "货架编号起始终止数必须是正整数");
+			return map;
+		}
+
+		if (shelfNoEnd > 999) {
+			map.put(Constant.MESSAGE, "货架编号不能超过3位数");
+			return map;
+		}
+
+		// 循环检查货架
+		for (int s = shelfNoStart; s <= shelfNoEnd; s++) {
+			String str = "" + s;
+			if (str.length() == 1) {
+				str = "00" + str;
+			}
+			if (str.length() == 2) {
+				str = "0" + str;
+			}
+			String shelfCode = shelfTypeName + str;
+			Shelf shelf = new Shelf();
+			shelf.setShelfCode(shelfCode);
+			Long count = shelfDao.countShelf(shelf);
+			if (count > 0) {
+				map.put(Constant.MESSAGE, "货架编号" + shelfCode + "已经存在,此次创建全部失败");
+				return map;
+			}
+		}
+		int totalShelf = 0;
+		int totalSeat = 0;
+		// 循环创建货架
+		for (int s = shelfNoStart; s <= shelfNoEnd; s++) {
+			Shelf shelf = new Shelf();
+			String str = "" + s;
+			if (str.length() == 1) {
+				str = "00" + str;
+			}
+			if (str.length() == 2) {
+				str = "0" + str;
+			}
+			String shelfCode = shelfTypeName + str;
+			shelf.setShelfCode(shelfCode);
+			shelf.setCols(cols);
+			shelf.setRemark(remark);
+			shelf.setRows(rows);
+			shelf.setSeatStart(start);
+			shelf.setSeatEnd(end);
+			shelf.setShelfType(shelfType);
+			shelf.setWarehouseId(warehouseId);
+			// 创建货位
+			List<Seat> seatList = Shelf.createSeatsByShelf(shelf);
+			long shelfId = shelfDao.saveShelf(shelf);
+			int seatQuantity = seatDao.saveBatchSeat(seatList);
+			totalSeat += seatQuantity;
+			totalShelf++;
+		}
+		map.put(Constant.MESSAGE, "创建成功" + totalShelf + "个货架, 总共生成" + totalSeat + "个货位");
 		map.put(Constant.STATUS, Constant.SUCCESS);
 		return map;
 	}
