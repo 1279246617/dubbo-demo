@@ -29,11 +29,16 @@ public class Shelf implements Serializable {
 	 * 主键
 	 */
 	private Long id;
-
+	
 	/**
-	 * 货位个数(当类型是地面货架类型时,直接设置货位个数,按照货架号+123456..生成货位
+	 * 地面货架的起始货位
 	 */
-	private Integer seatQuantity;
+	private Integer seatStart;
+	
+	/**
+	 * 地面货架的终止货位
+	 */
+	private Integer seatEnd;
 
 	/**
 	 * 行 当货架类型是:立体货架时
@@ -105,12 +110,21 @@ public class Shelf implements Serializable {
 		this.shelfCode = shelfCode;
 	}
 
-	public Integer getSeatQuantity() {
-		return seatQuantity;
+ 
+	public Integer getSeatStart() {
+		return seatStart;
 	}
 
-	public void setSeatQuantity(Integer seatQuantity) {
-		this.seatQuantity = seatQuantity;
+	public void setSeatStart(Integer seatStart) {
+		this.seatStart = seatStart;
+	}
+
+	public Integer getSeatEnd() {
+		return seatEnd;
+	}
+
+	public void setSeatEnd(Integer seatEnd) {
+		this.seatEnd = seatEnd;
 	}
 
 	public Integer getRows() {

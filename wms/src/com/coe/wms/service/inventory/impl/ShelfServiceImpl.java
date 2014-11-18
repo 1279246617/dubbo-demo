@@ -485,4 +485,21 @@ public class ShelfServiceImpl implements IShelfService {
 		return page;
 	}
 
+	@Override
+	public Map<String, String> saveAddShelf(Long warehouseId, String shelfType, int start, int end, int rows, int cols, String shelofNo, String remark) {
+		Map<String, String> map = new HashMap<String, String>();
+		Shelf shelf = new Shelf();
+		shelf.setCols(cols);
+		shelf.setRemark(remark);
+		shelf.setRows(rows);
+		shelf.setSeatStart(start);
+		shelf.setSeatEnd(end);
+		shelf.setShelfCode(shelofNo);
+		shelf.setShelfType(shelfType);
+		shelf.setWarehouseId(warehouseId);
+		
+		
+		return map;
+	}
+
 }

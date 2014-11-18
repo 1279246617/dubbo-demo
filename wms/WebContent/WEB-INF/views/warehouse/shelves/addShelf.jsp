@@ -28,6 +28,7 @@
 	<div id="step2" style="margin-top: 6mm;width:100%;" class="pull-left">
 		<div class="pull-left" style="width:100px;margin-left: 2mm;" >
 				<span class="badge badge-success">2</span>货架类型:	
+				<input style="display: none;" id="shelfType" type="text" value='G'>
 		</div>
 		<div class="pull-left" style="width:100px;">
 			<input type="radio" name="shelfType" id="typeG" checked="checked" onclick="changeType()">地面货架
@@ -42,10 +43,10 @@
 				<span class="badge badge-success">3</span>货位设置:
 		</div>
 		<div class="pull-left" style="width:180px;">
-			货位起始:<input type="text" name="start" style="width:80px;">
+			货位起始:<input type="text" name="start" id="start" style="width:80px;"  onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" >
 		</div>
 		<div class="pull-left" style="width:200px;">	
-			货位截止:<input type="text" name="end"  style="width:80px;">
+			货位截止:<input type="text" name="end"  id="end" style="width:80px;"  onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" >
 		</div>
 	</div>	
 	
@@ -54,10 +55,10 @@
 				<span class="badge badge-success">3</span>货位设置:
 		</div>
 		<div class="pull-left" style="width:180px;">
-			货位层数:<input type="text" name="rows" style="width:80px;">
+			货位层数:<input type="text" name="rows" id="rows" style="width:80px;"  onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" >
 		</div>
 		<div class="pull-left" style="width:200px;">	
-			货位列数:<input type="text" name="cols"  style="width:80px;">
+			货位列数:<input type="text" name="cols" id="cols" style="width:80px;"  onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" >
 		</div>
 	</div>
 	
@@ -66,7 +67,7 @@
 						<span class="badge badge-success">4</span>货架编号:
 		</div>
 		<div class="pull-left" style="width:200px;">
-			<input type="text" name="rows" style="width:100px;">
+			<input type="text" name="shelofNo" id="shelofNo" style="width:100px;" >
 		</div>
 	</div>	
 	
@@ -75,7 +76,7 @@
 				<span class="badge badge-success">5</span>货架备注:
 		</div>
 		<div class="pull-left" style="width:200px;">
-			<input type="text" name="rows" style="width:100px;">
+			<input type="text" name="remark" id="remark" style="width:100px;">
 		</div>
 	</div>	
 	
@@ -104,12 +105,14 @@
 					   $("#step3").show();
 					   $("#step7").hide();
 					   $("#step8").show();
+					   $("#shelfType").val("G");
 					}else{
 						//选中立体货架
 						$("#step3").hide();
 						$("#step4").show();
 						$("#step8").hide();
 						$("#step7").show();
+						$("#shelfType").val("B");
 					}
 			   }
 			   
