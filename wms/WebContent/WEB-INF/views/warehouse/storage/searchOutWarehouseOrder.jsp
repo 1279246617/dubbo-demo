@@ -10,10 +10,15 @@
 <title>COE</title>
 </head>
 <body >
-	
-	
-	
-	
+      <table class="table" style="width: 100%;">
+      		<tr>
+      			<th>客户订单号</th>
+      			<th>
+      				<textarea type="text"  name="batchCustomerReferenceNo" id="batchCustomerReferenceNo" style="width:400px;height: 120px;"></textarea>
+      			</th>
+      		</tr>
+      </table>
+
 	<script type="text/javascript" src="${baseUrl}/static/jquery/jquery.js"></script>
     <script type="text/javascript" src="${baseUrl}/static/bootstrap/bootstrap-typeahead.js"></script>
 	<script type="text/javascript" src="${baseUrl}/static/jquery/jquery.showMessage.js"></script>

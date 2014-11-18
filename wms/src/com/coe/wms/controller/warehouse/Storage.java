@@ -974,4 +974,14 @@ public class Storage {
 		view.setViewName("warehouse/storage/searchOutWarehouseOrder");
 		return view;
 	}
+
+	/**
+	 * @throws IOException
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/executeSearchOutWarehouseOrder")
+	public String executeSearchOutWarehouseOrder(HttpServletRequest request, String batchCustomerReferenceNo) throws IOException {
+		Map<String, String> map = storageService.executeSearchOutWarehouseOrder(batchCustomerReferenceNo);
+		return GsonUtil.toJson(map);
+	}
 }
