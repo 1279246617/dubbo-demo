@@ -100,42 +100,6 @@
     
     <script type="text/javascript">
  		var baseUrl = "${baseUrl}";
- 		//货位表格
-   	 	var grid = null;
-	    function initGrid() {
-	    	 grid = $("#maingrid").ligerGrid({
-	                columns: [
-							{ display: '仓库', name: 'warehouse_id', type: 'float',width:'17%'},
-	  	                  	{ display: '货架号', name: 'shelf_code', type: 'float',width:'16%'},
-	  	                  	{ display: '货位号', name: 'seat_code', type: 'int', width:'18%'},
-			                { display: '备注', name: 'remark',type:'float',width:'20%'},
-	  	                  	{display: '操作',isSort: false,width: '17%',render: function(row) {
-			            		var h = "";
-			            		if (!row._editing) {
-			            			h += '<a href="javascript:print(' + row.id + ')">打印货位条码</a> ';
-			            		}
-			            		return h;
-			            	}}
-		             ],   
-	                dataAction: 'server',
-	                url: baseUrl+'/warehouse/shelves/getSeatData.do',
-	                pageSize: 50, 
-	                pageSizeOptions:[10,50,100,500,1000],
-	                usePager: 'true',
-	                sortName: 'id',
-	                width: '100%',
-	                height: '99%',
-	                checkbox: true,
-	                rownumbers:true,
-	                alternatingRow:true,
-	                minColToggle:20,
-	                isScroll: true,
-	                enabledEdit: false,
-	                clickToEdit: false,
-	                enabledSort:true
-	         });
-	    };	
-	    
 	    //货架表格
 	    var gridShelf = null;
 	    function initShelfGrid() {
@@ -175,7 +139,42 @@
 	                enabledSort:true
 	         });
 	    };	
-	        
+ 		//货位表格
+   	 	var grid = null;
+	    function initGrid() {
+	    	 grid = $("#maingrid").ligerGrid({
+	                columns: [
+							{ display: '仓库', name: 'warehouse_id', type: 'float',width:'17%'},
+	  	                  	{ display: '货架号', name: 'shelf_code', type: 'float',width:'16%'},
+	  	                  	{ display: '货位号', name: 'seat_code', type: 'int', width:'18%'},
+			                { display: '备注', name: 'remark',type:'float',width:'20%'},
+	  	                  	{display: '操作',isSort: false,width: '17%',render: function(row) {
+			            		var h = "";
+			            		if (!row._editing) {
+			            			h += '<a href="javascript:print(' + row.id + ')">打印货位条码</a> ';
+			            		}
+			            		return h;
+			            	}}
+		             ],   
+	                dataAction: 'server',
+	                url: baseUrl+'/warehouse/shelves/getSeatData.do',
+	                pageSize: 50, 
+	                pageSizeOptions:[10,50,100,500,1000],
+	                usePager: 'true',
+	                sortName: 'id',
+	                width: '100%',
+	                height: '99%',
+	                checkbox: true,
+	                rownumbers:true,
+	                alternatingRow:true,
+	                minColToggle:20,
+	                isScroll: true,
+	                enabledEdit: false,
+	                clickToEdit: false,
+	                enabledSort:true
+	         });
+	    };	
+	 
     	$(function(){
     		initShelfGrid();
     		initGrid();	    	
@@ -263,7 +262,7 @@
 	     	           	 var end = this.content.$("#end").val();
 	     	           	 var rows = this.content.$("#rows").val();
 	     	           	 var cols= this.content.$("#cols").val();
-						 var shelofNo = this.content.$("#shelofNo").val();
+						 var shelfNo = this.content.$("#shelfNo").val();
 	     	         	 var remark = this.content.$("#remark").val();
 	     	             $.post(baseUrl + '/warehouse/shelves/saveAddShelf.do', {
 	     	            	warehouseId:warehouseId,
@@ -272,13 +271,17 @@
 	     	            	end:end,
 	     	            	rows:rows,
 	     	            	cols:cols,
-	     	            	shelofNo:shelofNo,
+	     	            	shelfNo:shelfNo,
 	     	            	remark:remark
 	     	             },
 	     	             function(msg) {
-	     	            	 
-	     	                grid.loadData();
-	     	                
+	     	            	if(msg.status == 1){
+	     	            		parent.$.showShortMessage({msg:msg.message,animate:false,left:"45%"});
+	     	            		gridShelf.loadData();	 //保存成功,重新加载货架,但不重新加载货位,避免打乱货位界面
+	     	            	}
+							if(msg.status ==0){
+								parent.$.showDialogMessage(msg.message,null,null);
+							}
 	     	             },"gson");
      	            }
      	          }],
