@@ -28,7 +28,7 @@
 			       	 	</a>
 			       	 	<input style=" visibility:hidden;">
 		       	 	</span>
-		       	 	<span class="pull-left" style="width:95px;">
+		       	 	<span class="pull-left" style="width:90px;">
 			       		<a class="btn btn-primary btn-small" onclick="printOrder()" title="打印捡货单">
 			           		 <i class="icon-folder-open"></i>打印捡货单
 			       	 	</a>
@@ -36,9 +36,9 @@
 		       	 	</span>
 		    	</div>    
                <div class="pull-right searchContent">
-               		<span class="pull-left" style="width:140px;">
+               		<span class="pull-left" style="width:125px;">
                			仓库
-               			<select style="width:93px;" id="warehouseId" name="warehouseId">
+               			<select style="width:80px;" id="warehouseId" name="warehouseId">
                				<option></option>
 							<c:forEach items="${warehouseList}" var="w" >
 				       	 		<option value="<c:out value='${w.id}'/>">
@@ -47,9 +47,9 @@
 				       		</c:forEach>
 						</select>
                		</span>
-               		<span class="pull-left" style="width:140px;">
+               		<span class="pull-left" style="width:125px;">
                			状态
-               			<select style="width:93px;" id="status" name="status">
+               			<select style="width:80px;" id="status" name="status">
                				<option></option>
 							<c:forEach items="${outWarehouseOrderStatusList}" var="status" >
 				       	 		<option value="<c:out value='${status.code}'/>">
@@ -59,14 +59,15 @@
 						</select>
                		</span>
                		
-               		<span class="pull-left" style="width:140px;">
+               		<span class="pull-left" style="width:130px;">
                			客户
-               			<input type="text" name="userLoginName" data-provide="typeahead"  id="userLoginName" style="width:93px;" title="请输入客户登录名" />
+               			<input type="text" name="userLoginName" data-provide="typeahead"  id="userLoginName" style="width:85px;" title="请输入客户登录名" />
                		</span>
                		
-					<span class="pull-left" style="width:175px;">
+					<span class="pull-left" style="width:170px;">
 						客户订单号
-						<input type="text"  name="customerReferenceNo"  id="customerReferenceNo"   style="width:105px;"/>
+						<input type="text"  name="customerReferenceNo"  id="customerReferenceNo"   style="width:90px;"/>
+						<input type="text"  name="batchCustomerReferenceNo"  id="batchCustomerReferenceNo"   style="display:none;"/>
 					</span>
                		
                		<span class="pull-left" style="width:175px;">
@@ -78,9 +79,12 @@
                			至	
                			<input type="text"   style="width:120px;" name="createdTimeEnd"  id="createdTimeEnd"  title="终止创建时间">
                		</span>
-               		
                		<span class="pull-left" style="width:55px;">
                			<a class="btn btn-primary btn-small" id="btn_search"><i class="icon-search icon-white"></i>搜索</a>
+               			<input style=" visibility:hidden;">
+               		</span>
+               		<span class="pull-left" style="width:55px;">
+               			<a class="btn btn-primary btn-small" id="advancedSearch"><i class="icon-search icon-white"></i>高级</a>
                			<input style=" visibility:hidden;">
                		</span>
                </div>
@@ -91,7 +95,8 @@
 	
 	<script type="text/javascript" src="${baseUrl}/static/jquery/jquery.js"></script>
 	<script type="text/javascript" src="${baseUrl}/static/bootstrap/bootstrap-typeahead.js"></script>
-    
+    	
+   	<script type="text/javascript" src="${baseUrl}/static/js/warehouse/listOutWarehouseOrder.js"></script>
     <script type="text/javascript">
  		var baseUrl = "${baseUrl}";
    		$(function(){
@@ -131,6 +136,10 @@
    			//btn_search
    			$("#btn_search").click(function(){
    				btnSearch("#searchform",grid);
+   			});
+   			//高级搜索
+   			$("#advancedSearch").click(function(){
+   				advancedSearch();
    			});
    			
    		});
@@ -196,7 +205,9 @@
 	                enabledSort:false
 	            });
 	        };		
+	        
    	</script>
+   
    	
 	<script type="text/javascript" src="${baseUrl}/static/jquery/jquery.showMessage.js"></script>
 	<script type="text/javascript" src="${baseUrl}/static/ligerui/ligerUI/js/core/base.js"></script>
@@ -208,7 +219,5 @@
 	<script type="text/javascript" src="${baseUrl}/static/calendar/lhgcalendar.min.js"></script>
 	<script type="text/javascript" src="${baseUrl}/static/calendar/prettify.js"></script>
 	<script type="text/javascript" src="${baseUrl}/static/ligerui/ligerUI/js/ligerui.all.js"></script>
-	
-	<script type="text/javascript" src="${baseUrl}/static/js/warehouse/listOutWarehouseOrder.js"></script>
 </body>
 </html>

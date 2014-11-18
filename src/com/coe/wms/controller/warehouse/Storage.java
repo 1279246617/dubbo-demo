@@ -74,7 +74,7 @@ public class Storage {
 	public ModelAndView addInWarehouseOrderRemark(HttpServletRequest request, HttpServletResponse response, Long id, String remark) throws IOException {
 		ModelAndView view = new ModelAndView();
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
-		if(remark == null){
+		if (remark == null) {
 			remark = "";
 		}
 		view.addObject("remark", remark);
@@ -163,7 +163,7 @@ public class Storage {
 	public ModelAndView editInWarehouseRecordRemark(HttpServletRequest request, HttpServletResponse response, Long id, String remark) throws IOException {
 		ModelAndView view = new ModelAndView();
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
-		if(remark == null){
+		if (remark == null) {
 			remark = "";
 		}
 		view.addObject("remark", remark);
@@ -361,7 +361,7 @@ public class Storage {
 		List<Map<String, String>> mapList = storageService.getOutWarehouseRecordShippingMapByRecordId(recordId);
 		return GsonUtil.toJson(mapList);
 	}
-	
+
 	@ResponseBody
 	@RequestMapping(value = "/getInWarehouseRecordItemByRecordId", method = RequestMethod.POST)
 	public String getInWarehouseRecordItemByRecordId(Long recordId) {
@@ -928,7 +928,7 @@ public class Storage {
 		Map<String, String> map = storageService.saveInWarehouseRecordRemark(remark, id);
 		return GsonUtil.toJson(map);
 	}
-	
+
 	/**
 	 * 添加入库订单备注
 	 * 
@@ -941,14 +941,14 @@ public class Storage {
 	public ModelAndView editOutWarehouseRecordRemark(HttpServletRequest request, HttpServletResponse response, Long id, String remark) throws IOException {
 		ModelAndView view = new ModelAndView();
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
-		if(remark == null){
+		if (remark == null) {
 			remark = "";
 		}
 		view.addObject("remark", remark);
 		view.setViewName("warehouse/storage/editOutWarehouseRecordRemark");
 		return view;
 	}
-	
+
 	/**
 	 * @throws IOException
 	 */
@@ -957,5 +957,21 @@ public class Storage {
 	public String saveOutWarehouseRecordRemark(HttpServletRequest request, Long id, String remark) throws IOException {
 		Map<String, String> map = storageService.saveOutWarehouseRecordRemark(remark, id);
 		return GsonUtil.toJson(map);
+	}
+
+	/**
+	 * 出库订单搜索
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/searchOutWarehouseOrder", method = RequestMethod.GET)
+	public ModelAndView searchOutWarehouseOrder(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		ModelAndView view = new ModelAndView();
+		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
+		view.setViewName("warehouse/storage/searchOutWarehouseOrder");
+		return view;
 	}
 }
