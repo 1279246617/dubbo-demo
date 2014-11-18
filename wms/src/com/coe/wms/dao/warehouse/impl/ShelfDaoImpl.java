@@ -35,7 +35,7 @@ public class ShelfDaoImpl implements IShelfDao {
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public Shelf getShelfByCode(Long code) {
-		String sql = "select id,warehouse_id,shelf_type,shelf_code,cols,rows,seat_quantity,remark from w_w_shelf where shelf_code = ?";
+		String sql = "select id,warehouse_id,shelf_type,shelf_code,cols,rows,seat_start,seat_end,remark from w_w_shelf where shelf_code = ?";
 		List<Shelf> shelfList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(Shelf.class));
 		if (shelfList.size() > 0) {
 			return shelfList.get(0);
@@ -47,7 +47,7 @@ public class ShelfDaoImpl implements IShelfDao {
 	@DataSource(DataSourceCode.WMS)
 	public List<Shelf> findShelf(Shelf shelf, Pagination page) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select  id,warehouse_id,shelf_type,shelf_code,cols,rows,seat_quantity,remark  from w_w_shelf where 1=1");
+		sb.append("select  id,warehouse_id,shelf_type,shelf_code,cols,rows,seat_start,seat_end,remark  from w_w_shelf where 1=1");
 		if (shelf.getId() != null) {
 			sb.append(" and id = " + shelf.getId());
 		}
@@ -66,8 +66,8 @@ public class ShelfDaoImpl implements IShelfDao {
 		if (shelf.getCols() != null) {
 			sb.append(" and cols= " + shelf.getCols());
 		}
-		if (shelf.getSeatQuantity() != null) {
-			sb.append(" and seat_quantity = " + shelf.getSeatQuantity());
+		if (shelf.getSeatStart() != null) {
+			sb.append(" and seat_start= " + shelf.getSeatStart());
 		}
 		if (shelf.getWarehouseId() != null) {
 			sb.append(" and warehouse_id = " + shelf.getWarehouseId());
@@ -103,8 +103,8 @@ public class ShelfDaoImpl implements IShelfDao {
 		if (shelf.getCols() != null) {
 			sb.append(" and cols= " + shelf.getCols());
 		}
-		if (shelf.getSeatQuantity() != null) {
-			sb.append(" and seat_quantity = " + shelf.getSeatQuantity());
+		if (shelf.getSeatStart() != null) {
+			sb.append(" and seat_start= " + shelf.getSeatStart());
 		}
 		if (shelf.getWarehouseId() != null) {
 			sb.append(" and warehouse_id = " + shelf.getWarehouseId());
@@ -120,7 +120,7 @@ public class ShelfDaoImpl implements IShelfDao {
 
 	@Override
 	public Long saveShelf(final Shelf shelf) {
-		final String sql = "insert into w_w_shelf ( warehouse_id,shelf_type,shelf_code,cols,rows,seat_quantity,remark ) values (?,?,?,?,?,?,?)";
+		final String sql = "insert into w_w_shelf ( warehouse_id,shelf_type,shelf_code,cols,rows,seat_start,seat_end,remark ) values (?,?,?,?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
@@ -128,10 +128,15 @@ public class ShelfDaoImpl implements IShelfDao {
 				ps.setLong(1, shelf.getWarehouseId());
 				ps.setString(2, shelf.getShelfType());
 				ps.setString(3, shelf.getShelfCode());
-				ps.setInt(4, shelf.getCols());
+				if (shelf.getCols() == null) {
+					ps.setNull(4, Types.INTEGER);
+				} else {
+					ps.setInt(4, shelf.getCols());
+				}
 				ps.setInt(5, shelf.getRows());
-				ps.setInt(6, shelf.getSeatQuantity());
-				ps.setString(7, shelf.getRemark());
+				ps.setInt(6, shelf.getSeatStart());
+				ps.setInt(7, shelf.getSeatEnd());
+				ps.setString(8, shelf.getRemark());
 				return ps;
 			}
 		}, keyHolder);
