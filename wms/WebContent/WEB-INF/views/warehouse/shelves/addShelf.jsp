@@ -67,7 +67,7 @@
 						<span class="badge badge-success">4</span>货架编号:
 		</div>
 		<div class="pull-left" style="width:200px;">
-			<input type="text" name="shelofNo" id="shelofNo" style="width:100px;" >
+			<input type="text" name="shelfNo" id="shelfNo" style="width:100px;" >
 		</div>
 	</div>	
 	

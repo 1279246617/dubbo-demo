@@ -411,11 +411,11 @@ public class Shelves {
 
 	@ResponseBody
 	@RequestMapping(value = "/saveAddShelf")
-	public String saveAddShelf(HttpServletRequest request, Long warehouseId, String shelfType, int start, int end, int rows, int cols, String shelofNo, String remark) throws IOException {
-		logger.info("保存货架:warehouseId:" + warehouseId + " shelfType:" + shelfType + " start:" + start + " end:" + end + " rows:" + rows + " cols:" + cols + " shelofNo:" + shelofNo + " remark:" + remark);
+	public String saveAddShelf(HttpServletRequest request, Long warehouseId, String shelfType, int start, int end, int rows, int cols, String shelfNo, String remark) throws IOException {
+		logger.info("保存货架:warehouseId:" + warehouseId + " shelfType:" + shelfType + " start:" + start + " end:" + end + " rows:" + rows + " cols:" + cols + " shelfNo:" + shelfNo + " remark:" + remark);
 		HttpSession session = request.getSession();
 		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
-		Map<String, String> map =  shelfService.saveAddShelf(warehouseId, shelfType, start, end, rows, cols, shelofNo, remark);
+		Map<String, String> map =  shelfService.saveAddShelf(warehouseId, shelfType, start, end, rows, cols, shelfNo, remark);
 		return GsonUtil.toJson(map);
 	}
 
