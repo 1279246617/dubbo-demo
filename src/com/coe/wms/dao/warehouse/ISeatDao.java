@@ -13,4 +13,5 @@ public interface ISeatDao {
 
 	public Long countSeat(Seat seat);
 
+	public int saveBatchSeat(List<Seat> seatList);
 }

@@ -489,6 +489,27 @@ public class ShelfServiceImpl implements IShelfService {
 	@Override
 	public Map<String, String> saveAddShelf(Long warehouseId, String shelfType, int start, int end, int rows, int cols, String shelofNo, String remark) {
 		Map<String, String> map = new HashMap<String, String>();
+		map.put(Constant.STATUS, Constant.FAIL);
+		if (StringUtil.isNull(shelfType)) {
+			map.put(Constant.MESSAGE, "货架类型不能为空");
+			return map;
+		}
+		if (StringUtil.isNull(shelofNo)) {
+			map.put(Constant.MESSAGE, "货架编号不能为空");
+			return map;
+		}
+		if (StringUtil.isEqual(shelfType, Shelf.TYPE_BUILD)) {
+			if (rows <= 0 || cols <= 0) {
+				map.put(Constant.MESSAGE, "层数列数必须是正整数");
+				return map;
+			}
+		}
+		if (StringUtil.isEqual(shelfType, Shelf.TYPE_GROUND)) {
+			if (start <= 0 || end <= 0) {
+				map.put(Constant.MESSAGE, "起始终止数必须是正整数");
+				return map;
+			}
+		}
 		Shelf shelf = new Shelf();
 		shelf.setCols(cols);
 		shelf.setRemark(remark);
@@ -500,9 +521,10 @@ public class ShelfServiceImpl implements IShelfService {
 		shelf.setWarehouseId(warehouseId);
 		// 创建货位
 		List<Seat> seatList = Shelf.createSeatsByShelf(shelf);
-seatDao;
 		long shelfId = shelfDao.saveShelf(shelf);
+		int seatQuantity = seatDao.saveBatchSeat(seatList);
+		map.put(Constant.MESSAGE, "货架创建成功,并生成" + seatQuantity + "个货位");
+		map.put(Constant.STATUS, Constant.SUCCESS);
 		return map;
 	}
-
 }
