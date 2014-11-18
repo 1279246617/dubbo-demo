@@ -474,7 +474,8 @@ public class ShelfServiceImpl implements IShelfService {
 			}
 			map.put("shelf_code", shelfTemp.getShelfCode());
 			map.put("shelf_type", shelfTemp.getShelfType());
-			map.put("seat_quantity", shelfTemp.getSeatQuantity());
+			map.put("seat_start", shelfTemp.getSeatStart());
+			map.put("seat_end", shelfTemp.getSeatEnd());
 			map.put("remark", shelfTemp.getRemark());
 			map.put("cols", shelfTemp.getCols());
 			map.put("rows", shelfTemp.getRows());
@@ -497,8 +498,10 @@ public class ShelfServiceImpl implements IShelfService {
 		shelf.setShelfCode(shelofNo);
 		shelf.setShelfType(shelfType);
 		shelf.setWarehouseId(warehouseId);
-		
-		
+		// 创建货位
+		List<Seat> seatList = Shelf.createSeatsByShelf(shelf);
+seatDao;
+		long shelfId = shelfDao.saveShelf(shelf);
 		return map;
 	}
 
