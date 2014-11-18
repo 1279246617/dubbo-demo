@@ -10,54 +10,108 @@
 <title>COE</title>
 </head>
 <body >
-	<div id="step1">
-		<div class="pull-left" style="width:100px;">
-				<span class="badge badge-success">1</span>货架类型:	
+	<div id="step1" style="margin-top: 3mm;width:100%;" class="pull-left">
+		<div class="pull-left" style="width:100px;margin-left: 2mm;" >
+				<span class="badge badge-success">1</span>所属仓库:	
+		</div>
+		<div class="pull-left" style="width:200px;">
+             <select style="width:80px;" id="warehouseId" name="warehouseId">
+					<c:forEach items="${warehouseList}" var="w" >
+	       	 			<option value="<c:out value='${w.id}'/>">
+	       	 				<c:out value="${w.id}-${w.warehouseName}"/>
+	       		 		</option>
+	       			</c:forEach>
+			 </select>
+		</div>
+	</div>	
+	
+	<div id="step2" style="margin-top: 6mm;width:100%;" class="pull-left">
+		<div class="pull-left" style="width:100px;margin-left: 2mm;" >
+				<span class="badge badge-success">2</span>货架类型:	
 		</div>
 		<div class="pull-left" style="width:100px;">
-			<input type="radio" name="shelfType">地面货架
+			<input type="radio" name="shelfType" id="typeG" checked="checked" onclick="changeType()">地面货架
 		</div>
 		<div class="pull-left" style="width:100px;">	
-			<input  type="radio" name="shelfType">立体货架
+			<input  type="radio" name="shelfType"  id="typeB" onclick="changeType()">立体货架
 		</div>
 	</div>	
 		
-	<div id="step2" style="margin-top: 2mm;">
-		<!-- 地面货架  display: none;-->
-		<table style="width:100%;" class="table">
-			<tr>
-				<th><span class="badge badge-success">2</span>货位设置:</th>
-				<th>
-					货位起始:<input type="text" name="start" style="width:40px;">
-				</th>
-				<th>
-					货位截止:<input type="text" name="end"  style="width:40px;">
-				</th>
-			</tr>
-		</table>		
-		<!-- 立体货架 -->
-		<table style="width:100%;" class="table">
-			<tr>
-				<th><span class="badge badge-success">2</span>货位设置:</th>
-				<th>
-					层数:<input type="text" name="rows" style="width:40px;">
-				</th>
-				<th>
-					列数:<input type="text" name="cols"  style="width:40px;">
-				</th>
-			</tr>
-		</table>
+	<div id="step3" style="margin-top:6mm;width:100%;" class="pull-left">
+		<div class="pull-left" style="width:100px;margin-left: 2mm;" >
+				<span class="badge badge-success">3</span>货位设置:
+		</div>
+		<div class="pull-left" style="width:180px;">
+			货位起始:<input type="text" name="start" style="width:80px;">
+		</div>
+		<div class="pull-left" style="width:200px;">	
+			货位截止:<input type="text" name="end"  style="width:80px;">
+		</div>
 	</div>	
 	
-	<div id="step3">
-	
-		
+	<div id="step4" style="margin-top:6mm;width:100%;display: none;" class="pull-left">
+		<div class="pull-left" style="width:100px;margin-left: 2mm;" >
+				<span class="badge badge-success">3</span>货位设置:
+		</div>
+		<div class="pull-left" style="width:180px;">
+			货位层数:<input type="text" name="rows" style="width:80px;">
+		</div>
+		<div class="pull-left" style="width:200px;">	
+			货位列数:<input type="text" name="cols"  style="width:80px;">
+		</div>
 	</div>
+	
+	<div id="step5" style="margin-top: 6mm;width:100%;" class="pull-left">
+		<div class="pull-left" style="width:100px;margin-left: 2mm;" >
+						<span class="badge badge-success">4</span>货架编号:
+		</div>
+		<div class="pull-left" style="width:200px;">
+			<input type="text" name="rows" style="width:100px;">
+		</div>
+	</div>	
+	
+	<div id="step6" style="margin-top: 6mm;width:100%;" class="pull-left">
+		<div class="pull-left" style="width:100px;margin-left: 2mm;" >
+				<span class="badge badge-success">5</span>货架备注:
+		</div>
+		<div class="pull-left" style="width:200px;">
+			<input type="text" name="rows" style="width:100px;">
+		</div>
+	</div>	
+	
+	<div id="step7" style="margin-top: 10mm;width:100%;display: none;" class="pull-left" >
+		<div class="pull-left" style="width:95%;margin-left: 2mm;color: red;font-weight: bold;line-height: 6mm;" >
+				注:货位命名将以货架编号+货位层数+货位列数. 如货位编号是B001,层数是2,列数是3. 将会生成B00111,B00112,B00113
+				,B00121,B00122,B00123; 一共6个货位.
+		</div>
+	</div>	
+	
+	<div id="step8" style="margin-top: 10mm;width:100%;" class="pull-left">
+		<div class="pull-left" style="width:95%;margin-left: 2mm;color: red;font-weight: bold;line-height: 6mm;" >
+				注:货位命名将以货架编号+(货位起始 至 货位截止). 如货位编号是G1,起始是1,截止是5. 将会生成G11,G12,G13,G14,G15 一共5个货位.
+		</div>
+	</div>	
+	
 	
 	<script type="text/javascript" src="${baseUrl}/static/jquery/jquery.js"></script>
     <script type="text/javascript" src="${baseUrl}/static/bootstrap/bootstrap-typeahead.js"></script>
 	<script type="text/javascript" src="${baseUrl}/static/jquery/jquery.showMessage.js"></script>
     <script type="text/javascript">
+			   function changeType(){
+				   if($('#typeG').is(':checked')){
+						//选中地面货架
+						$("#step4").hide();
+					   $("#step3").show();
+					   $("#step7").hide();
+					   $("#step8").show();
+					}else{
+						//选中立体货架
+						$("#step3").hide();
+						$("#step4").show();
+						$("#step8").hide();
+						$("#step7").show();
+					}
+			   }
 			   
     </script>	
 </body>

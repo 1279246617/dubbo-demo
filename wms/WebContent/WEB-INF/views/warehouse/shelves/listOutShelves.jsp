@@ -25,8 +25,11 @@
                		<span class="pull-left" style="width:175px;">
                			仓库
                			<select style="width:100px;" id="warehouseId" name="warehouseId">
-               				<option></option>
-							<option value="1">1-香港仓</option>
+										<c:forEach items="${warehouseList}" var="w" >
+						       	 			<option value="<c:out value='${w.id}'/>">
+						       	 				<c:out value="${w.id}-${w.warehouseName}"/>
+						       		 		</option>
+						       			</c:forEach>
 						</select>
                		</span>
                		
@@ -114,21 +117,13 @@
 	                columns: [
 							{ display: '客户帐号', name: 'userLoginNameOfCustomer',type:'float',width:'9%'},
 							{ display: '仓库', name: 'warehouse', type: 'float',width:'10%'},
-							{ display: '入库批次号', name: 'batchNo', type: 'int', width:'11%'},
-							{ display: '货位', name: 'seatCode', type: 'int', width:'10%'},
-	  	                  	{ display: '产品SKU', name: 'sku', type: 'float',width:'13%'},
+							{ display: '入库批次号', name: 'batchNo', type: 'int', width:'12%'},
+							{ display: '货位', name: 'seatCode', type: 'int', width:'11%'},
+	  	                  	{ display: '产品SKU', name: 'sku', type: 'float',width:'15%'},
 		  	                { display: '本次下架数量', name: 'quantity', type: 'float',width:'10%'},
 			                { display: '下架操作员', name: 'userLoginNameOfOperator',type:'float',width:'11%'},
 			                { display: '客户订单号', name: 'customerReferenceNo',type:'float',width:'11%'},
-			                { display: '出库订单Id', name: 'outWarehouseOrderId',type:'float',width:'8%'},
-			                {display: '操作',isSort: false,width: '8%',render: function(row) {
-			            		var h = "";
-			            		if (!row._editing) {
-			            			h += '<a href="javascript:updateInWarehouseItem(' + row.id + ')">详情</a> ';
-			            		}
-			            		return h;
-			            	}
-			            }
+			                { display: '出库订单Id', name: 'outWarehouseOrderId',type:'float',width:'9%'}
 		             ],   
 	                dataAction: 'server',
 	                url: baseUrl+'/warehouse/shelves/getOutShelvesData.do?createdTimeStart=${sevenDaysAgoStart}',
