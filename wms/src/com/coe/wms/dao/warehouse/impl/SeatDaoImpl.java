@@ -1,10 +1,13 @@
 package com.coe.wms.dao.warehouse.impl;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.List;
 
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.ParameterizedBeanPropertyRowMapper;
 import org.springframework.stereotype.Repository;
@@ -13,6 +16,8 @@ import com.coe.wms.dao.datasource.DataSource;
 import com.coe.wms.dao.datasource.DataSourceCode;
 import com.coe.wms.dao.warehouse.ISeatDao;
 import com.coe.wms.model.warehouse.Seat;
+import com.coe.wms.model.warehouse.storage.order.InWarehouseOrderItem;
+import com.coe.wms.util.NumberUtil;
 import com.coe.wms.util.Pagination;
 import com.coe.wms.util.StringUtil;
 
@@ -89,5 +94,27 @@ public class SeatDaoImpl implements ISeatDao {
 			return 0l;
 		}
 		return count;
+	}
+
+	@Override
+	@DataSource(DataSourceCode.WMS)
+	public int saveBatchSeat(final List<Seat> seatList) {
+		final String sql = "insert into w_w_seat (seat_code,shelf_code,warehouse_id,remark) values (?,?,?,?)";
+		int[] batchUpdateSize = jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+			@Override
+			public void setValues(PreparedStatement ps, int i) throws SQLException {
+				Seat seat = seatList.get(i);
+				ps.setString(1, seat.getSeatCode());
+				ps.setString(2, seat.getShelfCode());
+				ps.setLong(3, seat.getWarehouseId());
+				ps.setString(4, seat.getRemark());
+			}
+
+			@Override
+			public int getBatchSize() {
+				return seatList.size();
+			}
+		});
+		return NumberUtil.sumArry(batchUpdateSize);
 	}
 }
