@@ -72,7 +72,7 @@ public class OutWarehouseOrderDaoImpl implements IOutWarehouseOrderDao {
 				ps.setString(11, order.getTradeRemark());
 				ps.setString(12, order.getLogisticsRemark());
 				ps.setString(13, order.getTrackingNo());
-				ps.setInt(14,0);
+				ps.setInt(14, 0);
 				return ps;
 			}
 		}, keyHolder);
@@ -169,6 +169,26 @@ public class OutWarehouseOrderDaoImpl implements IOutWarehouseOrderDao {
 					sb.append(" and created_time <= " + date.getTime());
 				}
 			}
+			// 按单号 批量查询 开始---------------
+			String noType = moreParam.get("noType");
+			String nos = moreParam.get("nos");
+			String noArray[] = StringUtil.splitW(nos);
+			if (noArray != null) {
+				String in = "";
+				for (String no : noArray) {
+					in += ("'" + no + "',");
+				}
+				if (in.endsWith(",")) {
+					in = in.substring(0, in.length() - 1);
+				}
+				if (StringUtil.isEqual(noType, "1")) {
+					sb.append(" and customer_reference_no in(" + in + ")");
+				}
+				if (StringUtil.isEqual(noType, "2")) {
+					sb.append(" and tracking_no in(" + in + ")");
+				}
+			}
+			// 按单号 批量查询 结束------------
 		}
 		if (page != null) {
 			// 分页sql
@@ -256,6 +276,26 @@ public class OutWarehouseOrderDaoImpl implements IOutWarehouseOrderDao {
 					sb.append(" and created_time <= " + date.getTime());
 				}
 			}
+			// 按单号 批量查询 开始---------------
+			String noType = moreParam.get("noType");
+			String nos = moreParam.get("nos");
+			String noArray[] = StringUtil.splitW(nos);
+			if (noArray != null) {
+				String in = "";
+				for (String no : noArray) {
+					in += ("'" + no + "',");
+				}
+				if (in.endsWith(",")) {
+					in = in.substring(0, in.length() - 1);
+				}
+				if (StringUtil.isEqual(noType, "1")) {
+					sb.append(" and customer_reference_no in(" + in + ")");
+				}
+				if (StringUtil.isEqual(noType, "2")) {
+					sb.append(" and tracking_no in(" + in + ")");
+				}
+			}
+			// 按单号 批量查询 结束------------
 		}
 		String sql = sb.toString();
 		logger.info("统计出库订单sql:" + sql);
