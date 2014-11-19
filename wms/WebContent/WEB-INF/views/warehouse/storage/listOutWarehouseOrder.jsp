@@ -67,7 +67,8 @@
 					<span class="pull-left" style="width:170px;">
 						客户订单号
 						<input type="text"  name="customerReferenceNo"  id="customerReferenceNo"   style="width:90px;"/>
-						<input type="text"  name="batchCustomerReferenceNo"  id="batchCustomerReferenceNo"   style="display:none;"/>
+						<input type="text"  name="nos"  id="nos"   style="display:none;"/>
+						<input type="text"  name="noType"  id="noType"   style="display:none;"/>
 					</span>
                		
                		<span class="pull-left" style="width:175px;">
@@ -205,6 +206,7 @@
 	                enabledSort:false
 	            });
 	        };		
+	        
 	        
    	</script>
    

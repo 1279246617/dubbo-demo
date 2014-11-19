@@ -196,4 +196,20 @@ public class StringUtil {
 		}
 		return md5Str;
 	}
+
+	/**
+	 * 除了字母和数字的字符 都作为分隔符
+	 * 
+	 * @param strs
+	 * @return
+	 */
+	public static String[] splitW(String strs) {
+		if (strs == null) {
+			return null;
+		}
+		strs = strs.replaceAll("\\s+", " ");
+		strs = strs.replaceAll("[^\\w]+", " ");
+		String noArray[] = strs.split(" ");
+		return noArray;
+	}
 }

@@ -1645,13 +1645,11 @@ public class StorageServiceImpl implements IStorageService {
 			map.put(Constant.MESSAGE, "单号不能为空");
 			return map;
 		}
-		if (StringUtil.isEqual(noType, "1") || StringUtil.isEqual(noType, "2")) {
+		if (!(StringUtil.isEqual(noType, "1") || StringUtil.isEqual(noType, "2"))) {
 			map.put(Constant.MESSAGE, "单号类型必须是 客户订单号或顺丰运单号");
 			return map;
 		}
-		nos = nos.replaceAll("\\s+", " ");
-		nos = nos.replaceAll("[^\\w]+", " ");
-		String noArray[] = nos.split(" ");
+		String noArray[] = StringUtil.splitW(nos);
 		// 不可以
 		String unAbleNos = "";
 		int unAbleNoCount = 0;
@@ -1667,13 +1665,16 @@ public class StorageServiceImpl implements IStorageService {
 				param.setTrackingNo(no);
 			}
 			long count = outWarehouseOrderDao.countOutWarehouseOrder(param, null);
-			if (count < 0) {
+			if (count <= 0) {
 				// 单号不可以查到出库订单
 				unAbleNos += no + ",";
 				unAbleNoCount++;
 			} else {
 				orderCount += count;
 			}
+		}
+		if (unAbleNos.endsWith(",")) {
+			unAbleNos = unAbleNos.substring(0, unAbleNos.length() - 1);
 		}
 		map.put("unAbleNos", unAbleNos);
 		map.put("orderCount", orderCount + "");

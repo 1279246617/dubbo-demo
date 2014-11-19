@@ -464,7 +464,7 @@ public class Storage {
 	@ResponseBody
 	@RequestMapping(value = "/getOutWarehouseOrderData", method = RequestMethod.POST)
 	public String getOutWarehouseOrderData(HttpServletRequest request, String sortorder, String sortname, int page, int pagesize, String userLoginName, Long warehouseId, String customerReferenceNo, String createdTimeStart, String createdTimeEnd,
-			String status) throws IOException {
+			String status, String nos, String noType) throws IOException {
 		if (StringUtil.isNotNull(createdTimeStart) && createdTimeStart.contains(",")) {
 			createdTimeStart = createdTimeStart.substring(createdTimeStart.lastIndexOf(",") + 1, createdTimeStart.length());
 		}
@@ -492,7 +492,8 @@ public class Storage {
 		Map<String, String> moreParam = new HashMap<String, String>();
 		moreParam.put("createdTimeStart", createdTimeStart);
 		moreParam.put("createdTimeEnd", createdTimeEnd);
-
+		moreParam.put("nos", nos);
+		moreParam.put("noType", noType);
 		pagination = storageService.getOutWarehouseOrderData(param, moreParam, pagination);
 		Map map = new HashMap();
 		map.put("Rows", pagination.rows);
