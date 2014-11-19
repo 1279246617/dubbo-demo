@@ -351,7 +351,7 @@ public class ShelfServiceImpl implements IShelfService {
 			// 循环outWarehouseOrderItemShelfList
 			int subQuantity = -1;
 			for (OutWarehouseOrderItemShelf oItemShelf : outWarehouseOrderItemShelfList) {
-				if (StringUtil.isEqual(seatCode, oItemShelf.getSeatCode()) || StringUtil.isEqual(sku, oItemShelf.getSku())) {
+				if (StringUtil.isEqualIgnoreCase(seatCode, oItemShelf.getSeatCode()) && StringUtil.isEqualIgnoreCase(sku, oItemShelf.getSku())) {
 					// 库位号和sku相同,数量相减,最后outWarehouseOrderItemShelfList的内容数量都等于0
 					subQuantity = oItemShelf.getQuantity() - Integer.valueOf(quantity);
 					break;
