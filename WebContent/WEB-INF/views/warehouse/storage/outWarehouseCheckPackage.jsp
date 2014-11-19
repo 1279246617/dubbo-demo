@@ -13,7 +13,8 @@
 <link href="${baseUrl}/static/calendar/prettify.css" rel="stylesheet" type="text/css" />
 <link href="${baseUrl}/static/calendar/lhgcalendar.css" rel="stylesheet" type="text/css" />
 <link href="${baseUrl}/static/ligerui/ligerUI/skins/Aqua/css/ligerui-all.css" rel="stylesheet" type="text/css" />
-
+<script type="text/javascript" src="${baseUrl}/static/jquery/jquery.js"></script>
+<script type="text/javascript" src="${baseUrl}/static/js/warehouse/outWarehouseCheckPackage.js"></script>
 <title>COE</title>
 </head>
 <body style="font-size: 16px;" onload="toggleConnection()">
@@ -105,7 +106,7 @@
 	</div>
 	
 		
-	 <script type="text/javascript" src="${baseUrl}/static/jquery/jquery.js"></script>
+	 
     <script type="text/javascript" src="${baseUrl}/static/bootstrap/bootstrap-typeahead.js"></script>
 	<script type="text/javascript" src="${baseUrl}/static/jquery/jquery.showMessage.js"></script>
 	<script  type="text/javascript" src="${baseUrl}/static/ligerui/ligerUI/js/core/base.js"></script>
@@ -114,7 +115,7 @@
     <script type="text/javascript" src="${baseUrl}/static/ligerui/ligerUI/js/plugins/ligerTab.js"></script>
     <script  type="text/javascript" src="${baseUrl}/static/ligerui/ligerUI/js/plugins/ligerTree.js" ></script>
     
-    <script type="text/javascript" src="${baseUrl}/static/js/warehouse/webSocketReadScales.js"></script>
+    
     
     <script type="text/javascript">
 	   var baseUrl = "${baseUrl}";
@@ -227,7 +228,45 @@
  		  		$("input").focus(function(){
  		  			focus = $(this).attr("t");
  		  		});
+ 		  		$("input[name=outWarehouseOrderWeight]").focus(function(){
+ 		  			//获取重量
+ 		  			var weight = getWeight();
+ 		  			alert(weight);
+ 		  		});
  	   	});
     </script>	
+    
+    <script type="text/javascript">
+   		 var ws;
+		  //连接
+		  function toggleConnection() {
+		  	try {
+		  		ws = new WebSocket("ws://127.0.0.1:9999");// 连接服务器
+		  		ws.onopen = function(event) {
+		  			alert("已经与服务器建立了连接\r\n当前连接状态：" + this.readyState);
+		  		};
+		  		ws.onmessage = function(event) {
+		//  			alert("接收到服务器发送的数据：\r\n" + event.data);
+		  		};
+		  		ws.onclose = function(event) {
+		//  			alert("已经与服务器断开连接\r\n当前连接状态：" + this.readyState);
+		  		};
+		  		ws.onerror = function(event) {
+		  			alert("WebSocket异常,电子秤自动读取功能不可用!");
+		  		};
+		  	} catch (ex) {
+		  		alert(ex.message);
+		  	}
+		  };
+		
+		  var getWeight=function(){
+		  	try {
+		  		ws.send("getweig");
+		  	} catch (ex) {
+		  		alert(ex.message);
+		  		return ex.message;
+		  	}
+		  };
+    </script>
 </body>
 </html>
