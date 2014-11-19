@@ -165,15 +165,23 @@ function advancedSearch(){
 	          button: [{
 	            name: '确定',
 	            callback: function() {
-	              var batchCustomerReferenceNo = this.content.document.getElementById("batchCustomerReferenceNo").val();
+	              var nos = this.content.$("#nos").val();
+	              var noType = this.content.$("#noType").val();
 	              //执行查询,返回不能查到出库订单的 客户订单号
 	              $.post(baseUrl + '/warehouse/storage/executeSearchOutWarehouseOrder.do', {
-	            	  batchCustomerReferenceNo:batchCustomerReferenceNo
+	            	  nos:nos,
+	            	  noType:noType
 	              },
 	              function(msg) {
-	            	  
-//	                	grid.loadData();
-	              });
+	            	  if(msg.status =='0'){
+	            			parent.$.showDialogMessage(msg.message, null, null);
+	            	  }
+	            	  if(msg.status =='1'){
+	            		  parent.$.showDialogMessage(msg.message, null, null);
+	            		  //执行查询
+//	            		  grid.loadData();
+	            	  }
+	              },"json");
 	              
 	            }
 	          }],
