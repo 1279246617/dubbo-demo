@@ -144,10 +144,15 @@ public class PrintServiceImpl implements IPrintService {
 		map.put("items", itemShelfList);
 		// 商品总数
 		int totalQuantity = 0;
+		double totalPrice = 0d;
 		for (OutWarehouseOrderItemShelf itemShelf : itemShelfList) {
 			totalQuantity += itemShelf.getQuantity();
+			if (itemShelf.getSkuUnitPrice() != null) {
+				totalPrice += (itemShelf.getQuantity() * itemShelf.getSkuUnitPrice() / 100);
+			}
 		}
 		map.put("totalQuantity", totalQuantity);
+		map.put("totalPrice", totalPrice);
 		if (outWarehouseOrder.getPrintedCount() == null) {
 			outWarehouseOrderDao.updateOutWarehouseOrderPrintedCount(outWarehouseOrderId, 1);
 		} else {
@@ -194,17 +199,11 @@ public class PrintServiceImpl implements IPrintService {
 		map.put("receiverPhoneNumber", receiver.getPhoneNumber());
 		map.put("receiverMobileNumber", receiver.getMobileNumber());
 		Integer totalQuantity = 0;
-		double totalPrice = 0d;
 		for (OutWarehouseOrderItem item : items) {
 			totalQuantity += item.getQuantity();
-			// 价格从分转成元,目前顺丰约定单位是分.
-			if (item.getSkuUnitPrice() != null) {
-				totalPrice += item.getQuantity() * item.getSkuUnitPrice() / 100;
-			}
 		}
 		// 寄托物品数量
 		map.put("totalQuantity", totalQuantity);
-		map.put("totalPrice", totalPrice);
 		// 总重量
 		map.put("totalWeight", outWarehouseOrder.getOutWarehouseWeight());
 		map.put("items", items);
