@@ -12,9 +12,15 @@
 <body >
       <table class="table" style="width: 100%;">
       		<tr>
-      			<th>客户订单号</th>
       			<th>
-      				<textarea type="text"  name="batchCustomerReferenceNo" id="batchCustomerReferenceNo" style="width:400px;height: 120px;"></textarea>
+      				按&nbsp;
+      				<select style="width:100px;" name="noType" id="noType">
+      					<option value="1">客户订单号</option>
+      					<option value="2">顺丰跟踪号</option>
+      				</select>	
+      			</th>
+      			<th>
+      				<textarea type="text"  name="nos" id="nos" style="width:400px;height: 120px;" ></textarea>
       			</th>
       		</tr>
       </table>

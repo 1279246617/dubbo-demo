@@ -980,8 +980,8 @@ public class Storage {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/executeSearchOutWarehouseOrder")
-	public String executeSearchOutWarehouseOrder(HttpServletRequest request, String batchCustomerReferenceNo) throws IOException {
-		Map<String, String> map = storageService.executeSearchOutWarehouseOrder(batchCustomerReferenceNo);
+	public String executeSearchOutWarehouseOrder(HttpServletRequest request, String nos, String noType) throws IOException {
+		Map<String, String> map = storageService.executeSearchOutWarehouseOrder(nos, noType);
 		return GsonUtil.toJson(map);
 	}
 }

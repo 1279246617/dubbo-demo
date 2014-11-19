@@ -1638,11 +1638,35 @@ public class StorageServiceImpl implements IStorageService {
 	}
 
 	@Override
-	public Map<String, String> executeSearchOutWarehouseOrder(String executeSearchOutWarehouseOrder) throws ServiceException {
-		OutWarehouseOrder param = new OutWarehouseOrder();
-		
-//		outWarehouseOrderDao.countOutWarehouseOrder(outWarehouseOrder, null);
-
-		return null;
+	public Map<String, String> executeSearchOutWarehouseOrder(String nos, String noType) throws ServiceException {
+		Map<String, String> map = new HashMap<String, String>();
+		map.put(Constant.STATUS, Constant.FAIL);
+		if (StringUtil.isNull(nos)) {
+			map.put(Constant.MESSAGE, "单号不能为空");
+		}
+		nos = nos.replaceAll("\\s+", " ");
+		nos = nos.replaceAll("[^\\w]+", " ");
+		String noArray[] = nos.split(" ");
+		// 不可以
+		String unAbleNos = "";
+		int unAbleNoCount = 0;
+		for (String no : noArray) {
+			OutWarehouseOrder param = new OutWarehouseOrder();
+			if (StringUtil.isEqual(noType, "1")) {// 客户单号
+				param.setCustomerReferenceNo(no);
+			} else if (StringUtil.isEqual(noType, "2")) {// 顺丰运单号
+				param.setTrackingNo(no);
+			}
+			long count = outWarehouseOrderDao.countOutWarehouseOrder(param, null);
+			if (count < 0) {
+				// 单号不可以查到出库订单
+				unAbleNos += no + ",";
+				unAbleNoCount++;
+			}
+		}
+		map.put("unAbleNos", unAbleNos);
+		map.put("unAbleNoCount", unAbleNoCount + "");
+		map.put(Constant.STATUS, Constant.SUCCESS);
+		return map;
 	}
 }
