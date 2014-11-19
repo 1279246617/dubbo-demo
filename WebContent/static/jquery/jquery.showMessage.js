@@ -28,7 +28,7 @@ $.extend({
                     lock: true,
                     content: content,
                     ok: true,
-                    resize: false,
+                    resize: true,
                     close: callback,
                     parent: parent || null
                 });

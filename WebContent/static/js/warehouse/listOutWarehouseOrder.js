@@ -184,7 +184,30 @@ function advancedSearch(){
 	            		  if(msg.unAbleNoCount == '0'){
 	            			  str = ('一共查询到'+msg.orderCount+'个订单,没有单号查询不到订单.');
 	            		  }
-	            		  parent.$.showDialogMessage(str, null, null);
+	            		  if(str.length>100){
+	            			  var contentArr = [];
+	             			 contentArr.push('<p style="width:500px;height:100%;margin-left:2mm;margin-top:2mm;word-break:break-all;">');
+	             			 contentArr.push('<b>'+str+'</b>');
+	             		     contentArr.push('</p>');
+	             		     var contentHtml = contentArr.join('');
+	             			 $.dialog({
+	             		  		lock: true,
+	             		  		max: false,
+	             		  		min: false,
+	             		  		title: '提示',
+	             		  		width: 550,
+	             		  		height: 350,
+	             		  		content: contentHtml,
+	             		  		button: [{
+	             		  			name: '确认',
+	             		  			callback: function() {
+	             		  			}
+	             		  		}]
+	             			  });
+	            		  }else{
+	            			  parent.$.showDialogMessage(str, null, null);
+	            		  }
+	            		  
 	            		  //对 searchfrom 赋值, 执行查询
 	            		  $("#noType").val(noType);
 	            		  $("#nos").val(nos);

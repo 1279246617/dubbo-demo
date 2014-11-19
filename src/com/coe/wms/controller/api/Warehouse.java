@@ -66,7 +66,7 @@ public class Warehouse {
 			if (StringUtil.isEqual(validateResultMap.get(Constant.STATUS), Constant.FAIL)) {
 				responseXml = validateResultMap.get(Constant.MESSAGE);
 
-				logger.info("responseXml:" + responseXml);
+				logger.warn("responseXml:" + responseXml);
 				return responseXml;
 			}
 			// 消息所属客户
@@ -79,7 +79,7 @@ public class Warehouse {
 			if (!StringUtil.isEqual((String) eventTypeMap.get(Constant.STATUS), Constant.SUCCESS)) {
 				responseXml = (String) eventTypeMap.get(Constant.MESSAGE);
 
-				logger.info("responseXml:" + responseXml);
+				logger.warn("responseXml:" + responseXml);
 				return responseXml;
 			}
 			// 成功获取事件类型
@@ -101,7 +101,7 @@ public class Warehouse {
 				responseXml = storageService.warehouseInterfaceConfirmOutWarehouseOrder(eventBody, userIdOfCustomer, eventTarget);
 			}
 
-			logger.info("eventType:" + eventType + "  responseXml:" + responseXml);
+			logger.warn("eventType:" + eventType + "  responseXml:" + responseXml);
 			return responseXml;
 		} catch (Exception e) {
 			Responses responses = new Responses();
@@ -115,7 +115,7 @@ public class Warehouse {
 			responseItems.add(serviceResponse);
 			responses.setResponseItems(responseItems);
 			String responseXml = XmlUtil.toXml(Responses.class, responses);
-			logger.info("API异常:"  + "  responseXml:" + responseXml);
+			logger.warn("API异常:"  + "  responseXml:" + responseXml);
 			return responseXml;
 		}
 	}
