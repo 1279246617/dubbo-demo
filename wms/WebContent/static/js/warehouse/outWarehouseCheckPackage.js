@@ -63,6 +63,10 @@
  	 	 function saveOutWarehouseOrderWeight(){
  	 		var outWarehouseOrderWeight = $("#outWarehouseOrderWeight").val();
  	 		var customerReferenceNo  = $("#customerReferenceNo").val();
+ 	 		if(outWarehouseOrderWeight ==null || outWarehouseOrderWeight == ''){
+ 	 			parent.$.showShortMessage({msg:"请先输入出库订单总重量",animate:false,left:"45%"});
+ 	 			return false;
+ 	 		}
  	 		$.post(baseUrl+ '/warehouse/storage/outWarehouseSubmitWeight.do?customerReferenceNo='+ customerReferenceNo+'&outWarehouseOrderWeight='+outWarehouseOrderWeight, function(msg) {
 	 				if(msg.status == 0){
 	 					parent.$.showShortMessage({msg:msg.message,animate:false,left:"45%"});

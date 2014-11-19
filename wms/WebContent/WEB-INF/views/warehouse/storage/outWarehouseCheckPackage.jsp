@@ -17,7 +17,7 @@
 <script type="text/javascript" src="${baseUrl}/static/js/warehouse/outWarehouseCheckPackage.js"></script>
 <title>COE</title>
 </head>
-<body style="font-size: 16px;" onload="toggleConnection()">
+<body style="font-size: 16px;">
 
 	<div class="pull-left" style="width:49%;height:100%; margin-top: 5px;margin-left: 5px;'" >
 		<table class="table">
@@ -104,8 +104,6 @@
 				</tbody>
 			</table>
 	</div>
-	
-		
 	 
     <script type="text/javascript" src="${baseUrl}/static/bootstrap/bootstrap-typeahead.js"></script>
 	<script type="text/javascript" src="${baseUrl}/static/jquery/jquery.showMessage.js"></script>
@@ -141,43 +139,40 @@
  		  		});
  		  		$("input[name=outWarehouseOrderWeight]").focus(function(){
  		  			//获取重量
- 		  			var weight = getWeight();
- 		  			alert(weight);
+ 		  			getWeight();
  		  		});
+ 		  		toggleConnection();
  	   	});
     </script>	
     
     <script type="text/javascript">
-   		 var ws;
-		  //连接
-		  function toggleConnection() {
-		  	try {
-		  		ws = new WebSocket("ws://127.0.0.1:9999");// 连接服务器
-		  		ws.onopen = function(event) {
-		  			alert("已经与服务器建立了连接\r\n当前连接状态：" + this.readyState);
-		  		};
-		  		ws.onmessage = function(event) {
-		//  			alert("接收到服务器发送的数据：\r\n" + event.data);
-		  		};
-		  		ws.onclose = function(event) {
-		//  			alert("已经与服务器断开连接\r\n当前连接状态：" + this.readyState);
-		  		};
-		  		ws.onerror = function(event) {
-		  			alert("WebSocket异常,电子秤自动读取功能不可用!");
-		  		};
-		  	} catch (ex) {
-		  		alert(ex.message);
-		  	}
-		  };
-		
-		  var getWeight=function(){
-		  	try {
-		  		ws.send("getweig");
-		  	} catch (ex) {
-		  		alert(ex.message);
-		  		return ex.message;
-		  	}
-		  };
+	    var ws;
+	    function toggleConnection() {          
+	            try {
+	                ws = new WebSocket("ws://127.0.0.1:9999");//连接服务器		
+					ws.onopen = function(event){
+	                	parent.$.showShortMessage({msg:'电子秤自动读取功能已经启动成功',animate:false,left:"45%"});
+	                };
+					ws.onmessage = function(event){
+						alert("接收到服务器发送的数据：\r\n"+event.data);
+					};
+					ws.onclose = function(event){
+						alert("已经与服务器断开连接\r\n当前连接状态："+this.readyState);
+					};
+					ws.onerror = function(event){
+						parent.$.showShortMessage({msg:'电子秤自动读取功能异常,请手动输入重量!',animate:false,left:"45%"});	
+					};
+	            } catch (ex) {
+	            	parent.$.showShortMessage({msg:'电子秤自动读取功能异常:'+ex.message, animate:false,left:"45%"});
+				}
+	    };
+		function getWeight() {
+				try{
+					ws.send("getweig");
+				}catch(ex){
+					alert(ex.message);
+				}
+	     };
     </script>
 </body>
 </html>
