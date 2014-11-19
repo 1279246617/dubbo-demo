@@ -182,7 +182,7 @@ public class PrintServiceImpl implements IPrintService {
 		}
 		// 创建条码
 		String trackingNo = outWarehouseOrder.getTrackingNo();
-		String trackingNoBarcodeData = BarcodeUtil.createCode128(trackingNo, true, 15d,null);
+		String trackingNoBarcodeData = BarcodeUtil.createCode128(trackingNo, true, 15d, null);
 		map.put("trackingNoBarcodeData", trackingNoBarcodeData);
 		// 清单号 (出库订单主键)
 		map.put("outWarehouseOrderId", String.valueOf(outWarehouseOrder.getId()));
@@ -194,11 +194,17 @@ public class PrintServiceImpl implements IPrintService {
 		map.put("receiverPhoneNumber", receiver.getPhoneNumber());
 		map.put("receiverMobileNumber", receiver.getMobileNumber());
 		Integer totalQuantity = 0;
+		double totalPrice = 0d;
 		for (OutWarehouseOrderItem item : items) {
 			totalQuantity += item.getQuantity();
+			// 价格从分转成元,目前顺丰约定单位是分.
+			if (item.getSkuUnitPrice() != null) {
+				totalPrice += item.getQuantity() * item.getSkuUnitPrice() / 100;
+			}
 		}
 		// 寄托物品数量
 		map.put("totalQuantity", totalQuantity);
+		map.put("totalPrice", totalPrice);
 		// 总重量
 		map.put("totalWeight", outWarehouseOrder.getOutWarehouseWeight());
 		map.put("items", items);

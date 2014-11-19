@@ -16,7 +16,7 @@
 
 <title>COE</title>
 </head>
-<body style="font-size: 16px;">
+<body style="font-size: 16px;" onload="toggleConnection()">
 
 	<div class="pull-left" style="width:49%;height:100%; margin-top: 5px;margin-left: 5px;'" >
 		<table class="table">
@@ -113,6 +113,8 @@
 	<script type="text/javascript" src="${baseUrl}/static/ligerui/ligerUI/js/plugins/ligeruiPatch.js"></script>
     <script type="text/javascript" src="${baseUrl}/static/ligerui/ligerUI/js/plugins/ligerTab.js"></script>
     <script  type="text/javascript" src="${baseUrl}/static/ligerui/ligerUI/js/plugins/ligerTree.js" ></script>
+    
+    <script type="text/javascript" src="${baseUrl}/static/js/warehouse/webSocketReadScales.js"></script>
     
     <script type="text/javascript">
 	   var baseUrl = "${baseUrl}";
