@@ -1654,10 +1654,12 @@ public class StorageServiceImpl implements IStorageService {
 		String unAbleNos = "";
 		int unAbleNoCount = 0;
 		int orderCount = 0;
+		String allNos = "";// 单号全部返回到页面,
 		for (String no : noArray) {
 			if (StringUtil.isNull(no)) {
 				continue;
 			}
+			allNos += no + ",";
 			OutWarehouseOrder param = new OutWarehouseOrder();
 			if (StringUtil.isEqual(noType, "1")) {// 客户单号
 				param.setCustomerReferenceNo(no);
@@ -1677,6 +1679,7 @@ public class StorageServiceImpl implements IStorageService {
 			unAbleNos = unAbleNos.substring(0, unAbleNos.length() - 1);
 		}
 		map.put("unAbleNos", unAbleNos);
+		map.put("allNos", allNos);
 		map.put("orderCount", orderCount + "");
 		map.put("unAbleNoCount", unAbleNoCount + "");
 		map.put(Constant.STATUS, Constant.SUCCESS);

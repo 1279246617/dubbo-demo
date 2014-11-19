@@ -173,6 +173,7 @@ function advancedSearch(){
 	            	  noType:noType
 	              },
 	              function(msg) {
+	            	  var  allNos = msg.allNos;
 	            	  if(msg.status =='0'){
 	            			parent.$.showDialogMessage(msg.message, null, null);
 	            	  }
@@ -207,10 +208,9 @@ function advancedSearch(){
 	            		  }else{
 	            			  parent.$.showDialogMessage(str, null, null);
 	            		  }
-	            		  
 	            		  //对 searchfrom 赋值, 执行查询
 	            		  $("#noType").val(noType);
-	            		  $("#nos").val(nos);
+	            		  $("#nos").val(allNos);
 	            		  btnSearch("#searchform",grid);
 	            	 }
 	              },"json");

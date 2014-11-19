@@ -209,6 +209,7 @@
 		}, function(map) {
 			if(map.status == 0){
 				parent.$.showDialogMessage(map.message, null, null);
+				sound();
 				return false;
 			}
 			if(map.status == 1){
@@ -221,6 +222,10 @@
 		},"json");
   	  }
   	  
+  	function sound(){
+  	     $('embed').remove();  
+	     $('body').append('<embed src="'+baseUrl+'/static/sound/False.wav" autostart="true" hidden="true" loop="false">');  		
+  	}  
     </script>	
 </body>
 </html>
