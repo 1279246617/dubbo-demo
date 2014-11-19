@@ -208,7 +208,7 @@ public class StringUtil {
 			return null;
 		}
 		strs = strs.replaceAll("\\s+", " ");
-		strs = strs.replaceAll("[^\\w]+", " ");
+		strs = strs.replaceAll("[^\\w\\-]+", " ");
 		String noArray[] = strs.split(" ");
 		return noArray;
 	}
