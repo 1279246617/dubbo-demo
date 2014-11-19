@@ -93,17 +93,24 @@
 									<td style="width:24mm;"></td>
 									<td style="width:24mm;">${item.seatCode}</td>
 									<td style="width:14mm;">${item.quantity }</td>
-									<td style="width:auto;">${item.skuUnitPrice}  ${item.skuPriceCurrency} </td>
+									
+<%-- 									${item.skuPriceCurrency}  --%>
+									<td style="width:auto;">${item.quantity * item.skuUnitPrice /100}  元</td>
+									
 								</tr>
 							</c:forEach>
 						</table>
 					</div>
 					<!-- 第七行 -->
-					<div style="height:8mm;weight:100%;" >
+					<div style="height:8mm;width:100%;" >
 						<span style="float:left;margin-left: 2mm;">
 							商品数量：${map.totalQuantity}
 						</span>
+						<span style="float:right;margin-right: 1mm;">
+							金额合计：${map.totalQuantity} ${map.totalPrice} 元
+						</span>
 					</div>		
+					
 					<!-- 第八行 -->
 					<div style="height:12mm;weight:100%;" >
 						<span style="float:left;margin-left: 2mm;">
