@@ -1643,6 +1643,11 @@ public class StorageServiceImpl implements IStorageService {
 		map.put(Constant.STATUS, Constant.FAIL);
 		if (StringUtil.isNull(nos)) {
 			map.put(Constant.MESSAGE, "单号不能为空");
+			return map;
+		}
+		if (StringUtil.isEqual(noType, "1") || StringUtil.isEqual(noType, "2")) {
+			map.put(Constant.MESSAGE, "单号类型必须是 客户订单号或顺丰运单号");
+			return map;
 		}
 		nos = nos.replaceAll("\\s+", " ");
 		nos = nos.replaceAll("[^\\w]+", " ");
@@ -1650,7 +1655,11 @@ public class StorageServiceImpl implements IStorageService {
 		// 不可以
 		String unAbleNos = "";
 		int unAbleNoCount = 0;
+		int orderCount = 0;
 		for (String no : noArray) {
+			if (StringUtil.isNull(no)) {
+				continue;
+			}
 			OutWarehouseOrder param = new OutWarehouseOrder();
 			if (StringUtil.isEqual(noType, "1")) {// 客户单号
 				param.setCustomerReferenceNo(no);
@@ -1662,9 +1671,12 @@ public class StorageServiceImpl implements IStorageService {
 				// 单号不可以查到出库订单
 				unAbleNos += no + ",";
 				unAbleNoCount++;
+			} else {
+				orderCount += count;
 			}
 		}
 		map.put("unAbleNos", unAbleNos);
+		map.put("orderCount", orderCount + "");
 		map.put("unAbleNoCount", unAbleNoCount + "");
 		map.put(Constant.STATUS, Constant.SUCCESS);
 		return map;

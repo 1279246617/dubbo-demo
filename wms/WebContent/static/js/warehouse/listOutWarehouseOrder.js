@@ -176,11 +176,19 @@ function advancedSearch(){
 	            	  if(msg.status =='0'){
 	            			parent.$.showDialogMessage(msg.message, null, null);
 	            	  }
+	            	  
 	            	  if(msg.status =='1'){
-	            		  parent.$.showDialogMessage(msg.message, null, null);
+	            		  String message = "";
+	            		  if(msg.unAbleNoCount !='0'){
+	            			  message = ("一共查询到"+msg.orderCount+"个订单," +msg.unAbleNoCount+ "个单号不能查询到订单,它们是:"+msg.unAbleNos+".");
+	            		  }
+	            		  if(msg.unAbleNoCount == '0'){
+	            			  message = ("一共查询到"+msg.orderCount+"个订单,没有单号查询不到订单.");
+	            		  }
+	            		  parent.$.showDialogMessage(message, null, null);
 	            		  //执行查询
 //	            		  grid.loadData();
-	            	  }
+	            	 }
 	              },"json");
 	              
 	            }
