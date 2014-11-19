@@ -21,6 +21,8 @@
 <body>
 	  <div class="toolbar1">
            <form action="${baseUrl}/warehouse/storage/getOutWarehouseOrderData.do" id="searchform" name="searchform" method="post">
+          	<input type="text"  name="nos"  id="nos"   style="display:none;"/>
+			<input type="text"  name="noType"  id="noType"   style="display:none;"/>
            		<div class="pull-left">
            			<span class="pull-left" style="width:55px;">
 			       		<a class="btn btn-primary btn-small" onclick="checkOrder()" title="审核出库订单">
@@ -63,6 +65,10 @@
                		
                		<span class="pull-left" style="width:55px;">
                			<a class="btn btn-primary btn-small" id="btn_search"><i class="icon-search icon-white"></i>搜索</a>
+               			<input style=" visibility:hidden;">
+               		</span>
+               		<span class="pull-left" style="width:55px;">
+               			<a class="btn btn-primary btn-small" id="advancedSearch"><i class="icon-search icon-white"></i>高级</a>
                			<input style=" visibility:hidden;">
                		</span>
                </div>
@@ -112,9 +118,14 @@
    			
    			//btn_search
    			$("#btn_search").click(function(){
+   				$("#noType").val("");//清空高级搜索隐藏框的内容
+   				$("#nos").val("");
    				btnSearch("#searchform",grid);
    			});
-   			
+   		//高级搜索
+   			$("#advancedSearch").click(function(){
+   				advancedSearch();
+   			});
    		});
    		  
    	 	 var grid = null;
@@ -131,6 +142,7 @@
 		            		}
 		            		return skus;
 	  		          	}},
+	  		          	{ display: '状态', name: 'status', align: 'center', type: 'float',width:'8%'},
 	  		          	{ display: '发货渠道', name: 'shipwayCode', align: 'center', type: 'float',width:'8%'},
 	  		          	{ display: '跟踪单号', name: 'trackingNo', align: 'center', type: 'float',width:'12%'},
 		                { display: '收件人名', name: 'receiverName', align: 'center', type: 'float',width:'8%'},
@@ -157,7 +169,7 @@
 		            }
 	                ],  
 	                dataAction: 'server',
-	                url: baseUrl+'/warehouse/storage/getWaitCheckOutWarehouseOrderData.do',
+	                url: baseUrl+'/warehouse/storage/getOutWarehouseOrderData.do?status=WWC',
 	                pageSize: 100, 
 	                pageSizeOptions:[10,50,100,500,1000],
 	                usePager: 'true',
