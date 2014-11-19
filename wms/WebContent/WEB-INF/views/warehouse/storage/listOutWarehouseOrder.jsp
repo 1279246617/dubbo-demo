@@ -136,6 +136,8 @@
    			
    			//btn_search
    			$("#btn_search").click(function(){
+   				$("#noType").val("");//清空高级搜索隐藏框的内容
+   				$("#nos").val("");
    				btnSearch("#searchform",grid);
    			});
    			//高级搜索
