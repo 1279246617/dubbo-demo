@@ -94,15 +94,13 @@ public class ItemInventoryDaoImpl implements IItemInventoryDao {
 		}
 		String sql = sb.toString();
 		logger.info("查询库存记录sql:" + sql);
-		List<ItemInventory> itemInventoryList = jdbcTemplate
-				.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(ItemInventory.class));
+		List<ItemInventory> itemInventoryList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(ItemInventory.class));
 		logger.info("查询库存记录sql:" + sql + " size:" + itemInventoryList.size());
 		return itemInventoryList;
 	}
 
 	@Override
-	public int addItemInventory(final Long wareHouseId, final Long userIdOfCustomer, final String batchNo, final String sku,
-			final Integer addQuantity) {
+	public int addItemInventory(final Long wareHouseId, final Long userIdOfCustomer, final String batchNo, final String sku, final Integer addQuantity) {
 		// 查询库存记录是否已存在
 		String sql = "select id from w_s_item_inventory where user_id_of_customer = ? and warehouse_id = ? and sku = ? and batch_no =?";
 		List<Long> idList = jdbcTemplate.queryForList(sql, Long.class, userIdOfCustomer, wareHouseId, sku, batchNo);
@@ -110,8 +108,7 @@ public class ItemInventoryDaoImpl implements IItemInventoryDao {
 			Long id = idList.get(0);
 			logger.info("已存在库存记录id:" + id);
 			// 更新已有库存记录
-			sql = "update w_s_item_inventory set quantity = quantity+" + addQuantity + " ,available_quantity = available_quantity+"
-					+ addQuantity + " ,last_update_time = " + System.currentTimeMillis() + " where id = " + id;
+			sql = "update w_s_item_inventory set quantity = quantity+" + addQuantity + " ,available_quantity = available_quantity+" + addQuantity + " ,last_update_time = " + System.currentTimeMillis() + " where id = " + id;
 			return jdbcTemplate.update(sql);
 		}
 		// 插入新库存记录
@@ -187,5 +184,11 @@ public class ItemInventoryDaoImpl implements IItemInventoryDao {
 			return 0l;
 		}
 		return count;
+	}
+
+	@Override
+	public int updateItemInventoryQuantity(Long id, Integer quantity) {
+		String sql = "update w_s_item_inventory set quantity=" + quantity + " where id=" + id;
+		return jdbcTemplate.update(sql);
 	}
 }

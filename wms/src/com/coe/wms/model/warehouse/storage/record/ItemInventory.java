@@ -3,10 +3,9 @@ package com.coe.wms.model.warehouse.storage.record;
 import java.io.Serializable;
 
 /**
- * 产品批次库存
+ * 在入库 出库时产品批次库存
  * 
- * 
- * 通过触发器 在入库 出库时 修改此表记录. 定时和流水记录统计对比
+ * 在上架和下架时修改产品货位库存
  * 
  * @author Administrator
  * 
@@ -24,21 +23,19 @@ public class ItemInventory implements Serializable {
 	private Long warehouseId;
 
 	private String sku;
-	
+
 	/**
 	 * 实际库存
 	 */
 	private Integer quantity;
 
 	/**
-	 * 可用库存 客户创建了出库订单,但是出库订单并没有完成, 这时可用库存等于 实际库存 - 出库订单sku数量
-	 * 
-	 * 预扣库存
+	 * 次字段暂时无用, 可用库存记录已经从 货位库存记录获取
 	 */
 	private Integer availableQuantity;
 
 	private Long lastUpdateTime;
-	
+
 	private Long createdTime;
 	/**
 	 * 入库批次号 可以查到某批次还剩余多少货
@@ -117,4 +114,3 @@ public class ItemInventory implements Serializable {
 		this.warehouseId = warehouseId;
 	}
 }
-
