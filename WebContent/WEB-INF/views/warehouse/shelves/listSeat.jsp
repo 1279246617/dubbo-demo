@@ -147,10 +147,10 @@
 	    	 grid = $("#maingrid").ligerGrid({
 	                columns: [
 							{ display: '仓库', name: 'warehouseId', type: 'float',width:'13%'},
-	  	                  	{ display: '货架号', name: 'shelfCode', type: 'float',width:'14%'},
-	  	                  	{ display: '货位号', name: 'seatCode', type: 'int', width:'16%'},
+	  	                  	{ display: '货架号', name: 'shelfCode', type: 'float',width:'13%'},
+	  	                  	{ display: '货位号', name: 'seatCode', type: 'int', width:'15%'},
 	  	                  	{ display: '状态', name: 'status', type: 'int', width:'9%'},
-			            	{ display: '货物', isSort: false, align: 'center', type: 'float',width:'20%',render: function(row) {
+			            	{ display: '货物', isSort: false, align: 'center', type: 'float',width:'22%',render: function(row) {
 			            		var skus = "";
 			            		if (!row._editing) {
 			            			skus += '<a href="javascript:listItemShelfInventory(' + row.id + ')">'+row.skus+'</a> ';
