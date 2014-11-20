@@ -11,7 +11,7 @@ import java.io.Serializable;
  * @author Administrator
  * 
  */
-public class OutWarehouseShipping implements Serializable {
+public class OutWarehouseRecordItem implements Serializable {
 
 	/**
 	 * 

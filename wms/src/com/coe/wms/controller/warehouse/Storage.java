@@ -27,7 +27,7 @@ import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus.OutWarehouseOrderStatusCode;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecord;
 import com.coe.wms.model.warehouse.storage.record.OutWarehouseRecord;
-import com.coe.wms.model.warehouse.storage.record.OutWarehouseShipping;
+import com.coe.wms.model.warehouse.storage.record.OutWarehouseRecordItem;
 import com.coe.wms.service.storage.IStorageService;
 import com.coe.wms.service.user.IUserService;
 import com.coe.wms.util.Constant;
@@ -744,7 +744,7 @@ public class Storage {
 		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
 		Map<String, Object> map = new HashMap<String, Object>();
 		Map<String, Object> objectMap = storageService.outWarehouseShippingEnterCoeTrackingNo(coeTrackingNo);
-		List<OutWarehouseShipping> outWarehouseShippingList = (List<OutWarehouseShipping>) objectMap.get("outWarehouseShippingList");
+		List<OutWarehouseRecordItem> outWarehouseShippingList = (List<OutWarehouseRecordItem>) objectMap.get("outWarehouseShippingList");
 		map.put("outWarehouseShippingList", outWarehouseShippingList);
 		map.put(Constant.STATUS, objectMap.get(Constant.STATUS));
 		map.put(Constant.MESSAGE, objectMap.get(Constant.MESSAGE));
