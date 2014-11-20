@@ -12,7 +12,7 @@ public interface ITrackingNoDao {
 	 * @return
 	 */
 	public TrackingNo getAvailableTrackingNoByType(String type);
-	
+
 	public List<TrackingNo> findTrackingNo(String trackingNo, String type);
 
 	/**
@@ -22,6 +22,8 @@ public interface ITrackingNoDao {
 	 * @return
 	 */
 	public int usedTrackingNo(Long trackingNoId);
+
+	public TrackingNo getTrackingNoById(Long id);
 
 	/**
 	 * 锁定跟踪号

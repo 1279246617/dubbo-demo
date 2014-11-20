@@ -1446,6 +1446,13 @@ public class StorageServiceImpl implements IStorageService {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put(Constant.STATUS, Constant.FAIL);
 		// 根据客户参考好查询出库订单customerReferenceNo
+		if (StringUtil.isNull(customerReferenceNo)) {
+			map.put(Constant.MESSAGE, "请先输入客户订单号");
+			return map;
+		}
+		if (weight == null || weight <= 0) {
+			map.put(Constant.MESSAGE, "重量必须是大于0的数字");
+		}
 		OutWarehouseOrder param = new OutWarehouseOrder();
 		param.setCustomerReferenceNo(customerReferenceNo);
 		List<OutWarehouseOrder> outWarehouseOrderList = outWarehouseOrderDao.findOutWarehouseOrder(param, null, null);
@@ -1460,7 +1467,6 @@ public class StorageServiceImpl implements IStorageService {
 		}
 		// 称重,并改变订单状态为已经称重,等待回传给顺丰
 		outWarehouseOrder.setStatus(OutWarehouseOrderStatusCode.WSW);
-
 		outWarehouseOrder.setOutWarehouseWeight(weight);
 		outWarehouseOrder.setWeightCode(WeightCode.KG);
 		int updateCount = outWarehouseOrderDao.updateOutWarehouseOrderWeight(outWarehouseOrder);
@@ -1684,5 +1690,10 @@ public class StorageServiceImpl implements IStorageService {
 		map.put("unAbleNoCount", unAbleNoCount + "");
 		map.put(Constant.STATUS, Constant.SUCCESS);
 		return map;
+	}
+
+	@Override
+	public TrackingNo getTrackingNoById(Long id) throws ServiceException {
+		return trackingNoDao.getTrackingNoById(id);
 	}
 }

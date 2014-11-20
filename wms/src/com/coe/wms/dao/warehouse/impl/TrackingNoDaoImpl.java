@@ -64,4 +64,13 @@ public class TrackingNoDaoImpl implements ITrackingNoDao {
 		return trackingNoList;
 	}
 
+	@Override
+	public TrackingNo getTrackingNoById(Long id) {
+		String sql = "select id,type,tracking_no,created_time,status,used_time,locked_time from w_w_tracking_no where id=" + id;
+		List<TrackingNo> trackingNoList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(TrackingNo.class));
+		if (trackingNoList == null || trackingNoList.size() <= 0) {
+			return null;
+		}
+		return trackingNoList.get(0);
+	}
 }
