@@ -24,7 +24,6 @@ var getWeight=function(){
 	try {
 		ws.send("getweig");
 	} catch (ex) {
-		alert(ex.message);
 		return ex.message;
 	}
 };
