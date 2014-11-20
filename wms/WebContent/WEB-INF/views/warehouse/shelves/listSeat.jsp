@@ -146,12 +146,18 @@
 	    function initGrid() {
 	    	 grid = $("#maingrid").ligerGrid({
 	                columns: [
-							{ display: '仓库', name: 'warehouse_id', type: 'float',width:'13%'},
-	  	                  	{ display: '货架号', name: 'shelf_code', type: 'float',width:'14%'},
-	  	                  	{ display: '货位号', name: 'seat_code', type: 'int', width:'16%'},
+							{ display: '仓库', name: 'warehouseId', type: 'float',width:'13%'},
+	  	                  	{ display: '货架号', name: 'shelfCode', type: 'float',width:'14%'},
+	  	                  	{ display: '货位号', name: 'seatCode', type: 'int', width:'16%'},
 	  	                  	{ display: '状态', name: 'status', type: 'int', width:'9%'},
-			                { display: '货物', name: 'skus',type:'float',width:'20%'},
-	  	                  	{display: '操作',isSort: false,width: '17%',render: function(row) {
+			            	{ display: '货物', isSort: false, align: 'center', type: 'float',width:'20%',render: function(row) {
+			            		var skus = "";
+			            		if (!row._editing) {
+			            			skus += '<a href="javascript:listItemShelfInventory(' + row.id + ')">'+row.skus+'</a> ';
+			            		}
+			            		return skus;
+		  		          	}},
+	  	                    {display: '操作',isSort: false,width: '17%',render: function(row) {
 			            		var h = "";
 			            		if (!row._editing) {
 			            			h += '<a href="javascript:print(' + row.id + ')">打印货位条码</a> ';
@@ -174,7 +180,7 @@
 	                isScroll: true,
 	                enabledEdit: false,
 	                clickToEdit: false,
-	                enabledSort:true
+	                enabledSort:false
 	         });
 	    };	
 	 
@@ -313,6 +319,47 @@
 		function showSeat(shelfId){
 			$("#shelfId").val(shelfId);
 			btnSearch("#searchform",grid);
+		}
+		
+		//显示货物
+		function listItemShelfInventory(id){
+			var contentArr = [];
+        	contentArr.push('<table class="table" style="width:549px">');
+        	contentArr.push('<tr><th>产品SKU</th><th>产品名称</th><th>实际数量</th><th>可用数量</th></tr>');
+        	$.ajax({ 
+                type : "post", 
+                url :baseUrl + '/warehouse/shelves/getSeatItemInventory.do', 
+                data : "seatId="+id, 
+                async : false, 
+                success : function(msg){ 
+                	msg = eval("(" + msg + ")");
+        			$.each(msg,function(i,e){
+        			  	contentArr.push('<tr>');
+        			  	contentArr.push('<td>'+e.sku+'</td>');
+    	        		contentArr.push('<td>'+e.skuName+'</td>');
+    	        		contentArr.push('<td>'+e.quantity+'</td>');
+    	        		contentArr.push('<td>'+e.availableQuantity+'</td>');
+        			  	contentArr.push('</tr>');
+        			});
+                } 
+           	});
+            contentArr.push('</table>');
+            var contentHtml = contentArr.join('');
+        	$.dialog({
+          		lock: true,
+          		max: false,
+          		min: false,
+          		title: '货位的货物详情',
+          		width: 550,
+          		height: 350,
+          		content: contentHtml,
+          		button: [{
+          			name: '关闭',
+          			callback: function() {
+						
+          			}
+          		}]
+          	})
 		}
    	</script>
 	<script type="text/javascript" src="${baseUrl}/static/jquery/jquery.showMessage.js"></script>

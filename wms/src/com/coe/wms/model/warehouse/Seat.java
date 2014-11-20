@@ -14,6 +14,11 @@ public class Seat implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 2216058659884286333L;
+
+	public static final String SEAT_STATUS_IDLE = "空闲";
+	
+	public static final String SEAT_STATUS_USED = "有货";
+
 	/**
 	 * 主键
 	 */
