@@ -55,14 +55,14 @@
 			<tr>
 				<td colspan="2" style="height:70px;">
 					<span style="width:90px;height:30px;margin-top: 4mm;font-size: 5mm;" class="pull-left" >装箱重量</span>
-					<input type="text"  name="outWarehouseOrderWeight"  t="3"  id="outWarehouseOrderWeight"  style="width:120px;height:60px; font-size: 10mm;font-weight: bold;color:red;" class="pull-left" readonly="readonly"/>
+					<input type="text"  name="outWarehouseOrderWeight"  t="3"  id="outWarehouseOrderWeight"  style="width:130px;height:60px; font-size: 10mm;font-weight: bold;color:red;" class="pull-left" readonly="readonly" onkeyup="this.value=this.value.replace(/[^\d\.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d\.]/g,'')"/>
 					<span style="width:50px;height:30px;margin-top: 4mm;font-size: 6mm;font-weight: bold;" class="pull-left" >KG</span>
 					<span style="width:90px;height:30px;margin-top: 4mm;font-size: 4mm;" class="pull-left" >
 						<input class="pull-left" name="auto" style="vertical-align: middle;" type="checkbox" checked="checked" id="auto" onclick="changeAuto()">
 						自动读取
 					</span>
-					<span style="height:30px;margin-top: 4mm;font-size: 8mm;" class="pull-left" >
-						<i  id="weightOk" style="display:none;width:4mm;height:4mm;" class="icon-ok icon-blue">
+					<span style="height:30px;margin-top: 0mm;font-size: 8mm;" class="pull-left" >
+						<img id="weightOk" src="${baseUrl}/static/img/nike.png" style="display:none;width:15mm;height:15mm;" >
 					</span>
 				</td>
 				<td colspan="1">
@@ -126,7 +126,8 @@
 	    function toggleConnection(port) {
 	    	  index = index+1;	 
 	            try {
-	                ws = new WebSocket("ws://127.0.0.1:"+port);//连接服务器		
+	                ws = new WebSocket("ws://127.0.0.1:"+port);//连接服务器
+// 	                ws = new WebSocket("ws://192.168.0.184:"+port);//连接服务器
 					ws.onopen = function(event){
 	                	parent.$.showShortMessage({msg:'电子秤自动读取功能已经启动成功',animate:false,left:"45%"});
 	                };

@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.coe.wms.controller.Application;
+import com.coe.wms.model.warehouse.TrackingNo;
 import com.coe.wms.model.warehouse.Warehouse;
 import com.coe.wms.model.warehouse.storage.record.OutWarehouseShipping;
 import com.coe.wms.service.print.IPrintService;
@@ -162,7 +163,7 @@ public class Print {
 	 * @throws IOException
 	 */
 	@RequestMapping(value = "/printOutWarehouseEIR", method = RequestMethod.GET)
-	public ModelAndView printOutWarehouseEIR(HttpServletRequest request, HttpServletResponse response, String coeTrackingNo, Long coeTrackingNoId) throws IOException {
+	public ModelAndView printOutWarehouseEIR(HttpServletRequest request, HttpServletResponse response, Long coeTrackingNoId) throws IOException {
 		ModelAndView view = new ModelAndView();
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
 		List<Map<String, String>> mapList = printService.getOutWarehouseShippings(coeTrackingNoId);
@@ -177,6 +178,9 @@ public class Print {
 				total++;
 			}
 		}
+		TrackingNo trackingNo = storageService.getTrackingNoById(coeTrackingNoId);
+		// 跟踪号 (COE交接单号)
+		String coeTrackingNo = trackingNo.getTrackingNo();
 		view.addObject("totalWeight", totalWeight);
 		view.addObject("total", total);
 		view.addObject("mapList", mapList);

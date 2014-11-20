@@ -312,8 +312,8 @@ public interface IStorageService {
 	public Map<String, String> saveInWarehouseRecordRemark(String remark, Long id) throws ServiceException;
 
 	public Map<String, String> saveOutWarehouseRecordRemark(String remark, Long id) throws ServiceException;
-	
-	public Map<String, String> executeSearchOutWarehouseOrder(String nos,String noType) throws ServiceException;
-	
-	
+
+	public Map<String, String> executeSearchOutWarehouseOrder(String nos, String noType) throws ServiceException;
+
+	public TrackingNo getTrackingNoById(Long id) throws ServiceException;
 }
