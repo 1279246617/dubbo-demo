@@ -20,7 +20,7 @@ import com.coe.wms.model.warehouse.storage.record.InWarehouseRecord;
 import com.coe.wms.model.warehouse.storage.record.OnShelf;
 import com.coe.wms.model.warehouse.storage.record.OutShelf;
 import com.coe.wms.model.warehouse.storage.record.OutWarehouseRecord;
-import com.coe.wms.model.warehouse.storage.record.OutWarehouseShipping;
+import com.coe.wms.model.warehouse.storage.record.OutWarehouseRecordItem;
 import com.coe.wms.pojo.api.warehouse.EventBody;
 import com.coe.wms.util.Pagination;
 

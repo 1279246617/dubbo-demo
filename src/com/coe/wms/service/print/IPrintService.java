@@ -3,7 +3,7 @@ package com.coe.wms.service.print;
 import java.util.List;
 import java.util.Map;
 
-import com.coe.wms.model.warehouse.storage.record.OutWarehouseShipping;
+import com.coe.wms.model.warehouse.storage.record.OutWarehouseRecordItem;
 
 public interface IPrintService {
 

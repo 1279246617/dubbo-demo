@@ -36,7 +36,7 @@ import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderReceiverDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderSenderDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderStatusDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseRecordDao;
-import com.coe.wms.dao.warehouse.storage.IOutWarehouseShippingDao;
+import com.coe.wms.dao.warehouse.storage.IOutWarehouseRecordItemDao;
 import com.coe.wms.exception.ServiceException;
 import com.coe.wms.model.unit.Weight;
 import com.coe.wms.model.unit.Weight.WeightCode;
@@ -65,7 +65,7 @@ import com.coe.wms.model.warehouse.storage.record.ItemShelfInventory;
 import com.coe.wms.model.warehouse.storage.record.OnShelf;
 import com.coe.wms.model.warehouse.storage.record.OutShelf;
 import com.coe.wms.model.warehouse.storage.record.OutWarehouseRecord;
-import com.coe.wms.model.warehouse.storage.record.OutWarehouseShipping;
+import com.coe.wms.model.warehouse.storage.record.OutWarehouseRecordItem;
 import com.coe.wms.pojo.api.warehouse.Buyer;
 import com.coe.wms.pojo.api.warehouse.ClearanceDetail;
 import com.coe.wms.pojo.api.warehouse.ErrorCode;
@@ -158,7 +158,7 @@ public class StorageServiceImpl implements IStorageService {
 	private IInWarehouseRecordItemDao inWarehouseRecordItemDao;
 
 	@Resource(name = "outWarehouseShippingDao")
-	private IOutWarehouseShippingDao outWarehouseShippingDao;
+	private IOutWarehouseRecordItemDao outWarehouseShippingDao;
 
 	@Resource(name = "userDao")
 	private IUserDao userDao;
@@ -1303,15 +1303,15 @@ public class StorageServiceImpl implements IStorageService {
 		if (!StringUtil.isEqual(addOrSub, "1")) {
 			map.put(Constant.STATUS, "2");
 			// 根据出货运单号+coe单号查找出货记录
-			OutWarehouseShipping shippingParam = new OutWarehouseShipping();
+			OutWarehouseRecordItem shippingParam = new OutWarehouseRecordItem();
 			shippingParam.setCoeTrackingNoId(coeTrackingNoId);
 			shippingParam.setCoeTrackingNo(coeTrackingNo);
 			shippingParam.setOurWarehouseOrderTrackingNo(trackingNo);
-			List<OutWarehouseShipping> outWarehouseShippingList = outWarehouseShippingDao.findOutWarehouseShipping(shippingParam, null, null);
+			List<OutWarehouseRecordItem> outWarehouseShippingList = outWarehouseShippingDao.findOutWarehouseRecordItem(shippingParam, null, null);
 			String deleteShippingIds = "";
 			int sub = 0;
-			for (OutWarehouseShipping shipping : outWarehouseShippingList) {
-				outWarehouseShippingDao.deleteOutWarehouseShippingById(shipping.getId());
+			for (OutWarehouseRecordItem shipping : outWarehouseShippingList) {
+				outWarehouseShippingDao.deleteOutWarehouseRecordItemById(shipping.getId());
 				// 加#是为了 jquery可以直接$("#id1,#id2,#id3,#id4")
 				deleteShippingIds += ("#" + shipping.getId() + ",");
 				orderIds = orderIds.replaceAll(shipping.getOutWarehouseOrderId() + "\\|\\|", "");
@@ -1327,7 +1327,7 @@ public class StorageServiceImpl implements IStorageService {
 		if (StringUtil.isEqual(outWarehouseOrder.getStatus(), OutWarehouseOrderStatusCode.WWO)) {
 			// 保存到OutWarehouseShipping,但不改变出库订单的状态.
 			// 只有当操作员点击完成出货总单才改变一个COE单号下面对应的所有出库订单的状态
-			OutWarehouseShipping outWarehouseShipping = new OutWarehouseShipping();
+			OutWarehouseRecordItem outWarehouseShipping = new OutWarehouseRecordItem();
 			outWarehouseShipping.setCoeTrackingNo(coeTrackingNo);
 			outWarehouseShipping.setCoeTrackingNoId(coeTrackingNoId);
 			outWarehouseShipping.setCreatedTime(System.currentTimeMillis());
@@ -1336,7 +1336,7 @@ public class StorageServiceImpl implements IStorageService {
 			outWarehouseShipping.setUserIdOfCustomer(outWarehouseOrder.getUserIdOfCustomer());
 			outWarehouseShipping.setUserIdOfOperator(userIdOfOperator);
 			outWarehouseShipping.setWarehouseId(outWarehouseOrder.getWarehouseId());
-			long outShippingId = outWarehouseShippingDao.saveOutWarehouseShipping(outWarehouseShipping);
+			long outShippingId = outWarehouseShippingDao.saveOutWarehouseRecordItem(outWarehouseShipping);
 			map.put("outWarehouseShippingId", outShippingId + "");
 			map.put(Constant.STATUS, Constant.SUCCESS);
 		} else if (StringUtil.isEqual(outWarehouseOrder.getStatus(), OutWarehouseOrderStatusCode.SUCCESS)) {
@@ -1554,9 +1554,9 @@ public class StorageServiceImpl implements IStorageService {
 	public Map<String, Object> outWarehouseShippingEnterCoeTrackingNo(String coeTrackingNo) throws ServiceException {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put(Constant.STATUS, Constant.FAIL);
-		OutWarehouseShipping outWarehouseShipping = new OutWarehouseShipping();
+		OutWarehouseRecordItem outWarehouseShipping = new OutWarehouseRecordItem();
 		outWarehouseShipping.setCoeTrackingNo(coeTrackingNo);
-		List<OutWarehouseShipping> outWarehouseShippingList = outWarehouseShippingDao.findOutWarehouseShipping(outWarehouseShipping, null, null);
+		List<OutWarehouseRecordItem> outWarehouseShippingList = outWarehouseShippingDao.findOutWarehouseRecordItem(outWarehouseShipping, null, null);
 		List<TrackingNo> trackingNos = trackingNoDao.findTrackingNo(coeTrackingNo, TrackingNo.TYPE_COE);
 		// 暂不处理,单号可能重复问题
 		if (trackingNos == null || trackingNos.size() <= 0) {
@@ -1607,12 +1607,12 @@ public class StorageServiceImpl implements IStorageService {
 				map.put("warehouse", warehouse.getWarehouseName());
 			}
 			map.put("remark", record.getRemark() == null ? "" : record.getRemark());
-			OutWarehouseShipping param = new OutWarehouseShipping();
+			OutWarehouseRecordItem param = new OutWarehouseRecordItem();
 			param.setCoeTrackingNoId(record.getCoeTrackingNoId());
-			List<OutWarehouseShipping> outWarehouseShippingList = outWarehouseShippingDao.findOutWarehouseShipping(param, null, null);
+			List<OutWarehouseRecordItem> outWarehouseShippingList = outWarehouseShippingDao.findOutWarehouseRecordItem(param, null, null);
 			Integer quantity = 0;
 			String orders = "";
-			for (OutWarehouseShipping item : outWarehouseShippingList) {
+			for (OutWarehouseRecordItem item : outWarehouseShippingList) {
 				orders += item.getOurWarehouseOrderTrackingNo() + " ; ";
 				quantity++;
 			}
@@ -1628,11 +1628,11 @@ public class StorageServiceImpl implements IStorageService {
 	@Override
 	public List<Map<String, String>> getOutWarehouseRecordShippingMapByRecordId(Long recordId) {
 		OutWarehouseRecord outWarehouseRecord = outWarehouseRecordDao.getOutWarehouseRecordById(recordId);
-		OutWarehouseShipping param = new OutWarehouseShipping();
+		OutWarehouseRecordItem param = new OutWarehouseRecordItem();
 		param.setCoeTrackingNoId(outWarehouseRecord.getCoeTrackingNoId());
-		List<OutWarehouseShipping> outWarehouseShippingList = outWarehouseShippingDao.findOutWarehouseShipping(param, null, null);
+		List<OutWarehouseRecordItem> outWarehouseShippingList = outWarehouseShippingDao.findOutWarehouseRecordItem(param, null, null);
 		List<Map<String, String>> mapList = new ArrayList<Map<String, String>>();
-		for (OutWarehouseShipping item : outWarehouseShippingList) {
+		for (OutWarehouseRecordItem item : outWarehouseShippingList) {
 			Map<String, String> map = new HashMap<String, String>();
 			map.put("orderId", item.getOutWarehouseOrderId() + "");
 			map.put("trackingNo", item.getOurWarehouseOrderTrackingNo());

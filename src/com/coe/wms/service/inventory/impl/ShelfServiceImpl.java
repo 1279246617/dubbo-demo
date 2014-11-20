@@ -36,7 +36,7 @@ import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderReceiverDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderSenderDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderStatusDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseRecordDao;
-import com.coe.wms.dao.warehouse.storage.IOutWarehouseShippingDao;
+import com.coe.wms.dao.warehouse.storage.IOutWarehouseRecordItemDao;
 import com.coe.wms.model.user.User;
 import com.coe.wms.model.warehouse.Seat;
 import com.coe.wms.model.warehouse.Shelf;
@@ -121,7 +121,7 @@ public class ShelfServiceImpl implements IShelfService {
 	private IInWarehouseRecordItemDao inWarehouseRecordItemDao;
 
 	@Resource(name = "outWarehouseShippingDao")
-	private IOutWarehouseShippingDao outWarehouseShippingDao;
+	private IOutWarehouseRecordItemDao outWarehouseShippingDao;
 
 	@Resource(name = "userDao")
 	private IUserDao userDao;
