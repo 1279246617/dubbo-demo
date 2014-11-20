@@ -54,8 +54,8 @@ public class PrintServiceImpl implements IPrintService {
 	@Resource(name = "warehouseDao")
 	private IWarehouseDao warehouseDao;
 
-	@Resource(name = "outWarehouseShippingDao")
-	private IOutWarehouseRecordItemDao outWarehouseShippingDao;
+	@Resource(name = "outWarehouseRecordItemDao")
+	private IOutWarehouseRecordItemDao outWarehouseRecordItemDao;
 
 	@Resource(name = "outWarehouseRecordDao")
 	private IOutWarehouseRecordDao outWarehouseRecordDao;
@@ -235,7 +235,7 @@ public class PrintServiceImpl implements IPrintService {
 	public List<Map<String, String>> getOutWarehouseShippings(Long coeTrackingNoId) {
 		OutWarehouseRecordItem outWarehouseShippingParam = new OutWarehouseRecordItem();
 		outWarehouseShippingParam.setCoeTrackingNoId(coeTrackingNoId);
-		List<OutWarehouseRecordItem> outWarehouseShippingList = outWarehouseShippingDao.findOutWarehouseRecordItem(outWarehouseShippingParam, null, null);
+		List<OutWarehouseRecordItem> outWarehouseShippingList = outWarehouseRecordItemDao.findOutWarehouseRecordItem(outWarehouseShippingParam, null, null);
 		List<Map<String, String>> mapList = new ArrayList<Map<String, String>>();
 		for (OutWarehouseRecordItem outWarehouseShipping : outWarehouseShippingList) {
 			Map<String, String> map = new HashMap<String, String>();
@@ -266,7 +266,7 @@ public class PrintServiceImpl implements IPrintService {
 		// 出貨詳情
 		OutWarehouseRecordItem outWarehouseShippingParam = new OutWarehouseRecordItem();
 		outWarehouseShippingParam.setCoeTrackingNoId(coeTrackingNoId);
-		List<OutWarehouseRecordItem> outWarehouseShippingList = outWarehouseShippingDao.findOutWarehouseRecordItem(outWarehouseShippingParam, null, null);
+		List<OutWarehouseRecordItem> outWarehouseShippingList = outWarehouseRecordItemDao.findOutWarehouseRecordItem(outWarehouseShippingParam, null, null);
 		// 總重量
 		double totalWeight = 0d;
 		int quantity = 0;

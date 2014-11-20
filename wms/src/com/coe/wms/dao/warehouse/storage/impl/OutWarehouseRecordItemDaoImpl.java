@@ -32,7 +32,7 @@ import com.mysql.jdbc.Statement;
  * 
  * @author Administrator
  */
-@Repository("outWarehouseShippingDao")
+@Repository("outWarehouseRecordItemDao")
 public class OutWarehouseRecordItemDaoImpl implements IOutWarehouseRecordItemDao {
 
 	Logger logger = Logger.getLogger(OutWarehouseRecordItemDaoImpl.class);
@@ -43,7 +43,7 @@ public class OutWarehouseRecordItemDaoImpl implements IOutWarehouseRecordItemDao
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public long saveOutWarehouseRecordItem(final OutWarehouseRecordItem shipping) {
-		final String sql = "insert into w_s_out_warehouse_shipping (warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,our_warehouse_order_tracking_no,out_warehouse_order_id) values (?,?,?,?,?,?,?,?)";
+		final String sql = "insert into w_s_out_warehouse_record_item (warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,our_warehouse_order_tracking_no,out_warehouse_order_id) values (?,?,?,?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
@@ -69,7 +69,7 @@ public class OutWarehouseRecordItemDaoImpl implements IOutWarehouseRecordItemDao
 
 	@Override
 	public OutWarehouseRecordItem getOutWarehouseRecordItemById(Long outWarehouseShippingId) {
-		String sql = "select id,warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,our_warehouse_order_tracking_no,out_warehouse_order_id from w_s_out_warehouse_shipping where id ="
+		String sql = "select id,warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,our_warehouse_order_tracking_no,out_warehouse_order_id from w_s_out_warehouse_record_item where id ="
 				+ outWarehouseShippingId;
 		OutWarehouseRecordItem shipping = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<OutWarehouseRecordItem>(OutWarehouseRecordItem.class));
 		return shipping;
@@ -83,7 +83,7 @@ public class OutWarehouseRecordItemDaoImpl implements IOutWarehouseRecordItemDao
 	@Override
 	public List<OutWarehouseRecordItem> findOutWarehouseRecordItem(OutWarehouseRecordItem outWarehouseShipping, Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select id,warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,our_warehouse_order_tracking_no,out_warehouse_order_id from w_s_out_warehouse_shipping where 1=1 ");
+		sb.append("select id,warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,our_warehouse_order_tracking_no,out_warehouse_order_id from w_s_out_warehouse_record_item where 1=1 ");
 		if (outWarehouseShipping != null) {
 			if (outWarehouseShipping.getId() != null) {
 				sb.append(" and id = " + outWarehouseShipping.getId());
@@ -139,7 +139,7 @@ public class OutWarehouseRecordItemDaoImpl implements IOutWarehouseRecordItemDao
 	@Override
 	public Long countOutWarehouseRecordItem(OutWarehouseRecordItem outWarehouseShipping, Map<String, String> moreParam) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select count(id) from w_s_out_warehouse_shipping where 1=1 ");
+		sb.append("select count(id) from w_s_out_warehouse_record_item where 1=1 ");
 		if (outWarehouseShipping != null) {
 			if (outWarehouseShipping.getId() != null) {
 				sb.append(" and id = " + outWarehouseShipping.getId());
@@ -189,7 +189,7 @@ public class OutWarehouseRecordItemDaoImpl implements IOutWarehouseRecordItemDao
 
 	@Override
 	public int deleteOutWarehouseRecordItemById(Long id) {
-		String sql = "delete from w_s_out_warehouse_shipping where id =" + id;
+		String sql = "delete from w_s_out_warehouse_record_item where id =" + id;
 		return jdbcTemplate.update(sql);
 	}
 
