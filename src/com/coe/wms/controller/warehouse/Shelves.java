@@ -427,4 +427,10 @@ public class Shelves {
 		return GsonUtil.toJson(map);
 	}
 
+	@ResponseBody
+	@RequestMapping(value = "/getSeatItemInventory", method = RequestMethod.POST)
+	public String getSeatItemInventory(Long recordId) {
+		List<Map<String, String>> mapList = storageService.getInWarehouseRecordItemMapByRecordId(recordId);
+		return GsonUtil.toJson(mapList);
+	}
 }

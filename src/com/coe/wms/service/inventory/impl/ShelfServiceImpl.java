@@ -394,12 +394,10 @@ public class ShelfServiceImpl implements IShelfService {
 				if (updateCount > 0) {
 					map.put(Constant.STATUS, Constant.SUCCESS);
 				} else {
-					map.put(Constant.MESSAGE, "执行数据库更新失败,请重试保存");
+					map.put(Constant.MESSAGE, "执行数据库更新失败,请重试保存");// 待添加事务回滚
 				}
 			} else {
-				map.put(Constant.MESSAGE, "找不到库位库存记录,出库订单Id:" + outWarehouseOrder.getId());
-				// 待添加事务回滚
-				// throw new
+				map.put(Constant.MESSAGE, "找不到库位库存记录,出库订单Id:" + outWarehouseOrder.getId());// 待添加事务回滚
 				// ServiceException("找不到库位库存记录,出库订单Id:"+outWarehouseOrder.getId());
 			}
 		}
@@ -446,11 +444,29 @@ public class ShelfServiceImpl implements IShelfService {
 			if (seatTemp.getWarehouseId() != null) {
 				Warehouse warehouse = warehouseDao.getWarehouseById(seatTemp.getWarehouseId());
 				if (warehouse != null) {
-					map.put("warehouse_id", warehouse.getWarehouseName());
+					map.put("warehouseId", warehouse.getWarehouseName());
 				}
 			}
-			map.put("shelf_code", seatTemp.getShelfCode());
-			map.put("seat_code", seatTemp.getSeatCode());
+			map.put("shelfCode", seatTemp.getShelfCode());
+			map.put("seatCode", seatTemp.getSeatCode());
+
+			ItemShelfInventory itemShelfInventoryParam = new ItemShelfInventory();
+			itemShelfInventoryParam.setSeatCode(seatTemp.getSeatCode());
+			Map<String, String> seatMoreParam = new HashMap<String, String>();
+			seatMoreParam.put("minQuantity", "1");
+			// 查找库存记录,库位,数量>=1
+			String skus = "";
+			List<ItemShelfInventory> itemShelfInventoryList = itemShelfInventoryDao.findItemShelfInventory(itemShelfInventoryParam, seatMoreParam, null);
+			if (itemShelfInventoryList != null && itemShelfInventoryList.size() > 0) {
+				map.put("status", Seat.SEAT_STATUS_USED);
+				for (ItemShelfInventory itemShelfInventory : itemShelfInventoryList) {
+					skus += (itemShelfInventory.getSku() + "*" + itemShelfInventory.getQuantity() + "  ;   ");
+				}
+			} else {
+				// 空闲
+				map.put("status", Seat.SEAT_STATUS_IDLE);
+			}
+			map.put("skus", skus);
 			map.put("remark", seatTemp.getRemark());
 			list.add(map);
 		}
@@ -602,5 +618,32 @@ public class ShelfServiceImpl implements IShelfService {
 			return shelfList.get(0);
 		}
 		return null;
+	}
+
+	@Override
+	public List<Map<String, String>> getSeatItemInventory(Long seatId) {
+		List<Map<String, String>> mapList = new ArrayList<Map<String, String>>();
+		Seat seatParam = new Seat();
+		seatParam.setId(seatId);
+		List<Seat> seatList = seatDao.findSeat(seatParam, null);
+		if (seatList == null || seatList.size() <= 0) {
+			return mapList;
+		}
+		Seat seat = seatList.get(0);
+		ItemShelfInventory itemShelfInventoryParam = new ItemShelfInventory();
+		itemShelfInventoryParam.setSeatCode(seat.getSeatCode());
+		Map<String, String> seatMoreParam = new HashMap<String, String>();
+		seatMoreParam.put("minQuantity", "1");
+		List<ItemShelfInventory> itemShelfInventoryList = itemShelfInventoryDao.findItemShelfInventory(itemShelfInventoryParam, seatMoreParam, null);
+		for (ItemShelfInventory item : itemShelfInventoryList) {
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("availableQuantity", item.getAvailableQuantity() + "");
+			map.put("quantity", item.getQuantity() + "");
+			map.put("sku", item.getSku());
+			//
+			map.put("skuName", "");
+			mapList.add(map);
+		}
+		return mapList;
 	}
 }

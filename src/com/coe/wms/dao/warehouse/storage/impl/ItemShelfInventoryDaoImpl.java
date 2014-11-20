@@ -94,6 +94,9 @@ public class ItemShelfInventoryDaoImpl implements IItemShelfInventoryDao {
 					sb.append(" and last_update_time <= " + date.getTime());
 				}
 			}
+			if (moreParam.get("minQuantity") != null) {
+				sb.append(" and quantity >= " + Integer.valueOf(moreParam.get("minQuantity")));
+			}
 		}
 		// 分页sql
 		if (page != null) {
@@ -186,6 +189,9 @@ public class ItemShelfInventoryDaoImpl implements IItemShelfInventoryDao {
 				if (date != null) {
 					sb.append(" and last_update_time <= " + date.getTime());
 				}
+			}
+			if (moreParam.get("minQuantity") != null) {
+				sb.append(" and quantity >= " + Integer.valueOf(moreParam.get("minQuantity")));
 			}
 		}
 		String sql = sb.toString();

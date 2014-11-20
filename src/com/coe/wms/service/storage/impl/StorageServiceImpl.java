@@ -5,8 +5,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 
@@ -41,8 +39,6 @@ import com.coe.wms.exception.ServiceException;
 import com.coe.wms.model.unit.Weight;
 import com.coe.wms.model.unit.Weight.WeightCode;
 import com.coe.wms.model.user.User;
-import com.coe.wms.model.warehouse.Seat;
-import com.coe.wms.model.warehouse.Shelf;
 import com.coe.wms.model.warehouse.TrackingNo;
 import com.coe.wms.model.warehouse.Warehouse;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
@@ -61,9 +57,8 @@ import com.coe.wms.model.warehouse.storage.record.InWarehouseRecord;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecordItem;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecordStatus;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecordStatus.InWarehouseRecordStatusCode;
+import com.coe.wms.model.warehouse.storage.record.ItemInventory;
 import com.coe.wms.model.warehouse.storage.record.ItemShelfInventory;
-import com.coe.wms.model.warehouse.storage.record.OnShelf;
-import com.coe.wms.model.warehouse.storage.record.OutShelf;
 import com.coe.wms.model.warehouse.storage.record.OutWarehouseRecord;
 import com.coe.wms.model.warehouse.storage.record.OutWarehouseRecordItem;
 import com.coe.wms.pojo.api.warehouse.Buyer;
@@ -1382,7 +1377,30 @@ public class StorageServiceImpl implements IStorageService {
 			}
 			outWarehouseOrderDao.updateOutWarehouseOrderStatus(Long.valueOf(orderId), OutWarehouseOrderStatusCode.SUCCESS);
 			// 更新出库成功,并改变产品批次库存
-			
+			// --------------------------------------------------------------------------------------------------------------------------------------------
+			// 查找下架时的批次,货位,sku,数量记录
+			OutWarehouseOrderItemShelf outWarehouseOrderItemShelfParam = new OutWarehouseOrderItemShelf();
+			outWarehouseOrderItemShelfParam.setOutWarehouseOrderId(Long.valueOf(orderId));
+			List<OutWarehouseOrderItemShelf> outWarehouseOrderItemShelfList = outWarehouseOrderItemShelfDao.findOutWarehouseOrderItemShelf(outWarehouseOrderItemShelfParam, null, null);
+			for (OutWarehouseOrderItemShelf oItemShelf : outWarehouseOrderItemShelfList) {
+				ItemInventory inventoryParam = new ItemInventory();
+				inventoryParam.setSku(oItemShelf.getSku());
+				inventoryParam.setBatchNo(oItemShelf.getBatchNo());
+				inventoryParam.setWarehouseId(warehouseId);
+				inventoryParam.setUserIdOfCustomer(userIdOfCustomer);
+				List<ItemInventory> itemInventoryList = itemInventoryDao.findItemInventory(inventoryParam, null, null);
+				if (itemInventoryList != null && itemInventoryList.size() > 0) {
+					ItemInventory itemInventory = itemInventoryList.get(0);
+					int outQuantity = oItemShelf.getQuantity();
+					int updateCount = itemInventoryDao.updateItemInventoryQuantity(itemInventory.getId(), itemInventory.getQuantity() - outQuantity);
+					if (updateCount <= 0) {
+						map.put(Constant.MESSAGE, "执行产品批次库存更新失败,出库不成功");// 待添加事务回滚
+					}
+				} else {
+					map.put(Constant.MESSAGE, "找不到产品批次库存,出库不成功");// 待添加事务回滚
+				}
+			}
+			// 更新库存结束----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 		}
 		// 保存出库记录
 		OutWarehouseRecord outWarehouseRecord = new OutWarehouseRecord();
@@ -1393,7 +1411,6 @@ public class StorageServiceImpl implements IStorageService {
 		outWarehouseRecord.setUserIdOfOperator(userIdOfOperator);
 		outWarehouseRecord.setWarehouseId(warehouseId);
 		outWarehouseRecordDao.saveOutWarehouseRecord(outWarehouseRecord);
-
 		// 标记coe单号已经使用
 		trackingNoDao.usedTrackingNo(coeTrackingNoId);
 		// 返回新COE单号,供下一批出库
