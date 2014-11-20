@@ -429,8 +429,8 @@ public class Shelves {
 
 	@ResponseBody
 	@RequestMapping(value = "/getSeatItemInventory", method = RequestMethod.POST)
-	public String getSeatItemInventory(Long recordId) {
-		List<Map<String, String>> mapList = storageService.getInWarehouseRecordItemMapByRecordId(recordId);
+	public String getSeatItemInventory(Long seatId) {
+		List<Map<String, String>> mapList = shelfService.getSeatItemInventory(seatId);
 		return GsonUtil.toJson(mapList);
 	}
 }
