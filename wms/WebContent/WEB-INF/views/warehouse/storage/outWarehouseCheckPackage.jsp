@@ -54,14 +54,21 @@
 			</tr>
 			<tr>
 				<td colspan="2" style="height:70px;">
-					装箱重量&nbsp;&nbsp;
-					<input type="text"  name="outWarehouseOrderWeight"  t="3"  id="outWarehouseOrderWeight"  style="width:90px;"/>KG
-					<i  id="weightOk" style="display:none;" class="icon-ok icon-blue">
+					<span style="width:90px;height:30px;margin-top: 4mm;font-size: 5mm;" class="pull-left" >装箱重量</span>
+					<input type="text"  name="outWarehouseOrderWeight"  t="3"  id="outWarehouseOrderWeight"  style="width:120px;height:60px; font-size: 10mm;font-weight: bold;color:red;" class="pull-left" readonly="readonly"/>
+					<span style="width:50px;height:30px;margin-top: 4mm;font-size: 6mm;font-weight: bold;" class="pull-left" >KG</span>
+					<span style="width:90px;height:30px;margin-top: 4mm;font-size: 4mm;" class="pull-left" >
+						<input class="pull-left" name="auto" style="vertical-align: middle;" type="checkbox" checked="checked" id="auto" onclick="changeAuto()">
+						自动读取
+					</span>
+					<span style="height:30px;margin-top: 4mm;font-size: 8mm;" class="pull-left" >
+						<i  id="weightOk" style="display:none;width:4mm;height:4mm;" class="icon-ok icon-blue">
+					</span>
 				</td>
 				<td colspan="1">
-					<a class="btn  btn-primary"  onclick="saveOutWarehouseOrderWeight();"  style="cursor:pointer;">
-						<i class="icon-ok icon-white"></i>保存重量
-					</a>
+					<span style="width:90px;height:30px;margin-top: 4mm;font-size: 5mm;" class="pull-left" >
+							<a class="btn  btn-primary"  onclick="saveOutWarehouseOrderWeight();"  style="cursor:pointer;"><i class="icon-ok icon-white"></i>保存重量</a>
+					</span>
 				</td>
 			</tr>
 			<tr>
@@ -112,8 +119,41 @@
 	<script type="text/javascript" src="${baseUrl}/static/ligerui/ligerUI/js/plugins/ligeruiPatch.js"></script>
     <script type="text/javascript" src="${baseUrl}/static/ligerui/ligerUI/js/plugins/ligerTab.js"></script>
     <script  type="text/javascript" src="${baseUrl}/static/ligerui/ligerUI/js/plugins/ligerTree.js" ></script>
-    
-    
+   <script type="text/javascript">
+	    var ws;
+	    var ports = ["9999", "888", "8888", "999","8080"]; 
+	    var index = 0;
+	    function toggleConnection(port) {
+	    	  index = index+1;	 
+	            try {
+	                ws = new WebSocket("ws://127.0.0.1:"+port);//连接服务器		
+					ws.onopen = function(event){
+	                	parent.$.showShortMessage({msg:'电子秤自动读取功能已经启动成功',animate:false,left:"45%"});
+	                };
+					ws.onmessage = function(event){
+						var message = event.data;
+						var weight = message.match(/([0-9\.]+)/ig);
+						$("#outWarehouseOrderWeight").val(weight);
+					};
+					ws.onclose = function(event){
+						parent.$.showShortMessage({msg:'电子秤自动读取功能已经关闭',animate:false,left:"45%"});
+					};
+					ws.onerror = function(event){
+						if(index>=5){
+							parent.$.showShortMessage({msg:'电子秤自动读取功能异常,请手动输入重量!',animate:false,left:"45%"});	
+						}else{
+							toggleConnection(ports[index]);	
+						}
+					};
+	            } catch (ex) {
+	            	if(index>=5){
+	            		parent.$.showShortMessage({msg:'电子秤自动读取功能异常:'+ex.message, animate:false,left:"45%"});	
+					}else{
+						toggleConnection(ports[index]);	
+					}
+				}
+	    };
+    </script>
     
     <script type="text/javascript">
 	   var baseUrl = "${baseUrl}";
@@ -137,42 +177,27 @@
  		  		$("input").focus(function(){
  		  			focus = $(this).attr("t");
  		  		});
- 		  		$("input[name=outWarehouseOrderWeight]").focus(function(){
- 		  			//获取重量
- 		  			getWeight();
+ 		  		//加载页面时,启动读取电子秤
+ 		  		toggleConnection(ports[0]);
+ 		  		//启动读取电子秤
+ 		  		var autoWeight = window.setInterval(function(){ 
+ 		  			ws.send("getweig");		 
+				}, 300);
+				 		  	
+ 		  		$("#auto").click(function(){
+ 		  			if($("#auto").attr("checked")=="checked"){
+ 		  				//自动获取电子称数据
+ 		 	  			$("#outWarehouseOrderWeight").attr("readonly","readonly");
+ 		  				//启动读取电子秤
+	 		 	  		autoWeight = window.setInterval(function(){ 
+	 	 		  			ws.send("getweig");		 
+	 					}, 300);
+ 		 	  		 }else{
+ 		 	  			 $("#outWarehouseOrderWeight").removeAttr("readonly");
+			 	  		 clearInterval(autoWeight);//取消读取
+ 		 	  		 }
  		  		});
- 		  		toggleConnection();
  	   	});
     </script>	
-    
-    <script type="text/javascript">
-	    var ws;
-	    function toggleConnection() {          
-	            try {
-	                ws = new WebSocket("ws://127.0.0.1:9999");//连接服务器		
-					ws.onopen = function(event){
-	                	parent.$.showShortMessage({msg:'电子秤自动读取功能已经启动成功',animate:false,left:"45%"});
-	                };
-					ws.onmessage = function(event){
-						alert("接收到服务器发送的数据：\r\n"+event.data);
-					};
-					ws.onclose = function(event){
-						alert("已经与服务器断开连接\r\n当前连接状态："+this.readyState);
-					};
-					ws.onerror = function(event){
-						parent.$.showShortMessage({msg:'电子秤自动读取功能异常,请手动输入重量!',animate:false,left:"45%"});	
-					};
-	            } catch (ex) {
-	            	parent.$.showShortMessage({msg:'电子秤自动读取功能异常:'+ex.message, animate:false,left:"45%"});
-				}
-	    };
-		function getWeight() {
-				try{
-					ws.send("getweig");
-				}catch(ex){
-					alert(ex.message);
-				}
-	     };
-    </script>
 </body>
 </html>
