@@ -124,7 +124,6 @@
 			                { display: '跟踪单号', name: 'trackingNo',type:'float',width:'11%'},
 			                { display: '上架时间', name: 'createdTime', align: 'center', type: 'float',width:'12%'},
 			                { display: '收货记录Id', name: 'inWarehouseRecordId',type:'float',width:'6%'}
-			            }
 		             ],   
 	                dataAction: 'server',
 	                url: baseUrl+'/warehouse/shelves/getOnShelvesData.do?createdTimeStart=${sevenDaysAgoStart}',

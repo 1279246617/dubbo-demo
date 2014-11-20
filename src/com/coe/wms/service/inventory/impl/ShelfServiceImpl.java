@@ -592,4 +592,15 @@ public class ShelfServiceImpl implements IShelfService {
 		map.put(Constant.STATUS, Constant.SUCCESS);
 		return map;
 	}
+
+	@Override
+	public Shelf getShelfById(Long shelfId) {
+		Shelf param = new Shelf();
+		param.setId(shelfId);
+		List<Shelf> shelfList = shelfDao.findShelf(param, null);
+		if (shelfList != null && shelfList.size() > 0) {
+			return shelfList.get(0);
+		}
+		return null;
+	}
 }

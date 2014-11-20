@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.coe.wms.controller.Application;
+import com.coe.wms.dao.warehouse.impl.ShelfDaoImpl;
 import com.coe.wms.model.user.User;
 import com.coe.wms.model.warehouse.Seat;
 import com.coe.wms.model.warehouse.Shelf;
@@ -333,7 +334,7 @@ public class Shelves {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/getSeatData")
-	public String getSeatData(HttpServletRequest request, String sortorder, String sortname, int page, int pagesize, String seatCode, String shelfCode, Long warehouseId) throws IOException {
+	public String getSeatData(HttpServletRequest request, String sortorder, String sortname, int page, int pagesize, String seatCode, String shelfCode, Long warehouseId, Long shelfId) throws IOException {
 		HttpSession session = request.getSession();
 		// 当前操作员
 		Long userIdOfOperator = (Long) session.getAttribute(SessionConstant.USER_ID);
@@ -343,10 +344,17 @@ public class Shelves {
 		pagination.sortName = sortname;
 		pagination.sortOrder = sortorder;
 		Seat param = new Seat();
-		param.setWarehouseId(warehouseId);
-		param.setSeatCode(seatCode);
-		param.setShelfCode(shelfCode);
-
+		// 如果 shelfCodeId 不为空,表示是点击货架表格的显示货位按钮, 只显示改货架的货位
+		if (shelfId != null) {
+			Shelf shelf = shelfService.getShelfById(shelfId);
+			if (shelf != null) {
+				param.setShelfCode(shelf.getShelfCode());
+			}
+		} else {
+			param.setWarehouseId(warehouseId);
+			param.setSeatCode(seatCode);
+			param.setShelfCode(shelfCode);
+		}
 		// 更多参数
 		Map<String, String> moreParam = new HashMap<String, String>();
 		pagination = shelfService.getSeatData(param, moreParam, pagination);

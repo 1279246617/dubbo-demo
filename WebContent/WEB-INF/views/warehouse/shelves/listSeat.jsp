@@ -67,20 +67,21 @@
 				  </div>    
 		           <form action="${baseUrl}/warehouse/shelves/getSeatData.do" id="searchform" name="searchform" method="post">
 		               <div class="pull-right searchContent">
-		               		<span class="pull-left" style="width:175px;">
+		               		<span class="pull-left" style="width:140px;">
 		               			仓库
-		               			<select style="width:100px;" id="warehouseId" name="warehouseId">
+		               			<select style="width:90px;" id="warehouseId" name="warehouseIdForSeat">
 		               				<option></option>
 									<option value="1">1-香港仓</option>
 								</select>
 		               		</span>
-		<!-- 					<span class="pull-left" style="width:195px;"> -->
-		<!-- 						货架号 -->
-		<!-- 						<input type="text"  name="shelfCode"  id="shelfCode"   style="width:120px;"/> -->
-		<!-- 					</span> -->
-							<span class="pull-left" style="width:195px;">
+							<span class="pull-left" style="width:135px;">
+								货架号
+								<input type="text"  name="shelfCode"  id="shelfCodeForSeat"   style="width:70px;"/>
+								<input type="text"  name="shelfId"  id="shelfId"   style="display: none;"/>
+							</span>
+							<span class="pull-left" style="width:145px;">
 								货位号
-								<input type="text"  name="seatCode"  id="seatCode"   style="width:120px;"/>
+								<input type="text"  name="seatCode"  id="seatCode"   style="width:80px;"/>
 							</span>
 							
 		               		<span class="pull-left" style="width:55px;">
@@ -105,18 +106,19 @@
 	    function initShelfGrid() {
 	    	gridShelf = $("#maingridShelf").ligerGrid({
 	                columns: [
-							{ display: '仓库', name: 'warehouse_id', type: 'float',width:'12%'},
-	  	                  	{ display: '货架号', name: 'shelf_code', type: 'float',width:'11%'},
-	  	                  	{ display: '类型', name: 'shelf_type', type: 'int', width:'8%'},
-	  	                  	{ display: '行数', name: 'rows', type: 'int', width:'8%'},
-	  	                	{ display: '列数', name: 'cols', type: 'int', width:'8%'},
-	  	              		{ display: '货位起始', name: 'seat_start', type: 'int', width:'12%'},
-	  	              		{ display: '货位终止', name: 'seat_end', type: 'int', width:'12%'},
-			                { display: '备注', name: 'remark',type:'float',width:'12%'},
-	  	                  	{display: '操作',isSort: false,width: '10%',render: function(row) {
+							{ display: '仓库', name: 'warehouse_id', type: 'float',width:'10%'},
+	  	                  	{ display: '货架号', name: 'shelf_code', type: 'float',width:'10%'},
+	  	                  	{ display: '类型', name: 'shelf_type', type: 'int', width:'7%'},
+	  	                  	{ display: '行数', name: 'rows', type: 'int', width:'7%'},
+	  	                	{ display: '列数', name: 'cols', type: 'int', width:'7%'},
+	  	              		{ display: '货位起始', name: 'seat_start', type: 'int', width:'10%'},
+	  	              		{ display: '货位终止', name: 'seat_end', type: 'int', width:'10%'},
+			                { display: '备注', name: 'remark',type:'float',width:'11%'},
+	  	                  	{display: '操作',isSort: false,width: '15%',render: function(row) {
 			            		var h = "";
 			            		if (!row._editing) {
-			            			h += '<a href="javascript:print(' + row.id + ')">更新</a> ';
+			            			h += '<a href="javascript:updateShelf(' + row.id + ')">更新</a> ';
+			            			h += '<a href="javascript:showSeat('+ row.id+ ')">显示货位</a> ';
 			            		}
 			            		return h;
 			            	}}
@@ -128,10 +130,10 @@
 	                usePager: 'true',
 	                sortName: 'id',
 	                width: '100%',
-	                height: '60%',
+	                height: '75%',
 	                checkbox: true,
 	                rownumbers:true,
-	                alternatingRow:true,
+	                alternatingRow:false,
 	                minColToggle:20,
 	                isScroll: true,
 	                enabledEdit: false,
@@ -144,10 +146,11 @@
 	    function initGrid() {
 	    	 grid = $("#maingrid").ligerGrid({
 	                columns: [
-							{ display: '仓库', name: 'warehouse_id', type: 'float',width:'17%'},
-	  	                  	{ display: '货架号', name: 'shelf_code', type: 'float',width:'16%'},
-	  	                  	{ display: '货位号', name: 'seat_code', type: 'int', width:'18%'},
-			                { display: '备注', name: 'remark',type:'float',width:'20%'},
+							{ display: '仓库', name: 'warehouse_id', type: 'float',width:'13%'},
+	  	                  	{ display: '货架号', name: 'shelf_code', type: 'float',width:'14%'},
+	  	                  	{ display: '货位号', name: 'seat_code', type: 'int', width:'16%'},
+	  	                  	{ display: '状态', name: 'status', type: 'int', width:'9%'},
+			                { display: '货物', name: 'skus',type:'float',width:'20%'},
 	  	                  	{display: '操作',isSort: false,width: '17%',render: function(row) {
 			            		var h = "";
 			            		if (!row._editing) {
@@ -181,6 +184,7 @@
     	});
     	//btn_search
   		$("#btn_search").click(function(){
+  				$("#shelfId").val("");
   				btnSearch("#searchform",grid);
   		});
     	
@@ -202,7 +206,7 @@
 			    contentArr.push('       <label class="pull-left" style="margin-left: 5px;" for="all">打印当前页</label>');
 			    contentArr.push('   </div>');
 			    contentArr.push('</div>');
-			    contentArr.push('<div style="color: #ff0000;margin-left: 40px;">注：请使用大于等于100*70标签纸打印</div>');
+			    contentArr.push('<div style="color: #ff0000;margin-left: 40px;">注：请使用大于等于100*60标签纸打印</div>');
 			    var contentHtml = contentArr.join('');
 				$.dialog({
 			  		lock: true,
@@ -300,6 +304,15 @@
 		
 		function deleteShelf(){
 			alert("删除货架");
+		}
+		function updateShelf(id){
+			alert("更新货架"+id);
+		}
+		
+		//点击货架上的显示货位
+		function showSeat(shelfId){
+			$("#shelfId").val(shelfId);
+			btnSearch("#searchform",grid);
 		}
    	</script>
 	<script type="text/javascript" src="${baseUrl}/static/jquery/jquery.showMessage.js"></script>
