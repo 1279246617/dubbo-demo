@@ -157,8 +157,8 @@ public class StorageServiceImpl implements IStorageService {
 	@Resource(name = "inWarehouseRecordItemDao")
 	private IInWarehouseRecordItemDao inWarehouseRecordItemDao;
 
-	@Resource(name = "outWarehouseShippingDao")
-	private IOutWarehouseRecordItemDao outWarehouseShippingDao;
+	@Resource(name = "outWarehouseRecordItemDao")
+	private IOutWarehouseRecordItemDao outWarehouseRecordItemDao;
 
 	@Resource(name = "userDao")
 	private IUserDao userDao;
@@ -1307,11 +1307,11 @@ public class StorageServiceImpl implements IStorageService {
 			shippingParam.setCoeTrackingNoId(coeTrackingNoId);
 			shippingParam.setCoeTrackingNo(coeTrackingNo);
 			shippingParam.setOurWarehouseOrderTrackingNo(trackingNo);
-			List<OutWarehouseRecordItem> outWarehouseShippingList = outWarehouseShippingDao.findOutWarehouseRecordItem(shippingParam, null, null);
+			List<OutWarehouseRecordItem> outWarehouseShippingList = outWarehouseRecordItemDao.findOutWarehouseRecordItem(shippingParam, null, null);
 			String deleteShippingIds = "";
 			int sub = 0;
 			for (OutWarehouseRecordItem shipping : outWarehouseShippingList) {
-				outWarehouseShippingDao.deleteOutWarehouseRecordItemById(shipping.getId());
+				outWarehouseRecordItemDao.deleteOutWarehouseRecordItemById(shipping.getId());
 				// 加#是为了 jquery可以直接$("#id1,#id2,#id3,#id4")
 				deleteShippingIds += ("#" + shipping.getId() + ",");
 				orderIds = orderIds.replaceAll(shipping.getOutWarehouseOrderId() + "\\|\\|", "");
@@ -1336,7 +1336,7 @@ public class StorageServiceImpl implements IStorageService {
 			outWarehouseShipping.setUserIdOfCustomer(outWarehouseOrder.getUserIdOfCustomer());
 			outWarehouseShipping.setUserIdOfOperator(userIdOfOperator);
 			outWarehouseShipping.setWarehouseId(outWarehouseOrder.getWarehouseId());
-			long outShippingId = outWarehouseShippingDao.saveOutWarehouseRecordItem(outWarehouseShipping);
+			long outShippingId = outWarehouseRecordItemDao.saveOutWarehouseRecordItem(outWarehouseShipping);
 			map.put("outWarehouseShippingId", outShippingId + "");
 			map.put(Constant.STATUS, Constant.SUCCESS);
 		} else if (StringUtil.isEqual(outWarehouseOrder.getStatus(), OutWarehouseOrderStatusCode.SUCCESS)) {
@@ -1556,7 +1556,7 @@ public class StorageServiceImpl implements IStorageService {
 		map.put(Constant.STATUS, Constant.FAIL);
 		OutWarehouseRecordItem outWarehouseShipping = new OutWarehouseRecordItem();
 		outWarehouseShipping.setCoeTrackingNo(coeTrackingNo);
-		List<OutWarehouseRecordItem> outWarehouseShippingList = outWarehouseShippingDao.findOutWarehouseRecordItem(outWarehouseShipping, null, null);
+		List<OutWarehouseRecordItem> outWarehouseShippingList = outWarehouseRecordItemDao.findOutWarehouseRecordItem(outWarehouseShipping, null, null);
 		List<TrackingNo> trackingNos = trackingNoDao.findTrackingNo(coeTrackingNo, TrackingNo.TYPE_COE);
 		// 暂不处理,单号可能重复问题
 		if (trackingNos == null || trackingNos.size() <= 0) {
@@ -1609,7 +1609,7 @@ public class StorageServiceImpl implements IStorageService {
 			map.put("remark", record.getRemark() == null ? "" : record.getRemark());
 			OutWarehouseRecordItem param = new OutWarehouseRecordItem();
 			param.setCoeTrackingNoId(record.getCoeTrackingNoId());
-			List<OutWarehouseRecordItem> outWarehouseShippingList = outWarehouseShippingDao.findOutWarehouseRecordItem(param, null, null);
+			List<OutWarehouseRecordItem> outWarehouseShippingList = outWarehouseRecordItemDao.findOutWarehouseRecordItem(param, null, null);
 			Integer quantity = 0;
 			String orders = "";
 			for (OutWarehouseRecordItem item : outWarehouseShippingList) {
@@ -1630,7 +1630,7 @@ public class StorageServiceImpl implements IStorageService {
 		OutWarehouseRecord outWarehouseRecord = outWarehouseRecordDao.getOutWarehouseRecordById(recordId);
 		OutWarehouseRecordItem param = new OutWarehouseRecordItem();
 		param.setCoeTrackingNoId(outWarehouseRecord.getCoeTrackingNoId());
-		List<OutWarehouseRecordItem> outWarehouseShippingList = outWarehouseShippingDao.findOutWarehouseRecordItem(param, null, null);
+		List<OutWarehouseRecordItem> outWarehouseShippingList = outWarehouseRecordItemDao.findOutWarehouseRecordItem(param, null, null);
 		List<Map<String, String>> mapList = new ArrayList<Map<String, String>>();
 		for (OutWarehouseRecordItem item : outWarehouseShippingList) {
 			Map<String, String> map = new HashMap<String, String>();

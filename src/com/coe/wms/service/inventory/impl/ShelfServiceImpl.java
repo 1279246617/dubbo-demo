@@ -120,8 +120,8 @@ public class ShelfServiceImpl implements IShelfService {
 	@Resource(name = "inWarehouseRecordItemDao")
 	private IInWarehouseRecordItemDao inWarehouseRecordItemDao;
 
-	@Resource(name = "outWarehouseShippingDao")
-	private IOutWarehouseRecordItemDao outWarehouseShippingDao;
+	@Resource(name = "outWarehouseRecordItemDao")
+	private IOutWarehouseRecordItemDao outWarehouseRecordItemDao;
 
 	@Resource(name = "userDao")
 	private IUserDao userDao;
