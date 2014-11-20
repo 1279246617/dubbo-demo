@@ -36,4 +36,13 @@ public interface IItemInventoryDao {
 	 * @return
 	 */
 	public int addItemInventory(Long wareHouseId, Long userIdOfCustomer, String batchNo, String sku, Integer addQuantity);
+
+	/**
+	 * 更新产品批次库存
+	 * 
+	 * @param id
+	 * @param quantity
+	 * @return
+	 */
+	public int updateItemInventoryQuantity(Long id, Integer quantity);
 }

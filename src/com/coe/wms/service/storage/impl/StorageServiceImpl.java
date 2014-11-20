@@ -1381,6 +1381,8 @@ public class StorageServiceImpl implements IStorageService {
 				warehouseId = outWarehouseOrder.getWarehouseId();
 			}
 			outWarehouseOrderDao.updateOutWarehouseOrderStatus(Long.valueOf(orderId), OutWarehouseOrderStatusCode.SUCCESS);
+			// 更新出库成功,并改变产品批次库存
+			
 		}
 		// 保存出库记录
 		OutWarehouseRecord outWarehouseRecord = new OutWarehouseRecord();

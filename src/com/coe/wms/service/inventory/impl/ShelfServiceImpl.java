@@ -399,8 +399,8 @@ public class ShelfServiceImpl implements IShelfService {
 			} else {
 				map.put(Constant.MESSAGE, "找不到库位库存记录,出库订单Id:" + outWarehouseOrder.getId());
 				// 待添加事务回滚
-				// throw new ServiceException("找不到库位库存记录,出库订单Id:"
-				// +outWarehouseOrder.getId());
+				// throw new
+				// ServiceException("找不到库位库存记录,出库订单Id:"+outWarehouseOrder.getId());
 			}
 		}
 		return map;

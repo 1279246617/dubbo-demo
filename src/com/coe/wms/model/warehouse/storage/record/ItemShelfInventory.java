@@ -7,8 +7,9 @@ import java.io.Serializable;
  * 
  * 
  * 
+ * 在入库 出库时产品批次库存
  * 
- * 通过触发器 在入库 出库时 修改此表记录. 定时和流水记录统计对比
+ * 在上架和下架时修改产品货位库存
  * 
  * @author Administrator
  * 
