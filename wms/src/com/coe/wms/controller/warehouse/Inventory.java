@@ -160,25 +160,4 @@ public class Inventory {
 		map.put("Total", pagination.total);
 		return GsonUtil.toJson(map);
 	}
-
-	/**
-	 * 库存日结报表
-	 * 
-	 * @param request
-	 * @param response
-	 * @return
-	 * @throws IOException
-	 */
-	@RequestMapping(value = "/listInventoryReport", method = RequestMethod.GET)
-	public ModelAndView listInventoryReport(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		ModelAndView view = new ModelAndView();
-		HttpSession session = request.getSession();
-		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
-		User user = userService.getUserById(userId);
-		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
-		view.addObject("warehouseList", storageService.findAllWarehouse(user.getDefaultWarehouseId()));
-		view.setViewName("warehouse/inventory/listInventoryReport");
-		return view;
-	}
-	
 }
