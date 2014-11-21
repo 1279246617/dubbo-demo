@@ -122,7 +122,7 @@ public class InWarehouseRecordItemDaoImpl implements IInWarehouseRecordItemDao {
 	/**
 	 * 查询入库记录
 	 * 
-	 * 参数一律使用实体类加Map . 节省QueryVO
+	 * 参数一律使用实体类加Map . 
 	 */
 	@Override
 	public List<InWarehouseRecordItem> findInWarehouseRecordItem(InWarehouseRecordItem inWarehouseRecordItem,
