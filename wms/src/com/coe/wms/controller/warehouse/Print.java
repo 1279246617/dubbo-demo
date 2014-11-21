@@ -72,7 +72,7 @@ public class Print {
 			}
 		}
 		view.addObject("mapList", mapList);
-		view.addObject("timeNow", DateUtil.dateConvertString(new Date(), DateUtil.yyyy_MM_ddHHmmss));
+		view.addObject("timeNow", DateUtil.dateConvertString(new Date(), DateUtil.yyyy_MM_dd));
 		view.setViewName("warehouse/print/printPackageList");
 		return view;
 	}

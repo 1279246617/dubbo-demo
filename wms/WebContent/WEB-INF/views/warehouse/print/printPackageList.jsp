@@ -1,4 +1,4 @@
-\<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -102,17 +102,20 @@
 						</table>
 					</div>
 					<!-- 第七行 -->
-					<div style="height:8mm;width:100%;margin-top: 2mm;" >
-						<span style="float:left;margin-left: 2mm;">
+					<div style="height:8mm;width:100%;margin-top: 3mm;" >
+						<span style="float:left;margin-left: 2mm; width:110mm;">
 							商品数量：${map.totalQuantity}
 						</span>
-						<span style="float:right;margin-right: 1mm;">
-							金额合计：${map.totalPrice} 元
+						<span style="float:left;margin-right: 1mm; width:50mm;">
+							货款合计(元) : ${map.totalPrice}
+						</span>
+						<span style="float:left;margin-right: 1mm; width:40mm;">
+							实际收取(元) : ${map.totalPrice}
 						</span>
 					</div>		
 					
 					<!-- 第八行 -->
-					<div style="height:12mm;weight:100%;" >
+					<div style="height:9mm;weight:100%;" >
 						<span style="float:left;margin-left: 2mm;">
 								发货日期:	${timeNow}
 						</span>
@@ -120,10 +123,13 @@
 					
 					<!-- 第九行 -->
 					<div  style="height:18mm;weight:100%;margin-left: 2mm;">
-						<div>高品质生活，就在顺丰海淘！</div>
-						<div>温馨提示：如发现商品破损或与描述不符等任何问题，请及时联系我们的售后服务热线 ：400-8111111。</div>
+						<div>温馨提示：</div>
+						<div>如发现商品破损或与描述不符等任何问题，请及时联系我们。</div>	
 						<div>欢迎对我们的工作进行监督，我们将不断改进，直至符合您高品质的要求！</div>
+						<br>
 						<div>顺丰海淘祝您生活愉快!</div>
+						<br>
+						<div>高品质生活，就在顺丰海淘！</div>
 					</div>
 			</div>
 		</c:forEach>
