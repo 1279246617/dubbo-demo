@@ -73,7 +73,7 @@ public class OutShelfDaoImpl implements IOutShelfDao {
 	/**
 	 * 查询入库记录
 	 * 
-	 * 参数一律使用实体类加Map . 节省QueryVO
+	 * 参数一律使用实体类加Map . 
 	 */
 	@Override
 	public List<OutShelf> findOutShelf(OutShelf outShelf, Map<String, String> moreParam, Pagination page) {

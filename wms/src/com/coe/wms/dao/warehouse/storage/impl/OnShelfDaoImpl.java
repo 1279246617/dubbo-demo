@@ -73,7 +73,7 @@ public class OnShelfDaoImpl implements IOnShelfDao {
 	/**
 	 * 查询入库记录
 	 * 
-	 * 参数一律使用实体类加Map . 节省QueryVO
+	 * 参数一律使用实体类加Map . 
 	 */
 	@Override
 	public List<OnShelf> findOnShelf(OnShelf onShelf, Map<String, String> moreParam, Pagination page) {

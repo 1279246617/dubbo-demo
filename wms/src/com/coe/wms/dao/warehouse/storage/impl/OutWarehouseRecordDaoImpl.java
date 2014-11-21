@@ -76,7 +76,7 @@ public class OutWarehouseRecordDaoImpl implements IOutWarehouseRecordDao {
 	/**
 	 * 查询入库订单
 	 * 
-	 * 参数一律使用实体类加Map . 节省QueryVO
+	 * 参数一律使用实体类加Map . 
 	 */
 	@Override
 	public List<OutWarehouseRecord> findOutWarehouseRecord(OutWarehouseRecord outWarehouseRecord, Map<String, String> moreParam, Pagination page) {
