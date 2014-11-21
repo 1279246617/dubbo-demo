@@ -21,4 +21,6 @@ public class SsmNameSpace {
 	public static final String OUT_WAREHOUSE_ORDER_STATUS = "OUT_WAREHOUSE_ORDER_STATUS";
 
 	public static final String ON_SHELF_STATUS = "ON_SHELF_STATUS";
+	
+	public static final String REPORT_TYPE = "REPORT_TYPE";
 }
