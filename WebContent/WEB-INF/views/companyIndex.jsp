@@ -95,7 +95,6 @@
 		              		<li><a href="#${baseUrl}/warehouse/inventory/listInventory.do" tab_id="findItemInventory"><i class="icon-zoom-out"></i><span class="hidden-tablet">产品批次库存</span></a></li>
 		              		<li><a href="#${baseUrl}/warehouse/inventory/listItemShelfInventory.do" tab_id="findItemShelfInventory"><i class="icon-zoom-out"></i><span class="hidden-tablet">产品货位库存</span></a></li>
 		              		<li><a href="#${baseUrl}/warehouse/shelves/listSeat.do" tab_id="findSeat"><i class="icon-zoom-out"></i><span class="hidden-tablet">货架货位查询</span></a></li>
-		              		<li><a href="#${baseUrl}/warehouse/inventory/listInventoryReport.do" tab_id="findSeat"><i class="icon-zoom-out"></i><span class="hidden-tablet">库存日结报表</span></a></li>
 		                </ul>
 		        </div>
 		         <div title="用户管理" class=" nav-collapse sidebar-nav">
@@ -121,6 +120,12 @@
 		              		<li><a href=#><i class="icon-check"></i><span class="hidden-tablet">报价管理</span></a></li>
 		              		<li><a href=#><i class="icon-cog"></i><span class="hidden-tablet">仓库设置</span></a></li>
 		              		<li><a href=#><i class="icon-cog"></i><span class="hidden-tablet">货架类型</span></a></li>
+		                </ul>
+		        </div> 
+		        
+		         <div title="报表管理" class=" nav-collapse sidebar-nav">
+		                <ul class="nav nav-tabs nav-stacked">
+		              			<li><a href="#${baseUrl}/warehouse/report/listReportForDownload.do" tab_id="customerReport"><i class="icon-zoom-out"></i><span class="hidden-tablet">报表文件下载</span></a></li>
 		                </ul>
 		        </div> 
     	</div>  
