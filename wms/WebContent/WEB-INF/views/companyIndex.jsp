@@ -126,7 +126,6 @@
 		         <div title="报表管理" class=" nav-collapse sidebar-nav">
 		                <ul class="nav nav-tabs nav-stacked">
 		              			<li><a href="#${baseUrl}/warehouse/report/listReport.do" tab_id="listReport"><i class="icon-zoom-out"></i><span class="hidden-tablet">报表文件下载</span></a></li>
-		              			
 		              			<li><a href=#><i class="icon-cog"></i><span class="hidden-tablet">入库记录报表</span></a></li>
 		              			<li><a href=#><i class="icon-cog"></i><span class="hidden-tablet">出库记录报表</span></a></li>
 		              			<li><a href=#><i class="icon-cog"></i><span class="hidden-tablet">库存日结报表</span></a></li>
