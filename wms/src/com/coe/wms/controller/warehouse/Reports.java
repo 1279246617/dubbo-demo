@@ -1,5 +1,6 @@
 package com.coe.wms.controller.warehouse;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -9,7 +10,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -108,4 +114,13 @@ public class Reports {
 		return GsonUtil.toJson(map);
 	}
 
+	@RequestMapping("downloadReport")
+	public ResponseEntity<byte[]> downloadReport() throws IOException {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+		headers.setContentDispositionFormData("attachment", "dict.txt");
+		File file = new File("F:\testdown.xlsx");
+		return new ResponseEntity<byte[]>(FileUtils.readFileToByteArray(file), headers, HttpStatus.CREATED);
+	}
+	
 }

@@ -21,6 +21,14 @@
 <body>
 			<div class="toolbar1">
            <form action="${baseUrl}/warehouse/report/getListReportData.do" id="searchform" name="searchform" method="post">
+           		<div class="pull-left">
+           			<span class="pull-left" style="width:55px;">
+			       		<a class="btn btn-primary btn-small" onclick="downloadBatch()" title="下载报表">
+			           		 <i class="icon-folder-open"></i>下载报表
+			       	 	</a>
+			       	 	<input style=" visibility:hidden;">
+		       	 	</span>
+		    	</div>   
                <div class="pull-right searchContent">
                		<span class="pull-left" style="width:145px;">
                			仓库
@@ -127,13 +135,13 @@
 							{ display: '客户帐号', name: 'userLoginNameOfCustomer',type:'float',width:'10%'},
 							{ display: '仓库', name: 'warehouse', type: 'float',width:'12%'},
 							{ display: '报表名称', name: 'reportName', type: 'int', width:'23%'},
-	  	                  	{ display: '报表类型', name: 'reportType',type:'float',width:'14%'},
+	  	                  	{ display: '报表类型', name: 'reportType',type:'float',width:'13%'},
 	  	                  	{ display: '创建时间', name: 'createdTime',type:'float',width:'13%'},
-	  	                	{ display: '备注', name: 'remark',type:'float',width:'15%'},
+	  	                	{ display: '备注', name: 'remark',type:'float',width:'14%'},
 	  	                  	{display: '操作',isSort: false,width: '12%',render: function(row) {
 	  	                  		var h = "";
 			            		if (!row._editing) {
-			            			h+="<a href=javascript:addRemark(" + row.id + ",'"+row.remark+"')>下载文件</a>&nbsp;&nbsp;";
+			            			h+="<a href=javascript:download(" + row.id +")>下载文件</a>&nbsp;&nbsp;";
 			            			h+="<a href=javascript:addRemark(" + row.id + ",'"+row.remark+"')>备注</a>";
 			            		}
 			            		return h;
@@ -147,7 +155,7 @@
 	                sortName: 'id',
 	                width: '100%',
 	                height: '99%',
-	                checkbox: false,
+	                checkbox: true,
 	                rownumbers:true,
 	                alternatingRow:true,
 	                minColToggle:20,
@@ -158,7 +166,41 @@
 	            });
 	        };		
    	</script>
-   	
+   	<script type="text/javascript">
+   		function addRemark(id,remark){
+//    		   $.dialog({
+//  	          lock: true,
+//  	          title: '备注',
+//  	          width: '450px',
+//  	          height: '290px',
+//  	          content: 'url:' + baseUrl + '/warehouse/storage/editOutWarehouseRecordRemark.do?id='+id+"&remark="+remark,
+//  	          button: [{
+//  	            name: '确定',
+//  	            callback: function() {
+//  	              var objRemark = this.content.document.getElementById("remark");
+//  	              var remark = $(objRemark).val();
+//  	              $.post(baseUrl + '/warehouse/storage/saveOutWarehouseRecordRemark.do', {
+//  	            	  remark:remark,
+//  	            	  id:id
+//  	              },
+//  	              function(msg) {
+//  	                	grid.loadData();
+//  	              });
+//  	            }
+//  	          }],
+//  	          cancel: true
+//  	        });
+   		}
+   		function downloadBatch(){
+   			
+   		}
+   		
+   		//下载
+   		function download(id){
+   			var url = baseUrl + '/warehouse/report/downloadReport.do';
+   			window.open(url);
+   		}
+   	</script>
 	<script type="text/javascript" src="${baseUrl}/static/jquery/jquery.showMessage.js"></script>
 	<script type="text/javascript" src="${baseUrl}/static/ligerui/ligerUI/js/core/base.js"></script>
 	<script type="text/javascript" src="${baseUrl}/static/ligerui/ligerUI/js/plugins/ligeruiPatch.js"></script>
