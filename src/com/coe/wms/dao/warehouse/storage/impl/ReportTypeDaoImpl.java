@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import com.coe.wms.dao.datasource.DataSource;
 import com.coe.wms.dao.datasource.DataSourceCode;
-import com.coe.wms.dao.warehouse.storage.IReportType;
+import com.coe.wms.dao.warehouse.storage.IReportTypeDao;
 import com.coe.wms.model.warehouse.report.ReportType;
 import com.coe.wms.util.SsmNameSpace;
 import com.google.code.ssm.api.ParameterValueKeyProvider;
@@ -26,8 +26,8 @@ import com.google.code.ssm.api.ReadThroughSingleCache;
  * @author Administrator
  * 
  */
-@Repository("reportType")
-public class ReportTypeDaoImpl implements IReportType {
+@Repository("reportTypeDao")
+public class ReportTypeDaoImpl implements IReportTypeDao {
 
 	Logger logger = Logger.getLogger(ReportTypeDaoImpl.class);
 

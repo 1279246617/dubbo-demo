@@ -35,12 +35,15 @@ import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderSenderDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderStatusDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseRecordDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseRecordItemDao;
+import com.coe.wms.dao.warehouse.storage.IReportDao;
+import com.coe.wms.dao.warehouse.storage.IReportTypeDao;
 import com.coe.wms.exception.ServiceException;
 import com.coe.wms.model.unit.Weight;
 import com.coe.wms.model.unit.Weight.WeightCode;
 import com.coe.wms.model.user.User;
 import com.coe.wms.model.warehouse.TrackingNo;
 import com.coe.wms.model.warehouse.Warehouse;
+import com.coe.wms.model.warehouse.report.ReportType;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrderItem;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrderStatus;
@@ -99,6 +102,12 @@ public class StorageServiceImpl implements IStorageService {
 
 	@Resource(name = "warehouseDao")
 	private IWarehouseDao warehouseDao;
+
+	@Resource(name = "reportTypeDao")
+	private IReportTypeDao reportTypeDao;
+
+	@Resource(name = "reportDao")
+	private IReportDao reportDao;
 
 	@Resource(name = "trackingNoDao")
 	private ITrackingNoDao trackingNoDao;
@@ -1734,5 +1743,10 @@ public class StorageServiceImpl implements IStorageService {
 	@Override
 	public TrackingNo getTrackingNoById(Long id) throws ServiceException {
 		return trackingNoDao.getTrackingNoById(id);
+	}
+
+	@Override
+	public List<ReportType> findAllReportType() throws ServiceException {
+		return reportTypeDao.findAllReportType();
 	}
 }
