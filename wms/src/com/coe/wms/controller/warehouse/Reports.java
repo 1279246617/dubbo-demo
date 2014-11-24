@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.coe.wms.controller.Application;
+import com.coe.wms.dao.warehouse.storage.impl.ReportDaoImpl;
 import com.coe.wms.model.user.User;
 import com.coe.wms.model.warehouse.report.Report;
 import com.coe.wms.service.inventory.IItemInventoryService;
@@ -110,15 +111,21 @@ public class Reports {
 		map.put("Total", pagination.total);
 		return GsonUtil.toJson(map);
 	}
-
+	
+	/**
+	 * 下载报表文件
+	 * @param response
+	 * @throws IOException
+	 */
 	@ResponseBody
 	@RequestMapping(value = "downloadReport", method = RequestMethod.GET)
-	public void downloadReport(HttpServletResponse res) throws IOException {
-		OutputStream os = res.getOutputStream();
+	public void downloadReport(HttpServletResponse response,Long reportId) throws IOException {
+		OutputStream os = response.getOutputStream();
 		try {
-			res.reset();
-			res.setHeader("Content-Disposition", "attachment; filename=111.xlsx");
-			res.setContentType("application/octet-stream; charset=utf-8");
+			storageService.getReportById(reportId);
+			response.reset();
+			response.setHeader("Content-Disposition", "attachment; filename=111.xlsx");
+			response.setContentType("application/octet-stream; charset=utf-8");
 			File file = new File("F:\\testdown.xlsx");
 			os.write(FileUtils.readFileToByteArray(file));
 			os.flush();
