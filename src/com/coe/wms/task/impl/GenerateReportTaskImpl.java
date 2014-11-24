@@ -19,6 +19,8 @@ import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderItemDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderReceiverDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderSenderDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderStatusDao;
+import com.coe.wms.model.warehouse.report.Report;
+import com.coe.wms.model.warehouse.report.ReportType.ReportTypeCode;
 import com.coe.wms.task.IGenerateReportTask;
 
 @Component
@@ -68,17 +70,26 @@ public class GenerateReportTaskImpl implements IGenerateReportTask {
 	/**
 	 * 生成入库日报表
 	 * 
-	 * 每天
+	 * 每天凌晨00:00:00
 	 */
-	@Scheduled(cron = "0 0 3 * * ? ")
+	@Scheduled(cron = "0 0 0 * * ? ")
 	@Override
 	public void inWarehouseReport() {
+		Long current = System.currentTimeMillis();
+		
+		
+		Report report = new Report();
+		report.setCreatedTime(current);
+
+		report.setRemark("测试日报表");
+		report.setReportName("入库日报表");
+		report.setReportType(ReportTypeCode.IN_WAREHOUSE_REPORT);
 
 	}
 
 	@Override
 	public void outWarehouseReport() {
-		
+
 	}
 
 	@Override

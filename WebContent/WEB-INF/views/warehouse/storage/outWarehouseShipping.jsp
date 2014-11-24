@@ -42,7 +42,7 @@
 					</tr>
 					<tr>
 						<td colspan="1" rowspan="2" style="height:25px;">
-							<a class="btn  btn-primary" id="enter" onclick="submitAll(1)" style="cursor:pointer;height:20px;"><i class="icon-ok icon-white"></i>
+							<a class="btn  btn-primary" id="submitAll" onclick="submitAll()" style="cursor:pointer;height:20px;"><i class="icon-ok icon-white"></i>
 								完成出货
 							</a>
 						</td>
@@ -188,29 +188,50 @@
 	  	  		}
 	  	  	},"json");
   		}
-  	 	 
+		  
+  	 	 //提交全部单号
+  	 	 var isSubmintIng = 'N';//是否在提交过程中. 
   	 	 function submitAll(){
+  	 		 if(isSubmintIng == "Y"){//防止重复点击
+  	 			 return false;
+  	 		 }
+  	 		isSubmintIng ="Y";
+  	 		$("#submitAll").attr("disabled","disabled");
   	 		 if(trackingNos == null || trackingNos ==''){
   	 			parent.$.showShortMessage({msg:"请输入出货跟踪单号再按完成出货总单!",animate:false,left:"43%"});
+  	 			isSubmintIng = 'N';
+  	 			$("#submitAll").removeAttr("disabled");
   	 			return false;
   	 		 }
   	 		 var coeTrackingNoId = $("#coeTrackingNoId").val();
   	 		 var coeTrackingNo = $("#coeTrackingNo").val();
 	 		 if(coeTrackingNo == null || coeTrackingNo == ""){
 		 			parent.$.showDialogMessage("请输入有效的COE单号并按回车!", null, null);
+		 			isSubmintIng = 'N';
+		 			$("#submitAll").removeAttr("disabled");
 		 			return false;
 		 	}
 	 		if(coeTrackingNoId ==""){
 	 			parent.$.showDialogMessage("请输入有效的COE单号并按回车!", null, null);
+	 			isSubmintIng = 'N';
+	 			$("#submitAll").removeAttr("disabled");
 	 			return false;
 	 		}
-  	 		 
-  	 		$.post(baseUrl+ '/warehouse/storage/outWarehouseShippingConfirm.do?orderIds='+ orderIds+'&coeTrackingNo='+coeTrackingNo+"&coeTrackingNoId="+coeTrackingNoId, function(msg) {
+	 		
+  	 		$.post(baseUrl+ '/warehouse/storage/outWarehouseShippingConfirm.do',{
+  	 			orderIds:orderIds,
+  	 			coeTrackingNo:coeTrackingNo,
+  	 			coeTrackingNoId:coeTrackingNoId
+  	 		},function(msg) {
   	 			if(msg.status == 0){
   	 				parent.$.showDialogMessage(msg.message, null, null);
+  	 				isSubmintIng = 'N';
+  	 				$("#submitAll").removeAttr("disabled");
 	  	  			return false;
   	 			}
 				if(msg.status >0){
+					isSubmintIng = 'N';
+					$("#submitAll").removeAttr("disabled");
 	  	  			//是否打印出货交接单
   	  			 	 var contentArr = [];
 	  	  		    contentArr.push('<div id="changeContent" style="padding:10px;width: 380px;">');
@@ -264,6 +285,8 @@
 					// 光标移至跟踪号
 	  	  			$("#trackingNo").focus();
 	  	  			$("#trackingNo").select();
+	  	  			isSubmintIng = 'N';
+	  	  		 	$("#submitAll").removeAttr("disabled");
 					return false;
 				}
   	 		},"json");

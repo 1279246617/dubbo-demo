@@ -1364,23 +1364,34 @@ public class StorageServiceImpl implements IStorageService {
 			map.put(Constant.MESSAGE, "COE交接单号不能为空,请刷新页面重试!");
 			return map;
 		}
+		TrackingNo trackingNo = trackingNoDao.getTrackingNoById(coeTrackingNoId);
+		if (trackingNo == null) {
+			map.put(Constant.MESSAGE, "该COE交接单号无效,请输入新单号");
+			return map;
+		}
+		if (StringUtil.isEqual(trackingNo.getStatus(), TrackingNo.STATUS_USED + "")) {
+			map.put(Constant.MESSAGE, "该COE交接单号已经使用,请输入新单号");
+			return map;
+		}
+		
 		Long userIdOfCustomer = null;
 		Long warehouseId = null;
 		// 迭代,检查跟踪号
 		for (String orderId : orderIdsArray) {
 			// 改变状态 ,发送到哲盟
-			logger.info("出货,待发送到哲盟新系统的出库订单id: = " + orderId);
+			Long orderIdLong = Long.valueOf(orderId);
+			logger.info("出货,待发送到哲盟新系统的出库订单id: = " + orderIdLong);
 			if (userIdOfCustomer == null) {
-				OutWarehouseOrder outWarehouseOrder = outWarehouseOrderDao.getOutWarehouseOrderById(Long.valueOf(orderId));
+				OutWarehouseOrder outWarehouseOrder = outWarehouseOrderDao.getOutWarehouseOrderById(orderIdLong);
 				userIdOfCustomer = outWarehouseOrder.getUserIdOfCustomer();
 				warehouseId = outWarehouseOrder.getWarehouseId();
 			}
-			outWarehouseOrderDao.updateOutWarehouseOrderStatus(Long.valueOf(orderId), OutWarehouseOrderStatusCode.SUCCESS);
+			outWarehouseOrderDao.updateOutWarehouseOrderStatus(orderIdLong, OutWarehouseOrderStatusCode.SUCCESS);
 			// 更新出库成功,并改变产品批次库存
 			// --------------------------------------------------------------------------------------------------------------------------------------------
 			// 查找下架时的批次,货位,sku,数量记录
 			OutWarehouseOrderItemShelf outWarehouseOrderItemShelfParam = new OutWarehouseOrderItemShelf();
-			outWarehouseOrderItemShelfParam.setOutWarehouseOrderId(Long.valueOf(orderId));
+			outWarehouseOrderItemShelfParam.setOutWarehouseOrderId(orderIdLong);
 			List<OutWarehouseOrderItemShelf> outWarehouseOrderItemShelfList = outWarehouseOrderItemShelfDao.findOutWarehouseOrderItemShelf(outWarehouseOrderItemShelfParam, null, null);
 			for (OutWarehouseOrderItemShelf oItemShelf : outWarehouseOrderItemShelfList) {
 				ItemInventory inventoryParam = new ItemInventory();
