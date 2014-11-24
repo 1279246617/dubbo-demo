@@ -11,6 +11,7 @@ import com.coe.wms.model.warehouse.Seat;
 import com.coe.wms.model.warehouse.Shelf;
 import com.coe.wms.model.warehouse.TrackingNo;
 import com.coe.wms.model.warehouse.Warehouse;
+import com.coe.wms.model.warehouse.report.ReportType;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrderItem;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrder;
@@ -316,4 +317,6 @@ public interface IStorageService {
 	public Map<String, String> executeSearchOutWarehouseOrder(String nos, String noType) throws ServiceException;
 
 	public TrackingNo getTrackingNoById(Long id) throws ServiceException;
+
+	public List<ReportType> findAllReportType() throws ServiceException;
 }

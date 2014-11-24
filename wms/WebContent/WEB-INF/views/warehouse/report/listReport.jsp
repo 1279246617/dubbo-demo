@@ -22,29 +22,41 @@
 			<div class="toolbar1">
            <form action="${baseUrl}/warehouse/inventory/getListInventoryData.do" id="searchform" name="searchform" method="post">
                <div class="pull-right searchContent">
-               		<span class="pull-left" style="width:175px;">
+               		<span class="pull-left" style="width:145px;">
                			仓库
-               			<select style="width:100px;" id="warehouseId" name="warehouseId">
+               			<select style="width:90px;" id="warehouseId" name="warehouseId">
                				<option></option>
-							<option value="1">1-香港仓</option>
+							<c:forEach items="${warehouseList}" var="w" >
+				       	 		<option value="<c:out value='${w.id}'/>">
+				       	 			<c:out value="${w.id}-${w.warehouseName}"/>
+				       		 	</option>
+				       		 </c:forEach>
 						</select>
                		</span>
-               		<span class="pull-left" style="width:175px;">
+               		<span class="pull-left" style="width:160px;">
                			客户帐号
-               			<input type="text" name="userLoginName" data-provide="typeahead"  id="userLoginName" style="width:100px;" title="请输入客户登录名" />
+               			<input type="text" name="userLoginName" data-provide="typeahead"  id="userLoginName" style="width:90px;" title="请输入客户登录名" />
                		</span>
-               		<span class="pull-left" style="width:185px;">
-               			产品SKU
-               			 <input type="text"   style="width:100px;" name="sku" title="产品SKU">
-               		</span>
-               		<span class="pull-left" style="width:185px;">
-               			入库批次号
-               			 <input type="text"   style="width:100px;" name="batchNo" title="可输入入库批次号">
+               		<span class="pull-left" style="width:160px;">
+               			报表类型
+               			 <select style="width:90px;" id="reportType" name="reportType">
+               				<option></option>
+							<c:forEach items="${reportTypeList}" var="r" >
+				       	 		<option value="<c:out value='${r.code}'/>">
+				       	 			<c:out value="${r.cn}"/>
+				       		 	</option>
+				       		 </c:forEach>
+						</select>
                		</span>
                		
-               		<span class="pull-left" style="width:200px;">
-               			上次更新时间
-	               		<input type="text"   style="width:120px;" name="timeStart" id="timeStart">
+               		<span class="pull-left" style="width:170px;">
+               			报表名称
+               			 <input type="text"   style="width:100px;" name="reportName">
+               		</span>
+               		
+               		<span class="pull-left" style="width:175px;">
+               			创建时间
+	               		<input type="text"   style="width:120px;" name="timeStart" id="timeStart" value="${sevenDaysAgoStart}" >
                		</span>
                		
                		<span class="pull-left" style="width:200px;">

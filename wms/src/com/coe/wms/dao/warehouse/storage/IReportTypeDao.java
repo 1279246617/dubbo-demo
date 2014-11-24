@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.coe.wms.model.warehouse.report.ReportType;
 
-public interface IReportType {
+public interface IReportTypeDao {
 
 	public ReportType findReportTypeByCode(String code);
 

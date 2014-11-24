@@ -23,6 +23,7 @@ import com.coe.wms.model.warehouse.storage.record.ItemShelfInventory;
 import com.coe.wms.service.inventory.IItemInventoryService;
 import com.coe.wms.service.storage.IStorageService;
 import com.coe.wms.service.user.IUserService;
+import com.coe.wms.util.DateUtil;
 import com.coe.wms.util.GsonUtil;
 import com.coe.wms.util.Pagination;
 import com.coe.wms.util.SessionConstant;
@@ -59,6 +60,8 @@ public class Report {
 		User user = userService.getUserById(userId);
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
 		view.addObject("warehouseList", storageService.findAllWarehouse(user.getDefaultWarehouseId()));
+		view.addObject("sevenDaysAgoStart", DateUtil.getSevenDaysAgoStart());
+		view.addObject("reportTypeList", storageService.findAllReportType());
 		view.setViewName("warehouse/report/listReport");
 		return view;
 	}
