@@ -1,6 +1,7 @@
 package com.coe.wms.task.impl;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -28,6 +29,7 @@ import com.coe.wms.model.warehouse.report.ReportType.ReportTypeCode;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecord;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecordItem;
 import com.coe.wms.task.IGenerateReportTask;
+import com.coe.wms.util.DateUtil;
 
 @Component
 public class GenerateReportTaskImpl implements IGenerateReportTask {
@@ -83,12 +85,32 @@ public class GenerateReportTaskImpl implements IGenerateReportTask {
 	public void inWarehouseReport() {
 		Long current = System.currentTimeMillis();
 		Calendar calendar = Calendar.getInstance();
+		// 开始时间
 		calendar.add(Calendar.DAY_OF_YEAR, -1);
+		calendar.set(Calendar.HOUR, 0);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.SECOND, 0);
+		Long startTime = calendar.getTimeInMillis();
+		// 终止时间
+		calendar.add(Calendar.DAY_OF_YEAR, 1);
+		Long endTime = calendar.getTimeInMillis();
 
-		User user = new User();
-		List<User> userList = userDao.findAllUser();
-		System.out.println(calendar.getTime());
+		String info = "入库报表:起始时间:" + DateUtil.dateConvertString(new Date(startTime), DateUtil.yyyy_MM_ddHHmmss);
+		info += "终止时间:" + DateUtil.dateConvertString(new Date(endTime), DateUtil.yyyy_MM_ddHHmmss);
+		logger.info(info);
+		
+		// 查找所有状态是OK的客户
+		User userParam = new User();
+		userParam.setUserType(User.USER_TYPE_CUSTOMER);
+		userParam.setStatus(User.STATUS_OK);
+		List<User> userList = userDao.findUser(userParam);
+		logger.info("入库报表:查到客户数:" + userList.size());
+		// 根据客户查找入库记录
+		for (User user : userList) {
+			InWarehouseRecord recordParam = new InWarehouseRecord();
+			recordParam.setUserIdOfCustomer(user.getId());
 
+		}
 		Report report = new Report();
 		report.setCreatedTime(current);
 
