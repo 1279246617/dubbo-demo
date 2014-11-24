@@ -1323,7 +1323,7 @@ public class StorageServiceImpl implements IStorageService {
 				outWarehouseRecordItem.setCoeTrackingNo(coeTrackingNo);
 				outWarehouseRecordItem.setCoeTrackingNoId(coeTrackingNoId);
 				outWarehouseRecordItem.setCreatedTime(System.currentTimeMillis());
-				outWarehouseRecordItem.setOurWarehouseOrderTrackingNo(trackingNo);
+				outWarehouseRecordItem.setOutWarehouseOrderTrackingNo(trackingNo);
 				outWarehouseRecordItem.setOutWarehouseOrderId(outWarehouseOrder.getId());
 				outWarehouseRecordItem.setUserIdOfCustomer(outWarehouseOrder.getUserIdOfCustomer());
 				outWarehouseRecordItem.setUserIdOfOperator(userIdOfOperator);
@@ -1337,7 +1337,7 @@ public class StorageServiceImpl implements IStorageService {
 				OutWarehouseRecordItem shippingParam = new OutWarehouseRecordItem();
 				shippingParam.setCoeTrackingNoId(coeTrackingNoId);
 				shippingParam.setCoeTrackingNo(coeTrackingNo);
-				shippingParam.setOurWarehouseOrderTrackingNo(trackingNo);
+				shippingParam.setOutWarehouseOrderTrackingNo(trackingNo);
 				List<OutWarehouseRecordItem> outWarehouseShippingList = outWarehouseRecordItemDao.findOutWarehouseRecordItem(shippingParam, null, null);
 				String deleteShippingIds = "";
 				int sub = 0;
@@ -1660,7 +1660,7 @@ public class StorageServiceImpl implements IStorageService {
 			Integer quantity = 0;
 			String orders = "";
 			for (OutWarehouseRecordItem item : outWarehouseShippingList) {
-				orders += item.getOurWarehouseOrderTrackingNo() + " ; ";
+				orders += item.getOutWarehouseOrderTrackingNo() + " ; ";
 				quantity++;
 			}
 			map.put("orders", orders);
@@ -1682,7 +1682,7 @@ public class StorageServiceImpl implements IStorageService {
 		for (OutWarehouseRecordItem item : outWarehouseShippingList) {
 			Map<String, String> map = new HashMap<String, String>();
 			map.put("orderId", item.getOutWarehouseOrderId() + "");
-			map.put("trackingNo", item.getOurWarehouseOrderTrackingNo());
+			map.put("trackingNo", item.getOutWarehouseOrderTrackingNo());
 			User user = userDao.getUserById(item.getUserIdOfCustomer());
 			map.put("customer", user.getLoginName());
 			OutWarehouseOrder outWarehouseOrder = outWarehouseOrderDao.getOutWarehouseOrderById(item.getOutWarehouseOrderId());
