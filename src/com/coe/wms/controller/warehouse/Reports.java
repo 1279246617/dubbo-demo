@@ -18,9 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.coe.wms.controller.Application;
 import com.coe.wms.model.user.User;
-import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
-import com.coe.wms.model.warehouse.storage.record.ItemInventory;
-import com.coe.wms.model.warehouse.storage.record.ItemShelfInventory;
+import com.coe.wms.model.warehouse.report.Report;
 import com.coe.wms.service.inventory.IItemInventoryService;
 import com.coe.wms.service.storage.IStorageService;
 import com.coe.wms.service.user.IUserService;
@@ -91,18 +89,19 @@ public class Reports {
 		pagination.pageSize = pagesize;
 		pagination.sortName = sortname;
 		pagination.sortOrder = sortorder;
-		com.coe.wms.model.warehouse.report.Report param = new com.coe.wms.model.warehouse.report.Report();
+		Report param = new Report();
 		if (StringUtil.isNotNull(userLoginName)) {
 			Long userIdOfCustomer = userService.findUserIdByLoginName(userLoginName);
 			param.setUserIdOfCustomer(userIdOfCustomer);
 		}
 		param.setWarehouseId(warehouseId);
+		param.setReportName(reportName);
+		param.setReportType(reportType);
 		// 更多参数
 		Map<String, String> moreParam = new HashMap<String, String>();
 		moreParam.put("createdTimeStart", createdTimeStart);
 		moreParam.put("createdTimeEnd", createdTimeEnd);
-		
-//		pagination = storageService.getInWarehouseOrderData(param, moreParam, pagination);
+		pagination = storageService.getListReportData(param, moreParam, pagination);
 		Map map = new HashMap();
 		map.put("Rows", pagination.rows);
 		map.put("Total", pagination.total);
