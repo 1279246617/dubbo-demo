@@ -2,6 +2,7 @@ package com.coe.wms.controller.warehouse;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,10 +13,6 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -114,13 +111,21 @@ public class Reports {
 		return GsonUtil.toJson(map);
 	}
 
-	@RequestMapping("downloadReport")
-	public ResponseEntity<byte[]> downloadReport() throws IOException {
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-		headers.setContentDispositionFormData("attachment", "dict.txt");
-		File file = new File("F:\testdown.xlsx");
-		return new ResponseEntity<byte[]>(FileUtils.readFileToByteArray(file), headers, HttpStatus.CREATED);
+	@ResponseBody
+	@RequestMapping(value = "downloadReport", method = RequestMethod.GET)
+	public void downloadReport(HttpServletResponse res) throws IOException {
+		OutputStream os = res.getOutputStream();
+		try {
+			res.reset();
+			res.setHeader("Content-Disposition", "attachment; filename=111.xlsx");
+			res.setContentType("application/octet-stream; charset=utf-8");
+			File file = new File("F:\\testdown.xlsx");
+			os.write(FileUtils.readFileToByteArray(file));
+			os.flush();
+		} finally {
+			if (os != null) {
+				os.close();
+			}
+		}
 	}
-	
 }
