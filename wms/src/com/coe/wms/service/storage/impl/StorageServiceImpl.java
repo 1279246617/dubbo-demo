@@ -43,6 +43,7 @@ import com.coe.wms.model.unit.Weight.WeightCode;
 import com.coe.wms.model.user.User;
 import com.coe.wms.model.warehouse.TrackingNo;
 import com.coe.wms.model.warehouse.Warehouse;
+import com.coe.wms.model.warehouse.report.Report;
 import com.coe.wms.model.warehouse.report.ReportType;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrderItem;
@@ -1748,5 +1749,37 @@ public class StorageServiceImpl implements IStorageService {
 	@Override
 	public List<ReportType> findAllReportType() throws ServiceException {
 		return reportTypeDao.findAllReportType();
+	}
+
+	@Override
+	public Pagination getListReportData(Report param, Map<String, String> moreParam, Pagination page) {
+		List<Report> reportList = reportDao.findReport(param, moreParam, page);
+		List<Object> list = new ArrayList<Object>();
+		for (Report report : reportList) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("id", report.getId());
+			if (report.getCreatedTime() != null) {
+				map.put("createdTime", DateUtil.dateConvertString(new Date(report.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss));
+			}
+			// 查询用户名
+			User user = userDao.getUserById(report.getUserIdOfCustomer());
+			map.put("userLoginNameOfCustomer", user.getLoginName());
+			// 查询操作员
+			if (NumberUtil.greaterThanZero(report.getUserIdOfOperator())) {
+				User userOfOperator = userDao.getUserById(report.getUserIdOfOperator());
+				map.put("userLoginNameOfOperator", userOfOperator.getLoginName());
+			}
+			map.put("reportName", report.getReportName());
+			map.put("reportType", report.getReportType());
+			if (NumberUtil.greaterThanZero(report.getWarehouseId())) {
+				Warehouse warehouse = warehouseDao.getWarehouseById(report.getWarehouseId());
+				map.put("warehouse", warehouse.getWarehouseName());
+			}
+			map.put("remark", report.getRemark() == null ? "" : report.getRemark());
+			list.add(map);
+		}
+		page.total = reportDao.countReport(param, moreParam);
+		page.rows = list;
+		return page;
 	}
 }

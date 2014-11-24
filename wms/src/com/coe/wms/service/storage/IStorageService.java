@@ -11,6 +11,7 @@ import com.coe.wms.model.warehouse.Seat;
 import com.coe.wms.model.warehouse.Shelf;
 import com.coe.wms.model.warehouse.TrackingNo;
 import com.coe.wms.model.warehouse.Warehouse;
+import com.coe.wms.model.warehouse.report.Report;
 import com.coe.wms.model.warehouse.report.ReportType;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrderItem;
@@ -319,4 +320,14 @@ public interface IStorageService {
 	public TrackingNo getTrackingNoById(Long id) throws ServiceException;
 
 	public List<ReportType> findAllReportType() throws ServiceException;
+
+	/**
+	 * 获取报表
+	 * 
+	 * @param inWarehouseOrder
+	 * @param moreParam
+	 * @param page
+	 * @return
+	 */
+	public Pagination getListReportData(Report param, Map<String, String> moreParam, Pagination page);
 }

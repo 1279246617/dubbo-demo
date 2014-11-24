@@ -125,10 +125,9 @@
 	    	 grid = $("#maingrid").ligerGrid({
 	                columns: [
 							{ display: '客户帐号', name: 'userLoginNameOfCustomer',type:'float',width:'10%'},
-							{ display: '仓库', name: 'warehouse', type: 'float',width:'11%'},
-							{ display: '报表名称', name: 'reportName', type: 'int', width:'13%'},
-	  	                  	{ display: '报表类型', name: 'reportType',type:'float',width:'12%'},
-	  	                  	{ display: '报表日期', name: 'quantity',type:'float',width:'13%'},
+							{ display: '仓库', name: 'warehouse', type: 'float',width:'12%'},
+							{ display: '报表名称', name: 'reportName', type: 'int', width:'23%'},
+	  	                  	{ display: '报表类型', name: 'reportType',type:'float',width:'14%'},
 	  	                  	{ display: '创建时间', name: 'createdTime',type:'float',width:'13%'},
 	  	                	{ display: '备注', name: 'remark',type:'float',width:'15%'},
 	  	                  	{display: '操作',isSort: false,width: '12%',render: function(row) {
