@@ -116,12 +116,12 @@ public class GenerateReportTaskImpl implements IGenerateReportTask {
 		Map<String, String> moreParam = new HashMap<String, String>();
 		moreParam.put("createdTimeStart", startTime);
 		moreParam.put("createdTimeEnd", endTime);
-		for (User user : userList) {
-			Long userIdOfCustomer = user.getId();
-			// 仓库
-			List<Warehouse> warehouseList = warehouseDao.findAllWarehouse();
-			for (Warehouse warehouse : warehouseList) {
-				Long warehouseId = warehouse.getId();
+		// 仓库
+		List<Warehouse> warehouseList = warehouseDao.findAllWarehouse();
+		for (Warehouse warehouse : warehouseList) {
+			Long warehouseId = warehouse.getId();
+			for (User user : userList) {// 按仓库为每个用户生成入库报表
+				Long userIdOfCustomer = user.getId();
 				InWarehouseRecord recordParam = new InWarehouseRecord();
 				recordParam.setWarehouseId(warehouseId);
 				recordParam.setUserIdOfCustomer(userIdOfCustomer);// 查找指定客户,仓库的入库记录
@@ -129,8 +129,14 @@ public class GenerateReportTaskImpl implements IGenerateReportTask {
 				if (inWarehouseRecordList == null || inWarehouseRecordList.size() <= 0) {
 					continue;
 				}
-				
-				
+				for (InWarehouseRecord record : inWarehouseRecordList) {// 迭代收货记录
+					InWarehouseRecordItem itemParam = new InWarehouseRecordItem();
+					itemParam.setInWarehouseRecordId(record.getId());
+					List<InWarehouseRecordItem> recordItemList = inWarehouseRecordItemDao.findInWarehouseRecordItem(itemParam, null, null);
+						
+					
+				}
+
 				String filePath = "";
 				Report report = new Report();
 				report.setCreatedTime(current);
