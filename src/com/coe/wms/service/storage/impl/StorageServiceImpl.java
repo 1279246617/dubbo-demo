@@ -1783,4 +1783,9 @@ public class StorageServiceImpl implements IStorageService {
 		page.rows = list;
 		return page;
 	}
+
+	@Override
+	public Report getReportById(Long reportId) throws ServiceException {
+		return reportDao.getReportById(reportId);
+	}
 }

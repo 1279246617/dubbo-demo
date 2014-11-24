@@ -330,4 +330,13 @@ public interface IStorageService {
 	 * @return
 	 */
 	public Pagination getListReportData(Report param, Map<String, String> moreParam, Pagination page);
+
+	/**
+	 * 获取报表
+	 * 
+	 * @param reportId
+	 * @return
+	 * @throws ServiceException
+	 */
+	public Report getReportById(Long reportId) throws ServiceException;
 }
