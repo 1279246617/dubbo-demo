@@ -126,11 +126,13 @@ public class Reports {
 	public void downloadReport(HttpServletResponse response, Long reportId) throws IOException {
 		OutputStream os = response.getOutputStream();
 		try {
-			reportService.getReportById(reportId);
+			Report report = reportService.getReportById(reportId);
+			String filePathAndName = report.getFilePath();
+			String fileName = filePathAndName.substring((filePathAndName.lastIndexOf("\\") == -1 ? filePathAndName.lastIndexOf("/") : 0) + 1, filePathAndName.length());
 			response.reset();
-			response.setHeader("Content-Disposition", "attachment; filename=111.xlsx");
+			response.setHeader("Content-Disposition", "attachment; filename=" + java.net.URLEncoder.encode(fileName, "UTF-8"));
 			response.setContentType("application/octet-stream; charset=utf-8");
-			File file = new File("F:\\testdown.xlsx");
+			File file = new File(filePathAndName);
 			os.write(FileUtils.readFileToByteArray(file));
 			os.flush();
 		} finally {

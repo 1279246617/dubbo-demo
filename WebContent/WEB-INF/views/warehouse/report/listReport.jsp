@@ -197,7 +197,7 @@
    		
    		//下载
    		function download(id){
-   			var url = baseUrl + '/warehouse/report/downloadReport.do';
+   			var url = baseUrl + '/warehouse/report/downloadReport.do?reportId='+id;
    			window.open(url);
    		}
    	</script>

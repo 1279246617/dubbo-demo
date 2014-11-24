@@ -2,17 +2,20 @@ package com.coe.wms.util;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
+import org.apache.poi.hssf.usermodel.HSSFFont;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -127,5 +130,75 @@ public class POIExcelUtil {
 			dataLst.add(rowLst);
 		}
 		return dataLst;
+	}
+
+	/**
+	 * 创建excel
+	 * 
+	 * @param sheetTitle
+	 * @param headers
+	 * @param rows
+	 * @param filePathAndName
+	 * @return
+	 * @throws IOException
+	 */
+	public static String createExcel(String sheetTitle, String[] headers, List<String[]> rows, String filePathAndName) throws IOException {
+		// 声明一个工作薄
+		HSSFWorkbook workbook = new HSSFWorkbook();
+		// 生成一个表格
+		HSSFSheet sheet = workbook.createSheet(sheetTitle);
+		// 设置表格默认列宽15个字节
+		sheet.setDefaultColumnWidth(15);
+
+		// 生成表头样式
+		HSSFCellStyle style = workbook.createCellStyle();
+		style.setFillForegroundColor(HSSFColor.SKY_BLUE.index);// 设置这些样式--表头
+		style.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+		style.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+		style.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+		style.setBorderRight(HSSFCellStyle.BORDER_THIN);
+		style.setBorderTop(HSSFCellStyle.BORDER_THIN);
+		style.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+		// 生成一个字体
+		HSSFFont font = workbook.createFont();
+		font.setColor(HSSFColor.VIOLET.index);
+		font.setFontHeightInPoints((short) 12);
+		font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+		// 把字体应用到当前的样式
+		style.setFont(font);
+
+		// 生成并设置另一个样式
+		HSSFCellStyle style2 = workbook.createCellStyle();
+		style2.setFillForegroundColor(HSSFColor.LIGHT_YELLOW.index);
+		style2.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+		style2.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+		style2.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+		style2.setBorderRight(HSSFCellStyle.BORDER_THIN);
+		style2.setBorderTop(HSSFCellStyle.BORDER_THIN);
+		style2.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+		style2.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		// 生成另一个字体
+		HSSFFont font2 = workbook.createFont();
+		font2.setBoldweight(HSSFFont.BOLDWEIGHT_NORMAL);
+		// 把字体应用到当前的样式
+		style2.setFont(font2);
+
+		// 生成表头内容
+		HSSFRow hssfRow = sheet.createRow(0);
+		for (int i = 0; i < headers.length; i++) {
+			HSSFCell cell = hssfRow.createCell(i);
+			cell.setCellStyle(style);
+			cell.setCellValue(headers[i]);
+		}
+
+		// 生成表头以外的内容
+		for (String[] row : rows) {
+			for (int i = 0; i < row.length; i++) {
+				HSSFCell cell = hssfRow.createCell(i);
+				cell.setCellStyle(style2);
+				cell.setCellValue(row[i]);
+			}
+		}
+		return FileUtil.writeHSSFWorkbook(workbook, filePathAndName);
 	}
 }
