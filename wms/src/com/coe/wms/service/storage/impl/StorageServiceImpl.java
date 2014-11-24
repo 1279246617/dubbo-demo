@@ -1287,53 +1287,62 @@ public class StorageServiceImpl implements IStorageService {
 			return map;
 		}
 		if (outWarehouseOrderList.size() > 1) {
+			map.put(Constant.MESSAGE, "查询不到唯一的出库订单,暂无法处理");
 			// 找到多个出库订单的情况,待处理
-			map.put(Constant.MESSAGE, "查询到多个出库订单,请输入客户订单号");
+			// map.put(Constant.MESSAGE, "查询到多个出库订单,请输入客户订单号");
 			return map;
 		}
 		OutWarehouseOrder outWarehouseOrder = outWarehouseOrderList.get(0);
-		map.put("orderId", outWarehouseOrder.getId() + "");
-
-		// 1 = 添加出货运单号 ,2 是减去
-		if (!StringUtil.isEqual(addOrSub, "1")) {
-			map.put(Constant.STATUS, "2");
-			// 根据出货运单号+coe单号查找出货记录
-			OutWarehouseRecordItem shippingParam = new OutWarehouseRecordItem();
-			shippingParam.setCoeTrackingNoId(coeTrackingNoId);
-			shippingParam.setCoeTrackingNo(coeTrackingNo);
-			shippingParam.setOurWarehouseOrderTrackingNo(trackingNo);
-			List<OutWarehouseRecordItem> outWarehouseShippingList = outWarehouseRecordItemDao.findOutWarehouseRecordItem(shippingParam, null, null);
-			String deleteShippingIds = "";
-			int sub = 0;
-			for (OutWarehouseRecordItem shipping : outWarehouseShippingList) {
-				outWarehouseRecordItemDao.deleteOutWarehouseRecordItemById(shipping.getId());
-				// 加#是为了 jquery可以直接$("#id1,#id2,#id3,#id4")
-				deleteShippingIds += ("#" + shipping.getId() + ",");
-				orderIds = orderIds.replaceAll(shipping.getOutWarehouseOrderId() + "\\|\\|", "");
-				sub++;
-			}
-			map.put("sub", sub + "");
-			map.put("deleteShippingIds", deleteShippingIds);
-			map.put("orderIds", orderIds);
-			return map;
-		}
-
 		// 只有顺丰确认出库,顺丰已确认的订单 可以出库
 		if (StringUtil.isEqual(outWarehouseOrder.getStatus(), OutWarehouseOrderStatusCode.WWO)) {
-			// 保存到OutWarehouseShipping,但不改变出库订单的状态.
-			// 只有当操作员点击完成出货总单才改变一个COE单号下面对应的所有出库订单的状态
-			OutWarehouseRecordItem outWarehouseShipping = new OutWarehouseRecordItem();
-			outWarehouseShipping.setCoeTrackingNo(coeTrackingNo);
-			outWarehouseShipping.setCoeTrackingNoId(coeTrackingNoId);
-			outWarehouseShipping.setCreatedTime(System.currentTimeMillis());
-			outWarehouseShipping.setOurWarehouseOrderTrackingNo(trackingNo);
-			outWarehouseShipping.setOutWarehouseOrderId(outWarehouseOrder.getId());
-			outWarehouseShipping.setUserIdOfCustomer(outWarehouseOrder.getUserIdOfCustomer());
-			outWarehouseShipping.setUserIdOfOperator(userIdOfOperator);
-			outWarehouseShipping.setWarehouseId(outWarehouseOrder.getWarehouseId());
-			long outShippingId = outWarehouseRecordItemDao.saveOutWarehouseRecordItem(outWarehouseShipping);
-			map.put("outWarehouseShippingId", outShippingId + "");
-			map.put(Constant.STATUS, Constant.SUCCESS);
+			Long outWarehouseOrderId = outWarehouseOrder.getId();
+			map.put("orderId", outWarehouseOrderId + "");
+			// 检查出库订单 是否已经和COE交接单号绑定
+			OutWarehouseRecordItem checkTrackingNoParam = new OutWarehouseRecordItem();
+			checkTrackingNoParam.setOutWarehouseOrderId(outWarehouseOrderId);
+			Long countTrackingNoResult = outWarehouseRecordItemDao.countOutWarehouseRecordItem(checkTrackingNoParam, null);
+			if (countTrackingNoResult > 0) {
+				// 说明该出库订单已经和其他COE交接单号绑定了,不能再绑定此单号
+				map.put(Constant.MESSAGE, "该出库订单已经绑定的了其他COE交接单号");
+				return map;
+			}
+			if (StringUtil.isEqual(addOrSub, "1")) {
+				// 保存到OutWarehouseShipping,但不改变出库订单的状态.
+				// 只有当操作员点击完成出货总单才改变一个COE单号下面对应的所有出库订单的状态
+				OutWarehouseRecordItem outWarehouseRecordItem = new OutWarehouseRecordItem();
+				outWarehouseRecordItem.setCoeTrackingNo(coeTrackingNo);
+				outWarehouseRecordItem.setCoeTrackingNoId(coeTrackingNoId);
+				outWarehouseRecordItem.setCreatedTime(System.currentTimeMillis());
+				outWarehouseRecordItem.setOurWarehouseOrderTrackingNo(trackingNo);
+				outWarehouseRecordItem.setOutWarehouseOrderId(outWarehouseOrder.getId());
+				outWarehouseRecordItem.setUserIdOfCustomer(outWarehouseOrder.getUserIdOfCustomer());
+				outWarehouseRecordItem.setUserIdOfOperator(userIdOfOperator);
+				outWarehouseRecordItem.setWarehouseId(outWarehouseOrder.getWarehouseId());
+				long outShippingId = outWarehouseRecordItemDao.saveOutWarehouseRecordItem(outWarehouseRecordItem);
+				map.put("outWarehouseShippingId", outShippingId + "");
+				map.put(Constant.STATUS, Constant.SUCCESS);
+			} else {
+				// 1 = 添加出货运单号 ,2 是减去
+				// 根据出货运单号+coe单号查找出货记录
+				OutWarehouseRecordItem shippingParam = new OutWarehouseRecordItem();
+				shippingParam.setCoeTrackingNoId(coeTrackingNoId);
+				shippingParam.setCoeTrackingNo(coeTrackingNo);
+				shippingParam.setOurWarehouseOrderTrackingNo(trackingNo);
+				List<OutWarehouseRecordItem> outWarehouseShippingList = outWarehouseRecordItemDao.findOutWarehouseRecordItem(shippingParam, null, null);
+				String deleteShippingIds = "";
+				int sub = 0;
+				for (OutWarehouseRecordItem shipping : outWarehouseShippingList) {
+					outWarehouseRecordItemDao.deleteOutWarehouseRecordItemById(shipping.getId());
+					// 加#是为了 jquery可以直接$("#id1,#id2,#id3,#id4")
+					deleteShippingIds += ("#" + shipping.getId() + ",");
+					orderIds = orderIds.replaceAll(shipping.getOutWarehouseOrderId() + "\\|\\|", "");
+					sub++;
+				}
+				map.put("sub", sub + "");
+				map.put("deleteShippingIds", deleteShippingIds);
+				map.put("orderIds", orderIds);
+				map.put(Constant.STATUS, "2");
+			}
 		} else if (StringUtil.isEqual(outWarehouseOrder.getStatus(), OutWarehouseOrderStatusCode.SUCCESS)) {
 			map.put(Constant.MESSAGE, "出库订单当前状态已经是出库成功");
 		} else if (StringUtil.isEqual(outWarehouseOrder.getStatus(), OutWarehouseOrderStatusCode.WCC)) {
@@ -1373,7 +1382,7 @@ public class StorageServiceImpl implements IStorageService {
 			map.put(Constant.MESSAGE, "该COE交接单号已经使用,请输入新单号");
 			return map;
 		}
-		
+
 		Long userIdOfCustomer = null;
 		Long warehouseId = null;
 		// 迭代,检查跟踪号
