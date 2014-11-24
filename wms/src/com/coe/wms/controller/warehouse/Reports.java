@@ -20,10 +20,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.coe.wms.controller.Application;
-import com.coe.wms.dao.warehouse.storage.impl.ReportDaoImpl;
 import com.coe.wms.model.user.User;
 import com.coe.wms.model.warehouse.report.Report;
 import com.coe.wms.service.inventory.IItemInventoryService;
+import com.coe.wms.service.report.IReportService;
 import com.coe.wms.service.storage.IStorageService;
 import com.coe.wms.service.user.IUserService;
 import com.coe.wms.util.DateUtil;
@@ -40,6 +40,9 @@ public class Reports {
 
 	@Resource(name = "storageService")
 	private IStorageService storageService;
+
+	@Resource(name = "reportService")
+	private IReportService reportService;
 
 	@Resource(name = "itemInventoryService")
 	private IItemInventoryService itemInventoryService;
@@ -64,7 +67,7 @@ public class Reports {
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
 		view.addObject("warehouseList", storageService.findAllWarehouse(user.getDefaultWarehouseId()));
 		view.addObject("sevenDaysAgoStart", DateUtil.getSevenDaysAgoStart());
-		view.addObject("reportTypeList", storageService.findAllReportType());
+		view.addObject("reportTypeList", reportService.findAllReportType());
 		view.setViewName("warehouse/report/listReport");
 		return view;
 	}
@@ -105,24 +108,25 @@ public class Reports {
 		Map<String, String> moreParam = new HashMap<String, String>();
 		moreParam.put("createdTimeStart", createdTimeStart);
 		moreParam.put("createdTimeEnd", createdTimeEnd);
-		pagination = storageService.getListReportData(param, moreParam, pagination);
+		pagination = reportService.getListReportData(param, moreParam, pagination);
 		Map map = new HashMap();
 		map.put("Rows", pagination.rows);
 		map.put("Total", pagination.total);
 		return GsonUtil.toJson(map);
 	}
-	
+
 	/**
 	 * 下载报表文件
+	 * 
 	 * @param response
 	 * @throws IOException
 	 */
 	@ResponseBody
 	@RequestMapping(value = "downloadReport", method = RequestMethod.GET)
-	public void downloadReport(HttpServletResponse response,Long reportId) throws IOException {
+	public void downloadReport(HttpServletResponse response, Long reportId) throws IOException {
 		OutputStream os = response.getOutputStream();
 		try {
-			storageService.getReportById(reportId);
+			reportService.getReportById(reportId);
 			response.reset();
 			response.setHeader("Content-Disposition", "attachment; filename=111.xlsx");
 			response.setContentType("application/octet-stream; charset=utf-8");
