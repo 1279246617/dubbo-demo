@@ -38,11 +38,13 @@ public interface IUserDao {
 	public Long findUserIdByLoginName(String loginName);
 
 	public List<User> findUserByLikeLoginName(String loginName);
+	
+	public List<User> findUser(User user);
 
 	public List<User> findAllUser();
 
 	public int updateUser(User user);
-	
+
 	public int deleteUserById(Long userId);
 
 	/**
