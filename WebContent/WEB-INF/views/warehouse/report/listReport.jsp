@@ -20,7 +20,7 @@
 </head>
 <body>
 			<div class="toolbar1">
-           <form action="${baseUrl}/warehouse/inventory/getListInventoryData.do" id="searchform" name="searchform" method="post">
+           <form action="${baseUrl}/warehouse/report/getListReportData.do" id="searchform" name="searchform" method="post">
                <div class="pull-right searchContent">
                		<span class="pull-left" style="width:145px;">
                			仓库
@@ -56,12 +56,12 @@
                		
                		<span class="pull-left" style="width:175px;">
                			创建时间
-	               		<input type="text"   style="width:120px;" name="timeStart" id="timeStart" value="${sevenDaysAgoStart}" >
+	               		<input type="text"   style="width:120px;" name="createdTimeStart" id="timeStart" value="${sevenDaysAgoStart}" >
                		</span>
                		
                		<span class="pull-left" style="width:200px;">
                			至	
-               			<input type="text"   style="width:120px;" name="timeEnd"  id="timeEnd" >
+               			<input type="text"   style="width:120px;" name="createdTimeEnd"  id="timeEnd" >
                		</span>
                		
                		<span class="pull-left" style="width:55px;">
@@ -124,17 +124,24 @@
 	     function initGrid() {
 	    	 grid = $("#maingrid").ligerGrid({
 	                columns: [
-							{ display: '客户帐号', name: 'userLoginNameOfCustomer',type:'float',width:'14%'},
-							{ display: '仓库', name: 'warehouse', type: 'float',width:'14%'},
-							{ display: '入库批次号', name: 'batchNo', type: 'int', width:'12%'},
-	  	                  	{ display: '产品SKU', name: 'sku',type:'float',width:'14%'},
-	  	                  	{ display: '实际库存数量', name: 'quantity',type:'float',width:'9%'},
-	  	                  	{ display: '可用库存数量', name: 'availableQuantity',type:'float',width:'9%'},
-			                { display: '上次更新时间', name: 'lastUpdateTime',type:'float',width:'13%'},
-	  	                  	{ display: '创建时间', name: 'createdTime',type:'float',width:'13%'}
+							{ display: '客户帐号', name: 'userLoginNameOfCustomer',type:'float',width:'10%'},
+							{ display: '仓库', name: 'warehouse', type: 'float',width:'11%'},
+							{ display: '报表名称', name: 'reportName', type: 'int', width:'13%'},
+	  	                  	{ display: '报表类型', name: 'reportType',type:'float',width:'12%'},
+	  	                  	{ display: '报表日期', name: 'quantity',type:'float',width:'13%'},
+	  	                  	{ display: '创建时间', name: 'createdTime',type:'float',width:'13%'},
+	  	                	{ display: '备注', name: 'remark',type:'float',width:'15%'},
+	  	                  	{display: '操作',isSort: false,width: '12%',render: function(row) {
+	  	                  		var h = "";
+			            		if (!row._editing) {
+			            			h+="<a href=javascript:addRemark(" + row.id + ",'"+row.remark+"')>下载文件</a>&nbsp;&nbsp;";
+			            			h+="<a href=javascript:addRemark(" + row.id + ",'"+row.remark+"')>备注</a>";
+			            		}
+			            		return h;
+			            	}}
 		             ],   
 	                dataAction: 'server',
-	                url: baseUrl+'/warehouse/inventory/getListInventoryData.do',
+	                url: baseUrl+'/warehouse/report/getListReportData.do',
 	                pageSize: 50, 
 	                pageSizeOptions:[10,50,100,500,1000],
 	                usePager: 'true',
