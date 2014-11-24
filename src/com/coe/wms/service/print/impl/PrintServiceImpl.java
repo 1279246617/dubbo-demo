@@ -240,7 +240,7 @@ public class PrintServiceImpl implements IPrintService {
 		List<Map<String, String>> mapList = new ArrayList<Map<String, String>>();
 		for (OutWarehouseRecordItem outWarehouseShipping : outWarehouseShippingList) {
 			Map<String, String> map = new HashMap<String, String>();
-			map.put("ourWarehouseOrderTrackingNo", outWarehouseShipping.getOurWarehouseOrderTrackingNo());
+			map.put("ourWarehouseOrderTrackingNo", outWarehouseShipping.getOutWarehouseOrderTrackingNo());
 			Long outWarehouseOrderId = outWarehouseShipping.getOutWarehouseOrderId();
 			OutWarehouseOrder outWarehouseOrder = outWarehouseOrderDao.getOutWarehouseOrderById(outWarehouseOrderId);
 			if (outWarehouseOrder == null) {

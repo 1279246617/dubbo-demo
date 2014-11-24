@@ -43,7 +43,7 @@ public class OutWarehouseRecordItemDaoImpl implements IOutWarehouseRecordItemDao
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public long saveOutWarehouseRecordItem(final OutWarehouseRecordItem shipping) {
-		final String sql = "insert into w_s_out_warehouse_record_item (warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,our_warehouse_order_tracking_no,out_warehouse_order_id) values (?,?,?,?,?,?,?,?)";
+		final String sql = "insert into w_s_out_warehouse_record_item (warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,out_warehouse_order_tracking_no,out_warehouse_order_id) values (?,?,?,?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
@@ -58,7 +58,7 @@ public class OutWarehouseRecordItemDaoImpl implements IOutWarehouseRecordItemDao
 				ps.setString(4, shipping.getCoeTrackingNo());
 				ps.setLong(5, shipping.getCoeTrackingNoId());
 				ps.setLong(6, shipping.getCreatedTime());
-				ps.setString(7, shipping.getOurWarehouseOrderTrackingNo());
+				ps.setString(7, shipping.getOutWarehouseOrderTrackingNo());
 				ps.setLong(8, shipping.getOutWarehouseOrderId());
 				return ps;
 			}
@@ -69,7 +69,7 @@ public class OutWarehouseRecordItemDaoImpl implements IOutWarehouseRecordItemDao
 
 	@Override
 	public OutWarehouseRecordItem getOutWarehouseRecordItemById(Long outWarehouseShippingId) {
-		String sql = "select id,warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,our_warehouse_order_tracking_no,out_warehouse_order_id from w_s_out_warehouse_record_item where id ="
+		String sql = "select id,warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,out_warehouse_order_tracking_no,out_warehouse_order_id from w_s_out_warehouse_record_item where id ="
 				+ outWarehouseShippingId;
 		OutWarehouseRecordItem shipping = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<OutWarehouseRecordItem>(OutWarehouseRecordItem.class));
 		return shipping;
@@ -83,7 +83,7 @@ public class OutWarehouseRecordItemDaoImpl implements IOutWarehouseRecordItemDao
 	@Override
 	public List<OutWarehouseRecordItem> findOutWarehouseRecordItem(OutWarehouseRecordItem outWarehouseShipping, Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select id,warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,our_warehouse_order_tracking_no,out_warehouse_order_id from w_s_out_warehouse_record_item where 1=1 ");
+		sb.append("select id,warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,out_warehouse_order_tracking_no,out_warehouse_order_id from w_s_out_warehouse_record_item where 1=1 ");
 		if (outWarehouseShipping != null) {
 			if (outWarehouseShipping.getId() != null) {
 				sb.append(" and id = " + outWarehouseShipping.getId());
@@ -109,8 +109,8 @@ public class OutWarehouseRecordItemDaoImpl implements IOutWarehouseRecordItemDao
 			if (outWarehouseShipping.getCreatedTime() != null) {
 				sb.append(" and created_time = " + outWarehouseShipping.getCreatedTime());
 			}
-			if (StringUtil.isNotNull(outWarehouseShipping.getOurWarehouseOrderTrackingNo())) {
-				sb.append(" and our_warehouse_order_tracking_no = '" + outWarehouseShipping.getOurWarehouseOrderTrackingNo() + "' ");
+			if (StringUtil.isNotNull(outWarehouseShipping.getOutWarehouseOrderTrackingNo())) {
+				sb.append(" and out_warehouse_order_tracking_no = '" + outWarehouseShipping.getOutWarehouseOrderTrackingNo() + "' ");
 			}
 		}
 		if (moreParam != null) {
@@ -165,8 +165,8 @@ public class OutWarehouseRecordItemDaoImpl implements IOutWarehouseRecordItemDao
 			if (outWarehouseShipping.getCreatedTime() != null) {
 				sb.append(" and created_time = " + outWarehouseShipping.getCreatedTime());
 			}
-			if (StringUtil.isNotNull(outWarehouseShipping.getOurWarehouseOrderTrackingNo())) {
-				sb.append(" and our_warehouse_order_tracking_no = '" + outWarehouseShipping.getOurWarehouseOrderTrackingNo() + "' ");
+			if (StringUtil.isNotNull(outWarehouseShipping.getOutWarehouseOrderTrackingNo())) {
+				sb.append(" and out_warehouse_order_tracking_no = '" + outWarehouseShipping.getOutWarehouseOrderTrackingNo() + "' ");
 			}
 		}
 		if (moreParam != null) {

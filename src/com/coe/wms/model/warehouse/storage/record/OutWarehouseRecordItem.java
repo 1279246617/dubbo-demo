@@ -52,8 +52,8 @@ public class OutWarehouseRecordItem implements Serializable {
 	 * 
 	 * 出库订单的跟踪号, 如果是顺丰渠道,则是顺丰单号,如果是ETK渠道则是ETK单号
 	 */
-	private String ourWarehouseOrderTrackingNo;
-	
+	private String outWarehouseOrderTrackingNo;
+
 	private Long outWarehouseOrderId;
 	/**
 	 * 创建时间
@@ -116,14 +116,6 @@ public class OutWarehouseRecordItem implements Serializable {
 		this.userIdOfCustomer = userIdOfCustomer;
 	}
 
-	public String getOurWarehouseOrderTrackingNo() {
-		return ourWarehouseOrderTrackingNo;
-	}
-
-	public void setOurWarehouseOrderTrackingNo(String ourWarehouseOrderTrackingNo) {
-		this.ourWarehouseOrderTrackingNo = ourWarehouseOrderTrackingNo;
-	}
-
 	public Long getCreatedTime() {
 		return createdTime;
 	}
@@ -131,6 +123,12 @@ public class OutWarehouseRecordItem implements Serializable {
 	public void setCreatedTime(Long createdTime) {
 		this.createdTime = createdTime;
 	}
-	
-	
+
+	public String getOutWarehouseOrderTrackingNo() {
+		return outWarehouseOrderTrackingNo;
+	}
+
+	public void setOutWarehouseOrderTrackingNo(String outWarehouseOrderTrackingNo) {
+		this.outWarehouseOrderTrackingNo = outWarehouseOrderTrackingNo;
+	}
 }
