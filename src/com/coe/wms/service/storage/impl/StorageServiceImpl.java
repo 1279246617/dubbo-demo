@@ -1770,7 +1770,8 @@ public class StorageServiceImpl implements IStorageService {
 				map.put("userLoginNameOfOperator", userOfOperator.getLoginName());
 			}
 			map.put("reportName", report.getReportName());
-			map.put("reportType", report.getReportType());
+			ReportType type = reportTypeDao.findReportTypeByCode(report.getReportType());
+			map.put("reportType", type.getCn());
 			if (NumberUtil.greaterThanZero(report.getWarehouseId())) {
 				Warehouse warehouse = warehouseDao.getWarehouseById(report.getWarehouseId());
 				map.put("warehouse", warehouse.getWarehouseName());

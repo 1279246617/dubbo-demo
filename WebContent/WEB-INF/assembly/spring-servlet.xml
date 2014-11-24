@@ -65,9 +65,10 @@
 		</mvc:interceptor>
 	</mvc:interceptors> 
 	
+	<!-- 文件下载 -->
+	<bean class="org.springframework.http.converter.ByteArrayHttpMessageConverter"/>  
 	<!--JSON -->
-	<bean
-		class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
 		<property name="messageConverters">
 			<list>
 				<ref bean="mappingJacksonHttpMessageConverter" />
