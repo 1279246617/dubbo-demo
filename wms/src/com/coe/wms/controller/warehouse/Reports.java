@@ -32,9 +32,9 @@ import com.coe.wms.util.StringUtil;
 
 @Controller("report")
 @RequestMapping("/warehouse/report")
-public class Report {
+public class Reports {
 
-	private static final Logger logger = Logger.getLogger(Report.class);
+	private static final Logger logger = Logger.getLogger(Reports.class);
 
 	@Resource(name = "storageService")
 	private IStorageService storageService;
@@ -82,7 +82,7 @@ public class Report {
 		if (StringUtil.isNotNull(createdTimeStart) && createdTimeStart.contains(",")) {
 			createdTimeStart = createdTimeStart.substring(createdTimeStart.lastIndexOf(",") + 1, createdTimeStart.length());
 		}
-		
+
 		HttpSession session = request.getSession();
 		// 当前操作员
 		Long userIdOfOperator = (Long) session.getAttribute(SessionConstant.USER_ID);
@@ -91,9 +91,7 @@ public class Report {
 		pagination.pageSize = pagesize;
 		pagination.sortName = sortname;
 		pagination.sortOrder = sortorder;
-		com.coe.wms.model.warehouse.report.Report		
-		InWarehouseOrder param = new InWarehouseOrder();
-		param.setTrackingNo(trackingNo);
+		com.coe.wms.model.warehouse.report.Report param = new com.coe.wms.model.warehouse.report.Report();
 		if (StringUtil.isNotNull(userLoginName)) {
 			Long userIdOfCustomer = userService.findUserIdByLoginName(userLoginName);
 			param.setUserIdOfCustomer(userIdOfCustomer);
@@ -103,8 +101,8 @@ public class Report {
 		Map<String, String> moreParam = new HashMap<String, String>();
 		moreParam.put("createdTimeStart", createdTimeStart);
 		moreParam.put("createdTimeEnd", createdTimeEnd);
-
-		pagination = storageService.getInWarehouseOrderData(param, moreParam, pagination);
+		
+//		pagination = storageService.getInWarehouseOrderData(param, moreParam, pagination);
 		Map map = new HashMap();
 		map.put("Rows", pagination.rows);
 		map.put("Total", pagination.total);
