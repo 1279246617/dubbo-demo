@@ -318,25 +318,4 @@ public interface IStorageService {
 	public Map<String, String> executeSearchOutWarehouseOrder(String nos, String noType) throws ServiceException;
 
 	public TrackingNo getTrackingNoById(Long id) throws ServiceException;
-
-	public List<ReportType> findAllReportType() throws ServiceException;
-
-	/**
-	 * 获取报表
-	 * 
-	 * @param inWarehouseOrder
-	 * @param moreParam
-	 * @param page
-	 * @return
-	 */
-	public Pagination getListReportData(Report param, Map<String, String> moreParam, Pagination page);
-
-	/**
-	 * 获取报表
-	 * 
-	 * @param reportId
-	 * @return
-	 * @throws ServiceException
-	 */
-	public Report getReportById(Long reportId) throws ServiceException;
 }
