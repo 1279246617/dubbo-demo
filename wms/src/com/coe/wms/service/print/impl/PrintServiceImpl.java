@@ -44,6 +44,7 @@ import com.coe.wms.model.warehouse.storage.record.OutWarehouseRecordItem;
 import com.coe.wms.service.print.IPrintService;
 import com.coe.wms.util.BarcodeUtil;
 import com.coe.wms.util.DateUtil;
+import com.coe.wms.util.NumberUtil;
 import com.coe.wms.util.StringUtil;
 
 @Service("printService")
@@ -277,7 +278,7 @@ public class PrintServiceImpl implements IPrintService {
 		}
 		String trackingNoBarcodeData = BarcodeUtil.createCode128(outWarehouseRecord.getCoeTrackingNo(), false, 29d, 0.5d);
 		map.put("coeTrackingNoBarcodeData", trackingNoBarcodeData);
-		map.put("totalWeight", totalWeight);
+		map.put("totalWeight", NumberUtil.getNumPrecision(totalWeight, 3));
 		map.put("quantity", quantity);
 		map.put("outWarehouseRecord", outWarehouseRecord);
 		map.put("shipdate", DateUtil.dateConvertString(new Date(outWarehouseRecord.getCreatedTime()), DateUtil.yyyy_MM_dd));
