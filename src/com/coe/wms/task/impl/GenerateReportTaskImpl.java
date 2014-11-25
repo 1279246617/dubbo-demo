@@ -154,7 +154,7 @@ public class GenerateReportTaskImpl implements IGenerateReportTask {
 		// 终止时间
 		calendar.add(Calendar.DAY_OF_YEAR, 1);
 		String endTime = DateUtil.dateConvertString(new Date(calendar.getTimeInMillis()), DateUtil.yyyy_MM_ddHHmmss);
-		startTime = "2014-10-10 00:00:00";
+//		startTime = "2014-10-10 00:00:00";
 		logger.info("入库报表:起始时间:" + startTime + " 终止时间:" + endTime);
 
 		// 查找所有状态是OK的客户
@@ -264,7 +264,7 @@ public class GenerateReportTaskImpl implements IGenerateReportTask {
 		// 终止时间
 		calendar.add(Calendar.DAY_OF_YEAR, 1);
 		String endTime = DateUtil.dateConvertString(new Date(calendar.getTimeInMillis()), DateUtil.yyyy_MM_ddHHmmss);
-		startTime = "2014-10-10 00:00:00";
+//		startTime = "2014-10-10 00:00:00";
 		logger.info("出库报表:起始时间:" + startTime + " 终止时间:" + endTime);
 
 		// 查找所有状态是OK的客户
@@ -436,7 +436,7 @@ public class GenerateReportTaskImpl implements IGenerateReportTask {
 		// 终止时间
 		calendar.add(Calendar.DAY_OF_YEAR, 1);
 		String endTime = DateUtil.dateConvertString(new Date(calendar.getTimeInMillis()), DateUtil.yyyy_MM_ddHHmmss);
-		startTime = "2014-10-10 00:00:00";
+//		startTime = "2014-10-10 00:00:00";
 		logger.info("库存报表:起始时间:" + startTime + " 终止时间:" + endTime);
 
 		// 查找所有状态是OK的客户
