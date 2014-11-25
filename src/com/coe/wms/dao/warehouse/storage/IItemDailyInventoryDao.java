@@ -11,7 +11,8 @@ public interface IItemDailyInventoryDao {
 	public long saveItemDailyInventory(ItemDailyInventory ItemDailyInventory);
 
 	public List<ItemDailyInventory> findItemDailyInventory(ItemDailyInventory ItemDailyInventory, Map<String, String> moreParam, Pagination page);
-	
+
 	public Long countItemDailyInventory(ItemDailyInventory ItemDailyInventory, Map<String, String> moreParam);
 
+	public int addItemDailyInventory(Long wareHouseId, Long userIdOfCustomer, String sku, Integer addQuantity,Integer availableQuantity,String inventoryDate);
 }

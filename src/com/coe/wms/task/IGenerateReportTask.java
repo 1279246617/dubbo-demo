@@ -19,4 +19,8 @@ public interface IGenerateReportTask {
 	 */
 	public void inventoryReport();
 
+	/**
+	 * 日结库存
+	 */
+	public void dailyInventory();
 }

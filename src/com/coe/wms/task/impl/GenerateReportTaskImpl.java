@@ -21,6 +21,8 @@ import com.coe.wms.dao.warehouse.storage.IInWarehouseOrderItemDao;
 import com.coe.wms.dao.warehouse.storage.IInWarehouseOrderStatusDao;
 import com.coe.wms.dao.warehouse.storage.IInWarehouseRecordDao;
 import com.coe.wms.dao.warehouse.storage.IInWarehouseRecordItemDao;
+import com.coe.wms.dao.warehouse.storage.IItemDailyInventoryDao;
+import com.coe.wms.dao.warehouse.storage.IItemInventoryDao;
 import com.coe.wms.dao.warehouse.storage.IOnShelfDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderItemDao;
@@ -41,6 +43,8 @@ import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderItem;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderReceiver;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecord;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecordItem;
+import com.coe.wms.model.warehouse.storage.record.ItemDailyInventory;
+import com.coe.wms.model.warehouse.storage.record.ItemInventory;
 import com.coe.wms.model.warehouse.storage.record.OutWarehouseRecord;
 import com.coe.wms.model.warehouse.storage.record.OutWarehouseRecordItem;
 import com.coe.wms.task.IGenerateReportTask;
@@ -93,6 +97,12 @@ public class GenerateReportTaskImpl implements IGenerateReportTask {
 	@Resource(name = "outWarehouseRecordItemDao")
 	private IOutWarehouseRecordItemDao outWarehouseRecordItemDao;
 
+	@Resource(name = "itemInventoryDao")
+	private IItemInventoryDao itemInventoryDao;
+
+	@Resource(name = "itemDailyInventoryDao")
+	private IItemDailyInventoryDao itemDailyInventoryDao;
+
 	@Resource(name = "userDao")
 	private IUserDao userDao;
 
@@ -122,7 +132,7 @@ public class GenerateReportTaskImpl implements IGenerateReportTask {
 	/**
 	 * 库存日报表 EXCEL头
 	 */
-	private static final String[] INVENTORY_REPORT_HEAD = { "结转日期", "货主", "SKU编码", "商品条码", "商品名称", "批次号", "前日结余", "当日收货数量", "当日发货数量", "当日盘点调整数量", "当日剩余数量" };
+	private static final String[] INVENTORY_REPORT_HEAD = { "序号", "仓库编号", "结转日期", "货主", "SKU编码", "商品条码", "商品名称", "批次号", "前日结余", "当日收货数量", "当日发货数量", "当日盘点调整数量", "当日剩余数量" };
 
 	/**
 	 * 生成入库日报表
@@ -175,7 +185,7 @@ public class GenerateReportTaskImpl implements IGenerateReportTask {
 					String filePath = config.getRuntimeFilePath() + "/report/";
 					FileUtil.mkdirs(filePath);
 					// 文件保存地址
-					String filePathAndName = filePath + user.getLoginName() + "-" + IN_WAREHOUSE_REPORT_SHEET_TITLE + "-" + date + ".xls";
+					String filePathAndName = filePath + user.getLoginName() + "-" + IN_WAREHOUSE_REPORT_SHEET_TITLE + "-" + date + "-" + warehouseId + ".xls";
 					List<String[]> rows = new ArrayList<String[]>();
 					int index = 0;
 					for (InWarehouseRecord record : inWarehouseRecordList) {// 迭代收货记录
@@ -219,7 +229,7 @@ public class GenerateReportTaskImpl implements IGenerateReportTask {
 					Report report = new Report();
 					report.setCreatedTime(current);
 					report.setRemark(user.getLoginName());
-					report.setReportName("入库日报表-" + date + "-" + user.getLoginName());
+					report.setReportName("入库日报表-" + warehouse.getWarehouseName() + "-" + user.getLoginName() + "-" + date);
 					report.setReportType(ReportTypeCode.IN_WAREHOUSE_REPORT);
 					report.setUserIdOfCustomer(userIdOfCustomer);
 					report.setWarehouseId(warehouseId);
@@ -285,7 +295,7 @@ public class GenerateReportTaskImpl implements IGenerateReportTask {
 					String filePath = config.getRuntimeFilePath() + "/report/";
 					FileUtil.mkdirs(filePath);
 					// 文件保存地址
-					String filePathAndName = filePath + user.getLoginName() + "-" + OUT_WAREHOUSE_REPORT_SHEET_TITLE + "-" + date + ".xls";
+					String filePathAndName = filePath + user.getLoginName() + "-" + OUT_WAREHOUSE_REPORT_SHEET_TITLE + "-" + date + "-" + warehouseId + ".xls";
 					int index = 0;
 					List<String[]> rows = new ArrayList<String[]>();
 					for (OutWarehouseRecord record : outWarehouseRecordList) {// 迭代出货记录
@@ -343,7 +353,7 @@ public class GenerateReportTaskImpl implements IGenerateReportTask {
 					Report report = new Report();
 					report.setCreatedTime(current);
 					report.setRemark(user.getLoginName());
-					report.setReportName("出库日报表-" + date + "-" + user.getLoginName());
+					report.setReportName("出库日报表-" + warehouse.getWarehouseName() + "-" + user.getLoginName() + "-" + date);
 					report.setReportType(ReportTypeCode.OUT_WAREHOUSE_REPORT);
 					report.setUserIdOfCustomer(userIdOfCustomer);
 					report.setWarehouseId(warehouseId);
@@ -359,6 +369,49 @@ public class GenerateReportTaskImpl implements IGenerateReportTask {
 	}
 
 	/**
+	 * 生成日结库存记录
+	 * 
+	 * 每天凌晨0点1秒统计昨日库存
+	 */
+	@Scheduled(cron = "1 0 0 * * ? ")
+	@Override
+	public void dailyInventory() {
+		Calendar calendar = Calendar.getInstance();
+		// 开始时间
+		calendar.add(Calendar.DAY_OF_YEAR, -1);
+		calendar.set(Calendar.HOUR_OF_DAY, 0);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.SECOND, 0);
+		String date = DateUtil.dateConvertString(new Date(calendar.getTimeInMillis()), DateUtil.yyyy_MM_dd);
+		logger.info("日结库存记录:统计日期:" + date);
+		// 查找所有状态是OK的客户
+		User userParam = new User();
+		userParam.setUserType(User.USER_TYPE_CUSTOMER);
+		userParam.setStatus(User.STATUS_OK);
+		List<User> userList = userDao.findUser(userParam);
+		// 仓库
+		List<Warehouse> warehouseList = warehouseDao.findAllWarehouse();
+		for (Warehouse warehouse : warehouseList) {
+			Long warehouseId = warehouse.getId();
+			// 按仓库为每个用户生成入库报表
+			for (User user : userList) {
+				Long userIdOfCustomer = user.getId();
+				ItemInventory itemInventoryParam = new ItemInventory();
+				itemInventoryParam.setUserIdOfCustomer(userIdOfCustomer);
+				itemInventoryParam.setWarehouseId(warehouseId);
+
+				List<ItemInventory> itemInventoryList = itemInventoryDao.findItemInventory(itemInventoryParam, null, null);
+				if (itemInventoryList == null || itemInventoryList.size() <= 0) {
+					continue;
+				}
+				for (ItemInventory inventory : itemInventoryList) {
+					itemDailyInventoryDao.addItemDailyInventory(warehouseId, userIdOfCustomer, inventory.getSku(), inventory.getQuantity(), inventory.getAvailableQuantity(), date);
+				}
+			}
+		}
+	}
+
+	/**
 	 * 生成库存日报表
 	 * 
 	 * 每天凌晨3点统计库存
@@ -366,7 +419,102 @@ public class GenerateReportTaskImpl implements IGenerateReportTask {
 	@Scheduled(cron = "0 0 3 * * ? ")
 	@Override
 	public void inventoryReport() {
-		
-		
-	}	
+		Long current = System.currentTimeMillis();
+		Calendar calendar = Calendar.getInstance();
+		// 开始时间
+		calendar.add(Calendar.DAY_OF_YEAR, -1);
+		calendar.set(Calendar.HOUR_OF_DAY, 0);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.SECOND, 0);
+		String startTime = DateUtil.dateConvertString(new Date(calendar.getTimeInMillis()), DateUtil.yyyy_MM_ddHHmmss);
+		String date = DateUtil.dateConvertString(new Date(calendar.getTimeInMillis()), DateUtil.yyyy_MM_dd);
+		// 库存记录日期的前一天, 跟服务器时间隔2天
+		calendar.add(Calendar.DAY_OF_YEAR, -1);
+		String yesterday = DateUtil.dateConvertString(new Date(calendar.getTimeInMillis()), DateUtil.yyyy_MM_dd);
+		calendar.add(Calendar.DAY_OF_YEAR, 1);
+
+		// 终止时间
+		calendar.add(Calendar.DAY_OF_YEAR, 1);
+		String endTime = DateUtil.dateConvertString(new Date(calendar.getTimeInMillis()), DateUtil.yyyy_MM_ddHHmmss);
+		startTime = "2014-10-10 00:00:00";
+		logger.info("库存报表:起始时间:" + startTime + " 终止时间:" + endTime);
+
+		// 查找所有状态是OK的客户
+		User userParam = new User();
+		userParam.setUserType(User.USER_TYPE_CUSTOMER);
+		userParam.setStatus(User.STATUS_OK);
+		List<User> userList = userDao.findUser(userParam);
+		logger.debug("库存报表:查到客户数:" + userList.size());
+		// 根据客户查找入库记录
+		Map<String, String> moreParam = new HashMap<String, String>();
+		moreParam.put("createdTimeStart", startTime);
+		moreParam.put("createdTimeEnd", endTime);
+		// 仓库
+		List<Warehouse> warehouseList = warehouseDao.findAllWarehouse();
+		for (Warehouse warehouse : warehouseList) {
+			Long warehouseId = warehouse.getId();
+			// 按仓库为每个用户生成入库报表
+			for (User user : userList) {
+				try {
+					Long userIdOfCustomer = user.getId();
+					ItemDailyInventory inventoryParam = new ItemDailyInventory();
+					inventoryParam.setUserIdOfCustomer(userIdOfCustomer);
+					inventoryParam.setWarehouseId(warehouseId);
+					inventoryParam.setInventoryDate(date);
+					List<ItemDailyInventory> inventoryList = itemDailyInventoryDao.findItemDailyInventory(inventoryParam, null, null);
+					if (inventoryList == null || inventoryList.size() <= 0) {
+						continue;
+					}
+					String filePath = config.getRuntimeFilePath() + "/report/";
+					FileUtil.mkdirs(filePath);
+					// 文件保存地址
+					String filePathAndName = filePath + user.getLoginName() + "-" + INVENTORY_REPORT_SHEET_TITLE + "-" + date + "-" + warehouseId + ".xls";
+					List<String[]> rows = new ArrayList<String[]>();
+					int index = 0;
+					for (ItemDailyInventory inventory : inventoryList) {// 迭代库存记录
+						index++;
+						String[] row = new String[13];
+						row[0] = index + "";// 序号
+						row[1] = warehouse.getWarehouseNo();// 仓库编号
+						row[2] = inventory.getInventoryDate().replaceAll("-", ""); // 结转日期
+						row[3] = user.getLoginName();// 货主
+						row[4] = "";// SKU编码
+						row[5] = inventory.getSku();// 商品条码
+						row[6] = "";// 商品名称
+						row[7] = "";// 批次号 奶粉必填，其他没有则不用填
+						// 查前日结余
+						ItemDailyInventory yesterdayParam = new ItemDailyInventory();
+						yesterdayParam.setUserIdOfCustomer(userIdOfCustomer);
+						yesterdayParam.setWarehouseId(warehouseId);
+						yesterdayParam.setSku(inventory.getSku());
+						yesterdayParam.setInventoryDate(yesterday);
+						List<ItemDailyInventory> yesterdayInventoryList = itemDailyInventoryDao.findItemDailyInventory(yesterdayParam, null, null);
+						if (yesterdayInventoryList != null && yesterdayInventoryList.size() > 0) {
+							row[8] = yesterdayInventoryList.get(0).getQuantity() + "";// 前日结余
+						} else {
+							row[8] = "";
+						}
+						row[9] = "";// 当日收货数量
+						row[10] = "";// 当日发货数量
+						row[11] = "";// 当日盘点调整数量
+						row[12] = inventory.getQuantity() + "";// 当日剩余数量
+						rows.add(row);
+					}
+					Report report = new Report();
+					report.setCreatedTime(current);
+					report.setRemark(user.getLoginName());
+					report.setReportName("库存报表-" + warehouse.getWarehouseName() + "-" + user.getLoginName() + "-" + date);
+					report.setReportType(ReportTypeCode.INVENTORY_REPORT);
+					report.setUserIdOfCustomer(userIdOfCustomer);
+					report.setWarehouseId(warehouseId);
+					report.setFilePath(filePathAndName);
+					Long reportId = reportDao.saveReport(report);
+					logger.info("库存报表Id:" + reportId + "  创建文件:" + filePathAndName);
+					POIExcelUtil.createExcel(INVENTORY_REPORT_SHEET_TITLE, INVENTORY_REPORT_HEAD, rows, filePathAndName);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
 }
