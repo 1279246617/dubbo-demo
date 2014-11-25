@@ -166,7 +166,7 @@ public class POIExcelUtil {
 		font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
 		// 把字体应用到当前的样式
 		style.setFont(font);
-		
+
 		// 生成并设置另一个样式
 		HSSFCellStyle style2 = workbook.createCellStyle();
 		style2.setFillForegroundColor(HSSFColor.WHITE.index);
@@ -192,12 +192,15 @@ public class POIExcelUtil {
 		}
 
 		// 生成表头以外的内容
+		int rowIndex = 1;
 		for (String[] row : rows) {
+			hssfRow = sheet.createRow(rowIndex);
 			for (int i = 0; i < row.length; i++) {
 				HSSFCell cell = hssfRow.createCell(i);
 				cell.setCellStyle(style2);
 				cell.setCellValue(row[i]);
 			}
+			rowIndex++;
 		}
 		return FileUtil.writeHSSFWorkbook(workbook, filePathAndName);
 	}
