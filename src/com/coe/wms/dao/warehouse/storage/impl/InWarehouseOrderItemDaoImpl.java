@@ -140,11 +140,11 @@ public class InWarehouseOrderItemDaoImpl implements IInWarehouseOrderItemDao {
 			sb.append(page.generatePageSql());
 		}
 		String sql = sb.toString();
-		logger.info("查询入库订单明细sql:" + sql);
+		logger.debug("查询入库订单明细sql:" + sql);
 		List<InWarehouseOrderItem> inWarehouseOrderItemList = jdbcTemplate.query(sql,
 				ParameterizedBeanPropertyRowMapper.newInstance(InWarehouseOrderItem.class));
 
-		logger.info("查询入库订单明细sql:" + sql + " size:" + inWarehouseOrderItemList.size());
+		logger.debug("查询入库订单明细sql:" + sql + " size:" + inWarehouseOrderItemList.size());
 
 		return inWarehouseOrderItemList;
 	}
@@ -168,7 +168,7 @@ public class InWarehouseOrderItemDaoImpl implements IInWarehouseOrderItemDao {
 			}
 		}
 		String sql = sb.toString();
-		logger.info("统计入库订单明细sql:" + sql);
+		logger.debug("统计入库订单明细sql:" + sql);
 		return jdbcTemplate.queryForObject(sql, Long.class);
 	}
 }

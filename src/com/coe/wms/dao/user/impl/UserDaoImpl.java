@@ -172,7 +172,7 @@ public class UserDaoImpl implements IUserDao {
 		List<Index> indexList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(Index.class), userType);
 		if (indexList.size() > 0) {
 			index = indexList.get(0);
-			logger.info("userType :" + userType + " index:" + index.getIndexUrl());
+			logger.debug("userType :" + userType + " index:" + index.getIndexUrl());
 			return index;
 		}
 		return index;

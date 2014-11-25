@@ -153,7 +153,7 @@ public class InWarehouseOrderDaoImpl implements IInWarehouseOrderDao {
 			sb.append(page.generatePageSql());
 		}
 		String sql = sb.toString();
-		logger.info("查询入库订单sql:" + sql);
+		logger.debug("查询入库订单sql:" + sql);
 		List<InWarehouseOrder> inWarehouseOrderList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(InWarehouseOrder.class));
 		return inWarehouseOrderList;
 	}
@@ -215,7 +215,7 @@ public class InWarehouseOrderDaoImpl implements IInWarehouseOrderDao {
 			}
 		}
 		String sql = sb.toString();
-		logger.info("统计入库订单sql:" + sql);
+		logger.debug("统计入库订单sql:" + sql);
 		return jdbcTemplate.queryForObject(sql, Long.class);
 	}
 
@@ -226,7 +226,7 @@ public class InWarehouseOrderDaoImpl implements IInWarehouseOrderDao {
 	@Override
 	public Long countInWarehouseOrderItemByTrackingNo(String trackingNo) {
 		String sql = "select sum(quantity) from w_s_in_warehouse_order_item where order_id = (select id from w_s_in_warehouse_order WHERE tracking_no = '" + trackingNo + "')";
-		logger.info("统计入库订单预报物品数量sql:" + sql);
+		logger.debug("统计入库订单预报物品数量sql:" + sql);
 		return jdbcTemplate.queryForObject(sql, Long.class);
 	}
 
@@ -239,7 +239,7 @@ public class InWarehouseOrderDaoImpl implements IInWarehouseOrderDao {
 	@Override
 	public Long countInWarehouseOrderItemByInWarehouseOrderId(Long inWarehouseOrderId) {
 		String sql = "select sum(quantity) from w_s_in_warehouse_order_item where order_id =  " + inWarehouseOrderId;
-		logger.info("统计入库订单预报物品数量sql:" + sql);
+		logger.debug("统计入库订单预报物品数量sql:" + sql);
 		return jdbcTemplate.queryForObject(sql, Long.class);
 	}
 

@@ -35,7 +35,7 @@ public class TrackingNoDaoImpl implements ITrackingNoDao {
 		pagination.sortName = "created_time";
 		pagination.sortOrder = "asc";
 		String sql = "select id,type,tracking_no,created_time,status,used_time,locked_time from w_w_tracking_no where type = '" + type + "' and (status is null or status = '0') " + pagination.generatePageSql();
-		logger.info("查询跟踪号sql:" + sql);
+		logger.debug("查询跟踪号sql:" + sql);
 		List<TrackingNo> trackingNoList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(TrackingNo.class));
 		if (trackingNoList.size() > 0) {
 			return trackingNoList.get(0);
