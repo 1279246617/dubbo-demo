@@ -27,6 +27,8 @@ import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderItemDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderReceiverDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderSenderDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderStatusDao;
+import com.coe.wms.dao.warehouse.storage.IOutWarehouseRecordDao;
+import com.coe.wms.dao.warehouse.storage.IOutWarehouseRecordItemDao;
 import com.coe.wms.dao.warehouse.storage.IReportDao;
 import com.coe.wms.model.user.User;
 import com.coe.wms.model.warehouse.Warehouse;
@@ -34,8 +36,13 @@ import com.coe.wms.model.warehouse.report.Report;
 import com.coe.wms.model.warehouse.report.ReportType.ReportTypeCode;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrderItem;
+import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrder;
+import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderItem;
+import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderReceiver;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecord;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecordItem;
+import com.coe.wms.model.warehouse.storage.record.OutWarehouseRecord;
+import com.coe.wms.model.warehouse.storage.record.OutWarehouseRecordItem;
 import com.coe.wms.task.IGenerateReportTask;
 import com.coe.wms.util.Config;
 import com.coe.wms.util.DateUtil;
@@ -80,6 +87,12 @@ public class GenerateReportTaskImpl implements IGenerateReportTask {
 	@Resource(name = "inWarehouseRecordItemDao")
 	private IInWarehouseRecordItemDao inWarehouseRecordItemDao;
 
+	@Resource(name = "outWarehouseRecordDao")
+	private IOutWarehouseRecordDao outWarehouseRecordDao;
+
+	@Resource(name = "outWarehouseRecordItemDao")
+	private IOutWarehouseRecordItemDao outWarehouseRecordItemDao;
+
 	@Resource(name = "userDao")
 	private IUserDao userDao;
 
@@ -114,9 +127,9 @@ public class GenerateReportTaskImpl implements IGenerateReportTask {
 	/**
 	 * 生成入库日报表
 	 * 
-	 * 每天凌晨00:00:00
+	 * 每天凌晨1点统计昨天入库
 	 */
-	@Scheduled(cron = "59 * * * * ? ")
+	@Scheduled(cron = "0 0 1 * * ? ")
 	@Override
 	public void inWarehouseReport() {
 		Long current = System.currentTimeMillis();
@@ -221,9 +234,123 @@ public class GenerateReportTaskImpl implements IGenerateReportTask {
 		}
 	}
 
+	/**
+	 * 生成出库日报表
+	 * 
+	 * 每天凌晨2点统计昨天出库
+	 */
+	@Scheduled(cron = "0 0 2 * * ? ")
 	@Override
 	public void outWarehouseReport() {
+		Long current = System.currentTimeMillis();
+		Calendar calendar = Calendar.getInstance();
+		// 开始时间
+		calendar.add(Calendar.DAY_OF_YEAR, -1);
+		calendar.set(Calendar.HOUR_OF_DAY, 0);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.SECOND, 0);
+		String startTime = DateUtil.dateConvertString(new Date(calendar.getTimeInMillis()), DateUtil.yyyy_MM_ddHHmmss);
+		String date = DateUtil.dateConvertString(new Date(calendar.getTimeInMillis()), DateUtil.yyyy_MM_dd);
+		// 终止时间
+		calendar.add(Calendar.DAY_OF_YEAR, 1);
+		String endTime = DateUtil.dateConvertString(new Date(calendar.getTimeInMillis()), DateUtil.yyyy_MM_ddHHmmss);
+		startTime = "2014-10-10 00:00:00";
+		logger.info("出库报表:起始时间:" + startTime + " 终止时间:" + endTime);
 
+		// 查找所有状态是OK的客户
+		User userParam = new User();
+		userParam.setUserType(User.USER_TYPE_CUSTOMER);
+		userParam.setStatus(User.STATUS_OK);
+		List<User> userList = userDao.findUser(userParam);
+		logger.debug("出库报表:查到客户数:" + userList.size());
+		// 根据客户查找出库记录
+		Map<String, String> moreParam = new HashMap<String, String>();
+		moreParam.put("createdTimeStart", startTime);
+		moreParam.put("createdTimeEnd", endTime);
+		// 仓库
+		List<Warehouse> warehouseList = warehouseDao.findAllWarehouse();
+		for (Warehouse warehouse : warehouseList) {
+			Long warehouseId = warehouse.getId();
+			// 按仓库为每个用户生成出库报表
+			for (User user : userList) {
+				try {
+					Long userIdOfCustomer = user.getId();
+					OutWarehouseRecord recordParam = new OutWarehouseRecord();
+					recordParam.setWarehouseId(warehouseId);
+					recordParam.setUserIdOfCustomer(userIdOfCustomer);// 查找指定客户,仓库的出库记录
+					List<OutWarehouseRecord> outWarehouseRecordList = outWarehouseRecordDao.findOutWarehouseRecord(recordParam, moreParam, null);
+					if (outWarehouseRecordList == null || outWarehouseRecordList.size() <= 0) {
+						continue;
+					}
+					String filePath = config.getRuntimeFilePath() + "/report/";
+					FileUtil.mkdirs(filePath);
+					// 文件保存地址
+					String filePathAndName = filePath + user.getLoginName() + "-" + OUT_WAREHOUSE_REPORT_SHEET_TITLE + "-" + date + ".xls";
+					int index = 0;
+					List<String[]> rows = new ArrayList<String[]>();
+					for (OutWarehouseRecord record : outWarehouseRecordList) {// 迭代出货记录
+						Long coeTrackingNoId = record.getCoeTrackingNoId();
+						OutWarehouseRecordItem itemParam = new OutWarehouseRecordItem();
+						// 出货主单和出货明细记录通过coe交接单号id关联
+						itemParam.setCoeTrackingNoId(coeTrackingNoId);
+						List<OutWarehouseRecordItem> recordItemList = outWarehouseRecordItemDao.findOutWarehouseRecordItem(itemParam, null, null);
+						for (OutWarehouseRecordItem recordItem : recordItemList) {
+							Long outWarehouseOrderId = recordItem.getOutWarehouseOrderId();
+							// 出库订单
+							OutWarehouseOrder order = outWarehouseOrderDao.getOutWarehouseOrderById(outWarehouseOrderId);
+							// 收件人
+							OutWarehouseOrderReceiver receiver = outWarehouseOrderReceiverDao.getOutWarehouseOrderReceiverByOrderId(outWarehouseOrderId);
+							// 查找出库订单明细
+							OutWarehouseOrderItem orderItemParam = new OutWarehouseOrderItem();
+							orderItemParam.setOutWarehouseOrderId(outWarehouseOrderId);
+							List<OutWarehouseOrderItem> orderItems = outWarehouseOrderItemDao.findOutWarehouseOrderItem(orderItemParam, null, null);
+							for (OutWarehouseOrderItem orderItem : orderItems) {
+								index++;
+								String[] row = new String[17];
+								row[0] = index + "";// 序号
+								row[1] = DateUtil.dateConvertString(new Date(record.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss);// 出库时间
+								row[2] = warehouse.getWarehouseNo();// 仓库编号
+								row[3] = user.getLoginName();// 客户编号
+								row[4] = "销售出库单";// 单据类型 待完善
+								row[5] = "";// 订单来源
+								row[6] = order.getId() + "";// 出库订单号
+								row[7] = order.getCustomerReferenceNo() + "";// 客户订单号
+								row[8] = order.getTrackingNo();// 运单编号
+								row[9] = order.getShipwayCode();// 快递公司
+								row[10] = "";// 重量
+								row[11] = "";// 体积重量
+								row[12] = receiver.getName();// 收货人姓名
+								row[13] = receiver.getStateOrProvince();// 收货省
+								row[14] = receiver.getCity();// 收货市
+								row[15] = receiver.getCounty();// 收货区
+								row[16] = receiver.getAddressLine1() == null ? "" : receiver.getAddressLine1() + " " + receiver.getAddressLine2() == null ? "" : receiver.getAddressLine2();// 收货人地址
+								row[17] = receiver.getPhoneNumber() == null ? "" : receiver.getPhoneNumber() + " " + receiver.getMobileNumber() == null ? "" : receiver.getMobileNumber();
+								row[18] = "";// SKU编码
+								row[19] = orderItem.getSkuName();// 商品名称
+								row[20] = orderItem.getSku();// SKU条码
+								row[21] = "";// 批次号
+								row[22] = orderItem.getQuantity() + "";// SKU数量
+								row[23] = "";// 备注
+								rows.add(row);
+							}
+						}
+					}
+					Report report = new Report();
+					report.setCreatedTime(current);
+					report.setRemark(user.getLoginName());
+					report.setReportName("出库日报表-" + date + "-" + user.getLoginName());
+					report.setReportType(ReportTypeCode.OUT_WAREHOUSE_REPORT);
+					report.setUserIdOfCustomer(userIdOfCustomer);
+					report.setWarehouseId(warehouseId);
+					report.setFilePath(filePathAndName);
+					Long reportId = reportDao.saveReport(report);
+					logger.info("出库报表Id:" + reportId + "  创建文件:" + filePathAndName);
+					POIExcelUtil.createExcel(OUT_WAREHOUSE_REPORT_SHEET_TITLE, OUT_WAREHOUSE_REPORT_HEAD, rows, filePathAndName);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 
 	@Override
