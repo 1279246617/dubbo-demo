@@ -28,16 +28,18 @@ import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderReceiverDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderSenderDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderStatusDao;
 import com.coe.wms.dao.warehouse.storage.IReportDao;
-import com.coe.wms.dao.warehouse.storage.impl.ReportDaoImpl;
 import com.coe.wms.model.user.User;
 import com.coe.wms.model.warehouse.Warehouse;
 import com.coe.wms.model.warehouse.report.Report;
 import com.coe.wms.model.warehouse.report.ReportType.ReportTypeCode;
+import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
+import com.coe.wms.model.warehouse.storage.order.InWarehouseOrderItem;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecord;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecordItem;
 import com.coe.wms.task.IGenerateReportTask;
 import com.coe.wms.util.Config;
 import com.coe.wms.util.DateUtil;
+import com.coe.wms.util.FileUtil;
 import com.coe.wms.util.POIExcelUtil;
 
 @Component
@@ -129,7 +131,7 @@ public class GenerateReportTaskImpl implements IGenerateReportTask {
 		// 终止时间
 		calendar.add(Calendar.DAY_OF_YEAR, 1);
 		String endTime = DateUtil.dateConvertString(new Date(calendar.getTimeInMillis()), DateUtil.yyyy_MM_ddHHmmss);
-
+		startTime = "2014-10-10 00:00:00";
 		logger.info("入库报表:起始时间:" + startTime + " 终止时间:" + endTime);
 
 		// 查找所有状态是OK的客户
@@ -157,16 +159,50 @@ public class GenerateReportTaskImpl implements IGenerateReportTask {
 					if (inWarehouseRecordList == null || inWarehouseRecordList.size() <= 0) {
 						continue;
 					}
+					String filePath = config.getRuntimeFilePath() + "/report/";
+					FileUtil.mkdirs(filePath);
 					// 文件保存地址
-					String filePathAndName = config.getRuntimeFilePath() + "/report/" + user.getLoginName() + "-" + IN_WAREHOUSE_REPORT_SHEET_TITLE + "-" + date + ".xls";
+					String filePathAndName = filePath + user.getLoginName() + "-" + IN_WAREHOUSE_REPORT_SHEET_TITLE + "-" + date + ".xls";
 					List<String[]> rows = new ArrayList<String[]>();
+					int index = 0;
 					for (InWarehouseRecord record : inWarehouseRecordList) {// 迭代收货记录
+						Long inWarehouseOrderId = record.getInWarehouseOrderId();
+						InWarehouseOrder order = inWarehouseOrderDao.getInWarehouseOrderById(inWarehouseOrderId);
 						InWarehouseRecordItem itemParam = new InWarehouseRecordItem();
 						itemParam.setInWarehouseRecordId(record.getId());
 						List<InWarehouseRecordItem> recordItemList = inWarehouseRecordItemDao.findInWarehouseRecordItem(itemParam, null, null);
-
+						for (InWarehouseRecordItem recordItem : recordItemList) {
+							InWarehouseOrderItem orderItemParam = new InWarehouseOrderItem();
+							orderItemParam.setOrderId(inWarehouseOrderId);
+							orderItemParam.setSku(recordItem.getSku());
+							// 由于收货记录 无记录sku对应的产品名,
+							// 并且未建立sku产品库.目前从收货记录的sku查找产品名,只能通过次种方式查找...
+							// 解决方法:建立sku库
+							List<InWarehouseOrderItem> orderItems = inWarehouseOrderItemDao.findInWarehouseOrderItem(orderItemParam, null, null);
+							InWarehouseOrderItem orderItem = orderItems.get(0);
+							index++;
+							String[] row = new String[17];
+							row[0] = index + "";// 序号
+							row[1] = DateUtil.dateConvertString(new Date(record.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss);// 入库时间
+							row[2] = warehouse.getWarehouseNo();// 仓库编号
+							row[3] = user.getLoginName();// 客户编号
+							row[4] = "采购入库单";// 单据类型 待完善
+							row[5] = record.getId().toString();// 入库单号(流水号)
+							row[6] = order.getCustomerReferenceNo();// 客户订单号
+							row[7] = "";// SKU编码
+							row[8] = recordItem.getSku();// SKU条码
+							row[9] = orderItem.getSkuName();// 商品名称
+							row[10] = "";// 奶粉批次
+							row[11] = orderItem.getQuantity() + "";// 订单数量
+							row[12] = recordItem.getQuantity() + "";// 入库数量
+							row[13] = "罐";// 包装单位 待建立sku库
+							row[14] = "";// SKU体积
+							row[15] = "";// SKU重量
+							row[16] = "";// 备注
+							rows.add(row);
+						}
 					}
-					
+
 					Report report = new Report();
 					report.setCreatedTime(current);
 					report.setRemark(user.getLoginName());

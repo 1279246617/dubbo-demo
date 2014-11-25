@@ -152,7 +152,7 @@ public class POIExcelUtil {
 
 		// 生成表头样式
 		HSSFCellStyle style = workbook.createCellStyle();
-		style.setFillForegroundColor(HSSFColor.SKY_BLUE.index);// 设置这些样式--表头
+		style.setFillForegroundColor(HSSFColor.BRIGHT_GREEN.index);// 设置这些样式--表头
 		style.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
 		style.setBorderBottom(HSSFCellStyle.BORDER_THIN);
 		style.setBorderLeft(HSSFCellStyle.BORDER_THIN);
@@ -161,15 +161,15 @@ public class POIExcelUtil {
 		style.setAlignment(HSSFCellStyle.ALIGN_CENTER);
 		// 生成一个字体
 		HSSFFont font = workbook.createFont();
-		font.setColor(HSSFColor.VIOLET.index);
-		font.setFontHeightInPoints((short) 12);
+		font.setColor(HSSFColor.BLACK.index);
+		font.setFontHeightInPoints((short) 11);
 		font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
 		// 把字体应用到当前的样式
 		style.setFont(font);
-
+		
 		// 生成并设置另一个样式
 		HSSFCellStyle style2 = workbook.createCellStyle();
-		style2.setFillForegroundColor(HSSFColor.LIGHT_YELLOW.index);
+		style2.setFillForegroundColor(HSSFColor.WHITE.index);
 		style2.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
 		style2.setBorderBottom(HSSFCellStyle.BORDER_THIN);
 		style2.setBorderLeft(HSSFCellStyle.BORDER_THIN);
