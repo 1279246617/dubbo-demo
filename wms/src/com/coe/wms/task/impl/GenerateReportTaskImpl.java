@@ -1,5 +1,6 @@
 package com.coe.wms.task.impl;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -88,7 +89,7 @@ public class GenerateReportTaskImpl implements IGenerateReportTask {
 
 	@Resource(name = "config")
 	private Config config;
-	
+
 	private static final String IN_WAREHOUSE_REPORT_SHEET_TITLE = "入库报表";
 	/**
 	 * 入库记录日报表 EXCEL头
@@ -145,36 +146,41 @@ public class GenerateReportTaskImpl implements IGenerateReportTask {
 		List<Warehouse> warehouseList = warehouseDao.findAllWarehouse();
 		for (Warehouse warehouse : warehouseList) {
 			Long warehouseId = warehouse.getId();
-			for (User user : userList) {// 按仓库为每个用户生成入库报表
-				Long userIdOfCustomer = user.getId();
-				InWarehouseRecord recordParam = new InWarehouseRecord();
-				recordParam.setWarehouseId(warehouseId);
-				recordParam.setUserIdOfCustomer(userIdOfCustomer);// 查找指定客户,仓库的入库记录
-				List<InWarehouseRecord> inWarehouseRecordList = inWarehouseRecordDao.findInWarehouseRecord(recordParam, moreParam, null);
-				if (inWarehouseRecordList == null || inWarehouseRecordList.size() <= 0) {
-					continue;
+			// 按仓库为每个用户生成入库报表
+			for (User user : userList) {
+				try {
+					Long userIdOfCustomer = user.getId();
+					InWarehouseRecord recordParam = new InWarehouseRecord();
+					recordParam.setWarehouseId(warehouseId);
+					recordParam.setUserIdOfCustomer(userIdOfCustomer);// 查找指定客户,仓库的入库记录
+					List<InWarehouseRecord> inWarehouseRecordList = inWarehouseRecordDao.findInWarehouseRecord(recordParam, moreParam, null);
+					if (inWarehouseRecordList == null || inWarehouseRecordList.size() <= 0) {
+						continue;
+					}
+					// 文件保存地址
+					String filePathAndName = config.getRuntimeFilePath() + "/report/" + user.getLoginName() + "-" + IN_WAREHOUSE_REPORT_SHEET_TITLE + "-" + date + ".xls";
+					List<String[]> rows = new ArrayList<String[]>();
+					for (InWarehouseRecord record : inWarehouseRecordList) {// 迭代收货记录
+						InWarehouseRecordItem itemParam = new InWarehouseRecordItem();
+						itemParam.setInWarehouseRecordId(record.getId());
+						List<InWarehouseRecordItem> recordItemList = inWarehouseRecordItemDao.findInWarehouseRecordItem(itemParam, null, null);
+
+					}
+					
+					Report report = new Report();
+					report.setCreatedTime(current);
+					report.setRemark(user.getLoginName());
+					report.setReportName("入库日报表-" + date + "-" + user.getLoginName());
+					report.setReportType(ReportTypeCode.IN_WAREHOUSE_REPORT);
+					report.setUserIdOfCustomer(userIdOfCustomer);
+					report.setWarehouseId(warehouseId);
+					report.setFilePath(filePathAndName);
+					Long reportId = reportDao.saveReport(report);
+					logger.info("入库报表Id:" + reportId + "  创建文件:" + filePathAndName);
+					POIExcelUtil.createExcel(IN_WAREHOUSE_REPORT_SHEET_TITLE, IN_WAREHOUSE_REPORT_HEAD, rows, filePathAndName);
+				} catch (IOException e) {
+					e.printStackTrace();
 				}
-				List<String[]> contexts = new ArrayList<String[]>();
-
-				POIExcelUtil.createExcel(IN_WAREHOUSE_REPORT_SHEET_TITLE, IN_WAREHOUSE_REPORT_HEAD, rows, filePathAndName);
-				for (InWarehouseRecord record : inWarehouseRecordList) {// 迭代收货记录
-					InWarehouseRecordItem itemParam = new InWarehouseRecordItem();
-					itemParam.setInWarehouseRecordId(record.getId());
-					List<InWarehouseRecordItem> recordItemList = inWarehouseRecordItemDao.findInWarehouseRecordItem(itemParam, null, null);
-
-				}
-
-				String filePath = "";
-				Report report = new Report();
-				report.setCreatedTime(current);
-				report.setRemark(user.getLoginName());
-				report.setReportName("入库日报表-" + date + "-" + user.getLoginName());
-				report.setReportType(ReportTypeCode.IN_WAREHOUSE_REPORT);
-				report.setUserIdOfCustomer(userIdOfCustomer);
-				report.setWarehouseId(warehouseId);
-				report.setFilePath(filePath);
-				Long reportId = reportDao.saveReport(report);
-				logger.info("入库报表Id:" + reportId);
 			}
 		}
 	}
