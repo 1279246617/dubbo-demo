@@ -16,6 +16,11 @@ public class Config {
 	 */
 	private Integer sessionMaxInactiveInterval;
 
+	/**
+	 * 系统产生的文件 根目录
+	 */
+	private String runtimeFilePath;
+
 	public Integer getCookieMaxAgeLoginName() {
 		return cookieMaxAgeLoginName;
 	}
@@ -47,4 +52,14 @@ public class Config {
 	public void setSessionMaxInactiveInterval(Integer sessionMaxInactiveInterval) {
 		this.sessionMaxInactiveInterval = sessionMaxInactiveInterval;
 	}
+
+	public String getRuntimeFilePath() {
+		return runtimeFilePath;
+	}
+
+	public void setRuntimeFilePath(String runtimeFilePath) {
+		this.runtimeFilePath = runtimeFilePath;
+	}
+
+	 
 }
