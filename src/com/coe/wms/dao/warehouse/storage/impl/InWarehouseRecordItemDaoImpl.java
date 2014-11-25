@@ -122,11 +122,10 @@ public class InWarehouseRecordItemDaoImpl implements IInWarehouseRecordItemDao {
 	/**
 	 * 查询入库记录
 	 * 
-	 * 参数一律使用实体类加Map . 
+	 * 参数一律使用实体类加Map .
 	 */
 	@Override
-	public List<InWarehouseRecordItem> findInWarehouseRecordItem(InWarehouseRecordItem inWarehouseRecordItem,
-			Map<String, String> moreParam, Pagination page) {
+	public List<InWarehouseRecordItem> findInWarehouseRecordItem(InWarehouseRecordItem inWarehouseRecordItem, Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("select id,in_warehouse_record_id,quantity,sku,remark,created_time,user_id_of_operator from w_s_in_warehouse_record_item where 1=1 ");
 		if (inWarehouseRecordItem != null) {
@@ -172,8 +171,7 @@ public class InWarehouseRecordItemDaoImpl implements IInWarehouseRecordItemDao {
 		}
 		String sql = sb.toString();
 		logger.debug("查询入库记录明细sql:" + sql);
-		List<InWarehouseRecordItem> inWarehouseRecordItemList = jdbcTemplate.query(sql,
-				ParameterizedBeanPropertyRowMapper.newInstance(InWarehouseRecordItem.class));
+		List<InWarehouseRecordItem> inWarehouseRecordItemList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(InWarehouseRecordItem.class));
 		logger.debug("查询入库记录明细sql:" + sql + " size:" + inWarehouseRecordItemList.size());
 		return inWarehouseRecordItemList;
 	}
@@ -235,9 +233,7 @@ public class InWarehouseRecordItemDaoImpl implements IInWarehouseRecordItemDao {
 
 	@Override
 	public int countInWarehouseItemSkuQuantityByOrderId(Long inWarehouseOrderId, String sku) {
-		String sql = "select sum(quantity) from w_s_in_warehouse_record_item where sku = '" + sku
-				+ "' and in_warehouse_record_id in(select id from w_s_in_warehouse_record where in_warehouse_order_id = "
-				+ inWarehouseOrderId + ")";
+		String sql = "select sum(quantity) from w_s_in_warehouse_record_item where sku = '" + sku + "' and in_warehouse_record_id in(select id from w_s_in_warehouse_record where in_warehouse_order_id = " + inWarehouseOrderId + ")";
 		Long count = jdbcTemplate.queryForObject(sql, Long.class);
 		if (count == null) {
 			return 0;
@@ -247,8 +243,7 @@ public class InWarehouseRecordItemDaoImpl implements IInWarehouseRecordItemDao {
 
 	@Override
 	public int countInWarehouseItemSkuQuantityByRecordId(Long inWarehouseRecordId, String sku) {
-		String sql = "select sum(quantity) from w_s_in_warehouse_record_item where sku = '" + sku + "' and in_warehouse_record_id = "
-				+ inWarehouseRecordId;
+		String sql = "select sum(quantity) from w_s_in_warehouse_record_item where sku = '" + sku + "' and in_warehouse_record_id = " + inWarehouseRecordId;
 		Long count = jdbcTemplate.queryForObject(sql, Long.class);
 		if (count == null) {
 			return 0;
@@ -331,6 +326,36 @@ public class InWarehouseRecordItemDaoImpl implements IInWarehouseRecordItemDao {
 		}
 		if (moreParam.get("createdTimeEnd") != null) {
 			Date date = DateUtil.stringConvertDate(moreParam.get("createdTimeEnd"), DateUtil.yyyy_MM_ddHHmmss);
+			if (date != null) {
+				sb.append(" and i.created_time <= " + date.getTime());
+			}
+		}
+		Long count = jdbcTemplate.queryForObject(sb.toString(), Long.class);
+		if (count == null) {
+			return 0l;
+		}
+		return count;
+	}
+
+	@Override
+	public Long countItemSkuQuantity(String createdTimeStart, String createdTimeEnd, String sku, Long userIdOfCustomer, Long warehouseId) {
+		StringBuffer sb = new StringBuffer();
+		sb.append("select sum(quantity) from w_s_in_warehouse_record_item i inner join w_s_in_warehouse_record r on i.in_warehouse_record_id=r.id where 1=1 ");
+		sb.append(" and r.user_id_of_customer = " + userIdOfCustomer);
+
+		sb.append(" and r.warehouse_id = " + warehouseId);
+
+		if (StringUtil.isNotNull(sku)) {
+			sb.append(" and i.sku = '" + sku + "'");
+		}
+		if (createdTimeStart != null) {
+			Date date = DateUtil.stringConvertDate(createdTimeStart, DateUtil.yyyy_MM_ddHHmmss);
+			if (date != null) {
+				sb.append(" and i.created_time >= " + date.getTime());
+			}
+		}
+		if (createdTimeEnd != null) {
+			Date date = DateUtil.stringConvertDate(createdTimeEnd, DateUtil.yyyy_MM_ddHHmmss);
 			if (date != null) {
 				sb.append(" and i.created_time <= " + date.getTime());
 			}

@@ -154,7 +154,7 @@ public class GenerateReportTaskImpl implements IGenerateReportTask {
 		// 终止时间
 		calendar.add(Calendar.DAY_OF_YEAR, 1);
 		String endTime = DateUtil.dateConvertString(new Date(calendar.getTimeInMillis()), DateUtil.yyyy_MM_ddHHmmss);
-//		startTime = "2014-10-10 00:00:00";
+		// startTime = "2014-10-10 00:00:00";
 		logger.info("入库报表:起始时间:" + startTime + " 终止时间:" + endTime);
 
 		// 查找所有状态是OK的客户
@@ -264,7 +264,7 @@ public class GenerateReportTaskImpl implements IGenerateReportTask {
 		// 终止时间
 		calendar.add(Calendar.DAY_OF_YEAR, 1);
 		String endTime = DateUtil.dateConvertString(new Date(calendar.getTimeInMillis()), DateUtil.yyyy_MM_ddHHmmss);
-//		startTime = "2014-10-10 00:00:00";
+		// startTime = "2014-10-10 00:00:00";
 		logger.info("出库报表:起始时间:" + startTime + " 终止时间:" + endTime);
 
 		// 查找所有状态是OK的客户
@@ -436,7 +436,7 @@ public class GenerateReportTaskImpl implements IGenerateReportTask {
 		// 终止时间
 		calendar.add(Calendar.DAY_OF_YEAR, 1);
 		String endTime = DateUtil.dateConvertString(new Date(calendar.getTimeInMillis()), DateUtil.yyyy_MM_ddHHmmss);
-//		startTime = "2014-10-10 00:00:00";
+		// startTime = "2014-10-10 00:00:00";
 		logger.info("库存报表:起始时间:" + startTime + " 终止时间:" + endTime);
 
 		// 查找所有状态是OK的客户
@@ -494,7 +494,9 @@ public class GenerateReportTaskImpl implements IGenerateReportTask {
 						} else {
 							row[8] = "";
 						}
-						row[9] = "";// 当日收货数量
+						Long inWarehouseItemSkuQuantity = inWarehouseRecordItemDao.countItemSkuQuantity(startTime, endTime, inventory.getSku(), userIdOfCustomer, warehouseId);
+						row[9] = inWarehouseItemSkuQuantity + "";// 当日收货数量
+						
 						row[10] = "";// 当日发货数量
 						row[11] = "";// 当日盘点调整数量
 						row[12] = inventory.getQuantity() + "";// 当日剩余数量
