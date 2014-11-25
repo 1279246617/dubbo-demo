@@ -139,7 +139,8 @@ public class GenerateReportTaskImpl implements IGenerateReportTask {
 	 * 
 	 * 每天凌晨1点统计昨天入库
 	 */
-	@Scheduled(cron = "0 0 1 * * ? ")
+//	@Scheduled(cron = "0 0 1 * * ? ")
+	@Scheduled(cron = "1 * * * * ? ")
 	@Override
 	public void inWarehouseReport() {
 		Long current = System.currentTimeMillis();
@@ -154,7 +155,7 @@ public class GenerateReportTaskImpl implements IGenerateReportTask {
 		// 终止时间
 		calendar.add(Calendar.DAY_OF_YEAR, 1);
 		String endTime = DateUtil.dateConvertString(new Date(calendar.getTimeInMillis()), DateUtil.yyyy_MM_ddHHmmss);
-		// startTime = "2014-10-10 00:00:00";
+		 startTime = "2014-10-10 00:00:00";
 		logger.info("入库报表:起始时间:" + startTime + " 终止时间:" + endTime);
 
 		// 查找所有状态是OK的客户
@@ -249,7 +250,8 @@ public class GenerateReportTaskImpl implements IGenerateReportTask {
 	 * 
 	 * 每天凌晨2点统计昨天出库
 	 */
-	@Scheduled(cron = "0 0 2 * * ? ")
+//	@Scheduled(cron = "0 0 2 * * ? ")
+	@Scheduled(cron = "10 * * * * ? ")
 	@Override
 	public void outWarehouseReport() {
 		Long current = System.currentTimeMillis();
@@ -264,7 +266,7 @@ public class GenerateReportTaskImpl implements IGenerateReportTask {
 		// 终止时间
 		calendar.add(Calendar.DAY_OF_YEAR, 1);
 		String endTime = DateUtil.dateConvertString(new Date(calendar.getTimeInMillis()), DateUtil.yyyy_MM_ddHHmmss);
-		// startTime = "2014-10-10 00:00:00";
+		 startTime = "2014-10-10 00:00:00";
 		logger.info("出库报表:起始时间:" + startTime + " 终止时间:" + endTime);
 
 		// 查找所有状态是OK的客户
@@ -373,7 +375,7 @@ public class GenerateReportTaskImpl implements IGenerateReportTask {
 	 * 
 	 * 每天凌晨0点1秒统计昨日库存
 	 */
-	@Scheduled(cron = "1 0 0 * * ? ")
+	@Scheduled(cron = "30 * * * * ? ")
 	@Override
 	public void dailyInventory() {
 		Calendar calendar = Calendar.getInstance();
@@ -416,7 +418,8 @@ public class GenerateReportTaskImpl implements IGenerateReportTask {
 	 * 
 	 * 每天凌晨3点统计库存
 	 */
-	@Scheduled(cron = "0 0 3 * * ? ")
+	@Scheduled(cron = "15 * * * * ? ")
+//	@Scheduled(cron = "0 0 3 * * ? ")
 	@Override
 	public void inventoryReport() {
 		Long current = System.currentTimeMillis();

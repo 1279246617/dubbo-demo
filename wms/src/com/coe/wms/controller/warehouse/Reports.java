@@ -128,7 +128,9 @@ public class Reports {
 		try {
 			Report report = reportService.getReportById(reportId);
 			String filePathAndName = report.getFilePath();
-			String fileName = filePathAndName.substring((filePathAndName.lastIndexOf("\\") == -1 ? filePathAndName.lastIndexOf("/") : 0) + 1, filePathAndName.length());
+			int a = filePathAndName.lastIndexOf("\\");
+			int b = filePathAndName.lastIndexOf("/");
+			String fileName = filePathAndName.substring((a > b ? a : b) + 1, filePathAndName.length());
 			response.reset();
 			response.setHeader("Content-Disposition", "attachment; filename=" + java.net.URLEncoder.encode(fileName, "UTF-8"));
 			response.setContentType("application/octet-stream; charset=utf-8");
