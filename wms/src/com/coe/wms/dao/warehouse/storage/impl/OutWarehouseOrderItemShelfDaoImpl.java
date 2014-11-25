@@ -182,7 +182,7 @@ public class OutWarehouseOrderItemShelfDaoImpl implements IOutWarehouseOrderItem
 			sb.append(page.generatePageSql());
 		}
 		String sql = sb.toString();
-		logger.info("查询出库订单明细sql:" + sql);
+		logger.debug("查询出库订单明细sql:" + sql);
 		List<OutWarehouseOrderItemShelf> outWarehouseOrderItemShelfList = jdbcTemplate.query(sql,
 				ParameterizedBeanPropertyRowMapper.newInstance(OutWarehouseOrderItemShelf.class));
 		return outWarehouseOrderItemShelfList;

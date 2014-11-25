@@ -195,7 +195,7 @@ public class OutWarehouseOrderDaoImpl implements IOutWarehouseOrderDao {
 			sb.append(page.generatePageSql());
 		}
 		String sql = sb.toString();
-		logger.info("查询出库订单sql:" + sql);
+		logger.debug("查询出库订单sql:" + sql);
 		List<OutWarehouseOrder> outWarehouseOrderList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(OutWarehouseOrder.class));
 		return outWarehouseOrderList;
 	}
@@ -298,7 +298,7 @@ public class OutWarehouseOrderDaoImpl implements IOutWarehouseOrderDao {
 			// 按单号 批量查询 结束------------
 		}
 		String sql = sb.toString();
-		logger.info("统计出库订单sql:" + sql);
+		logger.debug("统计出库订单sql:" + sql);
 		return jdbcTemplate.queryForObject(sql, Long.class);
 	}
 

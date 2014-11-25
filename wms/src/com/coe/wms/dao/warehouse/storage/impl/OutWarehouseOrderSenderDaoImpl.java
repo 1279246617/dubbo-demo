@@ -213,7 +213,7 @@ public class OutWarehouseOrderSenderDaoImpl implements IOutWarehouseOrderSenderD
 		// 分页sql
 		sb.append(page.generatePageSql());
 		String sql = sb.toString();
-		logger.info("查询出库订单发件人sql:" + sql);
+		logger.debug("查询出库订单发件人sql:" + sql);
 		List<OutWarehouseOrderSender> outWarehouseOrderSenderList = jdbcTemplate.query(sql,
 				ParameterizedBeanPropertyRowMapper.newInstance(OutWarehouseOrderSender.class));
 		return outWarehouseOrderSenderList;
@@ -223,7 +223,7 @@ public class OutWarehouseOrderSenderDaoImpl implements IOutWarehouseOrderSenderD
 	public OutWarehouseOrderSender getOutWarehouseOrderSenderByOrderId(Long outWarehouseOrderId) {
 		String sql = "select id,out_warehouse_order_id,name,company,first_name,last_name,address_line1,state_or_province,city,county,postal_code,country_code,country_name,phone_number,email,mobile_number,address_line2 from w_s_out_warehouse_order_sender  where out_warehouse_order_id =  "
 				+ outWarehouseOrderId;
-		logger.info("查询出库订单发件人sql:" + sql);
+		logger.debug("查询出库订单发件人sql:" + sql);
 		List<OutWarehouseOrderSender> outWarehouseOrderSenderList = jdbcTemplate.query(sql,
 				ParameterizedBeanPropertyRowMapper.newInstance(OutWarehouseOrderSender.class));
 		if (outWarehouseOrderSenderList != null && outWarehouseOrderSenderList.size() > 0) {

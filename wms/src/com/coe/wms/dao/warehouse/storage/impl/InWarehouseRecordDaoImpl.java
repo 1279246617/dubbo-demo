@@ -139,7 +139,7 @@ public class InWarehouseRecordDaoImpl implements IInWarehouseRecordDao {
 			sb.append(page.generatePageSql());
 		}
 		String sql = sb.toString();
-		logger.info("查询入库记录sql:" + sql);
+		logger.debug("查询入库记录sql:" + sql);
 		List<InWarehouseRecord> InWarehouseRecordList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(InWarehouseRecord.class));
 		return InWarehouseRecordList;
 	}
@@ -205,7 +205,7 @@ public class InWarehouseRecordDaoImpl implements IInWarehouseRecordDao {
 			}
 		}
 		String sql = sb.toString();
-		logger.info("统计入库记录sql:" + sql);
+		logger.debug("统计入库记录sql:" + sql);
 		return jdbcTemplate.queryForObject(sql, Long.class);
 	}
 

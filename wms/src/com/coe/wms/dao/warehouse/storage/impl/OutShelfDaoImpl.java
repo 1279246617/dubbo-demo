@@ -133,9 +133,9 @@ public class OutShelfDaoImpl implements IOutShelfDao {
 			sb.append(page.generatePageSql());
 		}
 		String sql = sb.toString();
-		logger.info("查询上架记录明细sql:" + sql);
+		logger.debug("查询上架记录明细sql:" + sql);
 		List<OutShelf> outShelfList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(OutShelf.class));
-		logger.info("查询上架记录明细sql:" + sql + " size:" + outShelfList.size());
+		logger.debug("查询上架记录明细sql:" + sql + " size:" + outShelfList.size());
 		return outShelfList;
 	}
 
@@ -196,7 +196,7 @@ public class OutShelfDaoImpl implements IOutShelfDao {
 			}
 		}
 		String sql = sb.toString();
-		logger.info("统计上架明细记录sql:" + sql);
+		logger.debug("统计上架明细记录sql:" + sql);
 		return jdbcTemplate.queryForObject(sql, Long.class);
 	}
 

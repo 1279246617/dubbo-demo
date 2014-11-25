@@ -133,9 +133,9 @@ public class OnShelfDaoImpl implements IOnShelfDao {
 			sb.append(page.generatePageSql());
 		}
 		String sql = sb.toString();
-		logger.info("查询上架记录明细sql:" + sql);
+		logger.debug("查询上架记录明细sql:" + sql);
 		List<OnShelf> onShelfList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(OnShelf.class));
-		logger.info("查询上架记录明细sql:" + sql + " size:" + onShelfList.size());
+		logger.debug("查询上架记录明细sql:" + sql + " size:" + onShelfList.size());
 		return onShelfList;
 	}
 
@@ -196,7 +196,7 @@ public class OnShelfDaoImpl implements IOnShelfDao {
 			}
 		}
 		String sql = sb.toString();
-		logger.info("统计上架明细记录sql:" + sql);
+		logger.debug("统计上架明细记录sql:" + sql);
 		return jdbcTemplate.queryForObject(sql, Long.class);
 	}
 

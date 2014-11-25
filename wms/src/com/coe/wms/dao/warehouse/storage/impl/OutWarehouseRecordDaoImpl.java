@@ -124,7 +124,7 @@ public class OutWarehouseRecordDaoImpl implements IOutWarehouseRecordDao {
 			sb.append(page.generatePageSql());
 		}
 		String sql = sb.toString();
-		logger.info("查询出库记录sql:" + sql);
+		logger.debug("查询出库记录sql:" + sql);
 		List<OutWarehouseRecord> outWarehouseRecordList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(OutWarehouseRecord.class));
 		return outWarehouseRecordList;
 	}
@@ -171,7 +171,7 @@ public class OutWarehouseRecordDaoImpl implements IOutWarehouseRecordDao {
 			}
 		}
 		String sql = sb.toString();
-		logger.info("统计出库记录sql:" + sql);
+		logger.debug("统计出库记录sql:" + sql);
 		return jdbcTemplate.queryForObject(sql, Long.class);
 	}
 	

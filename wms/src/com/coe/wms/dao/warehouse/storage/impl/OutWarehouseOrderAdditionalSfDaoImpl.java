@@ -151,7 +151,7 @@ public class OutWarehouseOrderAdditionalSfDaoImpl implements IOutWarehouseOrderA
 		// 分页sql
 		sb.append(page.generatePageSql());
 		String sql = sb.toString();
-		logger.info("查询出库订单收件人sql:" + sql);
+		logger.debug("查询出库订单收件人sql:" + sql);
 		List<OutWarehouseOrderAdditionalSf> OutWarehouseOrderAdditionalSfList = jdbcTemplate.query(sql,
 				ParameterizedBeanPropertyRowMapper.newInstance(OutWarehouseOrderAdditionalSf.class));
 		return OutWarehouseOrderAdditionalSfList;
@@ -161,7 +161,7 @@ public class OutWarehouseOrderAdditionalSfDaoImpl implements IOutWarehouseOrderA
 	public OutWarehouseOrderAdditionalSf getOutWarehouseOrderAdditionalSfByOrderId(Long outWarehouseOrderId) {
 		String sql = "select id,out_warehouse_order_id,carrier_code,mail_no,sender_address,cust_id,pay_method,shipper_code,delivery_code,order_id from w_s_out_warehouse_order_additional_sf where out_warehouse_order_id = "
 				+ outWarehouseOrderId;
-		logger.info("查询出库订单顺丰标签附加内容sql:" + sql);
+		logger.debug("查询出库订单顺丰标签附加内容sql:" + sql);
 		List<OutWarehouseOrderAdditionalSf> OutWarehouseOrderAdditionalSfList = jdbcTemplate.query(sql,
 				ParameterizedBeanPropertyRowMapper.newInstance(OutWarehouseOrderAdditionalSf.class));
 		if (OutWarehouseOrderAdditionalSfList != null && OutWarehouseOrderAdditionalSfList.size() > 0) {

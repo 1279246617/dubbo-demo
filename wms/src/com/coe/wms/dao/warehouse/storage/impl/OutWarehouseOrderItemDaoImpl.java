@@ -176,7 +176,7 @@ public class OutWarehouseOrderItemDaoImpl implements IOutWarehouseOrderItemDao {
 			sb.append(page.generatePageSql());
 		}
 		String sql = sb.toString();
-		logger.info("查询出库订单明细sql:" + sql);
+		logger.debug("查询出库订单明细sql:" + sql);
 		List<OutWarehouseOrderItem> outWarehouseOrderItemList = jdbcTemplate.query(sql,
 				ParameterizedBeanPropertyRowMapper.newInstance(OutWarehouseOrderItem.class));
 		return outWarehouseOrderItemList;

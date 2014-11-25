@@ -306,7 +306,7 @@ public class GenerateReportTaskImpl implements IGenerateReportTask {
 							List<OutWarehouseOrderItem> orderItems = outWarehouseOrderItemDao.findOutWarehouseOrderItem(orderItemParam, null, null);
 							for (OutWarehouseOrderItem orderItem : orderItems) {
 								index++;
-								String[] row = new String[17];
+								String[] row = new String[24];
 								row[0] = index + "";// 序号
 								row[1] = DateUtil.dateConvertString(new Date(record.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss);// 出库时间
 								row[2] = warehouse.getWarehouseNo();// 仓库编号
@@ -323,8 +323,13 @@ public class GenerateReportTaskImpl implements IGenerateReportTask {
 								row[13] = receiver.getStateOrProvince();// 收货省
 								row[14] = receiver.getCity();// 收货市
 								row[15] = receiver.getCounty();// 收货区
-								row[16] = receiver.getAddressLine1() == null ? "" : receiver.getAddressLine1() + " " + receiver.getAddressLine2() == null ? "" : receiver.getAddressLine2();// 收货人地址
-								row[17] = receiver.getPhoneNumber() == null ? "" : receiver.getPhoneNumber() + " " + receiver.getMobileNumber() == null ? "" : receiver.getMobileNumber();
+								String address = receiver.getAddressLine1() == null ? "" : (receiver.getAddressLine1() + " ");
+								address += (receiver.getAddressLine2() == null ? "" : receiver.getAddressLine2());
+								row[16] = address;// 收货人地址
+
+								String phone = receiver.getPhoneNumber() == null ? "" : (receiver.getPhoneNumber() + " ");
+								phone += (receiver.getMobileNumber() == null ? "" : receiver.getMobileNumber());
+								row[17] = phone;
 								row[18] = "";// SKU编码
 								row[19] = orderItem.getSkuName();// 商品名称
 								row[20] = orderItem.getSku();// SKU条码
@@ -357,5 +362,4 @@ public class GenerateReportTaskImpl implements IGenerateReportTask {
 	public void inventoryReport() {
 
 	}
-
 }

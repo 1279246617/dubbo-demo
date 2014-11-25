@@ -103,9 +103,9 @@ public class ItemShelfInventoryDaoImpl implements IItemShelfInventoryDao {
 			sb.append(page.generatePageSql());
 		}
 		String sql = sb.toString();
-		logger.info("查询库存记录sql:" + sql);
+		logger.debug("查询库存记录sql:" + sql);
 		List<ItemShelfInventory> itemShelfInventoryList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(ItemShelfInventory.class));
-		logger.info("查询库存记录sql:" + sql + " size:" + itemShelfInventoryList.size());
+		logger.debug("查询库存记录sql:" + sql + " size:" + itemShelfInventoryList.size());
 		return itemShelfInventoryList;
 	}
 
@@ -116,7 +116,7 @@ public class ItemShelfInventoryDaoImpl implements IItemShelfInventoryDao {
 		List<Long> idList = jdbcTemplate.queryForList(sql, Long.class, userIdOfCustomer, warehouseId, sku, seatCode, batchNo);
 		if (idList.size() > 0) {
 			Long id = idList.get(0);
-			logger.info("已存在库存记录id:" + id);
+			logger.debug("已存在库存记录id:" + id);
 			// 更新已有库存记录
 			sql = "update w_s_item_shelf_inventory set quantity = quantity+" + addQuantity + " ,available_quantity = available_quantity+" + addQuantity + " ,last_update_time = " + System.currentTimeMillis() + " where id = " + id;
 			return jdbcTemplate.update(sql);
@@ -140,7 +140,7 @@ public class ItemShelfInventoryDaoImpl implements IItemShelfInventoryDao {
 			}
 		}, keyHolder);
 		Long id = keyHolder.getKey().longValue();
-		logger.info("新建库存记录id:" + id);
+		logger.debug("新建库存记录id:" + id);
 		return 1;
 	}
 
@@ -195,7 +195,7 @@ public class ItemShelfInventoryDaoImpl implements IItemShelfInventoryDao {
 			}
 		}
 		String sql = sb.toString();
-		logger.info("统计库存记录sql:" + sql);
+		logger.debug("统计库存记录sql:" + sql);
 		Long count = jdbcTemplate.queryForObject(sql, Long.class);
 		if (count == null) {
 			return 0l;
@@ -218,9 +218,9 @@ public class ItemShelfInventoryDaoImpl implements IItemShelfInventoryDao {
 		}
 		sb.append(" order by batch_no asc,created_time asc;");
 		String sql = sb.toString();
-		logger.info("查询库位库存记录明细sql:" + sql);
+		logger.debug("查询库位库存记录明细sql:" + sql);
 		List<ItemShelfInventory> itemShelfInventoryList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(ItemShelfInventory.class));
-		logger.info("查询库位库存记录明细sql:" + sql + " size:" + itemShelfInventoryList.size());
+		logger.debug("查询库位库存记录明细sql:" + sql + " size:" + itemShelfInventoryList.size());
 		return itemShelfInventoryList;
 	}
 
@@ -289,7 +289,7 @@ public class ItemShelfInventoryDaoImpl implements IItemShelfInventoryDao {
 			}
 		}
 		String sql = sb.toString();
-		logger.info("统计库位可用库存数量sql:" + sql);
+		logger.debug("统计库位可用库存数量sql:" + sql);
 		Long count = jdbcTemplate.queryForObject(sql, Long.class);
 		if (count == null) {
 			return 0l;
