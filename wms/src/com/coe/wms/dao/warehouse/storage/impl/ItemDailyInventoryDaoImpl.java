@@ -151,4 +151,35 @@ public class ItemDailyInventoryDaoImpl implements IItemDailyInventoryDao {
 		}
 		return count;
 	}
+
+	@Override
+	public int addItemDailyInventory(final Long warehouseId, final Long userIdOfCustomer, final String sku, final Integer addQuantity, final Integer availableQuantity, final String inventoryDate) {
+		// 查询库存记录是否已存在
+		String sql = "select id from w_s_item_daily_inventory where user_id_of_customer = ? and warehouse_id = ? and sku = ? and inventory_date =?";
+		List<Long> idList = jdbcTemplate.queryForList(sql, Long.class, userIdOfCustomer, warehouseId, sku, inventoryDate);
+		if (idList.size() > 0) {
+			Long id = idList.get(0);
+			// 更新已有库存记录
+			sql = "update w_s_item_daily_inventory set quantity = quantity+" + addQuantity + " ,available_quantity = available_quantity+" + availableQuantity + "  where id = " + id;
+			return jdbcTemplate.update(sql);
+		}
+		// 插入新库存记录
+		final String newSql = "insert into w_s_item_daily_inventory (user_id_of_customer,warehouse_id,sku,quantity,available_quantity,inventory_date,created_time) values (?,?,?,?,?,?,?)";
+		KeyHolder keyHolder = new GeneratedKeyHolder();
+		jdbcTemplate.update(new PreparedStatementCreator() {
+			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
+				PreparedStatement ps = conn.prepareStatement(newSql, Statement.RETURN_GENERATED_KEYS);
+				ps.setLong(1, userIdOfCustomer);
+				ps.setLong(2, warehouseId);
+				ps.setString(3, sku);
+				ps.setLong(4, addQuantity);
+				ps.setLong(5, availableQuantity);
+				ps.setString(6, inventoryDate);
+				ps.setLong(7, System.currentTimeMillis());
+				return ps;
+			}
+		}, keyHolder);
+		Long id = keyHolder.getKey().longValue();
+		return 1;
+	}
 }
