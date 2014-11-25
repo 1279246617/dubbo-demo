@@ -196,7 +196,7 @@ public class GenerateReportTaskImpl implements IGenerateReportTask {
 							index++;
 							String[] row = new String[17];
 							row[0] = index + "";// 序号
-							row[1] = DateUtil.dateConvertString(new Date(record.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss);// 入库时间
+							row[1] = DateUtil.dateConvertString(new Date(record.getCreatedTime()), DateUtil.yyyy_MM_dd);// 入库时间
 							row[2] = warehouse.getWarehouseNo();// 仓库编号
 							row[3] = user.getLoginName();// 客户编号
 							row[4] = "采购入库单";// 单据类型 待完善
@@ -308,7 +308,7 @@ public class GenerateReportTaskImpl implements IGenerateReportTask {
 								index++;
 								String[] row = new String[24];
 								row[0] = index + "";// 序号
-								row[1] = DateUtil.dateConvertString(new Date(record.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss);// 出库时间
+								row[1] = DateUtil.dateConvertString(new Date(record.getCreatedTime()), DateUtil.yyyy_MM_dd);// 出库时间
 								row[2] = warehouse.getWarehouseNo();// 仓库编号
 								row[3] = user.getLoginName();// 客户编号
 								row[4] = "销售出库单";// 单据类型 待完善
@@ -358,8 +358,15 @@ public class GenerateReportTaskImpl implements IGenerateReportTask {
 		}
 	}
 
+	/**
+	 * 生成库存日报表
+	 * 
+	 * 每天凌晨3点统计库存
+	 */
+	@Scheduled(cron = "0 0 3 * * ? ")
 	@Override
 	public void inventoryReport() {
-
-	}
+		
+		
+	}	
 }
