@@ -26,6 +26,7 @@ import com.coe.wms.service.print.IPrintService;
 import com.coe.wms.service.storage.IStorageService;
 import com.coe.wms.service.user.IUserService;
 import com.coe.wms.util.DateUtil;
+import com.coe.wms.util.NumberUtil;
 import com.coe.wms.util.StringUtil;
 
 @Controller("print")
@@ -181,7 +182,7 @@ public class Print {
 		TrackingNo trackingNo = storageService.getTrackingNoById(coeTrackingNoId);
 		// 跟踪号 (COE交接单号)
 		String coeTrackingNo = trackingNo.getTrackingNo();
-		view.addObject("totalWeight", totalWeight);
+		view.addObject("totalWeight", NumberUtil.getNumPrecision(totalWeight, 2));
 		view.addObject("total", total);
 		view.addObject("mapList", mapList);
 		view.addObject("coeTrackingNo", coeTrackingNo);

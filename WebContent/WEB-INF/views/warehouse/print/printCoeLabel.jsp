@@ -32,7 +32,7 @@
 				
 				<div style="height:21mm;width:96mm; border-bottom:2px solid  #000;font-size: 12px;">
 					<div style="margin-left: 2mm;" >
-							<table style="line-height: 3mm;width:80mm;" class="pull-left">
+							<table style="line-height: 3mm;width:90mm;" class="pull-left">
 								<tr>	
 									<td >ShipDate/發貨日:${map.shipdate}</td>
 									<td>WT/實重: ${map.totalWeight}kg</td>
