@@ -11,8 +11,12 @@ public interface IOutWarehouseOrderItemDao {
 	public long saveOutWarehouseOrderItem(OutWarehouseOrderItem item);
 
 	public int saveBatchOutWarehouseOrderItem(List<OutWarehouseOrderItem> itemList);
-	
-	public int saveBatchOutWarehouseOrderItemWithOrderId(List<OutWarehouseOrderItem> itemList,Long orderId);
-	
-	public List<OutWarehouseOrderItem> findOutWarehouseOrderItem(OutWarehouseOrderItem outWarehouseOrderItem,Map<String,String> moreParam, Pagination page);
+
+	public int saveBatchOutWarehouseOrderItemWithOrderId(List<OutWarehouseOrderItem> itemList, Long orderId);
+
+	public List<OutWarehouseOrderItem> findOutWarehouseOrderItem(OutWarehouseOrderItem outWarehouseOrderItem, Map<String, String> moreParam, Pagination page);
+
+	public String getSkuNameByCustomerIdAndSku(String sku, Long userIdOfCustomer);
+
+	public Long sumSkuQuantityByOrderIdAndSku(List<Long> orderIds,String sku);
 }

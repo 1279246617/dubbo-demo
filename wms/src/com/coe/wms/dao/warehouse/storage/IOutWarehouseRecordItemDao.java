@@ -17,4 +17,6 @@ public interface IOutWarehouseRecordItemDao {
 	public Long countOutWarehouseRecordItem(OutWarehouseRecordItem outWarehouseShipping, Map<String, String> moreParam);
 
 	public int deleteOutWarehouseRecordItemById(Long id);
+
+	public List<Long> getOutWarehouseOrderIdsByRecordTime(String startTime, String endTime, Long userIdOfCustomer, Long warehouseId);
 }

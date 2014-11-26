@@ -51,6 +51,7 @@ import com.coe.wms.task.IGenerateReportTask;
 import com.coe.wms.util.Config;
 import com.coe.wms.util.DateUtil;
 import com.coe.wms.util.FileUtil;
+import com.coe.wms.util.NumberUtil;
 import com.coe.wms.util.POIExcelUtil;
 
 @Component
@@ -125,8 +126,8 @@ public class GenerateReportTaskImpl implements IGenerateReportTask {
 	/**
 	 * 出库记录日报表 EXCEL头
 	 */
-	private static final String[] OUT_WAREHOUSE_REPORT_HEAD = { "序号", "出库时间", "仓库编号", "客户编号", "单据类型", "订单来源", "出库订单号", "客户订单号", "运单编号", "快递公司", "重量", "体积重量", "收货人姓名", "收货省", "收货市", "收货区", "收货人地址", "收货人电话", "SKU编码", "商品名称", "SKU条码", "批次号", "SKU数量",
-			"备注" };
+	private static final String[] OUT_WAREHOUSE_REPORT_HEAD = { "序号", "出库时间", "仓库编号", "客户编号", "单据类型", "订单来源", "出库订单号", "客户订单号", "运单编号", "快递公司", "商品单价", "总金额(不含运费)", "运费", "重量", "体积重量", "收货人姓名", "收货省", "收货市", "收货区", "收货人地址", "收货人电话", "SKU编码", "商品名称",
+			"SKU数量", "SKU条码", "批次号", "备注" };
 
 	private static final String INVENTORY_REPORT_SHEET_TITLE = "库存报表";
 	/**
@@ -150,6 +151,7 @@ public class GenerateReportTaskImpl implements IGenerateReportTask {
 		calendar.set(Calendar.MINUTE, 0);
 		calendar.set(Calendar.SECOND, 0);
 		String startTime = DateUtil.dateConvertString(new Date(calendar.getTimeInMillis()), DateUtil.yyyy_MM_ddHHmmss);
+
 		String date = DateUtil.dateConvertString(new Date(calendar.getTimeInMillis()), DateUtil.yyyy_MM_dd);
 		// 终止时间
 		calendar.add(Calendar.DAY_OF_YEAR, 1);
@@ -228,7 +230,7 @@ public class GenerateReportTaskImpl implements IGenerateReportTask {
 					Report report = new Report();
 					report.setCreatedTime(current);
 					report.setRemark(user.getLoginName());
-					report.setReportName("入库日报表-" + warehouse.getWarehouseName() + "-" + user.getLoginName() + "-" + date);
+					report.setReportName("入库日报表-" + warehouse.getWarehouseName() + "-" + user.getUserName() + "-" + date);
 					report.setReportType(ReportTypeCode.IN_WAREHOUSE_REPORT);
 					report.setUserIdOfCustomer(userIdOfCustomer);
 					report.setWarehouseId(warehouseId);
@@ -259,6 +261,7 @@ public class GenerateReportTaskImpl implements IGenerateReportTask {
 		calendar.set(Calendar.MINUTE, 0);
 		calendar.set(Calendar.SECOND, 0);
 		String startTime = DateUtil.dateConvertString(new Date(calendar.getTimeInMillis()), DateUtil.yyyy_MM_ddHHmmss);
+
 		String date = DateUtil.dateConvertString(new Date(calendar.getTimeInMillis()), DateUtil.yyyy_MM_dd);
 		// 终止时间
 		calendar.add(Calendar.DAY_OF_YEAR, 1);
@@ -314,36 +317,41 @@ public class GenerateReportTaskImpl implements IGenerateReportTask {
 							List<OutWarehouseOrderItem> orderItems = outWarehouseOrderItemDao.findOutWarehouseOrderItem(orderItemParam, null, null);
 							for (OutWarehouseOrderItem orderItem : orderItems) {
 								index++;
-								String[] row = new String[24];
+								String[] row = new String[27];
 								row[0] = index + "";// 序号
 								row[1] = DateUtil.dateConvertString(new Date(record.getCreatedTime()), DateUtil.yyyy_MM_dd);// 出库时间
 								row[2] = warehouse.getWarehouseNo();// 仓库编号
 								row[3] = user.getLoginName();// 客户编号
 								row[4] = "销售出库单";// 单据类型 待完善
-								row[5] = "";// 订单来源
+								row[5] = user.getUserName();// 订单来源
 								row[6] = order.getId() + "";// 出库订单号
 								row[7] = order.getCustomerReferenceNo() + "";// 客户订单号
 								row[8] = order.getTrackingNo();// 运单编号
 								row[9] = order.getShipwayCode();// 快递公司
-								row[10] = "";// 重量
-								row[11] = "";// 体积重量
-								row[12] = receiver.getName();// 收货人姓名
-								row[13] = receiver.getStateOrProvince();// 收货省
-								row[14] = receiver.getCity();// 收货市
-								row[15] = receiver.getCounty();// 收货区
+								row[10] = NumberUtil.div(orderItem.getSkuUnitPrice(), 100d).toString();// 商品单价,目前出库订单sku单价单位是分(CNF)
+								Double unit = NumberUtil.div(orderItem.getSkuUnitPrice(), 100d);
+								row[11] = NumberUtil.getNumPrecision(unit * orderItem.getQuantity(), 2).toString(); // 总金额(不含运费)
+								row[12] = "0";// 运费
+								row[13] = "";// 重量
+								row[14] = "";// 体积重量
+								row[15] = receiver.getName();// 收货人姓名
+								row[16] = receiver.getStateOrProvince();// 收货省
+								row[17] = receiver.getCity();// 收货市
+								row[18] = receiver.getCounty();// 收货区
 								String address = receiver.getAddressLine1() == null ? "" : (receiver.getAddressLine1() + " ");
-								address += (receiver.getAddressLine2() == null ? "" : receiver.getAddressLine2());
-								row[16] = address;// 收货人地址
+								address += (receiver.getAddressLine2() == null ? "" : receiver.getAddressLine2() + " ");
+								address += (receiver.getPostalCode() == null ? "" : receiver.getPostalCode());
+								row[19] = address;// 收货人地址
 
 								String phone = receiver.getPhoneNumber() == null ? "" : (receiver.getPhoneNumber() + " ");
 								phone += (receiver.getMobileNumber() == null ? "" : receiver.getMobileNumber());
-								row[17] = phone;
-								row[18] = "";// SKU编码
-								row[19] = orderItem.getSkuName();// 商品名称
-								row[20] = orderItem.getSku();// SKU条码
-								row[21] = "";// 批次号
-								row[22] = orderItem.getQuantity() + "";// SKU数量
-								row[23] = "";// 备注
+								row[20] = phone;
+								row[21] = "";// SKU编码
+								row[22] = orderItem.getSkuName();// 商品名称
+								row[23] = orderItem.getQuantity() + "";// SKU数量
+								row[24] = orderItem.getSku();// SKU条码
+								row[25] = "";// 批次号
+								row[26] = "";// 备注
 								rows.add(row);
 							}
 						}
@@ -351,7 +359,7 @@ public class GenerateReportTaskImpl implements IGenerateReportTask {
 					Report report = new Report();
 					report.setCreatedTime(current);
 					report.setRemark(user.getLoginName());
-					report.setReportName("出库日报表-" + warehouse.getWarehouseName() + "-" + user.getLoginName() + "-" + date);
+					report.setReportName("出库日报表-" + warehouse.getWarehouseName() + "-" + user.getUserName() + "-" + date);
 					report.setReportType(ReportTypeCode.OUT_WAREHOUSE_REPORT);
 					report.setUserIdOfCustomer(userIdOfCustomer);
 					report.setWarehouseId(warehouseId);
@@ -425,12 +433,12 @@ public class GenerateReportTaskImpl implements IGenerateReportTask {
 		calendar.set(Calendar.MINUTE, 0);
 		calendar.set(Calendar.SECOND, 0);
 		String startTime = DateUtil.dateConvertString(new Date(calendar.getTimeInMillis()), DateUtil.yyyy_MM_ddHHmmss);
+
 		String date = DateUtil.dateConvertString(new Date(calendar.getTimeInMillis()), DateUtil.yyyy_MM_dd);
 		// 库存记录日期的前一天, 跟服务器时间隔2天
 		calendar.add(Calendar.DAY_OF_YEAR, -1);
 		String yesterday = DateUtil.dateConvertString(new Date(calendar.getTimeInMillis()), DateUtil.yyyy_MM_dd);
 		calendar.add(Calendar.DAY_OF_YEAR, 1);
-
 		// 终止时间
 		calendar.add(Calendar.DAY_OF_YEAR, 1);
 		String endTime = DateUtil.dateConvertString(new Date(calendar.getTimeInMillis()), DateUtil.yyyy_MM_ddHHmmss);
@@ -474,10 +482,12 @@ public class GenerateReportTaskImpl implements IGenerateReportTask {
 						row[0] = index + "";// 序号
 						row[1] = warehouse.getWarehouseNo();// 仓库编号
 						row[2] = inventory.getInventoryDate().replaceAll("-", ""); // 结转日期
-						row[3] = user.getLoginName();// 货主
+						row[3] = user.getUserName();// 货主
 						row[4] = "";// SKU编码
 						row[5] = inventory.getSku();// 商品条码
-						row[6] = "";// 商品名称
+						// 目前无SKU库..只能从出库订单中查找SKU产品名
+						String skuName = outWarehouseOrderItemDao.getSkuNameByCustomerIdAndSku(inventory.getSku(), userIdOfCustomer);
+						row[6] = skuName;// 商品名称
 						row[7] = "";// 批次号 奶粉必填，其他没有则不用填
 						// 查前日结余
 						ItemDailyInventory yesterdayParam = new ItemDailyInventory();
@@ -494,7 +504,10 @@ public class GenerateReportTaskImpl implements IGenerateReportTask {
 						Long inWarehouseItemSkuQuantity = inWarehouseRecordItemDao.countItemSkuQuantity(startTime, endTime, inventory.getSku(), userIdOfCustomer, warehouseId);
 						row[9] = inWarehouseItemSkuQuantity + "";// 当日收货数量
 
-						row[10] = "";// 当日发货数量
+						// 计算当日发货数量
+						List<Long> orderIds = outWarehouseRecordItemDao.getOutWarehouseOrderIdsByRecordTime(startTime, endTime, userIdOfCustomer, warehouseId);
+						Long outWarehouseItemSkuQuantity = outWarehouseOrderItemDao.sumSkuQuantityByOrderIdAndSku(orderIds, inventory.getSku());
+						row[10] = outWarehouseItemSkuQuantity + "";
 						row[11] = "";// 当日盘点调整数量
 						row[12] = inventory.getQuantity() + "";// 当日剩余数量
 						rows.add(row);
@@ -502,7 +515,7 @@ public class GenerateReportTaskImpl implements IGenerateReportTask {
 					Report report = new Report();
 					report.setCreatedTime(current);
 					report.setRemark(user.getLoginName());
-					report.setReportName("库存报表-" + warehouse.getWarehouseName() + "-" + user.getLoginName() + "-" + date);
+					report.setReportName("库存报表-" + warehouse.getWarehouseName() + "-" + user.getUserName() + "-" + date);
 					report.setReportType(ReportTypeCode.INVENTORY_REPORT);
 					report.setUserIdOfCustomer(userIdOfCustomer);
 					report.setWarehouseId(warehouseId);

@@ -8,13 +8,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.apache.poi.hsmf.datatypes.Types;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFDataFormat;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.usermodel.examples.CellTypes;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -183,6 +186,23 @@ public class POIExcelUtil {
 		// 把字体应用到当前的样式
 		style2.setFont(font2);
 
+		HSSFCellStyle style3 = workbook.createCellStyle();
+		style3.setFillForegroundColor(HSSFColor.WHITE.index);
+		style3.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+		style3.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+		style3.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+		style3.setBorderRight(HSSFCellStyle.BORDER_THIN);
+		style3.setBorderTop(HSSFCellStyle.BORDER_THIN);
+		style3.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+		style3.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		// 生成另一个字体
+		HSSFFont font3 = workbook.createFont();
+		font3.setBoldweight(HSSFFont.BOLDWEIGHT_NORMAL);
+		// 把字体应用到当前的样式
+		style3.setFont(font3);
+		HSSFDataFormat format = workbook.createDataFormat();
+		style3.setDataFormat(format.getFormat("@"));
+
 		// 生成表头内容
 		HSSFRow hssfRow = sheet.createRow(0);
 		for (int i = 0; i < headers.length; i++) {
@@ -197,8 +217,17 @@ public class POIExcelUtil {
 			hssfRow = sheet.createRow(rowIndex);
 			for (int i = 0; i < row.length; i++) {
 				HSSFCell cell = hssfRow.createCell(i);
-				cell.setCellStyle(style2);
-				cell.setCellValue(row[i]);
+				if (NumberUtil.isDecimal(row[i]) && row[i].indexOf(".") > 0) {
+					cell.setCellStyle(style2);
+					cell.setCellValue(Double.valueOf(row[i]));
+				} else if (NumberUtil.isNumberic(row[i]) && row[i].length() < 10) {// 32位机器,整型最大4294967296
+					cell.setCellStyle(style2);
+					cell.setCellValue(Integer.valueOf(row[i]));
+				} else {
+					cell.setCellStyle(style3);
+					cell.setCellType(HSSFCell.CELL_TYPE_STRING);
+					cell.setCellValue(row[i]);
+				}
 			}
 			rowIndex++;
 		}

@@ -135,11 +135,10 @@ public class OutWarehouseOrderItemDaoImpl implements IOutWarehouseOrderItemDao {
 	/**
 	 * 查询入库订单
 	 * 
-	 * 参数一律使用实体类加Map . 
+	 * 参数一律使用实体类加Map .
 	 */
 	@Override
-	public List<OutWarehouseOrderItem> findOutWarehouseOrderItem(OutWarehouseOrderItem outWarehouseOrderItem,
-			Map<String, String> moreParam, Pagination page) {
+	public List<OutWarehouseOrderItem> findOutWarehouseOrderItem(OutWarehouseOrderItem outWarehouseOrderItem, Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("select id,out_warehouse_order_id,quantity,sku,sku_name,sku_unit_price,sku_price_currency,remark,sku_net_weight from w_s_out_warehouse_order_item where 1=1 ");
 		if (outWarehouseOrderItem != null) {
@@ -177,8 +176,41 @@ public class OutWarehouseOrderItemDaoImpl implements IOutWarehouseOrderItemDao {
 		}
 		String sql = sb.toString();
 		logger.debug("查询出库订单明细sql:" + sql);
-		List<OutWarehouseOrderItem> outWarehouseOrderItemList = jdbcTemplate.query(sql,
-				ParameterizedBeanPropertyRowMapper.newInstance(OutWarehouseOrderItem.class));
+		List<OutWarehouseOrderItem> outWarehouseOrderItemList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(OutWarehouseOrderItem.class));
 		return outWarehouseOrderItemList;
+	}
+
+	@Override
+	public String getSkuNameByCustomerIdAndSku(String sku, Long userIdOfCustomer) {
+		StringBuffer sb = new StringBuffer();
+		sb.append("select sku_name  from w_s_out_warehouse_order_item i inner join w_s_out_warehouse_order r on i.out_warehouse_order_id=r.id where 1=1 ");
+		sb.append(" and r.user_id_of_customer = " + userIdOfCustomer);
+		sb.append(" and i.sku = " + sku);
+		Pagination page = new Pagination();
+		page.curPage = 1;
+		page.pageSize = 1;
+		sb.append(page.generatePageSql());
+		String skuName = jdbcTemplate.queryForObject(sb.toString(), String.class);
+		return skuName;
+	}
+
+	@Override
+	public Long sumSkuQuantityByOrderIdAndSku(List<Long> orderIds, String sku) {
+		String orderIdStrs = "";
+		for (Long orderId : orderIds) {
+			orderIdStrs += orderId + ",";
+		}
+		if (orderIdStrs.endsWith(",")) {
+			orderIdStrs = orderIdStrs.substring(0, orderIdStrs.length() - 1);
+		}
+		if (StringUtil.isNull(orderIdStrs)) {
+			return 0l;
+		}
+		StringBuffer sb = new StringBuffer();
+		sb.append("select sum(quantity)  from w_s_out_warehouse_order_item i inner join w_s_out_warehouse_order r on i.out_warehouse_order_id=r.id where 1=1 ");
+		sb.append(" and i.sku = " + sku);
+		sb.append(" and r.id in( " + orderIdStrs + ")");
+		Long sum = jdbcTemplate.queryForObject(sb.toString(), Long.class);
+		return sum;
 	}
 }

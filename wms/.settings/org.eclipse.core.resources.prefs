@@ -3,7 +3,6 @@ encoding//WebContent/WEB-INF/assembly/applicationContext.xml=UTF-8
 encoding//WebContent/WEB-INF/views/dashboard/main.jsp=UTF-8
 encoding//resources/config.properties=UTF-8
 encoding//resources/jdbc.properties=UTF-8
-encoding//src/com/coe/wms/controller/user/UserController.java=UTF-8
 encoding//src/com/coe/wms/dao/datasource/DataSourceAdvice.java=UTF-8
 encoding//src/com/coe/wms/dao/datasource/DataSourceCode.java=UTF-8
 encoding//src/com/coe/wms/dao/user/impl/UserDaoImpl.java=UTF-8
