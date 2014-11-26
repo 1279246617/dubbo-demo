@@ -3,6 +3,7 @@ package com.coe.wms.dao.warehouse.storage.impl;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.List;
 import java.util.Map;
 
@@ -44,7 +45,7 @@ public class InWarehouseOrderItemDaoImpl implements IInWarehouseOrderItemDao {
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public long saveInWarehouseOrderItem(final InWarehouseOrderItem item) {
-		final String sql = "insert into w_s_in_warehouse_order_item (order_id,quantity,sku,sku_name,sku_remark) values (?,?,?,?,?)";
+		final String sql = "insert into w_s_in_warehouse_order_item (order_id,quantity,sku,sku_name,sku_remark,validity_time,production_batch_no) values (?,?,?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
@@ -54,6 +55,12 @@ public class InWarehouseOrderItemDaoImpl implements IInWarehouseOrderItemDao {
 				ps.setString(3, item.getSku());
 				ps.setString(4, item.getSkuName());
 				ps.setString(5, item.getSkuRemark());
+				if (item.getValidityTime() != null) {
+					ps.setLong(6, item.getValidityTime());
+				} else {
+					ps.setNull(6, Types.BIGINT);
+				}
+				ps.setString(7, item.getProductionBatchNo());
 				return ps;
 			}
 		}, keyHolder);
@@ -67,7 +74,7 @@ public class InWarehouseOrderItemDaoImpl implements IInWarehouseOrderItemDao {
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public int saveBatchInWarehouseOrderItem(final List<InWarehouseOrderItem> itemList) {
-		final String sql = "insert into w_s_in_warehouse_order_item (order_id,quantity,sku,sku_name,sku_remark) values (?,?,?,?,?)";
+		final String sql = "insert into w_s_in_warehouse_order_item (order_id,quantity,sku,sku_name,sku_remark,validity_time,production_batch_no) values (?,?,?,?,?,?,?)";
 		int[] batchUpdateSize = jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
 			@Override
 			public void setValues(PreparedStatement ps, int i) throws SQLException {
@@ -77,6 +84,12 @@ public class InWarehouseOrderItemDaoImpl implements IInWarehouseOrderItemDao {
 				ps.setString(3, item.getSku());
 				ps.setString(4, item.getSkuName());
 				ps.setString(5, item.getSkuRemark());
+				if (item.getValidityTime() != null) {
+					ps.setLong(6, item.getValidityTime());
+				} else {
+					ps.setNull(6, Types.BIGINT);
+				}
+				ps.setString(7, item.getProductionBatchNo());
 			}
 
 			@Override
@@ -90,7 +103,7 @@ public class InWarehouseOrderItemDaoImpl implements IInWarehouseOrderItemDao {
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public int saveBatchInWarehouseOrderItemWithOrderId(final List<InWarehouseOrderItem> itemList, final Long orderId) {
-		final String sql = "insert into w_s_in_warehouse_order_item (order_id,quantity,sku,sku_name,sku_remark) values (?,?,?,?,?)";
+		final String sql = "insert into w_s_in_warehouse_order_item (order_id,quantity,sku,sku_name,sku_remark,validity_time,production_batch_no) values (?,?,?,?,?,?,?)";
 		int[] batchUpdateSize = jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
 			@Override
 			public void setValues(PreparedStatement ps, int i) throws SQLException {
@@ -100,6 +113,12 @@ public class InWarehouseOrderItemDaoImpl implements IInWarehouseOrderItemDao {
 				ps.setString(3, item.getSku());
 				ps.setString(4, item.getSkuName());
 				ps.setString(5, item.getSkuRemark());
+				if (item.getValidityTime() != null) {
+					ps.setLong(6, item.getValidityTime());
+				} else {
+					ps.setNull(6, Types.BIGINT);
+				}
+				ps.setString(7, item.getProductionBatchNo());
 			}
 
 			@Override
@@ -117,13 +136,12 @@ public class InWarehouseOrderItemDaoImpl implements IInWarehouseOrderItemDao {
 	/**
 	 * 查询入库订单
 	 * 
-	 * 参数一律使用实体类加Map . 
+	 * 参数一律使用实体类加Map .
 	 */
 	@Override
-	public List<InWarehouseOrderItem> findInWarehouseOrderItem(InWarehouseOrderItem inWarehouseOrderItem, Map<String, String> moreParam,
-			Pagination page) {
+	public List<InWarehouseOrderItem> findInWarehouseOrderItem(InWarehouseOrderItem inWarehouseOrderItem, Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select id,order_id,quantity,sku,sku_name,sku_remark from w_s_in_warehouse_order_item where 1=1 ");
+		sb.append("select id,order_id,quantity,sku,sku_name,sku_remark,validity_time,production_batch_no from w_s_in_warehouse_order_item where 1=1 ");
 		if (inWarehouseOrderItem != null) {
 			if (StringUtil.isNotNull(inWarehouseOrderItem.getSku())) {
 				sb.append(" and sku = '" + inWarehouseOrderItem.getSku() + "' ");
@@ -134,6 +152,9 @@ public class InWarehouseOrderItemDaoImpl implements IInWarehouseOrderItemDao {
 			if (inWarehouseOrderItem.getOrderId() != null) {
 				sb.append(" and order_id = '" + inWarehouseOrderItem.getOrderId() + "' ");
 			}
+			if (inWarehouseOrderItem.getProductionBatchNo() != null) {
+				sb.append(" and production_batch_no = '" + inWarehouseOrderItem.getProductionBatchNo() + "' ");
+			}
 		}
 		// 分页sql
 		if (page != null) {
@@ -141,8 +162,7 @@ public class InWarehouseOrderItemDaoImpl implements IInWarehouseOrderItemDao {
 		}
 		String sql = sb.toString();
 		logger.debug("查询入库订单明细sql:" + sql);
-		List<InWarehouseOrderItem> inWarehouseOrderItemList = jdbcTemplate.query(sql,
-				ParameterizedBeanPropertyRowMapper.newInstance(InWarehouseOrderItem.class));
+		List<InWarehouseOrderItem> inWarehouseOrderItemList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(InWarehouseOrderItem.class));
 
 		logger.debug("查询入库订单明细sql:" + sql + " size:" + inWarehouseOrderItemList.size());
 
@@ -165,6 +185,9 @@ public class InWarehouseOrderItemDaoImpl implements IInWarehouseOrderItemDao {
 			}
 			if (inWarehouseOrderItem.getOrderId() != null) {
 				sb.append(" and order_id = '" + inWarehouseOrderItem.getOrderId() + "' ");
+			}
+			if (inWarehouseOrderItem.getProductionBatchNo() != null) {
+				sb.append(" and production_batch_no = '" + inWarehouseOrderItem.getProductionBatchNo() + "' ");
 			}
 		}
 		String sql = sb.toString();

@@ -24,6 +24,16 @@ public class InWarehouseOrderItem implements Serializable {
 	private String sku;
 
 	/**
+	 * 产品生产批次(也称客户批次)
+	 */
+	private String productionBatchNo;
+
+	/**
+	 * 产品有效期至
+	 */
+	private Long validityTime;
+
+	/**
 	 * 商品名称
 	 */
 	private String skuName;
@@ -79,5 +89,21 @@ public class InWarehouseOrderItem implements Serializable {
 
 	public void setSkuRemark(String skuRemark) {
 		this.skuRemark = skuRemark;
+	}
+
+	public String getProductionBatchNo() {
+		return productionBatchNo;
+	}
+
+	public void setProductionBatchNo(String productionBatchNo) {
+		this.productionBatchNo = productionBatchNo;
+	}
+
+	public Long getValidityTime() {
+		return validityTime;
+	}
+
+	public void setValidityTime(Long validityTime) {
+		this.validityTime = validityTime;
 	}
 }
