@@ -21,47 +21,68 @@ public class Product implements Serializable {
 	 */
 	private Long id;
 
-	private String productName;
+	/**
+	 * 客户id
+	 */
+	private Long userIdOfCustomer;
 
-	private Long productTypeId;
+	/**
+	 * 是否需要生产批次
+	 */
+	private String isNeedBatchNo;
 
+	/**
+	 * 规格型号
+	 */
+	private String model;
+
+	/**
+	 * 产品sku
+	 */
 	private String sku;
 
-	private String color;
-
-	private String mainImage;
-
-	private String images;
+	/**
+	 * 仓库为客户的产品sku 再次编制的sku
+	 */
+	private String warehouseSku;
 
 	/**
-	 * 长度单位代码
+	 * 产品名
 	 */
-	private String lengthUnitCode;
+	private String productName;
 
 	/**
-	 * 长
+	 * 产品类型id
 	 */
-	private Double length;
+	private Long productTypeId;
 
 	/**
-	 * 高
+	 * 体积
 	 */
-	private Double height;
+	private Double volume;
 
 	/**
-	 * 宽
+	 * 报关重量 KG
 	 */
-	private Double width;
+	private Double customsWeight;
+	/**
+	 * 价值币种
+	 */
+	private String currency;
+	/**
+	 * 报关价值 元
+	 */
+	private Double customsValue;
 
 	/**
-	 * 重量 KG
+	 * 行邮税号 (ETK B2C渠道专用报关字段)
 	 */
-	private Double weight;
+	private String taxCode;
 
 	/**
-	 * 价值 元
+	 * 原产地
 	 */
-	private Double value;
+	private String origin;
 
 	/**
 	 * 备注
@@ -69,29 +90,14 @@ public class Product implements Serializable {
 	private String remark;
 
 	/**
-	 * 价值币种
+	 * 创建时间
 	 */
-	private String currency;
+	private Long createdTime;
 
 	/**
-	 * 报关重量 KG
+	 * 上次更改时间
 	 */
-	private Double customsWeight;
-
-	/**
-	 * 报关价值 元
-	 */
-	private Double customsValue;
-
-	/**
-	 * 海关编码
-	 */
-	private String hsCode;
-
-	/**
-	 * 行邮税号 (ETK B2C渠道)
-	 */
-	private String taxCode;
+	private Long lastUpdateTime;
 
 	public Long getId() {
 		return id;
@@ -99,6 +105,46 @@ public class Product implements Serializable {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public Long getUserIdOfCustomer() {
+		return userIdOfCustomer;
+	}
+
+	public void setUserIdOfCustomer(Long userIdOfCustomer) {
+		this.userIdOfCustomer = userIdOfCustomer;
+	}
+
+	public String getIsNeedBatchNo() {
+		return isNeedBatchNo;
+	}
+
+	public void setIsNeedBatchNo(String isNeedBatchNo) {
+		this.isNeedBatchNo = isNeedBatchNo;
+	}
+
+	public String getModel() {
+		return model;
+	}
+
+	public void setModel(String model) {
+		this.model = model;
+	}
+
+	public String getSku() {
+		return sku;
+	}
+
+	public void setSku(String sku) {
+		this.sku = sku;
+	}
+
+	public String getWarehouseSku() {
+		return warehouseSku;
+	}
+
+	public void setWarehouseSku(String warehouseSku) {
+		this.warehouseSku = warehouseSku;
 	}
 
 	public String getProductName() {
@@ -117,100 +163,12 @@ public class Product implements Serializable {
 		this.productTypeId = productTypeId;
 	}
 
-	public String getSku() {
-		return sku;
+	public Double getVolume() {
+		return volume;
 	}
 
-	public void setSku(String sku) {
-		this.sku = sku;
-	}
-
-	public String getColor() {
-		return color;
-	}
-
-	public void setColor(String color) {
-		this.color = color;
-	}
-
-	public String getMainImage() {
-		return mainImage;
-	}
-
-	public void setMainImage(String mainImage) {
-		this.mainImage = mainImage;
-	}
-
-	public String getImages() {
-		return images;
-	}
-
-	public void setImages(String images) {
-		this.images = images;
-	}
-
-	public String getLengthUnitCode() {
-		return lengthUnitCode;
-	}
-
-	public void setLengthUnitCode(String lengthUnitCode) {
-		this.lengthUnitCode = lengthUnitCode;
-	}
-
-	public Double getLength() {
-		return length;
-	}
-
-	public void setLength(Double length) {
-		this.length = length;
-	}
-
-	public Double getHeight() {
-		return height;
-	}
-
-	public void setHeight(Double height) {
-		this.height = height;
-	}
-
-	public Double getWidth() {
-		return width;
-	}
-
-	public void setWidth(Double width) {
-		this.width = width;
-	}
-
-	public Double getWeight() {
-		return weight;
-	}
-
-	public void setWeight(Double weight) {
-		this.weight = weight;
-	}
-
-	public Double getValue() {
-		return value;
-	}
-
-	public void setValue(Double value) {
-		this.value = value;
-	}
-
-	public String getRemark() {
-		return remark;
-	}
-
-	public void setRemark(String remark) {
-		this.remark = remark;
-	}
-
-	public String getCurrency() {
-		return currency;
-	}
-
-	public void setCurrency(String currency) {
-		this.currency = currency;
+	public void setVolume(Double volume) {
+		this.volume = volume;
 	}
 
 	public Double getCustomsWeight() {
@@ -221,6 +179,14 @@ public class Product implements Serializable {
 		this.customsWeight = customsWeight;
 	}
 
+	public String getCurrency() {
+		return currency;
+	}
+
+	public void setCurrency(String currency) {
+		this.currency = currency;
+	}
+
 	public Double getCustomsValue() {
 		return customsValue;
 	}
@@ -229,19 +195,43 @@ public class Product implements Serializable {
 		this.customsValue = customsValue;
 	}
 
-	public String getHsCode() {
-		return hsCode;
-	}
-
-	public void setHsCode(String hsCode) {
-		this.hsCode = hsCode;
-	}
-
 	public String getTaxCode() {
 		return taxCode;
 	}
 
 	public void setTaxCode(String taxCode) {
 		this.taxCode = taxCode;
+	}
+
+	public String getOrigin() {
+		return origin;
+	}
+
+	public void setOrigin(String origin) {
+		this.origin = origin;
+	}
+
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+
+	public Long getCreatedTime() {
+		return createdTime;
+	}
+
+	public void setCreatedTime(Long createdTime) {
+		this.createdTime = createdTime;
+	}
+
+	public Long getLastUpdateTime() {
+		return lastUpdateTime;
+	}
+
+	public void setLastUpdateTime(Long lastUpdateTime) {
+		this.lastUpdateTime = lastUpdateTime;
 	}
 }
