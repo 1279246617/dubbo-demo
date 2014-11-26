@@ -14,6 +14,7 @@ import org.apache.log4j.Logger;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.RowMapperResultSetExtractor;
 import org.springframework.jdbc.core.simple.ParameterizedBeanPropertyRowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -78,7 +79,7 @@ public class OutWarehouseRecordItemDaoImpl implements IOutWarehouseRecordItemDao
 	/**
 	 * 查询入库订单
 	 * 
-	 * 参数一律使用实体类加Map . 
+	 * 参数一律使用实体类加Map .
 	 */
 	@Override
 	public List<OutWarehouseRecordItem> findOutWarehouseRecordItem(OutWarehouseRecordItem outWarehouseShipping, Map<String, String> moreParam, Pagination page) {
@@ -195,6 +196,28 @@ public class OutWarehouseRecordItemDaoImpl implements IOutWarehouseRecordItemDao
 
 	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
+	}
+
+	@Override
+	public List<Long> getOutWarehouseOrderIdsByRecordTime(String startTime, String endTime, Long userIdOfCustomer, Long warehouseId) {
+		StringBuffer sb = new StringBuffer();
+		sb.append("select out_warehouse_order_id  from w_s_out_warehouse_record_item i inner join w_s_out_warehouse_record r on i.coe_tracking_no_id=r.coe_tracking_no_id where 1=1 ");
+		sb.append(" and r.user_id_of_customer = " + userIdOfCustomer);
+		sb.append(" and r.warehouse_id = " + warehouseId);
+		if (startTime != null) {
+			Date date = DateUtil.stringConvertDate(startTime, DateUtil.yyyy_MM_ddHHmmss);
+			if (date != null) {
+				sb.append(" and r.created_time >= " + date.getTime());
+			}
+		}
+		if (endTime != null) {
+			Date date = DateUtil.stringConvertDate(endTime, DateUtil.yyyy_MM_ddHHmmss);
+			if (date != null) {
+				sb.append(" and r.created_time <= " + date.getTime());
+			}
+		}
+		List<Long> outWarehouseShippingList = jdbcTemplate.queryForList(sb.toString(), Long.class);
+		return outWarehouseShippingList;
 	}
 
 }
