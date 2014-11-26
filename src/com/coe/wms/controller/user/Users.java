@@ -28,9 +28,9 @@ import com.coe.wms.util.StringUtil;
 
 @Controller
 @RequestMapping("/user")
-public class UserController {
+public class Users {
 
-	private static final Logger logger = Logger.getLogger(UserController.class);
+	private static final Logger logger = Logger.getLogger(Users.class);
 
 	@Resource(name = "userService")
 	private IUserService userService;
