@@ -27,7 +27,7 @@ public class Product implements Serializable {
 	private Long userIdOfCustomer;
 
 	/**
-	 * 是否需要生产批次
+	 * 是否需要生产批次  Y || N
 	 */
 	private String isNeedBatchNo;
 
