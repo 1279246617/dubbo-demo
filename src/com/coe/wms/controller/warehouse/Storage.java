@@ -71,7 +71,7 @@ public class Storage {
 	 * @throws IOException
 	 */
 	@RequestMapping(value = "/editInWarehouseOrderRemark", method = RequestMethod.GET)
-	public ModelAndView addInWarehouseOrderRemark(HttpServletRequest request, HttpServletResponse response, Long id, String remark) throws IOException {
+	public ModelAndView editInWarehouseOrderRemark(HttpServletRequest request, HttpServletResponse response, Long id, String remark) throws IOException {
 		ModelAndView view = new ModelAndView();
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
 		if (remark == null) {
