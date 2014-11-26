@@ -58,6 +58,7 @@ function saveInWarehouseRecordStep1(trackingNoStr,remark,warehouseId) {
 			$("#inWarehouseOrdertbody").append(tr);
 		});
 		if (msg.status == 2) {
+			$("#inWarehouseOrderDiv").css('height', 170);
 			// 找到多条订
 			$("#tips").html("请选择其中一个入库订单并按回车!");
 			parent.$.showDialogMessage(msg.message, null, null);

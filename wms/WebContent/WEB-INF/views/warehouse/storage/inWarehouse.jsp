@@ -56,7 +56,7 @@
 							</td>
 					</tr>
 			</table>
-			<div style="height:120px;width:100%;">
+			<div style="height:100px;width:100%;overflow:auto;" id="inWarehouseOrderDiv">
 					<table  class="table table-striped" style="width:100%;margin-bottom: 5px;display:none;" id="inWarehouseOrdertable" >
 						<tr>
 							<th style="width:25px;text-align:center;">选择</th>
@@ -71,8 +71,6 @@
 				</table>
 			</div>
 			
-			<div style="height:30px;">
-			</div>
 		</form>
 		
 		<table class="table table-striped" style="width:1200px;margin-bottom: 0px">
