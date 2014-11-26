@@ -100,6 +100,9 @@ public class NumberUtil {
 	 * @return Double
 	 */
 	public static Double div(Double v1, Double v2) {
+		if (v1 == null) {
+			return 0d;
+		}
 		BigDecimal b1 = new BigDecimal(v1.toString());
 		BigDecimal b2 = new BigDecimal(v2.toString());
 		return new Double(b1.divide(b2, DEF_DIV_SCALE, BigDecimal.ROUND_HALF_UP).doubleValue());
@@ -195,7 +198,7 @@ public class NumberUtil {
 		}
 		return false;
 	}
-	
+
 	public static String intToString(Integer i) {
 		if (i != null) {
 			return i.toString();
