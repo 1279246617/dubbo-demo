@@ -32,7 +32,13 @@ public class ItemShelfInventory implements Serializable {
 	 * sku所属的批次号
 	 */
 	private String batchNo;
+	/**
+	 * 货位号,可以查到货位上的SKU数量
+	 */
+	private String seatCode;
 
+	
+	//
 	/**
 	 * 实际库存
 	 */
@@ -48,10 +54,6 @@ public class ItemShelfInventory implements Serializable {
 	private Long lastUpdateTime;
 
 	private Long createdTime;
-	/**
-	 * 货位号,可以查到货位上的SKU数量
-	 */
-	private String seatCode;
 
 	public Long getUserIdOfCustomer() {
 		return userIdOfCustomer;
