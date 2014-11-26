@@ -196,6 +196,9 @@
 	        }
 	        
 	        function addRemark(id,remark){
+		        	if(remark == 'undefined'){
+		        		remark ='';
+		        	}
 	        	   $.dialog({
 	        	          lock: true,
 	        	          title: '备注',

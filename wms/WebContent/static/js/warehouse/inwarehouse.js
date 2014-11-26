@@ -56,9 +56,12 @@ function saveInWarehouseRecordStep1(trackingNoStr,remark,warehouseId) {
 			tr+="<td style='width:205px;text-align:center;'>"+n.createdTime+"</td>";
 			tr+="</tr>";
 			$("#inWarehouseOrdertbody").append(tr);
+			//最高200px
+			if($("#inWarehouseOrderDiv").height()+25<=190){
+				$("#inWarehouseOrderDiv").css('height', $("#inWarehouseOrderDiv").height()+25);	
+			}
 		});
 		if (msg.status == 2) {
-			$("#inWarehouseOrderDiv").css('height', 170);
 			// 找到多条订
 			$("#tips").html("请选择其中一个入库订单并按回车!");
 			parent.$.showDialogMessage(msg.message, null, null);
