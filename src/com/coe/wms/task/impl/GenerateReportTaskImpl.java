@@ -332,7 +332,7 @@ public class GenerateReportTaskImpl implements IGenerateReportTask {
 								Double unit = NumberUtil.div(orderItem.getSkuUnitPrice(), 100d);
 								row[11] = NumberUtil.getNumPrecision(unit * orderItem.getQuantity(), 2).toString(); // 总金额(不含运费)
 								row[12] = "0";// 运费
-								row[13] = "";// 重量
+								row[13] = NumberUtil.getNumPrecision(order.getOutWarehouseWeight(), 2) + ""; // 重量
 								row[14] = "";// 体积重量
 								row[15] = receiver.getName();// 收货人姓名
 								row[16] = receiver.getStateOrProvince();// 收货省
