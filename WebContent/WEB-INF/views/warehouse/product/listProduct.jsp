@@ -43,18 +43,6 @@
 		    	</div>    
            		
                <div class="pull-right ">
-               		<span class="pull-left" style="width:150px;">
-               			仓库
-               			<select style="width:90px;" id="warehouseId" name="warehouseId">
-               				<option></option>
-							<c:forEach items="${warehouseList}" var="w" >
-				       	 		<option value="<c:out value='${w.id}'/>">
-				       	 			<c:out value="${w.id}-${w.warehouseName}"/>
-				       		 	</option>
-				       		 </c:forEach>
-						</select>
-               		</span>
-               		
                		<span class="pull-left" style="width:165px;">
                			客户帐号
                			<input type="text" name="userLoginName" data-provide="typeahead"  id="userLoginName" style="width:90px;" title="请输入客户登录名" />
