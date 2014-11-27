@@ -235,7 +235,7 @@ public class Print {
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
 		List<Map<String, Object>> mapList = new ArrayList<Map<String, Object>>();
 		List<String> skus = new ArrayList<String>();
-		if (StringUtil.isNull(ids)) {
+		if (StringUtil.isNotNull(ids)) {
 			String idArray[] = ids.split(",");
 			for (int i = 0; i < idArray.length; i++) {
 				if (StringUtil.isNull(idArray[i])) {
