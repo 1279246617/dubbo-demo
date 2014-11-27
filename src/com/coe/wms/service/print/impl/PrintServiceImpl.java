@@ -284,4 +284,9 @@ public class PrintServiceImpl implements IPrintService {
 		map.put("shipdate", DateUtil.dateConvertString(new Date(outWarehouseRecord.getCreatedTime()), DateUtil.yyyy_MM_dd));
 		return map;
 	}
+
+	@Override
+	public Map<String, Object> getPrintSkuBarcodeData(String sku) {
+		return null;
+	}
 }
