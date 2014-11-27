@@ -16,24 +16,23 @@ import com.coe.wms.dao.user.IUserDao;
 import com.coe.wms.model.product.Product;
 import com.coe.wms.model.product.ProductType;
 import com.coe.wms.model.user.User;
-import com.coe.wms.service.product.IproductService;
+import com.coe.wms.service.product.IProductService;
 import com.coe.wms.util.DateUtil;
 import com.coe.wms.util.Pagination;
 
 @Service("productService")
-public class ProductServiceImpl implements IproductService {
-	
+public class ProductServiceImpl implements IProductService {
+
 	private static final Logger logger = Logger.getLogger(ProductServiceImpl.class);
 
 	@Resource(name = "productDao")
 	private IProductDao productDao;
-	
+
 	@Resource(name = "userDao")
 	private IUserDao userDao;
 
 	@Override
-	public Pagination findAllProduct(Product product,
-			Map<String, String> moreParam, Pagination page) {
+	public Pagination findAllProduct(Product product, Map<String, String> moreParam, Pagination page) {
 		List<Product> productList = productDao.findAllProduct(product, moreParam, page);
 		List<Object> list = new ArrayList<Object>();
 		for (Product pro : productList) {
@@ -48,7 +47,7 @@ public class ProductServiceImpl implements IproductService {
 			map.put("warehouseSku", pro.getWarehouseSku());
 			map.put("remark", pro.getRemark());
 			map.put("currency", pro.getCurrency());
-			map.put("customsWeight",pro.getCustomsWeight());
+			map.put("customsWeight", pro.getCustomsWeight());
 			map.put("isNeedBatchNo", pro.getIsNeedBatchNo());
 			map.put("model", pro.getModel());
 			map.put("customsValue", pro.getCustomsValue());
@@ -64,13 +63,18 @@ public class ProductServiceImpl implements IproductService {
 			list.add(map);
 		}
 		page.total = productDao.countProduct(product, moreParam);
-		page.rows=list;
+		page.rows = list;
 		return page;
 	}
 
 	@Override
 	public ProductType getProductTypeById(Long typeId) {
 		return productDao.getProductTypeById(typeId);
+	}
+
+	@Override
+	public Product getProductById(Long id) {
+		return productDao.getProductById(id);
 	}
 
 }

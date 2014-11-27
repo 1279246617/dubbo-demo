@@ -287,6 +287,8 @@ public class PrintServiceImpl implements IPrintService {
 
 	@Override
 	public Map<String, Object> getPrintSkuBarcodeData(String sku) {
+		System.out.println(sku);
+		
 		return null;
 	}
 }

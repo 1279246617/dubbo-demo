@@ -18,7 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.coe.wms.controller.Application;
 import com.coe.wms.model.product.Product;
 import com.coe.wms.model.user.User;
-import com.coe.wms.service.product.IproductService;
+import com.coe.wms.service.product.IProductService;
 import com.coe.wms.service.storage.IStorageService;
 import com.coe.wms.service.user.IUserService;
 import com.coe.wms.util.GsonUtil;
@@ -38,7 +38,7 @@ public class Products {
 	private IUserService userService;
 
 	@Resource(name = "productService")
-	private IproductService productService;
+	private IProductService productService;
 
 	@RequestMapping(value = "/listProduct", method = RequestMethod.GET)
 	public ModelAndView listProduct(HttpServletRequest request, HttpServletResponse response) {

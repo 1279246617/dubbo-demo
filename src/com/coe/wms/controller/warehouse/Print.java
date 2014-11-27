@@ -18,10 +18,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.coe.wms.controller.Application;
+import com.coe.wms.model.product.Product;
 import com.coe.wms.model.warehouse.TrackingNo;
 import com.coe.wms.model.warehouse.Warehouse;
 import com.coe.wms.service.print.IPrintService;
-import com.coe.wms.service.product.IproductService;
+import com.coe.wms.service.product.IProductService;
 import com.coe.wms.service.storage.IStorageService;
 import com.coe.wms.service.user.IUserService;
 import com.coe.wms.util.DateUtil;
@@ -41,9 +42,9 @@ public class Print {
 
 	@Resource(name = "printService")
 	private IPrintService printService;
-	
+
 	@Resource(name = "productService")
-	private IproductService productService;
+	private IProductService productService;
 
 	/**
 	 * 
@@ -232,22 +233,32 @@ public class Print {
 	public ModelAndView printSkuBarcode(HttpServletRequest request, HttpServletResponse response, String ids, String sku, Integer quantity) throws IOException {
 		ModelAndView view = new ModelAndView();
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
-		if (StringUtil.isNull(ids) && StringUtil.isNull(sku)) {
+		List<Map<String, Object>> mapList = new ArrayList<Map<String, Object>>();
+		List<String> skus = new ArrayList<String>();
+		if (StringUtil.isNull(ids)) {
+			String idArray[] = ids.split(",");
+			for (int i = 0; i < idArray.length; i++) {
+				if (StringUtil.isNull(idArray[i])) {
+					continue;
+				}
+				Long id = Long.valueOf(idArray[i]);
+				// 根据产品id,找到sku
+				Product product = productService.getProductById(id);
+				skus.add(product.getSku());
+			}
+		}
+		if (StringUtil.isNotNull(sku)) {
+			skus.add(sku);
+		}
+		if (skus.size() == 0) {
 			return view;
 		}
-		List<Map<String, Object>> mapList = new ArrayList<Map<String, Object>>();
-		String idArray[] = ids.split(",");
-		for (int i = 0; i < idArray.length; i++) {
-			if (StringUtil.isNull(idArray[i])) {
-				continue;
-			}
-			Long id = Long.valueOf(idArray[i]);
-			//根据产品id,找到sku
-			
-			
-			Map<String, Object> map = printService.getPrintSkuBarcodeData();
+		for (String sku2 : skus) {
+			Map<String, Object> map = printService.getPrintSkuBarcodeData(sku2);
 			if (map != null) {
-				mapList.add(map);
+				for (int i = 0; i < quantity; i++) {// 打印份数
+					mapList.add(map);
+				}
 			}
 		}
 		view.addObject("mapList", mapList);

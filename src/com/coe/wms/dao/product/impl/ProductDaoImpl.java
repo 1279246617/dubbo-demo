@@ -31,7 +31,7 @@ import com.mysql.jdbc.Statement;
 @Repository("productDao")
 public class ProductDaoImpl implements IProductDao {
 	Logger logger = Logger.getLogger(ProductDaoImpl.class);
-	
+
 	@Resource(name = "jdbcTemplate")
 	private JdbcTemplate jdbcTemplate;
 
@@ -40,8 +40,9 @@ public class ProductDaoImpl implements IProductDao {
 	}
 
 	@Override
-	public List<Product> findAllProduct(Product product,Map<String, String> moreParam, Pagination page) {
-		StringBuffer sb = new StringBuffer("select id,user_id_of_customer,product_name,product_type_id,sku,warehouse_sku,remark,currency,customs_weight,is_need_batch_no,model,customs_value,origin,last_update_time,created_time,tax_code,volume from p_product where 1=1 ");
+	public List<Product> findAllProduct(Product product, Map<String, String> moreParam, Pagination page) {
+		StringBuffer sb = new StringBuffer(
+				"select id,user_id_of_customer,product_name,product_type_id,sku,warehouse_sku,remark,currency,customs_weight,is_need_batch_no,model,customs_value,origin,last_update_time,created_time,tax_code,volume from p_product where 1=1 ");
 		if (moreParam != null) {
 			if (moreParam.get("createdTimeStart") != null) {
 				Date date = DateUtil.stringConvertDate(moreParam.get("createdTimeStart"), DateUtil.yyyy_MM_ddHHmmss);
@@ -85,49 +86,54 @@ public class ProductDaoImpl implements IProductDao {
 		final String sql = "insert into p_product (id,user_id_of_customer,product_name,product_type_id,sku,warehouse_sku,remark,currency,customs_weight,is_need_batch_no,model,customs_value,origin,last_update_time,created_time,tax_code,volume) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
-			
+
 			@Override
-			public PreparedStatement createPreparedStatement(Connection conn)
-					throws SQLException {
-				PreparedStatement ps = conn.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
+			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
+				PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 				ps.setLong(1, product.getUserIdOfCustomer());
 				ps.setString(2, product.getProductName());
 				ps.setLong(3, product.getProductTypeId());
 				ps.setString(4, product.getSku());
 				ps.setString(5, product.getWarehouseSku());
-				ps.setString(6,product.getRemark());
+				ps.setString(6, product.getRemark());
 				ps.setString(7, product.getCurrency());
-				if(product.getCustomsWeight() == null){
+				if (product.getCustomsWeight() == null) {
 					ps.setNull(8, Types.DOUBLE);
-				}else{
+				} else {
 					ps.setDouble(8, product.getCustomsWeight());
 				}
 				ps.setString(9, product.getIsNeedBatchNo());
 				ps.setString(10, product.getModel());
-				if(product.getCustomsValue() == null){
+				if (product.getCustomsValue() == null) {
 					ps.setNull(11, Types.DOUBLE);
-				}else{
+				} else {
 					ps.setDouble(11, product.getCustomsValue());
 				}
 				ps.setString(12, product.getOrigin());
-				if(product.getLastUpdateTime() ==null ){
+				if (product.getLastUpdateTime() == null) {
 					ps.setNull(13, Types.INTEGER);
-				}else{
-					
+				} else {
+
 					ps.setLong(13, product.getLastUpdateTime());
 				}
 				ps.setLong(14, product.getCreatedTime());
 				ps.setString(15, product.getTaxCode());
-				if(product.getVolume() == null){
+				if (product.getVolume() == null) {
 					ps.setNull(16, Types.DOUBLE);
-				}else{
+				} else {
 					ps.setDouble(16, product.getVolume());
 				}
 				return ps;
 			}
-		},keyHolder);
+		}, keyHolder);
 		long id = keyHolder.getKey().longValue();
 		return id;
 	}
 
+	@Override
+	public Product getProductById(Long id) {
+		String sql = "select id,user_id_of_customer,product_name,product_type_id,sku,warehouse_sku,remark,currency,customs_weight,is_need_batch_no,model,customs_value,origin,last_update_time,created_time,tax_code,volume from p_product where id= "+ id;
+		Product product = jdbcTemplate.queryForObject(sql, Product.class);
+		return product;
+	}
 }
