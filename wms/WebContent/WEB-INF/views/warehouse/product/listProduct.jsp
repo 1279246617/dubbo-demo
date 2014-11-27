@@ -24,7 +24,7 @@
                <div class="pull-left">
                		<span class="pull-left" style="width:90px;">
 			       		<a class="btn btn-primary btn-small" onclick="addProduct()" title="添加产品">
-			           		 <i class="icon-folder-open"></i>添加产品
+			           		 <i class="icon-plus"></i>添加产品
 			       	 	</a>
 			       	 	<input style=" visibility:hidden;">
 		       	 	</span>
@@ -143,7 +143,7 @@
 		                { display: '体积', name: 'volume', align: 'center',type:'float',width:'6%'},
 		                { display: '上次更改时间', name: 'lastUpdateTime', align: 'center',type:'float',width:'12%'},
 		                { display: '创建时间', name: 'createdTime', align: 'center',type:'float',width:'12%'},
-		                { display: '备注', name: 'remark', align: 'center', type: 'float',width:'13%'}
+		                { display: '备注', name: 'remark', align: 'center', type: 'float',width:'13%'},
 		                {display: '操作',isSort: false,width: '10%',render: function(row) {
 		            		if (!row._editing) {
 		            			var h = "<a href=javascript:updateProduct(" + row.id +")>更新</a>&nbsp;&nbsp;";
