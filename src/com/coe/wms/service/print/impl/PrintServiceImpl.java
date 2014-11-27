@@ -288,7 +288,7 @@ public class PrintServiceImpl implements IPrintService {
 	@Override
 	public Map<String, Object> getPrintSkuBarcodeData(String sku) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		String skuBarcodeData = BarcodeUtil.createCode128(sku, false, 29d, 0.5d);
+		String skuBarcodeData = BarcodeUtil.createCode128(sku, false, 9d, null);
 		map.put("skuBarcodeData", skuBarcodeData);
 		map.put("sku", sku);
 		return map;

@@ -8,16 +8,16 @@
 <body class="print-page-label" style="font-size: 12px;">
 	<c:forEach var="map"  items="${mapList}">  
 	<div class="label-80-25 change-page mt_1mm">
-			<table style="width: 100%;text-align: center;margin-top: 3mm;">
+			<table style="width: 100%;text-align: center;margin-top: 2mm;margin-left: 4mm;">
 				<tr>
 					<td>
-						<img  style="margin-left: 1mm;" src="data:image/png;base64,<c:out value="${map.skuBarcodeData}"/>">
+						<img  style="margin-left: 1mm;" width="90%" src="data:image/png;base64,<c:out value="${map.skuBarcodeData}"/>">
 					</td>
 				</tr>
 				
 				<tr>
 					<td>
-						<font style="font-size: 18mm;"><c:out value="${map.sku}"/></font>
+						<font style="font-size: 6mm;margin-left: 3mm;"><c:out value="${map.sku}"/></font>
 					</td>
 				 </tr>
 			</table>
