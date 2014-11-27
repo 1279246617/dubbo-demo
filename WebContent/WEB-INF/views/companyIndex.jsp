@@ -120,6 +120,7 @@
 		              		<li><a href=#><i class="icon-check"></i><span class="hidden-tablet">报价管理</span></a></li>
 		              		<li><a href=#><i class="icon-cog"></i><span class="hidden-tablet">仓库设置</span></a></li>
 		              		<li><a href=#><i class="icon-cog"></i><span class="hidden-tablet">货架类型</span></a></li>
+		              		<li><a href="#${baseUrl}/product/listProduct.do"><i class="icon-cog"></i><span class="hidden-tablet">产品管理</span></a></li>
 		                </ul>
 		        </div> 
 		        
@@ -129,6 +130,11 @@
 		              			<li><a href="#" tab_id=""><i class="icon-th-large"></i><span class="hidden-tablet">入库记录报表</span></a></li>
 		              			<li><a href="#" tab_id=""><i class="icon-th-large"></i><span class="hidden-tablet">出库记录报表</span></a></li>
 		              			<li><a href="#" tab_id=""><i class="icon-th-large"></i><span class="hidden-tablet">库存日结报表</span></a></li>
+		                </ul>
+		        </div>
+		        <div title="测试管理" class=" nav-collapse sidebar-nav">
+		                <ul class="nav nav-tabs nav-stacked">
+		              			<li><a href="#${baseUrl}/warehouse/test/test.do" tab_id="test"><i class="icon-file"></i><span class="hidden-tablet">测试</span></a></li>
 		                </ul>
 		        </div> 
     	</div>  
