@@ -3,7 +3,6 @@ package com.coe.wms.controller.warehouse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,8 +20,8 @@ import org.springframework.web.servlet.ModelAndView;
 import com.coe.wms.controller.Application;
 import com.coe.wms.model.warehouse.TrackingNo;
 import com.coe.wms.model.warehouse.Warehouse;
-import com.coe.wms.model.warehouse.storage.record.OutWarehouseRecordItem;
 import com.coe.wms.service.print.IPrintService;
+import com.coe.wms.service.product.IproductService;
 import com.coe.wms.service.storage.IStorageService;
 import com.coe.wms.service.user.IUserService;
 import com.coe.wms.util.DateUtil;
@@ -42,6 +41,9 @@ public class Print {
 
 	@Resource(name = "printService")
 	private IPrintService printService;
+	
+	@Resource(name = "productService")
+	private IproductService productService;
 
 	/**
 	 * 
@@ -214,6 +216,43 @@ public class Print {
 		view.addObject("map", map);
 		view.addObject("timeNow", DateUtil.dateConvertString(new Date(), DateUtil.yyyy_MM_ddHHmmss));
 		view.setViewName("warehouse/print/printCoeLabel");
+		return view;
+	}
+
+	/**
+	 * 
+	 * 打印SKU条码
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/printSkuBarcode", method = RequestMethod.GET)
+	public ModelAndView printSkuBarcode(HttpServletRequest request, HttpServletResponse response, String ids, String sku, Integer quantity) throws IOException {
+		ModelAndView view = new ModelAndView();
+		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
+		if (StringUtil.isNull(ids) && StringUtil.isNull(sku)) {
+			return view;
+		}
+		List<Map<String, Object>> mapList = new ArrayList<Map<String, Object>>();
+		String idArray[] = ids.split(",");
+		for (int i = 0; i < idArray.length; i++) {
+			if (StringUtil.isNull(idArray[i])) {
+				continue;
+			}
+			Long id = Long.valueOf(idArray[i]);
+			//根据产品id,找到sku
+			
+			
+			Map<String, Object> map = printService.getPrintSkuBarcodeData();
+			if (map != null) {
+				mapList.add(map);
+			}
+		}
+		view.addObject("mapList", mapList);
+		view.addObject("timeNow", DateUtil.dateConvertString(new Date(), DateUtil.yyyy_MM_ddHHmmss));
+		view.setViewName("warehouse/print/printSkuBarcode");
 		return view;
 	}
 

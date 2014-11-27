@@ -22,21 +22,27 @@
 	  <div class="toolbar1">
            <form action="${baseUrl}/product/getListProductData.do" id="searchform" name="searchform" method="post">
                <div class="pull-left">
-               		<span class="pull-left" style="width:90px;">
+               		<span class="pull-left" style="width:85px;">
 			       		<a class="btn btn-primary btn-small" onclick="addProduct()" title="添加产品">
 			           		 <i class="icon-plus"></i>添加产品
 			       	 	</a>
 			       	 	<input style=" visibility:hidden;">
 		       	 	</span>
-           			<span class="pull-left" style="width:55px;">
+           			<span class="pull-left" style="width:130px;">
+			       		<a class="btn btn-primary btn-small" onclick="printListSkuBarcode()" title="打印SKU条码">
+			           		 <i class="icon-folder-open"></i>打印列表SKU条码
+			       	 	</a>
+			       	 	<input style=" visibility:hidden;">
+		       	 	</span>
+		       	 	<span class="pull-left" style="width:130px;">
 			       		<a class="btn btn-primary btn-small" onclick="printSkuBarcode()" title="打印SKU条码">
-			           		 <i class="icon-folder-open"></i>打印SKU条码
+			           		 <i class="icon-folder-open"></i>打印指定SKU条码
 			       	 	</a>
 			       	 	<input style=" visibility:hidden;">
 		       	 	</span>
 		    	</div>    
            		
-               <div class="pull-right searchContent">
+               <div class="pull-right ">
                		<span class="pull-left" style="width:150px;">
                			仓库
                			<select style="width:90px;" id="warehouseId" name="warehouseId">
@@ -158,7 +164,7 @@
 	                pageSizeOptions:[10,50,100,500,1000],
 	                usePager: 'true',
 	                sortName: 'id',
-	                checkbox: false,
+	                checkbox: true,
 	                rownumbers:true,
 	                alternatingRow:true,
 	                minColToggle:20,
@@ -184,9 +190,101 @@
    			
    		}
    		
+		function printListSkuBarcode(){
+		    var contentArr = [];
+		    contentArr.push('<div id="changeContent" style="padding:10px;width: 300px;">');
+		    contentArr.push('   <div class="pull-left" style="width: 100%">');
+		    contentArr.push('       <input class="pull-left" name="chooseOption" style="margin-left: 15px;" type="radio" checked="checked" value="selected" id="selected">');
+		    contentArr.push('       <label class="pull-left" style="margin-left: 5px" for="selected">打印选中</label>');
+		    contentArr.push('       <input class="pull-left" name="chooseOption" style="margin-left: 30px;" type="radio" value="all" id="all">');
+		    contentArr.push('       <label class="pull-left" style="margin-left: 5px;" for="all">打印当前页</label>');
+		    contentArr.push('   </div>');
+		    contentArr.push('   <div class="pull-left" style="width: 100%;margin-top:10px;height:35px;">');
+		    contentArr.push('       <label class="pull-left" style="margin-left: 15px;" for="all">每个SKU打印份数</label>');
+		    contentArr.push('       <input class="pull-left" name="quantity" value="1"  style="margin-left: 10px;height:15px;width:80px" type="text" id="quantity">');
+		    contentArr.push('   </div>');
+		    contentArr.push('</div>');
+		    contentArr.push('<div style="color: #ff0000;margin-left: 25px;margin-top:5px;">注：请使用大于等于80*25的标签纸</div>');
+		    var contentHtml = contentArr.join('');
+			$.dialog({
+		  		lock: true,
+		  		max: false,
+		  		min: false,
+		  		title: '打印SKU条码',
+		  	     width: 340,
+		         height: 120,
+		  		content: contentHtml,
+		  		button: [{
+		  			name: '确认',
+		  			callback: function() {
+		  				var  row = grid.getSelectedRows();
+		                var all = parent.$("#all").attr("checked");
+		                if(all){
+		                	row = grid.getRows();	 
+		                }
+			            if(row.length < 1){
+			                parent.$.showShortMessage({msg:"请最少选择一条数据",animate:false,left:"45%"});
+			                return false;
+			            }
+			            var ids = "";
+		            	for ( var i = 0; i < row.length; i++) {
+		            		ids += row[i].id+",";
+						}
+		            	var quantity =  parent.$("#quantity").val();
+		            	if(ids!=""){
+		            		//打印SKU,新建标签页
+		    			    var url = baseUrl+'/warehouse/print/printSkuBarcode.do?ids='+ids+'&quantity='+quantity;
+		      			  	window.open(url);
+		            	}
+		  			}
+		  		},
+		  		{
+		  			name: '取消'
+		  		}]
+		  	})
+		}
+	
 		function printSkuBarcode(){
-			
-		}   	
+		    var contentArr = [];
+		    contentArr.push('<div id="changeContent" style="padding:10px;width: 340px;">');
+		    contentArr.push('   <div class="pull-left" style="width: 100%;margin-top:5px;line-height:10px;">');
+		    contentArr.push('       <label class="pull-left" style="margin-left: 15px;" for="all">打印指定SKU条码</label>');
+		    contentArr.push('       <input class="pull-left" name="sku" style="margin-left: 10px;width:120px;height:15px;" type="text" id="sku">');
+		    contentArr.push('   </div>');
+		    contentArr.push('   <div class="pull-left" style="width: 100%;margin-top:10px;height:35px;">');
+		    contentArr.push('       <label class="pull-left" style="margin-left: 15px;" for="all">每个SKU打印份数</label>');
+		    contentArr.push('       <input class="pull-left" name="quantity" value="1" style="margin-left: 10px;height:15px;width:80px" type="text" id="quantity">');
+		    contentArr.push('   </div>');
+		    contentArr.push('</div>');
+		    contentArr.push('<div style="color: #ff0000;margin-left: 25px;margin-top:5px;">注：请使用大于等于80*25的标签纸</div>');
+		    var contentHtml = contentArr.join('');
+			$.dialog({
+		  		lock: true,
+		  		max: false,
+		  		min: false,
+		  		title: '打印SKU条码',
+		  	     width: 380,
+		         height: 120,
+		  		content: contentHtml,
+		  		button: [{
+		  			name: '确认',
+		  			callback: function() {
+		                var sku = parent.$("#sku").val();
+			            if(sku == null || sku ==""){
+			                parent.$.showShortMessage({msg:"请输入产品SKU",animate:false,left:"45%"});
+			                return false;
+			            }
+			            var quantity =  parent.$("#quantity").val();
+		            	//打印SKU,新建标签页
+	    			    var url = baseUrl+'/warehouse/print/printSkuBarcode.do?sku='+sku+'&quantity='+quantity;
+	      			  	window.open(url);
+		  			}
+		  		},
+		  		{
+		  			name: '取消'
+		  		}]
+		  	})
+		}
    	</script>
 	<script type="text/javascript" src="${baseUrl}/static/jquery/jquery.showMessage.js"></script>
 	<script type="text/javascript" src="${baseUrl}/static/ligerui/ligerUI/js/core/base.js"></script>
