@@ -132,11 +132,6 @@
 		              			<li><a href="#" tab_id=""><i class="icon-th-large"></i><span class="hidden-tablet">库存日结报表</span></a></li>
 		                </ul>
 		        </div>
-		        <div title="测试管理" class=" nav-collapse sidebar-nav">
-		                <ul class="nav nav-tabs nav-stacked">
-		              			<li><a href="#${baseUrl}/warehouse/test/test.do" tab_id="test"><i class="icon-file"></i><span class="hidden-tablet">测试</span></a></li>
-		                </ul>
-		        </div> 
     	</div>  
 	</div>
 	    
