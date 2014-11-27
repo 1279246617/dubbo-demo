@@ -6,6 +6,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
@@ -16,33 +17,45 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.coe.wms.controller.Application;
 import com.coe.wms.model.product.Product;
+import com.coe.wms.model.user.User;
 import com.coe.wms.service.product.IproductService;
+import com.coe.wms.service.storage.IStorageService;
+import com.coe.wms.service.user.IUserService;
 import com.coe.wms.util.GsonUtil;
 import com.coe.wms.util.Pagination;
+import com.coe.wms.util.SessionConstant;
 
 @Controller("product")
 @RequestMapping("/product")
 public class Products {
-	
+
 	Logger logger = Logger.getLogger(Products.class);
-	
+
+	@Resource(name = "storageService")
+	private IStorageService storageService;
+
+	@Resource(name = "userService")
+	private IUserService userService;
+
 	@Resource(name = "productService")
 	private IproductService productService;
 
 	@RequestMapping(value = "/listProduct", method = RequestMethod.GET)
-	public ModelAndView listProduct(HttpServletRequest request,
-			HttpServletResponse response) {
+	public ModelAndView listProduct(HttpServletRequest request, HttpServletResponse response) {
+		HttpSession session = request.getSession();
+		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
 		ModelAndView view = new ModelAndView();
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
+		User user = userService.getUserById(userId);
+		view.addObject("warehouseList", storageService.findAllWarehouse(user.getDefaultWarehouseId()));
 		view.setViewName("warehouse/product/listProduct");
 		return view;
 	}
 
 	@ResponseBody
 	@RequestMapping(value = "/getListProductData", method = RequestMethod.POST)
-	public String getListProductData(HttpServletRequest request, String sortorder,
-			String sortname, Integer page, Integer pagesize) {
-		logger.info("sortorder:"+sortorder +" sortname:"+sortname +" page:"+page +" pagesize:"+pagesize);
+	public String getListProductData(HttpServletRequest request, String sortorder, String sortname, Integer page, Integer pagesize) {
+		logger.info("sortorder:" + sortorder + " sortname:" + sortname + " page:" + page + " pagesize:" + pagesize);
 		Pagination pagination = new Pagination();
 		pagination.curPage = page;
 		pagination.pageSize = pagesize;
@@ -51,8 +64,7 @@ public class Products {
 		Product product = new Product();
 		// 更多参数
 		Map<String, String> moreParam = new HashMap<String, String>();
-		pagination = productService.findAllProduct(product, moreParam,
-				pagination);
+		pagination = productService.findAllProduct(product, moreParam, pagination);
 		Map map = new HashMap();
 		map.put("Rows", pagination.rows);
 		map.put("Total", pagination.total);
