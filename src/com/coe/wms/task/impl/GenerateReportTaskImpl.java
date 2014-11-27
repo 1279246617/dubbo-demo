@@ -485,8 +485,8 @@ public class GenerateReportTaskImpl implements IGenerateReportTask {
 						row[3] = user.getUserName();// 货主
 						row[4] = "";// SKU编码
 						row[5] = inventory.getSku();// 商品条码
-						// 目前无SKU库..只能从出库订单中查找SKU产品名
-						String skuName = outWarehouseOrderItemDao.getSkuNameByCustomerIdAndSku(inventory.getSku(), userIdOfCustomer);
+						// 目前无SKU库..只能从如库订单中查找SKU产品名
+						String skuName = inWarehouseOrderItemDao.getSkuNameByCustomerIdAndSku(inventory.getSku(), userIdOfCustomer);
 						row[6] = skuName;// 商品名称
 						row[7] = "";// 批次号 奶粉必填，其他没有则不用填
 						// 查前日结余
@@ -503,7 +503,6 @@ public class GenerateReportTaskImpl implements IGenerateReportTask {
 						}
 						Long inWarehouseItemSkuQuantity = inWarehouseRecordItemDao.countItemSkuQuantity(startTime, endTime, inventory.getSku(), userIdOfCustomer, warehouseId);
 						row[9] = inWarehouseItemSkuQuantity + "";// 当日收货数量
-
 						// 计算当日发货数量
 						List<Long> orderIds = outWarehouseRecordItemDao.getOutWarehouseOrderIdsByRecordTime(startTime, endTime, userIdOfCustomer, warehouseId);
 						Long outWarehouseItemSkuQuantity = outWarehouseOrderItemDao.sumSkuQuantityByOrderIdAndSku(orderIds, inventory.getSku());
