@@ -27,14 +27,16 @@
 						</div>
 				</div>
 				
-				<div style="height:11mm;width:96mm; border-bottom:1px solid  #000;">
-						<div style="height:12mm;width:57mm; border-right:1px solid  #000;" class="pull-left">
-							<span style="margin-top:2mm;margin-left: 2mm;"  class="pull-left">
-								寄方:<c:out value="${map.additionalSf.senderAddress}"/>
+				<div style="height:12.5mm;width:96mm; border-bottom:1px solid  #000;">
+						<div style="height:12mm;width:57mm; border-right:1px solid  #000;line-height:3mm; font-size:12px; overflow: hidden;" class="pull-left">
+							<span style="margin-top:0mm;margin-left: 0mm;"  class="pull-left">
+								寄方:<c:out value="${map.sender.name}"/>	
+									<c:out value="${map.sender.phoneNumber}"/>	<br>
+									<c:out value="${map.sender.addressLine1}"/>	
 							</span>
 						</div>
 						
-						<div style="height:12mm;width:38mm;" class="pull-right">
+						<div style="height:12mm;width:38mm;line-height:3mm;font-size: 12px;" class="pull-right">
 							<span style="margin-top:2mm;; width: 16mm;"  class="pull-left">
 								原寄地
 							</span>
@@ -44,13 +46,21 @@
 						</div>
 				</div>
 				
-				<div style="height:12mm;width:100%; border-bottom:1mm solid  #000;">
-						<div style="height:12mm;width:57mm; border-right:1px solid  #000;" class="pull-left">
-							<span style="margin-top:3mm;margin-left: 2mm;"  class="pull-left">
-								收方:<b>自取</b>
-							</span>
+				<div style="height:12.5mm;width:100%; border-bottom:1mm solid  #000;">
+						<div style="height:12.5mm;width:57mm; border-right:1px solid  #000;line-height:3.5mm; overflow: hidden;font-size: 12px;" class="pull-left">
+								收方:	<c:out value="${map.receiver.countryName}"/>
+								<c:out value="${map.receiver.stateOrProvince}"/>
+								<c:out value="${map.receiver.city}"/>
+								<c:out value="${map.receiver.addressLine1}"/>
+								<c:out value="${map.receiver.addressLine2}"/>
+								&nbsp;
+								<c:out value="${map.receiver.name}"/>
+								&nbsp;
+								<c:out value="${map.receiver.mobileNumber}"/>
+								&nbsp;
+								<c:out value="${map.receiver.phoneNumber}"/>
 						</div>
-						<div style="height:12mm;width:38mm;" class="pull-right">
+						<div style="height:12.5mm;width:38mm;" class="pull-right">
 							<span style="margin-top:3mm; width: 16mm;"  class="pull-left">
 								目的地
 							</span>
@@ -62,7 +72,7 @@
 					
 				<div style="height:22mm;width:100%; border-bottom:1mm solid  #000;">
 						<div style="height:22mm;width:57mm;text-align: center; border-right:1px solid  #000;" class="pull-left">
-									<img  style="margin-top:3mm;margin-left: 2mm;" src="data:image/png;base64,<c:out value="${map.trackingNoBarcodeData}"/>">
+									<img  style="margin-top:3mm;margin-left: 2mm;width:80%" src="data:image/png;base64,<c:out value="${map.trackingNoBarcodeData}"/>">
 						</div>
 						
 						<div style="height:12mm;width:38mm;" class="pull-left">
@@ -122,18 +132,18 @@
 					</table>
 				</div>	
 				
-				<div style="height:32mm;width:100%; border-bottom:1px solid  #000;">
+				<div style="height:34mm;width:100%; border-bottom:1px solid  #000;">
 					<table  rules="all" style="line-height: 4mm;width:100%;height:31mm;border-color: #000;">
 						<tr>
-							<td rowspan="2" style="width:58mm;height:15.5mm;text-align: center;">
-								<img  style="margin-left: 1mm;" src="data:image/png;base64,<c:out value="${map.trackingNoBarcodeData}"/>">
+							<td rowspan="1" style="width:57mm;height:14mm;text-align: center;">
+								<img  style="margin-left: 1mm;width:80%" src="data:image/png;base64,<c:out value="${map.trackingNoBarcodeData}"/>">
 							</td>
-							<td>寄方</td>
+							<td rowspan="1" style="width:39mm;height:14mm;text-align: left;line-height:3mm; overflow: hidden;">
+									寄方:<c:out value="${map.sender.name}"/><br>	
+									<c:out value="${map.sender.phoneNumber}"/>&nbsp;	
+									<c:out value="${map.sender.addressLine1}"/>			
+							</td>
 						</tr>
-						<tr>
-							<td>518000</td>
-						</tr>
-						
 						<tr>
 							<td rowspan="2" style="width:58mm;height:15.5mm;">
 								收件:
@@ -142,11 +152,12 @@
 								<c:out value="${map.receiver.city}"/>
 								<c:out value="${map.receiver.addressLine1}"/>
 								<c:out value="${map.receiver.addressLine2}"/>
+								&nbsp;
 								<c:out value="${map.receiver.name}"/>
-								&nbsp;&nbsp;&nbsp;&nbsp;
-								<c:out value="${map.receiver.phoneNumber}"/>
-								&nbsp;&nbsp;&nbsp;
+								&nbsp;
 								<c:out value="${map.receiver.mobileNumber}"/>
+								&nbsp;
+								<c:out value="${map.receiver.phoneNumber}"/>
 							</td>
 							<td>订单号</td>
 						</tr>

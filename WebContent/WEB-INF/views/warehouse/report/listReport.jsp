@@ -178,7 +178,47 @@
    		}
    		
    		function downloadBatch(){
-   			
+   		    var contentArr = [];
+		    contentArr.push('<div id="changeContent" style="padding:10px;width: 240px;">');
+		    contentArr.push('   <div class="pull-left" style="width: 100%">');
+		    contentArr.push('       <input class="pull-left" name="chooseOption" style="margin-left: 15px;" type="radio" checked="checked" value="selected" id="selected">');
+		    contentArr.push('       <label class="pull-left" style="margin-left: 5px" for="selected">下载选中</label>');
+		    contentArr.push('       <input class="pull-left" name="chooseOption" style="margin-left: 30px;" type="radio" value="all" id="all">');
+		    contentArr.push('       <label class="pull-left" style="margin-left: 5px;" for="all">下载当前页</label>');
+		    contentArr.push('   </div>');
+		    contentArr.push('</div>');
+		    var contentHtml = contentArr.join('');
+			$.dialog({
+		  		lock: true,
+		  		max: false,
+		  		min: false,
+		  		title: '下载报表',
+		  	     width: 300,
+		         height: 60,
+		  		content: contentHtml,
+		  		button: [{
+		  			name: '确认',
+		  			callback: function() {
+		  				var  row = grid.getSelectedRows();
+		                var all = parent.$("#all").attr("checked");
+		                if(all){
+		                	row = grid.getRows();	 
+		                }
+			            if(row.length < 1){
+			                parent.$.showShortMessage({msg:"请最少选择一条数据",animate:false,left:"45%"});
+			                return false;
+			            }
+			            var ids = "";
+		            	for ( var i = 0; i < row.length; i++) {
+		            		download(row[i].id);//分多次下载,每次一个报表
+		            		ids += row[i].id+",";	//预留批次提交到后台,后台压缩后只返回一个文件
+						}
+		  			}
+		  		},
+		  		{
+		  			name: '取消'
+		  		}]
+		  	})
    		}
    		
    		function diyReport(){
