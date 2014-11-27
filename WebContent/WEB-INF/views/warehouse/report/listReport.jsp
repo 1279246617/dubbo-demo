@@ -22,17 +22,23 @@
 			<div class="toolbar1">
            <form action="${baseUrl}/warehouse/report/getListReportData.do" id="searchform" name="searchform" method="post">
            		<div class="pull-left">
-           			<span class="pull-left" style="width:55px;">
+           			<span class="pull-left" style="width:90px;">
 			       		<a class="btn btn-primary btn-small" onclick="downloadBatch()" title="下载报表">
 			           		 <i class="icon-folder-open"></i>下载报表
 			       	 	</a>
 			       	 	<input style=" visibility:hidden;">
 		       	 	</span>
+		       	 	<span class="pull-left" style="width:55px;">
+			       		<a class="btn btn-primary btn-small" onclick="diyReport()" title="定制报表">
+			           		 <i class="icon-folder-open"></i>定制报表
+			       	 	</a>
+			       	 	<input style=" visibility:hidden;">
+		       	 	</span>
 		    	</div>   
                <div class="pull-right searchContent">
-               		<span class="pull-left" style="width:145px;">
+               		<span class="pull-left" style="width:135px;">
                			仓库
-               			<select style="width:90px;" id="warehouseId" name="warehouseId">
+               			<select style="width:85px;" id="warehouseId" name="warehouseId">
                				<option></option>
 							<c:forEach items="${warehouseList}" var="w" >
 				       	 		<option value="<c:out value='${w.id}'/>">
@@ -41,13 +47,13 @@
 				       		 </c:forEach>
 						</select>
                		</span>
-               		<span class="pull-left" style="width:160px;">
+               		<span class="pull-left" style="width:150px;">
                			客户帐号
-               			<input type="text" name="userLoginName" data-provide="typeahead"  id="userLoginName" style="width:90px;" title="请输入客户登录名" />
+               			<input type="text" name="userLoginName" data-provide="typeahead"  id="userLoginName" style="width:80px;" title="请输入客户登录名" />
                		</span>
-               		<span class="pull-left" style="width:160px;">
+               		<span class="pull-left" style="width:150px;">
                			报表类型
-               			 <select style="width:90px;" id="reportType" name="reportType">
+               			 <select style="width:80px;" id="reportType" name="reportType">
                				<option></option>
 							<c:forEach items="${reportTypeList}" var="r" >
 				       	 		<option value="<c:out value='${r.code}'/>">
@@ -57,9 +63,9 @@
 						</select>
                		</span>
                		
-               		<span class="pull-left" style="width:170px;">
+               		<span class="pull-left" style="width:165px;">
                			报表名称
-               			 <input type="text"   style="width:100px;" name="reportName">
+               			 <input type="text"   style="width:95px;" name="reportName">
                		</span>
                		
                		<span class="pull-left" style="width:175px;">
@@ -67,7 +73,7 @@
 	               		<input type="text"   style="width:120px;" name="createdTimeStart" id="timeStart" value="${sevenDaysAgoStart}" >
                		</span>
                		
-               		<span class="pull-left" style="width:200px;">
+               		<span class="pull-left" style="width:170px;">
                			至	
                			<input type="text"   style="width:120px;" name="createdTimeEnd"  id="timeEnd" >
                		</span>
@@ -168,30 +174,14 @@
    	</script>
    	<script type="text/javascript">
    		function addRemark(id,remark){
-//    		   $.dialog({
-//  	          lock: true,
-//  	          title: '备注',
-//  	          width: '450px',
-//  	          height: '290px',
-//  	          content: 'url:' + baseUrl + '/warehouse/storage/editOutWarehouseRecordRemark.do?id='+id+"&remark="+remark,
-//  	          button: [{
-//  	            name: '确定',
-//  	            callback: function() {
-//  	              var objRemark = this.content.document.getElementById("remark");
-//  	              var remark = $(objRemark).val();
-//  	              $.post(baseUrl + '/warehouse/storage/saveOutWarehouseRecordRemark.do', {
-//  	            	  remark:remark,
-//  	            	  id:id
-//  	              },
-//  	              function(msg) {
-//  	                	grid.loadData();
-//  	              });
-//  	            }
-//  	          }],
-//  	          cancel: true
-//  	        });
+ 		
    		}
+   		
    		function downloadBatch(){
+   			
+   		}
+   		
+   		function diyReport(){
    			
    		}
    		
