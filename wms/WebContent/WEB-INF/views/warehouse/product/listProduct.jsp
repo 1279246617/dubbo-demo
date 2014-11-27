@@ -21,28 +21,43 @@
 <body>
 	  <div class="toolbar1">
            <form action="${baseUrl}/product/getListProductData.do" id="searchform" name="searchform" method="post">
+               <div class="pull-left">
+               		<span class="pull-left" style="width:90px;">
+			       		<a class="btn btn-primary btn-small" onclick="addProduct()" title="添加产品">
+			           		 <i class="icon-folder-open"></i>添加产品
+			       	 	</a>
+			       	 	<input style=" visibility:hidden;">
+		       	 	</span>
+           			<span class="pull-left" style="width:55px;">
+			       		<a class="btn btn-primary btn-small" onclick="printSkuBarcode()" title="打印SKU条码">
+			           		 <i class="icon-folder-open"></i>打印SKU条码
+			       	 	</a>
+			       	 	<input style=" visibility:hidden;">
+		       	 	</span>
+		    	</div>    
+           		
                <div class="pull-right searchContent">
-               		<span class="pull-left" style="width:175px;">
+               		<span class="pull-left" style="width:150px;">
                			仓库
-               			<select style="width:100px;" id="warehouseId" name="warehouseId">
+               			<select style="width:90px;" id="warehouseId" name="warehouseId">
                				<option></option>
-<%-- 							<c:forEach items="${warehouseList}" var="w" > --%>
-<%-- 				       	 		<option value="<c:out value='${w.id}'/>"> --%>
-<%-- 				       	 			<c:out value="${w.id}-${w.warehouseName}"/> --%>
-<!-- 				       		 	</option> -->
-<%-- 				       		 </c:forEach> --%>
+							<c:forEach items="${warehouseList}" var="w" >
+				       	 		<option value="<c:out value='${w.id}'/>">
+				       	 			<c:out value="${w.id}-${w.warehouseName}"/>
+				       		 	</option>
+				       		 </c:forEach>
 						</select>
                		</span>
                		
-               		<span class="pull-left" style="width:175px;">
+               		<span class="pull-left" style="width:165px;">
                			客户帐号
-               			<input type="text" name="userLoginName" data-provide="typeahead"  id="userLoginName" style="width:100px;" title="请输入客户登录名" />
+               			<input type="text" name="userLoginName" data-provide="typeahead"  id="userLoginName" style="width:90px;" title="请输入客户登录名" />
                		</span>
-					<span class="pull-left" style="width:195px;">
-						跟踪单号	
-						<input type="text"  name="trackingNo"  id="trackingNo"   style="width:120px;"/>
+					<span class="pull-left" style="width:190;">
+						<!--  keyword关键字搜索产品sku或产品名-->
+						产品名/SKU	
+						<input type="text"  name="keyword"  id="keyword"   style="width:100px;"/>
 					</span>
-               		
                		<span class="pull-left" style="width:175px;">
                			创建时间
 	               		<input type="text"   style="width:120px;" name="createdTimeStart" id="createdTimeStart" value="${sevenDaysAgoStart}" title="起始创建时间">
@@ -129,12 +144,13 @@
 		                { display: '上次更改时间', name: 'lastUpdateTime', align: 'center',type:'float',width:'12%'},
 		                { display: '创建时间', name: 'createdTime', align: 'center',type:'float',width:'12%'},
 		                { display: '备注', name: 'remark', align: 'center', type: 'float',width:'13%'}
-		                
-// 		                {display: '操作',isSort: false,width: '10%',render: function(row) {
-// 		            		if (!row._editing) {
-// 		            			return "<a href=javascript:addRemark(" + row.id + ",'"+row.remark+"')>备注</a>";
-// 		            		}
-// 		            	}}
+		                {display: '操作',isSort: false,width: '10%',render: function(row) {
+		            		if (!row._editing) {
+		            			var h = "<a href=javascript:updateProduct(" + row.id +")>更新</a>&nbsp;&nbsp;";
+		            			h+= "<a href=javascript:deleteProduct(" + row.id +")>删除</a>";
+		            			return h;
+		            		}
+		            	}}
 	                ],  
 	                dataAction: 'server',
 	                url: baseUrl+'/product/getListProductData.do',
@@ -157,6 +173,21 @@
 	        };		
    	</script>
    	
+   	<script type="text/javascript">
+   		function addProduct(){
+   			
+   		}
+   		function deleteProduct(id){
+   			
+   		}
+   		function updateProduct(id){
+   			
+   		}
+   		
+		function printSkuBarcode(){
+			
+		}   	
+   	</script>
 	<script type="text/javascript" src="${baseUrl}/static/jquery/jquery.showMessage.js"></script>
 	<script type="text/javascript" src="${baseUrl}/static/ligerui/ligerUI/js/core/base.js"></script>
 	<script type="text/javascript" src="${baseUrl}/static/ligerui/ligerUI/js/ligerui.all.js"></script>
