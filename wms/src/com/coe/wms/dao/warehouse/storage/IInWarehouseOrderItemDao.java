@@ -18,5 +18,7 @@ public interface IInWarehouseOrderItemDao {
 			Pagination page);
 
 	public Long countInWarehouseOrderItem(InWarehouseOrderItem inWarehouseOrderItem, Map<String, String> moreParam);
+	
+	public String getSkuNameByCustomerIdAndSku(String sku, Long userIdOfCustomer);
 
 }

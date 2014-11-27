@@ -194,4 +194,19 @@ public class InWarehouseOrderItemDaoImpl implements IInWarehouseOrderItemDao {
 		logger.debug("统计入库订单明细sql:" + sql);
 		return jdbcTemplate.queryForObject(sql, Long.class);
 	}
+
+	@Override
+	public String getSkuNameByCustomerIdAndSku(String sku, Long userIdOfCustomer) {
+		StringBuffer sb = new StringBuffer();
+		sb.append("select sku_name  from w_s_in_warehouse_order_item i inner join w_s_in_warehouse_order r on i.order_id=r.id where 1=1 ");
+		sb.append(" and r.user_id_of_customer = " + userIdOfCustomer);
+		sb.append(" and i.sku = " + sku);
+		Pagination page = new Pagination();
+		page.curPage = 1;
+		page.pageSize = 1;
+		sb.append(page.generatePageSql());
+		String skuName = jdbcTemplate.queryForObject(sb.toString(), String.class);
+		return skuName;
+	}
+
 }
