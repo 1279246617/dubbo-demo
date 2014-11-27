@@ -8,12 +8,14 @@ import com.coe.wms.model.product.ProductType;
 import com.coe.wms.util.Pagination;
 
 public interface IProductDao {
-	public List<Product> findAllProduct(Product product,Map<String, String> moreParam, Pagination page);
-	
-	public Long countProduct(Product product,Map<String, String> moreParam);
-	
+	public List<Product> findAllProduct(Product product, Map<String, String> moreParam, Pagination page);
+
+	public Long countProduct(Product product, Map<String, String> moreParam);
+
 	public ProductType getProductTypeById(Long id);
-	
+
+	public Product getProductById(Long id);
+
 	public long saveProduct(Product product);
-	
+
 }
