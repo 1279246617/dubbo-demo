@@ -11,7 +11,6 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.simple.ParameterizedBeanPropertyRowMapper;
@@ -19,13 +18,11 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import com.alibaba.druid.proxy.jdbc.JdbcParameter.TYPE;
 import com.coe.wms.dao.product.IProductDao;
 import com.coe.wms.model.product.Product;
-import com.coe.wms.model.product.ProductType;
 import com.coe.wms.util.DateUtil;
 import com.coe.wms.util.Pagination;
-import com.google.code.ssm.api.ParameterValueKeyProvider;
+import com.coe.wms.util.StringUtil;
 import com.mysql.jdbc.Statement;
 
 @Repository("productDao")
@@ -40,18 +37,35 @@ public class ProductDaoImpl implements IProductDao {
 	}
 
 	@Override
-	public List<Product> findAllProduct(Product product, Map<String, String> moreParam, Pagination page) {
+	public List<Product> findAllProduct(Product product,
+			Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer(
 				"select id,user_id_of_customer,product_name,product_type_id,sku,warehouse_sku,remark,currency,customs_weight,is_need_batch_no,model,customs_value,origin,last_update_time,created_time,tax_code,volume from p_product where 1=1 ");
+		if (product != null) {
+			if (product.getUserIdOfCustomer() != null) {
+				sb.append(" and user_id_of_customer= '"+product.getUserIdOfCustomer()+"' ");
+			}
+			if(StringUtil.isNotNull(product.getProductName())){
+				sb.append(" and product_name like '%"+product.getProductName()+"%' ");
+			}
+			if(StringUtil.isNotNull(product.getSku())){
+				sb.append(" and product_name like '%"+product.getSku()+"%' ");
+				sb.append(" and sku like '%"+product.getSku()+"%' ");
+			}
+		}
 		if (moreParam != null) {
 			if (moreParam.get("createdTimeStart") != null) {
-				Date date = DateUtil.stringConvertDate(moreParam.get("createdTimeStart"), DateUtil.yyyy_MM_ddHHmmss);
+				Date date = DateUtil.stringConvertDate(
+						moreParam.get("createdTimeStart"),
+						DateUtil.yyyy_MM_ddHHmmss);
 				if (date != null) {
 					sb.append(" and created_time >= " + date.getTime());
 				}
 			}
 			if (moreParam.get("createdTimeEnd") != null) {
-				Date date = DateUtil.stringConvertDate(moreParam.get("createdTimeEnd"), DateUtil.yyyy_MM_ddHHmmss);
+				Date date = DateUtil.stringConvertDate(
+						moreParam.get("createdTimeEnd"),
+						DateUtil.yyyy_MM_ddHHmmss);
 				if (date != null) {
 					sb.append(" and created_time <= " + date.getTime());
 				}
@@ -62,23 +76,18 @@ public class ProductDaoImpl implements IProductDao {
 			sb.append(page.generatePageSql());
 		}
 		String sql = sb.toString();
-		List<Product> prodcutList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(Product.class));
+		logger.info("查询产品信息SQL："+sql);
+		List<Product> prodcutList = jdbcTemplate.query(sql,
+				ParameterizedBeanPropertyRowMapper.newInstance(Product.class));
 		return prodcutList;
 	}
 
 	@Override
 	public Long countProduct(Product product, Map<String, String> moreParam) {
-		StringBuffer sb = new StringBuffer("select count(id) from p_product where 1=1 ");
+		StringBuffer sb = new StringBuffer(
+				"select count(id) from p_product where 1=1 ");
 		String sql = sb.toString();
 		return jdbcTemplate.queryForObject(sql, Long.class);
-	}
-
-	@Override
-	public ProductType getProductTypeById(@ParameterValueKeyProvider Long id) {
-		String sql = "select id,product_type_name from p_product_type ";
-		ProductType productType = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<ProductType>(ProductType.class));
-		logger.debug("从数据库查询产品类型:" + sql + " 参数:主键:" + id);
-		return productType;
 	}
 
 	@Override
@@ -88,8 +97,10 @@ public class ProductDaoImpl implements IProductDao {
 		jdbcTemplate.update(new PreparedStatementCreator() {
 
 			@Override
-			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
-				PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+			public PreparedStatement createPreparedStatement(Connection conn)
+					throws SQLException {
+				PreparedStatement ps = conn.prepareStatement(sql,
+						Statement.RETURN_GENERATED_KEYS);
 				ps.setLong(1, product.getUserIdOfCustomer());
 				ps.setString(2, product.getProductName());
 				ps.setLong(3, product.getProductTypeId());
@@ -129,11 +140,12 @@ public class ProductDaoImpl implements IProductDao {
 		long id = keyHolder.getKey().longValue();
 		return id;
 	}
-
+	
 	@Override
 	public Product getProductById(Long id) {
 		String sql = "select id,user_id_of_customer,product_name,product_type_id,sku,warehouse_sku,remark,currency,customs_weight,is_need_batch_no,model,customs_value,origin,last_update_time,created_time,tax_code,volume from p_product where id= "+ id;
 		Product product = jdbcTemplate.queryForObject(sql, Product.class);
 		return product;
 	}
+	 
 }

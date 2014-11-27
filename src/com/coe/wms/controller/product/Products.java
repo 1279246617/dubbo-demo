@@ -21,9 +21,11 @@ import com.coe.wms.model.user.User;
 import com.coe.wms.service.product.IProductService;
 import com.coe.wms.service.storage.IStorageService;
 import com.coe.wms.service.user.IUserService;
+import com.coe.wms.util.DateUtil;
 import com.coe.wms.util.GsonUtil;
 import com.coe.wms.util.Pagination;
 import com.coe.wms.util.SessionConstant;
+import com.coe.wms.util.StringUtil;
 
 @Controller("product")
 @RequestMapping("/product")
@@ -48,23 +50,38 @@ public class Products {
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
 		User user = userService.getUserById(userId);
 		view.addObject("warehouseList", storageService.findAllWarehouse(user.getDefaultWarehouseId()));
+		view.addObject("sevenDaysAgoStart", DateUtil.getSevenDaysAgoStart());
 		view.setViewName("warehouse/product/listProduct");
 		return view;
 	}
 
 	@ResponseBody
 	@RequestMapping(value = "/getListProductData", method = RequestMethod.POST)
-	public String getListProductData(HttpServletRequest request, String sortorder, String sortname, Integer page, Integer pagesize) {
-		logger.info("sortorder:" + sortorder + " sortname:" + sortname + " page:" + page + " pagesize:" + pagesize);
+	public String getListProductData(HttpServletRequest request, String sortorder, String sortname, Integer page, Integer pagesize,String userLoginName,String keyword, String createdTimeStart, String createdTimeEnd) {
+		logger.info("userLoginName:" + userLoginName + " keyword:" + keyword + " timeStart:" + createdTimeStart +" timeEnd: " +createdTimeEnd);
 		Pagination pagination = new Pagination();
 		pagination.curPage = page;
 		pagination.pageSize = pagesize;
 		pagination.sortName = sortname;
 		pagination.sortOrder = sortorder;
-		Product product = new Product();
+		if (StringUtil.isNotNull(createdTimeStart) && createdTimeStart.contains(",")) {
+			createdTimeStart = createdTimeStart.substring(createdTimeStart.lastIndexOf(",") + 1, createdTimeStart.length());
+		}
+		Product param = new Product();
+		// 客户帐号
+		if (StringUtil.isNotNull(userLoginName)) {
+			Long userIdOfCustomer = userService.findUserIdByLoginName(userLoginName);
+			param.setUserIdOfCustomer(userIdOfCustomer);
+			logger.info("userIdOfCustomer:"+userIdOfCustomer);
+		}
+		param.setSku(keyword);
+		param.setProductName(keyword);
 		// 更多参数
 		Map<String, String> moreParam = new HashMap<String, String>();
-		pagination = productService.findAllProduct(product, moreParam, pagination);
+		moreParam.put("createdTimeStart", createdTimeStart);
+		moreParam.put("createdTimeEnd", createdTimeEnd);
+		
+		pagination = productService.findAllProduct(param, moreParam, pagination);
 		Map map = new HashMap();
 		map.put("Rows", pagination.rows);
 		map.put("Total", pagination.total);
