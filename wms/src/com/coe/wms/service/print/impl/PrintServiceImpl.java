@@ -38,6 +38,7 @@ import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderAdditionalSf;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderItem;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderItemShelf;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderReceiver;
+import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderSender;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus.OutWarehouseOrderStatusCode;
 import com.coe.wms.model.warehouse.storage.record.OutWarehouseRecord;
 import com.coe.wms.model.warehouse.storage.record.OutWarehouseRecordItem;
@@ -175,20 +176,23 @@ public class PrintServiceImpl implements IPrintService {
 			return null;
 		}
 		OutWarehouseOrderReceiver receiver = outWarehouseOrderReceiverDao.getOutWarehouseOrderReceiverByOrderId(outWarehouseOrderId);
+		OutWarehouseOrderSender sender = outWarehouseOrderSenderDao.getOutWarehouseOrderSenderByOrderId(outWarehouseOrderId);
 		OutWarehouseOrderItem itemParam = new OutWarehouseOrderItem();
 		itemParam.setOutWarehouseOrderId(outWarehouseOrderId);
 		List<OutWarehouseOrderItem> items = outWarehouseOrderItemDao.findOutWarehouseOrderItem(itemParam, null, null);
 		// 根据批次排序,找到货位
-
 		// 顺丰label 内容
 		OutWarehouseOrderAdditionalSf additionalSf = outWarehouseOrderAdditionalSfDao.getOutWarehouseOrderAdditionalSfByOrderId(outWarehouseOrderId);
 		Map<String, Object> map = new HashMap<String, Object>();
 		if (additionalSf != null) {
 			map.put("additionalSf", additionalSf);
 		}
+		if (sender != null) {
+			map.put("sender", sender);
+		}
 		// 创建条码
 		String trackingNo = outWarehouseOrder.getTrackingNo();
-		String trackingNoBarcodeData = BarcodeUtil.createCode128(trackingNo, true, 15d, null);
+		String trackingNoBarcodeData = BarcodeUtil.createCode128(trackingNo, true, 11d, null);
 		map.put("trackingNoBarcodeData", trackingNoBarcodeData);
 		// 清单号 (出库订单主键)
 		map.put("outWarehouseOrderId", String.valueOf(outWarehouseOrder.getId()));
@@ -284,7 +288,7 @@ public class PrintServiceImpl implements IPrintService {
 		map.put("shipdate", DateUtil.dateConvertString(new Date(outWarehouseRecord.getCreatedTime()), DateUtil.yyyy_MM_dd));
 		return map;
 	}
-	
+
 	@Override
 	public Map<String, Object> getPrintSkuBarcodeData(String sku) {
 		Map<String, Object> map = new HashMap<String, Object>();
