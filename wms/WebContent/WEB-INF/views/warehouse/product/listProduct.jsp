@@ -159,7 +159,7 @@
 		            	}}
 	                ],  
 	                dataAction: 'server',
-	                url: baseUrl+'/product/getListProductData.do',
+	                url: baseUrl+'/product/getListProductData.do?createdTimeStart=${sevenDaysAgoStart}',
 	                pageSize: 50, 
 	                pageSizeOptions:[10,50,100,500,1000],
 	                usePager: 'true',
