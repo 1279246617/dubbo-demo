@@ -130,12 +130,56 @@ public class BarcodeUtil {
 			_barcode.setExtraTextPosition(BarcodeExtraTextPosition.above);
 			_barcode.setCheckCharShowMode(CheckCharShowMode.hide);
 			_barcode.setOrientation(BarcodeOrientation.bottomFacing);
-//			_barcode.setBarTypeWidth(1, 3);
+			// _barcode.setBarTypeWidth(1, 3);
 			int width = _barcode.getModuleCount();
 			int barcodeHeight = height.intValue();
 			int scale = 1;
 			bos = new ByteArrayOutputStream();
 			_barcode.makeSimpleImage(Barcode.BARCODE_PNG, width, barcodeHeight, false, scale, null, bos);
+			byte[] data = bos.toByteArray();
+			// 转成字符串,img :src:data
+			BASE64Encoder encoder = new BASE64Encoder();
+			return encoder.encode(data);
+		} catch (Exception e) {
+			logger.error("生成条码 barcodeText:" + barcodeText + "出现异常:" + e, e);
+		} finally {
+			if (bos != null) {
+				try {
+					bos.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * 
+	 * @param barcodeText
+	 * @param isShowBarcodeText
+	 * @param height
+	 * @return
+	 */
+	public static String createCode128Auto(String barcodeText, boolean isShowBarcodeText, Double height) {
+		ByteArrayOutputStream bos = null;
+		try {
+			Barcode barcode = new Barcode(Barcode.BCT_CODE128AUTO);
+			barcode.setData(barcodeText);
+			if (isShowBarcodeText) {
+				barcode.setTextAlign(BarcodeTextPosition.below);
+			} else {
+				barcode.setTextAlign(BarcodeTextPosition.notShown);
+			}
+			barcode.setExtraTextPosition(BarcodeExtraTextPosition.above);
+			barcode.setCheckCharShowMode(CheckCharShowMode.hide);
+			barcode.setOrientation(BarcodeOrientation.bottomFacing);
+//			 _barcode.setBarTypeWidth(1, 3);
+			int width = barcode.getModuleCount();
+			int barcodeHeight = height.intValue();
+			int scale = 1;
+			bos = new ByteArrayOutputStream();
+			barcode.makeSimpleImage(Barcode.BARCODE_PNG, width, barcodeHeight, false, scale, null, bos);
 			byte[] data = bos.toByteArray();
 			// 转成字符串,img :src:data
 			BASE64Encoder encoder = new BASE64Encoder();
