@@ -51,6 +51,28 @@ public class Reports {
 	private IUserService userService;
 
 	/**
+	 * 自定义报表
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/diyReport", method = RequestMethod.GET)
+	public ModelAndView diyReport(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		ModelAndView view = new ModelAndView();
+		HttpSession session = request.getSession();
+		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
+		User user = userService.getUserById(userId);
+		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
+		view.addObject("warehouseList", storageService.findAllWarehouse(user.getDefaultWarehouseId()));
+		view.addObject("reportTypeList", reportService.findAllReportType());
+		view.addObject("todayStart", DateUtil.getTodayStart());
+		view.setViewName("warehouse/report/diyReport");
+		return view;
+	}
+
+	/**
 	 * 下载报表
 	 * 
 	 * @param request

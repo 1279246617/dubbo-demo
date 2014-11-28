@@ -123,7 +123,7 @@ public class Storage {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/checkOutWarehouseOrder")
-	public String checkOutWarehouseOrder(HttpServletRequest request, String orderIds, Integer checkResult) throws IOException {
+	public synchronized String checkOutWarehouseOrder(HttpServletRequest request, String orderIds, Integer checkResult) throws IOException {
 		HttpSession session = request.getSession();
 		// 当前操作员
 		Long userIdOfOperator = (Long) session.getAttribute(SessionConstant.USER_ID);
@@ -507,7 +507,7 @@ public class Storage {
 		List<OutWarehouseOrderItem> outWarehouseOrderItemList = storageService.getOutWarehouseOrderItem(orderId);
 		return GsonUtil.toJson(outWarehouseOrderItemList);
 	}
-	
+
 	/**
 	 * 入库订单收货
 	 * 
