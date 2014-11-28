@@ -18,8 +18,10 @@ import com.coe.wms.model.product.Product;
 import com.coe.wms.model.product.ProductType;
 import com.coe.wms.model.user.User;
 import com.coe.wms.service.product.IProductService;
+import com.coe.wms.util.Constant;
 import com.coe.wms.util.DateUtil;
 import com.coe.wms.util.Pagination;
+import com.coe.wms.util.StringUtil;
 
 @Service("productService")
 public class ProductServiceImpl implements IProductService {
@@ -37,9 +39,9 @@ public class ProductServiceImpl implements IProductService {
 	private IUserDao userDao;
 
 	@Override
-	public Pagination findAllProduct(Product product,
+	public Pagination findProduct(Product product,
 			Map<String, String> moreParam, Pagination page) {
-		List<Product> productList = productDao.findAllProduct(product,
+		List<Product> productList = productDao.findProduct(product,
 				moreParam, page);
 		List<Object> list = new ArrayList<Object>();
 		for (Product pro : productList) {
@@ -77,9 +79,32 @@ public class ProductServiceImpl implements IProductService {
 		page.rows = list;
 		return page;
 	}
-	
+
 	@Override
 	public Product getProductById(Long id) {
 		return productDao.getProductById(id);
+	}
+
+	@Override
+	public Map<String, String> deleteProductById(Long productId) {
+		Map<String, String> map = new HashMap<String, String>();
+		map.put(Constant.STATUS, Constant.FAIL);
+		if (productId == null) {
+			map.put(Constant.MESSAGE, "产品id为空，无法处理");
+			return map;
+		}
+		int updateCount = productDao.deleteProductById(productId);
+		if (updateCount == 1) {
+			map.put(Constant.STATUS, Constant.SUCCESS);
+			map.put(Constant.MESSAGE, "删除产品成功");
+		} else {
+			map.put(Constant.MESSAGE, "执行数据库更新失败，删除失败");
+		}
+		return map;
+	}
+
+	@Override
+	public int updateProductById(Product product) {
+		return productDao.updateProductById(product);
 	}
 }

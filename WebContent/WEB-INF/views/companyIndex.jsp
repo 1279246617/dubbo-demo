@@ -120,7 +120,7 @@
 		              		<li><a href=#><i class="icon-check"></i><span class="hidden-tablet">报价管理</span></a></li>
 		              		<li><a href=#><i class="icon-cog"></i><span class="hidden-tablet">仓库设置</span></a></li>
 		              		<li><a href=#><i class="icon-cog"></i><span class="hidden-tablet">货架类型</span></a></li>
-		              		<li><a href="#${baseUrl}/product/listProduct.do"><i class="icon-cog"></i><span class="hidden-tablet">产品管理</span></a></li>
+		              		<li><a href="#${baseUrl}/products/listProduct.do"><i class="icon-cog"></i><span class="hidden-tablet">产品管理</span></a></li>
 		                </ul>
 		        </div> 
 		        

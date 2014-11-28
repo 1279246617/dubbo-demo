@@ -20,7 +20,7 @@
 </head>
 <body>
 	  <div class="toolbar1">
-           <form action="${baseUrl}/product/getListProductData.do" id="searchform" name="searchform" method="post">
+           <form action="${baseUrl}/products/getListProductData.do" id="searchform" name="searchform" method="post">
                <div class="pull-left">
                		<span class="pull-left" style="width:85px;">
 			       		<a class="btn btn-primary btn-small" onclick="addProduct()" title="添加产品">
@@ -147,7 +147,7 @@
 		            	}}
 	                ],  
 	                dataAction: 'server',
-	                url: baseUrl+'/product/getListProductData.do?createdTimeStart=${sevenDaysAgoStart}',
+	                url: baseUrl+'/products/getListProductData.do?createdTimeStart=${sevenDaysAgoStart}',
 	                pageSize: 50, 
 	                pageSizeOptions:[10,50,100,500,1000],
 	                usePager: 'true',
@@ -169,10 +169,87 @@
    	
    	<script type="text/javascript">
    		function addProduct(){
-   			
+   			$.dialog({
+   	          lock: true,
+   	          title: '添加产品',
+   	          width: '800px',
+   	          height: '600px',
+   	          content: 'url:' + baseUrl + '/products/addProduct.do',
+   	          button: [{
+   	            name: '确定',
+   	            callback: function() {
+// 	     	             var warehouseId = this.content.$("#warehouseId").val();
+// 	     	             //货架类型 G/B
+// 	     	             var shelfType = this.content.$("#shelfType").val();
+// 	     	             var shelfTypeName = this.content.$("#shelfTypeName").val();
+// 	     	             var shelfNoStart = this.content.$("#shelfNoStart").val();
+// 	     	         	 var shelfNoEnd = this.content.$("#shelfNoEnd").val();
+// 	     	          	 var start = this.content.$("#start").val();
+// 	     	           	 var end = this.content.$("#end").val();
+// 	     	           	 var rows = this.content.$("#rows").val();
+// 	     	           	 var cols= this.content.$("#cols").val();
+// //	     	           	parent.$.showShortMessage({msg:"创建货架可能需要比较长时间,请耐心等待!",animate:false,left:"45%"});
+// 	     	           	$("#addButton").attr("disabled","disabled");
+// 	     	         	 var remark = this.content.$("#remark").val();
+// 	     	             $.post(baseUrl + '/warehouse/shelves/saveAddShelf.do', {
+// 	     	            	warehouseId:warehouseId,
+// 	     	            	shelfTypeName:shelfTypeName,
+// 	     	            	shelfType:shelfType,
+// 	     	            	start:start,
+// 	     	            	end:end,
+// 	     	            	rows:rows,
+// 	     	            	cols:cols,
+// 	     	            	shelfNoStart:shelfNoStart,
+// 	     	            	shelfNoEnd:shelfNoEnd,
+// 	     	            	remark:remark
+// 	     	             },
+// 	     	             function(msg) {
+// 	     	            	if(msg.status == '1'){
+// 	     	            		parent.$.showDialogMessage(msg.message,null,null);
+// 	     	            		gridShelf.loadData();	 //保存成功,重新加载货架,但不重新加载货位,避免打乱货位界面
+	     	            		
+// 	     	            	}
+// 							if(msg.status =='0'){
+// 								parent.$.showDialogMessage(msg.message,null,null);
+// 							}
+// 							$("#addButton").removeAttr("disabled");
+// 	     	             },"json");
+   	            }
+   	          }],
+   	          cancel: true
+   	        });   			
    		}
    		function deleteProduct(id){
-   			
+   		 var contentArr = [];
+		    contentArr.push('<div id="changeContent" style="padding:10px;width: 340px;">');
+		    contentArr.push('<div style="color: #ff0000;margin-left: 25px;margin-top:5px;">是否确认删除？</div>');
+		    contentArr.push('</div>');
+		    var contentHtml = contentArr.join('');
+			$.dialog({
+		  		lock: true,
+		  		max: false,
+		  		min: false,
+		  		title: '确认删除',
+		  	     width: 380,
+		         height: 120,
+		  		content: contentHtml,
+		  		button: [{
+		  			name: '确认',
+		  			callback: function() {
+		  				$.post(baseUrl + '/products/deleteProductById.do',{id:id},function(msg){
+		        			if(msg.status == "1"){
+		        				parent.$.showShortMessage({msg:msg.message,animate:false,left:"43%"});
+		        				grid.loadData();	
+		        			}else{
+		        				parent.$.showShortMessage({msg:msg.message,animate:false,left:"43%"});
+		        			}
+		                },"json");
+		  			}
+		  		},
+		  		{
+		  			name: '取消'
+		  		}]
+		  	})
    		}
    		function updateProduct(id){
    			
@@ -221,7 +298,7 @@
 		            	var quantity =  parent.$("#quantity").val();
 		            	if(ids!=""){
 		            		//打印SKU,新建标签页
-		    			    var url = baseUrl+'/warehouse/print/printSkuBarcode.do?ids='+ids+'&quantity='+quantity;
+		    			    var url = baseUrl+'/products/print/printSkuBarcode.do?ids='+ids+'&quantity='+quantity;
 		      			  	window.open(url);
 		            	}
 		  			}
