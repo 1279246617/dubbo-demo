@@ -158,7 +158,8 @@
 	                pageSize: 50, 
 	                pageSizeOptions:[10,50,100,500,1000],
 	                usePager: 'true',
-	                sortName: 'id',
+	                sortName: 'created_time',
+	                sortOrder:'desc',
 	                width: '100%',
 	                height: '99%',
 	                checkbox: true,
@@ -225,25 +226,48 @@
    		   $.dialog({
   	          lock: true,
   	          title: '定制报表',
-  	          width: '550px',
-  	          height: '390px',
+  	          width: '500px',
+  	          height: '330px',
   	          content: 'url:' + baseUrl + '/warehouse/report/diyReport.do',
   	          button: [{
   	            name: '确定',
   	            callback: function() {
 	     	             var warehouseId = this.content.$("#warehouseId").val();
-	     	             
+	     	             var reportName =  this.content.$("#reportName").val();
+	     	             var reportType =  this.content.$("#reportType").val();
+	     	           	 var userLoginName =  this.content.$("#userLoginName").val();
+	     	             var inWarehouseTimeStart =  this.content.$("#inWarehouseTimeStart").val();
+		     	         var inWarehouseTimeEnd =  this.content.$("#inWarehouseTimeEnd").val();
+	     	          	 var outWarehouseTimeStart =  this.content.$("#outWarehouseTimeStart").val();
+	     	          	 var outWarehouseTimeEnd =  this.content.$("#outWarehouseTimeEnd").val();
+	     	          	 if(reportName =='非必填,建议由系统生成'){
+	     	          		 reportName = '';
+	     	          	 }
+	     	          	 if(userLoginName ==''){
+	     	          	    parent.$.showShortMessage({msg:"请输入客户帐号",animate:false,left:"45%"});
+	     	          		return false;
+		     	         }
+	     	          	 
 	     	             $.post(baseUrl + '/warehouse/report/saveDiyReport.do', {
 	     	            	warehouseId:warehouseId,
-	     	            	shelfTypeName:shelfTypeName
+	     	            	reportName:reportName,
+	     	            	reportType:reportType,
+	     	            	userLoginName:userLoginName,
+	     	            	inWarehouseTimeStart:inWarehouseTimeStart,
+	     	            	inWarehouseTimeEnd:inWarehouseTimeEnd,
+	     	            	outWarehouseTimeStart:outWarehouseTimeStart,
+	     	            	outWarehouseTimeEnd:outWarehouseTimeEnd
 	     	             },
 	     	             function(msg) {
 	     	            	if(msg.status == '1'){
-	     	            		parent.$.showDialogMessage(msg.message,null,null);
-	     	            		gridShelf.loadData();	
+	     	            		parent.$.showShortMessage({msg:msg.message,animate:false,left:"45%"});
+	     	            		//生成报表成功,生成下载连接
+	     	            		download(msg.reportId);
+	     	            		grid.loadData();	
 	     	            	}
 							if(msg.status =='0'){
 								parent.$.showDialogMessage(msg.message,null,null);
+								return false;
 							}
 	     	             },"json");
   	            }

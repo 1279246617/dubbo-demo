@@ -22,10 +22,12 @@ import org.springframework.web.servlet.ModelAndView;
 import com.coe.wms.controller.Application;
 import com.coe.wms.model.user.User;
 import com.coe.wms.model.warehouse.report.Report;
+import com.coe.wms.model.warehouse.report.ReportType.ReportTypeCode;
 import com.coe.wms.service.inventory.IItemInventoryService;
 import com.coe.wms.service.report.IReportService;
 import com.coe.wms.service.storage.IStorageService;
 import com.coe.wms.service.user.IUserService;
+import com.coe.wms.util.Constant;
 import com.coe.wms.util.DateUtil;
 import com.coe.wms.util.GsonUtil;
 import com.coe.wms.util.Pagination;
@@ -164,5 +166,35 @@ public class Reports {
 				os.close();
 			}
 		}
+	}
+
+	/**
+	 * 获取报表数据
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/saveDiyReport")
+	public String saveDiyReport(HttpServletRequest request, String userLoginName, Long warehouseId, String reportType, String reportName, String inWarehouseTimeStart, String inWarehouseTimeEnd, String outWarehouseTimeStart, String outWarehouseTimeEnd)
+			throws IOException {
+		HttpSession session = request.getSession();
+		// 当前操作员
+		Long userIdOfOperator = (Long) session.getAttribute(SessionConstant.USER_ID);
+		// 检查参数
+		Map<String, String> map = reportService.checkAddReport(userLoginName, warehouseId, reportType, reportName, inWarehouseTimeStart, inWarehouseTimeEnd, outWarehouseTimeStart, outWarehouseTimeEnd, userIdOfOperator);
+		if (StringUtil.isEqual(map.get(Constant.STATUS), Constant.FAIL)) {
+			return GsonUtil.toJson(map);
+		}
+		Long userIdOfCustomer = userService.findUserIdByLoginName(userLoginName);
+		if (StringUtil.isEqual(reportType, ReportTypeCode.IN_WAREHOUSE_REPORT)) {
+			map = reportService.addInWarehouseReport(userIdOfCustomer, warehouseId, reportName, inWarehouseTimeStart, inWarehouseTimeEnd);
+		}
+		if (StringUtil.isEqual(reportType, ReportTypeCode.OUT_WAREHOUSE_REPORT)) {
+			map = reportService.addOutWarehouseReport(userIdOfCustomer, warehouseId, reportName, outWarehouseTimeStart, outWarehouseTimeEnd);
+		}
+		return GsonUtil.toJson(map);
 	}
 }
