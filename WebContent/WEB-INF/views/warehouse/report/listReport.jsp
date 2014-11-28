@@ -222,7 +222,34 @@
    		}
    		
    		function diyReport(){
-   			
+   		   $.dialog({
+  	          lock: true,
+  	          title: '定制报表',
+  	          width: '550px',
+  	          height: '390px',
+  	          content: 'url:' + baseUrl + '/warehouse/report/diyReport.do',
+  	          button: [{
+  	            name: '确定',
+  	            callback: function() {
+	     	             var warehouseId = this.content.$("#warehouseId").val();
+	     	             
+	     	             $.post(baseUrl + '/warehouse/report/saveDiyReport.do', {
+	     	            	warehouseId:warehouseId,
+	     	            	shelfTypeName:shelfTypeName
+	     	             },
+	     	             function(msg) {
+	     	            	if(msg.status == '1'){
+	     	            		parent.$.showDialogMessage(msg.message,null,null);
+	     	            		gridShelf.loadData();	
+	     	            	}
+							if(msg.status =='0'){
+								parent.$.showDialogMessage(msg.message,null,null);
+							}
+	     	             },"json");
+  	            }
+  	          }],
+  	          cancel: true
+  	        });
    		}
    		
    		//下载
