@@ -27,8 +27,8 @@ import com.coe.wms.util.Pagination;
 import com.coe.wms.util.SessionConstant;
 import com.coe.wms.util.StringUtil;
 
-@Controller("product")
-@RequestMapping("/product")
+@Controller("products")
+@RequestMapping("/products")
 public class Products {
 
 	Logger logger = Logger.getLogger(Products.class);
@@ -58,7 +58,6 @@ public class Products {
 	@ResponseBody
 	@RequestMapping(value = "/getListProductData", method = RequestMethod.POST)
 	public String getListProductData(HttpServletRequest request, String sortorder, String sortname, Integer page, Integer pagesize,String userLoginName,String keyword, String createdTimeStart, String createdTimeEnd) {
-		logger.info("userLoginName:" + userLoginName + " keyword:" + keyword + " timeStart:" + createdTimeStart +" timeEnd: " +createdTimeEnd);
 		Pagination pagination = new Pagination();
 		pagination.curPage = page;
 		pagination.pageSize = pagesize;
@@ -81,11 +80,47 @@ public class Products {
 		moreParam.put("createdTimeStart", createdTimeStart);
 		moreParam.put("createdTimeEnd", createdTimeEnd);
 		
-		pagination = productService.findAllProduct(param, moreParam, pagination);
+		pagination = productService.findProduct(param, moreParam, pagination);
 		Map map = new HashMap();
 		map.put("Rows", pagination.rows);
 		map.put("Total", pagination.total);
 		return GsonUtil.toJson(map);
 	}
+	
+	@ResponseBody
+	@RequestMapping(value="/deleteProductById",method=RequestMethod.POST)
+	public String deleteProductById(HttpServletRequest request,Long id){
+		logger.info("产品ID:"+id);
+		Map<String, String> map = productService.deleteProductById(id);
+		return GsonUtil.toJson(map);
+	}
 
+	
+	/**
+	 * 
+	 * @param request
+	 * @param response
+	 * @return 显示选中跟新产品
+	 */
+	@RequestMapping(value = "/getProductById", method = RequestMethod.GET)
+	public ModelAndView getProductById(HttpServletRequest request, HttpServletResponse response){
+		ModelAndView view = new ModelAndView();
+		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
+		view.setViewName("");
+		return view;
+	}
+	
+	@ResponseBody
+	@RequestMapping(value="/updateProductById",method=RequestMethod.POST)
+	public String updateProductById(){
+		return null;
+	}
+	
+	@RequestMapping(value = "/addProduct", method = RequestMethod.GET)
+	public ModelAndView addProduct(HttpServletRequest request, HttpServletResponse response){
+		ModelAndView view = new ModelAndView();
+		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
+		view.setViewName("warehouse/product/addProduct");
+		return view;
+	}
 }

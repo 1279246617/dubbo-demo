@@ -37,7 +37,7 @@ public class ProductDaoImpl implements IProductDao {
 	}
 
 	@Override
-	public List<Product> findAllProduct(Product product,
+	public List<Product> findProduct(Product product,
 			Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer(
 				"select id,user_id_of_customer,product_name,product_type_id,sku,warehouse_sku,remark,currency,customs_weight,is_need_batch_no,model,customs_value,origin,last_update_time,created_time,tax_code,volume from p_product where 1=1 ");
@@ -50,6 +50,9 @@ public class ProductDaoImpl implements IProductDao {
 				sb.append(" and product_name like '%" + product.getSku()
 						+ "%' ");
 				sb.append(" or sku like '%" + product.getSku() + "%' ");
+			}
+			if (product.getId() != null) {
+				sb.append(" and id= '" + product.getId() + "' ");
 			}
 		}
 		if (moreParam != null) {
@@ -146,6 +149,28 @@ public class ProductDaoImpl implements IProductDao {
 				+ id;
 		Product product = jdbcTemplate.queryForObject(sql, Product.class);
 		return product;
+	}
+
+	@Override
+	public int deleteProductById(Long id) {
+		String sql = "delete from p_product where id=?";
+		int count = jdbcTemplate.update(sql, id);
+		return count;
+	}
+
+	@Override
+	public int updateProductById(Product product) {
+		String sql = "update p_product set user_id_of_customer=?,product_name=?,product_type_id=?,sku=?,warehouse_sku=?,remark=?,currency=?,customs_weight=?,is_need_batch_no=?,model=?,customs_value=?,origin=?,last_update_time=?,tax_code=?,volume=? where id=?";
+		logger.info("更新产品SQL："+sql);
+		int count = jdbcTemplate.update(sql, product.getUserIdOfCustomer(),
+				product.getProductName(), product.getProductTypeId(),
+				product.getSku(), product.getWarehouseSku(),
+				product.getRemark(), product.getCurrency(),
+				product.getCustomsWeight(), product.getIsNeedBatchNo(),
+				product.getModel(), product.getCustomsValue(),
+				product.getOrigin(), product.getLastUpdateTime(),
+				product.getTaxCode(), product.getVolume(), product.getId());
+		return count;
 	}
 
 }
