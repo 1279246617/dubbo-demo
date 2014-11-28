@@ -40,4 +40,17 @@ public interface IReportService {
 	 * @throws ServiceException
 	 */
 	public Report getReportById(Long reportId) throws ServiceException;
+
+	/**
+	 * 检查保存报表
+	 * 
+	 * @return
+	 * @throws ServiceException
+	 */
+	public Map<String, String> checkAddReport(String userLoginNameOfCustomer, Long warehouseId, String reportType, String reportName, String inWarehouseTimeStart, String inWarehouseTimeEnd, String outWarehouseTimeStart, String outWarehouseTimeEnd,
+			Long userIdOfOperator) throws ServiceException;
+
+	public Map<String, String> addInWarehouseReport(Long userIdOfCustomer, Long warehouseId, String reportName, String inWarehouseTimeStart, String inWarehouseTimeEnd);
+	
+	public Map<String, String> addOutWarehouseReport(Long userIdOfCustomer, Long warehouseId, String reportName, String outWarehouseTimeStart, String outWarehouseTimeEnd);
 }
