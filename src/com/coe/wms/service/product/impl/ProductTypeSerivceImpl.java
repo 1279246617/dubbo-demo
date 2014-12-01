@@ -19,4 +19,9 @@ public class ProductTypeSerivceImpl implements IProductTypeService {
 		return productTypeDao.getProductTypeById(typeId);
 	}
 
+	@Override
+	public Long getProductTypeIdByName(String productType) {
+		return productTypeDao.getProductTypeIdByName(productType);
+	}
+
 }

@@ -14,4 +14,6 @@ public interface IProductService {
 	public Map<String, String> deleteProductById(Long productId);
 	
 	public int updateProductById(Product product);
+	
+	public Map<String, String> saveAddProduct(String productName,Long productTypeId,Long userIdOfCustomer,String isNeedBatchNo,String sku,String warehouseSku,String model,Double volume,Double customsWeight,String currency,Double customsValue,String taxCode,String origin,String remark);
 }

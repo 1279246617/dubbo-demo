@@ -178,42 +178,47 @@
    	          button: [{
    	            name: '确定',
    	            callback: function() {
-// 	     	             var warehouseId = this.content.$("#warehouseId").val();
-// 	     	             //货架类型 G/B
-// 	     	             var shelfType = this.content.$("#shelfType").val();
-// 	     	             var shelfTypeName = this.content.$("#shelfTypeName").val();
-// 	     	             var shelfNoStart = this.content.$("#shelfNoStart").val();
-// 	     	         	 var shelfNoEnd = this.content.$("#shelfNoEnd").val();
-// 	     	          	 var start = this.content.$("#start").val();
-// 	     	           	 var end = this.content.$("#end").val();
-// 	     	           	 var rows = this.content.$("#rows").val();
-// 	     	           	 var cols= this.content.$("#cols").val();
-// //	     	           	parent.$.showShortMessage({msg:"创建货架可能需要比较长时间,请耐心等待!",animate:false,left:"45%"});
-// 	     	           	$("#addButton").attr("disabled","disabled");
-// 	     	         	 var remark = this.content.$("#remark").val();
-// 	     	             $.post(baseUrl + '/warehouse/shelves/saveAddShelf.do', {
-// 	     	            	warehouseId:warehouseId,
-// 	     	            	shelfTypeName:shelfTypeName,
-// 	     	            	shelfType:shelfType,
-// 	     	            	start:start,
-// 	     	            	end:end,
-// 	     	            	rows:rows,
-// 	     	            	cols:cols,
-// 	     	            	shelfNoStart:shelfNoStart,
-// 	     	            	shelfNoEnd:shelfNoEnd,
-// 	     	            	remark:remark
-// 	     	             },
-// 	     	             function(msg) {
-// 	     	            	if(msg.status == '1'){
-// 	     	            		parent.$.showDialogMessage(msg.message,null,null);
-// 	     	            		gridShelf.loadData();	 //保存成功,重新加载货架,但不重新加载货位,避免打乱货位界面
+   	            		var productName = this.content.$("#productName").val();
+   	            		var productTypeName = this.content.$("#productTypeName").val();
+   	            		var userIdOfCustomer = this.content.$("#userIdOfCustomer").val();
+   	            		var isNeedBatchNo = this.content.$("#isNeedBatchNo").val();
+   	            		var sku = this.content.$("#sku").val();
+   	            		var warehouseSku = this.content.$("#warehouseSku").val();
+   	            		var model = this.content.$("#model").val();
+   	            		var volume = this.content.$("#volume").val();
+   	            		var customsWeight = this.content.$("#customsWeight").val();
+   	            		var currency = this.content.$("#currency").val();
+   	            		var customsValue = this.content.$("#customsValue").val();
+   	            		var taxCode = this.content.$("#taxCode").val();
+   	            		var origin = this.content.$("#origin").val();
+   	            		var remark = this.content.$("#remark").val();
+   	            		 
+	     	             $.post(baseUrl + '/products/saveAddProduct.do', {
+	     	            	productName:productName,
+	     	            	productTypeName:productTypeName,
+	     	            	userIdOfCustomer:userIdOfCustomer,
+	     	            	isNeedBatchNo:isNeedBatchNo,
+	     	            	sku:sku,
+	     	            	warehouseSku:warehouseSku,
+	     	            	model:model,
+	     	            	volume:volume,
+	     	            	customsWeight:customsWeight,
+	     	            	currency:currency,
+	     	            	customsValue:customsValue,
+	     	            	taxCode:taxCode,
+	     	            	origin:origin,
+	     	            	remark:remark
+	     	             },
+	     	             function(msg) {
+	     	            	if(msg.status == '1'){
+	     	            		parent.$.showDialogMessage(msg.message,null,null);
+	     	            		grid.loadData();	 //保存成功,重新加载产品,但不重新加载货位,避免打乱货位界面
 	     	            		
-// 	     	            	}
-// 							if(msg.status =='0'){
-// 								parent.$.showDialogMessage(msg.message,null,null);
-// 							}
-// 							$("#addButton").removeAttr("disabled");
-// 	     	             },"json");
+	     	            	}
+							if(msg.status =='0'){
+								parent.$.showDialogMessage(msg.message,null,null);
+							}
+	     	             },"json");
    	            }
    	          }],
    	          cancel: true

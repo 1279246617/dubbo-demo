@@ -1,5 +1,7 @@
 package com.coe.wms.dao.product.impl;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
@@ -30,4 +32,14 @@ public class ProductTypeDaoImpl implements IProductTypeDao {
 		return productType;
 	}
 
+	@Override
+	public Long getProductTypeIdByName(String productType) {
+		String sql = "select id from p_product_type where product_type_name = ?";
+		List<Long> idList = jdbcTemplate.queryForList(sql,Long.class,productType);
+		if (idList.size() > 0) {
+			return idList.get(0);
+		}
+		return null;
+	}
+	
 }
