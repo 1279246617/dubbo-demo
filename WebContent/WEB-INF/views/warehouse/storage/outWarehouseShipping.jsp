@@ -22,53 +22,17 @@
 					<tr>
 						<td colspan="2" style="height:28px;">
 								<span style="width:100px;" class="pull-left">COE交接单号</span>
-								<input id="coeTrackingNo" name="coeTrackingNo" value="${coeTrackingNo}"  t="1"  style="width:150px;" readonly="readonly"/>
-								<input id="coeTrackingNoId" name="coeTrackingNoId" value="${coeTrackingNoId}"  t="1" style="display: none;"/>
-								<a class="btn  btn-primary" id="enter" onclick="enClick()" style="cursor:pointer;height:20px;"><i class="icon-ok icon-white"></i>手动输入交接单号</a>
-								
+								<input id="coeTrackingNo" name="coeTrackingNo" value="${coeTrackingNo}"  t="1"  style="width:150px;"/>
 						</td>
-					</tr>
-					<tr style="height:65px;">
-							<td>
-								<span style="width:100px;" class="pull-left" >出货跟踪单号</span>
-								<input type="text"  name="trackingNo"  id="trackingNo"    t="2"  style="width:150px;" title="扫描出库装箱时打印的运单上的条码"/>
-								 <input   style="margin-left: 30px;" id="add"  name="addOrSub"  t="2" type="radio" checked>绑定
-								 <input   style="margin-left: 30px;" id="sub" name="addOrSub"  t="2" type="radio">解绑
-							</td>		
-							
-							<td>
-<!-- 		          				 <a class="btn  btn-primary" id="enter" onclick="next()" style="cursor:pointer;"><i class="icon-ok icon-white"></i>继续下一票</a> -->
-							</td>
-					</tr>
-					<tr>
-						<td colspan="1" rowspan="2" style="height:25px;">
-							<a class="btn  btn-primary" id="submitAll" onclick="submitAll()" style="cursor:pointer;height:20px;"><i class="icon-ok icon-white"></i>
-								扫描建包
-							</a>
-						</td>
-						
-						<td colspan="1" rowspan="2" style="height:25px;">
-							<a class="btn  btn-primary" id="submitAll" onclick="submitAll()" style="cursor:pointer;height:20px;"><i class="icon-ok icon-white"></i>
+						<td colspan="1"  style="height:25px;">
+							<a class="btn  btn-primary" id="submit" onclick="submit()" style="cursor:pointer;height:20px;"><i class="icon-ok icon-white"></i>
 								完成出货
 							</a>
 						</td>
 					</tr>
 			</table>
-			
-			
 	</div>
-	
-	<div class="pull-right" style="width:50%;margin-top: 1px;" >
-			<table class="table table-striped" style="width:100%;">
-					<tr>
-							<td colspan="1" style="height:28px;text-align: center">已扫描的出货跟踪单号记录, 数量:<span id="total" style="margin-left: 5px;">0</span></td>
-					</tr>
-					<tbody id="trackingNos">
-					</tbody>
-			</table>
-	</div>
-	 
-	  
+		  
 	 <script type="text/javascript" src="${baseUrl}/static/jquery/jquery.js"></script>
     <script type="text/javascript" src="${baseUrl}/static/bootstrap/bootstrap-typeahead.js"></script>
 	<script type="text/javascript" src="${baseUrl}/static/jquery/jquery.showMessage.js"></script>
@@ -84,222 +48,46 @@
 	
     <script type="text/javascript">
 	   var baseUrl = "${baseUrl}";
-	   var orderIds = "";
-	   //进入页面,焦点跟踪单号
-	   $("#trackingNo").focus();
-	   var focus ="2";
-		$(function(){
-		  		$("input").focus(function(){
-		  			//当前获取焦点的文本框是 主单还是明细
-		  			focus = $(this).attr("t");
-		  		});
-	   	});
-	   
+	   $("#coeTrackingNo").focus();
 	    $(window).keydown(function(event){
-	    	if((event.keyCode   ==   13) &&   (event.ctrlKey)) {
-	    		submitAll();
-	    		return;
-	    	}
-	    	//回车事件
 	    	if((event.keyCode   ==   13)) {
-	    		if(focus =='1'){
-	    			enterCoeTrackingNo();
-	    		}
-				if(focus =='2'){
-					next();	
-	    		}
-	    		return;
+	    		submit();
 	    	}  
 	    });
- 		//手动输入coe单号
-	    function enterCoeTrackingNo(){
-	    	var coeTrackingNo = $("#coeTrackingNo").val();
-			$("#total").html(0);
-			$("#coeTrackingNoId").val("");
-			$("#trackingNo").val("");
-			$("#trackingNos").html("");
-			$.post(baseUrl+ '/warehouse/storage/outWarehouseShippingEnterCoeTrackingNo.do?&coeTrackingNo='+coeTrackingNo, function(msg) {
-	  	  		if(msg.status == 0){
-	  	  			parent.$.showDialogMessage(msg.message, null, null);
-	  	  			return false;
-	  	  		}
-	  	  		if(msg.status == 1){
-	  	  			var coeTrackingNoId = msg.coeTrackingNo.id;
-	  	  			$("#coeTrackingNoId").val(coeTrackingNoId);
-		  	  		$.each(msg.outWarehouseShippingList,function(i,e){
-			  			//添加从数据库查出来的运单
-						var tr = "<tr style='height:25px;' id="+e.id+">";
-				  		tr += "<td style='text-align: center'>"+e.ourWarehouseOrderTrackingNo+"</td>";
-				  		tr += "</tr>";
-			  			$("#trackingNos").append(tr);
-			  			$("#total").html( parseInt($("#total").html()) + 1);
-			  			orderIds +=e.outWarehouseOrderId+"||";
-	    			});
-	  	  			// 光标移至跟踪号
-	  	  			$("#trackingNo").focus();
-	  	  			$("#trackingNo").select();
-	  	  			return false;
-	  	  		}
-	  	  	},"json");
-	    }
-	    
-  	 	 //回车事件
-  	  	function next(){
-	 		var coeTrackingNo = $("#coeTrackingNo").val();
-	 		var coeTrackingNoId = $("#coeTrackingNoId").val();
-	 		 if(coeTrackingNo == null || coeTrackingNo == ""){
-	 			parent.$.showDialogMessage("请输入有效的COE单号并按回车!", null, null);
-	 			return false;
-	 		 }
-	 		 if(coeTrackingNoId ==""){
-	 			parent.$.showDialogMessage("请输入有效的COE单号并按回车!", null, null);
-	 			return false;
-	 		 }
-  	 		 var trackingNo = $("#trackingNo").val();
-  	 		 if(trackingNo == null || trackingNo==''){
-  	 			parent.$.showShortMessage({msg:"请输入出货跟踪单号再按回车!",animate:false,left:"43%"});
-  	 			return false;	 
-  	 		 }
- 	 		var addOrSub = 1; //1标识加,2表示减
-  	 		if(!$("#add").attr("checked")){
-  	 			addOrSub = 2;
-  	 		}
- 	 		
-	  	  	$.post(baseUrl+ '/warehouse/storage/checkOutWarehouseShipping.do?trackingNo='+ trackingNo+'&coeTrackingNoId='+coeTrackingNoId+'&coeTrackingNo='+coeTrackingNo+'&addOrSub='+addOrSub+"&orderIds="+orderIds, function(msg) {
-	  	  		if(msg.status == 0){
-	  	  			parent.$.showShortMessage({msg:msg.message,animate:false,left:"42%"});
-	  	  			return false;
-	  	  		}
-	  	  		if(msg.status == 1){
-	  	  			//添加一行运单
-					var tr = "<tr style='height:25px;' id="+msg.outWarehouseShippingId+">";
-			  		tr += "<td style='text-align: center'>"+trackingNo+"</td>";
-			  		tr += "</tr>";
-		  			$("#trackingNos").append(tr);
-		  			$("#total").html( parseInt($("#total").html()) + 1);
-		  			
-		  			orderIds +=msg.orderId+"||";
-		  			
-	  	  			// 光标移至跟踪号
-	  	  			$("#trackingNo").focus();
-	  	  			$("#trackingNo").select();
-	  	  			return false;
-	  	  		}
-	  	  		if(msg.status ==2){
-	  	  			//删除
-	  	  			$(msg.deleteShippingIds).html("");
-	  	  			$("#total").html( parseInt($("#total").html()) - msg.sub);
-	  	  			//后台处理 需要删除的orderId
-	  	  			orderIds = msg.orderIds;
-	  	  		}
-	  	  	},"json");
-  		}
-		  
-  	 	 //提交全部单号
+ 		 
   	 	 var isSubmintIng = 'N';//是否在提交过程中. 
-  	 	 function submitAll(){
+  	 	 function submit(){
   	 		 if(isSubmintIng == "Y"){//防止重复点击
   	 			 return false;
   	 		 }
-  	 		isSubmintIng ="Y";
-  	 		$("#submitAll").attr("disabled","disabled");
-  	 		 if(trackingNos == null || trackingNos ==''){
-  	 			parent.$.showShortMessage({msg:"请输入出货跟踪单号再按完成出货总单!",animate:false,left:"43%"});
-  	 			isSubmintIng = 'N';
-  	 			$("#submitAll").removeAttr("disabled");
-  	 			return false;
-  	 		 }
-  	 		 var coeTrackingNoId = $("#coeTrackingNoId").val();
+  	 		 $("#coeTrackingNo").attr("readonly","readonly");
+  	 		 $("#submit").attr("disabled","disabled");
+  	 		 isSubmintIng ="Y";
+				  	 		 
   	 		 var coeTrackingNo = $("#coeTrackingNo").val();
 	 		 if(coeTrackingNo == null || coeTrackingNo == ""){
+		 			isSubmintIng = 'N';	
+	  	 			$("#coeTrackingNo").removeAttr("readonly");
+	  	 			$("#submit").removeAttr("disabled");
+	 			 	
 		 			parent.$.showDialogMessage("请输入有效的COE单号并按回车!", null, null);
-		 			isSubmintIng = 'N';
-		 			$("#submitAll").removeAttr("disabled");
 		 			return false;
 		 	}
-	 		if(coeTrackingNoId ==""){
-	 			parent.$.showDialogMessage("请输入有效的COE单号并按回车!", null, null);
-	 			isSubmintIng = 'N';
-	 			$("#submitAll").removeAttr("disabled");
-	 			return false;
-	 		}
-	 		
   	 		$.post(baseUrl+ '/warehouse/storage/outWarehouseShippingConfirm.do',{
-  	 			orderIds:orderIds,
-  	 			coeTrackingNo:coeTrackingNo,
-  	 			coeTrackingNoId:coeTrackingNoId
+  	 			coeTrackingNo:coeTrackingNo
   	 		},function(msg) {
+  	 			isSubmintIng = 'N';	
+  	 			$("#coeTrackingNo").removeAttr("readonly");
+  	 			$("#submit").removeAttr("disabled");
+  	 			
   	 			if(msg.status == 0){
   	 				parent.$.showDialogMessage(msg.message, null, null);
-  	 				isSubmintIng = 'N';
-  	 				$("#submitAll").removeAttr("disabled");
 	  	  			return false;
   	 			}
 				if(msg.status >0){
-					isSubmintIng = 'N';
-					$("#submitAll").removeAttr("disabled");
-	  	  			//是否打印出货交接单
-  	  			 	 var contentArr = [];
-	  	  		    contentArr.push('<div id="changeContent" style="padding:10px;width: 380px;">');
-		  	  		contentArr.push('   <div class="pull-left" style="width: 100%height:40px;"><b>');
-	  	  		    contentArr.push(msg.message);
-	  	  		    contentArr.push('  </b></div><br/>');
-	  	  		    
-	  	           	contentArr.push('<div class="pull-left" style="margin-top:5px;text-align:center;line-height:20px;height:50px;width: 100%">');
-	  	          	contentArr.push('   <span class="pull-left">打印内容：</span>');
-	  	          	contentArr.push('   <input class="pull-left" style="margin-left:30px;vertical-align: middle;" id="printLabel" type="checkbox" checked>');
-	  	          	contentArr.push('   <label class="pull-left" style="margin-left: 5px;line-height:20px;vertical-align: middle;" for="printLabel">COE运单标签</label>');
-	  	          	contentArr.push('   <input class="pull-left" style="margin-left:30px;vertical-align: middle;" id="printCustoms" type="checkbox" checked>');
-	  	          	contentArr.push('   <label class="pull-left" style="margin-left: 5px;line-height:20px;vertical-align: middle;" for="printCustoms">出货交接单</label>');
-	  	          	contentArr.push('</div>');
-	  	          	contentArr.push('<div style="color: #ff0000;margin-left: 0px;">注：在出库记录查询页面也可以打印</div>');
-	  	  		    contentArr.push('</div>');
-	  	  		    var contentHtml = contentArr.join('');
-	  	  			$.dialog({
-	  	  		  		lock: true,
-	  	  		  		max: false,
-	  	  		  		min: false,
-	  	  		  		title: '是否打印',
-	  	  		  	     width: 380,
-	  	  		         height: 160,
-	  	  		  		content: contentHtml,
-	  	  		  		button: [{
-	  	  		  			name: '打印',
-	  	  		  			callback: function() {
-	  	  		  	      		//打印COE运单
-	  	                    	var isPrintLabel = parent.$("#printLabel").attr("checked")=="checked"?true:false;
-								if(isPrintLabel){
-									var url = baseUrl+'/warehouse/print/printCoeLabel.do?coeTrackingNoId='+coeTrackingNoId;
-		  	     			  		window.open(url);
-	  	                      	}
-	  	                      	//打印出货交接单
-	  	                   	   	var isPrintCustoms = parent.$("#printCustoms").attr("checked")=="checked"?true:false;
-	  	                      	if(isPrintCustoms){
-		  	  		            	var url = baseUrl+'/warehouse/print/printOutWarehouseEIR.do?coeTrackingNo='+coeTrackingNo+'&coeTrackingNoId='+coeTrackingNoId;
-		  	     			  		window.open(url);
-	  	                      	}
-	  	  		  			}
-	  	  		  		},{name: '取消'}]
-	  	  		  	});
-	  	  			orderIds = "";
-	  	  			//成功,清空输入,进入下一批,重新分配COE单号
-					$("#coeTrackingNo").val(msg.coeTrackingNo);
-					$("#coeTrackingNoId").val(msg.coeTrackingNoId);
-					$("#total").html(0);
-					$("#trackingNo").val("");
-					$("#trackingNos").html("");
-					// 光标移至跟踪号
-	  	  			$("#trackingNo").focus();
-	  	  			$("#trackingNo").select();
-	  	  			isSubmintIng = 'N';
-	  	  		 	$("#submitAll").removeAttr("disabled");
-					return false;
+					parent.$.showShortMessage({msg:msg.message, animate:false,left:"45%"});						
 				}
   	 		},"json");
-  	 	 }
-	  	 	 
-  	 	 function enClick(){
-  	 		 $("#coeTrackingNo").removeAttr("readonly");
   	 	 }
     </script>	
 </body>

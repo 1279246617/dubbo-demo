@@ -1370,51 +1370,52 @@ public class StorageServiceImpl implements IStorageService {
 	}
 
 	@Override
-	public Map<String, String> outWarehouseShippingConfirm(String coeTrackingNo, Long coeTrackingNoId, String orderIds, Long userIdOfOperator) throws ServiceException {
+	public Map<String, String> outWarehouseShippingConfirm(String coeTrackingNo, Long userIdOfOperator) throws ServiceException {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put(Constant.STATUS, Constant.FAIL);
-		if (StringUtil.isNull(orderIds)) {
-			map.put(Constant.MESSAGE, "请输入出货跟踪单号再按完成出货总单!");
-			return map;
-		}
-		// 前端用||分割多个跟踪单号
-		String orderIdsArray[] = orderIds.split("\\|\\|");
-		if (orderIdsArray.length < 1) {
-			map.put(Constant.MESSAGE, "请输入出货跟踪单号再按完成出货总单!");
-			return map;
-		}
 		if (StringUtil.isNull(coeTrackingNo)) {
-			map.put(Constant.MESSAGE, "COE交接单号不能为空,请刷新页面重试!");
+			map.put(Constant.MESSAGE, "COE交接单号不能为空");
 			return map;
 		}
-		TrackingNo trackingNo = trackingNoDao.getTrackingNoById(coeTrackingNoId);
-		if (trackingNo == null) {
+		List<TrackingNo> trackingNoList = trackingNoDao.findTrackingNo(coeTrackingNo, TrackingNo.TYPE_COE);
+		if (trackingNoList == null || trackingNoList.size() < 1) {
 			map.put(Constant.MESSAGE, "该COE交接单号无效,请输入新单号");
 			return map;
 		}
-		if (StringUtil.isEqual(trackingNo.getStatus(), TrackingNo.STATUS_USED + "")) {
-			map.put(Constant.MESSAGE, "该COE交接单号已经使用,请输入新单号");
+		TrackingNo trackingNo = trackingNoList.get(0);
+		Long coeTrackingNoId = trackingNo.getId();
+		// 根据出库交接单号查询建包记录.
+		OutWarehousePackage outWarehousePackage = new OutWarehousePackage();
+		outWarehousePackage.setCoeTrackingNoId(coeTrackingNoId);
+		Long countOutWarehousePackage = outWarehousePackageDao.countOutWarehousePackage(outWarehousePackage, null);
+		if (countOutWarehousePackage <= 0) {
+			map.put(Constant.MESSAGE, "没有找到出库建包记录,请先完成建包");
 			return map;
 		}
 
 		Long userIdOfCustomer = null;
 		Long warehouseId = null;
+		// 根据coe交接单号 获取建包记录,获取每个出库订单(小包)
+		OutWarehouseRecordItem itemParam = new OutWarehouseRecordItem();
+		itemParam.setCoeTrackingNoId(coeTrackingNoId);
+		List<OutWarehouseRecordItem> outWarehouseRecordItemList = outWarehouseRecordItemDao.findOutWarehouseRecordItem(itemParam, null, null);
 		// 迭代,检查跟踪号
-		for (String orderId : orderIdsArray) {
+		for (OutWarehouseRecordItem recordItem : outWarehouseRecordItemList) {
 			// 改变状态 ,发送到哲盟
-			Long orderIdLong = Long.valueOf(orderId);
-			logger.info("出货,待发送到哲盟新系统的出库订单id: = " + orderIdLong);
+			Long orderId = recordItem.getOutWarehouseOrderId();
+			// logger.info("出货,待发送到哲盟新系统的出库订单id: = " + orderId);
+
 			if (userIdOfCustomer == null) {
-				OutWarehouseOrder outWarehouseOrder = outWarehouseOrderDao.getOutWarehouseOrderById(orderIdLong);
+				OutWarehouseOrder outWarehouseOrder = outWarehouseOrderDao.getOutWarehouseOrderById(orderId);
 				userIdOfCustomer = outWarehouseOrder.getUserIdOfCustomer();
 				warehouseId = outWarehouseOrder.getWarehouseId();
 			}
-			outWarehouseOrderDao.updateOutWarehouseOrderStatus(orderIdLong, OutWarehouseOrderStatusCode.SUCCESS);
+			outWarehouseOrderDao.updateOutWarehouseOrderStatus(orderId, OutWarehouseOrderStatusCode.SUCCESS);
 			// 更新出库成功,并改变产品批次库存
 			// --------------------------------------------------------------------------------------------------------------------------------------------
 			// 查找下架时的批次,货位,sku,数量记录
 			OutWarehouseOrderItemShelf outWarehouseOrderItemShelfParam = new OutWarehouseOrderItemShelf();
-			outWarehouseOrderItemShelfParam.setOutWarehouseOrderId(orderIdLong);
+			outWarehouseOrderItemShelfParam.setOutWarehouseOrderId(orderId);
 			List<OutWarehouseOrderItemShelf> outWarehouseOrderItemShelfList = outWarehouseOrderItemShelfDao.findOutWarehouseOrderItemShelf(outWarehouseOrderItemShelfParam, null, null);
 			for (OutWarehouseOrderItemShelf oItemShelf : outWarehouseOrderItemShelfList) {
 				ItemInventory inventoryParam = new ItemInventory();
@@ -1436,6 +1437,7 @@ public class StorageServiceImpl implements IStorageService {
 			}
 			// 更新库存结束----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 		}
+
 		// 保存出库记录
 		OutWarehouseRecord outWarehouseRecord = new OutWarehouseRecord();
 		outWarehouseRecord.setCoeTrackingNo(coeTrackingNo);
@@ -1445,12 +1447,64 @@ public class StorageServiceImpl implements IStorageService {
 		outWarehouseRecord.setUserIdOfOperator(userIdOfOperator);
 		outWarehouseRecord.setWarehouseId(warehouseId);
 		outWarehouseRecordDao.saveOutWarehouseRecord(outWarehouseRecord);
+		map.put(Constant.STATUS, Constant.SUCCESS);
+		map.put(Constant.MESSAGE, "完成出货总单成功,请继续下一批!");
+		return map;
+	}
+
+	@Override
+	public Map<String, String> outWarehousePackageConfirm(String coeTrackingNo, Long coeTrackingNoId, String orderIds, Long userIdOfOperator) throws ServiceException {
+		Map<String, String> map = new HashMap<String, String>();
+		map.put(Constant.STATUS, Constant.FAIL);
+		if (StringUtil.isNull(orderIds)) {
+			map.put(Constant.MESSAGE, "请输入出货跟踪单号再按完成出货建包!");
+			return map;
+		}
+		// 前端用||分割多个跟踪单号
+		String orderIdsArray[] = orderIds.split("\\|\\|");
+		if (orderIdsArray.length < 1) {
+			map.put(Constant.MESSAGE, "请输入出货跟踪单号再按完成出货建包!");
+			return map;
+		}
+		if (StringUtil.isNull(coeTrackingNo)) {
+			map.put(Constant.MESSAGE, "COE交接单号不能为空,请刷新页面重试!");
+			return map;
+		}
+		TrackingNo trackingNo = trackingNoDao.getTrackingNoById(coeTrackingNoId);
+		if (trackingNo == null) {
+			map.put(Constant.MESSAGE, "该COE交接单号无效,请输入新单号");
+			return map;
+		}
+		if (StringUtil.isEqual(trackingNo.getStatus(), TrackingNo.STATUS_USED + "")) {
+			map.put(Constant.MESSAGE, "该COE交接单号已经使用,请输入新单号");
+			return map;
+		}
+		Long userIdOfCustomer = null;
+		Long warehouseId = null;
+		// 迭代,检查跟踪号
+		for (String orderId : orderIdsArray) {
+			Long orderIdLong = Long.valueOf(orderId);
+			if (userIdOfCustomer == null) {
+				OutWarehouseOrder outWarehouseOrder = outWarehouseOrderDao.getOutWarehouseOrderById(orderIdLong);
+				userIdOfCustomer = outWarehouseOrder.getUserIdOfCustomer();
+				warehouseId = outWarehouseOrder.getWarehouseId();
+			}
+		}
+		// 保存出库建包记录
+		OutWarehousePackage outWarehousePackage = new OutWarehousePackage();
+		outWarehousePackage.setCoeTrackingNo(coeTrackingNo);
+		outWarehousePackage.setCoeTrackingNoId(coeTrackingNoId);
+		outWarehousePackage.setCreatedTime(System.currentTimeMillis());
+		outWarehousePackage.setUserIdOfCustomer(userIdOfCustomer);
+		outWarehousePackage.setUserIdOfOperator(userIdOfOperator);
+		outWarehousePackage.setWarehouseId(warehouseId);
+		outWarehousePackageDao.saveOutWarehousePackage(outWarehousePackage);
 		// 标记coe单号已经使用
 		trackingNoDao.usedTrackingNo(coeTrackingNoId);
 		// 返回新COE单号,供下一批出库
 		TrackingNo nextTrackingNo = trackingNoDao.getAvailableTrackingNoByType(TrackingNo.TYPE_COE);
 		if (nextTrackingNo == null) {
-			map.put(Constant.MESSAGE, "本次出货总单已完成,但COE单号不足,不能继续操作出库!");
+			map.put(Constant.MESSAGE, "本次出货建包已完成,但COE单号不足,不能继续操作建包!");
 			map.put(Constant.STATUS, "2");
 			map.put("coeTrackingNo", "");
 			map.put("coeTrackingNoId", "");
@@ -1460,7 +1514,7 @@ public class StorageServiceImpl implements IStorageService {
 		map.put("coeTrackingNo", nextTrackingNo.getTrackingNo());
 		map.put("coeTrackingNoId", nextTrackingNo.getId().toString());
 		map.put(Constant.STATUS, Constant.SUCCESS);
-		map.put(Constant.MESSAGE, "完成出货总单成功,请继续下一批!");
+		map.put(Constant.MESSAGE, "完成出货建包成功,请继续下一批!");
 		return map;
 	}
 
