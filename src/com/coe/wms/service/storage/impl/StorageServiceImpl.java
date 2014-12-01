@@ -33,6 +33,7 @@ import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderItemShelfDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderReceiverDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderSenderDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderStatusDao;
+import com.coe.wms.dao.warehouse.storage.IOutWarehousePackageDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseRecordDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseRecordItemDao;
 import com.coe.wms.dao.warehouse.storage.IReportDao;
@@ -43,8 +44,6 @@ import com.coe.wms.model.unit.Weight.WeightCode;
 import com.coe.wms.model.user.User;
 import com.coe.wms.model.warehouse.TrackingNo;
 import com.coe.wms.model.warehouse.Warehouse;
-import com.coe.wms.model.warehouse.report.Report;
-import com.coe.wms.model.warehouse.report.ReportType;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrderItem;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrderStatus;
@@ -63,6 +62,7 @@ import com.coe.wms.model.warehouse.storage.record.InWarehouseRecordStatus;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecordStatus.InWarehouseRecordStatusCode;
 import com.coe.wms.model.warehouse.storage.record.ItemInventory;
 import com.coe.wms.model.warehouse.storage.record.ItemShelfInventory;
+import com.coe.wms.model.warehouse.storage.record.OutWarehousePackage;
 import com.coe.wms.model.warehouse.storage.record.OutWarehouseRecord;
 import com.coe.wms.model.warehouse.storage.record.OutWarehouseRecordItem;
 import com.coe.wms.pojo.api.warehouse.Buyer;
@@ -141,8 +141,12 @@ public class StorageServiceImpl implements IStorageService {
 
 	@Resource(name = "outWarehouseOrderDao")
 	private IOutWarehouseOrderDao outWarehouseOrderDao;
+
 	@Resource(name = "outWarehouseRecordDao")
 	private IOutWarehouseRecordDao outWarehouseRecordDao;
+
+	@Resource(name = "outWarehousePackageDao")
+	private IOutWarehousePackageDao outWarehousePackageDao;
 
 	@Resource(name = "outWarehouseOrderStatusDao")
 	private IOutWarehouseOrderStatusDao outWarehouseOrderStatusDao;
@@ -1668,6 +1672,52 @@ public class StorageServiceImpl implements IStorageService {
 			list.add(map);
 		}
 		page.total = outWarehouseRecordDao.countOutWarehouseRecord(outWarehouseRecord, moreParam);
+		page.rows = list;
+		return page;
+	}
+
+	/**
+	 * 获取出库建包记录
+	 */
+	@Override
+	public Pagination getOutWarehousePackageData(OutWarehousePackage outWarehousePackage, Map<String, String> moreParam, Pagination page) {
+		List<OutWarehousePackage> outWarehousePackageList = outWarehousePackageDao.findOutWarehousePackage(outWarehousePackage, moreParam, page);
+		List<Object> list = new ArrayList<Object>();
+		for (OutWarehousePackage record : outWarehousePackageList) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("id", record.getId());
+			if (record.getCreatedTime() != null) {
+				map.put("createdTime", DateUtil.dateConvertString(new Date(record.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss));
+			}
+			// 查询用户名
+			User user = userDao.getUserById(record.getUserIdOfCustomer());
+			map.put("userLoginNameOfCustomer", user.getLoginName());
+			// 查询操作员
+			if (NumberUtil.greaterThanZero(record.getUserIdOfOperator())) {
+				User userOfOperator = userDao.getUserById(record.getUserIdOfOperator());
+				map.put("userLoginNameOfOperator", userOfOperator.getLoginName());
+			}
+			map.put("coeTrackingNo", record.getCoeTrackingNo());
+			map.put("coeTrackingNoId", record.getCoeTrackingNoId());
+			if (NumberUtil.greaterThanZero(record.getWarehouseId())) {
+				Warehouse warehouse = warehouseDao.getWarehouseById(record.getWarehouseId());
+				map.put("warehouse", warehouse.getWarehouseName());
+			}
+			map.put("remark", record.getRemark() == null ? "" : record.getRemark());
+			OutWarehouseRecordItem param = new OutWarehouseRecordItem();
+			param.setCoeTrackingNoId(record.getCoeTrackingNoId());
+			List<OutWarehouseRecordItem> outWarehouseShippingList = outWarehouseRecordItemDao.findOutWarehouseRecordItem(param, null, null);
+			Integer quantity = 0;
+			String orders = "";
+			for (OutWarehouseRecordItem item : outWarehouseShippingList) {
+				orders += item.getOutWarehouseOrderTrackingNo() + " ; ";
+				quantity++;
+			}
+			map.put("orders", orders);
+			map.put("quantity", quantity);
+			list.add(map);
+		}
+		page.total = outWarehousePackageDao.countOutWarehousePackage(outWarehousePackage, moreParam);
 		page.rows = list;
 		return page;
 	}

@@ -43,6 +43,12 @@
 					<tr>
 						<td colspan="1" rowspan="2" style="height:25px;">
 							<a class="btn  btn-primary" id="submitAll" onclick="submitAll()" style="cursor:pointer;height:20px;"><i class="icon-ok icon-white"></i>
+								扫描建包
+							</a>
+						</td>
+						
+						<td colspan="1" rowspan="2" style="height:25px;">
+							<a class="btn  btn-primary" id="submitAll" onclick="submitAll()" style="cursor:pointer;height:20px;"><i class="icon-ok icon-white"></i>
 								完成出货
 							</a>
 						</td>
