@@ -1656,6 +1656,17 @@ public class StorageServiceImpl implements IStorageService {
 	}
 
 	@Override
+	public Map<String, String> saveOutWarehousePackageRemark(String remark, Long id) throws ServiceException {
+		Map<String, String> map = new HashMap<String, String>();
+		if (outWarehousePackageDao.updateOutWarehousePackageRemark(id, remark) > 0) {
+			map.put(Constant.STATUS, Constant.SUCCESS);
+		} else {
+			map.put(Constant.STATUS, Constant.FAIL);
+		}
+		return map;
+	}
+
+	@Override
 	public Map<String, Object> outWarehouseShippingEnterCoeTrackingNo(String coeTrackingNo) throws ServiceException {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put(Constant.STATUS, Constant.FAIL);
@@ -1777,10 +1788,30 @@ public class StorageServiceImpl implements IStorageService {
 	}
 
 	@Override
-	public List<Map<String, String>> getOutWarehouseRecordShippingMapByRecordId(Long recordId) {
+	public List<Map<String, String>> getOutWarehouseRecordItemMapByRecordId(Long recordId) {
 		OutWarehouseRecord outWarehouseRecord = outWarehouseRecordDao.getOutWarehouseRecordById(recordId);
 		OutWarehouseRecordItem param = new OutWarehouseRecordItem();
 		param.setCoeTrackingNoId(outWarehouseRecord.getCoeTrackingNoId());
+		List<OutWarehouseRecordItem> outWarehouseShippingList = outWarehouseRecordItemDao.findOutWarehouseRecordItem(param, null, null);
+		List<Map<String, String>> mapList = new ArrayList<Map<String, String>>();
+		for (OutWarehouseRecordItem item : outWarehouseShippingList) {
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("orderId", item.getOutWarehouseOrderId() + "");
+			map.put("trackingNo", item.getOutWarehouseOrderTrackingNo());
+			User user = userDao.getUserById(item.getUserIdOfCustomer());
+			map.put("customer", user.getLoginName());
+			OutWarehouseOrder outWarehouseOrder = outWarehouseOrderDao.getOutWarehouseOrderById(item.getOutWarehouseOrderId());
+			map.put("weight", outWarehouseOrder.getOutWarehouseWeight() + "");
+			mapList.add(map);
+		}
+		return mapList;
+	}
+
+	@Override
+	public List<Map<String, String>> getOutWarehouseRecordItemByPackageId(Long packageId) {
+		OutWarehousePackage outWarehousePackage = outWarehousePackageDao.getOutWarehousePackageById(packageId);
+		OutWarehouseRecordItem param = new OutWarehouseRecordItem();
+		param.setCoeTrackingNoId(outWarehousePackage.getCoeTrackingNoId());
 		List<OutWarehouseRecordItem> outWarehouseShippingList = outWarehouseRecordItemDao.findOutWarehouseRecordItem(param, null, null);
 		List<Map<String, String>> mapList = new ArrayList<Map<String, String>>();
 		for (OutWarehouseRecordItem item : outWarehouseShippingList) {

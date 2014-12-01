@@ -29,6 +29,7 @@ import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderItemShelfDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderReceiverDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderSenderDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderStatusDao;
+import com.coe.wms.dao.warehouse.storage.IOutWarehousePackageDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseRecordDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseRecordItemDao;
 import com.coe.wms.model.warehouse.Seat;
@@ -40,7 +41,7 @@ import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderItemShelf;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderReceiver;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderSender;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus.OutWarehouseOrderStatusCode;
-import com.coe.wms.model.warehouse.storage.record.OutWarehouseRecord;
+import com.coe.wms.model.warehouse.storage.record.OutWarehousePackage;
 import com.coe.wms.model.warehouse.storage.record.OutWarehouseRecordItem;
 import com.coe.wms.service.print.IPrintService;
 import com.coe.wms.util.BarcodeUtil;
@@ -97,6 +98,9 @@ public class PrintServiceImpl implements IPrintService {
 
 	@Resource(name = "inWarehouseRecordDao")
 	private IInWarehouseRecordDao inWarehouseRecordDao;
+
+	@Resource(name = "outWarehousePackageDao")
+	private IOutWarehousePackageDao outWarehousePackageDao;
 
 	@Resource(name = "inWarehouseRecordItemDao")
 	private IInWarehouseRecordItemDao inWarehouseRecordItemDao;
@@ -258,16 +262,19 @@ public class PrintServiceImpl implements IPrintService {
 		return mapList;
 	}
 
+	/**
+	 * 打印coe交接单,根据建包记录
+	 */
 	@Override
 	public Map<String, Object> getPrintCoeLabelData(Long coeTrackingNoId) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		OutWarehouseRecord outWarehouseRecordParam = new OutWarehouseRecord();
-		outWarehouseRecordParam.setCoeTrackingNoId(coeTrackingNoId);
-		List<OutWarehouseRecord> outWarehouseRecordList = outWarehouseRecordDao.findOutWarehouseRecord(outWarehouseRecordParam, null, null);
-		if (outWarehouseRecordList == null || outWarehouseRecordList.size() == 0) {
+		OutWarehousePackage outWarehousePackageParam = new OutWarehousePackage();
+		outWarehousePackageParam.setCoeTrackingNoId(coeTrackingNoId);
+		List<OutWarehousePackage> outWarehousePackageList = outWarehousePackageDao.findOutWarehousePackage(outWarehousePackageParam, null, null);
+		if (outWarehousePackageList == null || outWarehousePackageList.size() == 0) {
 			return map;
 		}
-		OutWarehouseRecord outWarehouseRecord = outWarehouseRecordList.get(0);
+		OutWarehousePackage outWarehousePackage = outWarehousePackageList.get(0);
 		// 出貨詳情
 		OutWarehouseRecordItem outWarehouseShippingParam = new OutWarehouseRecordItem();
 		outWarehouseShippingParam.setCoeTrackingNoId(coeTrackingNoId);
@@ -280,12 +287,12 @@ public class PrintServiceImpl implements IPrintService {
 			totalWeight += outWarehouseOrder.getOutWarehouseWeight();
 			quantity++;
 		}
-		String trackingNoBarcodeData = BarcodeUtil.createCode128(outWarehouseRecord.getCoeTrackingNo(), false, 29d, 0.5d);
+		String trackingNoBarcodeData = BarcodeUtil.createCode128(outWarehousePackage.getCoeTrackingNo(), false, 29d, 0.5d);
 		map.put("coeTrackingNoBarcodeData", trackingNoBarcodeData);
 		map.put("totalWeight", NumberUtil.getNumPrecision(totalWeight, 3));
 		map.put("quantity", quantity);
-		map.put("outWarehouseRecord", outWarehouseRecord);
-		map.put("shipdate", DateUtil.dateConvertString(new Date(outWarehouseRecord.getCreatedTime()), DateUtil.yyyy_MM_dd));
+		map.put("outWarehouseRecord", outWarehousePackage);
+		map.put("shipdate", DateUtil.dateConvertString(new Date(outWarehousePackage.getCreatedTime()), DateUtil.yyyy_MM_dd));
 		return map;
 	}
 

@@ -24,8 +24,8 @@ import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrder;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderItem;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus;
-import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus.OutWarehouseOrderStatusCode;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecord;
+import com.coe.wms.model.warehouse.storage.record.OutWarehousePackage;
 import com.coe.wms.model.warehouse.storage.record.OutWarehouseRecord;
 import com.coe.wms.model.warehouse.storage.record.OutWarehouseRecordItem;
 import com.coe.wms.service.storage.IStorageService;
@@ -380,7 +380,7 @@ public class Storage {
 		pagination.pageSize = pagesize;
 		pagination.sortName = sortname;
 		pagination.sortOrder = sortorder;
-		OutWarehouseRecord param = new OutWarehouseRecord();
+		OutWarehousePackage param = new OutWarehousePackage();
 		param.setCoeTrackingNo(coeTrackingNo);
 		if (StringUtil.isNotNull(userLoginName)) {
 			Long userIdOfCustomer = userService.findUserIdByLoginName(userLoginName);
@@ -391,7 +391,7 @@ public class Storage {
 		Map<String, String> moreParam = new HashMap<String, String>();
 		moreParam.put("createdTimeStart", createdTimeStart);
 		moreParam.put("createdTimeEnd", createdTimeEnd);
-		pagination = storageService.getOutWarehouseRecordData(param, moreParam, pagination);
+		pagination = storageService.getOutWarehousePackageData(param, moreParam, pagination);
 		Map map = new HashMap();
 		map.put("Rows", pagination.rows);
 		map.put("Total", pagination.total);
@@ -399,9 +399,16 @@ public class Storage {
 	}
 
 	@ResponseBody
-	@RequestMapping(value = "/getOutWarehouseShipppingByRecordId", method = RequestMethod.POST)
-	public String getOutWarehouseShipppingByRecordId(Long recordId) {
-		List<Map<String, String>> mapList = storageService.getOutWarehouseRecordShippingMapByRecordId(recordId);
+	@RequestMapping(value = "/getOutWarehouseRecordItemByRecordId", method = RequestMethod.POST)
+	public String getOutWarehouseRecordItemByRecordId(Long recordId) {
+		List<Map<String, String>> mapList = storageService.getOutWarehouseRecordItemMapByRecordId(recordId);
+		return GsonUtil.toJson(mapList);
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/getOutWarehouseRecordItemByPackageId", method = RequestMethod.POST)
+	public String getOutWarehouseRecordItemByPackageId(Long recordId) {
+		List<Map<String, String>> mapList = storageService.getOutWarehouseRecordItemByPackageId(recordId);
 		return GsonUtil.toJson(mapList);
 	}
 
@@ -992,7 +999,6 @@ public class Storage {
 	}
 
 	/**
-	 * 添加入库订单备注
 	 * 
 	 * @param request
 	 * @param response
@@ -1012,12 +1018,41 @@ public class Storage {
 	}
 
 	/**
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/editOutWarehousePackageRemark", method = RequestMethod.GET)
+	public ModelAndView editOutWarehousePackageRemark(HttpServletRequest request, HttpServletResponse response, Long id, String remark) throws IOException {
+		ModelAndView view = new ModelAndView();
+		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
+		if (remark == null) {
+			remark = "";
+		}
+		view.addObject("remark", remark);
+		view.setViewName("warehouse/storage/editOutWarehousePackageRemark");
+		return view;
+	}
+
+	/**
 	 * @throws IOException
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/saveOutWarehouseRecordRemark")
 	public String saveOutWarehouseRecordRemark(HttpServletRequest request, Long id, String remark) throws IOException {
 		Map<String, String> map = storageService.saveOutWarehouseRecordRemark(remark, id);
+		return GsonUtil.toJson(map);
+	}
+
+	/**
+	 * @throws IOException
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/saveOutWarehousePackageRemark")
+	public String saveOutWarehousePackageRemark(HttpServletRequest request, Long id, String remark) throws IOException {
+		Map<String, String> map = storageService.saveOutWarehousePackageRemark(remark, id);
 		return GsonUtil.toJson(map);
 	}
 
