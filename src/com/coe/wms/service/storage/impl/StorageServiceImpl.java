@@ -1315,16 +1315,16 @@ public class StorageServiceImpl implements IStorageService {
 		if (StringUtil.isEqual(outWarehouseOrder.getStatus(), OutWarehouseOrderStatusCode.WWO)) {
 			Long outWarehouseOrderId = outWarehouseOrder.getId();
 			map.put("orderId", outWarehouseOrderId + "");
-			// 检查出库订单 是否已经和COE交接单号绑定
-			OutWarehouseRecordItem checkTrackingNoParam = new OutWarehouseRecordItem();
-			checkTrackingNoParam.setOutWarehouseOrderId(outWarehouseOrderId);
-			Long countTrackingNoResult = outWarehouseRecordItemDao.countOutWarehouseRecordItem(checkTrackingNoParam, null);
-			if (countTrackingNoResult > 0) {
-				// 说明该出库订单已经和其他COE交接单号绑定了,不能再绑定此单号
-				map.put(Constant.MESSAGE, "该出库订单已经绑定的了其他COE交接单号");
-				return map;
-			}
 			if (StringUtil.isEqual(addOrSub, "1")) {
+				// 检查出库订单 是否已经和COE交接单号绑定
+				OutWarehouseRecordItem checkTrackingNoParam = new OutWarehouseRecordItem();
+				checkTrackingNoParam.setOutWarehouseOrderId(outWarehouseOrderId);
+				Long countTrackingNoResult = outWarehouseRecordItemDao.countOutWarehouseRecordItem(checkTrackingNoParam, null);
+				if (countTrackingNoResult > 0) {
+					// 说明该出库订单已经和其他COE交接单号绑定了,不能再绑定此单号
+					map.put(Constant.MESSAGE, "该出库订单已经绑定的了其他COE交接单号");
+					return map;
+				}
 				// 保存到OutWarehouseShipping,但不改变出库订单的状态.
 				// 只有当操作员点击完成出货总单才改变一个COE单号下面对应的所有出库订单的状态
 				OutWarehouseRecordItem outWarehouseRecordItem = new OutWarehouseRecordItem();
@@ -1492,13 +1492,20 @@ public class StorageServiceImpl implements IStorageService {
 		Long warehouseId = null;
 		// 迭代,检查跟踪号
 		for (String orderId : orderIdsArray) {
-			Long orderIdLong = Long.valueOf(orderId);
-			if (userIdOfCustomer == null) {
-				OutWarehouseOrder outWarehouseOrder = outWarehouseOrderDao.getOutWarehouseOrderById(orderIdLong);
-				userIdOfCustomer = outWarehouseOrder.getUserIdOfCustomer();
-				warehouseId = outWarehouseOrder.getWarehouseId();
+			if (StringUtil.isNotNull(orderId)) {
+				Long orderIdLong = Long.valueOf(orderId);
+				if (userIdOfCustomer == null) {
+					OutWarehouseOrder outWarehouseOrder = outWarehouseOrderDao.getOutWarehouseOrderById(orderIdLong);
+					userIdOfCustomer = outWarehouseOrder.getUserIdOfCustomer();
+					warehouseId = outWarehouseOrder.getWarehouseId();
+				}
 			}
 		}
+		if (userIdOfCustomer == null) {
+			map.put(Constant.MESSAGE, "请输入出货跟踪单号再按完成出货建包!");
+			return map;
+		}
+
 		// 保存出库建包记录
 		OutWarehousePackage outWarehousePackage = new OutWarehousePackage();
 		outWarehousePackage.setCoeTrackingNo(coeTrackingNo);
@@ -1757,29 +1764,41 @@ public class StorageServiceImpl implements IStorageService {
 	public Pagination getOutWarehousePackageData(OutWarehousePackage outWarehousePackage, Map<String, String> moreParam, Pagination page) {
 		List<OutWarehousePackage> outWarehousePackageList = outWarehousePackageDao.findOutWarehousePackage(outWarehousePackage, moreParam, page);
 		List<Object> list = new ArrayList<Object>();
-		for (OutWarehousePackage record : outWarehousePackageList) {
+		for (OutWarehousePackage oPackage : outWarehousePackageList) {
 			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("id", record.getId());
-			if (record.getCreatedTime() != null) {
-				map.put("createdTime", DateUtil.dateConvertString(new Date(record.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss));
+			map.put("id", oPackage.getId());
+			if (oPackage.getCreatedTime() != null) {
+				map.put("packageTime", DateUtil.dateConvertString(new Date(oPackage.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss));
+			}
+			OutWarehouseRecord recordParam = new OutWarehouseRecord();
+			recordParam.setCoeTrackingNoId(oPackage.getCoeTrackingNoId());
+			List<OutWarehouseRecord> recordList = outWarehouseRecordDao.findOutWarehouseRecord(recordParam, null, null);
+			if (recordList != null && recordList.size() >= 1) {
+				map.put("isShipped", "已发货");
+				OutWarehouseRecord record = recordList.get(0);
+				if (record.getCreatedTime() != null) {
+					map.put("shippedTime", DateUtil.dateConvertString(new Date(record.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss));
+				}
+			} else {
+				map.put("isShipped", "未发货");
 			}
 			// 查询用户名
-			User user = userDao.getUserById(record.getUserIdOfCustomer());
+			User user = userDao.getUserById(oPackage.getUserIdOfCustomer());
 			map.put("userLoginNameOfCustomer", user.getLoginName());
 			// 查询操作员
-			if (NumberUtil.greaterThanZero(record.getUserIdOfOperator())) {
-				User userOfOperator = userDao.getUserById(record.getUserIdOfOperator());
+			if (NumberUtil.greaterThanZero(oPackage.getUserIdOfOperator())) {
+				User userOfOperator = userDao.getUserById(oPackage.getUserIdOfOperator());
 				map.put("userLoginNameOfOperator", userOfOperator.getLoginName());
 			}
-			map.put("coeTrackingNo", record.getCoeTrackingNo());
-			map.put("coeTrackingNoId", record.getCoeTrackingNoId());
-			if (NumberUtil.greaterThanZero(record.getWarehouseId())) {
-				Warehouse warehouse = warehouseDao.getWarehouseById(record.getWarehouseId());
+			map.put("coeTrackingNo", oPackage.getCoeTrackingNo());
+			map.put("coeTrackingNoId", oPackage.getCoeTrackingNoId());
+			if (NumberUtil.greaterThanZero(oPackage.getWarehouseId())) {
+				Warehouse warehouse = warehouseDao.getWarehouseById(oPackage.getWarehouseId());
 				map.put("warehouse", warehouse.getWarehouseName());
 			}
-			map.put("remark", record.getRemark() == null ? "" : record.getRemark());
+			map.put("remark", oPackage.getRemark() == null ? "" : oPackage.getRemark());
 			OutWarehouseRecordItem param = new OutWarehouseRecordItem();
-			param.setCoeTrackingNoId(record.getCoeTrackingNoId());
+			param.setCoeTrackingNoId(oPackage.getCoeTrackingNoId());
 			List<OutWarehouseRecordItem> outWarehouseShippingList = outWarehouseRecordItemDao.findOutWarehouseRecordItem(param, null, null);
 			Integer quantity = 0;
 			String orders = "";
