@@ -21,7 +21,14 @@ public class InWarehouseOrderItem implements Serializable {
 	 */
 	private Integer quantity;
 
+	/**
+	 * sku 等于顺丰的商品条码
+	 */
 	private String sku;
+	/**
+	 * sku编号 等于顺丰的商品编号
+	 */
+	private String skuNo;
 
 	/**
 	 * 产品生产批次(也称客户批次)
@@ -81,6 +88,14 @@ public class InWarehouseOrderItem implements Serializable {
 
 	public void setSkuName(String skuName) {
 		this.skuName = skuName;
+	}
+
+	public String getSkuNo() {
+		return skuNo;
+	}
+
+	public void setSkuNo(String skuNo) {
+		this.skuNo = skuNo;
 	}
 
 	public String getSkuRemark() {

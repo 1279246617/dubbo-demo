@@ -750,7 +750,8 @@ public class StorageServiceImpl implements IStorageService {
 				continue;
 			}
 			InWarehouseOrderItem inwarehouseOrderItem = new InWarehouseOrderItem();
-			inwarehouseOrderItem.setSku(sku.getSkuCode());
+			inwarehouseOrderItem.setSku(sku.getSkuCode());// 商品条码
+			inwarehouseOrderItem.setSkuNo(sku.getSkuId());// 商品编号
 			inwarehouseOrderItem.setQuantity(sku.getSkuQty());
 			inwarehouseOrderItem.setSkuName(sku.getSkuName());
 			inwarehouseOrderItem.setSkuRemark(sku.getSkuRemark());
@@ -891,6 +892,8 @@ public class StorageServiceImpl implements IStorageService {
 				outWarehouseOrderItem.setQuantity(sku.getSkuQty());
 				outWarehouseOrderItem.setRemark(sku.getSkuRemark());
 				outWarehouseOrderItem.setSku(sku.getSkuCode());
+				outWarehouseOrderItem.setSkuNo(sku.getSkuId());
+				outWarehouseOrderItem.setSpecification(sku.getSpecification());
 				outWarehouseOrderItem.setSkuName(sku.getSkuName());
 				outWarehouseOrderItem.setSkuUnitPrice(sku.getSkuUnitPrice());
 				outWarehouseOrderItem.setSkuPriceCurrency(sku.getSkuPriceCurrency());

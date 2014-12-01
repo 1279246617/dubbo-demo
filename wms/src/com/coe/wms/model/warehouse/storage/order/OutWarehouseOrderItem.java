@@ -36,6 +36,16 @@ public class OutWarehouseOrderItem implements Serializable {
 	private String sku;
 
 	/**
+	 * sku编号 等于顺丰的商品编号
+	 */
+	private String skuNo;
+
+	/**
+	 * 商品规格
+	 */
+	private String specification;
+
+	/**
 	 * 可用于报关描述(申报品名)
 	 */
 	private String skuName;
@@ -49,7 +59,7 @@ public class OutWarehouseOrderItem implements Serializable {
 	 * sku单价 可用于报关价值
 	 */
 	private Double skuUnitPrice;
-	
+
 	/**
 	 * sku 重量
 	 */
@@ -59,7 +69,7 @@ public class OutWarehouseOrderItem implements Serializable {
 	 * 备注
 	 */
 	private String remark;
-	
+
 	public Long getId() {
 		return id;
 	}
@@ -78,6 +88,22 @@ public class OutWarehouseOrderItem implements Serializable {
 
 	public void setSkuName(String skuName) {
 		this.skuName = skuName;
+	}
+
+	public String getSkuNo() {
+		return skuNo;
+	}
+
+	public void setSkuNo(String skuNo) {
+		this.skuNo = skuNo;
+	}
+
+	public String getSpecification() {
+		return specification;
+	}
+
+	public void setSpecification(String specification) {
+		this.specification = specification;
 	}
 
 	public String getSkuPriceCurrency() {
