@@ -22,7 +22,7 @@
 					<tr>
 						<td colspan="2" style="height:28px;">
 								<span style="width:100px;" class="pull-left">COE交接单号</span>
-								<input id="coeTrackingNo" name="coeTrackingNo" value="${coeTrackingNo}"  t="1"  style="width:150px;"/>
+								<input id="coeTrackingNo" name="coeTrackingNo"   style="width:150px;"/>
 						</td>
 						<td colspan="1"  style="height:25px;">
 							<a class="btn  btn-primary" id="submit" onclick="submit()" style="cursor:pointer;height:20px;"><i class="icon-ok icon-white"></i>
@@ -85,7 +85,9 @@
 	  	  			return false;
   	 			}
 				if(msg.status >0){
-					parent.$.showShortMessage({msg:msg.message, animate:false,left:"45%"});						
+					parent.$.showShortMessage({msg:msg.message, animate:false,left:"45%"});
+					$("#coeTrackingNo").val("");
+					$("#coeTrackingNo").focus();
 				}
   	 		},"json");
   	 	 }

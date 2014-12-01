@@ -1392,7 +1392,15 @@ public class StorageServiceImpl implements IStorageService {
 			map.put(Constant.MESSAGE, "没有找到出库建包记录,请先完成建包");
 			return map;
 		}
-
+		// 出库记录
+		OutWarehouseRecord outWarehouseRecord = new OutWarehouseRecord();
+		outWarehouseRecord.setCoeTrackingNoId(coeTrackingNoId);
+		Long countOutWarehouseRecord = outWarehouseRecordDao.countOutWarehouseRecord(outWarehouseRecord, null);
+		if (countOutWarehouseRecord >= 1) {
+			map.put(Constant.MESSAGE, "该交接单号已经存在出库记录,请勿重复操作");
+			return map;
+		}
+		
 		Long userIdOfCustomer = null;
 		Long warehouseId = null;
 		// 根据coe交接单号 获取建包记录,获取每个出库订单(小包)
@@ -1437,11 +1445,8 @@ public class StorageServiceImpl implements IStorageService {
 			}
 			// 更新库存结束----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 		}
-
 		// 保存出库记录
-		OutWarehouseRecord outWarehouseRecord = new OutWarehouseRecord();
 		outWarehouseRecord.setCoeTrackingNo(coeTrackingNo);
-		outWarehouseRecord.setCoeTrackingNoId(coeTrackingNoId);
 		outWarehouseRecord.setCreatedTime(System.currentTimeMillis());
 		outWarehouseRecord.setUserIdOfCustomer(userIdOfCustomer);
 		outWarehouseRecord.setUserIdOfOperator(userIdOfOperator);
