@@ -110,8 +110,6 @@ public interface IStorageService {
 	 * @return
 	 */
 	public Pagination getOutWarehouseRecordData(OutWarehouseRecord outWarehouseRecord, Map<String, String> moreParam, Pagination page);
-	
-
 
 	/**
 	 * 获取建包记录
@@ -121,7 +119,7 @@ public interface IStorageService {
 	 * @return
 	 */
 	public Pagination getOutWarehousePackageData(OutWarehousePackage outWarehousePackage, Map<String, String> moreParam, Pagination page);
-	
+
 	/**
 	 * 获取入库明细记录
 	 * 
@@ -291,7 +289,16 @@ public interface IStorageService {
 	 * @return
 	 * @throws ServiceException
 	 */
-	public Map<String, String> outWarehouseShippingConfirm(String coeTrackingNo, Long coeTrackingNoId, String orderIds, Long userIdOfOperator) throws ServiceException;
+	public Map<String, String> outWarehouseShippingConfirm(String coeTrackingNo, Long userIdOfOperator) throws ServiceException;
+	
+	/**
+	 * 出库建包
+	 * 
+	 * @param TrackingNo
+	 * @return
+	 * @throws ServiceException
+	 */
+	public Map<String, String> outWarehousePackageConfirm(String coeTrackingNo, Long coeTrackingNoId, String orderIds, Long userIdOfOperator) throws ServiceException;
 
 	/**
 	 * 检查出库时扫描每单

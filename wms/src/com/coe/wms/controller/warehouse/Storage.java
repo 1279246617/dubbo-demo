@@ -750,6 +750,33 @@ public class Storage {
 	}
 
 	/**
+	 * 出库扫描运单建包界面
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/outWarehousePackage", method = RequestMethod.GET)
+	public ModelAndView outWarehousePackage(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		HttpSession session = request.getSession();
+		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
+		ModelAndView view = new ModelAndView();
+		view.addObject("userId", userId);
+		User user = userService.getUserById(userId);
+		view.addObject("warehouseList", storageService.findAllWarehouse(user.getDefaultWarehouseId()));
+		// 进入界面 分配coe单号,并锁定coe单号,下次不能再使用
+		TrackingNo trackingNo = storageService.getCoeTrackingNoforOutWarehouseShipping();
+		if (trackingNo != null) {
+			view.addObject("coeTrackingNo", trackingNo.getTrackingNo());
+			view.addObject("coeTrackingNoId", trackingNo.getId());
+		}
+		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
+		view.setViewName("warehouse/storage/outWarehousePackage");
+		return view;
+	}
+
+	/**
 	 * 出库扫描运单界面
 	 * 
 	 * @param request
@@ -777,6 +804,23 @@ public class Storage {
 	}
 
 	/**
+	 * 提交出货建包
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/outWarehousePackageConfirm")
+	public String outWarehousePackageConfirm(HttpServletRequest request, HttpServletResponse response, String orderIds, String coeTrackingNo, Long coeTrackingNoId) throws IOException {
+		HttpSession session = request.getSession();
+		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
+		Map<String, String> checkResultMap = storageService.outWarehousePackageConfirm(coeTrackingNo, coeTrackingNoId, orderIds, userId);
+		return GsonUtil.toJson(checkResultMap);
+	}
+
+	/**
 	 * 提交出货总单
 	 * 
 	 * @param request
@@ -786,10 +830,10 @@ public class Storage {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/outWarehouseShippingConfirm")
-	public String outWarehouseShippingConfirm(HttpServletRequest request, HttpServletResponse response, String orderIds, String coeTrackingNo, Long coeTrackingNoId) throws IOException {
+	public String outWarehouseShippingConfirm(HttpServletRequest request, HttpServletResponse response, String coeTrackingNo) throws IOException {
 		HttpSession session = request.getSession();
 		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
-		Map<String, String> checkResultMap = storageService.outWarehouseShippingConfirm(coeTrackingNo, coeTrackingNoId, orderIds, userId);
+		Map<String, String> checkResultMap = storageService.outWarehouseShippingConfirm(coeTrackingNo, userId);
 		return GsonUtil.toJson(checkResultMap);
 	}
 

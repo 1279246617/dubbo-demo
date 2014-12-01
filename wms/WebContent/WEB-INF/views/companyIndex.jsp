@@ -89,7 +89,7 @@
 			              		
 			              	<!-- (扫SKU和数量 是否和出库订单一样) -->	
 		              		<li><a href="#${baseUrl}/warehouse/storage/outWarehouseCheckPackage.do" tab_id="doOutWarehouse"><i class="icon-plane"></i><span class="hidden-tablet">装箱称重打单</span></a></li>
-		              		<li><a href="#${baseUrl}/warehouse/storage/outWarehouseShipping.do" tab_id="outWarehouseShipping"><i class="icon-plane"></i><span class="hidden-tablet">扫描建包</span></a></li>
+		              		<li><a href="#${baseUrl}/warehouse/storage/outWarehousePackage.do" tab_id="outWarehousePackage"><i class="icon-plane"></i><span class="hidden-tablet">扫描建包</span></a></li>
 		              		<li><a href="#${baseUrl}/warehouse/storage/listOutWarehousePackage.do" tab_id="findOutWarehousePackage"><i class="icon-zoom-out"></i><span class="hidden-tablet">扫描建包记录</span></a></li>
 		              		<li><a href="#${baseUrl}/warehouse/storage/outWarehouseShipping.do" tab_id="outWarehouseShipping"><i class="icon-plane"></i><span class="hidden-tablet">大包发货</span></a></li>
 		              		<li><a href="#${baseUrl}/warehouse/storage/listOutWarehouseRecord.do" tab_id="findOutWarehouseRecord"><i class="icon-zoom-out"></i><span class="hidden-tablet">大包发货记录</span></a></li>
