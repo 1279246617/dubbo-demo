@@ -45,7 +45,7 @@ public class OutWarehouseOrderItemDaoImpl implements IOutWarehouseOrderItemDao {
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public long saveOutWarehouseOrderItem(final OutWarehouseOrderItem item) {
-		final String sql = "insert into w_s_out_warehouse_order_item (out_warehouse_order_id,quantity,sku,sku_name,sku_unit_price,sku_price_currency,remark,sku_net_weight) values (?,?,?,?,?,?,?,?)";
+		final String sql = "insert into w_s_out_warehouse_order_item (out_warehouse_order_id,quantity,sku,sku_name,sku_unit_price,sku_price_currency,remark,sku_net_weight,sku_no,specification) values (?,?,?,?,?,?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
@@ -54,10 +54,20 @@ public class OutWarehouseOrderItemDaoImpl implements IOutWarehouseOrderItemDao {
 				ps.setLong(2, item.getQuantity());
 				ps.setString(3, item.getSku());
 				ps.setString(4, item.getSkuName());
-				ps.setDouble(5, item.getSkuUnitPrice());
+				if (item.getSkuUnitPrice() != null) {
+					ps.setDouble(5, item.getSkuUnitPrice());
+				} else {
+					ps.setNull(5, Types.DOUBLE);
+				}
 				ps.setString(6, item.getSkuPriceCurrency());
 				ps.setString(7, item.getRemark());
-				ps.setDouble(8, item.getSkuNetWeight());
+				if (item.getSkuNetWeight() != null) {
+					ps.setDouble(8, item.getSkuNetWeight());
+				} else {
+					ps.setNull(8, Types.DOUBLE);
+				}
+				ps.setString(9, item.getSkuNo());
+				ps.setString(10, item.getSpecification());
 				return ps;
 			}
 		}, keyHolder);
@@ -71,7 +81,7 @@ public class OutWarehouseOrderItemDaoImpl implements IOutWarehouseOrderItemDao {
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public int saveBatchOutWarehouseOrderItem(final List<OutWarehouseOrderItem> itemList) {
-		final String sql = "insert into w_s_out_warehouse_order_item (out_warehouse_order_id,quantity,sku,sku_name,sku_unit_price,sku_price_currency,remark,sku_net_weight) values (?,?,?,?,?,?,?,?)";
+		final String sql = "insert into w_s_out_warehouse_order_item (out_warehouse_order_id,quantity,sku,sku_name,sku_unit_price,sku_price_currency,remark,sku_net_weight,sku_no,specification) values (?,?,?,?,?,?,?,?,?,?)";
 		int[] batchUpdateSize = jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
 			@Override
 			public void setValues(PreparedStatement ps, int i) throws SQLException {
@@ -80,10 +90,20 @@ public class OutWarehouseOrderItemDaoImpl implements IOutWarehouseOrderItemDao {
 				ps.setLong(2, item.getQuantity());
 				ps.setString(3, item.getSku());
 				ps.setString(4, item.getSkuName());
-				ps.setDouble(5, item.getSkuUnitPrice());
+				if (item.getSkuUnitPrice() != null) {
+					ps.setDouble(5, item.getSkuUnitPrice());
+				} else {
+					ps.setNull(5, Types.DOUBLE);
+				}
 				ps.setString(6, item.getSkuPriceCurrency());
 				ps.setString(7, item.getRemark());
-				ps.setDouble(8, item.getSkuNetWeight());
+				if (item.getSkuNetWeight() != null) {
+					ps.setDouble(8, item.getSkuNetWeight());
+				} else {
+					ps.setNull(8, Types.DOUBLE);
+				}
+				ps.setString(9, item.getSkuNo());
+				ps.setString(10, item.getSpecification());
 			}
 
 			@Override
@@ -97,7 +117,7 @@ public class OutWarehouseOrderItemDaoImpl implements IOutWarehouseOrderItemDao {
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public int saveBatchOutWarehouseOrderItemWithOrderId(final List<OutWarehouseOrderItem> itemList, final Long orderId) {
-		final String sql = "insert into w_s_out_warehouse_order_item (out_warehouse_order_id,quantity,sku,sku_name,sku_unit_price,sku_price_currency,remark,sku_net_weight) values (?,?,?,?,?,?,?,?)";
+		final String sql = "insert into w_s_out_warehouse_order_item (out_warehouse_order_id,quantity,sku,sku_name,sku_unit_price,sku_price_currency,remark,sku_net_weight,sku_no,specification) values (?,?,?,?,?,?,?,?,?,?)";
 		int[] batchUpdateSize = jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
 			@Override
 			public void setValues(PreparedStatement ps, int i) throws SQLException {
@@ -106,18 +126,20 @@ public class OutWarehouseOrderItemDaoImpl implements IOutWarehouseOrderItemDao {
 				ps.setLong(2, item.getQuantity());
 				ps.setString(3, item.getSku());
 				ps.setString(4, item.getSkuName());
-				if (item.getSkuUnitPrice() == null) {
-					ps.setNull(5, Types.DOUBLE);
-				} else {
+				if (item.getSkuUnitPrice() != null) {
 					ps.setDouble(5, item.getSkuUnitPrice());
+				} else {
+					ps.setNull(5, Types.DOUBLE);
 				}
 				ps.setString(6, item.getSkuPriceCurrency());
 				ps.setString(7, item.getRemark());
-				if (item.getSkuNetWeight() == null) {
-					ps.setNull(8, Types.DOUBLE);
-				} else {
+				if (item.getSkuNetWeight() != null) {
 					ps.setDouble(8, item.getSkuNetWeight());
+				} else {
+					ps.setNull(8, Types.DOUBLE);
 				}
+				ps.setString(9, item.getSkuNo());
+				ps.setString(10, item.getSpecification());
 			}
 
 			@Override
@@ -140,10 +162,16 @@ public class OutWarehouseOrderItemDaoImpl implements IOutWarehouseOrderItemDao {
 	@Override
 	public List<OutWarehouseOrderItem> findOutWarehouseOrderItem(OutWarehouseOrderItem outWarehouseOrderItem, Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select id,out_warehouse_order_id,quantity,sku,sku_name,sku_unit_price,sku_price_currency,remark,sku_net_weight from w_s_out_warehouse_order_item where 1=1 ");
+		sb.append("select id,out_warehouse_order_id,quantity,sku,sku_name,sku_unit_price,sku_price_currency,remark,sku_net_weight,sku_no,specification from w_s_out_warehouse_order_item where 1=1 ");
 		if (outWarehouseOrderItem != null) {
 			if (StringUtil.isNotNull(outWarehouseOrderItem.getSku())) {
 				sb.append(" and sku = '" + outWarehouseOrderItem.getSku() + "' ");
+			}
+			if (StringUtil.isNotNull(outWarehouseOrderItem.getSkuNo())) {
+				sb.append(" and sku_no = '" + outWarehouseOrderItem.getSkuNo() + "' ");
+			}
+			if (StringUtil.isNotNull(outWarehouseOrderItem.getSpecification())) {
+				sb.append(" and specification = '" + outWarehouseOrderItem.getSpecification() + "' ");
 			}
 			if (StringUtil.isNotNull(outWarehouseOrderItem.getSkuName())) {
 				sb.append(" and sku_name = '" + outWarehouseOrderItem.getSkuName() + "' ");

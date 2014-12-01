@@ -6,6 +6,10 @@ public class Sku implements Serializable {
 
 	private static final long serialVersionUID = 551558947068185258L;
 
+	private String skuId;
+
+	private String specification;
+
 	private String skuCode;
 
 	private String skuName;
@@ -53,6 +57,22 @@ public class Sku implements Serializable {
 
 	public String getSkuCode() {
 		return skuCode;
+	}
+
+	public String getSkuId() {
+		return skuId;
+	}
+
+	public void setSkuId(String skuId) {
+		this.skuId = skuId;
+	}
+
+	public String getSpecification() {
+		return specification;
+	}
+
+	public void setSpecification(String specification) {
+		this.specification = specification;
 	}
 
 	public void setSkuCode(String skuCode) {

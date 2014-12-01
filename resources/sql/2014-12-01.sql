@@ -1,7 +1,7 @@
 SET FOREIGN_KEY_CHECKS=0;
 
 -- ----------------------------
--- Table structure for `w_s_out_warehouse_package`
+-- 创建出库建包记录表
 -- ----------------------------
 DROP TABLE IF EXISTS `w_s_out_warehouse_package`;
 CREATE TABLE `w_s_out_warehouse_package` (
@@ -15,3 +15,22 @@ CREATE TABLE `w_s_out_warehouse_package` (
   `remark` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+
+-- ----------------------------
+-- 更新入库订单物品表
+-- ----------------------------
+ALTER TABLE `w_s_in_warehouse_order_item`
+MODIFY COLUMN `sku_name`  varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL AFTER `received_quantity`,
+ADD COLUMN `sku_no`  varchar(100) NULL COMMENT 'sku编号 等于顺丰的商品编号' AFTER `sku_unit_price`,
+
+-- ----------------------------
+-- 更新出库订单物品表
+-- ----------------------------
+ALTER TABLE `w_s_out_warehouse_order_item`
+ADD COLUMN `sku_no`  varchar(100) NULL AFTER `sku_net_weight`,
+ADD COLUMN `specification`  varchar(100) NULL AFTER `sku_no`;
+
+
+
+
