@@ -799,12 +799,6 @@ public class Storage {
 		view.addObject("userId", userId);
 		User user = userService.getUserById(userId);
 		view.addObject("warehouseList", storageService.findAllWarehouse(user.getDefaultWarehouseId()));
-		// 进入界面 分配coe单号,并锁定coe单号,下次不能再使用
-		TrackingNo trackingNo = storageService.getCoeTrackingNoforOutWarehouseShipping();
-		if (trackingNo != null) {
-			view.addObject("coeTrackingNo", trackingNo.getTrackingNo());
-			view.addObject("coeTrackingNoId", trackingNo.getId());
-		}
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
 		view.setViewName("warehouse/storage/outWarehouseShipping");
 		return view;
