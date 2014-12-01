@@ -41,8 +41,8 @@ public class ProductServiceImpl implements IProductService {
 	@Override
 	public Pagination findProduct(Product product,
 			Map<String, String> moreParam, Pagination page) {
-		List<Product> productList = productDao.findProduct(product,
-				moreParam, page);
+		List<Product> productList = productDao.findProduct(product, moreParam,
+				page);
 		List<Object> list = new ArrayList<Object>();
 		for (Product pro : productList) {
 			Map<String, Object> map = new HashMap<String, Object>();
@@ -107,4 +107,74 @@ public class ProductServiceImpl implements IProductService {
 	public int updateProductById(Product product) {
 		return productDao.updateProductById(product);
 	}
+
+	/**
+	 * 新增产品
+	 */
+	@Override
+	public Map<String, String> saveAddProduct(String productName,
+			Long productTypeId, Long userIdOfCustomer, String isNeedBatchNo,
+			String sku, String warehouseSku, String model, Double volume,
+			Double customsWeight, String currency, Double customsValue,
+			String taxCode, String origin, String remark) {
+		Map<String, String> map = new HashMap<String, String>();
+		map.put(Constant.MESSAGE, Constant.FAIL);
+		if (StringUtil.isNull(productName)) {
+			map.put(Constant.MESSAGE, "产品名称不能为空");
+			return map;
+		}
+		if (StringUtil.isNull(isNeedBatchNo)) {
+			map.put(Constant.MESSAGE, "是否需要批次不能为空");
+			return map;
+		}
+		if (StringUtil.isNull(sku)) {
+			map.put(Constant.MESSAGE, "SKU不能为空");
+			return map;
+		}
+		if (StringUtil.isNull(warehouseSku)) {
+			map.put(Constant.MESSAGE, "仓库SKU不能为空");
+			return map;
+		}
+		if (StringUtil.isNull(model)) {
+			map.put(Constant.MESSAGE, "规格型号不能为空");
+			return map;
+		}
+		if (StringUtil.isNull(currency)) {
+			map.put(Constant.MESSAGE, "币种不能为空");
+			return map;
+		}
+		if (StringUtil.isNull(taxCode)) {
+			map.put(Constant.MESSAGE, "行邮税号不能为空");
+			return map;
+		}
+		if (StringUtil.isNull(origin)) {
+			map.put(Constant.MESSAGE, "原产地不能为空");
+			return map;
+		}
+		Long createdTime = System.currentTimeMillis();
+		Product product = new Product();
+		product.setProductName(productName);
+		product.setProductTypeId(productTypeId);
+		product.setUserIdOfCustomer(userIdOfCustomer);
+		product.setIsNeedBatchNo(isNeedBatchNo);
+		product.setModel(model);
+		product.setSku(sku);
+		product.setWarehouseSku(warehouseSku);
+		product.setVolume(volume);
+		product.setCustomsWeight(customsWeight);
+		product.setCurrency(currency);
+		product.setCustomsValue(customsValue);
+		product.setTaxCode(taxCode);
+		product.setOrigin(origin);
+		product.setRemark(remark);
+		product.setCreatedTime(createdTime);
+		long count = productDao.saveProduct(product);
+		if (count > 0) {
+			map.put(Constant.MESSAGE, "新增产品成功");
+			map.put(Constant.STATUS, Constant.SUCCESS);
+		}
+		logger.info("新增产品失败");
+		return map;
+	}
+
 }

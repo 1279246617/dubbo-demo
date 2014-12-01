@@ -4,5 +4,7 @@ import com.coe.wms.model.product.ProductType;
 
 public interface IProductTypeService {
 	public ProductType getProductTypeById(Long typeId);
+	
+	public Long getProductTypeIdByName(String productType);
 
 }

@@ -51,9 +51,6 @@ public class ProductDaoImpl implements IProductDao {
 						+ "%' ");
 				sb.append(" or sku like '%" + product.getSku() + "%' ");
 			}
-			if (product.getId() != null) {
-				sb.append(" and id= '" + product.getId() + "' ");
-			}
 		}
 		if (moreParam != null) {
 			if (moreParam.get("createdTimeStart") != null) {
@@ -94,7 +91,7 @@ public class ProductDaoImpl implements IProductDao {
 
 	@Override
 	public long saveProduct(final Product product) {
-		final String sql = "insert into p_product (id,user_id_of_customer,product_name,product_type_id,sku,warehouse_sku,remark,currency,customs_weight,is_need_batch_no,model,customs_value,origin,last_update_time,created_time,tax_code,volume) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		final String sql = "insert into p_product (user_id_of_customer,product_name,product_type_id,sku,warehouse_sku,remark,currency,customs_weight,is_need_batch_no,model,customs_value,origin,last_update_time,created_time,tax_code,volume) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 
@@ -126,7 +123,6 @@ public class ProductDaoImpl implements IProductDao {
 				if (product.getLastUpdateTime() == null) {
 					ps.setNull(13, Types.INTEGER);
 				} else {
-
 					ps.setLong(13, product.getLastUpdateTime());
 				}
 				ps.setLong(14, product.getCreatedTime());
@@ -161,7 +157,7 @@ public class ProductDaoImpl implements IProductDao {
 	@Override
 	public int updateProductById(Product product) {
 		String sql = "update p_product set user_id_of_customer=?,product_name=?,product_type_id=?,sku=?,warehouse_sku=?,remark=?,currency=?,customs_weight=?,is_need_batch_no=?,model=?,customs_value=?,origin=?,last_update_time=?,tax_code=?,volume=? where id=?";
-		logger.info("更新产品SQL："+sql);
+		logger.info("更新产品SQL：" + sql);
 		int count = jdbcTemplate.update(sql, product.getUserIdOfCustomer(),
 				product.getProductName(), product.getProductTypeId(),
 				product.getSku(), product.getWarehouseSku(),
