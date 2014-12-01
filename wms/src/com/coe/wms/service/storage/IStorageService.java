@@ -21,6 +21,7 @@ import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecord;
 import com.coe.wms.model.warehouse.storage.record.OnShelf;
 import com.coe.wms.model.warehouse.storage.record.OutShelf;
+import com.coe.wms.model.warehouse.storage.record.OutWarehousePackage;
 import com.coe.wms.model.warehouse.storage.record.OutWarehouseRecord;
 import com.coe.wms.model.warehouse.storage.record.OutWarehouseRecordItem;
 import com.coe.wms.pojo.api.warehouse.EventBody;
@@ -109,7 +110,18 @@ public interface IStorageService {
 	 * @return
 	 */
 	public Pagination getOutWarehouseRecordData(OutWarehouseRecord outWarehouseRecord, Map<String, String> moreParam, Pagination page);
+	
 
+
+	/**
+	 * 获取建包记录
+	 * 
+	 * @param inWarehouseRecordId
+	 * @param page
+	 * @return
+	 */
+	public Pagination getOutWarehousePackageData(OutWarehousePackage outWarehousePackage, Map<String, String> moreParam, Pagination page);
+	
 	/**
 	 * 获取入库明细记录
 	 * 
