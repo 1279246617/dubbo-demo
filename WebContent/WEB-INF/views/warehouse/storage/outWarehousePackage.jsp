@@ -123,7 +123,7 @@
 		  	  		$.each(msg.outWarehouseShippingList,function(i,e){
 			  			//添加从数据库查出来的运单
 						var tr = "<tr style='height:25px;' id="+e.id+">";
-				  		tr += "<td style='text-align: center'>"+e.ourWarehouseOrderTrackingNo+"</td>";
+				  		tr += "<td style='text-align: center'>"+e.outWarehouseOrderTrackingNo+"</td>";
 				  		tr += "</tr>";
 			  			$("#trackingNos").append(tr);
 			  			$("#total").html( parseInt($("#total").html()) + 1);
