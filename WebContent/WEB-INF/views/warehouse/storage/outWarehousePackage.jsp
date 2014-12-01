@@ -32,6 +32,7 @@
 							<td>
 								<span style="width:100px;" class="pull-left" >出货跟踪单号</span>
 								<input type="text"  name="trackingNo"  id="trackingNo"    t="2"  style="width:150px;" title="扫描出库装箱时打印的运单上的条码"/>
+								<button onclick="batchTrackingNo()">批量</button>
 								 <input   style="margin-left: 30px;" id="add"  name="addOrSub"  t="2" type="radio" checked>绑定
 								 <input   style="margin-left: 30px;" id="sub" name="addOrSub"  t="2" type="radio">解绑
 							</td>		
@@ -41,7 +42,7 @@
 							</td>
 					</tr>
 					<tr>
-						<td colspan="1" rowspan="2" style="height:25px;">
+						<td colspan="2" rowspan="2" style="height:25px;">
 							<a class="btn  btn-primary" id="submitAll" onclick="submitAll()" style="cursor:pointer;height:20px;"><i class="icon-ok icon-white"></i>
 								完成建包
 							</a>
@@ -64,15 +65,14 @@
 	 
 	  
 	 <script type="text/javascript" src="${baseUrl}/static/jquery/jquery.js"></script>
-    <script type="text/javascript" src="${baseUrl}/static/bootstrap/bootstrap-typeahead.js"></script>
-	<script type="text/javascript" src="${baseUrl}/static/jquery/jquery.showMessage.js"></script>
-	<script  type="text/javascript" src="${baseUrl}/static/ligerui/ligerUI/js/core/base.js"></script>
-	<script type="text/javascript" src="${baseUrl}/static/ligerui/ligerUI/js/ligerui.all.js"></script>
+   	<script type="text/javascript" src="${baseUrl}/static/jquery/jquery.showMessage.js"></script>
+	<script type="text/javascript" src="${baseUrl}/static/ligerui/ligerUI/js/core/base.js"></script>
 	<script type="text/javascript" src="${baseUrl}/static/ligerui/ligerUI/js/plugins/ligeruiPatch.js"></script>
-    <script type="text/javascript" src="${baseUrl}/static/ligerui/ligerUI/js/plugins/ligerTab.js"></script>
-    <script  type="text/javascript" src="${baseUrl}/static/ligerui/ligerUI/js/plugins/ligerTree.js" ></script>
-    
-    	
+	<script type="text/javascript" src="${baseUrl}/static/calendar/lhgcalendar.min.js"></script>
+	<script type="text/javascript" src="${baseUrl}/static/calendar/prettify.js"></script>
+	<script type="text/javascript" src="${baseUrl}/static/lhgdialog/prettify/prettify.js"></script>
+	<script type="text/javascript" src="${baseUrl}/static/lhgdialog/prettify/lhgdialog.js"></script>
+	<script type="text/javascript" src="${baseUrl}/static/ligerui/ligerUI/js/ligerui.all.js"></script>
 	<script type="text/javascript" src="${baseUrl}/static/lhgdialog/prettify/prettify.js"></script>
 	<script type="text/javascript" src="${baseUrl}/static/lhgdialog/prettify/lhgdialog.js"></script>
 	
@@ -159,8 +159,20 @@
   	 			addOrSub = 2;
   	 		}
  	 		
+  	 		if(trackingNo.indexOf(",")>=0){
+  	 	 		var trackingNoSplit = trackingNo.split(",");
+  	 			$.each(trackingNoSplit,function(i,e){
+  	 				submitSingleTrackingNo(e, coeTrackingNoId, coeTrackingNo, addOrSub, orderIds,"Y");	 				
+  				});	
+  	 		}else{
+  	 			submitSingleTrackingNo(trackingNo, coeTrackingNoId, coeTrackingNo, addOrSub, orderIds,"N");	
+  	 		}
+  		}
+		  
+  	 	 //isBatch是否批量提交, 如果批量提交不显示每个详细的提示
+  	 	function submitSingleTrackingNo(trackingNo,coeTrackingNoId,coeTrackingNo,addOrSub,orderIds,isBatch){
 	  	  	$.post(baseUrl+ '/warehouse/storage/checkOutWarehouseShipping.do?trackingNo='+ trackingNo+'&coeTrackingNoId='+coeTrackingNoId+'&coeTrackingNo='+coeTrackingNo+'&addOrSub='+addOrSub+"&orderIds="+orderIds, function(msg) {
-	  	  		if(msg.status == 0){
+	  	  		if(msg.status == 0 && isBatch=='N'){
 	  	  			parent.$.showShortMessage({msg:msg.message,animate:false,left:"42%"});
 	  	  			return false;
 	  	  		}
@@ -187,8 +199,8 @@
 	  	  			orderIds = msg.orderIds;
 	  	  		}
 	  	  	},"json");
-  		}
-		  
+  	 	} 
+  	 	 
   	 	 //提交全部单号
   	 	 var isSubmintIng = 'N';//是否在提交过程中. 
   	 	 function submitAll(){
@@ -291,10 +303,31 @@
 				}
   	 		},"json");
   	 	 }
-	  	 	 
-  	 	 function enClick(){
-  	 		 $("#coeTrackingNo").removeAttr("readonly");
-  	 	 }
     </script>	
+    
+    <script type="text/javascript">
+	    function batchTrackingNo(){
+	    	var trackingNo = $("#trackingNo").val();
+	 	   $.dialog({
+	 	          lock: true,
+	 	          title: '备注',
+	 	          width: '450px',
+	 	          height: '290px',
+	 	          content: 'url:' + baseUrl + '/warehouse/storage/outWarehousePackageBatchTrackingNo.do?trackingNo='+trackingNo,
+	 	          button: [{
+	 	            name: '确定',
+	 	            callback: function() {
+	 	              var objTrackingNos = this.content.document.getElementById("trackingNos");
+	 	              var trackingNos = $(objTrackingNos).val();
+	 	              //替换所有空白字符为单个,
+	 	              var reg = /\s+/g;
+	 	              trackingNos = trackingNos.replace(reg,",");
+ 					  $("#trackingNo").val(trackingNos); 
+	 	            }
+	 	          }],
+	 	          cancel: true
+	 	        });
+	    }
+    </script>
 </body>
 </html>
