@@ -162,15 +162,15 @@
   	 		if(trackingNo.indexOf(",")>=0){
   	 	 		var trackingNoSplit = trackingNo.split(",");
   	 			$.each(trackingNoSplit,function(i,e){
-  	 				submitSingleTrackingNo(e, coeTrackingNoId, coeTrackingNo, addOrSub, orderIds,"Y");	 				
+  	 				submitSingleTrackingNo(e, coeTrackingNoId, coeTrackingNo, addOrSub,"Y");	 	
   				});	
   	 		}else{
-  	 			submitSingleTrackingNo(trackingNo, coeTrackingNoId, coeTrackingNo, addOrSub, orderIds,"N");	
+  	 			submitSingleTrackingNo(trackingNo, coeTrackingNoId, coeTrackingNo, addOrSub,"N");	
   	 		}
   		}
 		  
   	 	 //isBatch是否批量提交, 如果批量提交不显示每个详细的提示
-  	 	function submitSingleTrackingNo(trackingNo,coeTrackingNoId,coeTrackingNo,addOrSub,orderIds,isBatch){
+  	 	function submitSingleTrackingNo(trackingNo,coeTrackingNoId,coeTrackingNo,addOrSub,isBatch){
 	  	  	$.post(baseUrl+ '/warehouse/storage/checkOutWarehouseShipping.do?trackingNo='+ trackingNo+'&coeTrackingNoId='+coeTrackingNoId+'&coeTrackingNo='+coeTrackingNo+'&addOrSub='+addOrSub+"&orderIds="+orderIds, function(msg) {
 	  	  		if(msg.status == 0 && isBatch=='N'){
 	  	  			parent.$.showShortMessage({msg:msg.message,animate:false,left:"42%"});
@@ -185,7 +185,6 @@
 		  			$("#total").html( parseInt($("#total").html()) + 1);
 		  			
 		  			orderIds +=msg.orderId+"||";
-		  			
 	  	  			// 光标移至跟踪号
 	  	  			$("#trackingNo").focus();
 	  	  			$("#trackingNo").select();
@@ -310,7 +309,7 @@
 	    	var trackingNo = $("#trackingNo").val();
 	 	   $.dialog({
 	 	          lock: true,
-	 	          title: '备注',
+	 	          title: '批量',
 	 	          width: '450px',
 	 	          height: '290px',
 	 	          content: 'url:' + baseUrl + '/warehouse/storage/outWarehousePackageBatchTrackingNo.do?trackingNo='+trackingNo,
@@ -327,6 +326,10 @@
 	 	          }],
 	 	          cancel: true
 	 	        });
+	    }
+	    
+	    function enClick (){
+	    	$("#coeTrackingNo").removeAttr("readonly");
 	    }
     </script>
 </body>

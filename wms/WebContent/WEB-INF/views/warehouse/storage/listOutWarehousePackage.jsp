@@ -23,8 +23,8 @@
            <form action="${baseUrl}/warehouse/storage/getOutWarehousePackageData.do" id="searchform" name="searchform" method="post">
            		<div class="pull-left">
 <!-- 		       	 	<span class="pull-left" style="width:105px;"> -->
-<!-- 			       		<a class="btn btn-primary btn-small" onclick="printCoeLabel()" title="打印COE运单"> -->
-<!-- 			           		 <i class="icon-folder-open"></i>打印COE运单 -->
+<!-- 			       		<a class="btn btn-primary btn-small" onclick="printCoeLabel()" title="完成出库"> -->
+<!-- 			           		 <i class="icon-folder-open"></i>完成出库 -->
 <!-- 			       	 	</a> -->
 <!-- 			       	 		<input style=" visibility:hidden;"> -->
 <!-- 		       	 	</span> -->
@@ -49,7 +49,7 @@
 						<input type="text"  name="coeTrackingNo"  id="coeTrackingNo"   style="width:120px;"/>
 					</span>
                		<span class="pull-left" style="width:175px;">
-               			创建时间
+               			建包时间
 	               		<input type="text"   style="width:120px;" name="createdTimeStart" id="createdTimeStart" value="${sevenDaysAgoStart}" title="起始创建时间">
                		</span>
                		
@@ -122,9 +122,11 @@
 	                columns: [
 							{ display: '客户帐号', name: 'userLoginNameOfCustomer',type:'float',width:'8%'},
 							{ display: '仓库', name: 'warehouse', type: 'float',width:'8%'},
+							{ display: '发货状态', name: 'isShipped', type: 'float',width:'8%'},
 	  	                    { display: '交接单号', name: 'coeTrackingNo',type:'float',width:'11%'},
+	  	                    { display: '建包时间', name: 'packageTime', align: 'center', type: 'float',width:'12%'},
 		  		            { display: '出库订单数量', name: 'quantity', type: 'float',width:'9%'},
-		  		        	{ display: '出库详情', isSort: false, align: 'center', type: 'float',width:'15%',render: function(row) {
+		  		        	{ display: '建包详情', isSort: false, align: 'center', type: 'float',width:'15%',render: function(row) {
 			            		var skus = "";
 			            		if (!row._editing) {
 			            			skus += '<a href="javascript:listInWarehouseRecordItem(' + row.id + ')">'+row.orders+'</a> ';
@@ -132,7 +134,7 @@
 			            		return skus;
 		  		          	}},
 			                { display: '操作员', name: 'userLoginNameOfOperator',type:'float',width:'8%'},
-			                { display: '出库时间', name: 'createdTime', align: 'center', type: 'float',width:'12%'},
+			                { display: '出库时间', name: 'shippedTime', align: 'center', type: 'float',width:'12%'},
 			                {display: '出库备注',isSort: false,width: '12%',render: function(row) {
 			                		if(row.remark ==''){
 			                			return  "<a href=javascript:addRemark(" + row.id + ",'"+row.remark+"')>添加备注</a>&nbsp;";	
@@ -154,6 +156,7 @@
 	                pageSizeOptions:[10,50,100,500,1000],
 	                usePager: 'true',
 	                sortName: 'id',
+	                sortOrder:'desc',
 	                width: '100%',
 	                height: '99%',
 	                checkbox: false,
