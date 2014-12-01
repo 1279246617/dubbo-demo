@@ -180,7 +180,7 @@
 	        	contentArr.push('<tr><th>出库订单Id</th><th>出库订单跟踪单号</th><th>出库订单重量KG</th><th>出库订单客户帐号</th></tr>');
 	        	$.ajax({ 
 	                type : "post", 
-	                url :baseUrl + '/warehouse/storage/getOutWarehouseShipppingByRecordId.do', 
+	                url :baseUrl + '/warehouse/storage/getOutWarehouseRecordItemByRecordId.do', 
 	                data : "recordId="+recordId, 
 	                async : false, 
 	                success : function(msg){ 

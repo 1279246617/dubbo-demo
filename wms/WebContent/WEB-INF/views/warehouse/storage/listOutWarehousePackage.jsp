@@ -21,20 +21,14 @@
 <body>
 	  <div class="toolbar1">
            <form action="${baseUrl}/warehouse/storage/getOutWarehousePackageData.do" id="searchform" name="searchform" method="post">
-<!--            		<div class="pull-left"> -->
+           		<div class="pull-left">
 <!-- 		       	 	<span class="pull-left" style="width:105px;"> -->
 <!-- 			       		<a class="btn btn-primary btn-small" onclick="printCoeLabel()" title="打印COE运单"> -->
 <!-- 			           		 <i class="icon-folder-open"></i>打印COE运单 -->
 <!-- 			       	 	</a> -->
 <!-- 			       	 		<input style=" visibility:hidden;"> -->
 <!-- 		       	 	</span> -->
-<!-- 		       	 	<span class="pull-left" style="width:105px;"> -->
-<!-- 			       		<a class="btn btn-primary btn-small" onclick="printOrder()" title="打印出货交接单"> -->
-<!-- 			           		 <i class="icon-folder-open"></i>打印出货交接单 -->
-<!-- 			       	 	</a> -->
-<!-- 			       	 	<input style=" visibility:hidden;"> -->
-<!-- 		       	 	</span> -->
-<!-- 		    	</div>     -->
+		    	</div>    
 		    	
                <div class="pull-right searchContent">
                		<span class="pull-left" style="width:175px;">
@@ -180,7 +174,7 @@
 	        	contentArr.push('<tr><th>出库订单Id</th><th>出库订单跟踪单号</th><th>出库订单重量KG</th><th>出库订单客户帐号</th></tr>');
 	        	$.ajax({ 
 	                type : "post", 
-	                url :baseUrl + '/warehouse/storage/getOutWarehouseShipppingByRecordId.do', 
+	                url :baseUrl + '/warehouse/storage/getOutWarehouseRecordItemByPackageId.do', 
 	                data : "recordId="+recordId, 
 	                async : false, 
 	                success : function(msg){ 
@@ -201,7 +195,7 @@
 	          		lock: true,
 	          		max: false,
 	          		min: false,
-	          		title: '出库记录详情',
+	          		title: '建包记录详情',
 	          		width: 550,
 	          		height: 350,
 	          		content: contentHtml,
@@ -220,13 +214,13 @@
 	        	          title: '备注',
 	        	          width: '450px',
 	        	          height: '290px',
-	        	          content: 'url:' + baseUrl + '/warehouse/storage/editOutWarehouseRecordRemark.do?id='+id+"&remark="+remark,
+	        	          content: 'url:' + baseUrl + '/warehouse/storage/editOutWarehousePackageRemark.do?id='+id+"&remark="+remark,
 	        	          button: [{
 	        	            name: '确定',
 	        	            callback: function() {
 	        	              var objRemark = this.content.document.getElementById("remark");
 	        	              var remark = $(objRemark).val();
-	        	              $.post(baseUrl + '/warehouse/storage/saveOutWarehouseRecordRemark.do', {
+	        	              $.post(baseUrl + '/warehouse/storage/saveOutWarehousePackageRemark.do', {
 	        	            	  remark:remark,
 	        	            	  id:id
 	        	              },

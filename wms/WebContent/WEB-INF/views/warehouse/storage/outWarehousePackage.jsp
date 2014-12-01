@@ -246,7 +246,7 @@
 	  	          	contentArr.push('   <input class="pull-left" style="margin-left:30px;vertical-align: middle;" id="printCustoms" type="checkbox" checked>');
 	  	          	contentArr.push('   <label class="pull-left" style="margin-left: 5px;line-height:20px;vertical-align: middle;" for="printCustoms">出货交接单</label>');
 	  	          	contentArr.push('</div>');
-	  	          	contentArr.push('<div style="color: #ff0000;margin-left: 0px;">注：在出库记录查询页面也可以打印</div>');
+	  	          	contentArr.push('<div style="color: #ff0000;margin-left: 0px;">注：在建包记录查询页面也可以打印</div>');
 	  	  		    contentArr.push('</div>');
 	  	  		    var contentHtml = contentArr.join('');
 	  	  			$.dialog({
