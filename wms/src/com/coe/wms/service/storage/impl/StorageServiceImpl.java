@@ -1293,6 +1293,10 @@ public class StorageServiceImpl implements IStorageService {
 	public Map<String, String> checkOutWarehouseShipping(String trackingNo, Long userIdOfOperator, Long coeTrackingNoId, String coeTrackingNo, String addOrSub, String orderIds) throws ServiceException {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put(Constant.STATUS, Constant.FAIL);
+		if (StringUtil.isNull(trackingNo)) {
+			map.put(Constant.MESSAGE, "请输入出货跟踪单号");
+			return map;
+		}
 		OutWarehouseOrder param = new OutWarehouseOrder();
 		param.setTrackingNo(trackingNo);
 		List<OutWarehouseOrder> outWarehouseOrderList = outWarehouseOrderDao.findOutWarehouseOrder(param, null, null);
@@ -1400,7 +1404,7 @@ public class StorageServiceImpl implements IStorageService {
 			map.put(Constant.MESSAGE, "该交接单号已经存在出库记录,请勿重复操作");
 			return map;
 		}
-		
+
 		Long userIdOfCustomer = null;
 		Long warehouseId = null;
 		// 根据coe交接单号 获取建包记录,获取每个出库订单(小包)

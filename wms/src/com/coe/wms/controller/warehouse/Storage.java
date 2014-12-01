@@ -82,6 +82,18 @@ public class Storage {
 		return view;
 	}
 
+	@RequestMapping(value = "/outWarehousePackageBatchTrackingNo", method = RequestMethod.GET)
+	public ModelAndView outWarehousePackageBatchTrackingNo(HttpServletRequest request, HttpServletResponse response, String trackingNo) throws IOException {
+		ModelAndView view = new ModelAndView();
+		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
+		if (trackingNo == null) {
+			trackingNo = "";
+		}
+		view.addObject("trackingNo", trackingNo);
+		view.setViewName("warehouse/storage/outWarehousePackageBatchTrackingNo");
+		return view;
+	}
+
 	/**
 	 * 检查 跟踪号和客户帐号是否能找到唯一的入库订单
 	 * 
