@@ -171,10 +171,9 @@ public interface IStorageService {
 	public List<Map<String, String>> getInWarehouseRecordItemMapByRecordId(Long recordId);
 
 	public List<Map<String, String>> getOutWarehouseRecordItemMapByRecordId(Long recordId);
-	
+
 	public List<Map<String, String>> getOutWarehouseRecordItemByPackageId(Long packageId);
 
-	
 	/**
 	 * 获取出库订单物品
 	 * 
@@ -293,7 +292,7 @@ public interface IStorageService {
 	 * @throws ServiceException
 	 */
 	public Map<String, String> outWarehouseShippingConfirm(String coeTrackingNo, Long userIdOfOperator) throws ServiceException;
-	
+
 	/**
 	 * 出库建包
 	 * 
@@ -335,8 +334,10 @@ public interface IStorageService {
 
 	public Map<String, String> saveInWarehouseRecordRemark(String remark, Long id) throws ServiceException;
 
+	public Map<String, String> saveInWarehouseOrderItemSku(Long id, String sku) throws ServiceException;
+
 	public Map<String, String> saveOutWarehouseRecordRemark(String remark, Long id) throws ServiceException;
-	
+
 	public Map<String, String> saveOutWarehousePackageRemark(String remark, Long id) throws ServiceException;
 
 	public Map<String, String> executeSearchOutWarehouseOrder(String nos, String noType) throws ServiceException;

@@ -218,4 +218,10 @@ public class InWarehouseOrderItemDaoImpl implements IInWarehouseOrderItemDao {
 		return skuName;
 	}
 
+	@Override
+	public long saveInWarehouseOrderItemSku(Long id, String sku) {
+		String sql = "update w_s_in_warehouse_order_item set sku ='" + sku + "' where id=" + id;
+		return jdbcTemplate.update(sql);
+	}
+
 }

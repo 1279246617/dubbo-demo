@@ -246,14 +246,28 @@ public class StorageServiceImpl implements IStorageService {
 			return map;
 		}
 		Long orderId = inWarehouseRecordDao.getInWarehouseOrderIdByRecordId(inWarehouseRecordId);
+		if (orderId == null) {
+			map.put(Constant.MESSAGE, "入库订单Id不能为空.");
+			return map;
+		}
 		// 检查该SKU是否存在入库订单中
 		InWarehouseOrderItem inWarehouseOrderItemParam = new InWarehouseOrderItem();
 		inWarehouseOrderItemParam.setSku(itemSku);
 		inWarehouseOrderItemParam.setOrderId(orderId);
 		List<InWarehouseOrderItem> inWarehouseOrderItemList = inWarehouseOrderItemDao.findInWarehouseOrderItem(inWarehouseOrderItemParam, null, null);
 		if (inWarehouseOrderItemList.size() <= 0) {
-			map.put(Constant.MESSAGE, "该产品SKU在此订单中无预报.");
-			return map;
+			// 2014-12-02 改成无预报时判断是否
+			// 入库订单是否直有一个明细.如果只有一个明细,并且无sku的情况,视为薄库存.把操作员扫描的sku更新到预报中
+			InWarehouseOrderItem orderItemParam2 = new InWarehouseOrderItem();
+			orderItemParam2.setOrderId(orderId);
+			List<InWarehouseOrderItem> orderItems = inWarehouseOrderItemDao.findInWarehouseOrderItem(orderItemParam2, null, null);
+			if (orderItems.size() == 1 && StringUtil.isNull(orderItems.get(0).getSku())) {// 薄库存,把sku更新到物品明细记录
+				long updateCount = inWarehouseOrderItemDao.saveInWarehouseOrderItemSku(orderItems.get(0).getId(), itemSku);
+				inWarehouseOrderItemList = inWarehouseOrderItemDao.findInWarehouseOrderItem(inWarehouseOrderItemParam, null, null);
+			} else {
+				map.put(Constant.MESSAGE, "该产品SKU在此订单中无预报,且不符合薄库存情况");
+				return map;
+			}
 		}
 		InWarehouseOrderItem orderItem = inWarehouseOrderItemList.get(0);
 		map.put(Constant.STATUS, Constant.SUCCESS);
@@ -1916,5 +1930,16 @@ public class StorageServiceImpl implements IStorageService {
 	@Override
 	public TrackingNo getTrackingNoById(Long id) throws ServiceException {
 		return trackingNoDao.getTrackingNoById(id);
+	}
+
+	@Override
+	public Map<String, String> saveInWarehouseOrderItemSku(Long id, String sku) throws ServiceException {
+		Map<String, String> map = new HashMap<String, String>();
+		if (inWarehouseOrderItemDao.saveInWarehouseOrderItemSku(id, sku) > 0) {
+			map.put(Constant.STATUS, Constant.SUCCESS);
+		} else {
+			map.put(Constant.STATUS, Constant.FAIL);
+		}
+		return map;
 	}
 }

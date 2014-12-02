@@ -12,13 +12,14 @@ public interface IInWarehouseOrderItemDao {
 
 	public int saveBatchInWarehouseOrderItem(List<InWarehouseOrderItem> itemList);
 
+	public long saveInWarehouseOrderItemSku(Long id, String sku);
+
 	public int saveBatchInWarehouseOrderItemWithOrderId(List<InWarehouseOrderItem> itemList, Long orderId);
 
-	public List<InWarehouseOrderItem> findInWarehouseOrderItem(InWarehouseOrderItem inWarehouseOrder, Map<String, String> moreParam,
-			Pagination page);
+	public List<InWarehouseOrderItem> findInWarehouseOrderItem(InWarehouseOrderItem inWarehouseOrder, Map<String, String> moreParam, Pagination page);
 
 	public Long countInWarehouseOrderItem(InWarehouseOrderItem inWarehouseOrderItem, Map<String, String> moreParam);
-	
+
 	public String getSkuNameByCustomerIdAndSku(String sku, Long userIdOfCustomer);
 
 }
