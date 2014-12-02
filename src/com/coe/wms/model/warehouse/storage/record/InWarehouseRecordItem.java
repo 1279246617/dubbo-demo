@@ -38,6 +38,11 @@ public class InWarehouseRecordItem implements Serializable {
 	 * sku
 	 */
 	private String sku;
+	
+	/**
+	 * sku
+	 */
+	private String skuNo;
 
 	/**
 	 * 备注
@@ -71,6 +76,14 @@ public class InWarehouseRecordItem implements Serializable {
 
 	public void setInWarehouseRecordId(Long inWareHouseRecordId) {
 		this.inWarehouseRecordId = inWareHouseRecordId;
+	}
+
+	public String getSkuNo() {
+		return skuNo;
+	}
+
+	public void setSkuNo(String skuNo) {
+		this.skuNo = skuNo;
 	}
 
 	public Integer getQuantity() {

@@ -255,6 +255,7 @@ public class StorageServiceImpl implements IStorageService {
 			map.put(Constant.MESSAGE, "该产品SKU在此订单中无预报.");
 			return map;
 		}
+		InWarehouseOrderItem orderItem = inWarehouseOrderItemList.get(0);
 		map.put(Constant.STATUS, Constant.SUCCESS);
 		// 查询入库主单信息,用于更新库存
 		InWarehouseRecord inWarehouseRecord = inWarehouseRecordDao.getInWarehouseRecordById(inWarehouseRecordId);
@@ -281,6 +282,7 @@ public class StorageServiceImpl implements IStorageService {
 		inWarehouseRecordItem.setQuantity(itemQuantity);
 		inWarehouseRecordItem.setRemark(itemRemark);
 		inWarehouseRecordItem.setSku(itemSku);
+		inWarehouseRecordItem.setSkuNo(orderItem.getSkuNo());
 		inWarehouseRecordItem.setUserIdOfOperator(userIdOfOperator);
 		// 返回id
 		long id = inWarehouseRecordItemDao.saveInWarehouseRecordItem(inWarehouseRecordItem);
@@ -483,8 +485,9 @@ public class StorageServiceImpl implements IStorageService {
 		List<Object> list = new ArrayList<Object>();
 		for (InWarehouseOrderItem orderItem : orderItemList) {
 			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("orderId", orderItem.getId());
+			map.put("orderItemId", orderItem.getId());
 			map.put("sku", orderItem.getSku());
+			map.put("skuNo", orderItem.getSkuNo());
 			map.put("totalQuantity", orderItem.getQuantity());
 			int totalReceivedQuantity = inWarehouseRecordItemDao.countInWarehouseItemSkuQuantityByOrderId(inWarehouseOrderId, orderItem.getSku());
 			map.put("totalReceivedQuantity", totalReceivedQuantity);
@@ -747,7 +750,7 @@ public class StorageServiceImpl implements IStorageService {
 		List<InWarehouseOrderItem> inwarehouseOrderItemList = new ArrayList<InWarehouseOrderItem>();
 		for (int j = 0; j < skuList.size(); j++) {
 			Sku sku = skuList.get(j);
-			if (sku.getSkuQty() == null || StringUtil.isNull(sku.getSkuCode())) {
+			if (sku.getSkuQty() == null || (StringUtil.isNull(sku.getSkuCode()) && StringUtil.isNull(sku.getSkuId()))) {
 				continue;
 			}
 			InWarehouseOrderItem inwarehouseOrderItem = new InWarehouseOrderItem();

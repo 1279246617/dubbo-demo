@@ -46,7 +46,7 @@ public class InWarehouseRecordItemDaoImpl implements IInWarehouseRecordItemDao {
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public long saveInWarehouseRecordItem(final InWarehouseRecordItem item) {
-		final String sql = "insert into w_s_in_warehouse_record_item (in_warehouse_record_id,quantity,sku,remark,created_time,user_id_of_operator) values (?,?,?,?,?,?)";
+		final String sql = "insert into w_s_in_warehouse_record_item (in_warehouse_record_id,quantity,sku,remark,created_time,user_id_of_operator,sku_no) values (?,?,?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
@@ -57,6 +57,7 @@ public class InWarehouseRecordItemDaoImpl implements IInWarehouseRecordItemDao {
 				ps.setString(4, item.getRemark());
 				ps.setLong(5, item.getCreatedTime());
 				ps.setLong(6, item.getUserIdOfOperator());
+				ps.setString(7, item.getSkuNo());
 				return ps;
 			}
 		}, keyHolder);
@@ -70,7 +71,7 @@ public class InWarehouseRecordItemDaoImpl implements IInWarehouseRecordItemDao {
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public int saveBatchInWarehouseRecordItem(final List<InWarehouseRecordItem> itemList) {
-		final String sql = "insert into w_s_in_warehouse_record_item (in_warehouse_record_id,quantity,sku,remark,created_time,user_id_of_operator) values (?,?,?,?,?,?)";
+		final String sql = "insert into w_s_in_warehouse_record_item (in_warehouse_record_id,quantity,sku,remark,created_time,user_id_of_operator,sku_no) values (?,?,?,?,?,?,?)";
 		int[] batchUpdateSize = jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
 			@Override
 			public void setValues(PreparedStatement ps, int i) throws SQLException {
@@ -81,6 +82,7 @@ public class InWarehouseRecordItemDaoImpl implements IInWarehouseRecordItemDao {
 				ps.setString(4, item.getRemark());
 				ps.setLong(5, item.getCreatedTime());
 				ps.setLong(6, item.getUserIdOfOperator());
+				ps.setString(7, item.getSkuNo());
 			}
 
 			@Override
@@ -94,7 +96,7 @@ public class InWarehouseRecordItemDaoImpl implements IInWarehouseRecordItemDao {
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public int saveBatchInWarehouseRecordItemWithRecordId(final List<InWarehouseRecordItem> itemList, final Long recordId) {
-		final String sql = "insert into w_s_in_warehouse_record_item (in_warehouse_record_id,quantity,sku,remark,created_time,user_id_of_operator) values (?,?,?,?,?,?)";
+		final String sql = "insert into w_s_in_warehouse_record_item (in_warehouse_record_id,quantity,sku,remark,created_time,user_id_of_operator,sku_no) values (?,?,?,?,?,?,?)";
 		int[] batchUpdateSize = jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
 			@Override
 			public void setValues(PreparedStatement ps, int i) throws SQLException {
@@ -105,6 +107,7 @@ public class InWarehouseRecordItemDaoImpl implements IInWarehouseRecordItemDao {
 				ps.setString(4, item.getRemark());
 				ps.setLong(5, item.getCreatedTime());
 				ps.setLong(6, item.getUserIdOfOperator());
+				ps.setString(7, item.getSkuNo());
 			}
 
 			@Override
@@ -127,10 +130,13 @@ public class InWarehouseRecordItemDaoImpl implements IInWarehouseRecordItemDao {
 	@Override
 	public List<InWarehouseRecordItem> findInWarehouseRecordItem(InWarehouseRecordItem inWarehouseRecordItem, Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select id,in_warehouse_record_id,quantity,sku,remark,created_time,user_id_of_operator from w_s_in_warehouse_record_item where 1=1 ");
+		sb.append("select id,in_warehouse_record_id,quantity,sku,remark,created_time,user_id_of_operator,sku_no from w_s_in_warehouse_record_item where 1=1 ");
 		if (inWarehouseRecordItem != null) {
 			if (StringUtil.isNotNull(inWarehouseRecordItem.getSku())) {
 				sb.append(" and sku = '" + inWarehouseRecordItem.getSku() + "' ");
+			}
+			if (StringUtil.isNotNull(inWarehouseRecordItem.getSkuNo())) {
+				sb.append(" and sku_no = '" + inWarehouseRecordItem.getSkuNo() + "' ");
 			}
 			if (StringUtil.isNotNull(inWarehouseRecordItem.getRemark())) {
 				sb.append(" and remark = '" + inWarehouseRecordItem.getRemark() + "' ");
@@ -186,6 +192,9 @@ public class InWarehouseRecordItemDaoImpl implements IInWarehouseRecordItemDao {
 		if (inWarehouseRecordItem != null) {
 			if (StringUtil.isNotNull(inWarehouseRecordItem.getSku())) {
 				sb.append(" and sku = '" + inWarehouseRecordItem.getSku() + "' ");
+			}
+			if (StringUtil.isNotNull(inWarehouseRecordItem.getSkuNo())) {
+				sb.append(" and sku_no = '" + inWarehouseRecordItem.getSkuNo() + "' ");
 			}
 			if (StringUtil.isNotNull(inWarehouseRecordItem.getRemark())) {
 				sb.append(" and remark = '" + inWarehouseRecordItem.getRemark() + "' ");
@@ -259,7 +268,7 @@ public class InWarehouseRecordItemDaoImpl implements IInWarehouseRecordItemDao {
 		String sku = moreParam.get("sku");
 		String warehouseId = moreParam.get("warehouseId");
 		StringBuffer sb = new StringBuffer();
-		sb.append("select r.warehouse_id,r.in_warehouse_order_id,r.user_id_of_customer,r.batch_no,r.tracking_no,i.sku,i.quantity,i.remark,i.created_time,i.user_id_of_operator,i.in_warehouse_record_id from w_s_in_warehouse_record_item i inner join w_s_in_warehouse_record r on i.in_warehouse_record_id=r.id where 1=1 ");
+		sb.append("select r.warehouse_id,r.in_warehouse_order_id,r.user_id_of_customer,r.batch_no,r.tracking_no,i.sku,i,sku_no,i.quantity,i.remark,i.created_time,i.user_id_of_operator,i.in_warehouse_record_id from w_s_in_warehouse_record_item i inner join w_s_in_warehouse_record r on i.in_warehouse_record_id=r.id where 1=1 ");
 		if (StringUtil.isNotNull(userIdOfCustomer)) {
 			sb.append(" and r.user_id_of_customer = " + userIdOfCustomer);
 		}

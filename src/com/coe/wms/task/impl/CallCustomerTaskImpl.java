@@ -165,6 +165,7 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 			for (InWarehouseRecordItem recordItem : recordItemList) {
 				Sku sku = new Sku();
 				sku.setSkuCode(recordItem.getSku());
+				sku.setSkuId(recordItem.getSkuNo());
 				sku.setSkuName(recordItem.getSku());
 				// 2014-10-16 当一个入库订单多次收货,产生多个入库单时,每次回传SKU入库情况,回传所有已收货数量
 				// 根据SKU和入库订单Id, 查询已经收货的SKU数量
