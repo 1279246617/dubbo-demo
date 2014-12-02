@@ -118,6 +118,7 @@ function printOrder(){
 //SKU
 function listOutWarehouseOrderItem(orderId){
 	var contentArr = [];
+	contentArr.push('<div style="height:340px;overflow:auto; ">');
 	contentArr.push('<table class="table" style="width:749px">');
 	contentArr.push('<tr><th>产品SKU</th><th>产品编号</th><th>产品名称</th><th>产品规格</th><th>出库数量</th><th>单价和币种</th><th>单件重量</th></tr>');
 	$.ajax({ 
@@ -141,6 +142,7 @@ function listOutWarehouseOrderItem(orderId){
         } 
    	});
     contentArr.push('</table>');
+    contentArr.push('</div>');
     var contentHtml = contentArr.join('');
 	$.dialog({
   		lock: true,
