@@ -46,6 +46,10 @@ public class OutWarehouseOrderItemShelf implements Serializable {
 	private String skuName;
 
 	/**
+	 * 商品规格
+	 */
+	private String specification;
+	/**
 	 * 可用于报关币种
 	 */
 	private String skuPriceCurrency;
@@ -103,6 +107,14 @@ public class OutWarehouseOrderItemShelf implements Serializable {
 
 	public Double getSkuUnitPrice() {
 		return skuUnitPrice;
+	}
+
+	public String getSpecification() {
+		return specification;
+	}
+
+	public void setSpecification(String specification) {
+		this.specification = specification;
 	}
 
 	public void setSkuUnitPrice(Double skuUnitPrice) {

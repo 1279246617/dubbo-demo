@@ -45,7 +45,7 @@ public class OutWarehouseOrderItemShelfDaoImpl implements IOutWarehouseOrderItem
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public long saveOutWarehouseOrderItemShelf(final OutWarehouseOrderItemShelf item) {
-		final String sql = "insert into w_s_out_warehouse_order_item_shelf (out_warehouse_order_id,quantity,sku,sku_name,sku_unit_price,sku_price_currency,seat_code,sku_net_weight,batch_no) values (?,?,?,?,?,?,?,?,?)";
+		final String sql = "insert into w_s_out_warehouse_order_item_shelf (out_warehouse_order_id,quantity,sku,sku_name,sku_unit_price,sku_price_currency,seat_code,sku_net_weight,batch_no,specification) values (?,?,?,?,?,?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
@@ -54,11 +54,20 @@ public class OutWarehouseOrderItemShelfDaoImpl implements IOutWarehouseOrderItem
 				ps.setLong(2, item.getQuantity());
 				ps.setString(3, item.getSku());
 				ps.setString(4, item.getSkuName());
-				ps.setDouble(5, item.getSkuUnitPrice());
+				if (item.getSkuUnitPrice() == null) {
+					ps.setNull(5, Types.DOUBLE);
+				} else {
+					ps.setDouble(5, item.getSkuUnitPrice());
+				}
 				ps.setString(6, item.getSkuPriceCurrency());
 				ps.setString(7, item.getSeatCode());
-				ps.setDouble(8, item.getSkuNetWeight());
+				if (item.getSkuNetWeight() == null) {
+					ps.setNull(8, Types.DOUBLE);
+				} else {
+					ps.setDouble(8, item.getSkuNetWeight());
+				}
 				ps.setString(9, item.getBatchNo());
+				ps.setString(10, item.getSpecification());
 				return ps;
 			}
 		}, keyHolder);
@@ -72,7 +81,7 @@ public class OutWarehouseOrderItemShelfDaoImpl implements IOutWarehouseOrderItem
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public int saveBatchOutWarehouseOrderItemShelf(final List<OutWarehouseOrderItemShelf> itemList) {
-		final String sql = "insert into w_s_out_warehouse_order_item_shelf (out_warehouse_order_id,quantity,sku,sku_name,sku_unit_price,sku_price_currency,seat_code,sku_net_weight,batch_no) values (?,?,?,?,?,?,?,?,?)";
+		final String sql = "insert into w_s_out_warehouse_order_item_shelf (out_warehouse_order_id,quantity,sku,sku_name,sku_unit_price,sku_price_currency,seat_code,sku_net_weight,batch_no,specification) values (?,?,?,?,?,?,?,?,?,?)";
 		int[] batchUpdateSize = jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
 			@Override
 			public void setValues(PreparedStatement ps, int i) throws SQLException {
@@ -81,11 +90,20 @@ public class OutWarehouseOrderItemShelfDaoImpl implements IOutWarehouseOrderItem
 				ps.setLong(2, item.getQuantity());
 				ps.setString(3, item.getSku());
 				ps.setString(4, item.getSkuName());
-				ps.setDouble(5, item.getSkuUnitPrice());
+				if (item.getSkuUnitPrice() == null) {
+					ps.setNull(5, Types.DOUBLE);
+				} else {
+					ps.setDouble(5, item.getSkuUnitPrice());
+				}
 				ps.setString(6, item.getSkuPriceCurrency());
 				ps.setString(7, item.getSeatCode());
-				ps.setDouble(8, item.getSkuNetWeight());
+				if (item.getSkuNetWeight() == null) {
+					ps.setNull(8, Types.DOUBLE);
+				} else {
+					ps.setDouble(8, item.getSkuNetWeight());
+				}
 				ps.setString(9, item.getBatchNo());
+				ps.setString(10, item.getSpecification());
 			}
 
 			@Override
@@ -99,7 +117,7 @@ public class OutWarehouseOrderItemShelfDaoImpl implements IOutWarehouseOrderItem
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public int saveBatchOutWarehouseOrderItemShelfWithOrderId(final List<OutWarehouseOrderItemShelf> itemList, final Long orderId) {
-		final String sql = "insert into w_s_out_warehouse_order_item_shelf (out_warehouse_order_id,quantity,sku,sku_name,sku_unit_price,sku_price_currency,seat_code,sku_net_weight,batch_no) values (?,?,?,?,?,?,?,?,?)";
+		final String sql = "insert into w_s_out_warehouse_order_item_shelf (out_warehouse_order_id,quantity,sku,sku_name,sku_unit_price,sku_price_currency,seat_code,sku_net_weight,batch_no,specification) values (?,?,?,?,?,?,?,?,?,?)";
 		int[] batchUpdateSize = jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
 			@Override
 			public void setValues(PreparedStatement ps, int i) throws SQLException {
@@ -121,6 +139,7 @@ public class OutWarehouseOrderItemShelfDaoImpl implements IOutWarehouseOrderItem
 					ps.setDouble(8, item.getSkuNetWeight());
 				}
 				ps.setString(9, item.getBatchNo());
+				ps.setString(10, item.getSpecification());
 			}
 
 			@Override
@@ -138,13 +157,12 @@ public class OutWarehouseOrderItemShelfDaoImpl implements IOutWarehouseOrderItem
 	/**
 	 * 查询入库订单
 	 * 
-	 * 参数一律使用实体类加Map . 
+	 * 参数一律使用实体类加Map .
 	 */
 	@Override
-	public List<OutWarehouseOrderItemShelf> findOutWarehouseOrderItemShelf(OutWarehouseOrderItemShelf outWarehouseOrderItemShelf,
-			Map<String, String> moreParam, Pagination page) {
+	public List<OutWarehouseOrderItemShelf> findOutWarehouseOrderItemShelf(OutWarehouseOrderItemShelf outWarehouseOrderItemShelf, Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select id,out_warehouse_order_id,quantity,sku,sku_name,sku_unit_price,sku_price_currency,seat_code,sku_net_weight,batch_no from w_s_out_warehouse_order_item_shelf where 1=1 ");
+		sb.append("select id,out_warehouse_order_id,quantity,sku,sku_name,sku_unit_price,sku_price_currency,seat_code,sku_net_weight,batch_no,specification from w_s_out_warehouse_order_item_shelf where 1=1 ");
 		if (outWarehouseOrderItemShelf != null) {
 			if (StringUtil.isNotNull(outWarehouseOrderItemShelf.getSku())) {
 				sb.append(" and sku = '" + outWarehouseOrderItemShelf.getSku() + "' ");
@@ -164,6 +182,9 @@ public class OutWarehouseOrderItemShelfDaoImpl implements IOutWarehouseOrderItem
 			if (StringUtil.isNotNull(outWarehouseOrderItemShelf.getBatchNo())) {
 				sb.append(" and batch_no = '" + outWarehouseOrderItemShelf.getBatchNo() + "' ");
 			}
+			if (StringUtil.isNotNull(outWarehouseOrderItemShelf.getSpecification())) {
+				sb.append(" and specification = '" + outWarehouseOrderItemShelf.getSpecification() + "' ");
+			}
 			if (outWarehouseOrderItemShelf.getOutWarehouseOrderId() != null) {
 				sb.append(" and out_warehouse_order_id = " + outWarehouseOrderItemShelf.getOutWarehouseOrderId());
 			}
@@ -176,6 +197,7 @@ public class OutWarehouseOrderItemShelfDaoImpl implements IOutWarehouseOrderItem
 			if (outWarehouseOrderItemShelf.getSkuNetWeight() != null) {
 				sb.append(" and sku_net_weight = " + outWarehouseOrderItemShelf.getSkuNetWeight());
 			}
+
 		}
 		// 分页sql
 		if (page != null) {
@@ -183,8 +205,7 @@ public class OutWarehouseOrderItemShelfDaoImpl implements IOutWarehouseOrderItem
 		}
 		String sql = sb.toString();
 		logger.debug("查询出库订单明细sql:" + sql);
-		List<OutWarehouseOrderItemShelf> outWarehouseOrderItemShelfList = jdbcTemplate.query(sql,
-				ParameterizedBeanPropertyRowMapper.newInstance(OutWarehouseOrderItemShelf.class));
+		List<OutWarehouseOrderItemShelf> outWarehouseOrderItemShelfList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(OutWarehouseOrderItemShelf.class));
 		return outWarehouseOrderItemShelfList;
 	}
 }
