@@ -89,8 +89,7 @@
 									</td>
 									<td style="width:40mm;">${item.sku }</td>
 									<td style="width:60mm;">${item.skuName }</td>
-									
-									<td style="width:24mm;"></td>
+									<td style="width:24mm;">${item.specification }</td>
 									<td style="width:24mm;">${item.seatCode}</td>
 									<td style="width:14mm;">${item.quantity }</td>
 									
