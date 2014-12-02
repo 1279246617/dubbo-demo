@@ -11,6 +11,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.simple.ParameterizedBeanPropertyRowMapper;
@@ -152,7 +153,8 @@ public class ProductDaoImpl implements IProductDao {
 	public Product getProductById(Long id) {
 		String sql = "select id,user_id_of_customer,product_name,product_type_id,sku,warehouse_sku,remark,currency,customs_weight,is_need_batch_no,model,customs_value,origin,last_update_time,created_time,tax_code,volume from p_product where id= "
 				+ id;
-		Product product = jdbcTemplate.queryForObject(sql, Product.class);
+		logger.info("得到单个产品SQL："+sql);
+		Product product = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<Product>(Product.class));
 		return product;
 	}
 

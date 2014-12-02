@@ -103,12 +103,52 @@ public class ProductServiceImpl implements IProductService {
 		return map;
 	}
 
+	/**
+	 * 更新产品
+	 * 
+	 */
 	@Override
 	public Map<String,String> updateProductById(Product product) {
-		Long lastUpdateTime = System.currentTimeMillis();
-		product.setLastUpdateTime(lastUpdateTime);
-		productDao.updateProductById(product);
-		return null;
+		Map<String, String> map = new HashMap<String, String>();
+		map.put(Constant.STATUS, Constant.FAIL);
+		if (StringUtil.isNull(product.getProductName())) {
+			map.put(Constant.MESSAGE, "产品名称不能为空");
+			return map;
+		}
+		if (StringUtil.isNull(product.getIsNeedBatchNo())) {
+			map.put(Constant.MESSAGE, "是否需要批次不能为空");
+			return map;
+		}
+		if (StringUtil.isNull(product.getSku())) {
+			map.put(Constant.MESSAGE, "SKU不能为空");
+			return map;
+		}
+		if (StringUtil.isNull(product.getWarehouseSku())) {
+			map.put(Constant.MESSAGE, "仓库SKU不能为空");
+			return map;
+		}
+		if (StringUtil.isNull(product.getModel())) {
+			map.put(Constant.MESSAGE, "规格型号不能为空");
+			return map;
+		}
+		if (StringUtil.isNull(product.getCurrency())) {
+			map.put(Constant.MESSAGE, "币种不能为空");
+			return map;
+		}
+		if (StringUtil.isNull(product.getTaxCode())) {
+			map.put(Constant.MESSAGE, "行邮税号不能为空");
+			return map;
+		}
+		if (StringUtil.isNull(product.getOrigin())) {
+			map.put(Constant.MESSAGE, "原产地不能为空");
+			return map;
+		}
+		long count = productDao.updateProductById(product);
+		if(count>0){
+			map.put(Constant.MESSAGE, "更新产品成功");
+			map.put(Constant.STATUS, Constant.SUCCESS);
+		}
+		return map;
 	}
 
 	/**

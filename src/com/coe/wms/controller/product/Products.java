@@ -17,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.coe.wms.controller.Application;
 import com.coe.wms.model.product.Product;
+import com.coe.wms.model.product.ProductType;
 import com.coe.wms.model.user.User;
 import com.coe.wms.service.product.IProductService;
 import com.coe.wms.service.product.IProductTypeService;
@@ -157,10 +158,16 @@ public class Products {
 	 */
 	@RequestMapping(value = "/getProductById", method = RequestMethod.GET)
 	public ModelAndView getProductById(HttpServletRequest request,
-			HttpServletResponse response) {
+			HttpServletResponse response,Long id) {
 		ModelAndView view = new ModelAndView();
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
-		view.setViewName("");
+		Product product = productService.getProductById(id);
+		ProductType productType = productTypeService.getProductTypeById(product.getProductTypeId());
+		User user = userService.getUserById(product.getUserIdOfCustomer());
+		view.addObject("product",product);
+		view.addObject("productType",productType);
+		view.addObject("user",user);
+		view.setViewName("warehouse/product/updateProduct");
 		return view;
 	}
 
@@ -170,8 +177,34 @@ public class Products {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/updateProductById", method = RequestMethod.POST)
-	public String updateProductById() {
-		return null;
+	public String updateProductById(HttpServletRequest request,Long id,String productName, String productTypeName,
+			String userIdOfCustomer, String isNeedBatchNo, String sku,
+			String warehouseSku, String model, Double volume,
+			Double customsWeight, String currency, Double customsValue,
+			String taxCode, String origin, String remark) {
+		Long productTypeId = productTypeService
+				.getProductTypeIdByName(productTypeName);
+		Long userId = userService.findUserIdByLoginName(userIdOfCustomer);
+		Long lastUpdateTime = System.currentTimeMillis();
+		Product product = new Product();
+		product.setId(id);
+		product.setProductName(productName);
+		product.setProductTypeId(productTypeId);
+		product.setUserIdOfCustomer(userId);
+		product.setIsNeedBatchNo(isNeedBatchNo);
+		product.setSku(sku);
+		product.setWarehouseSku(warehouseSku);
+		product.setModel(model);
+		product.setVolume(volume);
+		product.setCustomsWeight(customsWeight);
+		product.setCurrency(currency);
+		product.setCustomsValue(customsValue);
+		product.setTaxCode(taxCode);
+		product.setOrigin(origin);
+		product.setRemark(remark);
+		product.setLastUpdateTime(lastUpdateTime);
+		Map<String, String> map = productService.updateProductById(product);
+		return GsonUtil.toJson(map);
 	}
 
 	/**
