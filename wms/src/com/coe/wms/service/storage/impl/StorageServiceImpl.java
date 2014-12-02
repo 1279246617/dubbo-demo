@@ -221,6 +221,7 @@ public class StorageServiceImpl implements IStorageService {
 			Map<String, String> map = new HashMap<String, String>();
 			map.put("sku", item.getSku());
 			map.put("skuName", item.getSkuName());
+			map.put("skuNo", item.getSkuNo() == null ? "" : item.getSkuNo());
 			map.put("quantity", NumberUtil.intToString(item.getQuantity()));
 			int receivedQuantity = inWarehouseRecordItemDao.countInWarehouseItemSkuQuantityByOrderId(orderId, item.getSku());
 			map.put("receivedQuantity", receivedQuantity + "");
@@ -1104,7 +1105,7 @@ public class StorageServiceImpl implements IStorageService {
 					waitUpdateavAilableQuantityList.add(itemShelfInventory);
 					// 打印捡货单,记录出库订单对应的货位和物品.下次打印时 使用已经保存的货位和物品信息
 					OutWarehouseOrderItemShelf outWarehouseOrderItemShelf = OutWarehouseOrderItemShelf.createOutWarehouseOrderItemShelf(orderIdLong, quantity, itemShelfInventory.getSeatCode(), item.getSku(), item.getSkuName(),
-							item.getSkuNetWeight(), item.getSkuPriceCurrency(), item.getSkuUnitPrice(), itemShelfInventory.getBatchNo());
+							item.getSkuNetWeight(), item.getSkuPriceCurrency(), item.getSkuUnitPrice(), itemShelfInventory.getBatchNo(), item.getSpecification());
 					outWarehouseOrderItemShelfList.add(outWarehouseOrderItemShelf);
 					if (isBreak) {
 						break;
@@ -1276,10 +1277,12 @@ public class StorageServiceImpl implements IStorageService {
 			List<InWarehouseOrderItem> inWarehouseOrderItemList = inWarehouseOrderItemDao.findInWarehouseOrderItem(orderItemParam, null, null);
 			if (inWarehouseOrderItemList != null && inWarehouseOrderItemList.size() == 1) {
 				map.put("skuName", inWarehouseOrderItemList.get(0).getSkuName());
+				map.put("skuNo", inWarehouseOrderItemList.get(0).getSkuNo());
 				// 预报数量
 				map.put("orderQuantity", inWarehouseOrderItemList.get(0).getQuantity() + "");
 			} else {
 				map.put("skuName", "");
+				map.put("skuNo", "");
 				map.put("orderQuantity", "");
 			}
 			map.put("quantity", NumberUtil.intToString(item.getQuantity()));
