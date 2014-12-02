@@ -116,8 +116,8 @@ function printOrder(){
 //SKU
 function listOutWarehouseOrderItem(orderId){
 	var contentArr = [];
-	contentArr.push('<table class="table" style="width:549px">');
-	contentArr.push('<tr><th>产品SKU</th><th>产品名称</th><th>出库数量</th><th>单价和币种</th><th>单件重量</th></tr>');
+	contentArr.push('<table class="table" style="width:749px">');
+	contentArr.push('<tr><th>产品SKU</th><th>产品编号</th><th>产品名称</th><th>产品规格</th><th>出库数量</th><th>单价和币种</th><th>单件重量</th></tr>');
 	$.ajax({ 
         type : "post", 
         url :baseUrl + '/warehouse/storage/getOutWarehouseOrderItemByOrderId.do', 
@@ -128,7 +128,9 @@ function listOutWarehouseOrderItem(orderId){
 			$.each(msg,function(i,e){
 			  	contentArr.push('<tr>');
 			  	contentArr.push('<td>'+e.sku+'</td>');
+			  	contentArr.push('<td>'+e.skuNo+'</td>');
         		contentArr.push('<td>'+e.skuName+'</td>');
+        		contentArr.push('<td>'+e.specification+'</td>');
         		contentArr.push('<td>'+e.quantity+'</td>');
         		contentArr.push('<td>'+(e.skuUnitPrice +" "+e.skuPriceCurrency)+'</td>');
         		contentArr.push('<td>'+e.skuNetWeight+' G(克)</td>');
@@ -143,7 +145,7 @@ function listOutWarehouseOrderItem(orderId){
   		max: false,
   		min: false,
   		title: '出库订单SKU详情',
-  		width: 550,
+  		width: 750,
   		height: 350,
   		content: contentHtml,
   		button: [{

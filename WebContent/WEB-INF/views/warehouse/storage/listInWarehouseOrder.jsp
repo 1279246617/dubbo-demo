@@ -157,8 +157,8 @@
 	        //SKU
 	        function listInWarehouseOrderItem(orderId){
 	        	var contentArr = [];
-	        	contentArr.push('<table class="table" style="width:549px">');
-	        	contentArr.push('<tr><th>产品SKU</th><th>产品名称</th><th>预报数量</th><th>已收数量</th></tr>');
+	        	contentArr.push('<table class="table" style="width:649px">');
+	        	contentArr.push('<tr><th>产品SKU</th><th>产品编号</th><th>产品名称</th><th>预报数量</th><th>已收数量</th></tr>');
 	        	$.ajax({ 
 	                type : "post", 
 	                url :baseUrl + '/warehouse/storage/getInWarehouseOrderItemByOrderId.do', 
@@ -169,6 +169,7 @@
 	        			$.each(msg,function(i,e){
 	        			  	contentArr.push('<tr>');
 	        			  	contentArr.push('<td>'+e.sku+'</td>');
+	        			  	contentArr.push('<td>'+e.skuNo+'</td>');
 	    	        		contentArr.push('<td>'+e.skuName+'</td>');
 	    	        		contentArr.push('<td>'+e.quantity+'</td>');
 	    	        		contentArr.push('<td>'+(e.receivedQuantity==undefined?0:e.receivedQuantity)+'</td>');
@@ -183,7 +184,7 @@
 	          		max: false,
 	          		min: false,
 	          		title: '入库订单SKU详情',
-	          		width: 550,
+	          		width: 650,
 	          		height: 350,
 	          		content: contentHtml,
 	          		button: [{

@@ -157,7 +157,8 @@ public class OutWarehouseOrderItemShelf implements Serializable {
 		this.seatCode = seatCode;
 	}
 
-	public static OutWarehouseOrderItemShelf createOutWarehouseOrderItemShelf(Long outWarehouseOrderId, int quantity, String seatCode, String sku, String skuName, Double skuNetWeight, String skuPriceCurrency, Double skuUnitPrice, String batchNo) {
+	public static OutWarehouseOrderItemShelf createOutWarehouseOrderItemShelf(Long outWarehouseOrderId, int quantity, String seatCode, String sku, String skuName, Double skuNetWeight, String skuPriceCurrency, Double skuUnitPrice, String batchNo,
+			String specification) {
 		OutWarehouseOrderItemShelf itemShelf = new OutWarehouseOrderItemShelf();
 		itemShelf.setOutWarehouseOrderId(outWarehouseOrderId);
 		itemShelf.setQuantity(quantity);
@@ -168,6 +169,7 @@ public class OutWarehouseOrderItemShelf implements Serializable {
 		itemShelf.setSkuPriceCurrency(skuPriceCurrency);
 		itemShelf.setSkuUnitPrice(skuUnitPrice);
 		itemShelf.setBatchNo(batchNo);
+		itemShelf.setSpecification(specification);
 		return itemShelf;
 	}
 }
