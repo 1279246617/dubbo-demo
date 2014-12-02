@@ -36,6 +36,9 @@ public class ProductDaoImpl implements IProductDao {
 		this.jdbcTemplate = jdbcTemplate;
 	}
 
+	/**
+	 * 查询产品
+	 */
 	@Override
 	public List<Product> findProduct(Product product,
 			Map<String, String> moreParam, Pagination page) {
@@ -81,6 +84,9 @@ public class ProductDaoImpl implements IProductDao {
 		return prodcutList;
 	}
 
+	/**
+	 * 删除产品
+	 */
 	@Override
 	public Long countProduct(Product product, Map<String, String> moreParam) {
 		StringBuffer sb = new StringBuffer(
@@ -89,6 +95,9 @@ public class ProductDaoImpl implements IProductDao {
 		return jdbcTemplate.queryForObject(sql, Long.class);
 	}
 
+	/**
+	 * 新增产品
+	 */
 	@Override
 	public long saveProduct(final Product product) {
 		final String sql = "insert into p_product (user_id_of_customer,product_name,product_type_id,sku,warehouse_sku,remark,currency,customs_weight,is_need_batch_no,model,customs_value,origin,last_update_time,created_time,tax_code,volume) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
@@ -168,5 +177,4 @@ public class ProductDaoImpl implements IProductDao {
 				product.getTaxCode(), product.getVolume(), product.getId());
 		return count;
 	}
-
 }

@@ -22,9 +22,15 @@
 	  <div class="toolbar1">
            <form action="${baseUrl}/products/getListProductData.do" id="searchform" name="searchform" method="post">
                <div class="pull-left">
-               		<span class="pull-left" style="width:85px;">
+               		<span class="pull-left" style="width:60px;">
 			       		<a class="btn btn-primary btn-small" onclick="addProduct()" title="添加产品">
-			           		 <i class="icon-plus"></i>添加产品
+			           		 <i class="icon-plus"></i>添加
+			       	 	</a>
+			       	 	<input style=" visibility:hidden;">
+		       	 	</span>
+		       	 	<span class="pull-left" style="width:60px;">
+			       		<a class="btn btn-primary btn-small" onclick="deleteProductBatch()" title="删除产品">
+			           		 <i class="icon-remove"></i>删除
 			       	 	</a>
 			       	 	<input style=" visibility:hidden;">
 		       	 	</span>
@@ -192,7 +198,7 @@
    	            		var taxCode = this.content.$("#taxCode").val();
    	            		var origin = this.content.$("#origin").val();
    	            		var remark = this.content.$("#remark").val();
-   	            		 
+   	            		var that = this; 
 	     	             $.post(baseUrl + '/products/saveAddProduct.do', {
 	     	            	productName:productName,
 	     	            	productTypeName:productTypeName,
@@ -211,33 +217,31 @@
 	     	             },
 	     	             function(msg) {
 	     	            	if(msg.status == '1'){
-	     	            		parent.$.showDialogMessage(msg.message,null,null);
-	     	            		grid.loadData();	 //保存成功,重新加载产品,但不重新加载货位,避免打乱货位界面
+	     	            		parent.$.showShortMessage({msg:msg.message,animate:false,left:"43%"});
+	     	            		that.close();
+	     	            		grid.loadData();	 //保存成功,重新加载产品
 	     	            		
 	     	            	}
 							if(msg.status =='0'){
-								parent.$.showDialogMessage(msg.message,null,null);
+								parent.$.showShortMessage({msg:msg.message,animate:false,left:"43%"});
+						
 							}
-	     	             },"json");
+	     	            },"json");
+	     	    		return false; 
    	            }
    	          }],
    	          cancel: true
    	        });   			
    		}
    		function deleteProduct(id){
-   		 var contentArr = [];
-		    contentArr.push('<div id="changeContent" style="padding:10px;width: 340px;">');
-		    contentArr.push('<div style="color: #ff0000;margin-left: 25px;margin-top:5px;">是否确认删除？</div>');
-		    contentArr.push('</div>');
-		    var contentHtml = contentArr.join('');
 			$.dialog({
 		  		lock: true,
 		  		max: false,
 		  		min: false,
-		  		title: '确认删除',
-		  	     width: 380,
-		         height: 120,
-		  		content: contentHtml,
+		  		title:'提示',
+			    width:260,
+			    height:60,
+			    content: '您确认删除 1个产品吗？',
 		  		button: [{
 		  			name: '确认',
 		  			callback: function() {
@@ -256,8 +260,44 @@
 		  		}]
 		  	})
    		}
+   		
+   		function deleteProductBatch(){
+   		 var row = grid.getSelectedRows();
+   		    if(row.length < 1){
+   		        parent.$.showShortMessage({msg:"请最少选择一条数据",animate:false});
+   		        return false;
+   		    }
+   		    $.dialog({
+   		        lock: true,
+   		        max:false,
+   		        min:false,
+   		        title:'提示',
+   		        width:260,
+   		        height:60,
+   		        content: '您确认删除 '+row.length+' 个产品吗？',
+   		        button:[{name: '确认',
+   		            callback: function (){
+   		            	var ids = "";
+   		            	for ( var i = 0; i < row.length; i++) {
+   		            		ids += row[i].id+",";
+   						}
+   		            	$.post(baseUrl + '/products/deleteProductByIds.do',{ids:ids},function(msg){
+//    		            		parent.$.showShortMessage({msg:msg.message,animate:false,left:"43%"});
+// 								grid.loadData();
+   		            		if(msg.status == "1"){
+		        				parent.$.showShortMessage({msg:msg.message,animate:false,left:"43%"});
+		        				grid.loadData();	
+		        			}else{
+		        				parent.$.showShortMessage({msg:msg.message,animate:false,left:"43%"});
+		        			}
+   		            		
+			            },"json");
+   		            }},{name: '取消'}]
+   		    });
+   		}
+			   		
    		function updateProduct(id){
-   			
+   			alert(id);
    		}
    		
 		function printListSkuBarcode(){
