@@ -131,7 +131,9 @@
 						{ display: '产品名称', name: 'productName', align: 'center',type:'float',width:'6%'},
 	                    { display: '客户帐号', name: 'userNameOfCustomer', align: 'center',type:'float',width:'6%'},
 	                    { display: '产品类型', name: 'productTypeName', align: 'center',type:'float',width:'6%'},
-	                    { display: '产品SKU', name: 'sku', align: 'center',type:'float',width:'6%'},
+	                    { display: '产品SKU', isSort: false, align: 'center', type: 'float',width:'6%',render: function(row) {
+	                    	return '<a href="javascript:updateProduct(' + row.id + ')">'+row.sku+'</a> ';
+	  		          	}},
 	  		          	{ display: '仓库SKU', name: 'warehouseSku', align: 'center',type:'float',width:'6%'},
 		                { display: '价值币种', name: 'currency', align: 'center',type:'float',width:'6%'},
 		                { display: '是否需要生产批次 ', name: 'isNeedBatchNo', align: 'center',type:'float',width:'6%'},
@@ -297,7 +299,65 @@
    		}
 			   		
    		function updateProduct(id){
-   			alert(id);
+   			$.dialog({
+     	          lock: true,
+     	          title: '更新产品',
+     	          width: '800px',
+     	          height: '600px',
+     	          content: 'url:' + baseUrl + '/products/getProductById.do?id='+id,
+     	          button: [{
+     	            name: '确定',
+     	            callback: function() {
+     	            		var id = this.content.$("#id").val();
+     	            		var productName = this.content.$("#productName").val();
+     	            		var productTypeName = this.content.$("#productTypeName").val();
+     	            		var userIdOfCustomer = this.content.$("#userIdOfCustomer").val();
+     	            		var isNeedBatchNo = this.content.$("#isNeedBatchNo").val();
+     	            		var sku = this.content.$("#sku").val();
+     	            		var warehouseSku = this.content.$("#warehouseSku").val();
+     	            		var model = this.content.$("#model").val();
+     	            		var volume = this.content.$("#volume").val();
+     	            		var customsWeight = this.content.$("#customsWeight").val();
+     	            		var currency = this.content.$("#currency").val();
+     	            		var customsValue = this.content.$("#customsValue").val();
+     	            		var taxCode = this.content.$("#taxCode").val();
+     	            		var origin = this.content.$("#origin").val();
+     	            		var remark = this.content.$("#remark").val();
+     	            		var that = this; 
+  	     	             $.post(baseUrl + '/products/updateProductById.do', {
+  	     	            	id:id,
+  	     	            	productName:productName,
+  	     	            	productTypeName:productTypeName,
+  	     	            	userIdOfCustomer:userIdOfCustomer,
+  	     	            	isNeedBatchNo:isNeedBatchNo,
+  	     	            	sku:sku,
+  	     	            	warehouseSku:warehouseSku,
+  	     	            	model:model,
+  	     	            	volume:volume,
+  	     	            	customsWeight:customsWeight,
+  	     	            	currency:currency,
+  	     	            	customsValue:customsValue,
+  	     	            	taxCode:taxCode,
+  	     	            	origin:origin,
+  	     	            	remark:remark
+  	     	             },
+  	     	             function(msg) {
+  	     	            	if(msg.status == '1'){
+  	     	            		parent.$.showShortMessage({msg:msg.message,animate:false,left:"43%"});
+  	     	            		that.close();
+  	     	            		grid.loadData();	 //保存成功,重新加载产品
+  	     	            		
+  	     	            	}
+  							if(msg.status =='0'){
+  								parent.$.showShortMessage({msg:msg.message,animate:false,left:"43%"});
+  						
+  							}
+  	     	            },"json");
+  	     	    		return false; 
+     	            }
+     	          }],
+     	          cancel: true
+     	        });  
    		}
    		
 		function printListSkuBarcode(){
