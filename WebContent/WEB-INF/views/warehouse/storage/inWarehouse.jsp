@@ -13,7 +13,7 @@
 <link href="${baseUrl}/static/calendar/prettify.css" rel="stylesheet" type="text/css" />
 <link href="${baseUrl}/static/calendar/lhgcalendar.css" rel="stylesheet" type="text/css" />
 <link href="${baseUrl}/static/ligerui/ligerUI/skins/Aqua/css/ligerui-all.css" rel="stylesheet" type="text/css" />
-
+	 
 
 <title>COE</title>
 </head>
@@ -131,6 +131,9 @@
     <script type="text/javascript" src="${baseUrl}/static/ligerui/ligerUI/js/plugins/ligerTab.js"></script>
     <script  type="text/javascript" src="${baseUrl}/static/ligerui/ligerUI/js/plugins/ligerTree.js" ></script>
 	<script  type="text/javascript" src="${baseUrl}/static/js/warehouse/inwarehouse.js" ></script>
+    <script type="text/javascript" src="${baseUrl}/static/calendar/lhgcalendar.min.js"></script>
+	<script type="text/javascript" src="${baseUrl}/static/lhgdialog/prettify/prettify.js"></script>
+	<script type="text/javascript" src="${baseUrl}/static/lhgdialog/prettify/lhgdialog.js"></script>
     
     <script type="text/javascript">
 	   var baseUrl = "${baseUrl}";
@@ -228,7 +231,37 @@
 	        
 
 	        function editSku(orderItemId){
-	        	alert(orderItemId);
+	        	$.dialog({
+      	          lock: true,
+      	          title: '补齐产品SKU',
+      	          width: '280px',
+      	          height: '80px',
+      	          content: 'url:' + baseUrl + '/warehouse/storage/editInWarehouseOrderItemSku.do?orderItemId='+orderItemId,
+      	          button: [{
+      	            name: '确定',
+      	            callback: function() {
+      	            	var objSku = this.content.document.getElementById("sku");
+       	              var sku = $(objSku).val();		
+      	              if(sku == null || sku ==''){
+      	            	parent.$.showShortMessage({msg:"请输入产品SKU",animate:false,left:"45%"});
+      	            	return false;
+      	              }
+      	              $.post(baseUrl + '/warehouse/storage/saveInWarehouseOrderItemSku.do', {
+      	            	  sku:sku,
+      	            	  id:orderItemId
+      	              },
+      	              function(msg) {
+      	            	  if(msg.status =="1"){
+      	            			parent.$.showShortMessage({msg:"补齐产品SKU成功",animate:false,left:"45%"});
+      	                		grid.loadData();
+      	            	  }else{
+      	            			parent.$.showShortMessage({msg:"补齐产品SKU失败",animate:false,left:"45%"});  
+      	            	  }
+      	              },"json");
+      	            }
+      	          }],
+      	          cancel: true
+      	        });
 	        }
 	</script>
 </body>

@@ -1005,6 +1005,31 @@ public class Storage {
 	}
 
 	/**
+	 * @throws IOException
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/saveInWarehouseOrderItemSku")
+	public String saveInWarehouseOrderItemSku(HttpServletRequest request, Long id, String sku) throws IOException {
+		Map<String, String> map = storageService.saveInWarehouseOrderItemSku(id, sku);
+		return GsonUtil.toJson(map);
+	}
+
+	/**
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/editInWarehouseOrderItemSku", method = RequestMethod.GET)
+	public ModelAndView editInWarehouseOrderItemSku(HttpServletRequest request, HttpServletResponse response, Long orderItemId) throws IOException {
+		ModelAndView view = new ModelAndView();
+		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
+		view.setViewName("warehouse/storage/editInWarehouseOrderItemSku");
+		return view;
+	}
+
+	/**
 	 * 
 	 * @param request
 	 * @param response

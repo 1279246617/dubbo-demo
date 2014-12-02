@@ -47,10 +47,12 @@ function checkOrder(){
 				}
         		$.post(baseUrl + '/warehouse/storage/checkOutWarehouseOrder.do',{orderIds:orderIds,checkResult:checkResult},function(msg){
         			if(msg.status == "1"){
-        				parent.$.showShortMessage({msg:msg.message,animate:false,left:"38%"});
+//        				parent.$.showShortMessage({msg:msg.message,animate:false,left:"38%"});
         				grid.loadData();	
+        				parent.$.showDialogMessage(msg.message,null,null);
         			}else{
-        				parent.$.showShortMessage({msg:msg.message,animate:false,left:"43%"});
+        				parent.$.showDialogMessage(msg.message,null,null);
+//        				parent.$.showShortMessage({msg:msg.message,animate:false,left:"43%"});
         			}
                 },"json");
   			}
