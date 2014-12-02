@@ -47,6 +47,13 @@ public class Products {
 	@Resource(name = "productTypeService")
 	private IProductTypeService productTypeService;
 
+	/**
+	 * 产品 界面
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 */
 	@RequestMapping(value = "/listProduct", method = RequestMethod.GET)
 	public ModelAndView listProduct(HttpServletRequest request,
 			HttpServletResponse response) {
@@ -62,6 +69,20 @@ public class Products {
 		return view;
 	}
 
+	/**
+	 * 产品查询
+	 * 
+	 * @param request
+	 * @param sortorder
+	 * @param sortname
+	 * @param page
+	 * @param pagesize
+	 * @param userLoginName
+	 * @param keyword
+	 * @param createdTimeStart
+	 * @param createdTimeEnd
+	 * @return
+	 */
 	@ResponseBody
 	@RequestMapping(value = "/getListProductData", method = RequestMethod.POST)
 	public String getListProductData(HttpServletRequest request,
@@ -101,6 +122,13 @@ public class Products {
 		return GsonUtil.toJson(map);
 	}
 
+	/**
+	 * 根据产品Id删除产品
+	 * 
+	 * @param request
+	 * @param id
+	 * @return
+	 */
 	@ResponseBody
 	@RequestMapping(value = "/deleteProductById", method = RequestMethod.POST)
 	public String deleteProductById(HttpServletRequest request, Long id) {
@@ -108,8 +136,20 @@ public class Products {
 		Map<String, String> map = productService.deleteProductById(id);
 		return GsonUtil.toJson(map);
 	}
-
+	
+	@ResponseBody
+	@RequestMapping(value = "/deleteProductByIds", method = RequestMethod.POST)
+	public String deleteProductByIds(HttpServletRequest request, String ids) {
+		Map<String, String> map = new HashMap<String, String>();
+		String[] id = ids.split(",");
+		for (int i = 0; i < id.length; i++) {
+			Long pId = Long.parseLong(id[i]);
+			map = productService.deleteProductById(pId);
+		}
+		return GsonUtil.toJson(map);
+	}
 	/**
+	 * 更新界面
 	 * 
 	 * @param request
 	 * @param response
@@ -124,12 +164,23 @@ public class Products {
 		return view;
 	}
 
+	/**
+	 * 更新产品
+	 * @return
+	 */
 	@ResponseBody
 	@RequestMapping(value = "/updateProductById", method = RequestMethod.POST)
 	public String updateProductById() {
 		return null;
 	}
 
+	/**
+	 * 添加产品界面
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 */
 	@RequestMapping(value = "/addProduct", method = RequestMethod.GET)
 	public ModelAndView addProduct(HttpServletRequest request,
 			HttpServletResponse response) {
@@ -139,6 +190,26 @@ public class Products {
 		return view;
 	}
 
+	/**
+	 * 添加新产品
+	 * 
+	 * @param request
+	 * @param productName
+	 * @param productTypeName
+	 * @param userIdOfCustomer
+	 * @param isNeedBatchNo
+	 * @param sku
+	 * @param warehouseSku
+	 * @param model
+	 * @param volume
+	 * @param customsWeight
+	 * @param currency
+	 * @param customsValue
+	 * @param taxCode
+	 * @param origin
+	 * @param remark
+	 * @return
+	 */
 	@ResponseBody
 	@RequestMapping(value = "/saveAddProduct", method = RequestMethod.POST)
 	public String saveAddProduct(HttpServletRequest request,
@@ -150,23 +221,6 @@ public class Products {
 		Long productTypeId = productTypeService
 				.getProductTypeIdByName(productTypeName);
 		Long userId = userService.findUserIdByLoginName(userIdOfCustomer);
-
-		// 产品参数
-		// Map<String, String> mapParam = new HashMap<String, String>();
-		// mapParam.put("productName", productName);
-		// mapParam.put("productTypeId", productTypeId.toString());
-		// mapParam.put("userIdOfCustomer", userId.toString());
-		// mapParam.put("isNeedBatchNo", isNeedBatchNo);
-		// mapParam.put("sku", sku);
-		// mapParam.put("warehouseSku", warehouseSku);
-		// mapParam.put("model", model);
-		// mapParam.put("volume", volume.toString());
-		// mapParam.put("customsWeight", customsWeight.toString());
-		// mapParam.put("currency", currency);
-		// mapParam.put("customsValue", customsValue.toString());
-		// mapParam.put("taxCode", taxCode);
-		// mapParam.put("origin", origin);
-		// mapParam.put("remark", remark);
 		Map<String, String> map = productService.saveAddProduct(productName,
 				productTypeId, userId, isNeedBatchNo, sku, warehouseSku, model,
 				volume, customsWeight, currency, customsValue, taxCode, origin,

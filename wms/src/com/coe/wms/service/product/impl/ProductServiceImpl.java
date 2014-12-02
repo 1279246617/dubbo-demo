@@ -94,7 +94,7 @@ public class ProductServiceImpl implements IProductService {
 			return map;
 		}
 		int updateCount = productDao.deleteProductById(productId);
-		if (updateCount == 1) {
+		if (updateCount > 0) {
 			map.put(Constant.STATUS, Constant.SUCCESS);
 			map.put(Constant.MESSAGE, "删除产品成功");
 		} else {
@@ -104,8 +104,11 @@ public class ProductServiceImpl implements IProductService {
 	}
 
 	@Override
-	public int updateProductById(Product product) {
-		return productDao.updateProductById(product);
+	public Map<String,String> updateProductById(Product product) {
+		Long lastUpdateTime = System.currentTimeMillis();
+		product.setLastUpdateTime(lastUpdateTime);
+		productDao.updateProductById(product);
+		return null;
 	}
 
 	/**
@@ -118,7 +121,7 @@ public class ProductServiceImpl implements IProductService {
 			Double customsWeight, String currency, Double customsValue,
 			String taxCode, String origin, String remark) {
 		Map<String, String> map = new HashMap<String, String>();
-		map.put(Constant.MESSAGE, Constant.FAIL);
+		map.put(Constant.STATUS, Constant.FAIL);
 		if (StringUtil.isNull(productName)) {
 			map.put(Constant.MESSAGE, "产品名称不能为空");
 			return map;
@@ -169,12 +172,10 @@ public class ProductServiceImpl implements IProductService {
 		product.setRemark(remark);
 		product.setCreatedTime(createdTime);
 		long count = productDao.saveProduct(product);
-		if (count > 0) {
+		if(count>0){
 			map.put(Constant.MESSAGE, "新增产品成功");
 			map.put(Constant.STATUS, Constant.SUCCESS);
 		}
-		logger.info("新增产品失败");
 		return map;
 	}
-
 }
