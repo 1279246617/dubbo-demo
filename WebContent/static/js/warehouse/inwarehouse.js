@@ -100,8 +100,8 @@ function saveInWarehouseRecordStep2(trackingNoStr,remark,warehouseId) {
 	},"json");
 }
 
-//回车事件3 , 保存明细
-function saveInWarehouseRecordItem() {
+//回车事件3 , 保存明细  isConfirm = 是否确认薄库存
+function saveInWarehouseRecordItem(isConfirm) {
 	//物品明细
 	var itemSku = $("#itemSku").val();
 	var itemQuantity = $("#itemQuantity").val();
@@ -129,11 +129,14 @@ function saveInWarehouseRecordItem() {
 			return;
 		}
 	}
-	
-	
-	$.post(baseUrl+ '/warehouse/storage/saveInWarehouseRecordItem.do?itemSku='
-			+ itemSku+'&itemQuantity='+itemQuantity+'&itemRemark='+itemRemark+"&warehouseId="
-			+warehouseId+"&inWarehouseRecordId="+inWarehouseRecordId, function(msg) {
+	$.post(baseUrl+ '/warehouse/storage/saveInWarehouseRecordItem.do',{
+		itemSku:itemSku,
+		itemQuantity:itemQuantity,
+		itemRemark:itemRemark,
+		warehouseId:warehouseId,
+		inWarehouseRecordId:inWarehouseRecordId,
+		isConfirm:isConfirm
+	},function(msg) {
 		if(msg.status == 0){
 			//保存失败,显示提示
 			parent.$.showDialogMessage(msg.message, null, null);
@@ -149,11 +152,19 @@ function saveInWarehouseRecordItem() {
 			$("#itemSku").focus();
 			$("#tips").html("请继续输入SKU和数量,或者点击完成本次收货!");
 			focus = "2";
-			
 			btnSearch("#searchform",grid);
 			return;
 		}
+		if(msg.status ==2){
+			var mymes = confirm("该订单是薄库存情况,你确定将此SKU绑定到产品吗?");
+			if(mymes != true){
+				return;
+			}else{
+				saveInWarehouseRecordItem('Y');
+			}
+		}
 	},"json");
+     
 }
 
 var oldTrackingNo = "";

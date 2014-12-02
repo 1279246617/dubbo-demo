@@ -978,20 +978,12 @@ public class Storage {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/saveInWarehouseRecordItem", method = RequestMethod.POST)
-	public String saveInWarehouseRecordItem(HttpServletRequest request, String itemSku, Integer itemQuantity, String itemRemark, Long warehouseId, String shelvesNo, String seatNo, Long inWarehouseRecordId) throws IOException {
+	public String saveInWarehouseRecordItem(HttpServletRequest request, String itemSku, Integer itemQuantity, String itemRemark, Long warehouseId, String shelvesNo, String seatNo, Long inWarehouseRecordId, String isConfirm) throws IOException {
 		// 操作员
 		Long userIdOfOperator = (Long) request.getSession().getAttribute(SessionConstant.USER_ID);
-		Map<String, String> map = new HashMap<String, String>();
-		map.put(Constant.STATUS, Constant.FAIL);
 		// 校验和保存
-		Map<String, String> serviceResult = storageService.saveInWarehouseRecordItem(itemSku, itemQuantity, itemRemark, warehouseId, inWarehouseRecordId, userIdOfOperator);
-		// 失败
-		if (!StringUtil.isEqual(serviceResult.get(Constant.STATUS), Constant.SUCCESS)) {
-			map.put(Constant.MESSAGE, serviceResult.get(Constant.MESSAGE));
-			return GsonUtil.toJson(map);
-		}
-		map.put(Constant.STATUS, Constant.SUCCESS);
-		return GsonUtil.toJson(map);
+		Map<String, String> serviceResult = storageService.saveInWarehouseRecordItem(itemSku, itemQuantity, itemRemark, warehouseId, inWarehouseRecordId, userIdOfOperator, isConfirm);
+		return GsonUtil.toJson(serviceResult);
 	}
 
 	/**

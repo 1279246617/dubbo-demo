@@ -234,7 +234,7 @@ public class StorageServiceImpl implements IStorageService {
 	 * 保存入库明细
 	 */
 	@Override
-	public Map<String, String> saveInWarehouseRecordItem(String itemSku, Integer itemQuantity, String itemRemark, Long warehouseId, Long inWarehouseRecordId, Long userIdOfOperator) {
+	public Map<String, String> saveInWarehouseRecordItem(String itemSku, Integer itemQuantity, String itemRemark, Long warehouseId, Long inWarehouseRecordId, Long userIdOfOperator, String isConfirm) {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put(Constant.STATUS, Constant.FAIL);
 		if (StringUtil.isNull(itemSku)) {
@@ -261,11 +261,17 @@ public class StorageServiceImpl implements IStorageService {
 			InWarehouseOrderItem orderItemParam2 = new InWarehouseOrderItem();
 			orderItemParam2.setOrderId(orderId);
 			List<InWarehouseOrderItem> orderItems = inWarehouseOrderItemDao.findInWarehouseOrderItem(orderItemParam2, null, null);
-			if (orderItems.size() == 1 && StringUtil.isNull(orderItems.get(0).getSku())) {// 薄库存,把sku更新到物品明细记录
+			if (orderItems.size() == 1 && StringUtil.isNull(orderItems.get(0).getSku())) {
+				// isConfirm = 'N' 表示不确认是否绑定,弹出询问框
+				if (StringUtil.isEqual(isConfirm, Constant.N)) {
+					map.put(Constant.STATUS, "2");// 该订单是薄库存情况,你确定将此SKU绑定到产品吗?
+					return map;
+				}
+				// 薄库存,把sku更新到物品明细记录
 				long updateCount = inWarehouseOrderItemDao.saveInWarehouseOrderItemSku(orderItems.get(0).getId(), itemSku);
 				inWarehouseOrderItemList = inWarehouseOrderItemDao.findInWarehouseOrderItem(inWarehouseOrderItemParam, null, null);
 			} else {
-				map.put(Constant.MESSAGE, "该产品SKU在此订单中无预报,且不符合薄库存情况");
+				map.put(Constant.MESSAGE, "该产品SKU在此订单中无预报,且不符合薄库存情况,请在下面列表补齐产品SKU");
 				return map;
 			}
 		}
