@@ -80,12 +80,10 @@
 						<span class="pull-left" style="width:170px;">
 							<input type="text"  name="itemSku" t="2"  id="itemSku" style="width:130px;"/>
 						</span>
-						
 						<span class="pull-left" style="width:75px;">产品数量</span>
 						<span class="pull-left" style="width:112px;">
 							<input type="text"  name="itemQuantity"  id="itemQuantity" t="3" style="width:90px;" onkeyup="this.value=this.value.replace(/[^\d]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d]/g,'')"/>
 						</span>
-						
 						
 						<span class="pull-left" style="width:75px;">明细备注</span>
 						<span class="pull-left" style="width:180px;">
@@ -192,7 +190,14 @@
 	     function initGrid() {
 	    	   grid = $("#maingrid").ligerGrid({
 	                columns: [
-	                    { display: '产品SKU', name: 'sku', align: 'center',width:'14%'},
+						{display: '产品SKU',isSort: false,width: '11%',render: function(row) {
+							if(row.sku ==null || row.sku ==''){
+								return '<a href="javascript:editSku(' + row.orderItemId + ')">点击补齐</a>';	
+							}else{
+								return row.sku;								
+							}
+						}},     
+	                    { display: '产品编号', name: 'skuNo', align: 'center',width:'10%'},
 	                    { display: '总预报数量', name: 'totalQuantity', align: 'center', type: 'int',width:'8%'},
 	                    { display: '总已收货数量', name: 'totalReceivedQuantity', align: 'center', type: 'int',width:'9%'},
 	                    { display: '本次收货数量', name: 'receivedQuantity', align: 'center', type: 'int',width:'9%'},
@@ -200,10 +205,10 @@
 	                    	var h = "<span style='color:red;'>"+row.unReceivedquantity+"</span>";
 	                    	return h;
 	  		          	}},
-		                { display: '仓库', name: 'warehouse', align: 'center', type: 'float',width:'11%'},
+		                { display: '仓库', name: 'warehouse', align: 'center', type: 'float',width:'10%'},
 		                { display: '收货时间', name: 'createdTime', type: 'int', width:'13%'},
-		                { display: '操作员', name: 'userLoginNameOfOperator',width:'11%'},
-		                { display: '入库明细备注', name: 'remark', align: 'center', type: 'float',width:'16%'}
+		                { display: '操作员', name: 'userLoginNameOfOperator',width:'10%'},
+		                { display: '入库明细备注', name: 'remark', align: 'center', type: 'float',width:'11%'}
 	                ],  
 	                isScroll: true,
 	                dataAction: 'server',
@@ -220,6 +225,11 @@
 	                clickToEdit: true
 	            });
 	        };	
+	        
+
+	        function editSku(orderItemId){
+	        	alert(orderItemId);
+	        }
 	</script>
 </body>
 </html>
