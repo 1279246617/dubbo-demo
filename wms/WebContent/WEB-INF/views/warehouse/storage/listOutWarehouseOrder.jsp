@@ -196,6 +196,7 @@
 	                pageSizeOptions:[10,50,100,500,1000],
 	                usePager: 'true',
 	                sortName: 'id',
+	                sortOrder: 'desc',
 	                width: '100%',
 	                height: '99%',
 	                checkbox: true,

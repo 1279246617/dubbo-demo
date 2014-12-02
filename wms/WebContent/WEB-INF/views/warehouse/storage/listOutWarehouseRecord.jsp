@@ -160,6 +160,7 @@
 	                pageSizeOptions:[10,50,100,500,1000],
 	                usePager: 'true',
 	                sortName: 'id',
+	                sortOrder: 'desc',
 	                width: '100%',
 	                height: '99%',
 	                checkbox: false,
@@ -176,6 +177,7 @@
 	      //SKU
 	        function listInWarehouseRecordItem(recordId){
 	        	var contentArr = [];
+	        	contentArr.push('<div style="height:340px;overflow:auto; ">');
 	        	contentArr.push('<table class="table" style="width:549px">');
 	        	contentArr.push('<tr><th>出库订单Id</th><th>出库订单跟踪单号</th><th>出库订单重量KG</th><th>出库订单客户帐号</th></tr>');
 	        	$.ajax({ 
@@ -196,6 +198,7 @@
 	                } 
 	           	});
 	            contentArr.push('</table>');
+	            contentArr.push('</div>');
 	            var contentHtml = contentArr.join('');
 	        	$.dialog({
 	          		lock: true,

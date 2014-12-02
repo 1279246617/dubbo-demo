@@ -324,6 +324,7 @@
 		//显示货物
 		function listItemShelfInventory(id){
 			var contentArr = [];
+			contentArr.push('<div style="height:340px;overflow:auto; ">');
         	contentArr.push('<table class="table" style="width:549px">');
         	contentArr.push('<tr><th>产品SKU</th><th>产品名称</th><th>实际数量</th><th>可用数量</th></tr>');
         	$.ajax({ 
@@ -344,6 +345,7 @@
                 } 
            	});
             contentArr.push('</table>');
+            contentArr.push('</div>');
             var contentHtml = contentArr.join('');
         	$.dialog({
           		lock: true,

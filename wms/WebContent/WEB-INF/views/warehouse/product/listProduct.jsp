@@ -160,6 +160,7 @@
 	                pageSizeOptions:[10,50,100,500,1000],
 	                usePager: 'true',
 	                sortName: 'id',
+	                sortOrder: 'desc',
 	                checkbox: true,
 	                rownumbers:true,
 	                alternatingRow:true,
