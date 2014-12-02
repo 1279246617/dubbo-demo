@@ -91,7 +91,7 @@
 						</span>
 						
 						<span class="pull-left" style="width:105px;">
-							<a class="btn  btn-primary" id="enterItem" onclick="saveInWarehouseRecordItem();" style="cursor:pointer;"><i class="icon-ok icon-white"></i>保存明细</a>
+							<a class="btn  btn-primary" id="enterItem" onclick="saveInWarehouseRecordItem('N');" style="cursor:pointer;"><i class="icon-ok icon-white"></i>保存明细</a>
 						</span>
 						<span class="pull-left" style="width:135px;">
 							<a class="btn  btn-primary" id="enterItem" onclick="nextInWarehouseRecord();" style="cursor:pointer;height: 15px;"><i class="icon-ok icon-white"></i>完成本次收货</a>
@@ -175,12 +175,12 @@
 			}
 			//quantity焦点,回车,提交保存明细
 			if(focus == '3'){
-	      		saveInWarehouseRecordItem();
+				saveInWarehouseRecordItem('N');
 	      		return false;
 			}
 			//remark 焦点,回车,提交保存明细
 			if(focus == '4'){
-	      		saveInWarehouseRecordItem();
+				saveInWarehouseRecordItem('N');
 	      		return false;
 			}
   	  }
