@@ -1,15 +1,25 @@
 package com.coe.wms.service.storage.impl;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileCopyUtils;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.coe.wms.dao.product.IProductDao;
 import com.coe.wms.dao.user.IUserDao;
@@ -86,8 +96,10 @@ import com.coe.wms.pojo.api.warehouse.SkuDetail;
 import com.coe.wms.pojo.api.warehouse.TradeDetail;
 import com.coe.wms.pojo.api.warehouse.TradeOrder;
 import com.coe.wms.service.storage.IStorageService;
+import com.coe.wms.util.Config;
 import com.coe.wms.util.Constant;
 import com.coe.wms.util.DateUtil;
+import com.coe.wms.util.FileUtil;
 import com.coe.wms.util.NumberUtil;
 import com.coe.wms.util.Pagination;
 import com.coe.wms.util.StringUtil;
@@ -186,6 +198,9 @@ public class StorageServiceImpl implements IStorageService {
 
 	@Resource(name = "productDao")
 	private IProductDao productDao;
+
+	@Resource(name = "config")
+	private Config config;
 
 	/**
 	 * 根据入库订单id, 查找入库物品明细
@@ -1973,5 +1988,28 @@ public class StorageServiceImpl implements IStorageService {
 			map.put(Constant.STATUS, Constant.FAIL);
 		}
 		return map;
+	}
+
+	@Override
+	public Map<String, Object> executeImportInWarehouseOrder(Map<String, MultipartFile> fileMap, String userLoginName, Long warehouseId) throws ServiceException {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		String uploadDir = config.getRuntimeFilePath() + "/order/import";
+		FileUtil.mkdirs(uploadDir);
+		try {
+			String fileName = null;
+			int i = 0;
+			for (Iterator<Map.Entry<String, MultipartFile>> it = fileMap.entrySet().iterator(); it.hasNext(); i++) {
+				Map.Entry<String, MultipartFile> entry = it.next();
+				MultipartFile mFile = entry.getValue();
+				String originalFilename = mFile.getOriginalFilename();
+
+				System.out.println(originalFilename);
+				byte[] bytes = FileUtil.readFileBinary(mFile.getInputStream());
+				FileUtil.writeFileBinary(uploadDir + "/" + originalFilename, bytes);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return resultMap;
 	}
 }

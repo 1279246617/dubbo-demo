@@ -1,9 +1,17 @@
 package com.coe.wms.controller.warehouse;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -12,9 +20,12 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.coe.wms.controller.Application;
@@ -1113,11 +1124,11 @@ public class Storage {
 	 * @return
 	 * @throws IOException
 	 */
-	@RequestMapping(value = "/inportInWarehouseOrder", method = RequestMethod.GET)
-	public ModelAndView inportInWarehouseOrder(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	@RequestMapping(value = "/importInWarehouseOrder", method = RequestMethod.GET)
+	public ModelAndView importInWarehouseOrder(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		ModelAndView view = new ModelAndView();
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
-		view.setViewName("warehouse/storage/inportInWarehouseOrder");
+		view.setViewName("warehouse/storage/importInWarehouseOrder");
 		return view;
 	}
 
@@ -1125,10 +1136,12 @@ public class Storage {
 	 * @throws IOException
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/executeInportInWarehouseOrder")
-	public String executeInportInWarehouseOrder(HttpServletRequest request) throws IOException {
-
-		return null;
+	@RequestMapping(value = "/executeImportInWarehouseOrder")
+	public String executeImportInWarehouseOrder(HttpServletRequest request, String userLoginName, Long warehouseId) throws IOException {
+		MultipartHttpServletRequest mRequest = (MultipartHttpServletRequest) request;
+		Map<String, MultipartFile> fileMap = mRequest.getFileMap();
+		Map<String, Object> map = storageService.executeImportInWarehouseOrder(fileMap, userLoginName, warehouseId);
+		return GsonUtil.toJson(map);
 	}
 
 	/**
@@ -1139,8 +1152,8 @@ public class Storage {
 	 * @return
 	 * @throws IOException
 	 */
-	@RequestMapping(value = "/inportOutWarehouseOrder", method = RequestMethod.GET)
-	public ModelAndView inportOutWarehouseOrder(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	@RequestMapping(value = "/importOutWarehouseOrder", method = RequestMethod.GET)
+	public ModelAndView importOutWarehouseOrder(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		ModelAndView view = new ModelAndView();
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
 		view.setViewName("warehouse/storage/inportOutWarehouseOrder");
@@ -1151,8 +1164,8 @@ public class Storage {
 	 * @throws IOException
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/executeInportOutWarehouseOrder")
-	public String executeInportOutWarehouseOrder(HttpServletRequest reques) throws IOException {
+	@RequestMapping(value = "/executeImportOutWarehouseOrder")
+	public String executeImportOutWarehouseOrder(HttpServletRequest reques) throws IOException {
 
 		return null;
 	}

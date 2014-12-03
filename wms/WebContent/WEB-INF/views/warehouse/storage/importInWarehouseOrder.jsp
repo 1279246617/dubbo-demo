@@ -10,7 +10,7 @@
 </head>
 <body>
 </body>
-<form enctype="multipart/form-data" action="${baseUrl}/warehouse/storage/inportInWarehouseOrder.do" method="post">
+<form enctype="multipart/form-data" action="${baseUrl}/warehouse/storage/executeImportInWarehouseOrder.do" method="post">
 	<input type="file" name="file1" /> <input type="text" name="alais" />
 	
 	<input type="submit" value="上传" />
