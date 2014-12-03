@@ -101,7 +101,11 @@ public class ProductDaoImpl implements IProductDao {
 				PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 				ps.setLong(1, product.getUserIdOfCustomer());
 				ps.setString(2, product.getProductName());
-				ps.setLong(3, product.getProductTypeId());
+				if (product.getProductTypeId() == null) {
+					ps.setNull(3, Types.BIGINT);
+				} else {
+					ps.setLong(3, product.getProductTypeId());
+				}
 				ps.setString(4, product.getSku());
 				ps.setString(5, product.getWarehouseSku());
 				ps.setString(6, product.getRemark());
@@ -120,7 +124,7 @@ public class ProductDaoImpl implements IProductDao {
 				}
 				ps.setString(12, product.getOrigin());
 				if (product.getLastUpdateTime() == null) {
-					ps.setNull(13, Types.INTEGER);
+					ps.setNull(13, Types.BIGINT);
 				} else {
 					ps.setLong(13, product.getLastUpdateTime());
 				}
@@ -142,7 +146,6 @@ public class ProductDaoImpl implements IProductDao {
 	public Product getProductById(Long id) {
 		String sql = "select id,user_id_of_customer,product_name,product_type_id,sku,warehouse_sku,remark,currency,customs_weight,is_need_batch_no,model,customs_value,origin,last_update_time,created_time,tax_code,volume from p_product where id= "
 				+ id;
-		logger.info("得到单个产品SQL：" + sql);
 		Product product = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<Product>(Product.class));
 		return product;
 	}
@@ -157,7 +160,6 @@ public class ProductDaoImpl implements IProductDao {
 	@Override
 	public int updateProductById(Product product) {
 		String sql = "update p_product set user_id_of_customer=?,product_name=?,product_type_id=?,sku=?,warehouse_sku=?,remark=?,currency=?,customs_weight=?,is_need_batch_no=?,model=?,customs_value=?,origin=?,last_update_time=?,tax_code=?,volume=? where id=?";
-		logger.info("更新产品SQL：" + sql);
 		int count = jdbcTemplate.update(sql, product.getUserIdOfCustomer(), product.getProductName(), product.getProductTypeId(), product.getSku(), product.getWarehouseSku(), product.getRemark(), product.getCurrency(), product.getCustomsWeight(),
 				product.getIsNeedBatchNo(), product.getModel(), product.getCustomsValue(), product.getOrigin(), product.getLastUpdateTime(), product.getTaxCode(), product.getVolume(), product.getId());
 		return count;

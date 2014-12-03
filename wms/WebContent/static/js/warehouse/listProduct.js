@@ -24,6 +24,9 @@ function addProduct(){
             		var origin = this.content.$("#origin").val();
             		var remark = this.content.$("#remark").val();
             		var that = this; 
+            		if(userLoginName == null || userLoginName ==''){
+            			parent.$.showShortMessage({msg:"请输入客户帐号",animate:false,left:"43%"});
+            		}
      	             $.post(baseUrl + '/products/saveAddProduct.do', {
      	            	productName:productName,
      	            	productTypeId:productTypeId,

@@ -66,6 +66,7 @@ public class Products {
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
 		List<ProductType> productTypeList = productTypeService.getAllProductType();
 		view.addObject("productTypeList", productTypeList);
+
 		List<Currency> currencyList = unitService.findAllCurrency();
 		view.addObject("currencyList", currencyList);
 		view.setViewName("warehouse/product/addProduct");
@@ -152,11 +153,20 @@ public class Products {
 		ModelAndView view = new ModelAndView();
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
 		Product product = productService.getProductById(id);
-		ProductType productType = productTypeService.getProductTypeById(product.getProductTypeId());
-		User user = userService.getUserById(product.getUserIdOfCustomer());
 		view.addObject("product", product);
+
+		ProductType productType = productTypeService.getProductTypeById(product.getProductTypeId());
 		view.addObject("productType", productType);
+
+		User user = userService.getUserById(product.getUserIdOfCustomer());
 		view.addObject("user", user);
+
+		List<ProductType> productTypeList = productTypeService.getAllProductType();
+		view.addObject("productTypeList", productTypeList);
+
+		List<Currency> currencyList = unitService.findAllCurrency();
+		view.addObject("currencyList", currencyList);
+
 		view.setViewName("warehouse/product/updateProduct");
 		return view;
 	}
@@ -205,8 +215,25 @@ public class Products {
 	@RequestMapping(value = "/saveAddProduct", method = RequestMethod.POST)
 	public String saveAddProduct(HttpServletRequest request, String productName, Long productTypeId, String userLoginName, String isNeedBatchNo, String sku, String warehouseSku, String model, Double volume, Double customsWeight, String currency,
 			Double customsValue, String taxCode, String origin, String remark) {
-		Long userId = userService.findUserIdByLoginName(userLoginName);
-		Map<String, String> map = productService.saveAddProduct(productName, productTypeId, userId, isNeedBatchNo, sku, warehouseSku, model, volume, customsWeight, currency, customsValue, taxCode, origin, remark);
+		Long userIdOfCustomer = userService.findUserIdByLoginName(userLoginName);
+		Long createdTime = System.currentTimeMillis();
+		Product product = new Product();
+		product.setProductName(productName);
+		product.setProductTypeId(productTypeId);
+		product.setUserIdOfCustomer(userIdOfCustomer);
+		product.setIsNeedBatchNo(isNeedBatchNo);
+		product.setModel(model);
+		product.setSku(sku);
+		product.setWarehouseSku(warehouseSku);
+		product.setVolume(volume);
+		product.setCustomsWeight(customsWeight);
+		product.setCurrency(currency);
+		product.setCustomsValue(customsValue);
+		product.setTaxCode(taxCode);
+		product.setOrigin(origin);
+		product.setRemark(remark);
+		product.setCreatedTime(createdTime);
+		Map<String, String> map = productService.saveAddProduct(product);
 		return GsonUtil.toJson(map);
 	}
 

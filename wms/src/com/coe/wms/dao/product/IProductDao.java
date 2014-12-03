@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.coe.wms.model.product.Product;
-import com.coe.wms.model.product.ProductType;
 import com.coe.wms.util.Pagination;
 
 public interface IProductDao {
