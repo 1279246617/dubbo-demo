@@ -46,6 +46,11 @@ public class InWarehouseOrderItem implements Serializable {
 	private String skuName;
 
 	/**
+	 * 商品规格
+	 */
+	private String specification;
+
+	/**
 	 * 备注
 	 */
 	private String skuRemark;
@@ -68,6 +73,14 @@ public class InWarehouseOrderItem implements Serializable {
 
 	public Integer getQuantity() {
 		return quantity;
+	}
+
+	public String getSpecification() {
+		return specification;
+	}
+
+	public void setSpecification(String specification) {
+		this.specification = specification;
 	}
 
 	public void setQuantity(Integer quantity) {

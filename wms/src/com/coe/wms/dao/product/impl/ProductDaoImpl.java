@@ -46,14 +46,35 @@ public class ProductDaoImpl implements IProductDao {
 				"select id,user_id_of_customer,product_name,product_type_id,sku,warehouse_sku,remark,currency,customs_weight,is_need_batch_no,model,customs_value,origin,last_update_time,created_time,tax_code,volume from p_product where 1=1 ");
 		if (product != null) {
 			if (product.getUserIdOfCustomer() != null) {
-				sb.append(" and user_id_of_customer= '" + product.getUserIdOfCustomer() + "' ");
+				sb.append(" and user_id_of_customer= " + product.getUserIdOfCustomer());
 			}
-			if (StringUtil.isNotNull(product.getSku())) {
-				sb.append(" and product_name like '%" + product.getSku() + "%' ");
-				sb.append(" or sku like '%" + product.getSku() + "%' ");
+			if (product.getId() != null) {
+				sb.append(" and id= " + product.getId());
+			}
+			if (product.getProductTypeId() != null) {
+				sb.append(" and product_type_id= " + product.getProductTypeId());
+			}
+			if (product.getProductName() != null) {
+				sb.append(" and product_name= '" + product.getProductName() + "'");
+			}
+			if (product.getSku() != null) {
+				sb.append(" and sku= '" + product.getSku() + "'");
+			}
+			if (product.getModel() != null) {
+				sb.append(" and model= '" + product.getModel() + "'");
+			}
+			if (product.getWarehouseSku() != null) {
+				sb.append(" and warehouse_sku= '" + product.getWarehouseSku() + "'");
+			}
+			if (product.getTaxCode() != null) {
+				sb.append(" and tax_code= '" + product.getTaxCode() + "'");
 			}
 		}
 		if (moreParam != null) {
+			if (StringUtil.isNotNull(moreParam.get("keyword"))) {
+				sb.append(" and (product_name like '%" + moreParam.get("keyword") + "%'");
+				sb.append(" or sku like '%" + moreParam.get("keyword") + "%' )");
+			}
 			if (moreParam.get("createdTimeStart") != null) {
 				Date date = DateUtil.stringConvertDate(moreParam.get("createdTimeStart"), DateUtil.yyyy_MM_ddHHmmss);
 				if (date != null) {
@@ -68,11 +89,9 @@ public class ProductDaoImpl implements IProductDao {
 			}
 		}
 		if (page != null) {
-			// 分页sql
 			sb.append(page.generatePageSql());
 		}
 		String sql = sb.toString();
-		logger.info("查询产品信息SQL：" + sql);
 		List<Product> prodcutList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(Product.class));
 		return prodcutList;
 	}
@@ -83,8 +102,51 @@ public class ProductDaoImpl implements IProductDao {
 	@Override
 	public Long countProduct(Product product, Map<String, String> moreParam) {
 		StringBuffer sb = new StringBuffer("select count(id) from p_product where 1=1 ");
-		String sql = sb.toString();
-		return jdbcTemplate.queryForObject(sql, Long.class);
+		if (product != null) {
+			if (product.getUserIdOfCustomer() != null) {
+				sb.append(" and user_id_of_customer= " + product.getUserIdOfCustomer());
+			}
+			if (product.getId() != null) {
+				sb.append(" and id= " + product.getId());
+			}
+			if (product.getProductTypeId() != null) {
+				sb.append(" and product_type_id= " + product.getProductTypeId());
+			}
+			if (product.getProductName() != null) {
+				sb.append(" and product_name= '" + product.getProductName() + "'");
+			}
+			if (product.getSku() != null) {
+				sb.append(" and sku= '" + product.getSku() + "'");
+			}
+			if (product.getModel() != null) {
+				sb.append(" and model= '" + product.getModel() + "'");
+			}
+			if (product.getWarehouseSku() != null) {
+				sb.append(" and warehouse_sku= '" + product.getWarehouseSku() + "'");
+			}
+			if (product.getTaxCode() != null) {
+				sb.append(" and tax_code= '" + product.getTaxCode() + "'");
+			}
+		}
+		if (moreParam != null) {
+			if (StringUtil.isNotNull(moreParam.get("keyword"))) {
+				sb.append(" and (product_name like '%" + moreParam.get("keyword") + "%'");
+				sb.append(" or sku like '%" + moreParam.get("keyword") + "%' )");
+			}
+			if (moreParam.get("createdTimeStart") != null) {
+				Date date = DateUtil.stringConvertDate(moreParam.get("createdTimeStart"), DateUtil.yyyy_MM_ddHHmmss);
+				if (date != null) {
+					sb.append(" and created_time >= " + date.getTime());
+				}
+			}
+			if (moreParam.get("createdTimeEnd") != null) {
+				Date date = DateUtil.stringConvertDate(moreParam.get("createdTimeEnd"), DateUtil.yyyy_MM_ddHHmmss);
+				if (date != null) {
+					sb.append(" and created_time <= " + date.getTime());
+				}
+			}
+		}
+		return jdbcTemplate.queryForObject(sb.toString(), Long.class);
 	}
 
 	/**
@@ -95,7 +157,6 @@ public class ProductDaoImpl implements IProductDao {
 		final String sql = "insert into p_product (user_id_of_customer,product_name,product_type_id,sku,warehouse_sku,remark,currency,customs_weight,is_need_batch_no,model,customs_value,origin,last_update_time,created_time,tax_code,volume) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
-
 			@Override
 			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
 				PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);

@@ -127,13 +127,11 @@ public class Products {
 			param.setUserIdOfCustomer(userIdOfCustomer);
 			logger.info("userIdOfCustomer:" + userIdOfCustomer);
 		}
-		param.setSku(keyword);
-		param.setProductName(keyword);
 		// 更多参数
 		Map<String, String> moreParam = new HashMap<String, String>();
 		moreParam.put("createdTimeStart", createdTimeStart);
 		moreParam.put("createdTimeEnd", createdTimeEnd);
-
+		moreParam.put("keyword", keyword);
 		pagination = productService.findProduct(param, moreParam, pagination);
 		Map map = new HashMap();
 		map.put("Rows", pagination.rows);
@@ -226,10 +224,10 @@ public class Products {
 
 		User user = userService.getUserById(product.getUserIdOfCustomer());
 		view.addObject("user", user);
-		
+
 		Currency currency = unitService.findCurrencyByCode(product.getCurrency());
 		view.addObject("currency", currency);
-		
+
 		List<ProductType> productTypeList = productTypeService.getAllProductType();
 		view.addObject("productTypeList", productTypeList);
 
