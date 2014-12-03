@@ -11,6 +11,7 @@ import javax.annotation.Resource;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
+import com.coe.wms.dao.product.IProductDao;
 import com.coe.wms.dao.user.IUserDao;
 import com.coe.wms.dao.warehouse.ISeatDao;
 import com.coe.wms.dao.warehouse.IShelfDao;
@@ -39,7 +40,9 @@ import com.coe.wms.dao.warehouse.storage.IOutWarehouseRecordItemDao;
 import com.coe.wms.dao.warehouse.storage.IReportDao;
 import com.coe.wms.dao.warehouse.storage.IReportTypeDao;
 import com.coe.wms.exception.ServiceException;
+import com.coe.wms.model.product.Product;
 import com.coe.wms.model.unit.Weight;
+import com.coe.wms.model.unit.Currency.CurrencyCode;
 import com.coe.wms.model.unit.Weight.WeightCode;
 import com.coe.wms.model.user.User;
 import com.coe.wms.model.warehouse.TrackingNo;
@@ -180,6 +183,9 @@ public class StorageServiceImpl implements IStorageService {
 
 	@Resource(name = "outWarehouseOrderAdditionalSfDao")
 	private IOutWarehouseOrderAdditionalSfDao outWarehouseOrderAdditionalSfDao;
+
+	@Resource(name = "productDao")
+	private IProductDao productDao;
 
 	/**
 	 * 根据入库订单id, 查找入库物品明细
@@ -779,6 +785,7 @@ public class StorageServiceImpl implements IStorageService {
 			inwarehouseOrderItem.setQuantity(sku.getSkuQty());
 			inwarehouseOrderItem.setSkuName(sku.getSkuName());
 			inwarehouseOrderItem.setSkuRemark(sku.getSkuRemark());
+			inwarehouseOrderItem.setSpecification(sku.getSpecification());
 			// 入库主单的id
 			inwarehouseOrderItemList.add(inwarehouseOrderItem);
 		}
@@ -924,6 +931,25 @@ public class StorageServiceImpl implements IStorageService {
 				outWarehouseOrderItem.setSkuNetWeight(sku.getSkuNetWeight());
 				outWarehouseOrderItem.setOutWarehouseOrderId(outWarehouseOrderId);
 				itemList.add(outWarehouseOrderItem);
+				// 入库订单物品加入产品库
+				Product productParam = new Product();
+				productParam.setSku(sku.getSkuCode());
+				productParam.setUserIdOfCustomer(userIdOfCustomer);
+				long countProduct = productDao.countProduct(productParam, null);
+				if (countProduct <= 0) {// sku未存在,新增
+					Product product = new Product();
+					product.setCreatedTime(System.currentTimeMillis());
+					product.setCurrency(CurrencyCode.CNY);
+					product.setCustomsValue(NumberUtil.div(sku.getSkuUnitPrice(), 100d));// 出库订单物品单价单位是人民币分
+					product.setCustomsWeight(NumberUtil.div(sku.getSkuNetWeight(), 1000d));// 出库订单物品重量单位是G,产品库是KG
+					product.setModel(sku.getSpecification());
+					product.setIsNeedBatchNo(Constant.N);
+					product.setProductName(sku.getSkuName());
+					product.setWarehouseSku(sku.getSkuCode());
+					product.setSku(sku.getSkuCode());
+					product.setUserIdOfCustomer(userIdOfCustomer);
+					productDao.addProduct(product);
+				}
 			}
 			// 保存出库订单明细
 			long itemCount = outWarehouseOrderItemDao.saveBatchOutWarehouseOrderItemWithOrderId(itemList, outWarehouseOrderId);

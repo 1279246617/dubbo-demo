@@ -45,7 +45,7 @@ public class InWarehouseOrderItemDaoImpl implements IInWarehouseOrderItemDao {
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public long saveInWarehouseOrderItem(final InWarehouseOrderItem item) {
-		final String sql = "insert into w_s_in_warehouse_order_item (order_id,quantity,sku,sku_name,sku_remark,validity_time,production_batch_no,sku_no) values (?,?,?,?,?,?,?,?)";
+		final String sql = "insert into w_s_in_warehouse_order_item (order_id,quantity,sku,sku_name,sku_remark,validity_time,production_batch_no,sku_no,specification) values (?,?,?,?,?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
@@ -62,6 +62,7 @@ public class InWarehouseOrderItemDaoImpl implements IInWarehouseOrderItemDao {
 				}
 				ps.setString(7, item.getProductionBatchNo());
 				ps.setString(8, item.getSkuNo());
+				ps.setString(9, item.getSpecification());
 				return ps;
 			}
 		}, keyHolder);
@@ -75,7 +76,7 @@ public class InWarehouseOrderItemDaoImpl implements IInWarehouseOrderItemDao {
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public int saveBatchInWarehouseOrderItem(final List<InWarehouseOrderItem> itemList) {
-		final String sql = "insert into w_s_in_warehouse_order_item (order_id,quantity,sku,sku_name,sku_remark,validity_time,production_batch_no,sku_no) values (?,?,?,?,?,?,?,?)";
+		final String sql = "insert into w_s_in_warehouse_order_item (order_id,quantity,sku,sku_name,sku_remark,validity_time,production_batch_no,sku_no,specification) values (?,?,?,?,?,?,?,?,?)";
 		int[] batchUpdateSize = jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
 			@Override
 			public void setValues(PreparedStatement ps, int i) throws SQLException {
@@ -92,6 +93,7 @@ public class InWarehouseOrderItemDaoImpl implements IInWarehouseOrderItemDao {
 				}
 				ps.setString(7, item.getProductionBatchNo());
 				ps.setString(8, item.getSkuNo());
+				ps.setString(9, item.getSpecification());
 			}
 
 			@Override
@@ -105,7 +107,7 @@ public class InWarehouseOrderItemDaoImpl implements IInWarehouseOrderItemDao {
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public int saveBatchInWarehouseOrderItemWithOrderId(final List<InWarehouseOrderItem> itemList, final Long orderId) {
-		final String sql = "insert into w_s_in_warehouse_order_item (order_id,quantity,sku,sku_name,sku_remark,validity_time,production_batch_no,sku_no) values (?,?,?,?,?,?,?,?)";
+		final String sql = "insert into w_s_in_warehouse_order_item (order_id,quantity,sku,sku_name,sku_remark,validity_time,production_batch_no,sku_no,specification) values (?,?,?,?,?,?,?,?,?)";
 		int[] batchUpdateSize = jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
 			@Override
 			public void setValues(PreparedStatement ps, int i) throws SQLException {
@@ -122,6 +124,7 @@ public class InWarehouseOrderItemDaoImpl implements IInWarehouseOrderItemDao {
 				}
 				ps.setString(7, item.getProductionBatchNo());
 				ps.setString(8, item.getSkuNo());
+				ps.setString(9, item.getSpecification());
 			}
 
 			@Override
@@ -132,10 +135,6 @@ public class InWarehouseOrderItemDaoImpl implements IInWarehouseOrderItemDao {
 		return NumberUtil.sumArry(batchUpdateSize);
 	}
 
-	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
-		this.jdbcTemplate = jdbcTemplate;
-	}
-
 	/**
 	 * 查询入库订单
 	 * 
@@ -144,7 +143,7 @@ public class InWarehouseOrderItemDaoImpl implements IInWarehouseOrderItemDao {
 	@Override
 	public List<InWarehouseOrderItem> findInWarehouseOrderItem(InWarehouseOrderItem inWarehouseOrderItem, Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select id,order_id,quantity,sku,sku_name,sku_remark,validity_time,production_batch_no,sku_no from w_s_in_warehouse_order_item where 1=1 ");
+		sb.append("select id,order_id,quantity,sku,sku_name,sku_remark,validity_time,production_batch_no,sku_no,specification from w_s_in_warehouse_order_item where 1=1 ");
 		if (inWarehouseOrderItem != null) {
 			if (StringUtil.isNotNull(inWarehouseOrderItem.getSku())) {
 				sb.append(" and sku = '" + inWarehouseOrderItem.getSku() + "' ");
@@ -160,6 +159,9 @@ public class InWarehouseOrderItemDaoImpl implements IInWarehouseOrderItemDao {
 			}
 			if (inWarehouseOrderItem.getProductionBatchNo() != null) {
 				sb.append(" and production_batch_no = '" + inWarehouseOrderItem.getProductionBatchNo() + "' ");
+			}
+			if (inWarehouseOrderItem.getSpecification() != null) {
+				sb.append(" and specification = '" + inWarehouseOrderItem.getSpecification() + "' ");
 			}
 		}
 		// 分页sql
@@ -198,6 +200,9 @@ public class InWarehouseOrderItemDaoImpl implements IInWarehouseOrderItemDao {
 			if (inWarehouseOrderItem.getProductionBatchNo() != null) {
 				sb.append(" and production_batch_no = '" + inWarehouseOrderItem.getProductionBatchNo() + "' ");
 			}
+			if (inWarehouseOrderItem.getSpecification() != null) {
+				sb.append(" and specification = '" + inWarehouseOrderItem.getSpecification() + "' ");
+			}
 		}
 		String sql = sb.toString();
 		logger.debug("统计入库订单明细sql:" + sql);
@@ -222,6 +227,10 @@ public class InWarehouseOrderItemDaoImpl implements IInWarehouseOrderItemDao {
 	public long saveInWarehouseOrderItemSku(Long id, String sku) {
 		String sql = "update w_s_in_warehouse_order_item set sku ='" + sku + "' where id=" + id;
 		return jdbcTemplate.update(sql);
+	}
+
+	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
+		this.jdbcTemplate = jdbcTemplate;
 	}
 
 }
