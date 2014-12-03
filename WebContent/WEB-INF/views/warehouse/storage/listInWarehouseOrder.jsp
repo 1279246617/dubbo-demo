@@ -21,6 +21,15 @@
 <body>
 	  <div class="toolbar1">
            <form action="${baseUrl}/warehouse/storage/getInWarehouseOrderData.do" id="searchform" name="searchform" method="post">
+           		<div class="pull-left">
+           			<span class="pull-left" style="width:105px;">
+			       		<a class="btn btn-primary btn-small" onclick="inportOrder()" title="导入入库订单">
+			           		 <i class="icon-folder-open"></i>导入入库订单
+			       	 	</a>
+			       	 	<input style=" visibility:hidden;">
+		       	 	</span>
+		    	</div>   
+		    	
                <div class="pull-right searchContent">
                		<span class="pull-left" style="width:175px;">
                			仓库
@@ -225,7 +234,32 @@
 	        	          }],
 	        	          cancel: true
 	        	        });
-	           }
+	       	}
+	        
+	        function inportOrder(){
+        	   $.dialog({
+        	          lock: true,
+        	          title: '导入订单',
+        	          width: '450px',
+        	          height: '390px',
+        	          content: 'url:' + baseUrl + '/warehouse/storage/inportInWarehouseOrder.do',
+        	          button: [{
+        	            name: '确定',
+        	            callback: function() {
+        	              var objRemark = this.content.document.getElementById("remark");
+        	              var remark = $(objRemark).val();
+        	              $.post(baseUrl + '/warehouse/storage/executeInportInWarehouseOrder.do', {
+        	            	  remark:remark,
+        	            	  id:id
+        	              },
+        	              function(msg) {
+        	                	grid.loadData();
+        	              });
+        	            }
+        	          }],
+        	          cancel: true
+        	        });
+	        }
    	</script>
    	
 	<script type="text/javascript" src="${baseUrl}/static/jquery/jquery.showMessage.js"></script>
