@@ -40,14 +40,17 @@
 			</th>
 		</tr>
 		<tr>
-			<th>所属客户</th>
+			<th>客户帐号</th>
 			<th>
                	<input type="text" name="userLoginName" data-provide="typeahead"  id="userLoginName" style="width:120px;" title="请输入客户登录名" />
 			</th>
 			
 			<th><span title="是否需要生产批次">批次管理</span></th>
 			<th>
-				<input type="text" name="isNeedBatchNo"id="isNeedBatchNo" style="width: 120px;"/>
+				<select style="width:125px;" id="isNeedBatchNo" name="isNeedBatchNo">
+							<option value="N">N</option>
+             				<option value="Y">Y</option>
+				</select>
 			</th>
 		</tr>
 		<tr>
@@ -63,12 +66,11 @@
 		<tr>
 			<th>报关价值</th>
 			<th>
-				<input type="text" name="customsValue" id="customsValue" style="width: 120px;" onkeyup="if(isNaN(value))execCommand('undo')" onafterpaste="if(isNaN(value))execCommand('undo')" />
+				<input type="text" name="customsValue" id="customsValue" style="width: 120px;" onkeyup="if(isNaN(value))execCommand('undo')" onafterpaste="if(isNaN(value))execCommand('undo')" />元
 			</th>
 			<th>价值币种</th>
 			<th>
 				<select style="width:125px;" id="currency" name="currency">
-             				<option></option>
 							<c:forEach items="${currencyList}" var="c" >
 		       	 					<option value="<c:out value='${c.code}'/>">
 		       	 							<c:out value="${c.code}-${c.cn}"/>
@@ -80,7 +82,7 @@
 		<tr>
 			<th>报关重量</th>
 			<th>
-				<input type="text" name="customsWeight" id="customsWeight" style="width: 120px;" onkeyup="if(isNaN(value))execCommand('undo')" onafterpaste="if(isNaN(value))execCommand('undo')" />
+				<input type="text" name="customsWeight" id="customsWeight" style="width: 120px;" onkeyup="if(isNaN(value))execCommand('undo')" onafterpaste="if(isNaN(value))execCommand('undo')" />KG
 			</th>
 			<th>行邮税号</th>
 			<th>

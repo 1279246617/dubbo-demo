@@ -20,7 +20,6 @@ import com.coe.wms.model.user.User;
 import com.coe.wms.service.product.IProductService;
 import com.coe.wms.util.Constant;
 import com.coe.wms.util.DateUtil;
-import com.coe.wms.util.GsonUtil;
 import com.coe.wms.util.Pagination;
 import com.coe.wms.util.StringUtil;
 
@@ -105,42 +104,28 @@ public class ProductServiceImpl implements IProductService {
 	public Map<String, String> updateProductById(Product product) {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put(Constant.STATUS, Constant.FAIL);
+		if (StringUtil.isNull(product.getSku())) {
+			map.put(Constant.MESSAGE, "产品SKU不能为空");
+			return map;
+		}
 		if (StringUtil.isNull(product.getProductName())) {
 			map.put(Constant.MESSAGE, "产品名称不能为空");
-			return map;
-		}
-		if (StringUtil.isNull(product.getIsNeedBatchNo())) {
-			map.put(Constant.MESSAGE, "是否需要批次不能为空");
-			return map;
-		}
-		if (StringUtil.isNull(product.getSku())) {
-			map.put(Constant.MESSAGE, "SKU不能为空");
 			return map;
 		}
 		if (StringUtil.isNull(product.getWarehouseSku())) {
 			map.put(Constant.MESSAGE, "仓库SKU不能为空");
 			return map;
 		}
-		if (StringUtil.isNull(product.getModel())) {
-			map.put(Constant.MESSAGE, "规格型号不能为空");
-			return map;
-		}
-		if (StringUtil.isNull(product.getCurrency())) {
-			map.put(Constant.MESSAGE, "币种不能为空");
-			return map;
-		}
-		if (StringUtil.isNull(product.getTaxCode())) {
-			map.put(Constant.MESSAGE, "行邮税号不能为空");
-			return map;
-		}
-		if (StringUtil.isNull(product.getOrigin())) {
-			map.put(Constant.MESSAGE, "原产地不能为空");
+		if (product.getUserIdOfCustomer() == null) {
+			map.put(Constant.MESSAGE, "请输入正确的客户帐号");
 			return map;
 		}
 		long count = productDao.updateProductById(product);
 		if (count > 0) {
 			map.put(Constant.MESSAGE, "更新产品成功");
 			map.put(Constant.STATUS, Constant.SUCCESS);
+		} else {
+			map.put(Constant.MESSAGE, "更新产品失败");
 		}
 		return map;
 	}
@@ -149,63 +134,31 @@ public class ProductServiceImpl implements IProductService {
 	 * 新增产品
 	 */
 	@Override
-	public Map<String, String> saveAddProduct(String productName, Long productTypeId, Long userIdOfCustomer, String isNeedBatchNo, String sku, String warehouseSku, String model, Double volume, Double customsWeight, String currency,
-			Double customsValue, String taxCode, String origin, String remark) {
+	public Map<String, String> saveAddProduct(Product product) {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put(Constant.STATUS, Constant.FAIL);
-		if (StringUtil.isNull(productName)) {
+		if (StringUtil.isNull(product.getSku())) {
+			map.put(Constant.MESSAGE, "产品SKU不能为空");
+			return map;
+		}
+		if (StringUtil.isNull(product.getProductName())) {
 			map.put(Constant.MESSAGE, "产品名称不能为空");
 			return map;
 		}
-		if (StringUtil.isNull(isNeedBatchNo)) {
-			map.put(Constant.MESSAGE, "是否需要批次不能为空");
-			return map;
-		}
-		if (StringUtil.isNull(sku)) {
-			map.put(Constant.MESSAGE, "SKU不能为空");
-			return map;
-		}
-		if (StringUtil.isNull(warehouseSku)) {
+		if (StringUtil.isNull(product.getWarehouseSku())) {
 			map.put(Constant.MESSAGE, "仓库SKU不能为空");
 			return map;
 		}
-		if (StringUtil.isNull(model)) {
-			map.put(Constant.MESSAGE, "规格型号不能为空");
+		if (product.getUserIdOfCustomer() == null) {
+			map.put(Constant.MESSAGE, "请输入正确的客户帐号");
 			return map;
 		}
-		if (StringUtil.isNull(currency)) {
-			map.put(Constant.MESSAGE, "币种不能为空");
-			return map;
-		}
-		if (StringUtil.isNull(taxCode)) {
-			map.put(Constant.MESSAGE, "行邮税号不能为空");
-			return map;
-		}
-		if (StringUtil.isNull(origin)) {
-			map.put(Constant.MESSAGE, "原产地不能为空");
-			return map;
-		}
-		Long createdTime = System.currentTimeMillis();
-		Product product = new Product();
-		product.setProductName(productName);
-		product.setProductTypeId(productTypeId);
-		product.setUserIdOfCustomer(userIdOfCustomer);
-		product.setIsNeedBatchNo(isNeedBatchNo);
-		product.setModel(model);
-		product.setSku(sku);
-		product.setWarehouseSku(warehouseSku);
-		product.setVolume(volume);
-		product.setCustomsWeight(customsWeight);
-		product.setCurrency(currency);
-		product.setCustomsValue(customsValue);
-		product.setTaxCode(taxCode);
-		product.setOrigin(origin);
-		product.setRemark(remark);
-		product.setCreatedTime(createdTime);
 		long count = productDao.saveProduct(product);
 		if (count > 0) {
 			map.put(Constant.MESSAGE, "新增产品成功");
 			map.put(Constant.STATUS, Constant.SUCCESS);
+		} else {
+			map.put(Constant.MESSAGE, "新增产品失败");
 		}
 		return map;
 	}
