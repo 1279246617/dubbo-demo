@@ -1,6 +1,7 @@
 package com.coe.wms.controller.product;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -18,12 +19,13 @@ import org.springframework.web.servlet.ModelAndView;
 import com.coe.wms.controller.Application;
 import com.coe.wms.model.product.Product;
 import com.coe.wms.model.product.ProductType;
+import com.coe.wms.model.unit.Currency;
 import com.coe.wms.model.user.User;
 import com.coe.wms.service.product.IProductService;
 import com.coe.wms.service.product.IProductTypeService;
 import com.coe.wms.service.storage.IStorageService;
+import com.coe.wms.service.unit.IUnitService;
 import com.coe.wms.service.user.IUserService;
-import com.coe.wms.util.Constant;
 import com.coe.wms.util.DateUtil;
 import com.coe.wms.util.GsonUtil;
 import com.coe.wms.util.Pagination;
@@ -48,26 +50,48 @@ public class Products {
 	@Resource(name = "productTypeService")
 	private IProductTypeService productTypeService;
 
+	@Resource(name = "unitService")
+	private IUnitService unitService;
+
 	/**
-	 * 产品 界面
+	 * 添加产品界面
 	 * 
 	 * @param request
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping(value = "/listProduct", method = RequestMethod.GET)
-	public ModelAndView listProduct(HttpServletRequest request,
-			HttpServletResponse response) {
-		HttpSession session = request.getSession();
-		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
+	@RequestMapping(value = "/addProduct", method = RequestMethod.GET)
+	public ModelAndView addProduct(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView view = new ModelAndView();
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
-		User user = userService.getUserById(userId);
-		view.addObject("warehouseList",
-				storageService.findAllWarehouse(user.getDefaultWarehouseId()));
-		view.addObject("sevenDaysAgoStart", DateUtil.getSevenDaysAgoStart());
-		view.setViewName("warehouse/product/listProduct");
+		List<ProductType> productTypeList = productTypeService.getAllProductType();
+		view.addObject("productTypeList", productTypeList);
+		List<Currency> currencyList = unitService.findAllCurrency();
+		view.addObject("currencyList", currencyList);
+		view.setViewName("warehouse/product/addProduct");
 		return view;
+	}
+
+	/**
+	 * 根据产品Id删除产品
+	 * 
+	 * @param request
+	 * @param id
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/deleteProductById", method = RequestMethod.POST)
+	public String deleteProductById(HttpServletRequest request, Long id) {
+		logger.info("产品ID:" + id);
+		Map<String, String> map = productService.deleteProductById(id);
+		return GsonUtil.toJson(map);
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/deleteProductByIds", method = RequestMethod.POST)
+	public String deleteProductByIds(HttpServletRequest request, String ids) {
+		Map<String, String> map = productService.deleteProductByIds(ids);
+		return GsonUtil.toJson(map);
 	}
 
 	/**
@@ -86,26 +110,19 @@ public class Products {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/getListProductData", method = RequestMethod.POST)
-	public String getListProductData(HttpServletRequest request,
-			String sortorder, String sortname, Integer page, Integer pagesize,
-			String userLoginName, String keyword, String createdTimeStart,
-			String createdTimeEnd) {
+	public String getListProductData(HttpServletRequest request, String sortorder, String sortname, Integer page, Integer pagesize, String userLoginName, String keyword, String createdTimeStart, String createdTimeEnd) {
 		Pagination pagination = new Pagination();
 		pagination.curPage = page;
 		pagination.pageSize = pagesize;
 		pagination.sortName = sortname;
 		pagination.sortOrder = sortorder;
-		if (StringUtil.isNotNull(createdTimeStart)
-				&& createdTimeStart.contains(",")) {
-			createdTimeStart = createdTimeStart.substring(
-					createdTimeStart.lastIndexOf(",") + 1,
-					createdTimeStart.length());
+		if (StringUtil.isNotNull(createdTimeStart) && createdTimeStart.contains(",")) {
+			createdTimeStart = createdTimeStart.substring(createdTimeStart.lastIndexOf(",") + 1, createdTimeStart.length());
 		}
 		Product param = new Product();
 		// 客户帐号
 		if (StringUtil.isNotNull(userLoginName)) {
-			Long userIdOfCustomer = userService
-					.findUserIdByLoginName(userLoginName);
+			Long userIdOfCustomer = userService.findUserIdByLoginName(userLoginName);
 			param.setUserIdOfCustomer(userIdOfCustomer);
 			logger.info("userIdOfCustomer:" + userIdOfCustomer);
 		}
@@ -124,102 +141,43 @@ public class Products {
 	}
 
 	/**
-	 * 根据产品Id删除产品
-	 * 
-	 * @param request
-	 * @param id
-	 * @return
-	 */
-	@ResponseBody
-	@RequestMapping(value = "/deleteProductById", method = RequestMethod.POST)
-	public String deleteProductById(HttpServletRequest request, Long id) {
-		logger.info("产品ID:" + id);
-		Map<String, String> map = productService.deleteProductById(id);
-		return GsonUtil.toJson(map);
-	}
-	
-	@ResponseBody
-	@RequestMapping(value = "/deleteProductByIds", method = RequestMethod.POST)
-	public String deleteProductByIds(HttpServletRequest request, String ids) {
-		Map<String, String> map = new HashMap<String, String>();
-		String[] id = ids.split(",");
-		for (int i = 0; i < id.length; i++) {
-			Long pId = Long.parseLong(id[i]);
-			map = productService.deleteProductById(pId);
-		}
-		return GsonUtil.toJson(map);
-	}
-	/**
 	 * 更新界面
 	 * 
 	 * @param request
 	 * @param response
 	 * @return 显示选中跟新产品
 	 */
-	@RequestMapping(value = "/getProductById", method = RequestMethod.GET)
-	public ModelAndView getProductById(HttpServletRequest request,
-			HttpServletResponse response,Long id) {
+	@RequestMapping(value = "/updateProduct", method = RequestMethod.GET)
+	public ModelAndView getProductById(HttpServletRequest request, HttpServletResponse response, Long id) {
 		ModelAndView view = new ModelAndView();
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
 		Product product = productService.getProductById(id);
 		ProductType productType = productTypeService.getProductTypeById(product.getProductTypeId());
 		User user = userService.getUserById(product.getUserIdOfCustomer());
-		view.addObject("product",product);
-		view.addObject("productType",productType);
-		view.addObject("user",user);
+		view.addObject("product", product);
+		view.addObject("productType", productType);
+		view.addObject("user", user);
 		view.setViewName("warehouse/product/updateProduct");
 		return view;
 	}
 
 	/**
-	 * 更新产品
-	 * @return
-	 */
-	@ResponseBody
-	@RequestMapping(value = "/updateProductById", method = RequestMethod.POST)
-	public String updateProductById(HttpServletRequest request,Long id,String productName, String productTypeName,
-			String userIdOfCustomer, String isNeedBatchNo, String sku,
-			String warehouseSku, String model, Double volume,
-			Double customsWeight, String currency, Double customsValue,
-			String taxCode, String origin, String remark) {
-		Long productTypeId = productTypeService
-				.getProductTypeIdByName(productTypeName);
-		Long userId = userService.findUserIdByLoginName(userIdOfCustomer);
-		Long lastUpdateTime = System.currentTimeMillis();
-		Product product = new Product();
-		product.setId(id);
-		product.setProductName(productName);
-		product.setProductTypeId(productTypeId);
-		product.setUserIdOfCustomer(userId);
-		product.setIsNeedBatchNo(isNeedBatchNo);
-		product.setSku(sku);
-		product.setWarehouseSku(warehouseSku);
-		product.setModel(model);
-		product.setVolume(volume);
-		product.setCustomsWeight(customsWeight);
-		product.setCurrency(currency);
-		product.setCustomsValue(customsValue);
-		product.setTaxCode(taxCode);
-		product.setOrigin(origin);
-		product.setRemark(remark);
-		product.setLastUpdateTime(lastUpdateTime);
-		Map<String, String> map = productService.updateProductById(product);
-		return GsonUtil.toJson(map);
-	}
-
-	/**
-	 * 添加产品界面
+	 * 产品 界面
 	 * 
 	 * @param request
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping(value = "/addProduct", method = RequestMethod.GET)
-	public ModelAndView addProduct(HttpServletRequest request,
-			HttpServletResponse response) {
+	@RequestMapping(value = "/listProduct", method = RequestMethod.GET)
+	public ModelAndView listProduct(HttpServletRequest request, HttpServletResponse response) {
+		HttpSession session = request.getSession();
+		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
 		ModelAndView view = new ModelAndView();
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
-		view.setViewName("warehouse/product/addProduct");
+		User user = userService.getUserById(userId);
+		view.addObject("warehouseList", storageService.findAllWarehouse(user.getDefaultWarehouseId()));
+		view.addObject("sevenDaysAgoStart", DateUtil.getSevenDaysAgoStart());
+		view.setViewName("warehouse/product/listProduct");
 		return view;
 	}
 
@@ -245,19 +203,42 @@ public class Products {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/saveAddProduct", method = RequestMethod.POST)
-	public String saveAddProduct(HttpServletRequest request,
-			String productName, String productTypeName,
-			String userIdOfCustomer, String isNeedBatchNo, String sku,
-			String warehouseSku, String model, Double volume,
-			Double customsWeight, String currency, Double customsValue,
-			String taxCode, String origin, String remark) {
-		Long productTypeId = productTypeService
-				.getProductTypeIdByName(productTypeName);
+	public String saveAddProduct(HttpServletRequest request, String productName, Long productTypeId, String userLoginName, String isNeedBatchNo, String sku, String warehouseSku, String model, Double volume, Double customsWeight, String currency,
+			Double customsValue, String taxCode, String origin, String remark) {
+		Long userId = userService.findUserIdByLoginName(userLoginName);
+		Map<String, String> map = productService.saveAddProduct(productName, productTypeId, userId, isNeedBatchNo, sku, warehouseSku, model, volume, customsWeight, currency, customsValue, taxCode, origin, remark);
+		return GsonUtil.toJson(map);
+	}
+
+	/**
+	 * 更新产品
+	 * 
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/updateProductById", method = RequestMethod.POST)
+	public String updateProductById(HttpServletRequest request, Long id, Long productTypeId, String productName, String userIdOfCustomer, String isNeedBatchNo, String sku, String warehouseSku, String model, Double volume, Double customsWeight,
+			String currency, Double customsValue, String taxCode, String origin, String remark) {
 		Long userId = userService.findUserIdByLoginName(userIdOfCustomer);
-		Map<String, String> map = productService.saveAddProduct(productName,
-				productTypeId, userId, isNeedBatchNo, sku, warehouseSku, model,
-				volume, customsWeight, currency, customsValue, taxCode, origin,
-				remark);
+		Long lastUpdateTime = System.currentTimeMillis();
+		Product product = new Product();
+		product.setId(id);
+		product.setProductName(productName);
+		product.setProductTypeId(productTypeId);
+		product.setUserIdOfCustomer(userId);
+		product.setIsNeedBatchNo(isNeedBatchNo);
+		product.setSku(sku);
+		product.setWarehouseSku(warehouseSku);
+		product.setModel(model);
+		product.setVolume(volume);
+		product.setCustomsWeight(customsWeight);
+		product.setCurrency(currency);
+		product.setCustomsValue(customsValue);
+		product.setTaxCode(taxCode);
+		product.setOrigin(origin);
+		product.setRemark(remark);
+		product.setLastUpdateTime(lastUpdateTime);
+		Map<String, String> map = productService.updateProductById(product);
 		return GsonUtil.toJson(map);
 	}
 }
