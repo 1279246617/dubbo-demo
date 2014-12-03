@@ -10,8 +10,8 @@ function addProduct(){
             name: '确定',
             callback: function() {
             		var productName = this.content.$("#productName").val();
-            		var productTypeName = this.content.$("#productTypeName").val();
-            		var userIdOfCustomer = this.content.$("#userIdOfCustomer").val();
+            		var productTypeId = this.content.$("#productTypeId").val();
+            		var userLoginName = this.content.$("#userLoginName").val();
             		var isNeedBatchNo = this.content.$("#isNeedBatchNo").val();
             		var sku = this.content.$("#sku").val();
             		var warehouseSku = this.content.$("#warehouseSku").val();
@@ -26,8 +26,8 @@ function addProduct(){
             		var that = this; 
      	             $.post(baseUrl + '/products/saveAddProduct.do', {
      	            	productName:productName,
-     	            	productTypeName:productTypeName,
-     	            	userIdOfCustomer:userIdOfCustomer,
+     	            	productTypeId:productTypeId,
+     	            	userLoginName:userLoginName,
      	            	isNeedBatchNo:isNeedBatchNo,
      	            	sku:sku,
      	            	warehouseSku:warehouseSku,
@@ -49,7 +49,6 @@ function addProduct(){
      	            	}
 						if(msg.status =='0'){
 							parent.$.showShortMessage({msg:msg.message,animate:false,left:"43%"});
-					
 						}
      	            },"json");
      	    		return false; 
@@ -109,8 +108,6 @@ function deleteProductBatch(){
             		ids += row[i].id+",";
 				}
             	$.post(baseUrl + '/products/deleteProductByIds.do',{ids:ids},function(msg){
-//    		            		parent.$.showShortMessage({msg:msg.message,animate:false,left:"43%"});
-// 								grid.loadData();
             		if(msg.status == "1"){
         				parent.$.showShortMessage({msg:msg.message,animate:false,left:"43%"});
         				grid.loadData();	
@@ -122,6 +119,7 @@ function deleteProductBatch(){
             }},{name: '取消'}]
     });
 }
+
 //更新产品			   		
 function updateProduct(id){
 	$.dialog({
@@ -129,7 +127,7 @@ function updateProduct(id){
           title: '更新产品',
           width: '800px',
           height: '600px',
-          content: 'url:' + baseUrl + '/products/getProductById.do?id='+id,
+          content: 'url:' + baseUrl + '/products/updateProduct.do?id='+id,
           button: [{
             name: '确定',
             callback: function() {
@@ -171,11 +169,9 @@ function updateProduct(id){
  	            		parent.$.showShortMessage({msg:msg.message,animate:false,left:"43%"});
  	            		that.close();
  	            		grid.loadData();	 //保存成功,重新加载产品
- 	            		
  	            	}
 					if(msg.status =='0'){
 						parent.$.showShortMessage({msg:msg.message,animate:false,left:"43%"});
-				
 					}
  	            },"json");
  	    		return false; 

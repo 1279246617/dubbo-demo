@@ -41,34 +41,27 @@ public class ProductDaoImpl implements IProductDao {
 	 * 查询产品
 	 */
 	@Override
-	public List<Product> findProduct(Product product,
-			Map<String, String> moreParam, Pagination page) {
+	public List<Product> findProduct(Product product, Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer(
 				"select id,user_id_of_customer,product_name,product_type_id,sku,warehouse_sku,remark,currency,customs_weight,is_need_batch_no,model,customs_value,origin,last_update_time,created_time,tax_code,volume from p_product where 1=1 ");
 		if (product != null) {
 			if (product.getUserIdOfCustomer() != null) {
-				sb.append(" and user_id_of_customer= '"
-						+ product.getUserIdOfCustomer() + "' ");
+				sb.append(" and user_id_of_customer= '" + product.getUserIdOfCustomer() + "' ");
 			}
 			if (StringUtil.isNotNull(product.getSku())) {
-				sb.append(" and product_name like '%" + product.getSku()
-						+ "%' ");
+				sb.append(" and product_name like '%" + product.getSku() + "%' ");
 				sb.append(" or sku like '%" + product.getSku() + "%' ");
 			}
 		}
 		if (moreParam != null) {
 			if (moreParam.get("createdTimeStart") != null) {
-				Date date = DateUtil.stringConvertDate(
-						moreParam.get("createdTimeStart"),
-						DateUtil.yyyy_MM_ddHHmmss);
+				Date date = DateUtil.stringConvertDate(moreParam.get("createdTimeStart"), DateUtil.yyyy_MM_ddHHmmss);
 				if (date != null) {
 					sb.append(" and created_time >= " + date.getTime());
 				}
 			}
 			if (moreParam.get("createdTimeEnd") != null) {
-				Date date = DateUtil.stringConvertDate(
-						moreParam.get("createdTimeEnd"),
-						DateUtil.yyyy_MM_ddHHmmss);
+				Date date = DateUtil.stringConvertDate(moreParam.get("createdTimeEnd"), DateUtil.yyyy_MM_ddHHmmss);
 				if (date != null) {
 					sb.append(" and created_time <= " + date.getTime());
 				}
@@ -80,8 +73,7 @@ public class ProductDaoImpl implements IProductDao {
 		}
 		String sql = sb.toString();
 		logger.info("查询产品信息SQL：" + sql);
-		List<Product> prodcutList = jdbcTemplate.query(sql,
-				ParameterizedBeanPropertyRowMapper.newInstance(Product.class));
+		List<Product> prodcutList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(Product.class));
 		return prodcutList;
 	}
 
@@ -90,8 +82,7 @@ public class ProductDaoImpl implements IProductDao {
 	 */
 	@Override
 	public Long countProduct(Product product, Map<String, String> moreParam) {
-		StringBuffer sb = new StringBuffer(
-				"select count(id) from p_product where 1=1 ");
+		StringBuffer sb = new StringBuffer("select count(id) from p_product where 1=1 ");
 		String sql = sb.toString();
 		return jdbcTemplate.queryForObject(sql, Long.class);
 	}
@@ -106,10 +97,8 @@ public class ProductDaoImpl implements IProductDao {
 		jdbcTemplate.update(new PreparedStatementCreator() {
 
 			@Override
-			public PreparedStatement createPreparedStatement(Connection conn)
-					throws SQLException {
-				PreparedStatement ps = conn.prepareStatement(sql,
-						Statement.RETURN_GENERATED_KEYS);
+			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
+				PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 				ps.setLong(1, product.getUserIdOfCustomer());
 				ps.setString(2, product.getProductName());
 				ps.setLong(3, product.getProductTypeId());
@@ -153,7 +142,7 @@ public class ProductDaoImpl implements IProductDao {
 	public Product getProductById(Long id) {
 		String sql = "select id,user_id_of_customer,product_name,product_type_id,sku,warehouse_sku,remark,currency,customs_weight,is_need_batch_no,model,customs_value,origin,last_update_time,created_time,tax_code,volume from p_product where id= "
 				+ id;
-		logger.info("得到单个产品SQL："+sql);
+		logger.info("得到单个产品SQL：" + sql);
 		Product product = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<Product>(Product.class));
 		return product;
 	}
@@ -169,14 +158,14 @@ public class ProductDaoImpl implements IProductDao {
 	public int updateProductById(Product product) {
 		String sql = "update p_product set user_id_of_customer=?,product_name=?,product_type_id=?,sku=?,warehouse_sku=?,remark=?,currency=?,customs_weight=?,is_need_batch_no=?,model=?,customs_value=?,origin=?,last_update_time=?,tax_code=?,volume=? where id=?";
 		logger.info("更新产品SQL：" + sql);
-		int count = jdbcTemplate.update(sql, product.getUserIdOfCustomer(),
-				product.getProductName(), product.getProductTypeId(),
-				product.getSku(), product.getWarehouseSku(),
-				product.getRemark(), product.getCurrency(),
-				product.getCustomsWeight(), product.getIsNeedBatchNo(),
-				product.getModel(), product.getCustomsValue(),
-				product.getOrigin(), product.getLastUpdateTime(),
-				product.getTaxCode(), product.getVolume(), product.getId());
+		int count = jdbcTemplate.update(sql, product.getUserIdOfCustomer(), product.getProductName(), product.getProductTypeId(), product.getSku(), product.getWarehouseSku(), product.getRemark(), product.getCurrency(), product.getCustomsWeight(),
+				product.getIsNeedBatchNo(), product.getModel(), product.getCustomsValue(), product.getOrigin(), product.getLastUpdateTime(), product.getTaxCode(), product.getVolume(), product.getId());
 		return count;
+	}
+
+	@Override
+	public int deleteProductByIds(String ids) {
+		String sql = "delete from p_product where id in(" + ids + ")";
+		return jdbcTemplate.update(sql);
 	}
 }

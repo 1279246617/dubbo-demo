@@ -1,5 +1,7 @@
 package com.coe.wms.service.product.impl;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
@@ -10,8 +12,8 @@ import com.coe.wms.service.product.IProductTypeService;
 
 @Service("productTypeService")
 public class ProductTypeSerivceImpl implements IProductTypeService {
-	
-	@Resource(name="productTypeDao")
+
+	@Resource(name = "productTypeDao")
 	private IProductTypeDao productTypeDao;
 
 	@Override
@@ -20,8 +22,12 @@ public class ProductTypeSerivceImpl implements IProductTypeService {
 	}
 
 	@Override
-	public Long getProductTypeIdByName(String productType) {
-		return productTypeDao.getProductTypeIdByName(productType);
+	public List<ProductType> getAllProductType() {
+		return productTypeDao.getAllProductType();
 	}
 
+	@Override
+	public List<ProductType> getProductTypeByCustomerId(Long userIdOfCustomer) {
+		return productTypeDao.getProductTypeByCustomerId(userIdOfCustomer);
+	}
 }
