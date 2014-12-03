@@ -142,36 +142,6 @@ public class Products {
 	}
 
 	/**
-	 * 更新界面
-	 * 
-	 * @param request
-	 * @param response
-	 * @return 显示选中跟新产品
-	 */
-	@RequestMapping(value = "/updateProduct", method = RequestMethod.GET)
-	public ModelAndView getProductById(HttpServletRequest request, HttpServletResponse response, Long id) {
-		ModelAndView view = new ModelAndView();
-		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
-		Product product = productService.getProductById(id);
-		view.addObject("product", product);
-
-		ProductType productType = productTypeService.getProductTypeById(product.getProductTypeId());
-		view.addObject("productType", productType);
-
-		User user = userService.getUserById(product.getUserIdOfCustomer());
-		view.addObject("user", user);
-
-		List<ProductType> productTypeList = productTypeService.getAllProductType();
-		view.addObject("productTypeList", productTypeList);
-
-		List<Currency> currencyList = unitService.findAllCurrency();
-		view.addObject("currencyList", currencyList);
-
-		view.setViewName("warehouse/product/updateProduct");
-		return view;
-	}
-
-	/**
 	 * 产品 界面
 	 * 
 	 * @param request
@@ -233,8 +203,41 @@ public class Products {
 		product.setOrigin(origin);
 		product.setRemark(remark);
 		product.setCreatedTime(createdTime);
-		Map<String, String> map = productService.saveAddProduct(product);
+		Map<String, String> map = productService.addProduct(product);
 		return GsonUtil.toJson(map);
+	}
+
+	/**
+	 * 更新界面
+	 * 
+	 * @param request
+	 * @param response
+	 * @return 显示选中跟新产品
+	 */
+	@RequestMapping(value = "/updateProduct", method = RequestMethod.GET)
+	public ModelAndView updateProduct(HttpServletRequest request, HttpServletResponse response, Long id) {
+		ModelAndView view = new ModelAndView();
+		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
+		Product product = productService.getProductById(id);
+		view.addObject("product", product);
+
+		ProductType productType = productTypeService.getProductTypeById(product.getProductTypeId());
+		view.addObject("productType", productType);
+
+		User user = userService.getUserById(product.getUserIdOfCustomer());
+		view.addObject("user", user);
+		
+		Currency currency = unitService.findCurrencyByCode(product.getCurrency());
+		view.addObject("currency", currency);
+		
+		List<ProductType> productTypeList = productTypeService.getAllProductType();
+		view.addObject("productTypeList", productTypeList);
+
+		List<Currency> currencyList = unitService.findAllCurrency();
+		view.addObject("currencyList", currencyList);
+
+		view.setViewName("warehouse/product/updateProduct");
+		return view;
 	}
 
 	/**
@@ -243,10 +246,10 @@ public class Products {
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/updateProductById", method = RequestMethod.POST)
-	public String updateProductById(HttpServletRequest request, Long id, Long productTypeId, String productName, String userIdOfCustomer, String isNeedBatchNo, String sku, String warehouseSku, String model, Double volume, Double customsWeight,
+	@RequestMapping(value = "/saveUpdateProduct", method = RequestMethod.POST)
+	public String saveUpdateProduct(HttpServletRequest request, Long id, String productName, Long productTypeId, String userLoginName, String isNeedBatchNo, String sku, String warehouseSku, String model, Double volume, Double customsWeight,
 			String currency, Double customsValue, String taxCode, String origin, String remark) {
-		Long userId = userService.findUserIdByLoginName(userIdOfCustomer);
+		Long userId = userService.findUserIdByLoginName(userLoginName);
 		Long lastUpdateTime = System.currentTimeMillis();
 		Product product = new Product();
 		product.setId(id);
@@ -265,7 +268,7 @@ public class Products {
 		product.setOrigin(origin);
 		product.setRemark(remark);
 		product.setLastUpdateTime(lastUpdateTime);
-		Map<String, String> map = productService.updateProductById(product);
+		Map<String, String> map = productService.updateProduct(product);
 		return GsonUtil.toJson(map);
 	}
 }

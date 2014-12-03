@@ -13,12 +13,12 @@ public interface IProductDao {
 
 	public Product getProductById(Long id);
 
-	public long saveProduct(Product product);
+	public long addProduct(Product product);
 
 	public int deleteProductById(Long id);
 
 	public int deleteProductByIds(String ids);
 
-	public int updateProductById(Product product);
+	public int updateProduct(Product product);
 
 }

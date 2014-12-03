@@ -91,7 +91,7 @@ public class ProductDaoImpl implements IProductDao {
 	 * 新增产品
 	 */
 	@Override
-	public long saveProduct(final Product product) {
+	public long addProduct(final Product product) {
 		final String sql = "insert into p_product (user_id_of_customer,product_name,product_type_id,sku,warehouse_sku,remark,currency,customs_weight,is_need_batch_no,model,customs_value,origin,last_update_time,created_time,tax_code,volume) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
@@ -158,7 +158,7 @@ public class ProductDaoImpl implements IProductDao {
 	}
 
 	@Override
-	public int updateProductById(Product product) {
+	public int updateProduct(Product product) {
 		String sql = "update p_product set user_id_of_customer=?,product_name=?,product_type_id=?,sku=?,warehouse_sku=?,remark=?,currency=?,customs_weight=?,is_need_batch_no=?,model=?,customs_value=?,origin=?,last_update_time=?,tax_code=?,volume=? where id=?";
 		int count = jdbcTemplate.update(sql, product.getUserIdOfCustomer(), product.getProductName(), product.getProductTypeId(), product.getSku(), product.getWarehouseSku(), product.getRemark(), product.getCurrency(), product.getCustomsWeight(),
 				product.getIsNeedBatchNo(), product.getModel(), product.getCustomsValue(), product.getOrigin(), product.getLastUpdateTime(), product.getTaxCode(), product.getVolume(), product.getId());

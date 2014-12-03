@@ -1,99 +1,145 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//Dth HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dth">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link href="${baseUrl}/static/css/common.css" rel="stylesheet"
-	type="text/css" />
-<link href="${baseUrl}/static/bootstrap/bootstrap.min.css"
-	rel="stylesheet" type="text/css" />
-<link href="${baseUrl}/static/bootstrap/common.css" rel="stylesheet"
-	type="text/css" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="${baseUrl}/static/css/common.css" rel="stylesheet"type="text/css" />
+<link href="${baseUrl}/static/bootstrap/bootstrap.min.css"rel="stylesheet" type="text/css" />
+<link href="${baseUrl}/static/bootstrap/common.css" rel="stylesheet" type="text/css" />
 <title>COE</title>
 </head>
 <body>
-	<form action="${baseUrl}/products/updateProductById.do" method="post">
-		<table>
-			<tr>
-				<td>产品名称：</td>
-				<td><input name="productName" id="productName"
-					value="${product.productName}" type="text"> <input
-					name="id" id="id" value="${product.id}" type="hidden"></td>
-			</tr>
-			<tr>
-				<td>产品类型：</td>
-				<td><input name="productTypeName" id="productTypeName"
-					value="${productType.productTypeName}" type="text"></td>
-			</tr>
-			<tr>
-				<td>所属客户：</td>
-				<td><input name="userIdOfCustomer" id="userIdOfCustomer"
-					value="${user.loginName}" type="text"></td>
-			</tr>
-			<tr>
-				<td>是否需要生产批次 （Y/N）：</td>
-				<td><input name="isNeedBatchNo" id="isNeedBatchNo"
-					value="${product.isNeedBatchNo}" type="text"></td>
-			</tr>
-			<tr>
-				<td>产品sku：</td>
-				<td><input name="sku" id="sku" value="${product.sku}"
-					type="text"></td>
-			</tr>
-			<tr>
-				<td>仓库sku：</td>
-				<td><input name="warehouseSku" id="warehouseSku"
-					value="${product.warehouseSku}" type="text"></td>
-			</tr>
-			<tr>
-				<td>规格型号：</td>
-				<td><input name="model" id="model" value="${product.model}"
-					type="text"></td>
-			</tr>
-			<tr>
-				<td>体积：</td>
-				<td><input name=volume id="volume" value="${product.volume}"
-					type="text"></td>
-			</tr>
-			<tr>
-				<td>报关重量（KG）：</td>
-				<td><input name=customsWeight id="customsWeight"
-					value="${product.customsWeight}" type="text"></td>
-			</tr>
-			<tr>
-				<td>价值币种：</td>
-				<td><input name=currency id="currency"
-					value="${product.currency}" type="text"></td>
-			</tr>
-			<tr>
-				<td>报关价值（元）：</td>
-				<td><input name=customsValue id="customsValue"
-					value="${product.customsValue}" type="text"></td>
-			</tr>
-			<tr>
-				<td>行邮税号（ETK B2C渠道专用报关字段）：</td>
-				<td><input name=taxCode id="taxCode" value="${product.taxCode}"
-					type="text"></td>
-			</tr>
-			<tr>
-				<td>原产地：</td>
-				<td><input name=origin id="origin" value="${product.origin}"
-					type="text"></td>
-			</tr>
-			<tr>
-				<td>备注：</td>
-				<td><input name=remark id="remark" value="${product.remark}"
-					type="text"></td>
-			</tr>
-		</table>
-	</form>
+	<input style="display: none;" id="id" name="id" value="${product.id}"/>
+	<table  class="table"  style="margin-top:15px;">
+		<tr>
+			<th style="width:70px;">产品SKU</th>
+			<th>
+				<input type="text" name="sku" id="sku" value="${product.sku}" style="width: 120px;"/>
+			</th>
+			<th style="width:70px;">仓库SKU</th>
+			<th>
+				<input type="text" name="warehouseSku" id="warehouseSku"  value="${product.warehouseSku}" style="width: 120px;"/>
+			</th>
+		</tr>
+		<tr>
+			<th  >产品名称</th>
+			<th>
+				<input type="text" name="productName" id="productName"  value="${product.productName}" style="width: 120px;"/>
+			</th>
+			<th>产品类型</th>
+			<th>
+					<select style="width:125px;" id="productTypeId" name="productTypeId">
+             				<option value="${productType.id}">${productType.id}-${productType.productTypeName}</option>
+             				
+							<c:forEach items="${productTypeList}" var="p" >
+		       	 					<option value="<c:out value='${p.id}'/>">
+		       	 							<c:out value="${p.id}-${p.productTypeName}"/>
+		       		 				</option>
+		       		 		</c:forEach>
+				</select>
+			</th>
+		</tr>
+		<tr>
+			<th>客户帐号</th>
+			<th>
+               	<input type="text" name="userLoginName" data-provide="typeahead"  value="${user.loginName}"  id="userLoginName" style="width:120px;" title="请输入客户登录名"  />
+			</th>
+			
+			<th><span title="是否需要生产批次">批次管理</span></th>
+			<th>
+				<select style="width:125px;" id="isNeedBatchNo" name="isNeedBatchNo">
+							<option value="${product.isNeedBatchNo}">${product.isNeedBatchNo}</option>
+							<option value="N">N</option>
+             				<option value="Y">Y</option>
+				</select>
+			</th>
+		</tr>
+		<tr>
+			<th>规格型号</th>
+			<th>
+				<input type="text" name="model" id="model"  value="${product.model}" style="width: 120px;"/>
+			</th>
+			<th>产品体积</th>
+			<th>
+				<input type="text" name="volume" id="volume" value="${product.volume}" style="width: 120px;" onkeyup="if(isNaN(value))execCommand('undo')" onafterpaste="if(isNaN(value))execCommand('undo')" />
+			</th>
+		</tr>
+		<tr>
+			<th>报关价值</th>
+			<th>
+				<input type="text" name="customsValue" id="customsValue" value="${product.customsValue}" style="width: 120px;" onkeyup="if(isNaN(value))execCommand('undo')" onafterpaste="if(isNaN(value))execCommand('undo')" />元
+			</th>
+			<th>价值币种</th>
+			<th>
+				<select style="width:125px;" id="currency" name="currency">
+							<option value="${currency.code}">${currency.code}-${currency.cn}</option>
+							<c:forEach items="${currencyList}" var="c" >
+		       	 					<option value="<c:out value='${c.code}'/>">
+		       	 							<c:out value="${c.code}-${c.cn}"/>
+		       		 				</option>
+		       		 		</c:forEach>
+				</select>
+			</th>
+		</tr>
+		<tr>
+			<th>报关重量</th>
+			<th>
+				<input type="text" name="customsWeight" id="customsWeight" value="${product.customsWeight}" style="width: 120px;" onkeyup="if(isNaN(value))execCommand('undo')" onafterpaste="if(isNaN(value))execCommand('undo')" />KG
+			</th>
+			<th>行邮税号</th>
+			<th>
+				<input type="text" name="taxCode" id="taxCode" value="${product.taxCode}" style="width: 120px;">
+			</th>
+		</tr>
+		<tr>
+			<th>产品产地</th>
+			<th>
+				<input type="text" name="origin" id="origin" value="${product.origin}" style="width: 120px;">
+			</th>
+			<th>产品备注</th>
+			<th>
+				<input type="text" name="remark" id="remark" value="${product.remark}" style="width: 120px;">
+			</th>
+		</tr>
+	</table>
 
 	<script type="text/javascript" src="${baseUrl}/static/jquery/jquery.js"></script>
-	<script type="text/javascript"
-		src="${baseUrl}/static/bootstrap/bootstrap-typeahead.js"></script>
-	<script type="text/javascript"
-		src="${baseUrl}/static/jquery/jquery.showMessage.js"></script>
+	<script type="text/javascript" src="${baseUrl}/static/bootstrap/bootstrap-typeahead.js"></script>
+	<script type="text/javascript" src="${baseUrl}/static/jquery/jquery.showMessage.js"></script>
+	<script type="text/javascript">
+		var baseUrl = '${baseUrl}'; 
+		$(function(){
+			    $("#userLoginName").typeahead({
+			        source: function (query, process) {
+			        	var userResult = "";
+			            $.ajax({
+			      	      type : "post",
+			      	      url : baseUrl+'/user/searchUser.do?keyword='+query,
+			      	      async : false,
+			      	      success : function(data){
+			      	       	 data = eval("(" + data + ")");
+			      	      	userResult = data;
+			      	      }
+			      	   });
+			            return userResult;
+			        },
+			        highlighter: function(item) {
+			        	var arr = item.split("-");
+				          	var userId = arr[0];
+				          	var loginName = arr[1];
+				          	var keyword = arr[2];
+				          	var newKeyword = ("<font color='red'>"+keyword+"</font>");
+				          	var newItem = userId.replace(keyword,newKeyword)+"-"+loginName.replace(keyword,newKeyword);
+				          	return newItem;
+			        },
+			        updater: function(item) {
+			    	 var itemArr = item.split("-");
+			            return itemArr[1];
+			 	 }
+			  });
+		});
+	</script>
 </body>
 </html>
