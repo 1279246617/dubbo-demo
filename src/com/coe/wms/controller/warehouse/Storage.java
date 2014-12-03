@@ -1104,4 +1104,56 @@ public class Storage {
 		Map<String, String> map = storageService.executeSearchOutWarehouseOrder(nos, noType);
 		return GsonUtil.toJson(map);
 	}
+
+	/**
+	 * 导入入库订单界面
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/inportInWarehouseOrder", method = RequestMethod.GET)
+	public ModelAndView inportInWarehouseOrder(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		ModelAndView view = new ModelAndView();
+		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
+		view.setViewName("warehouse/storage/inportInWarehouseOrder");
+		return view;
+	}
+
+	/**
+	 * @throws IOException
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/executeInportInWarehouseOrder")
+	public String executeInportInWarehouseOrder(HttpServletRequest request) throws IOException {
+
+		return null;
+	}
+
+	/**
+	 * 导入出库订单界面
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/inportOutWarehouseOrder", method = RequestMethod.GET)
+	public ModelAndView inportOutWarehouseOrder(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		ModelAndView view = new ModelAndView();
+		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
+		view.setViewName("warehouse/storage/inportOutWarehouseOrder");
+		return view;
+	}
+
+	/**
+	 * @throws IOException
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/executeInportOutWarehouseOrder")
+	public String executeInportOutWarehouseOrder(HttpServletRequest reques) throws IOException {
+
+		return null;
+	}
 }
