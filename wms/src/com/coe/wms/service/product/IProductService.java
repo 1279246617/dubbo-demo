@@ -14,8 +14,8 @@ public interface IProductService {
 
 	public Map<String, String> deleteProductByIds(String ids);
 
-	public Map<String, String> updateProductById(Product product);
+	public Map<String, String> updateProduct(Product product);
 
-	public Map<String, String> saveAddProduct(Product product);
+	public Map<String, String> addProduct(Product product);
 
 }

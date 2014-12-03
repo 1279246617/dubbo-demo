@@ -101,7 +101,7 @@ public class ProductServiceImpl implements IProductService {
 	 * 
 	 */
 	@Override
-	public Map<String, String> updateProductById(Product product) {
+	public Map<String, String> updateProduct(Product product) {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put(Constant.STATUS, Constant.FAIL);
 		if (StringUtil.isNull(product.getSku())) {
@@ -120,7 +120,7 @@ public class ProductServiceImpl implements IProductService {
 			map.put(Constant.MESSAGE, "请输入正确的客户帐号");
 			return map;
 		}
-		long count = productDao.updateProductById(product);
+		long count = productDao.updateProduct(product);
 		if (count > 0) {
 			map.put(Constant.MESSAGE, "更新产品成功");
 			map.put(Constant.STATUS, Constant.SUCCESS);
@@ -134,7 +134,7 @@ public class ProductServiceImpl implements IProductService {
 	 * 新增产品
 	 */
 	@Override
-	public Map<String, String> saveAddProduct(Product product) {
+	public Map<String, String> addProduct(Product product) {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put(Constant.STATUS, Constant.FAIL);
 		if (StringUtil.isNull(product.getSku())) {
@@ -153,7 +153,7 @@ public class ProductServiceImpl implements IProductService {
 			map.put(Constant.MESSAGE, "请输入正确的客户帐号");
 			return map;
 		}
-		long count = productDao.saveProduct(product);
+		long count = productDao.addProduct(product);
 		if (count > 0) {
 			map.put(Constant.MESSAGE, "新增产品成功");
 			map.put(Constant.STATUS, Constant.SUCCESS);

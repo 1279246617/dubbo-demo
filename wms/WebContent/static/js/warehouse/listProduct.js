@@ -128,16 +128,16 @@ function updateProduct(id){
 	$.dialog({
           lock: true,
           title: '更新产品',
-          width: '800px',
-          height: '600px',
+          width: '650px',
+          height: '400px',
           content: 'url:' + baseUrl + '/products/updateProduct.do?id='+id,
           button: [{
             name: '确定',
             callback: function() {
             		var id = this.content.$("#id").val();
             		var productName = this.content.$("#productName").val();
-            		var productTypeName = this.content.$("#productTypeName").val();
-            		var userIdOfCustomer = this.content.$("#userIdOfCustomer").val();
+            		var productTypeId = this.content.$("#productTypeId").val();
+            		var userLoginName = this.content.$("#userLoginName").val();
             		var isNeedBatchNo = this.content.$("#isNeedBatchNo").val();
             		var sku = this.content.$("#sku").val();
             		var warehouseSku = this.content.$("#warehouseSku").val();
@@ -150,11 +150,14 @@ function updateProduct(id){
             		var origin = this.content.$("#origin").val();
             		var remark = this.content.$("#remark").val();
             		var that = this; 
- 	             $.post(baseUrl + '/products/updateProductById.do', {
+            		if(userLoginName == null || userLoginName ==''){
+            			parent.$.showShortMessage({msg:"请输入客户帐号",animate:false,left:"43%"});
+            		}
+            	$.post(baseUrl + '/products/saveUpdateProduct.do', {
  	            	id:id,
  	            	productName:productName,
- 	            	productTypeName:productTypeName,
- 	            	userIdOfCustomer:userIdOfCustomer,
+ 	            	productTypeId:productTypeId,
+ 	            	userLoginName:userLoginName,
  	            	isNeedBatchNo:isNeedBatchNo,
  	            	sku:sku,
  	            	warehouseSku:warehouseSku,
