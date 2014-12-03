@@ -242,13 +242,13 @@
         	          title: '导入订单',
         	          width: '450px',
         	          height: '390px',
-        	          content: 'url:' + baseUrl + '/warehouse/storage/inportInWarehouseOrder.do',
+        	          content: 'url:' + baseUrl + '/warehouse/storage/importInWarehouseOrder.do',
         	          button: [{
         	            name: '确定',
         	            callback: function() {
         	              var objRemark = this.content.document.getElementById("remark");
         	              var remark = $(objRemark).val();
-        	              $.post(baseUrl + '/warehouse/storage/executeInportInWarehouseOrder.do', {
+        	              $.post(baseUrl + '/warehouse/storage/executeImportInWarehouseOrder.do', {
         	            	  remark:remark,
         	            	  id:id
         	              },

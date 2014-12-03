@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.coe.wms.exception.ServiceException;
 import com.coe.wms.model.user.User;
@@ -343,4 +344,6 @@ public interface IStorageService {
 	public Map<String, String> executeSearchOutWarehouseOrder(String nos, String noType) throws ServiceException;
 
 	public TrackingNo getTrackingNoById(Long id) throws ServiceException;
+
+	public Map<String, Object> executeImportInWarehouseOrder(Map<String, MultipartFile> fileMap, String userLoginName, Long warehouseId) throws ServiceException;
 }
