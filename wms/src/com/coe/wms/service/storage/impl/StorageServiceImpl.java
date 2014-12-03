@@ -247,7 +247,7 @@ public class StorageServiceImpl implements IStorageService {
 		}
 		Long orderId = inWarehouseRecordDao.getInWarehouseOrderIdByRecordId(inWarehouseRecordId);
 		if (orderId == null) {
-			map.put(Constant.MESSAGE, "入库订单Id不能为空.");
+			map.put(Constant.MESSAGE, "找不到入库订单Id.");
 			return map;
 		}
 		// 检查该SKU是否存在入库订单中
@@ -1407,7 +1407,7 @@ public class StorageServiceImpl implements IStorageService {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put(Constant.STATUS, Constant.FAIL);
 		if (StringUtil.isNull(coeTrackingNo)) {
-			map.put(Constant.MESSAGE, "COE交接单号不能为空");
+			map.put(Constant.MESSAGE, "请输入COE交接单号");
 			return map;
 		}
 		List<TrackingNo> trackingNoList = trackingNoDao.findTrackingNo(coeTrackingNo, TrackingNo.TYPE_COE);
@@ -1505,7 +1505,7 @@ public class StorageServiceImpl implements IStorageService {
 			return map;
 		}
 		if (StringUtil.isNull(coeTrackingNo)) {
-			map.put(Constant.MESSAGE, "COE交接单号不能为空,请刷新页面重试!");
+			map.put(Constant.MESSAGE, "请输入COE交接单号,或刷新页面重试!");
 			return map;
 		}
 		TrackingNo trackingNo = trackingNoDao.getTrackingNoById(coeTrackingNoId);
@@ -1889,7 +1889,7 @@ public class StorageServiceImpl implements IStorageService {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put(Constant.STATUS, Constant.FAIL);
 		if (StringUtil.isNull(nos)) {
-			map.put(Constant.MESSAGE, "单号不能为空");
+			map.put(Constant.MESSAGE, "请输入单号");
 			return map;
 		}
 		if (!(StringUtil.isEqual(noType, "1") || StringUtil.isEqual(noType, "2"))) {

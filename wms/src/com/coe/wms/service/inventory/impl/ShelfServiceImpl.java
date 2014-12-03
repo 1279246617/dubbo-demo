@@ -318,11 +318,11 @@ public class ShelfServiceImpl implements IShelfService {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put(Constant.STATUS, Constant.FAIL);
 		if (StringUtil.isNull(customerReferenceNo)) {
-			map.put(Constant.MESSAGE, "根据该客户订单号不能为空");
+			map.put(Constant.MESSAGE, "请输入客户订单号");
 			return map;
 		}
 		if (StringUtil.isNull(outShelfItems) || StringUtil.isNull(customerReferenceNo)) {
-			map.put(Constant.MESSAGE, "下架明细不能为空");
+			map.put(Constant.MESSAGE, "请输入下架明细");
 			return map;
 		}
 		OutWarehouseOrder param = new OutWarehouseOrder();
@@ -507,12 +507,12 @@ public class ShelfServiceImpl implements IShelfService {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put(Constant.STATUS, Constant.FAIL);
 		if (StringUtil.isNull(shelfType)) {
-			map.put(Constant.MESSAGE, "货架类型不能为空");
+			map.put(Constant.MESSAGE, "请输入货架类型");
 			return map;
 		}
 
 		if (StringUtil.isNull(shelfTypeName)) {
-			map.put(Constant.MESSAGE, "货架编号类型不能为空");
+			map.put(Constant.MESSAGE, "请输入货架编号类型");
 			return map;
 		}
 		if (shelfNoStart == null || shelfNoEnd == null || shelfNoStart <= 0 || shelfNoEnd <= 0) {
