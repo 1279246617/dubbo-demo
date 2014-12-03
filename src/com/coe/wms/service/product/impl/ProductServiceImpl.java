@@ -13,9 +13,11 @@ import org.springframework.stereotype.Service;
 
 import com.coe.wms.dao.product.IProductDao;
 import com.coe.wms.dao.product.IProductTypeDao;
+import com.coe.wms.dao.unit.ICurrencyDao;
 import com.coe.wms.dao.user.IUserDao;
 import com.coe.wms.model.product.Product;
 import com.coe.wms.model.product.ProductType;
+import com.coe.wms.model.unit.Currency;
 import com.coe.wms.model.user.User;
 import com.coe.wms.service.product.IProductService;
 import com.coe.wms.util.Constant;
@@ -37,38 +39,48 @@ public class ProductServiceImpl implements IProductService {
 	@Resource(name = "userDao")
 	private IUserDao userDao;
 
+	@Resource(name = "currencyDao")
+	private ICurrencyDao currencyDao;
+
 	@Override
-	public Pagination findProduct(Product product, Map<String, String> moreParam, Pagination page) {
-		List<Product> productList = productDao.findProduct(product, moreParam, page);
+	public Pagination findProduct(Product param, Map<String, String> moreParam, Pagination page) {
+		List<Product> productList = productDao.findProduct(param, moreParam, page);
 		List<Object> list = new ArrayList<Object>();
-		for (Product pro : productList) {
+		for (Product product : productList) {
 			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("id", pro.getId());
-			User user = userDao.getUserById(pro.getUserIdOfCustomer());
+			map.put("id", product.getId());
+			User user = userDao.getUserById(product.getUserIdOfCustomer());
 			map.put("userNameOfCustomer", user.getLoginName());
-			map.put("productName", pro.getProductName());
-			ProductType productType = productTypeDao.getProductTypeById(pro.getProductTypeId());
-			map.put("productTypeName", productType.getProductTypeName());
-			map.put("sku", pro.getSku());
-			map.put("warehouseSku", pro.getWarehouseSku());
-			map.put("remark", pro.getRemark());
-			map.put("currency", pro.getCurrency());
-			map.put("customsWeight", pro.getCustomsWeight());
-			map.put("isNeedBatchNo", pro.getIsNeedBatchNo());
-			map.put("model", pro.getModel());
-			map.put("customsValue", pro.getCustomsValue());
-			map.put("origin", pro.getOrigin());
-			if (pro.getLastUpdateTime() != null) {
-				map.put("lastUpdateTime", DateUtil.dateConvertString(new Date(pro.getLastUpdateTime()), DateUtil.yyyy_MM_ddHHmmss));
+			map.put("productName", product.getProductName());
+			if (product.getProductTypeId() != null) {
+				ProductType productType = productTypeDao.getProductTypeById(product.getProductTypeId());
+				map.put("productTypeName", productType.getProductTypeName());
 			}
-			if (pro.getCreatedTime() != null) {
-				map.put("createdTime", DateUtil.dateConvertString(new Date(pro.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss));
+			map.put("sku", product.getSku());
+			map.put("warehouseSku", product.getWarehouseSku());
+			map.put("remark", product.getRemark());
+			if (StringUtil.isNotNull(product.getCurrency())) {
+				Currency currency = currencyDao.findCurrencyByCode(product.getCurrency());
+				if (currency != null) {
+					map.put("currency", currency.getCn());
+				}
 			}
-			map.put("taxCode", pro.getTaxCode());
-			map.put("volume", pro.getVolume());
+			map.put("customsWeight", product.getCustomsWeight());
+			map.put("isNeedBatchNo", product.getIsNeedBatchNo());
+			map.put("model", product.getModel());
+			map.put("customsValue", product.getCustomsValue());
+			map.put("origin", product.getOrigin());
+			if (product.getLastUpdateTime() != null) {
+				map.put("lastUpdateTime", DateUtil.dateConvertString(new Date(product.getLastUpdateTime()), DateUtil.yyyy_MM_ddHHmmss));
+			}
+			if (product.getCreatedTime() != null) {
+				map.put("createdTime", DateUtil.dateConvertString(new Date(product.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss));
+			}
+			map.put("taxCode", product.getTaxCode());
+			map.put("volume", product.getVolume());
 			list.add(map);
 		}
-		page.total = productDao.countProduct(product, moreParam);
+		page.total = productDao.countProduct(param, moreParam);
 		page.rows = list;
 		return page;
 	}

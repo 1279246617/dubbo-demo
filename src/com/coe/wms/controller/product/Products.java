@@ -218,22 +218,22 @@ public class Products {
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
 		Product product = productService.getProductById(id);
 		view.addObject("product", product);
-
-		ProductType productType = productTypeService.getProductTypeById(product.getProductTypeId());
-		view.addObject("productType", productType);
-
-		User user = userService.getUserById(product.getUserIdOfCustomer());
-		view.addObject("user", user);
-
-		Currency currency = unitService.findCurrencyByCode(product.getCurrency());
-		view.addObject("currency", currency);
-
+		if (product.getProductTypeId() != null) {
+			ProductType productType = productTypeService.getProductTypeById(product.getProductTypeId());
+			view.addObject("productType", productType);
+		}
+		if (product.getUserIdOfCustomer() != null) {
+			User user = userService.getUserById(product.getUserIdOfCustomer());
+			view.addObject("user", user);
+		}
+		if (StringUtil.isNotNull(product.getCurrency())) {
+			Currency currency = unitService.findCurrencyByCode(product.getCurrency());
+			view.addObject("currency", currency);
+		}
 		List<ProductType> productTypeList = productTypeService.getAllProductType();
 		view.addObject("productTypeList", productTypeList);
-
 		List<Currency> currencyList = unitService.findAllCurrency();
 		view.addObject("currencyList", currencyList);
-
 		view.setViewName("warehouse/product/updateProduct");
 		return view;
 	}

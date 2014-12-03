@@ -231,7 +231,7 @@ function printListSkuBarcode(){
             	var quantity =  parent.$("#quantity").val();
             	if(ids!=""){
             		//打印SKU,新建标签页
-    			    var url = baseUrl+'/products/print/printSkuBarcode.do?ids='+ids+'&quantity='+quantity;
+    			    var url = baseUrl+'/warehouse/print/printSkuBarcode.do?ids='+ids+'&quantity='+quantity;
       			  	window.open(url);
             	}
   			}
