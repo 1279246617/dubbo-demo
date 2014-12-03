@@ -105,15 +105,15 @@ public class ProductServiceImpl implements IProductService {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put(Constant.STATUS, Constant.FAIL);
 		if (StringUtil.isNull(product.getSku())) {
-			map.put(Constant.MESSAGE, "产品SKU不能为空");
+			map.put(Constant.MESSAGE, "请输入产品SKU");
 			return map;
 		}
 		if (StringUtil.isNull(product.getProductName())) {
-			map.put(Constant.MESSAGE, "产品名称不能为空");
+			map.put(Constant.MESSAGE, "请输入产品名称");
 			return map;
 		}
 		if (StringUtil.isNull(product.getWarehouseSku())) {
-			map.put(Constant.MESSAGE, "仓库SKU不能为空");
+			map.put(Constant.MESSAGE, "请输入仓库SKU");
 			return map;
 		}
 		if (product.getUserIdOfCustomer() == null) {
@@ -138,15 +138,15 @@ public class ProductServiceImpl implements IProductService {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put(Constant.STATUS, Constant.FAIL);
 		if (StringUtil.isNull(product.getSku())) {
-			map.put(Constant.MESSAGE, "产品SKU不能为空");
+			map.put(Constant.MESSAGE, "请输入产品SKU");
 			return map;
 		}
 		if (StringUtil.isNull(product.getProductName())) {
-			map.put(Constant.MESSAGE, "产品名称不能为空");
+			map.put(Constant.MESSAGE, "请输入产品名称");
 			return map;
 		}
 		if (StringUtil.isNull(product.getWarehouseSku())) {
-			map.put(Constant.MESSAGE, "仓库SKU不能为空");
+			map.put(Constant.MESSAGE, "请输入仓库SKU");
 			return map;
 		}
 		if (product.getUserIdOfCustomer() == null) {
