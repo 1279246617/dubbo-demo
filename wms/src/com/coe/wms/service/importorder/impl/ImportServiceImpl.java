@@ -1,8 +1,10 @@
 package com.coe.wms.service.importorder.impl;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -44,6 +46,7 @@ import com.coe.wms.service.importorder.IImportService;
 import com.coe.wms.util.Config;
 import com.coe.wms.util.Constant;
 import com.coe.wms.util.FileUtil;
+import com.coe.wms.util.POIExcelUtil;
 import com.coe.wms.util.StringUtil;
 
 /**
@@ -120,13 +123,18 @@ public class ImportServiceImpl implements IImportService {
 			String originalFilename = multipartFile.getOriginalFilename();
 			// 系统保存文件名
 			String storeFileName = userLoginName + "-" + warehouseId + "-" + System.currentTimeMillis() + "-" + originalFilename;
-			FileUtil.writeFileBinary(uploadDir + "/" + storeFileName, FileUtil.readFileBinary(multipartFile.getInputStream()));
+			String filePathAndName = uploadDir + "/" + storeFileName;
+			FileUtil.writeFileBinary(filePathAndName, FileUtil.readFileBinary(multipartFile.getInputStream()));
 			// 解析文件
-			
-			
+			POIExcelUtil poiUtil = new POIExcelUtil();
+			List<ArrayList<String>> rows = poiUtil.readFile(filePathAndName);
+			for (ArrayList<String> row : rows) {
+				for (String cell : row) {
+					System.out.println(cell);
+				}
+			}
 			// 只有所有格式无错,完整导入所有数据才返回成功,其他情况一律返回失败,前台显示失败的数据
 			resultMap.put(Constant.STATUS, Constant.SUCCESS);
-
 		} catch (IOException e) {
 			resultMap.put(Constant.MESSAGE, "存储文件失败,请重新上传文件");
 			resultMap.put(Constant.STATUS, Constant.FAIL);

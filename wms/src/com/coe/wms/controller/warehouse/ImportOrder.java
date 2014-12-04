@@ -1,6 +1,8 @@
 package com.coe.wms.controller.warehouse;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -8,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,9 +22,11 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.coe.wms.controller.Application;
 import com.coe.wms.model.user.User;
+import com.coe.wms.model.warehouse.report.Report;
 import com.coe.wms.service.importorder.IImportService;
 import com.coe.wms.service.storage.IStorageService;
 import com.coe.wms.service.user.IUserService;
+import com.coe.wms.util.Config;
 import com.coe.wms.util.GsonUtil;
 import com.coe.wms.util.SessionConstant;
 
@@ -39,6 +44,9 @@ public class ImportOrder {
 
 	@Resource(name = "importService")
 	private IImportService importService;
+
+	@Resource(name = "config")
+	private Config config;
 
 	/**
 	 * 导入入库订单界面
@@ -59,6 +67,45 @@ public class ImportOrder {
 		view.addObject("warehouseList", storageService.findAllWarehouse(user.getDefaultWarehouseId()));
 		view.setViewName("warehouse/importorder/importInWarehouseOrder");
 		return view;
+	}
+
+	/**
+	 * 下载订单excel模版文件
+	 * 
+	 * 约定templateId = 1 表示入库订单模版 templateId =2 表示出库订单模版
+	 * 
+	 * @param response
+	 * @throws IOException
+	 */
+	@ResponseBody
+	@RequestMapping(value = "downloadTemplate", method = RequestMethod.GET)
+	public void downloadTemplate(HttpServletResponse response, Integer templateId) throws IOException {
+		OutputStream os = response.getOutputStream();
+		try {
+			if (templateId == null) {
+				return;
+			}
+			// 模版文件路径
+			String filePathAndName = config.getTemplateFilePath();
+			if (templateId == 1) {
+				filePathAndName += "/" + "in-warehouse-template.xlsx";
+			} else if (templateId == 2) {
+				filePathAndName += "/" + "out-warehouse-template.xlsx";
+			}
+			int a = filePathAndName.lastIndexOf("\\");
+			int b = filePathAndName.lastIndexOf("/");
+			String fileName = filePathAndName.substring((a > b ? a : b) + 1, filePathAndName.length());
+			response.reset();
+			response.setHeader("Content-Disposition", "attachment; filename=" + java.net.URLEncoder.encode(fileName, "UTF-8"));
+			response.setContentType("application/octet-stream; charset=utf-8");
+			File file = new File(filePathAndName);
+			os.write(FileUtils.readFileToByteArray(file));
+			os.flush();
+		} finally {
+			if (os != null) {
+				os.close();
+			}
+		}
 	}
 
 	/**

@@ -21,6 +21,11 @@ public class Config {
 	 */
 	private String runtimeFilePath;
 
+	/**
+	 * 系统模版文件 根目录
+	 */
+	private String templateFilePath;
+
 	public Integer getCookieMaxAgeLoginName() {
 		return cookieMaxAgeLoginName;
 	}
@@ -45,6 +50,14 @@ public class Config {
 		this.cookieMaxAgeRememberMe = cookieMaxAgeRememberMe;
 	}
 
+	public String getTemplateFilePath() {
+		return templateFilePath;
+	}
+
+	public void setTemplateFilePath(String templateFilePath) {
+		this.templateFilePath = templateFilePath;
+	}
+
 	public Integer getSessionMaxInactiveInterval() {
 		return sessionMaxInactiveInterval;
 	}
@@ -61,5 +74,4 @@ public class Config {
 		this.runtimeFilePath = runtimeFilePath;
 	}
 
-	 
 }

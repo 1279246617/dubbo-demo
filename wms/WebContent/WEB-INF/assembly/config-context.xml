@@ -31,5 +31,9 @@
 		<property name="runtimeFilePath">
 			<value>${runtime.FilePath}</value>
 		</property>
+		<!-- 模版文件的保存路径 -->
+		<property name="templateFilePath">
+			<value>${template.FilePath}</value>
+		</property>
 	</bean>
 </beans>

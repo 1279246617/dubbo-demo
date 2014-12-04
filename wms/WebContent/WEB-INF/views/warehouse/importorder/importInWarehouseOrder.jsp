@@ -37,8 +37,13 @@
 						<input type="file" name="file" id="file" />   
 					</th>
 					<th>
-						<a class="btn btn-primary btn-small" onclick="submit()" title="确认上传">
+						<a class="btn btn-primary btn-small" onclick="submit()" title="确认上传入库订单,但不代表成功上传">
 			           		 <i class="icon-check"></i>确认上传
+			       	 	</a>
+					</th>
+					<th>
+						<a class="btn btn-primary btn-small"  onclick="download()"  title="下载入库订单模版模版">
+			           		 <i class="icon-download-alt"></i> 下载模版
 			       	 	</a>
 					</th>
 				</tr>
@@ -96,11 +101,15 @@
 					msg = msg.substring(msg.indexOf(">")+1,msg.lastIndexOf("<"));
 					var json = JSON.parse(msg);
 					
-					alert(json.status +""+json.message);
 					
 					return false;
 				}
 			});
+		}
+		
+		function download(){
+			var url = baseUrl + '/warehouse/importorder/downloadTemplate.do?templateId=1';
+   			window.open(url);
 		}
 	 </script>
 </html>
