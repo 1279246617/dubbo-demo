@@ -2004,8 +2004,10 @@ public class StorageServiceImpl implements IStorageService {
 				String originalFilename = mFile.getOriginalFilename();
 
 				System.out.println(originalFilename);
-				byte[] bytes = FileUtil.readFileBinary(mFile.getInputStream());
-				FileUtil.writeFileBinary(uploadDir + "/" + originalFilename, bytes);
+				if (StringUtil.isNotNull(originalFilename)) {
+					byte[] bytes = FileUtil.readFileBinary(mFile.getInputStream());
+					FileUtil.writeFileBinary(uploadDir + "/" + originalFilename, bytes);
+				}
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

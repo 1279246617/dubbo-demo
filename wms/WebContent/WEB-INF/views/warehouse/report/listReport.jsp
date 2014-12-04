@@ -24,13 +24,13 @@
            		<div class="pull-left">
            			<span class="pull-left" style="width:90px;">
 			       		<a class="btn btn-primary btn-small" onclick="downloadBatch()" title="下载报表">
-			           		 <i class="icon-folder-open"></i>下载报表
+			           		 <i class="icon-download-alt"></i>下载报表
 			       	 	</a>
 			       	 	<input style=" visibility:hidden;">
 		       	 	</span>
 		       	 	<span class="pull-left" style="width:55px;">
 			       		<a class="btn btn-primary btn-small" onclick="diyReport()" title="定制报表">
-			           		 <i class="icon-folder-open"></i>定制报表
+			           		 <i class="icon-edit"></i>定制报表
 			       	 	</a>
 			       	 	<input style=" visibility:hidden;">
 		       	 	</span>
