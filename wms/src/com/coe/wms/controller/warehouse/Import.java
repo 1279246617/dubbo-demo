@@ -25,8 +25,8 @@ import com.coe.wms.service.user.IUserService;
 import com.coe.wms.util.GsonUtil;
 import com.coe.wms.util.SessionConstant;
 
-@Controller("import")
-@RequestMapping("/warehouse/import")
+@Controller("importorder")
+@RequestMapping("/warehouse/importorder")
 public class Import {
 
 	private static final Logger logger = Logger.getLogger(Import.class);
