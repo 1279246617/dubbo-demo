@@ -242,7 +242,7 @@
         	          title: '导入订单',
         	          width: '650px',
         	          height: '350px',
-        	          content: 'url:' + baseUrl + '/warehouse/storage/importInWarehouseOrder.do',
+        	          content: 'url:' + baseUrl + '/warehouse/importorder/importInWarehouseOrder.do',
         	          button: [{
         	            name: '关闭',
         	            callback: function() {
