@@ -34,7 +34,7 @@
 				
 				<tr style="height: 50px;">
 					<th colspan="2">
-						<input type="file" name="file" />   
+						<input type="file" name="file" id="file" />   
 					</th>
 					<th>
 						<a class="btn btn-primary btn-small" onclick="submit()" title="确认上传">
@@ -47,6 +47,7 @@
 
 </body>
 	<script type="text/javascript" src="${baseUrl}/static/jquery/jquery.js"></script>
+	<script type="text/javascript" src="${baseUrl}/static/jquery/jquery.form.js"></script>
 	<script type="text/javascript" src="${baseUrl}/static/bootstrap/bootstrap-typeahead.js"></script>
 	<script type="text/javascript">
 	 	var baseUrl = "${baseUrl}";
@@ -83,15 +84,19 @@
    		});
 		
 		function submit(){
+			var file = $("#file").val();
+			if(file == null || file ==''){
+				parent.$.showShortMessage({msg:"请先选择文件,再点击确认上传",animate:false,left:"45%"});	
+				return false;
+			}
 			var $form = $("#batchimport");
 			$form.ajaxSubmit({
 				dataType : 'text',
 				success : function(msg) {
-					alert(msg);
 					msg = msg.substring(msg.indexOf(">")+1,msg.lastIndexOf("<"));
-					alert(msg);
-					var obj = JSON.parse(msg);
+					var json = JSON.parse(msg);
 					
+					alert(json.status +""+json.message);
 					
 					return false;
 				}
