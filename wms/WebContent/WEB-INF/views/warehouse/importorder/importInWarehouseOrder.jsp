@@ -33,17 +33,17 @@
 				</tr>
 				
 				<tr style="height: 50px;">
-					<th colspan="2">
-						<input type="file" name="file" id="file" />   
+					<th colspan="2" style="width:270px;">
+						<input type="file" class="btn btn-inverse btn-small" name="file" id="file" />   
 					</th>
-					<th>
-						<a class="btn btn-primary btn-small" onclick="submit()" title="确认上传入库订单,但不代表成功上传">
+					<th style="width:150px;">
+						<a class="btn btn-primary  " onclick="submit()" title="确认上传入库订单,但不代表成功上传">
 			           		 <i class="icon-check"></i>确认上传
 			       	 	</a>
 					</th>
 					<th>
-						<a class="btn btn-primary btn-small"  onclick="download()"  title="下载入库订单模版模版">
-			           		 <i class="icon-download-alt"></i> 下载模版
+						<a class="btn  btn-success " onclick='downloadTemplate()' title="下载入库订单模版模版">
+			           		 <i class="icon-download-alt"></i>下载模版文件
 			       	 	</a>
 					</th>
 				</tr>
@@ -107,7 +107,7 @@
 			});
 		}
 		
-		function download(){
+		function downloadTemplate(){
 			var url = baseUrl + '/warehouse/importorder/downloadTemplate.do?templateId=1';
    			window.open(url);
 		}
