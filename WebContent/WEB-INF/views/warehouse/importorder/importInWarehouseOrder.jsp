@@ -48,6 +48,11 @@
 					</th>
 				</tr>
 		</table>
+		
+		<table style="text-align: left;margin-top: 5px;margin-left: 5px;" id="result" >
+			
+		</table>
+		
 	</form>
 
 </body>
@@ -100,8 +105,20 @@
 				success : function(msg) {
 					msg = msg.substring(msg.indexOf(">")+1,msg.lastIndexOf("<"));
 					var json = JSON.parse(msg);
-					
-					
+					if(json.status == "1"){
+						
+					}
+					if(json.status == "0"){
+						var result = $("#result");
+						result.empty();
+						var errors = json.errors;
+						$.each(errors,function(i,error){
+								var 	tr = "<tr class='error'>";
+								tr +="<td>"+error+"</td>";
+								tr+="</tr>";
+								result.append(tr); 
+						});
+					}
 					return false;
 				}
 			});
