@@ -3,6 +3,8 @@ package com.coe.wms.controller.warehouse;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -26,8 +28,10 @@ import com.coe.wms.service.importorder.IImportService;
 import com.coe.wms.service.storage.IStorageService;
 import com.coe.wms.service.user.IUserService;
 import com.coe.wms.util.Config;
+import com.coe.wms.util.Constant;
 import com.coe.wms.util.GsonUtil;
 import com.coe.wms.util.SessionConstant;
+import com.coe.wms.util.StringUtil;
 
 @Controller("importorder")
 @RequestMapping("/warehouse/importorder")
@@ -113,10 +117,35 @@ public class ImportOrder {
 	@ResponseBody
 	@RequestMapping(value = "/executeImportInWarehouseOrder")
 	public String executeImportInWarehouseOrder(HttpServletRequest request, String userLoginName, Long warehouseId) throws IOException {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put(Constant.STATUS, Constant.FAIL);
+		if (StringUtil.isNull(userLoginName)) {
+			resultMap.put(Constant.MESSAGE, "请输入客户帐号");
+			return GsonUtil.toJson(resultMap);
+		}
+		if (warehouseId == null) {
+			resultMap.put(Constant.MESSAGE, "请选择到货仓库");
+			return GsonUtil.toJson(resultMap);
+		}
+		String uploadDir = config.getRuntimeFilePath() + "/order/import";
 		MultipartHttpServletRequest mRequest = (MultipartHttpServletRequest) request;
 		Map<String, MultipartFile> fileMap = mRequest.getFileMap();
-		Map<String, Object> map = importService.executeImportInWarehouseOrder(fileMap, userLoginName, warehouseId);
-		return GsonUtil.toJson(map);
+		// 保存文件
+		Map<String, String> saveFileResultMap = importService.saveMultipartFile(fileMap, userLoginName, warehouseId, uploadDir);
+		if (StringUtil.isEqual(saveFileResultMap.get(Constant.STATUS), Constant.FAIL)) {
+			return GsonUtil.toJson(saveFileResultMap);
+		}
+		// 得到文件路径和名
+		String filePathAndName = saveFileResultMap.get("filePathAndName");
+		// 检测格式
+		Map<String, Object> validateFileResultMap = importService.validateImportInWarehouseOrder(filePathAndName);
+		if (StringUtil.isEqual((String) validateFileResultMap.get(Constant.STATUS), Constant.FAIL)) {
+			return GsonUtil.toJson(validateFileResultMap);
+		}
+		List<Map<String, String>> mapList = (List<Map<String, String>>) validateFileResultMap.get("rows");
+		// 执行导入
+		resultMap = importService.executeImportInWarehouseOrder(mapList, userLoginName, warehouseId);
+		return GsonUtil.toJson(resultMap);
 	}
 
 	/**
