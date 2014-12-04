@@ -127,11 +127,43 @@ public class ImportServiceImpl implements IImportService {
 			FileUtil.writeFileBinary(filePathAndName, FileUtil.readFileBinary(multipartFile.getInputStream()));
 			// 解析文件
 			POIExcelUtil poiUtil = new POIExcelUtil();
+			List<Map<String, String>> mapList = new ArrayList<Map<String, String>>();
 			List<ArrayList<String>> rows = poiUtil.readFile(filePathAndName);
-			for (ArrayList<String> row : rows) {
-				for (String cell : row) {
-					System.out.println(cell);
+			for (int i = 0; i < rows.size(); i++) {
+				if (i == 0) {
+					continue;
 				}
+				ArrayList<String> row = rows.get(i);
+				Map<String, String> map = new HashMap<String, String>();
+				for (int j = 0; j < row.size(); j++) {
+					String cell = row.get(j);
+					if (j == 0) {// 序号(可选)
+						map.put("index", cell);
+					} else if (j == 1) {//
+						map.put("index", cell);
+					} else if (j == 2) {//
+						map.put("index", cell);
+					} else if (j == 3) {//
+						map.put("index", cell);
+					} else if (j == 4) {//
+						map.put("index", cell);
+					} else if (j == 5) {//
+						map.put("index", cell);
+					} else if (j == 6) {//
+						map.put("index", cell);
+					} else if (j == 7) {//
+						map.put("index", cell);
+					} else if (j == 8) {//
+						map.put("index", cell);
+					} else if (j == 9) {//
+						map.put("index", cell);
+					} else if (j == 10) {//
+						map.put("index", cell);
+					} else if (j == 11) {//
+						map.put("index", cell);
+					}
+				}
+				mapList.add(map);
 			}
 			// 只有所有格式无错,完整导入所有数据才返回成功,其他情况一律返回失败,前台显示失败的数据
 			resultMap.put(Constant.STATUS, Constant.SUCCESS);
