@@ -1989,29 +1989,4 @@ public class StorageServiceImpl implements IStorageService {
 		}
 		return map;
 	}
-
-	@Override
-	public Map<String, Object> executeImportInWarehouseOrder(Map<String, MultipartFile> fileMap, String userLoginName, Long warehouseId) throws ServiceException {
-		Map<String, Object> resultMap = new HashMap<String, Object>();
-		String uploadDir = config.getRuntimeFilePath() + "/order/import";
-		FileUtil.mkdirs(uploadDir);
-		try {
-			String fileName = null;
-			int i = 0;
-			for (Iterator<Map.Entry<String, MultipartFile>> it = fileMap.entrySet().iterator(); it.hasNext(); i++) {
-				Map.Entry<String, MultipartFile> entry = it.next();
-				MultipartFile mFile = entry.getValue();
-				String originalFilename = mFile.getOriginalFilename();
-
-				System.out.println(originalFilename);
-				if (StringUtil.isNotNull(originalFilename)) {
-					byte[] bytes = FileUtil.readFileBinary(mFile.getInputStream());
-					FileUtil.writeFileBinary(uploadDir + "/" + originalFilename, bytes);
-				}
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return resultMap;
-	}
 }

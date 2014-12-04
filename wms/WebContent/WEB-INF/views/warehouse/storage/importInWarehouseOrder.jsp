@@ -9,7 +9,7 @@
 	<link href="${baseUrl}/static/bootstrap/common.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
-	<form enctype="multipart/form-data" action="${baseUrl}/warehouse/storage/executeImportInWarehouseOrder.do" method="post">
+	<form id="batchimport" enctype="multipart/form-data" action="${baseUrl}/warehouse/storage/executeImportInWarehouseOrder.do" method="post">
 		<table style="text-align: left;margin-top: 5px;margin-left: 5px;" >
 				<tr style="height: 40px;">
 					<th>客户帐号</th>
@@ -34,10 +34,10 @@
 				
 				<tr style="height: 50px;">
 					<th colspan="2">
-						<input type="file" name="file1" />   
+						<input type="file" name="file" />   
 					</th>
 					<th>
-						<a class="btn btn-primary btn-small" onclick="inportOrder()" title="确认上传">
+						<a class="btn btn-primary btn-small" onclick="submit()" title="确认上传">
 			           		 <i class="icon-check"></i>确认上传
 			       	 	</a>
 					</th>
@@ -81,5 +81,21 @@
 	     	 }
 	      });
    		});
+		
+		function submit(){
+			var $form = $("#batchimport");
+			$form.ajaxSubmit({
+				dataType : 'text',
+				success : function(msg) {
+					alert(msg);
+					msg = msg.substring(msg.indexOf(">")+1,msg.lastIndexOf("<"));
+					alert(msg);
+					var obj = JSON.parse(msg);
+					
+					
+					return false;
+				}
+			});
+		}
 	 </script>
 </html>

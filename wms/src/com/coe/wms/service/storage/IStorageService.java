@@ -344,6 +344,4 @@ public interface IStorageService {
 	public Map<String, String> executeSearchOutWarehouseOrder(String nos, String noType) throws ServiceException;
 
 	public TrackingNo getTrackingNoById(Long id) throws ServiceException;
-
-	public Map<String, Object> executeImportInWarehouseOrder(Map<String, MultipartFile> fileMap, String userLoginName, Long warehouseId) throws ServiceException;
 }
