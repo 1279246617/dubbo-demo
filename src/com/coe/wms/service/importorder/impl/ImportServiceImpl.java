@@ -42,6 +42,7 @@ import com.coe.wms.dao.warehouse.storage.IReportTypeDao;
 import com.coe.wms.exception.ServiceException;
 import com.coe.wms.service.importorder.IImportService;
 import com.coe.wms.util.Config;
+import com.coe.wms.util.Constant;
 import com.coe.wms.util.FileUtil;
 import com.coe.wms.util.StringUtil;
 
@@ -98,24 +99,37 @@ public class ImportServiceImpl implements IImportService {
 	@Override
 	public Map<String, Object> executeImportInWarehouseOrder(Map<String, MultipartFile> fileMap, String userLoginName, Long warehouseId) throws ServiceException {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		String uploadDir = config.getRuntimeFilePath() + "/order/import";
-		FileUtil.mkdirs(uploadDir);
+		resultMap.put(Constant.STATUS, Constant.FAIL);
 		try {
-			String fileName = null;
-			int i = 0;
-			for (Iterator<Map.Entry<String, MultipartFile>> it = fileMap.entrySet().iterator(); it.hasNext(); i++) {
-				Map.Entry<String, MultipartFile> entry = it.next();
-				MultipartFile mFile = entry.getValue();
-				String originalFilename = mFile.getOriginalFilename();
-
-				System.out.println(originalFilename);
-				if (StringUtil.isNotNull(originalFilename)) {
-					byte[] bytes = FileUtil.readFileBinary(mFile.getInputStream());
-					FileUtil.writeFileBinary(uploadDir + "/" + originalFilename, bytes);
-				}
+			if (StringUtil.isNull(userLoginName)) {
+				resultMap.put(Constant.MESSAGE, "请输入客户帐号");
+				return resultMap;
 			}
+			if (warehouseId == null) {
+				resultMap.put(Constant.MESSAGE, "请选择到货仓库");
+				return resultMap;
+			}
+			String uploadDir = config.getRuntimeFilePath() + "/order/import";
+			FileUtil.mkdirs(uploadDir);
+			MultipartFile multipartFile = fileMap.get("file");
+			if (multipartFile == null || multipartFile.getOriginalFilename() == null) {
+				resultMap.put(Constant.MESSAGE, "读取文件失败,请重新上传文件");
+				return resultMap;
+			}
+			// 文件原始文件名
+			String originalFilename = multipartFile.getOriginalFilename();
+			// 系统保存文件名
+			String storeFileName = userLoginName + "-" + warehouseId + "-" + System.currentTimeMillis() + "-" + originalFilename;
+			FileUtil.writeFileBinary(uploadDir + "/" + storeFileName, FileUtil.readFileBinary(multipartFile.getInputStream()));
+			// 解析文件
+			
+			
+			// 只有所有格式无错,完整导入所有数据才返回成功,其他情况一律返回失败,前台显示失败的数据
+			resultMap.put(Constant.STATUS, Constant.SUCCESS);
+
 		} catch (IOException e) {
-			e.printStackTrace();
+			resultMap.put(Constant.MESSAGE, "存储文件失败,请重新上传文件");
+			resultMap.put(Constant.STATUS, Constant.FAIL);
 		}
 		return resultMap;
 	}
