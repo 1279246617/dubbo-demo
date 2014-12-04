@@ -27,9 +27,9 @@ import com.coe.wms.util.SessionConstant;
 
 @Controller("importorder")
 @RequestMapping("/warehouse/importorder")
-public class Import {
+public class ImportOrder {
 
-	private static final Logger logger = Logger.getLogger(Import.class);
+	private static final Logger logger = Logger.getLogger(ImportOrder.class);
 
 	@Resource(name = "storageService")
 	private IStorageService storageService;
