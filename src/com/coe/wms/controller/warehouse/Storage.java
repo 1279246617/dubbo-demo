@@ -1128,6 +1128,11 @@ public class Storage {
 	public ModelAndView importInWarehouseOrder(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		ModelAndView view = new ModelAndView();
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
+		HttpSession session = request.getSession();
+		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
+		view.addObject("userId", userId);
+		User user = userService.getUserById(userId);
+		view.addObject("warehouseList", storageService.findAllWarehouse(user.getDefaultWarehouseId()));
 		view.setViewName("warehouse/storage/importInWarehouseOrder");
 		return view;
 	}
@@ -1156,6 +1161,11 @@ public class Storage {
 	public ModelAndView importOutWarehouseOrder(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		ModelAndView view = new ModelAndView();
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
+		HttpSession session = request.getSession();
+		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
+		view.addObject("userId", userId);
+		User user = userService.getUserById(userId);
+		view.addObject("warehouseList", storageService.findAllWarehouse(user.getDefaultWarehouseId()));
 		view.setViewName("warehouse/storage/inportOutWarehouseOrder");
 		return view;
 	}

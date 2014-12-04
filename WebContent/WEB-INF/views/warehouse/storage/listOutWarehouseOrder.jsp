@@ -24,7 +24,7 @@
            		<div class="pull-left">
            			<span class="pull-left" style="width:55px;">
 			       		<a class="btn btn-primary btn-small" onclick="checkOrder()" title="审核出库订单">
-			           		 <i class="icon-folder-open"></i>审核
+			           		 <i class="icon-eye-open"></i>审核
 			       	 	</a>
 			       	 	<input style=" visibility:hidden;">
 		       	 	</span>

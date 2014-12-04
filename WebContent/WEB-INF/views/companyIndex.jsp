@@ -66,33 +66,33 @@
 	    	<div id="accordion1" class="  well main-menu"  > 
 		         <div title="订单管理" class=" nav-collapse sidebar-nav">
 		              <ul class="nav nav-tabs nav-stacked ">	
-		              		<li><a href="#${baseUrl}/warehouse/storage/listInWarehouseOrder.do" tab_id="findInWarehouseOrder"><i class="icon-zoom-in"></i><span class="hidden-tablet">入库订单列表</span></a></li>
+		              		<li><a href="#${baseUrl}/warehouse/storage/listInWarehouseOrder.do" tab_id="findInWarehouseOrder"><i class="icon-list"></i><span class="hidden-tablet">入库订单列表</span></a></li>
 		              		<!-- 出库订单查询中,需要具备审核功能,反审核 -->
-		              		<li><a href="#${baseUrl}/warehouse/storage/listOutWarehouseOrder.do" tab_id="findOutWarehouseOrder"><i class="icon-zoom-out"></i><span class="hidden-tablet">出库订单列表</span></a></li>
+		              		<li><a href="#${baseUrl}/warehouse/storage/listOutWarehouseOrder.do" tab_id="findOutWarehouseOrder"><i class="icon-list"></i><span class="hidden-tablet">出库订单列表</span></a></li>
 		              		<!-- 待审核出库订单,只显示未审核出库订单,方便审核的人快速操作 -->
-		              		<li><a href=#${baseUrl}/warehouse/storage/listWaitCheckOutWarehouseOrder.do  tab_id="waitCheckOutWarehouseOrder"><i class="icon-folder-open"></i><span class="hidden-tablet">待审核出库订单</span></a></li>
+		              		<li><a href=#${baseUrl}/warehouse/storage/listWaitCheckOutWarehouseOrder.do  tab_id="waitCheckOutWarehouseOrder"><i class="icon-eye-open"></i><span class="hidden-tablet">待审核出库订单</span></a></li>
 		                </ul>
 		        </div>
 		        <div title="仓库管理" class=" nav-collapse sidebar-nav">
 		              <ul class="nav nav-tabs nav-stacked ">	
-		              		<li><a href="#${baseUrl}/warehouse/storage/inWarehouse.do" tab_id="doInWarehouse"><i class="icon-th"></i><span class="hidden-tablet">入库订单收货</span></a></li>
+		              		<li><a href="#${baseUrl}/warehouse/storage/inWarehouse.do" tab_id="doInWarehouse"><i class="icon-arrow-right"></i><span class="hidden-tablet">入库订单收货</span></a></li>
 		              		<!-- 入库主单查询 条件: 客户帐号,创建时间段,仓库,入库批次号 -->
-		              		<li><a href="#${baseUrl}/warehouse/storage/listInWarehouseRecord.do" tab_id="findInWarehouseOrderRecord"><i class="icon-zoom-in"></i><span class="hidden-tablet">入库收货记录</span></a></li>
+		              		<li><a href="#${baseUrl}/warehouse/storage/listInWarehouseRecord.do" tab_id="findInWarehouseOrderRecord"><i class="icon-list"></i><span class="hidden-tablet">入库收货记录</span></a></li>
 		              		<!-- 入库明细查询 条件: SKU, 数量, 主单号,批次号,客户帐号,时间,产品描述 -->
-		              		<li><a href="#${baseUrl}/warehouse/storage/listInWarehouseRecordItem.do"tab_id="findInWarehouseItemRecordItem"><i class="icon-zoom-in"></i><span class="hidden-tablet">入库收货明细记录</span></a></li>
+		              		<li><a href="#${baseUrl}/warehouse/storage/listInWarehouseRecordItem.do"tab_id="findInWarehouseItemRecordItem"><i class="icon-list"></i><span class="hidden-tablet">入库收货明细记录</span></a></li>
 		              		
-		              		<li><a href="#${baseUrl}/warehouse/shelves/onShelves.do" tab_id="doOnShelves"><i class="icon-th"></i><span class="hidden-tablet">入库订单上架</span></a></li>
-		              		<li><a href="#${baseUrl}/warehouse/shelves/listOnShelves.do" tab_id="listOnShelves"><i class=icon-zoom-in></i><span class="hidden-tablet">入库订单上架记录</span></a></li>
+		              		<li><a href="#${baseUrl}/warehouse/shelves/onShelves.do" tab_id="doOnShelves"><i class="icon-arrow-up"></i><span class="hidden-tablet">入库订单上架</span></a></li>
+		              		<li><a href="#${baseUrl}/warehouse/shelves/listOnShelves.do" tab_id="listOnShelves"><i class="icon-list"></i><span class="hidden-tablet">入库订单上架记录</span></a></li>
 		              		
-			              	<li><a href="#${baseUrl}/warehouse/shelves/outShelves.do" tab_id="doOutShelves"><i class="icon-th"></i><span class="hidden-tablet">出库订单下架</span></a></li>
-		              		<li><a href="#${baseUrl}/warehouse/shelves/listOutShelves.do" tab_id="listOutShelves"><i class=icon-zoom-in></i><span class="hidden-tablet">出库订单下架记录</span></a></li>
+			              	<li><a href="#${baseUrl}/warehouse/shelves/outShelves.do" tab_id="doOutShelves"><i class="icon-arrow-down"></i><span class="hidden-tablet">出库订单下架</span></a></li>
+		              		<li><a href="#${baseUrl}/warehouse/shelves/listOutShelves.do" tab_id="listOutShelves"><i class="icon-list"></i><span class="hidden-tablet">出库订单下架记录</span></a></li>
 			              		
 			              	<!-- (扫SKU和数量 是否和出库订单一样) -->	
-		              		<li><a href="#${baseUrl}/warehouse/storage/outWarehouseCheckPackage.do" tab_id="doOutWarehouse"><i class="icon-plane"></i><span class="hidden-tablet">装箱称重打单</span></a></li>
-		              		<li><a href="#${baseUrl}/warehouse/storage/outWarehousePackage.do" tab_id="outWarehousePackage"><i class="icon-plane"></i><span class="hidden-tablet">扫描建包</span></a></li>
+		              		<li><a href="#${baseUrl}/warehouse/storage/outWarehouseCheckPackage.do" tab_id="doOutWarehouse"><i class="icon-inbox"></i><span class="hidden-tablet">装箱称重打单</span></a></li>
+		              		<li><a href="#${baseUrl}/warehouse/storage/outWarehousePackage.do" tab_id="outWarehousePackage"><i class="icon-th"></i><span class="hidden-tablet">扫描建包</span></a></li>
 		              		<li><a href="#${baseUrl}/warehouse/storage/outWarehouseShipping.do" tab_id="outWarehouseShipping"><i class="icon-plane"></i><span class="hidden-tablet">扫描发货</span></a></li>
-		              		<li><a href="#${baseUrl}/warehouse/storage/listOutWarehousePackage.do" tab_id="findOutWarehousePackage"><i class="icon-zoom-out"></i><span class="hidden-tablet">出库建包记录</span></a></li>
-<!-- 		              		<li><a href="#${baseUrl}/warehouse/storage/listOutWarehouseRecord.do" tab_id="findOutWarehouseRecord"><i class="icon-zoom-out"></i><span class="hidden-tablet">发货记录</span></a></li> -->
+		              		<li><a href="#${baseUrl}/warehouse/storage/listOutWarehousePackage.do" tab_id="findOutWarehousePackage"><i class="icon-list"></i><span class="hidden-tablet">出库建包记录</span></a></li>
+<!-- 		              		<li><a href="#${baseUrl}/warehouse/storage/listOutWarehouseRecord.do" tab_id="findOutWarehouseRecord"><i class="icon-list"></i><span class="hidden-tablet">发货记录</span></a></li> -->
 		              		<li><a href="#${baseUrl}/warehouse/inventory/listInventory.do" tab_id="findItemInventory"><i class="icon-zoom-out"></i><span class="hidden-tablet">产品批次库存</span></a></li>
 		              		<li><a href="#${baseUrl}/warehouse/inventory/listItemShelfInventory.do" tab_id="findItemShelfInventory"><i class="icon-zoom-out"></i><span class="hidden-tablet">产品货位库存</span></a></li>
 		              		<li><a href="#${baseUrl}/warehouse/shelves/listSeat.do" tab_id="findSeat"><i class="icon-zoom-out"></i><span class="hidden-tablet">货架货位查询</span></a></li>

@@ -24,7 +24,7 @@
            		<div class="pull-left">
            			<span class="pull-left" style="width:105px;">
 			       		<a class="btn btn-primary btn-small" onclick="inportOrder()" title="导入入库订单">
-			           		 <i class="icon-folder-open"></i>导入入库订单
+			           		 <i class="icon-file"></i>导入入库订单
 			       	 	</a>
 			       	 	<input style=" visibility:hidden;">
 		       	 	</span>
@@ -240,24 +240,15 @@
         	   $.dialog({
         	          lock: true,
         	          title: '导入订单',
-        	          width: '450px',
-        	          height: '390px',
+        	          width: '650px',
+        	          height: '350px',
         	          content: 'url:' + baseUrl + '/warehouse/storage/importInWarehouseOrder.do',
         	          button: [{
-        	            name: '确定',
+        	            name: '关闭',
         	            callback: function() {
-        	              var objRemark = this.content.document.getElementById("remark");
-        	              var remark = $(objRemark).val();
-        	              $.post(baseUrl + '/warehouse/storage/executeImportInWarehouseOrder.do', {
-        	            	  remark:remark,
-        	            	  id:id
-        	              },
-        	              function(msg) {
-        	                	grid.loadData();
-        	              });
+        	               
         	            }
-        	          }],
-        	          cancel: true
+        	          }]
         	        });
 	        }
    	</script>
