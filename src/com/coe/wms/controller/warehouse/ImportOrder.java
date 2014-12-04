@@ -57,7 +57,7 @@ public class ImportOrder {
 		view.addObject("userId", userId);
 		User user = userService.getUserById(userId);
 		view.addObject("warehouseList", storageService.findAllWarehouse(user.getDefaultWarehouseId()));
-		view.setViewName("warehouse/storage/importInWarehouseOrder");
+		view.setViewName("warehouse/importorder/importInWarehouseOrder");
 		return view;
 	}
 
@@ -90,7 +90,7 @@ public class ImportOrder {
 		view.addObject("userId", userId);
 		User user = userService.getUserById(userId);
 		view.addObject("warehouseList", storageService.findAllWarehouse(user.getDefaultWarehouseId()));
-		view.setViewName("warehouse/storage/inportOutWarehouseOrder");
+		view.setViewName("warehouse/importorder/inportOutWarehouseOrder");
 		return view;
 	}
 

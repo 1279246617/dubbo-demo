@@ -9,7 +9,7 @@
 	<link href="${baseUrl}/static/bootstrap/common.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
-	<form id="batchimport" enctype="multipart/form-data" action="${baseUrl}/warehouse/storage/executeImportInWarehouseOrder.do" method="post">
+	<form id="batchimport" enctype="multipart/form-data" action="${baseUrl}/warehouse/importorder/executeImportInWarehouseOrder.do" method="post">
 		<table style="text-align: left;margin-top: 5px;margin-left: 5px;" >
 				<tr style="height: 40px;">
 					<th>客户帐号</th>
