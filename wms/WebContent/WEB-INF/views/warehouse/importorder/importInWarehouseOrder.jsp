@@ -48,13 +48,11 @@
 					</th>
 				</tr>
 		</table>
-		
-		<table style="text-align: left;margin-top: 5px;margin-left: 5px;" id="result" >
-			
-		</table>
-		
 	</form>
-
+		<div style="width:710px;height:280px;overflow: auto">
+				<table style="width:705px;text-align: left;margin-top: 5px;" class="table"  id="result" >
+				</table>		
+		</div>
 </body>
 	<script type="text/javascript" src="${baseUrl}/static/jquery/jquery.js"></script>
 	<script type="text/javascript" src="${baseUrl}/static/jquery/jquery.form.js"></script>
@@ -112,6 +110,7 @@
 						var result = $("#result");
 						result.empty();
 						var errors = json.errors;
+						result.append("<tr><th>"+json.message+"</th></tr>");
 						$.each(errors,function(i,error){
 								var 	tr = "<tr class='error'>";
 								tr +="<td>"+error+"</td>";
@@ -119,7 +118,7 @@
 								result.append(tr); 
 						});
 					}
-					return false;
+					return true;
 				}
 			});
 		}

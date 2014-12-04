@@ -240,8 +240,8 @@
         	   $.dialog({
         	          lock: true,
         	          title: '导入订单',
-        	          width: '650px',
-        	          height: '350px',
+        	          width: '720px',
+        	          height: '450px',
         	          content: 'url:' + baseUrl + '/warehouse/importorder/importInWarehouseOrder.do',
         	          button: [{
         	            name: '关闭',

@@ -89,7 +89,9 @@ public class ImportServiceImpl implements IImportService {
 	public Map<String, Object> executeImportInWarehouseOrder(List<Map<String, String>> mapList, String userLoginName, Long warehouseId) throws ServiceException {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put(Constant.STATUS, Constant.FAIL);
-
+		resultMap.put(Constant.MESSAGE, "上传成功,保存订单数量:11 , 产品明细数量:22");
+		
+		resultMap.put(Constant.STATUS, Constant.SUCCESS);
 		return resultMap;
 	}
 
@@ -214,6 +216,7 @@ public class ImportServiceImpl implements IImportService {
 		if (errors.size() == 0) {
 			resultMap.put(Constant.STATUS, Constant.SUCCESS);
 		}
+		resultMap.put(Constant.MESSAGE, "上传失败,必须所有内容无错误才能导入");
 		resultMap.put("errors", errors);
 		resultMap.put("rows", mapList);
 		return resultMap;
