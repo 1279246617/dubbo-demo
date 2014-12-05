@@ -44,7 +44,7 @@
 					</span>
                		<span class="pull-left" style="width:175px;">
                			创建时间
-	               		<input type="text"   style="width:120px;" name="createdTimeStart" id="createdTimeStart" value="${sevenDaysAgoStart}" title="起始创建时间">
+	               		<input type="text"   style="width:120px;" name="createdTimeStart" id="createdTimeStart" title="起始创建时间">
                		</span>
                		
                		<span class="pull-left" style="width:200px;">
@@ -126,11 +126,12 @@
 			                { display: '收货记录Id', name: 'inWarehouseRecordId',type:'float',width:'6%'}
 		             ],   
 	                dataAction: 'server',
-	                url: baseUrl+'/warehouse/shelves/getOnShelvesData.do?createdTimeStart=${sevenDaysAgoStart}',
+	                url: baseUrl+'/warehouse/shelves/getOnShelvesData.do',
 	                pageSize: 50, 
 	                pageSizeOptions:[10,50,100,500,1000],
 	                usePager: 'true',
 	                sortName: 'id',
+	                sortOrder:'desc',
 	                width: '100%',
 	                height: '99%',
 	                checkbox: false,

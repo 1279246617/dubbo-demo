@@ -86,7 +86,6 @@ public class Shelves {
 		User user = userService.getUserById(userId);
 		view.addObject("warehouseList", storageService.findAllWarehouse(user.getDefaultWarehouseId()));
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
-		view.addObject("sevenDaysAgoStart", DateUtil.getSevenDaysAgoStart());
 		view.setViewName("warehouse/shelves/listOnShelves");
 		return view;
 	}
@@ -108,7 +107,6 @@ public class Shelves {
 		User user = userService.getUserById(userId);
 		view.addObject("warehouseList", storageService.findAllWarehouse(user.getDefaultWarehouseId()));
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
-		view.addObject("sevenDaysAgoStart", DateUtil.getSevenDaysAgoStart());
 		view.setViewName("warehouse/shelves/listOutShelves");
 		return view;
 	}
@@ -127,9 +125,6 @@ public class Shelves {
 	@RequestMapping(value = "/getOutShelvesData")
 	public String getOutShelvesData(HttpServletRequest request, String sortorder, String sortname, int page, int pagesize, String userLoginName, Long warehouseId, String customerReferenceNo, String batchNo, String createdTimeStart,
 			String createdTimeEnd) throws IOException {
-		if (StringUtil.isNotNull(createdTimeStart) && createdTimeStart.contains(",")) {
-			createdTimeStart = createdTimeStart.substring(createdTimeStart.lastIndexOf(",") + 1, createdTimeStart.length());
-		}
 		HttpSession session = request.getSession();
 		// 当前操作员
 		Long userIdOfOperator = (Long) session.getAttribute(SessionConstant.USER_ID);
@@ -224,10 +219,6 @@ public class Shelves {
 	@RequestMapping(value = "/getOnShelvesData")
 	public String getOnShelvesData(HttpServletRequest request, String sortorder, String sortname, int page, int pagesize, String userLoginName, Long warehouseId, String trackingNo, String batchNo, String createdTimeStart, String createdTimeEnd)
 			throws IOException {
-		if (StringUtil.isNotNull(createdTimeStart) && createdTimeStart.contains(",")) {
-			createdTimeStart = createdTimeStart.substring(createdTimeStart.lastIndexOf(",") + 1, createdTimeStart.length());
-		}
-
 		HttpSession session = request.getSession();
 		// 当前操作员
 		Long userIdOfOperator = (Long) session.getAttribute(SessionConstant.USER_ID);
@@ -420,7 +411,6 @@ public class Shelves {
 	@ResponseBody
 	@RequestMapping(value = "/saveAddShelf", method = RequestMethod.POST)
 	public String saveAddShelf(HttpServletRequest request, Long warehouseId, String shelfType, String shelfTypeName, Integer start, Integer end, Integer rows, Integer cols, Integer shelfNoStart, Integer shelfNoEnd, String remark) throws IOException {
-		logger.info("保存货架:warehouseId:" + warehouseId + " shelfType:" + shelfType + " start:" + start + " end:" + end + " rows:" + rows + " cols:" + cols + " shelfNoStart:" + shelfNoStart + " shelfNoEnd:" + shelfNoEnd + " remark:" + remark);
 		HttpSession session = request.getSession();
 		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
 		Map<String, String> map = shelfService.saveAddShelf(warehouseId, shelfType, shelfTypeName, start, end, rows, cols, shelfNoStart, shelfNoEnd, remark);

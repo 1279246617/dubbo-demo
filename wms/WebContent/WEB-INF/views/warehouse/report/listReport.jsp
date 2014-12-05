@@ -70,7 +70,7 @@
                		
                		<span class="pull-left" style="width:175px;">
                			创建时间
-	               		<input type="text"   style="width:120px;" name="createdTimeStart" id="timeStart" value="${sevenDaysAgoStart}" >
+	               		<input type="text"   style="width:120px;" name="createdTimeStart" id="timeStart" >
                		</span>
                		
                		<span class="pull-left" style="width:170px;">
