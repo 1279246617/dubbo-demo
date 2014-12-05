@@ -30,6 +30,12 @@
 			       	 	</a>
 			       	 	<input style=" visibility:hidden;">
 		       	 	</span>
+		       	 	<span class="pull-left" style="width:105px;">
+			       		<a class="btn btn-primary btn-small" onclick="inportOrder()" title="导入出库订单">
+			           		 <i class="icon-file"></i>导入出库订单
+			       	 	</a>
+			       	 	<input style=" visibility:hidden;">
+		       	 	</span>
 		    	</div>    
                 <div class="pull-right searchContent">
                		<span class="pull-left" style="width:140px;">
@@ -67,8 +73,8 @@
                			<a class="btn btn-primary btn-small" id="btn_search"><i class="icon-search icon-white"></i>搜索</a>
                			<input style=" visibility:hidden;">
                		</span>
-               		<span class="pull-left" style="width:55px;">
-               			<a class="btn btn-primary btn-small" id="advancedSearch"><i class="icon-search icon-white"></i>高级</a>
+               		<span class="pull-left" style="width:100px;">
+               			<a class="btn btn-primary btn-small" id="advancedSearch"><i class="icon-search icon-white"></i>批量单号搜索</a>
                			<input style=" visibility:hidden;">
                		</span>
                </div>
@@ -158,12 +164,9 @@
 		                { display: '发件人名', name: 'senderName', align: 'center', type: 'float',width:'8%'},
 		                { display: '备注', name: 'remark', align: 'center', type: 'float',width:'15%'},
 		                { display: '创建时间', name: 'createdTime', align: 'center', type: 'float',width:'12%'},
-		                {display: '操作',isSort: false,width: '10%',render: function(row) {
-		            		var h = "";
-		            		if (!row._editing) {
-		            			h += '<a href="javascript:updateOutWarehouseItem(' + row.id + ')">编辑</a> ';
-		            			h += '<a href="javascript:deleteOutWarehouseItem(' + row.id + ')">删除</a>';
-		            		}
+		                {display: '操作',isSort: false,width: '9%',render: function(row) {
+		            		var  h = '<a href="javascript:checkSingleOrder(' + row.id + ')">审核</a> ';
+// 		            				h += '<a href="javascript:deleteOutWarehouseOrder(' + row.id + ')">删除</a>';
 		            		return h;
 		            	}
 		            }

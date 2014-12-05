@@ -62,7 +62,7 @@
                			<input type="text"   style="width:120px;" name="createdTimeEnd"  id="createdTimeEnd"  title="终止创建时间">
                		</span>
                		
-               		<span class="pull-left" style="width:55px;">
+               		<span class="pull-left" style="width:52px;">
                			<a class="btn btn-primary btn-small" id="btn_search"><i class="icon-search icon-white"></i>搜索</a>
                			<input style=" visibility:hidden;">
                		</span>
