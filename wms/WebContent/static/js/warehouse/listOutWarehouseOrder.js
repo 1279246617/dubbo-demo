@@ -226,3 +226,18 @@ function advancedSearch(){
 	        });
 }
 
+function inportOrder(){
+	   $.dialog({
+	          lock: true,
+	          title: '导入订单',
+	          width: '720px',
+	          height: '450px',
+	          content: 'url:' + baseUrl + '/warehouse/importorder/importOutWarehouseOrder.do',
+	          button: [{
+	            name: '关闭',
+	            callback: function() {
+	            	grid.loadData();
+	            }
+	          }]
+	        });
+ }
