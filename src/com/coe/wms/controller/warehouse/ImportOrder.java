@@ -127,11 +127,16 @@ public class ImportOrder {
 			resultMap.put(Constant.MESSAGE, "请选择到货仓库");
 			return GsonUtil.toJson(resultMap);
 		}
+		Long userIdOfCustomer = userService.findUserIdByLoginName(userLoginName);
+		if (userIdOfCustomer == null || userIdOfCustomer == 0) {
+			resultMap.put(Constant.MESSAGE, "请输入有效的客户帐号");
+			return GsonUtil.toJson(resultMap);
+		}
 		String uploadDir = config.getRuntimeFilePath() + "/order/import";
 		MultipartHttpServletRequest mRequest = (MultipartHttpServletRequest) request;
 		Map<String, MultipartFile> fileMap = mRequest.getFileMap();
 		// 保存文件
-		Map<String, String> saveFileResultMap = importService.saveMultipartFile(fileMap, userLoginName, warehouseId, uploadDir);
+		Map<String, String> saveFileResultMap = importService.saveMultipartFile(fileMap, userIdOfCustomer, warehouseId, uploadDir);
 		if (StringUtil.isEqual(saveFileResultMap.get(Constant.STATUS), Constant.FAIL)) {
 			return GsonUtil.toJson(saveFileResultMap);
 		}
@@ -144,7 +149,7 @@ public class ImportOrder {
 		}
 		List<Map<String, String>> mapList = (List<Map<String, String>>) validateFileResultMap.get("rows");
 		// 执行导入
-		resultMap = importService.executeImportInWarehouseOrder(mapList, userLoginName, warehouseId);
+		resultMap = importService.executeImportInWarehouseOrder(mapList, userIdOfCustomer, warehouseId);
 		return GsonUtil.toJson(resultMap);
 	}
 

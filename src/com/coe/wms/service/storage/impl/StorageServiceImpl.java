@@ -669,7 +669,6 @@ public class StorageServiceImpl implements IStorageService {
 			// 收件人信息
 			OutWarehouseOrderReceiver outWarehouseOrderReceiver = outWarehouseOrderReceiverDao.getOutWarehouseOrderReceiverByOrderId(outWarehouseOrderId);
 			if (outWarehouseOrderReceiver != null) {
-
 				map.put("receiverAddressLine1", outWarehouseOrderReceiver.getAddressLine1());
 				map.put("receiverAddressLine2", outWarehouseOrderReceiver.getAddressLine2());
 				map.put("receiverCity", outWarehouseOrderReceiver.getCity());
@@ -1934,7 +1933,7 @@ public class StorageServiceImpl implements IStorageService {
 			return map;
 		}
 		if (!(StringUtil.isEqual(noType, "1") || StringUtil.isEqual(noType, "2"))) {
-			map.put(Constant.MESSAGE, "单号类型必须是 客户订单号或顺丰运单号");
+			map.put(Constant.MESSAGE, "单号类型必须是 客户订单号或出货运单号");
 			return map;
 		}
 		String noArray[] = StringUtil.splitW(nos);

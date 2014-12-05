@@ -10,6 +10,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
+import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,6 +27,9 @@ import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderStatusDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehousePackageDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseRecordDao;
 import com.coe.wms.exception.ServiceException;
+import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
+import com.coe.wms.model.warehouse.storage.order.InWarehouseOrderItem;
+import com.coe.wms.model.warehouse.storage.order.InWarehouseOrderStatus.InWarehouseOrderStatusCode;
 import com.coe.wms.service.importorder.IImportService;
 import com.coe.wms.util.Config;
 import com.coe.wms.util.Constant;
@@ -86,17 +90,74 @@ public class ImportServiceImpl implements IImportService {
 	private Config config;
 
 	@Override
-	public Map<String, Object> executeImportInWarehouseOrder(List<Map<String, String>> mapList, String userLoginName, Long warehouseId) throws ServiceException {
+	public Map<String, Object> executeImportInWarehouseOrder(List<Map<String, String>> mapList, Long userIdOfCustomer, Long warehouseId) throws ServiceException {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put(Constant.STATUS, Constant.FAIL);
-		resultMap.put(Constant.MESSAGE, "上传成功,保存订单数量:11 , 产品明细数量:22");
-		
+		// key:客户订单号, value:连续的行
+		Map<String, List<Map<String, String>>> groupMap = new HashMap<String, List<Map<String, String>>>();
+		// 按客户订单号 分组
+		List<Map<String, String>> tempMapList = new ArrayList<Map<String, String>>();
+		for (Map<String, String> map : mapList) {
+			String customerReferenceNo = map.get("customerReferenceNo");
+			if (StringUtil.isNotNull(customerReferenceNo)) {
+				tempMapList = groupMap.get(customerReferenceNo);
+				if (tempMapList == null) {
+					tempMapList = new ArrayList<Map<String, String>>();
+				}
+				groupMap.put(customerReferenceNo, tempMapList);
+			}
+			tempMapList.add(map);
+		}
+		int saveOrderCount = 0;// 保存订单数量
+		int saveItemCount = 0;// 保存订单物品数量
+		// 迭代groupMap
+		for (String customerReferenceNo : groupMap.keySet()) {
+			InWarehouseOrder inWarehouseOrder = new InWarehouseOrder();
+			inWarehouseOrder.setCustomerReferenceNo(customerReferenceNo);
+			inWarehouseOrder.setUserIdOfCustomer(userIdOfCustomer);
+			inWarehouseOrder.setWarehouseId(warehouseId);
+			inWarehouseOrder.setStatus(InWarehouseOrderStatusCode.NONE);
+			inWarehouseOrder.setCreatedTime(System.currentTimeMillis());
+			inWarehouseOrder.setLogisticsType("1");
+			List<Map<String, String>> orderItemMapList = groupMap.get(customerReferenceNo);
+			List<InWarehouseOrderItem> orderItemList = new ArrayList<InWarehouseOrderItem>();
+			for (Map<String, String> map : orderItemMapList) {
+				if (StringUtil.isNotNull(map.get("carrierCode"))) {
+					inWarehouseOrder.setCarrierCode(map.get("carrierCode"));
+				}
+				if (StringUtil.isNotNull(map.get("trackingNo"))) {
+					inWarehouseOrder.setTrackingNo(map.get("trackingNo"));
+				}
+				if (StringUtil.isNotNull(map.get("inWarehouseType"))) {
+					// 入库类型
+				}
+				InWarehouseOrderItem orderItem = new InWarehouseOrderItem();
+				orderItem.setProductionBatchNo(map.get("productionBatchNo"));
+				orderItem.setQuantity(Integer.valueOf(map.get("quantity")));
+				orderItem.setSku(map.get("sku"));
+				orderItem.setSkuName(map.get("skuName"));
+				orderItem.setSkuNo(map.get("skuNo"));
+				orderItem.setSkuRemark(map.get("skuRemark"));
+				orderItem.setSpecification(map.get("specification"));
+				String validityTime = map.get("validityTime");
+				if (StringUtil.isNotNull(validityTime)) {
+					Date validityTimeDate = DateUtil.stringConvertDate(validityTime, DateUtil.yyyy_MM_dd);
+					if (validityTimeDate != null) {
+						orderItem.setValidityTime(validityTimeDate.getTime());
+					}
+				}
+			}
+			Long inWarehouseOrderId = inWarehouseOrderDao.saveInWarehouseOrder(inWarehouseOrder);// 订单di;
+			saveItemCount += inWarehouseOrderItemDao.saveBatchInWarehouseOrderItemWithOrderId(orderItemList, inWarehouseOrderId);
+			saveOrderCount++;
+		}
+		resultMap.put(Constant.MESSAGE, "上传成功,保存订单数量:" + saveOrderCount + " , 产品明细数量:" + saveItemCount);
 		resultMap.put(Constant.STATUS, Constant.SUCCESS);
 		return resultMap;
 	}
 
 	@Override
-	public Map<String, String> saveMultipartFile(Map<String, MultipartFile> fileMap, String userLoginName, Long warehouseId, String uploadDir) throws ServiceException {
+	public Map<String, String> saveMultipartFile(Map<String, MultipartFile> fileMap, Long userIdOfCustomer, Long warehouseId, String uploadDir) throws ServiceException {
 		Map<String, String> resultMap = new HashMap<String, String>();
 		resultMap.put(Constant.STATUS, Constant.FAIL);
 		try {
@@ -109,7 +170,7 @@ public class ImportServiceImpl implements IImportService {
 			// 文件原始文件名
 			String originalFilename = multipartFile.getOriginalFilename();
 			// 系统保存文件名
-			String storeFileName = userLoginName + "-" + warehouseId + "-" + System.currentTimeMillis() + "-" + originalFilename;
+			String storeFileName = userIdOfCustomer + "-" + warehouseId + "-" + System.currentTimeMillis() + "-" + originalFilename;
 			String filePathAndName = uploadDir + "/" + storeFileName;
 			resultMap.put("filePathAndName", filePathAndName);
 			FileUtil.writeFileBinary(filePathAndName, FileUtil.readFileBinary(multipartFile.getInputStream()));
@@ -134,7 +195,7 @@ public class ImportServiceImpl implements IImportService {
 			if (i == 0) {
 				continue;
 			}
-			String error = "列标:" + (i + 1);
+			String error = "第" + (i + 1) + "列";
 			boolean isError = false;
 			ArrayList<String> row = rows.get(i);
 			Map<String, String> map = new HashMap<String, String>();
@@ -150,6 +211,15 @@ public class ImportServiceImpl implements IImportService {
 					if (StringUtil.isNull(cell) && i == 1) {
 						error += " , 客户订单号必填";
 						isError = true;
+					} else {
+						// 判断客户订单号是否重复
+						InWarehouseOrder inWarehouseOrder = new InWarehouseOrder();
+						inWarehouseOrder.setCustomerReferenceNo(cell);
+						long count = inWarehouseOrderDao.countInWarehouseOrder(inWarehouseOrder, null);
+						if (count >= 1) {
+							error += " , 客户订单号重复";
+							isError = true;
+						}
 					}
 				} else if (j == 2) {// 跟踪号码
 					map.put("trackingNo", cell);
@@ -198,8 +268,10 @@ public class ImportServiceImpl implements IImportService {
 				} else if (j == 10) {// 有效期
 					map.put("validityTime", cell);
 					if (StringUtil.isNotNull(cell)) {
-						error += " , 有效期正确格式如:" + DateUtil.dateConvertString(new Date(), DateUtil.yyyy_MM_dd);
-						isError = true;
+						if (DateUtil.stringConvertDate(cell, DateUtil.yyyy_MM_dd) == null) {
+							error += " , 有效期正确格式如:" + DateUtil.dateConvertString(new Date(), DateUtil.yyyy_MM_dd);
+							isError = true;
+						}
 					}
 				} else if (j == 11) {// 生产批次
 					map.put("productionBatchNo", cell);
@@ -221,4 +293,5 @@ public class ImportServiceImpl implements IImportService {
 		resultMap.put("rows", mapList);
 		return resultMap;
 	}
+
 }
