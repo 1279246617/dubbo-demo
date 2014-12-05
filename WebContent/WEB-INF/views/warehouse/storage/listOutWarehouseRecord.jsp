@@ -157,7 +157,7 @@
 	                dataAction: 'server',
 	                url: baseUrl+'/warehouse/storage/getOutWarehouseRecordData.do',
 	                pageSize: 100, 
-	                pageSizeOptions:[10,50,100,150,200],
+	                pageSizeOptions:[50,100,150,200,500],
 	                usePager: 'true',
 	                sortName: 'id',
 	                sortOrder: 'desc',
