@@ -90,7 +90,7 @@ public class ImportServiceImpl implements IImportService {
 	private Config config;
 
 	@Override
-	public Map<String, Object> executeImportInWarehouseOrder(List<Map<String, String>> mapList, Long userIdOfCustomer, Long warehouseId) throws ServiceException {
+	public Map<String, Object> executeImportInWarehouseOrder(List<Map<String, String>> mapList, Long userIdOfCustomer, Long warehouseId,	Long userIdOfOperator ) throws ServiceException {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put(Constant.STATUS, Constant.FAIL);
 		// key:客户订单号, value:连续的行
@@ -119,6 +119,7 @@ public class ImportServiceImpl implements IImportService {
 			inWarehouseOrder.setStatus(InWarehouseOrderStatusCode.NONE);
 			inWarehouseOrder.setCreatedTime(System.currentTimeMillis());
 			inWarehouseOrder.setLogisticsType("1");
+			inWarehouseOrder.setUserIdOfOperator(userIdOfOperator);
 			List<Map<String, String>> orderItemMapList = groupMap.get(customerReferenceNo);
 			List<InWarehouseOrderItem> orderItemList = new ArrayList<InWarehouseOrderItem>();
 			for (Map<String, String> map : orderItemMapList) {

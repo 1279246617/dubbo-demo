@@ -21,5 +21,5 @@ public interface IImportService {
 
 	public Map<String, Object> validateImportInWarehouseOrder(String filePathAndName) throws ServiceException;
 
-	public Map<String, Object> executeImportInWarehouseOrder(List<Map<String, String>> mapList, Long userIdOfCustomer, Long warehouseId) throws ServiceException;
+	public Map<String, Object> executeImportInWarehouseOrder(List<Map<String, String>> mapList, Long userIdOfCustomer, Long warehouseId, Long userIdOfOperator) throws ServiceException;
 }
