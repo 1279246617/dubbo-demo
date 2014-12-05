@@ -91,108 +91,107 @@ public class OutWarehouseOrderDaoImpl implements IOutWarehouseOrderDao {
 	/**
 	 * 查询入库订单
 	 * 
-	 * 参数一律使用实体类加Map . 
+	 * 参数一律使用实体类加Map .
 	 */
 	@Override
 	public List<OutWarehouseOrder> findOutWarehouseOrder(OutWarehouseOrder outWarehouseOrder, Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("select id,warehouse_id,user_id_of_customer,user_id_of_operator,shipway_code,created_time,status,remark,customer_reference_no,callback_send_weight_is_success,callback_send_weigh_count,callback_send_status_is_success,callback_send_status_count,out_warehouse_weight,weight_code,trade_remark,logistics_remark,tracking_no,printed_count from w_s_out_warehouse_order where 1=1 ");
-		if (outWarehouseOrder != null) {
-			if (outWarehouseOrder.getId() != null) {
-				sb.append(" and id = " + outWarehouseOrder.getId());
-			}
-			if (outWarehouseOrder.getUserIdOfCustomer() != null) {
-				sb.append(" and user_id_of_customer = " + outWarehouseOrder.getUserIdOfCustomer());
-			}
-			if (outWarehouseOrder.getUserIdOfOperator() != null) {
-				sb.append(" and user_id_of_operator = " + outWarehouseOrder.getUserIdOfOperator());
-			}
-			if (StringUtil.isNotNull(outWarehouseOrder.getShipwayCode())) {
-				sb.append(" and shipway_code = '" + outWarehouseOrder.getShipwayCode() + "' ");
-			}
-			if (outWarehouseOrder.getCreatedTime() != null) {
-				sb.append(" and created_time = " + outWarehouseOrder.getCreatedTime());
-			}
-			if (StringUtil.isNotNull(outWarehouseOrder.getStatus())) {
-				sb.append(" and status = '" + outWarehouseOrder.getStatus() + "' ");
-			}
-			if (StringUtil.isNotNull(outWarehouseOrder.getRemark())) {
-				sb.append(" and remark = '" + outWarehouseOrder.getRemark() + "' ");
-			}
-			if (StringUtil.isNotNull(outWarehouseOrder.getCustomerReferenceNo())) {
-				sb.append(" and customer_reference_no = '" + outWarehouseOrder.getCustomerReferenceNo() + "' ");
-			}
-
-			if (StringUtil.isNotNull(outWarehouseOrder.getCallbackSendWeightIsSuccess())) {
-				sb.append(" and callback_send_weight_is_success = '" + outWarehouseOrder.getCallbackSendWeightIsSuccess() + "' ");
-			}
-			if (outWarehouseOrder.getCallbackSendWeighCount() != null) {
-				sb.append(" and callback_send_weigh_count = " + outWarehouseOrder.getCallbackSendWeighCount());
-			}
-
-			if (StringUtil.isNotNull(outWarehouseOrder.getCallbackSendStatusIsSuccess())) {
-				sb.append(" and callback_send_status_is_success = '" + outWarehouseOrder.getCallbackSendStatusIsSuccess() + "' ");
-			}
-			if (outWarehouseOrder.getCallbackSendStatusCount() != null) {
-				sb.append(" and callback_send_status_count = " + outWarehouseOrder.getCallbackSendStatusCount());
-			}
-
-			if (outWarehouseOrder.getOutWarehouseWeight() != null) {
-				sb.append(" and out_warehouse_weight = " + outWarehouseOrder.getOutWarehouseWeight());
-			}
-			if (outWarehouseOrder.getWeightCode() != null) {
-				sb.append(" and weight_code = '" + outWarehouseOrder.getWeightCode() + "'");
-			}
-			if (outWarehouseOrder.getTradeRemark() != null) {
-				sb.append(" and trade_remark = '" + outWarehouseOrder.getTradeRemark() + "'");
-			}
-			if (outWarehouseOrder.getLogisticsRemark() != null) {
-				sb.append(" and logistics_remark = '" + outWarehouseOrder.getLogisticsRemark() + "'");
-			}
-			if (outWarehouseOrder.getTrackingNo() != null) {
-				sb.append(" and tracking_no = '" + outWarehouseOrder.getTrackingNo() + "'");
-			}
-			if (outWarehouseOrder.getPrintedCount() != null) {
-				sb.append(" and printed_count = " + outWarehouseOrder.getPrintedCount());
-			}
-		}
-		if (moreParam != null) {
-			if (moreParam.get("createdTimeStart") != null) {
-				Date date = DateUtil.stringConvertDate(moreParam.get("createdTimeStart"), DateUtil.yyyy_MM_ddHHmmss);
-				if (date != null) {
-					sb.append(" and created_time >= " + date.getTime());
-				}
-			}
-			if (moreParam.get("createdTimeEnd") != null) {
-				Date date = DateUtil.stringConvertDate(moreParam.get("createdTimeEnd"), DateUtil.yyyy_MM_ddHHmmss);
-				if (date != null) {
-					sb.append(" and created_time <= " + date.getTime());
-				}
-			}
+		if (moreParam != null && StringUtil.isNotNull(moreParam.get("nos"))) {
 			// 按单号 批量查询 开始---------------
 			String noType = moreParam.get("noType");
 			String nos = moreParam.get("nos");
 			String noArray[] = StringUtil.splitW(nos);
-			if (noArray != null) {
-				String in = "";
-				for (String no : noArray) {
-					in += ("'" + no + "',");
-				}
-				if (in.endsWith(",")) {
-					in = in.substring(0, in.length() - 1);
-				}
-				if (StringUtil.isEqual(noType, "1")) {
-					sb.append(" and customer_reference_no in(" + in + ")");
-				}
-				if (StringUtil.isEqual(noType, "2")) {
-					sb.append(" and tracking_no in(" + in + ")");
-				}
+			String in = "";
+			for (String no : noArray) {
+				in += ("'" + no + "',");
+			}
+			if (in.endsWith(",")) {
+				in = in.substring(0, in.length() - 1);
+			}
+			if (StringUtil.isEqual(noType, "1")) {
+				sb.append(" and customer_reference_no in(" + in + ")");
+			}
+			if (StringUtil.isEqual(noType, "2")) {
+				sb.append(" and tracking_no in(" + in + ")");
 			}
 			// 按单号 批量查询 结束------------
-		}
-		if (page != null) {
-			// 分页sql
-			sb.append(page.generatePageSql());
+		} else {
+			if (outWarehouseOrder != null) {
+				if (outWarehouseOrder.getId() != null) {
+					sb.append(" and id = " + outWarehouseOrder.getId());
+				}
+				if (outWarehouseOrder.getUserIdOfCustomer() != null) {
+					sb.append(" and user_id_of_customer = " + outWarehouseOrder.getUserIdOfCustomer());
+				}
+				if (outWarehouseOrder.getUserIdOfOperator() != null) {
+					sb.append(" and user_id_of_operator = " + outWarehouseOrder.getUserIdOfOperator());
+				}
+				if (StringUtil.isNotNull(outWarehouseOrder.getShipwayCode())) {
+					sb.append(" and shipway_code = '" + outWarehouseOrder.getShipwayCode() + "' ");
+				}
+				if (outWarehouseOrder.getCreatedTime() != null) {
+					sb.append(" and created_time = " + outWarehouseOrder.getCreatedTime());
+				}
+				if (StringUtil.isNotNull(outWarehouseOrder.getStatus())) {
+					sb.append(" and status = '" + outWarehouseOrder.getStatus() + "' ");
+				}
+				if (StringUtil.isNotNull(outWarehouseOrder.getRemark())) {
+					sb.append(" and remark = '" + outWarehouseOrder.getRemark() + "' ");
+				}
+				if (StringUtil.isNotNull(outWarehouseOrder.getCallbackSendWeightIsSuccess())) {
+					sb.append(" and callback_send_weight_is_success = '" + outWarehouseOrder.getCallbackSendWeightIsSuccess() + "' ");
+				}
+				if (outWarehouseOrder.getCallbackSendWeighCount() != null) {
+					sb.append(" and callback_send_weigh_count = " + outWarehouseOrder.getCallbackSendWeighCount());
+				}
+
+				if (StringUtil.isNotNull(outWarehouseOrder.getCallbackSendStatusIsSuccess())) {
+					sb.append(" and callback_send_status_is_success = '" + outWarehouseOrder.getCallbackSendStatusIsSuccess() + "' ");
+				}
+				if (outWarehouseOrder.getCallbackSendStatusCount() != null) {
+					sb.append(" and callback_send_status_count = " + outWarehouseOrder.getCallbackSendStatusCount());
+				}
+				if (outWarehouseOrder.getOutWarehouseWeight() != null) {
+					sb.append(" and out_warehouse_weight = " + outWarehouseOrder.getOutWarehouseWeight());
+				}
+				if (outWarehouseOrder.getWeightCode() != null) {
+					sb.append(" and weight_code = '" + outWarehouseOrder.getWeightCode() + "'");
+				}
+				if (outWarehouseOrder.getTradeRemark() != null) {
+					sb.append(" and trade_remark = '" + outWarehouseOrder.getTradeRemark() + "'");
+				}
+				if (outWarehouseOrder.getLogisticsRemark() != null) {
+					sb.append(" and logistics_remark = '" + outWarehouseOrder.getLogisticsRemark() + "'");
+				}
+				if (outWarehouseOrder.getTrackingNo() != null) {
+					sb.append(" and tracking_no = '" + outWarehouseOrder.getTrackingNo() + "'");
+				}
+				if (StringUtil.isNotNull(outWarehouseOrder.getCustomerReferenceNo())) {
+					sb.append(" and customer_reference_no = '" + outWarehouseOrder.getCustomerReferenceNo() + "' ");
+				}
+				if (outWarehouseOrder.getPrintedCount() != null) {
+					sb.append(" and printed_count = " + outWarehouseOrder.getPrintedCount());
+				}
+			}
+			if (moreParam != null) {
+				if (moreParam.get("createdTimeStart") != null) {
+					Date date = DateUtil.stringConvertDate(moreParam.get("createdTimeStart"), DateUtil.yyyy_MM_ddHHmmss);
+					if (date != null) {
+						sb.append(" and created_time >= " + date.getTime());
+					}
+				}
+				if (moreParam.get("createdTimeEnd") != null) {
+					Date date = DateUtil.stringConvertDate(moreParam.get("createdTimeEnd"), DateUtil.yyyy_MM_ddHHmmss);
+					if (date != null) {
+						sb.append(" and created_time <= " + date.getTime());
+					}
+				}
+			}
+			if (page != null) {
+				// 分页sql
+				sb.append(page.generatePageSql());
+			}
 		}
 		String sql = sb.toString();
 		logger.debug("查询出库订单sql:" + sql);
@@ -203,99 +202,98 @@ public class OutWarehouseOrderDaoImpl implements IOutWarehouseOrderDao {
 	@Override
 	public Long countOutWarehouseOrder(OutWarehouseOrder outWarehouseOrder, Map<String, String> moreParam) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select count(id) from w_s_out_warehouse_order where 1=1 ");
-		if (outWarehouseOrder != null) {
-			if (outWarehouseOrder.getId() != null) {
-				sb.append(" and id = " + outWarehouseOrder.getId());
-			}
-			if (outWarehouseOrder.getUserIdOfCustomer() != null) {
-				sb.append(" and user_id_of_customer = " + outWarehouseOrder.getUserIdOfCustomer());
-			}
-			if (outWarehouseOrder.getUserIdOfOperator() != null) {
-				sb.append(" and user_id_of_operator = " + outWarehouseOrder.getUserIdOfOperator());
-			}
-			if (StringUtil.isNotNull(outWarehouseOrder.getShipwayCode())) {
-				sb.append(" and shipway_code = '" + outWarehouseOrder.getShipwayCode() + "' ");
-			}
-			if (outWarehouseOrder.getCreatedTime() != null) {
-				sb.append(" and created_time = " + outWarehouseOrder.getCreatedTime());
-			}
-			if (StringUtil.isNotNull(outWarehouseOrder.getStatus())) {
-				sb.append(" and status = '" + outWarehouseOrder.getStatus() + "' ");
-			}
-			if (StringUtil.isNotNull(outWarehouseOrder.getRemark())) {
-				sb.append(" and remark = '" + outWarehouseOrder.getRemark() + "' ");
-			}
-			if (StringUtil.isNotNull(outWarehouseOrder.getCustomerReferenceNo())) {
-				sb.append(" and customer_reference_no = '" + outWarehouseOrder.getCustomerReferenceNo() + "' ");
-			}
-
-			if (StringUtil.isNotNull(outWarehouseOrder.getCallbackSendWeightIsSuccess())) {
-				sb.append(" and callback_send_weight_is_success = '" + outWarehouseOrder.getCallbackSendWeightIsSuccess() + "' ");
-			}
-			if (outWarehouseOrder.getCallbackSendWeighCount() != null) {
-				sb.append(" and callback_send_weigh_count = " + outWarehouseOrder.getCallbackSendWeighCount());
-			}
-
-			if (StringUtil.isNotNull(outWarehouseOrder.getCallbackSendStatusIsSuccess())) {
-				sb.append(" and callback_send_status_is_success = '" + outWarehouseOrder.getCallbackSendStatusIsSuccess() + "' ");
-			}
-			if (outWarehouseOrder.getCallbackSendStatusCount() != null) {
-				sb.append(" and callback_send_status_count = " + outWarehouseOrder.getCallbackSendStatusCount());
-			}
-
-			if (outWarehouseOrder.getOutWarehouseWeight() != null) {
-				sb.append(" and out_warehouse_weight = " + outWarehouseOrder.getOutWarehouseWeight());
-			}
-			if (outWarehouseOrder.getWeightCode() != null) {
-				sb.append(" and weight_code = '" + outWarehouseOrder.getWeightCode() + "'");
-			}
-			if (outWarehouseOrder.getTradeRemark() != null) {
-				sb.append(" and trade_remark = '" + outWarehouseOrder.getTradeRemark() + "'");
-			}
-			if (outWarehouseOrder.getLogisticsRemark() != null) {
-				sb.append(" and logistics_remark = '" + outWarehouseOrder.getLogisticsRemark() + "'");
-			}
-			if (outWarehouseOrder.getTrackingNo() != null) {
-				sb.append(" and tracking_no = '" + outWarehouseOrder.getTrackingNo() + "'");
-			}
-			if (outWarehouseOrder.getPrintedCount() != null) {
-				sb.append(" and printed_count = " + outWarehouseOrder.getPrintedCount());
-			}
-		}
-		if (moreParam != null) {
-			if (moreParam.get("createdTimeStart") != null) {
-				Date date = DateUtil.stringConvertDate(moreParam.get("createdTimeStart"), DateUtil.yyyy_MM_ddHHmmss);
-				if (date != null) {
-					sb.append(" and created_time >= " + date.getTime());
-				}
-			}
-			if (moreParam.get("createdTimeEnd") != null) {
-				Date date = DateUtil.stringConvertDate(moreParam.get("createdTimeEnd"), DateUtil.yyyy_MM_ddHHmmss);
-				if (date != null) {
-					sb.append(" and created_time <= " + date.getTime());
-				}
-			}
+		sb.append("select count(id) from w_s_out_warehouse_order where 1=1");
+		if (moreParam != null && StringUtil.isNotNull(moreParam.get("nos"))) {
 			// 按单号 批量查询 开始---------------
 			String noType = moreParam.get("noType");
 			String nos = moreParam.get("nos");
 			String noArray[] = StringUtil.splitW(nos);
-			if (noArray != null) {
-				String in = "";
-				for (String no : noArray) {
-					in += ("'" + no + "',");
-				}
-				if (in.endsWith(",")) {
-					in = in.substring(0, in.length() - 1);
-				}
-				if (StringUtil.isEqual(noType, "1")) {
-					sb.append(" and customer_reference_no in(" + in + ")");
-				}
-				if (StringUtil.isEqual(noType, "2")) {
-					sb.append(" and tracking_no in(" + in + ")");
-				}
+			String in = "";
+			for (String no : noArray) {
+				in += ("'" + no + "',");
+			}
+			if (in.endsWith(",")) {
+				in = in.substring(0, in.length() - 1);
+			}
+			if (StringUtil.isEqual(noType, "1")) {
+				sb.append(" and customer_reference_no in(" + in + ")");
+			}
+			if (StringUtil.isEqual(noType, "2")) {
+				sb.append(" and tracking_no in(" + in + ")");
 			}
 			// 按单号 批量查询 结束------------
+		} else {
+			if (outWarehouseOrder != null) {
+				if (outWarehouseOrder.getId() != null) {
+					sb.append(" and id = " + outWarehouseOrder.getId());
+				}
+				if (outWarehouseOrder.getUserIdOfCustomer() != null) {
+					sb.append(" and user_id_of_customer = " + outWarehouseOrder.getUserIdOfCustomer());
+				}
+				if (outWarehouseOrder.getUserIdOfOperator() != null) {
+					sb.append(" and user_id_of_operator = " + outWarehouseOrder.getUserIdOfOperator());
+				}
+				if (StringUtil.isNotNull(outWarehouseOrder.getShipwayCode())) {
+					sb.append(" and shipway_code = '" + outWarehouseOrder.getShipwayCode() + "' ");
+				}
+				if (outWarehouseOrder.getCreatedTime() != null) {
+					sb.append(" and created_time = " + outWarehouseOrder.getCreatedTime());
+				}
+				if (StringUtil.isNotNull(outWarehouseOrder.getStatus())) {
+					sb.append(" and status = '" + outWarehouseOrder.getStatus() + "' ");
+				}
+				if (StringUtil.isNotNull(outWarehouseOrder.getRemark())) {
+					sb.append(" and remark = '" + outWarehouseOrder.getRemark() + "' ");
+				}
+				if (StringUtil.isNotNull(outWarehouseOrder.getCallbackSendWeightIsSuccess())) {
+					sb.append(" and callback_send_weight_is_success = '" + outWarehouseOrder.getCallbackSendWeightIsSuccess() + "' ");
+				}
+				if (outWarehouseOrder.getCallbackSendWeighCount() != null) {
+					sb.append(" and callback_send_weigh_count = " + outWarehouseOrder.getCallbackSendWeighCount());
+				}
+
+				if (StringUtil.isNotNull(outWarehouseOrder.getCallbackSendStatusIsSuccess())) {
+					sb.append(" and callback_send_status_is_success = '" + outWarehouseOrder.getCallbackSendStatusIsSuccess() + "' ");
+				}
+				if (outWarehouseOrder.getCallbackSendStatusCount() != null) {
+					sb.append(" and callback_send_status_count = " + outWarehouseOrder.getCallbackSendStatusCount());
+				}
+				if (outWarehouseOrder.getOutWarehouseWeight() != null) {
+					sb.append(" and out_warehouse_weight = " + outWarehouseOrder.getOutWarehouseWeight());
+				}
+				if (outWarehouseOrder.getWeightCode() != null) {
+					sb.append(" and weight_code = '" + outWarehouseOrder.getWeightCode() + "'");
+				}
+				if (outWarehouseOrder.getTradeRemark() != null) {
+					sb.append(" and trade_remark = '" + outWarehouseOrder.getTradeRemark() + "'");
+				}
+				if (outWarehouseOrder.getLogisticsRemark() != null) {
+					sb.append(" and logistics_remark = '" + outWarehouseOrder.getLogisticsRemark() + "'");
+				}
+				if (outWarehouseOrder.getTrackingNo() != null) {
+					sb.append(" and tracking_no = '" + outWarehouseOrder.getTrackingNo() + "'");
+				}
+				if (StringUtil.isNotNull(outWarehouseOrder.getCustomerReferenceNo())) {
+					sb.append(" and customer_reference_no = '" + outWarehouseOrder.getCustomerReferenceNo() + "' ");
+				}
+				if (outWarehouseOrder.getPrintedCount() != null) {
+					sb.append(" and printed_count = " + outWarehouseOrder.getPrintedCount());
+				}
+			}
+			if (moreParam != null) {
+				if (moreParam.get("createdTimeStart") != null) {
+					Date date = DateUtil.stringConvertDate(moreParam.get("createdTimeStart"), DateUtil.yyyy_MM_ddHHmmss);
+					if (date != null) {
+						sb.append(" and created_time >= " + date.getTime());
+					}
+				}
+				if (moreParam.get("createdTimeEnd") != null) {
+					Date date = DateUtil.stringConvertDate(moreParam.get("createdTimeEnd"), DateUtil.yyyy_MM_ddHHmmss);
+					if (date != null) {
+						sb.append(" and created_time <= " + date.getTime());
+					}
+				}
+			}
 		}
 		String sql = sb.toString();
 		logger.debug("统计出库订单sql:" + sql);

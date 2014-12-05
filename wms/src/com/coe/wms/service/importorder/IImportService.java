@@ -17,9 +17,9 @@ public interface IImportService {
 
 	static final Logger logger = Logger.getLogger(IImportService.class);
 
-	public Map<String, String> saveMultipartFile(Map<String, MultipartFile> fileMap, String userLoginName, Long warehouseId, String uploadDir) throws ServiceException;
+	public Map<String, String> saveMultipartFile(Map<String, MultipartFile> fileMap, Long userIdOfCustomer, Long warehouseId, String uploadDir) throws ServiceException;
 
 	public Map<String, Object> validateImportInWarehouseOrder(String filePathAndName) throws ServiceException;
 
-	public Map<String, Object> executeImportInWarehouseOrder(List<Map<String, String>> mapList, String userLoginName, Long warehouseId) throws ServiceException;
+	public Map<String, Object> executeImportInWarehouseOrder(List<Map<String, String>> mapList, Long userIdOfCustomer, Long warehouseId) throws ServiceException;
 }

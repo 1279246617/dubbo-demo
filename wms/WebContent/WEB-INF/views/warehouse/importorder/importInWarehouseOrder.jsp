@@ -103,17 +103,17 @@
 				success : function(msg) {
 					msg = msg.substring(msg.indexOf(">")+1,msg.lastIndexOf("<"));
 					var json = JSON.parse(msg);
+					var result = $("#result");
+					result.empty();
 					if(json.status == "1"){
-						
+						result.append("<tr><th style='color:green;'>"+json.message+"</th></tr>");
 					}
 					if(json.status == "0"){
-						var result = $("#result");
-						result.empty();
 						var errors = json.errors;
-						result.append("<tr><th>"+json.message+"</th></tr>");
+						result.append("<tr><th style='color:red;font-size:13px;'>"+json.message+"</th></tr>");
 						$.each(errors,function(i,error){
 								var 	tr = "<tr class='error'>";
-								tr +="<td>"+error+"</td>";
+								tr +="<th>"+error+"</th>";
 								tr+="</tr>";
 								result.append(tr); 
 						});
