@@ -246,7 +246,7 @@
         	          button: [{
         	            name: '关闭',
         	            callback: function() {
-        	               
+        	            	grid.loadData();
         	            }
         	          }]
         	        });
