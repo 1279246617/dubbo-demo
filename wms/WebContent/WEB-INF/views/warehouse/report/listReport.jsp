@@ -156,7 +156,7 @@
 	                dataAction: 'server',
 	                url: baseUrl+'/warehouse/report/getListReportData.do',
 	                pageSize: 50, 
-	                pageSizeOptions:[10,50,100,500,1000],
+	                pageSizeOptions:[50,100,150,200],
 	                usePager: 'true',
 	                sortName: 'created_time',
 	                sortOrder:'desc',

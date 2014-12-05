@@ -174,7 +174,7 @@
 	                dataAction: 'server',
 	                url: baseUrl+'/warehouse/storage/getOutWarehouseOrderData.do?status=WWC',
 	                pageSize: 100, 
-	                pageSizeOptions:[10,50,100,500,1000],
+	                pageSizeOptions:[50,100,150,200],
 	                usePager: 'true',
 	                sortName: 'id',
 	                sortOrder: 'desc',

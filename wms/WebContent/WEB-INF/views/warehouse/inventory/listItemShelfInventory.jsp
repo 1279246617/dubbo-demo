@@ -125,7 +125,7 @@
 	                dataAction: 'server',
 	                url: baseUrl+'/warehouse/inventory/getListItemShelfInventoryData.do',
 	                pageSize: 50, 
-	                pageSizeOptions:[10,50,100,500,1000],
+	                pageSizeOptions:[50,100,150,200],
 	                usePager: 'true',
 	                sortName: 'id',
 	                sortOrder:'desc',
