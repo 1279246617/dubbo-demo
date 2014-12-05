@@ -339,11 +339,41 @@ public class ImportServiceImpl implements IImportService {
 		resultMap.put("rows", mapList);
 		return resultMap;
 	}
-	
+
 	@Override
 	public Map<String, Object> validateImportOutWarehouseOrder(String filePathAndName) throws ServiceException {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put(Constant.STATUS, Constant.FAIL);
+		// 解析文件
+		POIExcelUtil poiUtil = new POIExcelUtil();
+		List<Map<String, String>> mapList = new ArrayList<Map<String, String>>();
+		List<ArrayList<String>> rows = poiUtil.readFile(filePathAndName);
+		List<String> errors = new ArrayList<String>();
+		for (int i = 0; i < rows.size(); i++) {
+			if (i == 0) {
+				continue;
+			}
+			String error = "第" + (i + 1) + "列";
+			boolean isError = false;
+			ArrayList<String> row = rows.get(i);
+			Map<String, String> map = new HashMap<String, String>();
+			for (int j = 0; j < row.size(); j++) {
+				String cell = row.get(j);
 
-		return null;
+			}
+			if (isError) {
+				errors.add(error);
+			}
+			mapList.add(map);
+		}
+
+		if (errors.size() == 0) {
+			resultMap.put(Constant.STATUS, Constant.SUCCESS);
+		}
+		resultMap.put(Constant.MESSAGE, "上传失败,必须所有内容无错误才能导入");
+		resultMap.put("errors", errors);
+		resultMap.put("rows", mapList);
+		return resultMap;
 	}
 
 	@Override
