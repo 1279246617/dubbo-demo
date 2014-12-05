@@ -31,9 +31,9 @@
 		    	</div>   
 		    	
                <div class="pull-right searchContent">
-               		<span class="pull-left" style="width:175px;">
+               		<span class="pull-left" style="width:140px;">
                			仓库
-               			<select style="width:100px;" id="warehouseId" name="warehouseId">
+               			<select style="width:90px;" id="warehouseId" name="warehouseId">
                				<option></option>
 							<c:forEach items="${warehouseList}" var="w" >
 				       	 		<option value="<c:out value='${w.id}'/>">
@@ -43,21 +43,23 @@
 						</select>
                		</span>
                		
-               		<span class="pull-left" style="width:175px;">
+               		<span class="pull-left" style="width:165px;">
                			客户帐号
                			<input type="text" name="userLoginName" data-provide="typeahead"  id="userLoginName" style="width:100px;" title="请输入客户登录名" />
                		</span>
-					<span class="pull-left" style="width:195px;">
-						跟踪单号	
-						<input type="text"  name="trackingNo"  id="trackingNo"   style="width:120px;"/>
+               		<span class="pull-left" style="width:180px;">
+						客户订单号	
+						<input type="text"  name="customerReferenceNo"  id="customerReferenceNo"   style="width:100px;"/>
 					</span>
-               		
+					<span class="pull-left" style="width:170px;">
+						跟踪单号	
+						<input type="text"  name="trackingNo"  id="trackingNo"   style="width:100px;"/>
+					</span>
                		<span class="pull-left" style="width:175px;">
                			创建时间
-	               		<input type="text"   style="width:120px;" name="createdTimeStart" id="createdTimeStart" value="${sevenDaysAgoStart}" title="起始创建时间">
+	               		<input type="text"   style="width:120px;" name="createdTimeStart" id="createdTimeStart" title="起始创建时间">
                		</span>
-               		
-               		<span class="pull-left" style="width:200px;">
+               		<span class="pull-left" style="width:175px;">
                			至	
                			<input type="text"   style="width:120px;" name="createdTimeEnd"  id="createdTimeEnd"  title="终止创建时间">
                		</span>
@@ -144,7 +146,7 @@
 		            	}}
 	                ],  
 	                dataAction: 'server',
-	                url: baseUrl+'/warehouse/storage/getInWarehouseOrderData.do?createdTimeStart=${sevenDaysAgoStart}',
+	                url: baseUrl+'/warehouse/storage/getInWarehouseOrderData.do',
 	                pageSize: 50, 
 	                pageSizeOptions:[10,50,100,500,1000],
 	                usePager: 'true',
