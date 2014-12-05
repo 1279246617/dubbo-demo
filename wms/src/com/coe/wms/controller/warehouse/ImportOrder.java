@@ -132,6 +132,8 @@ public class ImportOrder {
 			resultMap.put(Constant.MESSAGE, "请输入有效的客户帐号");
 			return GsonUtil.toJson(resultMap);
 		}
+		HttpSession session = request.getSession();
+		Long userIdOfOperator = (Long) session.getAttribute(SessionConstant.USER_ID);
 		String uploadDir = config.getRuntimeFilePath() + "/order/import";
 		MultipartHttpServletRequest mRequest = (MultipartHttpServletRequest) request;
 		Map<String, MultipartFile> fileMap = mRequest.getFileMap();
@@ -149,7 +151,7 @@ public class ImportOrder {
 		}
 		List<Map<String, String>> mapList = (List<Map<String, String>>) validateFileResultMap.get("rows");
 		// 执行导入
-		resultMap = importService.executeImportInWarehouseOrder(mapList, userIdOfCustomer, warehouseId);
+		resultMap = importService.executeImportInWarehouseOrder(mapList, userIdOfCustomer, warehouseId, userIdOfOperator);
 		return GsonUtil.toJson(resultMap);
 	}
 
