@@ -22,9 +22,9 @@
 	  <div class="toolbar1">
            <form action="${baseUrl}/warehouse/storage/getInWarehouseRecordData.do" id="searchform" name="searchform" method="post">
                <div class="pull-right searchContent">
-               		<span class="pull-left" style="width:175px;">
+               		<span class="pull-left" style="width:145px;">
                			仓库
-               			<select style="width:100px;" id="warehouseId" name="warehouseId">
+               			<select style="width:90px;" id="warehouseId" name="warehouseId">
                				<option></option>
 							<option value="1">1-香港仓</option>
 						</select>

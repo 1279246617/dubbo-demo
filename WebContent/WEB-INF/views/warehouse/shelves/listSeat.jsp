@@ -34,9 +34,9 @@
 				  </div>    
 		           <form action="${baseUrl}/warehouse/shelves/getShelfData.do" id="searchformShelf" name="searchformShelf" method="post">
 		               <div class="pull-right searchContent">
-		               		<span class="pull-left" style="width:175px;">
+		               		<span class="pull-left" style="width:145px;">
 		               			仓库
-		               			<select style="width:100px;" id="warehouseId" name="warehouseId">
+		               			<select style="width:90px;" id="warehouseId" name="warehouseId">
 		               				<option></option>
 									<option value="1">1-香港仓</option>
 								</select>
@@ -129,7 +129,7 @@
 	                pageSizeOptions:[10,50,100,500,1000],
 	                usePager: 'true',
 	                sortName: 'id',
-	                sortOrder:'desc',
+	                sortOrder:'asc',
 	                width: '100%',
 	                height: '75%',
 	                checkbox: true,
