@@ -205,7 +205,7 @@ function advancedSearch(){
 	          lock: true,
 	          title: '批量单号搜索',
 	          width: '600px',
-	          height: '400px',
+	          height: '200px',
 	          content: 'url:' + baseUrl + '/warehouse/storage/searchOutWarehouseOrder.do',
 	          button: [{
 	            name: '确定',

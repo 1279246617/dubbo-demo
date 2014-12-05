@@ -90,7 +90,6 @@ public class Reports {
 		User user = userService.getUserById(userId);
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
 		view.addObject("warehouseList", storageService.findAllWarehouse(user.getDefaultWarehouseId()));
-		view.addObject("sevenDaysAgoStart", DateUtil.getSevenDaysAgoStart());
 		view.addObject("reportTypeList", reportService.findAllReportType());
 		view.setViewName("warehouse/report/listReport");
 		return view;
@@ -108,10 +107,6 @@ public class Reports {
 	@RequestMapping(value = "/getListReportData")
 	public String getListReportData(HttpServletRequest request, String sortorder, String sortname, int page, int pagesize, String userLoginName, Long warehouseId, String reportType, String reportName, String createdTimeStart, String createdTimeEnd)
 			throws IOException {
-		if (StringUtil.isNotNull(createdTimeStart) && createdTimeStart.contains(",")) {
-			createdTimeStart = createdTimeStart.substring(createdTimeStart.lastIndexOf(",") + 1, createdTimeStart.length());
-		}
-
 		HttpSession session = request.getSession();
 		// 当前操作员
 		Long userIdOfOperator = (Long) session.getAttribute(SessionConstant.USER_ID);
