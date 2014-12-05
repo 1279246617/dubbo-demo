@@ -90,7 +90,7 @@ public class InWarehouseOrderDaoImpl implements IInWarehouseOrderDao {
 	/**
 	 * 查询入库订单
 	 * 
-	 * 参数一律使用实体类加Map . 
+	 * 参数一律使用实体类加Map .
 	 */
 	@Override
 	public List<InWarehouseOrder> findInWarehouseOrder(InWarehouseOrder inWarehouseOrder, Map<String, String> moreParam, Pagination page) {
@@ -124,24 +124,24 @@ public class InWarehouseOrderDaoImpl implements IInWarehouseOrderDao {
 			if (inWarehouseOrder.getWeight() != null) {
 				sb.append(" and weight = " + inWarehouseOrder.getWeight());
 			}
-			if (inWarehouseOrder.getCarrierCode() != null) {
+			if (StringUtil.isNotNull(inWarehouseOrder.getCarrierCode())) {
 				sb.append(" and carrier_code = '" + inWarehouseOrder.getCarrierCode() + "'");
 			}
-			if (inWarehouseOrder.getLogisticsType() != null) {
+			if (StringUtil.isNotNull(inWarehouseOrder.getLogisticsType())) {
 				sb.append(" and logistics_type = '" + inWarehouseOrder.getLogisticsType() + "'");
 			}
-			if (inWarehouseOrder.getCustomerReferenceNo() != null) {
+			if (StringUtil.isNotNull(inWarehouseOrder.getCustomerReferenceNo())) {
 				sb.append(" and customer_reference_no = '" + inWarehouseOrder.getCustomerReferenceNo() + "'");
 			}
 		}
 		if (moreParam != null) {
-			if (moreParam.get("createdTimeStart") != null) {
+			if (StringUtil.isNotNull(moreParam.get("createdTimeStart"))) {
 				Date date = DateUtil.stringConvertDate(moreParam.get("createdTimeStart"), DateUtil.yyyy_MM_ddHHmmss);
 				if (date != null) {
 					sb.append(" and created_time >= " + date.getTime());
 				}
 			}
-			if (moreParam.get("createdTimeEnd") != null) {
+			if (StringUtil.isNotNull(moreParam.get("createdTimeEnd"))) {
 				Date date = DateUtil.stringConvertDate(moreParam.get("createdTimeEnd"), DateUtil.yyyy_MM_ddHHmmss);
 				if (date != null) {
 					sb.append(" and created_time <= " + date.getTime());
@@ -190,24 +190,24 @@ public class InWarehouseOrderDaoImpl implements IInWarehouseOrderDao {
 			if (inWarehouseOrder.getWeight() != null) {
 				sb.append(" and weight = " + inWarehouseOrder.getWeight());
 			}
-			if (inWarehouseOrder.getCarrierCode() != null) {
+			if (StringUtil.isNotNull(inWarehouseOrder.getCarrierCode())) {
 				sb.append(" and carrier_code = '" + inWarehouseOrder.getCarrierCode() + "'");
 			}
-			if (inWarehouseOrder.getLogisticsType() != null) {
+			if (StringUtil.isNotNull(inWarehouseOrder.getLogisticsType())) {
 				sb.append(" and logistics_type = '" + inWarehouseOrder.getLogisticsType() + "'");
 			}
-			if (inWarehouseOrder.getCustomerReferenceNo() != null) {
+			if (StringUtil.isNotNull(inWarehouseOrder.getCustomerReferenceNo())) {
 				sb.append(" and customer_reference_no = '" + inWarehouseOrder.getCustomerReferenceNo() + "'");
 			}
 		}
 		if (moreParam != null) {
-			if (moreParam.get("createdTimeStart") != null) {
+			if (StringUtil.isNotNull(moreParam.get("createdTimeStart"))) {
 				Date date = DateUtil.stringConvertDate(moreParam.get("createdTimeStart"), DateUtil.yyyy_MM_ddHHmmss);
 				if (date != null) {
 					sb.append(" and created_time >= " + date.getTime());
 				}
 			}
-			if (moreParam.get("createdTimeEnd") != null) {
+			if (StringUtil.isNotNull(moreParam.get("createdTimeEnd"))) {
 				Date date = DateUtil.stringConvertDate(moreParam.get("createdTimeEnd"), DateUtil.yyyy_MM_ddHHmmss);
 				if (date != null) {
 					sb.append(" and created_time <= " + date.getTime());
