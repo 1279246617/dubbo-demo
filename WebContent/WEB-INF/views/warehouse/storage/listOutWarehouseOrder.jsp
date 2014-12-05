@@ -21,20 +21,6 @@
 <body>
 	  <div class="toolbar1">
            <form action="${baseUrl}/warehouse/storage/getOutWarehouseOrderData.do" id="searchform" name="searchform" method="post">
-           		<div class="pull-left">
-           			<span class="pull-left" style="width:55px;">
-			       		<a class="btn btn-primary btn-small" onclick="checkOrder()" title="审核出库订单">
-			           		 <i class="icon-eye-open"></i>审核
-			       	 	</a>
-			       	 	<input style=" visibility:hidden;">
-		       	 	</span>
-		       	 	<span class="pull-left" style="width:90px;">
-			       		<a class="btn btn-primary btn-small" onclick="printOrder()" title="打印捡货单">
-			           		 <i class="icon-folder-open"></i>打印捡货单
-			       	 	</a>
-			       	 	<input style=" visibility:hidden;">
-		       	 	</span>
-		    	</div>    
                <div class="pull-right searchContent">
                		<span class="pull-left" style="width:125px;">
                			仓库
@@ -84,11 +70,34 @@
                			<a class="btn btn-primary btn-small" id="btn_search"><i class="icon-search icon-white"></i>搜索</a>
                			<input style=" visibility:hidden;">
                		</span>
-               		<span class="pull-left" style="width:65px;">
+               		<span class="pull-left" style="width:100px;">
                			<a class="btn btn-primary btn-small" id="advancedSearch"><i class="icon-search icon-white"></i>批量单号搜索</a>
                			<input style=" visibility:hidden;">
                		</span>
                </div>
+               
+               <div class="pull-left">
+           			<span class="pull-left" style="width:60px;">
+			       		<a class="btn btn-primary btn-small" onclick="checkOrder()" title="审核出库订单">
+			           		 <i class="icon-eye-open"></i>审核
+			       	 	</a>
+			       	 	<input style=" visibility:hidden;">
+		       	 	</span>
+		       	 	
+		       	 	<span class="pull-left" style="width:95px;">
+			       		<a class="btn btn-primary btn-small" onclick="printOrder()" title="打印捡货单">
+			           		 <i class="icon-folder-open"></i>打印捡货单
+			       	 	</a>
+			       	 	<input style=" visibility:hidden;">
+		       	 	</span>
+		       	 	
+		       	 	<span class="pull-left" style="width:105px;">
+			       		<a class="btn btn-primary btn-small" onclick="inportOrder()" title="导入出库订单">
+			           		 <i class="icon-file"></i>导入出库订单
+			       	 	</a>
+			       	 	<input style=" visibility:hidden;">
+		       	 	</span>
+		    	</div>    
            </form>
 	</div>
 	<div id="maingrid" class="pull-left" style="width:100%;"></div>

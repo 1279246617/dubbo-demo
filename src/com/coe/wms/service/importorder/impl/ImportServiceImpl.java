@@ -339,5 +339,17 @@ public class ImportServiceImpl implements IImportService {
 		resultMap.put("rows", mapList);
 		return resultMap;
 	}
+	
+	@Override
+	public Map<String, Object> validateImportOutWarehouseOrder(String filePathAndName) throws ServiceException {
+
+		return null;
+	}
+
+	@Override
+	public Map<String, Object> executeImportOutWarehouseOrder(List<Map<String, String>> mapList, Long userIdOfCustomer, Long warehouseId, Long userIdOfOperator) throws ServiceException {
+
+		return null;
+	}
 
 }

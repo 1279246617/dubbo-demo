@@ -134,7 +134,7 @@ public class ImportOrder {
 		}
 		HttpSession session = request.getSession();
 		Long userIdOfOperator = (Long) session.getAttribute(SessionConstant.USER_ID);
-		String uploadDir = config.getRuntimeFilePath() + "/order/import";
+		String uploadDir = config.getRuntimeFilePath() + "/order/import/inwarehouse";
 		MultipartHttpServletRequest mRequest = (MultipartHttpServletRequest) request;
 		Map<String, MultipartFile> fileMap = mRequest.getFileMap();
 		// 保存文件
@@ -172,7 +172,7 @@ public class ImportOrder {
 		view.addObject("userId", userId);
 		User user = userService.getUserById(userId);
 		view.addObject("warehouseList", storageService.findAllWarehouse(user.getDefaultWarehouseId()));
-		view.setViewName("warehouse/importorder/inportOutWarehouseOrder");
+		view.setViewName("warehouse/importorder/importOutWarehouseOrder");
 		return view;
 	}
 
@@ -181,8 +181,42 @@ public class ImportOrder {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/executeImportOutWarehouseOrder")
-	public String executeImportOutWarehouseOrder(HttpServletRequest reques) throws IOException {
-
-		return null;
+	public String executeImportOutWarehouseOrder(HttpServletRequest request, String userLoginName, Long warehouseId) throws IOException {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put(Constant.STATUS, Constant.FAIL);
+		if (StringUtil.isNull(userLoginName)) {
+			resultMap.put(Constant.MESSAGE, "请输入客户帐号");
+			return GsonUtil.toJson(resultMap);
+		}
+		if (warehouseId == null) {
+			resultMap.put(Constant.MESSAGE, "请选择到货仓库");
+			return GsonUtil.toJson(resultMap);
+		}
+		Long userIdOfCustomer = userService.findUserIdByLoginName(userLoginName);
+		if (userIdOfCustomer == null || userIdOfCustomer == 0) {
+			resultMap.put(Constant.MESSAGE, "请输入有效的客户帐号");
+			return GsonUtil.toJson(resultMap);
+		}
+		HttpSession session = request.getSession();
+		Long userIdOfOperator = (Long) session.getAttribute(SessionConstant.USER_ID);
+		String uploadDir = config.getRuntimeFilePath() + "/order/import/outwarehouse";
+		MultipartHttpServletRequest mRequest = (MultipartHttpServletRequest) request;
+		Map<String, MultipartFile> fileMap = mRequest.getFileMap();
+		// 保存文件
+		Map<String, String> saveFileResultMap = importService.saveMultipartFile(fileMap, userIdOfCustomer, warehouseId, uploadDir);
+		if (StringUtil.isEqual(saveFileResultMap.get(Constant.STATUS), Constant.FAIL)) {
+			return GsonUtil.toJson(saveFileResultMap);
+		}
+		// 得到文件路径和名
+		String filePathAndName = saveFileResultMap.get("filePathAndName");
+		// 检测格式
+		Map<String, Object> validateFileResultMap = importService.validateImportOutWarehouseOrder(filePathAndName);
+		if (StringUtil.isEqual((String) validateFileResultMap.get(Constant.STATUS), Constant.FAIL)) {
+			return GsonUtil.toJson(validateFileResultMap);
+		}
+		List<Map<String, String>> mapList = (List<Map<String, String>>) validateFileResultMap.get("rows");
+		// 执行导入
+		resultMap = importService.executeImportOutWarehouseOrder(mapList, userIdOfCustomer, warehouseId, userIdOfOperator);
+		return GsonUtil.toJson(resultMap);
 	}
 }
