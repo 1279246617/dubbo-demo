@@ -22,9 +22,9 @@
 	  <div class="toolbar1">
            <form action="${baseUrl}/warehouse/storage/getOutShelvesData.do" id="searchform" name="searchform" method="post">
                <div class="pull-right searchContent">
-               		<span class="pull-left" style="width:175px;">
+               		<span class="pull-left" style="width:145px;">
                			仓库
-               			<select style="width:100px;" id="warehouseId" name="warehouseId">
+               			<select style="width:90px;" id="warehouseId" name="warehouseId">
 										<c:forEach items="${warehouseList}" var="w" >
 						       	 			<option value="<c:out value='${w.id}'/>">
 						       	 				<c:out value="${w.id}-${w.warehouseName}"/>
