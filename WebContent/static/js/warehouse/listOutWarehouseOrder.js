@@ -47,12 +47,10 @@ function checkOrder(){
 				}
         		$.post(baseUrl + '/warehouse/storage/checkOutWarehouseOrder.do',{orderIds:orderIds,checkResult:checkResult},function(msg){
         			if(msg.status == "1"){
-//        				parent.$.showShortMessage({msg:msg.message,animate:false,left:"38%"});
         				grid.loadData();	
         				parent.$.showDialogMessage(msg.message,null,null);
         			}else{
         				parent.$.showDialogMessage(msg.message,null,null);
-//        				parent.$.showShortMessage({msg:msg.message,animate:false,left:"43%"});
         			}
                 },"json");
   			}
@@ -62,7 +60,48 @@ function checkOrder(){
   		}]
   	})
 }
- 
+
+//审核单个订单
+function checkSingleOrder(id){
+    var contentArr = [];
+    contentArr.push('<div class="pull-left" style="width: 100%;text-align:center;line-height:20px;">');
+    contentArr.push('   <span class="pull-left">审核操作：</span>');
+    contentArr.push('   <input class="pull-left" name="checkResult" style="margin-left:30px;vertical-align: middle;" type="radio" checked="checked" id="checkSuccess">');
+    contentArr.push('   <label class="pull-left" style="margin-left: 5px;line-height:20px;vertical-align: middle;color: green;" for="checkSuccess">审核通过</label>');
+    contentArr.push('   <input class="pull-left" name="checkResult" style="margin-left:56px;vertical-align: middle;" type="radio" id="checkFail">');
+    contentArr.push('   <label class="pull-left" style="margin-left: 5px;line-height:20px;vertical-align: middle;color: red;" for="checkFail">审核不通过</label>');
+    contentArr.push('</div>');
+
+    contentArr.push('<div style="color: #ff0000;margin-left: 30px;">注: 非待审核状态的订单不受审核影响</div>');
+    contentArr.push('</div>');
+    var contentHtml = contentArr.join('');
+	$.dialog({
+  		lock: true,
+  		max: false,
+  		min: false,
+  		title: '提示',
+  		width: 360,
+  		height: 85,
+  		content: contentHtml,
+  		button: [{
+  			name: '确认',
+  			callback: function() {
+                var checkResult = parent.$("#checkSuccess").attr("checked")?1:2;//1是审核通过 2是审核不通过
+        		$.post(baseUrl + '/warehouse/storage/checkOutWarehouseOrder.do',{orderIds:id,checkResult:checkResult},function(msg){
+        			if(msg.status == "1"){
+        				grid.loadData();	
+        				parent.$.showDialogMessage(msg.message,null,null);
+        			}else{
+        				parent.$.showDialogMessage(msg.message,null,null);
+        			}
+                },"json");
+  			}
+  		},
+  		{
+  			name: '取消'
+  		}]
+  	})
+}
 
 //打印订单
 function printOrder(){
@@ -164,7 +203,7 @@ function listOutWarehouseOrderItem(orderId){
 function advancedSearch(){
 	   $.dialog({
 	          lock: true,
-	          title: '高级搜索',
+	          title: '批量单号搜索',
 	          width: '600px',
 	          height: '400px',
 	          content: 'url:' + baseUrl + '/warehouse/storage/searchOutWarehouseOrder.do',
@@ -184,40 +223,44 @@ function advancedSearch(){
 	            			parent.$.showDialogMessage(msg.message, null, null);
 	            	  }
 	            	  if(msg.status =='1'){
-	            		  var str = '';
 	            		  if(msg.unAbleNoCount !='0'){
-	            			  str = ('一共查询到'+msg.orderCount+'个订单,' +msg.unAbleNoCount+ '个单号不能查询到订单,它们是:'+msg.unAbleNos+'.');
+	            			  var  str = ('一共查询到'+msg.orderCount+'个订单,' +msg.unAbleNoCount+ '个单号不能查询到订单,它们是:<br/>'+msg.unAbleNos+'.');
+	            			  if(str.length>100){
+		            			 var contentArr = [];
+		             			 contentArr.push('<p style="width:500px;height:100%;margin-left:2mm;margin-top:2mm;word-break:break-all;">');
+		             			 contentArr.push('<b>'+str+'</b>');
+		             		     contentArr.push('</p>');
+		             		     var contentHtml = contentArr.join('');
+		             			 $.dialog({
+		             		  		lock: true,
+		             		  		max: false,
+		             		  		min: false,
+		             		  		title: '提示',
+		             		  		width: 550,
+		             		  		height: 350,
+		             		  		content: contentHtml,
+		             		  		button: [{
+		             		  			name: '确认',
+		             		  			callback: function() {
+		             		  				
+		             		  			}
+		             		  		}]
+		             			  });
+		            		  }else{
+		            			  parent.$.showDialogMessage(str, null, null);
+		            		  }
 	            		  }
 	            		  if(msg.unAbleNoCount == '0'){
-	            			  str = ('一共查询到'+msg.orderCount+'个订单,没有单号查询不到订单.');
-	            		  }
-	            		  if(str.length>100){
-	            			  var contentArr = [];
-	             			 contentArr.push('<p style="width:500px;height:100%;margin-left:2mm;margin-top:2mm;word-break:break-all;">');
-	             			 contentArr.push('<b>'+str+'</b>');
-	             		     contentArr.push('</p>');
-	             		     var contentHtml = contentArr.join('');
-	             			 $.dialog({
-	             		  		lock: true,
-	             		  		max: false,
-	             		  		min: false,
-	             		  		title: '提示',
-	             		  		width: 550,
-	             		  		height: 350,
-	             		  		content: contentHtml,
-	             		  		button: [{
-	             		  			name: '确认',
-	             		  			callback: function() {
-	             		  			}
-	             		  		}]
-	             			  });
-	            		  }else{
-	            			  parent.$.showDialogMessage(str, null, null);
+	            			  var str = ('一共查询到'+msg.orderCount+'个订单,没有单号查询不到订单.');
+	            			  parent.$.showShortMessage({msg:str,animate:false,left:"45%"});
 	            		  }
 	            		  //对 searchfrom 赋值, 执行查询
 	            		  $("#noType").val(noType);
 	            		  $("#nos").val(allNos);
 	            		  btnSearch("#searchform",grid);
+	            		  //查询完成后把隐藏的条件去掉
+	            		  $("#noType").val("");
+	            		  $("#nos").val("");
 	            	 }
 	              },"json");
 	            }

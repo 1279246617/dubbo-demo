@@ -189,12 +189,9 @@
 		                { display: '回传称重状态', name: 'callbackSendWeightIsSuccess', align: 'center', type: 'float',width:'8%'},
 		                { display: '回传出库状态', name: 'callbackSendStatusIsSuccess', align: 'center', type: 'float',width:'8%'},
 		                { display: '创建时间', name: 'createdTime', align: 'center', type: 'float',width:'12%'},
-		                {display: '操作',isSort: false,width: '10%',render: function(row) {
-		            		var h = "";
-		            		if (!row._editing) {
-		            			h += '<a href="javascript:updateOutWarehouseItem(' + row.id + ')">审核</a> ';
-		            			h += '<a href="javascript:deleteOutWarehouseItem(' + row.id + ')">删除</a>';
-		            		}
+		                {display: '操作',isSort: false,width: '9%',render: function(row) {
+		            		var  h = '<a href="javascript:checkSingleOrder(' + row.id + ')">审核</a> ';
+// 		            				h += '<a href="javascript:deleteOutWarehouseOrder(' + row.id + ')">删除</a>';
 		            		return h;
 		            	}
 		            }
