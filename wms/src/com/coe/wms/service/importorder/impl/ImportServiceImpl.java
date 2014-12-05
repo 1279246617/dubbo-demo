@@ -136,7 +136,7 @@ public class ImportServiceImpl implements IImportService {
 				orderItem.setProductionBatchNo(map.get("productionBatchNo"));
 				orderItem.setQuantity(Integer.valueOf(map.get("quantity")));
 				orderItem.setSku(map.get("sku"));
-				orderItem.setSkuName(map.get("skuName"));
+				orderItem.setSkuName(map.get("productName"));
 				orderItem.setSkuNo(map.get("skuNo"));
 				orderItem.setSkuRemark(map.get("skuRemark"));
 				orderItem.setSpecification(map.get("specification"));
@@ -147,6 +147,7 @@ public class ImportServiceImpl implements IImportService {
 						orderItem.setValidityTime(validityTimeDate.getTime());
 					}
 				}
+				orderItemList.add(orderItem);
 			}
 			Long inWarehouseOrderId = inWarehouseOrderDao.saveInWarehouseOrder(inWarehouseOrder);// 订单di;
 			saveItemCount += inWarehouseOrderItemDao.saveBatchInWarehouseOrderItemWithOrderId(orderItemList, inWarehouseOrderId);
