@@ -214,7 +214,7 @@ public class InWarehouseOrderItemDaoImpl implements IInWarehouseOrderItemDao {
 		StringBuffer sb = new StringBuffer();
 		sb.append("select sku_name  from w_s_in_warehouse_order_item i inner join w_s_in_warehouse_order r on i.order_id=r.id where 1=1 ");
 		sb.append(" and r.user_id_of_customer = " + userIdOfCustomer);
-		sb.append(" and i.sku = " + sku);
+		sb.append(" and i.sku = '" + sku+"'");
 		Pagination page = new Pagination();
 		page.curPage = 1;
 		page.pageSize = 1;
