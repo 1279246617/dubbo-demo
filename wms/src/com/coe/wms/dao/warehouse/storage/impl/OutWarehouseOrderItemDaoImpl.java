@@ -236,9 +236,12 @@ public class OutWarehouseOrderItemDaoImpl implements IOutWarehouseOrderItemDao {
 		}
 		StringBuffer sb = new StringBuffer();
 		sb.append("select sum(quantity)  from w_s_out_warehouse_order_item i inner join w_s_out_warehouse_order r on i.out_warehouse_order_id=r.id where 1=1 ");
-		sb.append(" and i.sku = " + sku);
+		sb.append(" and i.sku = '" + sku + "'");
 		sb.append(" and r.id in( " + orderIdStrs + ")");
 		Long sum = jdbcTemplate.queryForObject(sb.toString(), Long.class);
+		if (sum == null) {
+			return 0l;
+		}
 		return sum;
 	}
 }
