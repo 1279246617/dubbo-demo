@@ -18,7 +18,7 @@ public class OrderSender implements Serializable {
 	/**
 	 * orderId
 	 */
-	private Long outWarehouseOrderId;
+	private Long orderId;
 
 	/**
 	 * 发件人名
@@ -105,14 +105,6 @@ public class OrderSender implements Serializable {
 		this.name = name;
 	}
 
-	public Long getOutWarehouseOrderId() {
-		return outWarehouseOrderId;
-	}
-
-	public void setOutWarehouseOrderId(Long outWarehouseOrderId) {
-		this.outWarehouseOrderId = outWarehouseOrderId;
-	}
-
 	public String getCompany() {
 		return company;
 	}
@@ -123,6 +115,14 @@ public class OrderSender implements Serializable {
 
 	public String getMobileNumber() {
 		return mobileNumber;
+	}
+
+	public Long getOrderId() {
+		return orderId;
+	}
+
+	public void setOrderId(Long orderId) {
+		this.orderId = orderId;
 	}
 
 	public void setMobileNumber(String mobileNumber) {

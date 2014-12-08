@@ -5,31 +5,32 @@ import java.io.Serializable;
 import com.google.code.ssm.api.CacheKeyMethod;
 
 /**
- * 出库订单状态
+ * 转运订单状态
  * 
  * @author Administrator
  * 
  */
 public class OrderStatus implements Serializable {
 
-	public class OutWarehouseOrderStatusCode {
+	public class OrderStatusCode {
 		/**
-		 * 顺丰新建出库订单,等待COE审核 Wait Warehouse Check
+		 * 下单:LOGISTICS_TRADE_PAID 顺丰新建转运出库订单,等待COE审核 Wait Warehouse Check
 		 */
 		public static final String WWC = "WWC";
 
 		/**
-		 * 审核通过,等待打印捡货单
+		 * 审单:WMS_CHECK_ORDER 发送审核通过给顺丰, 待顺丰发实际货物到仓库, 待收货 Wait Receiver Goods
 		 */
-		public static final String WPP = "WPP";
+		public static final String WRG = "WRG";
 
 		/**
-		 * 打印捡货单,等待下架捡货
+		 * 入库：WMS_STOCKIN_INFO 收到货后,待回传入库状态给顺丰
+		 * 
 		 */
-		public static final String WOS = "WOS";
+		public static final String WSR = "WSR";
 
 		/**
-		 * 下架捡货完成,等待称重 Wait Warehouse Weighing
+		 * ,等待出库称重 Wait Warehouse Weighing
 		 */
 		public static final String WWW = "WWW";
 
@@ -41,14 +42,14 @@ public class OrderStatus implements Serializable {
 		/**
 		 * COE称重,并已经回传出库重量
 		 * 
-		 * 等待客户确认 Wait Customer Check
+		 * 等待客户确认 Wait Customer Check 发货：LOGISTICS_SEND_GOODS
 		 */
 		public static final String WCC = "WCC";
 		/**
 		 * 顺丰确认出库,等待COE操作出库 Wait Out Warehouse Operation
 		 */
 		public static final String WWO = "WWO";
-
+		
 		/**
 		 * 出库成功 Out Warehouse Success
 		 */
