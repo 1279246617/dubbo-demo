@@ -31,4 +31,9 @@ public class EventType {
 	 * 仓库回传出库状态
 	 */
 	public static final String WMS_STOCKOUT_INFO = "WMS_STOCKOUT_INFO";
+
+	/**
+	 * 转运订单入库
+	 */
+	public static final String LOGISTICS_TRADE_PAID = "LOGISTICS_TRADE_PAID";
 }
