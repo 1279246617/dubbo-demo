@@ -312,6 +312,15 @@ DIV.digg SPAN.disabled {
     white-space: nowrap;
     float: left;
 }
+
+.sep{
+	border-radius: 4px 4px 0 0;
+	border: 1px solid #ddd; 
+	border-bottom:1px solid #FDFDFE;
+	height:27px;
+	background-color: #CCDDFF;
+}
+
 .browser-tip{width: 100%;background-color: #ccc;padding-left: 30%;}
 .browser-tip-text{color: #ff0000;}
 .browser-tip-download{text-decoration:underline;}
