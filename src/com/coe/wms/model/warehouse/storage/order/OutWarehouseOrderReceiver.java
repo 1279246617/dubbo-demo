@@ -16,7 +16,7 @@ public class OutWarehouseOrderReceiver implements Serializable {
 	private static final long serialVersionUID = -4245802122495822276L;
 
 	/**
-	 * 顺丰API出库指令无传目的国家(顺丰海涛目的国家只有 中国,但我司仓储业务不止中国范围,必须指定国家)
+	 * 顺丰API出库指令无传目的国家(暂固定 中国)
 	 * 
 	 */
 	public static final String CN = "CN";
