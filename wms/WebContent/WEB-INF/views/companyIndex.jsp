@@ -175,9 +175,10 @@
 
 	<script type="text/javascript">
 		var baseUrl = "${baseUrl}",tab = null,manager=null;
+		var height = document.body.clientHeight - 110;
 		$(function() {
 			$("#accordion1").ligerAccordion({
-				height :560px
+				height :height
 			});
 			//左侧菜单 鼠标 hover
 			$('div.main-menu li:not(.nav-header)').hover(function(){
