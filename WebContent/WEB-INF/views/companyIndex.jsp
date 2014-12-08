@@ -65,7 +65,7 @@
 	    	<!-- 面板 -->
 	    	<div id="accordion1" class="  well main-menu"  > 
 		         <div title="订单管理" class=" nav-collapse sidebar-nav">
-		         		<div class="sep">
+		         		<div class="sep" >
 		                	<div style="font-weight: bold;color: black;margin:5px 0px  0px  9px;  ">
 		                		仓配订单管理
 		                	</div>
@@ -177,7 +177,7 @@
 		var baseUrl = "${baseUrl}",tab = null,manager=null;
 		$(function() {
 			$("#accordion1").ligerAccordion({
-				height :560
+				height :560px
 			});
 			//左侧菜单 鼠标 hover
 			$('div.main-menu li:not(.nav-header)').hover(function(){
