@@ -6,20 +6,26 @@ import java.io.Serializable;
  * 订单收件人信息
  * 
  * @author yechao
- * @date 2013年11月3日
+ * @date 2014年11月3日
  */
 public class OrderReceiver implements Serializable {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 8304577723723463601L;
-	
+	/**
+	 * 顺丰API出库指令无传目的国家(暂固定 中国)
+	 * 
+	 */
+	public static final String CN = "CN";
+
+	public static final String CN_VALUE = "中国";
+
 	private Long id;
 	/**
 	 * orderId
 	 */
 	private Long orderId;
-
 	/**
 	 * 收件人名
 	 */
@@ -87,10 +93,24 @@ public class OrderReceiver implements Serializable {
 	 * 收件人电话号码
 	 */
 	private String phoneNumber;
+
+	/**
+	 * 收件人手机号码
+	 */
+	private String mobileNumber;
+
 	/**
 	 * 收件人邮箱
 	 */
 	private String email;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 	public Long getOrderId() {
 		return orderId;
@@ -204,19 +224,19 @@ public class OrderReceiver implements Serializable {
 		this.phoneNumber = phoneNumber;
 	}
 
+	public String getMobileNumber() {
+		return mobileNumber;
+	}
+
+	public void setMobileNumber(String mobileNumber) {
+		this.mobileNumber = mobileNumber;
+	}
+
 	public String getEmail() {
 		return email;
 	}
 
 	public void setEmail(String email) {
 		this.email = email;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
 	}
 }
