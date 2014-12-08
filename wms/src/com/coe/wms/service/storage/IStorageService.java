@@ -16,6 +16,7 @@ import com.coe.wms.model.warehouse.report.Report;
 import com.coe.wms.model.warehouse.report.ReportType;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrderItem;
+import com.coe.wms.model.warehouse.storage.order.InWarehouseOrderStatus;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrder;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderItem;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus;
@@ -258,6 +259,14 @@ public interface IStorageService {
 	 * @throws ServiceException
 	 */
 	public List<OutWarehouseOrderStatus> findAllOutWarehouseOrderStatus() throws ServiceException;
+
+	/**
+	 * 所有入库订单状态
+	 * 
+	 * @return
+	 * @throws ServiceException
+	 */
+	public List<InWarehouseOrderStatus> findAllInWarehouseOrderStatus() throws ServiceException;
 
 	/**
 	 * 获取所有仓库

@@ -1,25 +1,15 @@
 package com.coe.wms.service.storage.impl;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
-import org.springframework.util.FileCopyUtils;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.coe.wms.dao.product.IProductDao;
 import com.coe.wms.dao.user.IUserDao;
@@ -51,8 +41,8 @@ import com.coe.wms.dao.warehouse.storage.IReportDao;
 import com.coe.wms.dao.warehouse.storage.IReportTypeDao;
 import com.coe.wms.exception.ServiceException;
 import com.coe.wms.model.product.Product;
-import com.coe.wms.model.unit.Weight;
 import com.coe.wms.model.unit.Currency.CurrencyCode;
+import com.coe.wms.model.unit.Weight;
 import com.coe.wms.model.unit.Weight.WeightCode;
 import com.coe.wms.model.user.User;
 import com.coe.wms.model.warehouse.TrackingNo;
@@ -99,7 +89,6 @@ import com.coe.wms.service.storage.IStorageService;
 import com.coe.wms.util.Config;
 import com.coe.wms.util.Constant;
 import com.coe.wms.util.DateUtil;
-import com.coe.wms.util.FileUtil;
 import com.coe.wms.util.NumberUtil;
 import com.coe.wms.util.Pagination;
 import com.coe.wms.util.StringUtil;
@@ -1987,5 +1976,10 @@ public class StorageServiceImpl implements IStorageService {
 			map.put(Constant.STATUS, Constant.FAIL);
 		}
 		return map;
+	}
+
+	@Override
+	public List<InWarehouseOrderStatus> findAllInWarehouseOrderStatus() throws ServiceException {
+		return inWarehouseOrderStatusDao.findAllInWarehouseOrderStatus();
 	}
 }
