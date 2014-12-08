@@ -6,13 +6,68 @@ import java.io.Serializable;
  * 订单物品|报关信息
  * 
  * @author yechao
- * @date 2013年11月3日
+ * @date 2014年11月3日
  */
 public class OrderItem implements Serializable {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 6403535606524196497L;
+
+	/**
+	 * 主键
+	 */
+	private Long id;
+
+	/**
+	 * 转运订单id
+	 */
+	private Long orderId;
+
+	/**
+	 * 数量
+	 */
+	private Integer quantity;
+
+	/**
+	 * sku
+	 */
+	private String sku;
+
+	/**
+	 * sku编号 等于顺丰的商品编号
+	 */
+	private String skuNo;
+
+	/**
+	 * 商品规格
+	 */
+	private String specification;
+
+	/**
+	 * 可用于报关描述(申报品名)
+	 */
+	private String skuName;
+
+	/**
+	 * 可用于报关币种
+	 */
+	private String skuPriceCurrency;
+
+	/**
+	 * sku单价 可用于报关价值
+	 */
+	private Double skuUnitPrice;
+
+	/**
+	 * sku 重量
+	 */
+	private Double skuNetWeight;
+
+	/**
+	 * 备注
+	 */
+	private String remark;
 
 	public Long getId() {
 		return id;
@@ -22,75 +77,12 @@ public class OrderItem implements Serializable {
 		this.id = id;
 	}
 
-	private Long id;
-	
-	/**
-	 * 订单ID, 订单表的ID
-	 */
-	private Long orderId;
-
-	/**
-	 * SKU名称 不可空
-	 */
-	private String sku;
-
-	/**
-	 * 产品名称
-	 */
-	private String productName;
-
-	/**
-	 * 报关数量
-	 */
-	private Integer quantity;
-
-	/**
-	 * 报关重量 必选. 默认 500克 重量单位 克
-	 */
-	private Double weight;
-
-	/**
-	 * 报关价值(单价) 必选. 默认 0.5USD
-	 */
-	private Double value;
-
-	/**
-	 * 报关描述(申报品名),
-	 */
-	private String customesDescription;
-
-	/**
-	 * 海关编号
-	 */
-	private String hsCode;
-
-	/**
-	 * 行邮税号
-	 */
-	private String taxCode;
-
 	public Long getOrderId() {
 		return orderId;
 	}
 
 	public void setOrderId(Long orderId) {
 		this.orderId = orderId;
-	}
-
-	public String getSku() {
-		return sku;
-	}
-
-	public void setSku(String sku) {
-		this.sku = sku;
-	}
-
-	public String getProductName() {
-		return productName;
-	}
-
-	public void setProductName(String productName) {
-		this.productName = productName;
 	}
 
 	public Integer getQuantity() {
@@ -101,44 +93,67 @@ public class OrderItem implements Serializable {
 		this.quantity = quantity;
 	}
 
-	public Double getWeight() {
-		return weight;
+	public String getSku() {
+		return sku;
 	}
 
-	public void setWeight(Double weight) {
-		this.weight = weight;
+	public void setSku(String sku) {
+		this.sku = sku;
 	}
 
-	public Double getValue() {
-		return value;
+	public String getSkuNo() {
+		return skuNo;
 	}
 
-	public void setValue(Double value) {
-		this.value = value;
+	public void setSkuNo(String skuNo) {
+		this.skuNo = skuNo;
 	}
 
-	public String getCustomesDescription() {
-		return customesDescription;
+	public String getSpecification() {
+		return specification;
 	}
 
-	public void setCustomesDescription(String customesDescription) {
-		this.customesDescription = customesDescription;
+	public void setSpecification(String specification) {
+		this.specification = specification;
 	}
 
-	public String getHsCode() {
-		return hsCode;
+	public String getSkuName() {
+		return skuName;
 	}
 
-	public void setHsCode(String hsCode) {
-		this.hsCode = hsCode;
+	public void setSkuName(String skuName) {
+		this.skuName = skuName;
 	}
 
-	public String getTaxCode() {
-		return taxCode;
+	public String getSkuPriceCurrency() {
+		return skuPriceCurrency;
 	}
 
-	public void setTaxCode(String taxCode) {
-		this.taxCode = taxCode;
+	public void setSkuPriceCurrency(String skuPriceCurrency) {
+		this.skuPriceCurrency = skuPriceCurrency;
 	}
 
+	public Double getSkuUnitPrice() {
+		return skuUnitPrice;
+	}
+
+	public void setSkuUnitPrice(Double skuUnitPrice) {
+		this.skuUnitPrice = skuUnitPrice;
+	}
+
+	public Double getSkuNetWeight() {
+		return skuNetWeight;
+	}
+
+	public void setSkuNetWeight(Double skuNetWeight) {
+		this.skuNetWeight = skuNetWeight;
+	}
+
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
 }

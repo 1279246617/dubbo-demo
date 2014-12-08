@@ -17,57 +17,97 @@ public class Order implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = -95644842282452189L;
-
+	/**
+	 * 主键
+	 */
 	private Long id;
+
+	/**
+	 * 仓库id
+	 */
+	private Long warehouseId;
 
 	/**
 	 * 订单所属客户id
 	 */
-	private Long userId;
-
-	private Integer status;
+	private Long userIdOfCustomer;
 
 	/**
-	 * 创建时间(同批次的订单创建时间完成相同)
+	 * 订单所属操作员id
 	 */
-	private Long createdTime;
-
+	private Long userIdOfOperator;
 	/**
-	 * 参考编号
-	 */
-	private String referenceNo;
-
-	/**
-	 * 追踪号码
-	 */
-	private String trackingNo;
-
-	private String channelNo;
-
-	/**
-	 * 报关信息类型 文件;礼物;包裹;其他
-	 */
-	private String customsType;
-
-	/**
-	 * 发件人id
-	 */
-	private Long senderId;
-
-	/**
-	 * 运输代码
+	 * 出货渠道
 	 */
 	private String shipwayCode;
 
 	/**
-	 * 用于搜索其他信息的字段 一般放 物品sku 等比较常用 但是字段比较小的信息 目前用于搜索:sku , 国家,邮编
+	 * 出货跟踪号
 	 */
-	private String search;
+	private String trackingNo;
 
 	/**
-	 * 备注.
+	 * 创建时间 (收货时间)
+	 */
+	private Long createdTime;
+
+	/**
+	 * 出库摘要 COE操作备注
 	 */
 	private String remark;
+
+	/**
+	 * 客户订单号, 用于客户对该出库指令进行修改,确认等
+	 * 
+	 * 对应 顺丰 tradeOrderId
+	 */
+	private String customerReferenceNo;
+
+	/**
+	 * 顺丰API,字段, 等于买家的备注,目前仅用于打印捡货单上的买家备注
+	 */
+	private String tradeRemark;
+
+	/**
+	 * 顺丰API字段,等于卖家备注,用于打印捡货单上的卖家备注
+	 */
+	private String logisticsRemark;
+
+	/**
+	 * 状态
+	 */
+	private String status;
+
+	/**
+	 * 回调称重是否成功 Y 成功 N或者空失败
+	 */
+	private String callbackSendWeightIsSuccess;
+
+	/**
+	 * 回调次数
+	 */
+	private Integer callbackSendWeighCount;
+
+	/**
+	 * 回调出库状态是否成功 Y 成功 N或者空失败
+	 */
+	private String callbackSendStatusIsSuccess;
+
+	/**
+	 * 回调次数
+	 */
+	private Integer callbackSendStatusCount;
+
+	/**
+	 * 出库重量
+	 * 
+	 */
+	private Double outWarehouseWeight;
+
+	/**
+	 * 重量代码 KG/G
+	 */
+	private String weightCode;
 
 	public Long getId() {
 		return id;
@@ -77,68 +117,28 @@ public class Order implements Serializable {
 		this.id = id;
 	}
 
-	public Long getUserId() {
-		return userId;
+	public Long getWarehouseId() {
+		return warehouseId;
 	}
 
-	public void setUserId(Long userId) {
-		this.userId = userId;
+	public void setWarehouseId(Long warehouseId) {
+		this.warehouseId = warehouseId;
 	}
 
-	public Integer getStatus() {
-		return status;
+	public Long getUserIdOfCustomer() {
+		return userIdOfCustomer;
 	}
 
-	public void setStatus(Integer status) {
-		this.status = status;
+	public void setUserIdOfCustomer(Long userIdOfCustomer) {
+		this.userIdOfCustomer = userIdOfCustomer;
 	}
 
-	public Long getCreatedTime() {
-		return createdTime;
+	public Long getUserIdOfOperator() {
+		return userIdOfOperator;
 	}
 
-	public void setCreatedTime(Long createdTime) {
-		this.createdTime = createdTime;
-	}
-
-	public String getReferenceNo() {
-		return referenceNo;
-	}
-
-	public void setReferenceNo(String referenceNo) {
-		this.referenceNo = referenceNo;
-	}
-
-	public String getTrackingNo() {
-		return trackingNo;
-	}
-
-	public void setTrackingNo(String trackingNo) {
-		this.trackingNo = trackingNo;
-	}
-
-	public String getChannelNo() {
-		return channelNo;
-	}
-
-	public void setChannelNo(String channelNo) {
-		this.channelNo = channelNo;
-	}
-
-	public String getCustomsType() {
-		return customsType;
-	}
-
-	public void setCustomsType(String customsType) {
-		this.customsType = customsType;
-	}
-
-	public Long getSenderId() {
-		return senderId;
-	}
-
-	public void setSenderId(Long senderId) {
-		this.senderId = senderId;
+	public void setUserIdOfOperator(Long userIdOfOperator) {
+		this.userIdOfOperator = userIdOfOperator;
 	}
 
 	public String getShipwayCode() {
@@ -149,12 +149,20 @@ public class Order implements Serializable {
 		this.shipwayCode = shipwayCode;
 	}
 
-	public String getSearch() {
-		return search;
+	public String getTrackingNo() {
+		return trackingNo;
 	}
 
-	public void setSearch(String search) {
-		this.search = search;
+	public void setTrackingNo(String trackingNo) {
+		this.trackingNo = trackingNo;
+	}
+
+	public Long getCreatedTime() {
+		return createdTime;
+	}
+
+	public void setCreatedTime(Long createdTime) {
+		this.createdTime = createdTime;
 	}
 
 	public String getRemark() {
@@ -165,4 +173,83 @@ public class Order implements Serializable {
 		this.remark = remark;
 	}
 
+	public String getCustomerReferenceNo() {
+		return customerReferenceNo;
+	}
+
+	public void setCustomerReferenceNo(String customerReferenceNo) {
+		this.customerReferenceNo = customerReferenceNo;
+	}
+
+	public String getTradeRemark() {
+		return tradeRemark;
+	}
+
+	public void setTradeRemark(String tradeRemark) {
+		this.tradeRemark = tradeRemark;
+	}
+
+	public String getLogisticsRemark() {
+		return logisticsRemark;
+	}
+
+	public void setLogisticsRemark(String logisticsRemark) {
+		this.logisticsRemark = logisticsRemark;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public String getCallbackSendWeightIsSuccess() {
+		return callbackSendWeightIsSuccess;
+	}
+
+	public void setCallbackSendWeightIsSuccess(String callbackSendWeightIsSuccess) {
+		this.callbackSendWeightIsSuccess = callbackSendWeightIsSuccess;
+	}
+
+	public Integer getCallbackSendWeighCount() {
+		return callbackSendWeighCount;
+	}
+
+	public void setCallbackSendWeighCount(Integer callbackSendWeighCount) {
+		this.callbackSendWeighCount = callbackSendWeighCount;
+	}
+
+	public String getCallbackSendStatusIsSuccess() {
+		return callbackSendStatusIsSuccess;
+	}
+
+	public void setCallbackSendStatusIsSuccess(String callbackSendStatusIsSuccess) {
+		this.callbackSendStatusIsSuccess = callbackSendStatusIsSuccess;
+	}
+
+	public Integer getCallbackSendStatusCount() {
+		return callbackSendStatusCount;
+	}
+
+	public void setCallbackSendStatusCount(Integer callbackSendStatusCount) {
+		this.callbackSendStatusCount = callbackSendStatusCount;
+	}
+
+	public Double getOutWarehouseWeight() {
+		return outWarehouseWeight;
+	}
+
+	public void setOutWarehouseWeight(Double outWarehouseWeight) {
+		this.outWarehouseWeight = outWarehouseWeight;
+	}
+
+	public String getWeightCode() {
+		return weightCode;
+	}
+
+	public void setWeightCode(String weightCode) {
+		this.weightCode = weightCode;
+	}
 }
