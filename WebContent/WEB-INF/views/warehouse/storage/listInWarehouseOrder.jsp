@@ -21,19 +21,10 @@
 <body>
 	  <div class="toolbar1">
            <form action="${baseUrl}/warehouse/storage/getInWarehouseOrderData.do" id="searchform" name="searchform" method="post">
-           		<div class="pull-left">
-           			<span class="pull-left" style="width:105px;">
-			       		<a class="btn btn-primary btn-small" onclick="inportOrder()" title="导入入库订单">
-			           		 <i class="icon-file"></i>导入入库订单
-			       	 	</a>
-			       	 	<input style=" visibility:hidden;">
-		       	 	</span>
-		    	</div>   
-		    	
                <div class="pull-right searchContent">
-               		<span class="pull-left" style="width:140px;">
+               		<span class="pull-left" style="width:130px;">
                			仓库
-               			<select style="width:90px;" id="warehouseId" name="warehouseId">
+               			<select style="width:85px;" id="warehouseId" name="warehouseId">
                				<option></option>
 							<c:forEach items="${warehouseList}" var="w" >
 				       	 		<option value="<c:out value='${w.id}'/>">
@@ -43,11 +34,23 @@
 						</select>
                		</span>
                		
-               		<span class="pull-left" style="width:165px;">
+               		<span class="pull-left" style="width:153px;">
                			客户帐号
-               			<input type="text" name="userLoginName" data-provide="typeahead"  id="userLoginName" style="width:100px;" title="请输入客户登录名" />
+               			<input type="text" name="userLoginName" data-provide="typeahead"  id="userLoginName" style="width:90px;" title="请输入客户登录名" />
                		</span>
-               		<span class="pull-left" style="width:180px;">
+               		<span class="pull-left" style="width:125px;">
+               			状态
+               			<select style="width:80px;" id="status" name="status">
+               				<option></option>
+							<c:forEach items="${inWarehouseOrderStatusList}" var="status" >
+				       	 		<option value="<c:out value='${status.code}'/>">
+				       	 			<c:out value="${status.cn}"/>
+				       		 	</option>
+				       		 </c:forEach>
+						</select>
+               		</span>
+               		
+               		<span class="pull-left" style="width:178px;">
 						客户订单号	
 						<input type="text"  name="customerReferenceNo"  id="customerReferenceNo"   style="width:100px;"/>
 					</span>
@@ -69,6 +72,14 @@
                			<input style=" visibility:hidden;">
                		</span>
                </div>
+               <div class="pull-left">
+           			<span class="pull-left" style="width:105px;">
+			       		<a class="btn btn-primary btn-small" onclick="inportOrder()" title="导入入库订单">
+			           		 <i class="icon-file"></i>导入入库订单
+			       	 	</a>
+			       	 	<input style=" visibility:hidden;">
+		       	 	</span>
+		    	</div>   
            </form>
 	</div>
 	<div id="maingrid" class="pull-left" style="width:100%;"></div>
