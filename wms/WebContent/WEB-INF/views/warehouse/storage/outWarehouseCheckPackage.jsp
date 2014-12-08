@@ -55,13 +55,13 @@
 			<tr>
 				<td colspan="2" style="height:70px;">
 					<span style="width:90px;height:30px;margin-top: 4mm;font-size: 5mm;" class="pull-left" >装箱重量</span>
-					<input type="text"  name="outWarehouseOrderWeight"  t="3"  id="outWarehouseOrderWeight"  style="width:130px;height:60px; font-size: 10mm;font-weight: bold;color:red;" class="pull-left" onkeyup="this.value=this.value.replace(/[^\d\.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d\.]/g,'')"/>
-<!-- 					<input type="text"  name="outWarehouseOrderWeight"  t="3"  id="outWarehouseOrderWeight"  style="width:130px;height:60px; font-size: 10mm;font-weight: bold;color:red;" class="pull-left" readonly="readonly" onkeyup="this.value=this.value.replace(/[^\d\.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d\.]/g,'')"/> -->
+<!-- 					<input type="text"  name="outWarehouseOrderWeight"  t="3"  id="outWarehouseOrderWeight"  style="width:130px;height:60px; font-size: 10mm;font-weight: bold;color:red;" class="pull-left" onkeyup="this.value=this.value.replace(/[^\d\.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d\.]/g,'')"/> -->
+					<input type="text"  name="outWarehouseOrderWeight"  t="3"  id="outWarehouseOrderWeight"  style="width:130px;height:60px; font-size: 10mm;font-weight: bold;color:red;" class="pull-left" readonly="readonly" onkeyup="this.value=this.value.replace(/[^\d\.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d\.]/g,'')"/>
 					<span style="width:50px;height:30px;margin-top: 4mm;font-size: 6mm;font-weight: bold;" class="pull-left" >KG</span>
-<!-- 					<span style="width:90px;height:30px;margin-top: 4mm;font-size: 4mm;" class="pull-left" > -->
-<!-- 						<input class="pull-left" name="auto" style="vertical-align: middle;" type="checkbox" checked="checked" id="auto" onclick="changeAuto()"> -->
-<!-- 						自动读取 -->
-<!-- 					</span> -->
+					<span style="width:90px;height:30px;margin-top: 4mm;font-size: 4mm;" class="pull-left" >
+						<input class="pull-left" name="auto" style="vertical-align: middle;" type="checkbox" checked="checked" id="auto">
+						自动读取
+					</span>
 					<span style="height:30px;margin-top: 0mm;font-size: 8mm;" class="pull-left" >
 						<img id="weightOk" src="${baseUrl}/static/img/nike.png" style="display:none;width:15mm;height:15mm;" >
 					</span>
@@ -128,7 +128,6 @@
 	    	  index = index+1;	 
 	            try {
 	                ws = new WebSocket("ws://127.0.0.1:"+port);//连接服务器
-// 	                ws = new WebSocket("ws://192.168.0.184:"+port);//连接服务器
 					ws.onopen = function(event){
 	                	parent.$.showShortMessage({msg:'电子秤自动读取功能已经启动成功',animate:false,left:"45%"});
 	                };
@@ -139,17 +138,20 @@
 					};
 					ws.onclose = function(event){
 						parent.$.showShortMessage({msg:'电子秤自动读取功能已经关闭',animate:false,left:"45%"});
+						shutdown();
 					};
 					ws.onerror = function(event){
 						if(index>=5){
 							parent.$.showShortMessage({msg:'电子秤自动读取功能异常,请手动输入重量!',animate:false,left:"45%"});	
+							shutdown();
 						}else{
 							toggleConnection(ports[index]);	
 						}
 					};
 	            } catch (ex) {
 	            	if(index>=5){
-	            		parent.$.showShortMessage({msg:'电子秤自动读取功能异常:'+ex.message, animate:false,left:"45%"});	
+	            		parent.$.showShortMessage({msg:'电子秤自动读取功能异常:'+ex.message, animate:false,left:"45%"});
+	            		shutdown();
 					}else{
 						toggleConnection(ports[index]);	
 					}
@@ -162,6 +164,7 @@
 	   //进入页面,焦点跟踪单号
 	   $("#customerReferenceNo").focus();
 	   var focus= "1";
+		var autoWeight;
 	   $(window).keydown(function(event){
 	    	//回车事件
 	    	if((event.keyCode   ==   13)) {
@@ -180,26 +183,32 @@
  		  			focus = $(this).attr("t");
  		  		});
  		  		//加载页面时,启动读取电子秤
-//  		  		toggleConnection(ports[0]);
-//  		  		//启动读取电子秤
-//  		  		var autoWeight = window.setInterval(function(){ 
-//  		  			ws.send("getweig");		 
-// 				}, 300);
+ 		  		toggleConnection(ports[0]);
+ 		  		//启动读取电子秤
+ 		  		autoWeight = window.setInterval(function(){ 
+ 		  			ws.send("getweig");		 
+				}, 300);
 				 		  	
-//  		  		$("#auto").click(function(){
-//  		  			if($("#auto").attr("checked")=="checked"){
-//  		  				//自动获取电子称数据
-//  		 	  			$("#outWarehouseOrderWeight").attr("readonly","readonly");
-//  		  				//启动读取电子秤
-// 	 		 	  		autoWeight = window.setInterval(function(){ 
-// 	 	 		  			ws.send("getweig");		 
-// 	 					}, 300);
-//  		 	  		 }else{
-//  		 	  			 $("#outWarehouseOrderWeight").removeAttr("readonly");
-// 			 	  		 clearInterval(autoWeight);//取消读取
-//  		 	  		 }
-//  		  		});
+ 		  		$("#auto").click(function(){
+ 		  			if($("#auto").attr("checked")=="checked"){
+ 		  				//自动获取电子称数据
+ 		 	  			$("#outWarehouseOrderWeight").attr("readonly","readonly");
+ 		  				//启动读取电子秤
+	 		 	  		autoWeight = window.setInterval(function(){ 
+	 	 		  			ws.send("getweig");		 
+	 					}, 300);
+ 		 	  		 }else{
+ 		 	  			 $("#outWarehouseOrderWeight").removeAttr("readonly");
+			 	  		 clearInterval(autoWeight);//取消读取
+ 		 	  		 }
+ 		  		});
  	   	});
+ 	  	 //关闭自动读取
+ 	  	 function shutdown(){
+ 	  		 clearInterval(autoWeight);
+ 	  		$("#outWarehouseOrderWeight").removeAttr("readonly");
+ 	  	 }
+ 	  	 
     </script>	
 </body>
 </html>
