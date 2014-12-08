@@ -827,7 +827,7 @@ public class Storage {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/outWarehouseShippingConfirm")
-	public String outWarehouseShippingConfirm(HttpServletRequest request, HttpServletResponse response, String coeTrackingNo) throws IOException {
+	public synchronized String outWarehouseShippingConfirm(HttpServletRequest request, HttpServletResponse response, String coeTrackingNo) throws IOException {
 		HttpSession session = request.getSession();
 		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
 		Map<String, String> checkResultMap = storageService.outWarehouseShippingConfirm(coeTrackingNo, userId);
