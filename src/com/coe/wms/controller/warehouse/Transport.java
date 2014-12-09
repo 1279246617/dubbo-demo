@@ -21,6 +21,7 @@ import com.coe.wms.controller.Application;
 import com.coe.wms.model.user.User;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrder;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus;
+import com.coe.wms.model.warehouse.transport.BigPackage;
 import com.coe.wms.model.warehouse.transport.BigPackageStatus;
 import com.coe.wms.service.storage.IStorageService;
 import com.coe.wms.service.transport.ITransportService;
@@ -120,7 +121,7 @@ public class Transport {
 		pagination.sortName = sortname;
 		pagination.sortOrder = sortorder;
 
-		OutWarehouseOrder param = new OutWarehouseOrder();
+		BigPackage param = new BigPackage();
 		param.setStatus(status);
 		// 客户订单号
 		param.setCustomerReferenceNo(customerReferenceNo);
@@ -137,7 +138,7 @@ public class Transport {
 		moreParam.put("createdTimeEnd", createdTimeEnd);
 		moreParam.put("nos", nos);
 		moreParam.put("noType", noType);
-		pagination = storageService.getOutWarehouseOrderData(param, moreParam, pagination);
+		pagination = transportService.getBigPackageData(param, moreParam, pagination);
 		Map map = new HashMap();
 		map.put("Rows", pagination.rows);
 		map.put("Total", pagination.total);

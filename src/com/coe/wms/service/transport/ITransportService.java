@@ -1,12 +1,15 @@
 package com.coe.wms.service.transport;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 
 import com.coe.wms.exception.ServiceException;
+import com.coe.wms.model.warehouse.transport.BigPackage;
 import com.coe.wms.model.warehouse.transport.BigPackageStatus;
 import com.coe.wms.pojo.api.warehouse.EventBody;
+import com.coe.wms.util.Pagination;
 
 /**
  * 转运 api service层
@@ -35,4 +38,12 @@ public interface ITransportService {
 	 */
 	public List<BigPackageStatus> findAllBigPackageStatus() throws ServiceException;
 
+	/**
+	 * 获取转运订单
+	 * 
+	 * @param inWarehouseRecordId
+	 * @param page
+	 * @return
+	 */
+	public Pagination getBigPackageData(BigPackage bigPackage, Map<String, String> moreParam, Pagination page);
 }

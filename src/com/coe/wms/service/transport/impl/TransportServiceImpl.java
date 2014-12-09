@@ -1,7 +1,10 @@
 package com.coe.wms.service.transport.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -27,8 +30,13 @@ import com.coe.wms.dao.warehouse.transport.ILittlePackageDao;
 import com.coe.wms.dao.warehouse.transport.ILittlePackageItemDao;
 import com.coe.wms.dao.warehouse.transport.ILittlePackageStatusDao;
 import com.coe.wms.exception.ServiceException;
+import com.coe.wms.model.user.User;
 import com.coe.wms.model.warehouse.Warehouse;
+import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrder;
+import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderItem;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderReceiver;
+import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderSender;
+import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus;
 import com.coe.wms.model.warehouse.transport.BigPackage;
 import com.coe.wms.model.warehouse.transport.BigPackageAdditionalSf;
 import com.coe.wms.model.warehouse.transport.BigPackageReceiver;
@@ -51,6 +59,9 @@ import com.coe.wms.pojo.api.warehouse.TradeOrder;
 import com.coe.wms.service.transport.ITransportService;
 import com.coe.wms.util.Config;
 import com.coe.wms.util.Constant;
+import com.coe.wms.util.DateUtil;
+import com.coe.wms.util.NumberUtil;
+import com.coe.wms.util.Pagination;
 import com.coe.wms.util.StringUtil;
 import com.coe.wms.util.XmlUtil;
 
@@ -286,4 +297,96 @@ public class TransportServiceImpl implements ITransportService {
 	public List<BigPackageStatus> findAllBigPackageStatus() throws ServiceException {
 		return bigPackageStatusDao.findAllBigPackageStatus();
 	}
+
+	/**
+	 * 获取转运订单列表数据
+	 */
+	@Override
+	public Pagination getBigPackageData(BigPackage param, Map<String, String> moreParam, Pagination pagination) {
+		List<BigPackage> bigPackageList = bigPackageDao.findBigPackage(param, moreParam, pagination);
+		List<Object> list = new ArrayList<Object>();
+		for (BigPackage bigPackage : bigPackageList) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			Long bigPackageId = bigPackage.getId();
+			map.put("id", bigPackageId);
+			if (bigPackage.getCreatedTime() != null) {
+				map.put("createdTime", DateUtil.dateConvertString(new Date(bigPackage.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss));
+			}
+			map.put("shipwayCode", bigPackage.getShipwayCode());
+			map.put("trackingNo", bigPackage.getTrackingNo());
+			// 回传称重
+			if (StringUtil.isEqual(bigPackage.getCallbackSendWeightIsSuccess(), Constant.Y)) {
+				map.put("callbackSendWeightIsSuccess", "成功");
+			} else {
+				if (bigPackage.getCallbackSendWeighCount() != null && bigPackage.getCallbackSendWeighCount() > 0) {
+					map.put("callbackSendWeightIsSuccess", "失败次数:" + bigPackage.getCallbackSendWeighCount());
+				} else {
+					map.put("callbackSendWeightIsSuccess", "未回传");
+				}
+			}
+			// 回传出库
+			if (StringUtil.isEqual(bigPackage.getCallbackSendStatusIsSuccess(), Constant.Y)) {
+				map.put("callbackSendStatusIsSuccess", "成功");
+			} else {
+				if (bigPackage.getCallbackSendStatusCount() != null && bigPackage.getCallbackSendStatusCount() > 0) {
+					map.put("callbackSendStatusIsSuccess", "失败次数:" + bigPackage.getCallbackSendStatusCount());
+				} else {
+					map.put("callbackSendStatusIsSuccess", "未回传");
+				}
+			}
+			// 查询用户名
+			User user = userDao.getUserById(bigPackage.getUserIdOfCustomer());
+			map.put("userNameOfCustomer", user.getLoginName());
+			map.put("customerReferenceNo", bigPackage.getCustomerReferenceNo());
+			if (NumberUtil.greaterThanZero(bigPackage.getWarehouseId())) {
+				Warehouse warehouse = warehouseDao.getWarehouseById(bigPackage.getWarehouseId());
+				if (warehouse != null) {
+					map.put("warehouse", warehouse.getWarehouseName());
+				}
+			}
+			map.put("remark", bigPackage.getRemark());
+			BigPackageStatus bigPackageStatus = bigPackageStatusDao.findBigPackageStatusByCode(bigPackage.getStatus());
+			if (bigPackageStatus != null) {
+				map.put("status", bigPackageStatus.getCn());
+			}
+			// 收件人信息
+			BigPackageReceiver bigPackageReceiver = bigPackageReceiverDao.getBigPackageReceiverByPackageId(bigPackageId);
+			if (bigPackageReceiver != null) {
+				map.put("receiverAddressLine1", bigPackageReceiver.getAddressLine1());
+				map.put("receiverAddressLine2", bigPackageReceiver.getAddressLine2());
+				map.put("receiverCity", bigPackageReceiver.getCity());
+				map.put("receiverCompany", bigPackageReceiver.getCompany());
+				map.put("receiverCountryCode", bigPackageReceiver.getCountryCode());
+				map.put("receiverCountryName", bigPackageReceiver.getCountryName());
+				map.put("receiverCounty", bigPackageReceiver.getCounty());
+				map.put("receiverEmail", bigPackageReceiver.getEmail());
+				map.put("receiverFirstName", bigPackageReceiver.getFirstName());
+				map.put("receiverLastName", bigPackageReceiver.getLastName());
+				map.put("receiverMobileNumber", bigPackageReceiver.getMobileNumber());
+				map.put("receiverName", bigPackageReceiver.getName());
+				map.put("receiverPhoneNumber", bigPackageReceiver.getPhoneNumber());
+				map.put("receiverPostalCode", bigPackageReceiver.getPostalCode());
+				map.put("receiverStateOrProvince", bigPackageReceiver.getStateOrProvince());
+			}
+			// 发件人
+			BigPackageSender bigPackageSender = bigPackageSenderDao.getBigPackageSenderByPackageId(bigPackageId);
+			if (bigPackageSender != null) {
+				map.put("senderName", bigPackageSender.getName());
+			}
+			// 物品明细(目前仅展示SKU*数量)
+//			String itemStr = "";
+//			OutWarehouseOrderItem outWarehouseOrderItemParam = new OutWarehouseOrderItem();
+//			outWarehouseOrderItemParam.setOutWarehouseOrderId(bigPackageId);
+//			List<OutWarehouseOrderItem> outWarehouseOrderItemList = outWarehouseOrderItemDao.findOutWarehouseOrderItem(outWarehouseOrderItemParam, null, null);
+//			for (OutWarehouseOrderItem outWarehouseOrderItem : outWarehouseOrderItemList) {
+//				itemStr += outWarehouseOrderItem.getSku() + "*" + outWarehouseOrderItem.getQuantity() + " ";
+//			}
+//			map.put("items", itemStr);
+			list.add(map);
+		}
+		pagination.total = bigPackageDao.countBigPackage(param, moreParam);
+		pagination.rows = list;
+		return pagination;
+	}
+
 }
