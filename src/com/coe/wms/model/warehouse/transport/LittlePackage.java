@@ -72,6 +72,16 @@ public class LittlePackage implements Serializable {
 
 	private String remark;
 
+	/**
+	 * 回调是否成功 Y 成功 N或者空失败
+	 */
+	private String callbackIsSuccess;
+
+	/**
+	 * 回调次数
+	 */
+	private Integer callbackCount;
+
 	public Long getId() {
 		return id;
 	}
@@ -98,6 +108,22 @@ public class LittlePackage implements Serializable {
 
 	public Long getUserIdOfOperator() {
 		return userIdOfOperator;
+	}
+
+	public String getCallbackIsSuccess() {
+		return callbackIsSuccess;
+	}
+
+	public void setCallbackIsSuccess(String callbackIsSuccess) {
+		this.callbackIsSuccess = callbackIsSuccess;
+	}
+
+	public Integer getCallbackCount() {
+		return callbackCount;
+	}
+
+	public void setCallbackCount(Integer callbackCount) {
+		this.callbackCount = callbackCount;
 	}
 
 	public void setUserIdOfOperator(Long userIdOfOperator) {
