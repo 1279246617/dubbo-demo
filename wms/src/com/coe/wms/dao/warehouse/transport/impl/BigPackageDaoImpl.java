@@ -44,7 +44,7 @@ public class BigPackageDaoImpl implements IBigPackageDao {
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public long saveBigPackage(final BigPackage bigPackage) {
-		final String sql = "insert into w_t_big_package (warehouse_id,user_id_of_customer,user_id_of_operator,shipway_code,created_time,status,remark,customer_reference_no,out_warehouse_weight,weight_code,trade_remark,logistics_remark,tracking_no) values (?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		final String sql = "insert into w_t_big_package (warehouse_id,user_id_of_customer,user_id_of_operator,shipway_code,created_time,status,remark,customer_reference_no,out_warehouse_weight,weight_code,trade_remark,tracking_no) values (?,?,?,?,?,?,?,?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
@@ -69,8 +69,7 @@ public class BigPackageDaoImpl implements IBigPackageDao {
 				}
 				ps.setString(10, bigPackage.getWeightCode());
 				ps.setString(11, bigPackage.getTradeRemark());
-				ps.setString(12, bigPackage.getLogisticsRemark());
-				ps.setString(13, bigPackage.getTrackingNo());
+				ps.setString(12, bigPackage.getTrackingNo());
 				return ps;
 			}
 		}, keyHolder);
@@ -80,7 +79,7 @@ public class BigPackageDaoImpl implements IBigPackageDao {
 
 	@Override
 	public BigPackage getBigPackageById(Long bigPackageId) {
-		String sql = "select id,warehouse_id,user_id_of_customer,user_id_of_operator,shipway_code,created_time,status,remark,customer_reference_no,callback_send_weight_is_success,callback_send_weigh_count,callback_send_status_is_success,callback_send_status_count,out_warehouse_weight,weight_code,trade_remark,logistics_remark,tracking_no from w_t_big_package where id ="
+		String sql = "select id,warehouse_id,user_id_of_customer,user_id_of_operator,shipway_code,created_time,status,remark,customer_reference_no,callback_send_weight_is_success,callback_send_weigh_count,callback_send_status_is_success,callback_send_status_count,out_warehouse_weight,weight_code,trade_remark,tracking_no from w_t_big_package where id ="
 				+ bigPackageId;
 		BigPackage bigPackage = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<BigPackage>(BigPackage.class));
 		return bigPackage;
@@ -93,7 +92,7 @@ public class BigPackageDaoImpl implements IBigPackageDao {
 	@Override
 	public List<BigPackage> findBigPackage(BigPackage bigPackage, Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select id,warehouse_id,user_id_of_customer,user_id_of_operator,shipway_code,created_time,status,remark,customer_reference_no,callback_send_weight_is_success,callback_send_weigh_count,callback_send_status_is_success,callback_send_status_count,out_warehouse_weight,weight_code,trade_remark,logistics_remark,tracking_no from w_t_big_package where 1=1 ");
+		sb.append("select id,warehouse_id,user_id_of_customer,user_id_of_operator,shipway_code,created_time,status,remark,customer_reference_no,callback_send_weight_is_success,callback_send_weigh_count,callback_send_status_is_success,callback_send_status_count,out_warehouse_weight,weight_code,trade_remark,tracking_no from w_t_big_package where 1=1 ");
 		if (moreParam != null && StringUtil.isNotNull(moreParam.get("nos"))) {
 			// 按单号 批量查询 开始---------------
 			String noType = moreParam.get("noType");
@@ -157,9 +156,6 @@ public class BigPackageDaoImpl implements IBigPackageDao {
 				}
 				if (bigPackage.getTradeRemark() != null) {
 					sb.append(" and trade_remark = '" + bigPackage.getTradeRemark() + "'");
-				}
-				if (bigPackage.getLogisticsRemark() != null) {
-					sb.append(" and logistics_remark = '" + bigPackage.getLogisticsRemark() + "'");
 				}
 				if (bigPackage.getTrackingNo() != null) {
 					sb.append(" and tracking_no = '" + bigPackage.getTrackingNo() + "'");
@@ -259,9 +255,6 @@ public class BigPackageDaoImpl implements IBigPackageDao {
 				}
 				if (bigPackage.getTradeRemark() != null) {
 					sb.append(" and trade_remark = '" + bigPackage.getTradeRemark() + "'");
-				}
-				if (bigPackage.getLogisticsRemark() != null) {
-					sb.append(" and logistics_remark = '" + bigPackage.getLogisticsRemark() + "'");
 				}
 				if (bigPackage.getTrackingNo() != null) {
 					sb.append(" and tracking_no = '" + bigPackage.getTrackingNo() + "'");
