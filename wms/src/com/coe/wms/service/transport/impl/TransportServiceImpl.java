@@ -33,6 +33,7 @@ import com.coe.wms.model.warehouse.transport.BigPackage;
 import com.coe.wms.model.warehouse.transport.BigPackageAdditionalSf;
 import com.coe.wms.model.warehouse.transport.BigPackageReceiver;
 import com.coe.wms.model.warehouse.transport.BigPackageSender;
+import com.coe.wms.model.warehouse.transport.BigPackageStatus;
 import com.coe.wms.model.warehouse.transport.BigPackageStatus.BigPackageStatusCode;
 import com.coe.wms.model.warehouse.transport.LittlePackage;
 import com.coe.wms.model.warehouse.transport.LittlePackageStatus.LittlePackageStatusCode;
@@ -279,5 +280,10 @@ public class TransportServiceImpl implements ITransportService {
 		}
 		response.setSuccess(Constant.TRUE);
 		return XmlUtil.toXml(Responses.class, responses);
+	}
+
+	@Override
+	public List<BigPackageStatus> findAllBigPackageStatus() throws ServiceException {
+		return bigPackageStatusDao.findAllBigPackageStatus();
 	}
 }
