@@ -20,8 +20,8 @@ import org.springframework.stereotype.Repository;
 
 import com.coe.wms.dao.datasource.DataSource;
 import com.coe.wms.dao.datasource.DataSourceCode;
-import com.coe.wms.dao.warehouse.transport.IOrderItemDao;
-import com.coe.wms.model.warehouse.transport.OrderItem;
+import com.coe.wms.dao.warehouse.transport.ILittlePackageItemDao;
+import com.coe.wms.model.warehouse.transport.LittlePackageItem;
 import com.coe.wms.util.NumberUtil;
 import com.coe.wms.util.Pagination;
 import com.coe.wms.util.StringUtil;
@@ -31,10 +31,10 @@ import com.mysql.jdbc.Statement;
  * 
  * @author Administrator
  */
-@Repository("orderItemDao")
-public class OrderItemDaoImpl implements IOrderItemDao {
+@Repository("littlePackageItemDao")
+public class LittlePackageItemDaoImpl implements ILittlePackageItemDao {
 
-	Logger logger = Logger.getLogger(OrderItemDaoImpl.class);
+	Logger logger = Logger.getLogger(LittlePackageItemDaoImpl.class);
 
 	@Resource(name = "jdbcTemplate")
 	private JdbcTemplate jdbcTemplate;
@@ -44,13 +44,13 @@ public class OrderItemDaoImpl implements IOrderItemDao {
 	 */
 	@Override
 	@DataSource(DataSourceCode.WMS)
-	public long saveOrderItem(final OrderItem item) {
-		final String sql = "insert into w_t_order_item (order_id,quantity,sku,sku_name,sku_unit_price,sku_price_currency,remark,sku_net_weight,sku_no,specification) values (?,?,?,?,?,?,?,?,?,?)";
+	public long saveLittlePackageItem(final LittlePackageItem item) {
+		final String sql = "insert into w_t_little_package_item (little_package_id,quantity,sku,sku_name,sku_unit_price,sku_price_currency,remark,sku_net_weight,sku_no,specification) values (?,?,?,?,?,?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
 				PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-				ps.setLong(1, item.getOrderId());
+				ps.setLong(1, item.getLittlePackageId());
 				ps.setLong(2, item.getQuantity());
 				ps.setString(3, item.getSku());
 				ps.setString(4, item.getSkuName());
@@ -80,13 +80,13 @@ public class OrderItemDaoImpl implements IOrderItemDao {
 	 */
 	@Override
 	@DataSource(DataSourceCode.WMS)
-	public int saveBatchOrderItem(final List<OrderItem> itemList) {
-		final String sql = "insert into w_t_order_item (order_id,quantity,sku,sku_name,sku_unit_price,sku_price_currency,remark,sku_net_weight,sku_no,specification) values (?,?,?,?,?,?,?,?,?,?)";
+	public int saveBatchLittlePackageItem(final List<LittlePackageItem> itemList) {
+		final String sql = "insert into w_t_little_package_item (little_package_id,quantity,sku,sku_name,sku_unit_price,sku_price_currency,remark,sku_net_weight,sku_no,specification) values (?,?,?,?,?,?,?,?,?,?)";
 		int[] batchUpdateSize = jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
 			@Override
 			public void setValues(PreparedStatement ps, int i) throws SQLException {
-				OrderItem item = itemList.get(i);
-				ps.setLong(1, item.getOrderId());
+				LittlePackageItem item = itemList.get(i);
+				ps.setLong(1, item.getLittlePackageId());
 				ps.setLong(2, item.getQuantity());
 				ps.setString(3, item.getSku());
 				ps.setString(4, item.getSkuName());
@@ -116,13 +116,13 @@ public class OrderItemDaoImpl implements IOrderItemDao {
 
 	@Override
 	@DataSource(DataSourceCode.WMS)
-	public int saveBatchOrderItemWithOrderId(final List<OrderItem> itemList, final Long orderId) {
-		final String sql = "insert into w_t_order_item (order_id,quantity,sku,sku_name,sku_unit_price,sku_price_currency,remark,sku_net_weight,sku_no,specification) values (?,?,?,?,?,?,?,?,?,?)";
+	public int saveBatchLittlePackageItemWithLittlePackageId(final List<LittlePackageItem> itemList, final Long littlePackageId) {
+		final String sql = "insert into w_t_little_package_item (little_package_id,quantity,sku,sku_name,sku_unit_price,sku_price_currency,remark,sku_net_weight,sku_no,specification) values (?,?,?,?,?,?,?,?,?,?)";
 		int[] batchUpdateSize = jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
 			@Override
 			public void setValues(PreparedStatement ps, int i) throws SQLException {
-				OrderItem item = itemList.get(i);
-				ps.setLong(1, orderId);
+				LittlePackageItem item = itemList.get(i);
+				ps.setLong(1, littlePackageId);
 				ps.setLong(2, item.getQuantity());
 				ps.setString(3, item.getSku());
 				ps.setString(4, item.getSkuName());
@@ -160,42 +160,42 @@ public class OrderItemDaoImpl implements IOrderItemDao {
 	 * 参数一律使用实体类加Map .
 	 */
 	@Override
-	public List<OrderItem> findOrderItem(OrderItem orderItem, Map<String, String> moreParam, Pagination page) {
+	public List<LittlePackageItem> findLittlePackageItem(LittlePackageItem littlePackageItem, Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select id,order_id,quantity,sku,sku_name,sku_unit_price,sku_price_currency,remark,sku_net_weight,sku_no,specification from w_t_order_item where 1=1 ");
-		if (orderItem != null) {
-			if (StringUtil.isNotNull(orderItem.getSku())) {
-				sb.append(" and sku = '" + orderItem.getSku() + "' ");
+		sb.append("select id,little_package_id,quantity,sku,sku_name,sku_unit_price,sku_price_currency,remark,sku_net_weight,sku_no,specification from w_t_little_package_item where 1=1 ");
+		if (littlePackageItem != null) {
+			if (StringUtil.isNotNull(littlePackageItem.getSku())) {
+				sb.append(" and sku = '" + littlePackageItem.getSku() + "' ");
 			}
-			if (StringUtil.isNotNull(orderItem.getSkuNo())) {
-				sb.append(" and sku_no = '" + orderItem.getSkuNo() + "' ");
+			if (StringUtil.isNotNull(littlePackageItem.getSkuNo())) {
+				sb.append(" and sku_no = '" + littlePackageItem.getSkuNo() + "' ");
 			}
-			if (StringUtil.isNotNull(orderItem.getSpecification())) {
-				sb.append(" and specification = '" + orderItem.getSpecification() + "' ");
+			if (StringUtil.isNotNull(littlePackageItem.getSpecification())) {
+				sb.append(" and specification = '" + littlePackageItem.getSpecification() + "' ");
 			}
-			if (StringUtil.isNotNull(orderItem.getSkuName())) {
-				sb.append(" and sku_name = '" + orderItem.getSkuName() + "' ");
+			if (StringUtil.isNotNull(littlePackageItem.getSkuName())) {
+				sb.append(" and sku_name = '" + littlePackageItem.getSkuName() + "' ");
 			}
-			if (StringUtil.isNotNull(orderItem.getSkuPriceCurrency())) {
-				sb.append(" and sku_price_currency = '" + orderItem.getSkuPriceCurrency() + "' ");
+			if (StringUtil.isNotNull(littlePackageItem.getSkuPriceCurrency())) {
+				sb.append(" and sku_price_currency = '" + littlePackageItem.getSkuPriceCurrency() + "' ");
 			}
-			if (orderItem.getSkuUnitPrice() != null) {
-				sb.append(" and sku_price_currency = '" + orderItem.getSkuUnitPrice() + "' ");
+			if (littlePackageItem.getSkuUnitPrice() != null) {
+				sb.append(" and sku_price_currency = '" + littlePackageItem.getSkuUnitPrice() + "' ");
 			}
-			if (StringUtil.isNotNull(orderItem.getRemark())) {
-				sb.append(" and remark = '" + orderItem.getRemark() + "' ");
+			if (StringUtil.isNotNull(littlePackageItem.getRemark())) {
+				sb.append(" and remark = '" + littlePackageItem.getRemark() + "' ");
 			}
-			if (orderItem.getOrderId() != null) {
-				sb.append(" and order_id = " + orderItem.getOrderId());
+			if (littlePackageItem.getLittlePackageId() != null) {
+				sb.append(" and little_package_id = " + littlePackageItem.getLittlePackageId());
 			}
-			if (orderItem.getId() != null) {
-				sb.append(" and id = '" + orderItem.getId() + "' ");
+			if (littlePackageItem.getId() != null) {
+				sb.append(" and id = '" + littlePackageItem.getId() + "' ");
 			}
-			if (orderItem.getQuantity() != null) {
-				sb.append(" and quantity = " + orderItem.getQuantity());
+			if (littlePackageItem.getQuantity() != null) {
+				sb.append(" and quantity = " + littlePackageItem.getQuantity());
 			}
-			if (orderItem.getSkuNetWeight() != null) {
-				sb.append(" and sku_net_weight = " + orderItem.getSkuNetWeight());
+			if (littlePackageItem.getSkuNetWeight() != null) {
+				sb.append(" and sku_net_weight = " + littlePackageItem.getSkuNetWeight());
 			}
 		}
 		// 分页sql
@@ -203,44 +203,7 @@ public class OrderItemDaoImpl implements IOrderItemDao {
 			sb.append(page.generatePageSql());
 		}
 		String sql = sb.toString();
-		List<OrderItem> orderItemList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(OrderItem.class));
-		return orderItemList;
-	}
-
-	@Override
-	public String getSkuNameByCustomerIdAndSku(String sku, Long userIdOfCustomer) {
-		StringBuffer sb = new StringBuffer();
-		sb.append("select sku_name  from w_t_order_item i inner join w_t_order r on i.order_id=r.id where 1=1 ");
-		sb.append(" and r.user_id_of_customer = " + userIdOfCustomer);
-		sb.append(" and i.sku = " + sku);
-		Pagination page = new Pagination();
-		page.curPage = 1;
-		page.pageSize = 1;
-		sb.append(page.generatePageSql());
-		String skuName = jdbcTemplate.queryForObject(sb.toString(), String.class);
-		return skuName;
-	}
-
-	@Override
-	public Long sumSkuQuantityByOrderIdAndSku(List<Long> orderIds, String sku) {
-		String orderIdStrs = "";
-		for (Long orderId : orderIds) {
-			orderIdStrs += orderId + ",";
-		}
-		if (orderIdStrs.endsWith(",")) {
-			orderIdStrs = orderIdStrs.substring(0, orderIdStrs.length() - 1);
-		}
-		if (StringUtil.isNull(orderIdStrs)) {
-			return 0l;
-		}
-		StringBuffer sb = new StringBuffer();
-		sb.append("select sum(quantity)  from w_t_order_item i inner join w_t_order r on i.order_id=r.id where 1=1 ");
-		sb.append(" and i.sku = '" + sku + "'");
-		sb.append(" and r.id in( " + orderIdStrs + ")");
-		Long sum = jdbcTemplate.queryForObject(sb.toString(), Long.class);
-		if (sum == null) {
-			return 0l;
-		}
-		return sum;
+		List<LittlePackageItem> littlePackageItemList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(LittlePackageItem.class));
+		return littlePackageItemList;
 	}
 }

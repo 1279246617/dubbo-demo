@@ -19,8 +19,8 @@ import org.springframework.stereotype.Repository;
 
 import com.coe.wms.dao.datasource.DataSource;
 import com.coe.wms.dao.datasource.DataSourceCode;
-import com.coe.wms.dao.warehouse.transport.IOrderReceiverDao;
-import com.coe.wms.model.warehouse.transport.OrderReceiver;
+import com.coe.wms.dao.warehouse.transport.IBigPackageReceiverDao;
+import com.coe.wms.model.warehouse.transport.BigPackageReceiver;
 import com.coe.wms.util.NumberUtil;
 import com.coe.wms.util.Pagination;
 import com.coe.wms.util.StringUtil;
@@ -30,10 +30,10 @@ import com.mysql.jdbc.Statement;
  * 
  * @author Administrator
  */
-@Repository("orderReceiverDao")
-public class OrderReceiverDaoImpl implements IOrderReceiverDao {
+@Repository("bigPackageReceiverDao")
+public class BigPackageReceiverDaoImpl implements IBigPackageReceiverDao {
 
-	Logger logger = Logger.getLogger(OrderReceiverDaoImpl.class);
+	Logger logger = Logger.getLogger(BigPackageReceiverDaoImpl.class);
 
 	@Resource(name = "jdbcTemplate")
 	private JdbcTemplate jdbcTemplate;
@@ -43,13 +43,13 @@ public class OrderReceiverDaoImpl implements IOrderReceiverDao {
 	 */
 	@Override
 	@DataSource(DataSourceCode.WMS)
-	public long saveOrderReceiver(final OrderReceiver receiver) {
-		final String sql = "insert into w_t_order_receiver (order_id,name,company,first_name,last_name,address_line1,state_or_province,city,county,postal_code,country_code,country_name,phone_number,email,mobile_number,address_line2) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+	public long saveBigPackageReceiver(final BigPackageReceiver receiver) {
+		final String sql = "insert into w_t_big_package_receiver (big_package_id,name,company,first_name,last_name,address_line1,state_or_province,city,county,postal_code,country_code,country_name,phone_number,email,mobile_number,address_line2) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
 				PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-				ps.setLong(1, receiver.getOrderId());
+				ps.setLong(1, receiver.getBigPackageId());
 				ps.setString(2, receiver.getName());
 				ps.setString(3, receiver.getCompany());
 				ps.setString(4, receiver.getFirstName());
@@ -77,13 +77,13 @@ public class OrderReceiverDaoImpl implements IOrderReceiverDao {
 	 */
 	@Override
 	@DataSource(DataSourceCode.WMS)
-	public int saveBatchOrderReceiver(final List<OrderReceiver> receiverList) {
-		final String sql = "insert into w_t_order_receiver (order_id,name,company,first_name,last_name,address_line1,state_or_province,city,county,postal_code,country_code,country_name,phone_number,email,mobile_number,address_line2) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+	public int saveBatchBigPackageReceiver(final List<BigPackageReceiver> receiverList) {
+		final String sql = "insert into w_t_big_package_receiver (big_package_id,name,company,first_name,last_name,address_line1,state_or_province,city,county,postal_code,country_code,country_name,phone_number,email,mobile_number,address_line2) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		int[] batchUpdateSize = jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
 			@Override
 			public void setValues(PreparedStatement ps, int i) throws SQLException {
-				OrderReceiver receiver = receiverList.get(i);
-				ps.setLong(1, receiver.getOrderId());
+				BigPackageReceiver receiver = receiverList.get(i);
+				ps.setLong(1, receiver.getBigPackageId());
 				ps.setString(2, receiver.getName());
 				ps.setString(3, receiver.getCompany());
 				ps.setString(4, receiver.getFirstName());
@@ -111,13 +111,13 @@ public class OrderReceiverDaoImpl implements IOrderReceiverDao {
 
 	@Override
 	@DataSource(DataSourceCode.WMS)
-	public int saveBatchOrderReceiverWithOrderId(final List<OrderReceiver> receiverList, final Long orderId) {
-		final String sql = "insert into w_t_order_receiver (order_id,name,company,first_name,last_name,address_line1,state_or_province,city,county,postal_code,country_code,country_name,phone_number,email,mobile_number,address_line2) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+	public int saveBatchBigPackageReceiverWithPackageId(final List<BigPackageReceiver> receiverList, final Long orderId) {
+		final String sql = "insert into w_t_big_package_receiver (big_package_id,name,company,first_name,last_name,address_line1,state_or_province,city,county,postal_code,country_code,country_name,phone_number,email,mobile_number,address_line2) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		int[] batchUpdateSize = jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
 			@Override
 			public void setValues(PreparedStatement ps, int i) throws SQLException {
-				OrderReceiver receiver = receiverList.get(i);
-				ps.setLong(1, receiver.getOrderId());
+				BigPackageReceiver receiver = receiverList.get(i);
+				ps.setLong(1, receiver.getBigPackageId());
 				ps.setString(2, receiver.getName());
 				ps.setString(3, receiver.getCompany());
 				ps.setString(4, receiver.getFirstName());
@@ -150,13 +150,12 @@ public class OrderReceiverDaoImpl implements IOrderReceiverDao {
 	/**
 	 * 查询出库订单收件人
 	 * 
-	 * 参数一律使用实体类加Map . 
+	 * 参数一律使用实体类加Map .
 	 */
 	@Override
-	public List<OrderReceiver> findOrderReceiver(OrderReceiver orderReceiver,
-			Map<String, String> moreParam, Pagination page) {
+	public List<BigPackageReceiver> findBigPackageReceiver(BigPackageReceiver orderReceiver, Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select id,order_id,name,company,first_name,last_name,address_line1,state_or_province,city,county,postal_code,country_code,country_name,phone_number,email,mobile_number,address_line2 from w_t_order_receiver where 1=1 ");
+		sb.append("select id,big_package_id,name,company,first_name,last_name,address_line1,state_or_province,city,county,postal_code,country_code,country_name,phone_number,email,mobile_number,address_line2 from w_t_big_package_receiver where 1=1 ");
 		if (orderReceiver != null) {
 			if (StringUtil.isNotNull(orderReceiver.getName())) {
 				sb.append(" and name = '" + orderReceiver.getName() + "' ");
@@ -206,23 +205,22 @@ public class OrderReceiverDaoImpl implements IOrderReceiverDao {
 			if (orderReceiver.getId() != null) {
 				sb.append(" and id = " + orderReceiver.getId());
 			}
-			if (orderReceiver.getOrderId() != null) {
-				sb.append(" and order_id = " + orderReceiver.getOrderId());
+			if (orderReceiver.getBigPackageId() != null) {
+				sb.append(" and big_package_id = " + orderReceiver.getBigPackageId());
 			}
 		}
 		// 分页sql
 		sb.append(page.generatePageSql());
 		String sql = sb.toString();
-		List<OrderReceiver> orderReceiverList = jdbcTemplate.query(sql,
-				ParameterizedBeanPropertyRowMapper.newInstance(OrderReceiver.class));
+		List<BigPackageReceiver> orderReceiverList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(BigPackageReceiver.class));
 		return orderReceiverList;
 	}
 
 	@Override
-	public OrderReceiver getOrderReceiverByOrderId(Long orderId) {
-		String sql = "select id,order_id,name,company,first_name,last_name,address_line1,state_or_province,city,county,postal_code,country_code,country_name,phone_number,email,mobile_number,address_line2 from w_t_order_receiver where order_id = "+ orderId;
-		List<OrderReceiver> orderReceiverList = jdbcTemplate.query(sql,
-				ParameterizedBeanPropertyRowMapper.newInstance(OrderReceiver.class));
+	public BigPackageReceiver getBigPackageReceiverByPackageId(Long orderId) {
+		String sql = "select id,big_package_id,name,company,first_name,last_name,address_line1,state_or_province,city,county,postal_code,country_code,country_name,phone_number,email,mobile_number,address_line2 from w_t_big_package_receiver where big_package_id = "
+				+ orderId;
+		List<BigPackageReceiver> orderReceiverList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(BigPackageReceiver.class));
 		if (orderReceiverList != null && orderReceiverList.size() > 0) {
 			return orderReceiverList.get(0);
 		}
