@@ -83,8 +83,8 @@
 		                	</div>
 						</div>
 						<ul class="nav nav-tabs nav-stacked" style="margin-bottom:0px;">	
-		              		<li><a href="#${baseUrl}/warehouse/storage/listOutWarehouseOrder.do" tab_id="findOutWarehouseOrder"><i class="icon-list"></i><span class="hidden-tablet">转运订单列表</span></a></li>
-		              		<li><a href=#${baseUrl}/warehouse/storage/listWaitCheckOutWarehouseOrder.do  tab_id="waitCheckOutWarehouseOrder"><i class="icon-eye-open"></i><span class="hidden-tablet">待审核转运订单</span></a></li>
+		              		<li><a href="#${baseUrl}/warehouse/transport/listBigPackage.do" tab_id="findBigPackage"><i class="icon-list"></i><span class="hidden-tablet">转运订单列表</span></a></li>
+		              		<li><a href=#${baseUrl}/warehouse/transport/listWaitCheckBigPackage.do  tab_id="waitCheckBigPackage"><i class="icon-eye-open"></i><span class="hidden-tablet">待审核转运订单</span></a></li>
 		                </ul>
 		        </div>
 		        
