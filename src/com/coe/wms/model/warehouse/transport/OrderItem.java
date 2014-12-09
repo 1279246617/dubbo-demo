@@ -3,7 +3,8 @@ package com.coe.wms.model.warehouse.transport;
 import java.io.Serializable;
 
 /**
- * 订单物品|报关信息
+ * 转运订单主体等于:tradeOrder ,交易id,
+ * 转运订单详情等于:logisticsOrder, 到货跟踪号
  * 
  * @author yechao
  * @date 2014年11月3日

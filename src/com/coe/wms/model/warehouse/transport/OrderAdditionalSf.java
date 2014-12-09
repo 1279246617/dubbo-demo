@@ -7,6 +7,9 @@ import java.io.Serializable;
  * 
  * 顺丰附加
  * 
+ * 
+ * 对应文档中:clearanceDetail内容
+ * 
  * @author Administrator
  * 
  */
