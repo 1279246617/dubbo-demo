@@ -3,13 +3,11 @@ package com.coe.wms.model.warehouse.transport;
 import java.io.Serializable;
 
 /**
- * 转运订单主体等于:tradeOrder ,交易id,
- * 转运订单详情等于:logisticsOrder, 到货跟踪号
  * 
  * @author yechao
  * @date 2014年11月3日
  */
-public class OrderItem implements Serializable {
+public class LittlePackageItem implements Serializable {
 	/**
 	 * 
 	 */
@@ -20,36 +18,29 @@ public class OrderItem implements Serializable {
 	 */
 	private Long id;
 
-	/**
-	 * 转运订单id
-	 */
-	private Long orderId;
+	private Long bigPackageId;
 
-	/**
-	 * 数量
-	 */
-	private Integer quantity;
-
+	private Long littlePackageId;
 	/**
 	 * sku
 	 */
 	private String sku;
-
 	/**
 	 * sku编号 等于顺丰的商品编号
 	 */
 	private String skuNo;
-
+	/**
+	 * 数量
+	 */
+	private Integer quantity;
 	/**
 	 * 商品规格
 	 */
 	private String specification;
-
 	/**
 	 * 可用于报关描述(申报品名)
 	 */
 	private String skuName;
-
 	/**
 	 * 可用于报关币种
 	 */
@@ -59,7 +50,6 @@ public class OrderItem implements Serializable {
 	 * sku单价 可用于报关价值
 	 */
 	private Double skuUnitPrice;
-
 	/**
 	 * sku 重量
 	 */
@@ -78,12 +68,20 @@ public class OrderItem implements Serializable {
 		this.id = id;
 	}
 
-	public Long getOrderId() {
-		return orderId;
+	public Long getBigPackageId() {
+		return bigPackageId;
 	}
 
-	public void setOrderId(Long orderId) {
-		this.orderId = orderId;
+	public void setBigPackageId(Long bigPackageId) {
+		this.bigPackageId = bigPackageId;
+	}
+
+	public Long getLittlePackageId() {
+		return littlePackageId;
+	}
+
+	public void setLittlePackageId(Long littlePackageId) {
+		this.littlePackageId = littlePackageId;
 	}
 
 	public Integer getQuantity() {

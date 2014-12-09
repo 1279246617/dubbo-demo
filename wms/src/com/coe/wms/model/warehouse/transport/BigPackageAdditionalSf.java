@@ -13,7 +13,7 @@ import java.io.Serializable;
  * @author Administrator
  * 
  */
-public class OrderAdditionalSf implements Serializable {
+public class BigPackageAdditionalSf implements Serializable {
 
 	/**
 	 * 
@@ -24,23 +24,8 @@ public class OrderAdditionalSf implements Serializable {
 	 */
 	private Long id;
 
-	public Long getOrderId() {
-		return orderId;
-	}
+	private Long bigPackageId;
 
-	public void setOrderId(Long orderId) {
-		this.orderId = orderId;
-	}
-
-	public String getCustomerOrderId() {
-		return customerOrderId;
-	}
-
-	public void setCustomerOrderId(String customerOrderId) {
-		this.customerOrderId = customerOrderId;
-	}
-
-	private Long orderId;
 	/**
 	 * 顺丰指定运输方式 , 在出库订单主表也存在此字段,名称 shipwayCode
 	 */
@@ -52,6 +37,7 @@ public class OrderAdditionalSf implements Serializable {
 	 * 寄方地址，需要打印在顺丰运单上
 	 */
 	private String senderAddress;
+
 	/**
 	 * 月结卡号，需要打印在顺丰运单上
 	 */
@@ -139,5 +125,21 @@ public class OrderAdditionalSf implements Serializable {
 
 	public void setDeliveryCode(String deliveryCode) {
 		this.deliveryCode = deliveryCode;
+	}
+
+	public Long getBigPackageId() {
+		return bigPackageId;
+	}
+
+	public void setBigPackageId(Long bigPackageId) {
+		this.bigPackageId = bigPackageId;
+	}
+
+	public String getCustomerOrderId() {
+		return customerOrderId;
+	}
+
+	public void setCustomerOrderId(String customerOrderId) {
+		this.customerOrderId = customerOrderId;
 	}
 }

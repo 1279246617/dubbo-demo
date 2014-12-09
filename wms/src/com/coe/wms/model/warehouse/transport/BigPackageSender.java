@@ -9,16 +9,15 @@ import java.io.Serializable;
  * @author Administrator
  * 
  */
-public class OrderSender implements Serializable {
+public class BigPackageSender implements Serializable {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -4245802122495822276L;
+
 	private Long id;
-	/**
-	 * orderId
-	 */
-	private Long orderId;
+
+	private Long bigPackageId;
 
 	/**
 	 * 发件人名
@@ -117,16 +116,16 @@ public class OrderSender implements Serializable {
 		return mobileNumber;
 	}
 
-	public Long getOrderId() {
-		return orderId;
-	}
-
-	public void setOrderId(Long orderId) {
-		this.orderId = orderId;
-	}
-
 	public void setMobileNumber(String mobileNumber) {
 		this.mobileNumber = mobileNumber;
+	}
+
+	public Long getBigPackageId() {
+		return bigPackageId;
+	}
+
+	public void setBigPackageId(Long bigPackageId) {
+		this.bigPackageId = bigPackageId;
 	}
 
 	public String getFirstName() {
