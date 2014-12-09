@@ -53,11 +53,6 @@ public class BigPackage implements Serializable {
 	private String tradeRemark;
 
 	/**
-	 * 顺丰API字段,等于卖家备注,用于打印捡货单上的卖家备注
-	 */
-	private String logisticsRemark;
-
-	/**
 	 * 出库摘要 COE操作备注
 	 */
 	private String remark;
@@ -189,14 +184,6 @@ public class BigPackage implements Serializable {
 
 	public void setTradeRemark(String tradeRemark) {
 		this.tradeRemark = tradeRemark;
-	}
-
-	public String getLogisticsRemark() {
-		return logisticsRemark;
-	}
-
-	public void setLogisticsRemark(String logisticsRemark) {
-		this.logisticsRemark = logisticsRemark;
 	}
 
 	public String getStatus() {
