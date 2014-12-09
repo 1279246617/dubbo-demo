@@ -8,7 +8,7 @@ import java.io.Serializable;
  * @author yechao
  * @date 2014年11月3日
  */
-public class OrderReceiver implements Serializable {
+public class BigPackageReceiver implements Serializable {
 	/**
 	 * 
 	 */

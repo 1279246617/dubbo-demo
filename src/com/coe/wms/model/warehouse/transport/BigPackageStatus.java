@@ -10,25 +10,25 @@ import com.google.code.ssm.api.CacheKeyMethod;
  * @author Administrator
  * 
  */
-public class OrderStatus implements Serializable {
+public class BigPackageStatus implements Serializable {
 
-	public class OrderStatusCode {
+	public class BigPackageStatusCode {
 		/**
 		 * 下单:LOGISTICS_TRADE_PAID 顺丰新建转运出库订单,等待COE审核 Wait Warehouse Check
 		 */
 		public static final String WWC = "WWC";
 
 		/**
-		 * 审单:WMS_CHECK_ORDER 发送审核通过给顺丰, 待顺丰发实际货物到仓库, 待收货 Wait Receiver Goods
+		 * 发送审核通过给顺丰, 待顺丰发实际货物到仓库, 待收货 Wait Receiver Goods
 		 */
 		public static final String WRG = "WRG";
 
 		/**
-		 * 入库：WMS_STOCKIN_INFO 收到货后,待回传入库状态给顺丰
+		 * 部分 入库:收到部分logisticsOrder
 		 * 
 		 */
-		public static final String WSR = "WSR";
-
+		public static final String WRP = "WRP";
+		
 		/**
 		 * ,等待出库称重 Wait Warehouse Weighing
 		 */
@@ -49,7 +49,7 @@ public class OrderStatus implements Serializable {
 		 * 顺丰确认出库,等待COE操作出库 Wait Out Warehouse Operation
 		 */
 		public static final String WWO = "WWO";
-		
+
 		/**
 		 * 出库成功 Out Warehouse Success
 		 */
