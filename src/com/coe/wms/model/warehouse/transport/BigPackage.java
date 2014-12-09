@@ -30,7 +30,7 @@ public class BigPackage implements Serializable {
 	 * 订单所属客户id
 	 */
 	private Long userIdOfCustomer;
-
+	
 	/**
 	 * 订单所属操作员id
 	 */
