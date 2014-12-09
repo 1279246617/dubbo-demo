@@ -78,7 +78,7 @@
 		              		<li><a href=#${baseUrl}/warehouse/storage/listWaitCheckOutWarehouseOrder.do  tab_id="waitCheckOutWarehouseOrder"><i class="icon-eye-open"></i><span class="hidden-tablet">待审核出库订单</span></a></li>
 		                </ul>
 		                <div class="sep">
-		                	<div style="font-weight: bold;color: black;margin:5px 0px  0px  9px;  ">
+		                	<div style="font-weight: bold;color: #006400;margin:5px 0px  0px  9px;  ">
 		                		转运订单管理
 		                	</div>
 						</div>
@@ -180,6 +180,14 @@
 			$("#accordion1").ligerAccordion({
 				height :height
 			});
+			/*     转运管理特殊颜色处理代码 ---------开始*/
+			var titles = $(".l-accordion-header-inner");
+			$.each(titles, function (key, val) {
+				if($(val).text() =='转运管理'){
+					$(val).css("color","#006400");
+				}
+	        });
+			/*     转运管理特殊颜色处理代码 ---------结束*/
 			//左侧菜单 鼠标 hover
 			$('div.main-menu li:not(.nav-header)').hover(function(){
 				$(this).animate({'margin-left':'+=5'},300);
