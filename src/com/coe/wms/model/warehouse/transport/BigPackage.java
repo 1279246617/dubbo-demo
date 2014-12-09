@@ -3,16 +3,15 @@ package com.coe.wms.model.warehouse.transport;
 import java.io.Serializable;
 
 /**
- * 订单
+ * 大包 等于顺丰 tradeOrder
  * 
- * 转运服务 以订单为单位, 在预报时就要求有订单的收件人信息
+ * 回传称重以大包为单位
  * 
- * 仓配服务 以大包为单位, 大包下只有SKU和数量, 无收件人信息, 出库指令时有收件人信息
+ * 回传收货以小包为单位
  * 
- * @author yechao
- * @date 2013年11月2日
+ * 回传出库以大包为单位
  */
-public class Order implements Serializable {
+public class BigPackage implements Serializable {
 	/**
 	 * 
 	 */
@@ -37,24 +36,9 @@ public class Order implements Serializable {
 	 */
 	private Long userIdOfOperator;
 	/**
-	 * 出货渠道
-	 */
-	private String shipwayCode;
-
-	/**
-	 * 出货跟踪号
-	 */
-	private String trackingNo;
-
-	/**
-	 * 创建时间 (收货时间)
+	 * 创建时间
 	 */
 	private Long createdTime;
-
-	/**
-	 * 出库摘要 COE操作备注
-	 */
-	private String remark;
 
 	/**
 	 * 客户订单号, 用于客户对该出库指令进行修改,确认等
@@ -74,7 +58,25 @@ public class Order implements Serializable {
 	private String logisticsRemark;
 
 	/**
+	 * 出库摘要 COE操作备注
+	 */
+	private String remark;
+	/**
+	 * 出货渠道
+	 */
+	private String shipwayCode;
+	/**
+	 * 出货跟踪号
+	 */
+	private String trackingNo;
+	/**
 	 * 状态
+	 * 
+	 * 全未入库, 部分入库 全部入库
+	 * 
+	 * 上架(以小包为单位)
+	 * 
+	 * 待合包称重(等于下架) 待回传称重 待客户确认 待出库操作
 	 */
 	private String status;
 
