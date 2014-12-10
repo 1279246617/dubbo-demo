@@ -82,10 +82,9 @@
 	</div>
 	<div id="maingrid" class="pull-left" style="width:100%;"></div>
 	
-	
-	<script type="text/javascript" src="${baseUrl}/static/jquery/jquery.js"></script>
+    <script type="text/javascript" src="${baseUrl}/static/jquery/jquery.js"></script>
 	<script type="text/javascript" src="${baseUrl}/static/bootstrap/bootstrap-typeahead.js"></script>
-    
+   	<script type="text/javascript" src="${baseUrl}/static/js/warehouse/listBigPackage.js"></script>
     <script type="text/javascript">
  		var baseUrl = "${baseUrl}";
    		$(function(){
@@ -141,10 +140,10 @@
 	                    { display: '客户帐号', name: 'userNameOfCustomer', align: 'center',type:'float',width:'9%'},
 	  		          	{ display: '客户订单号', name: 'customerReferenceNo', align: 'center', type: 'float',width:'14%'},
 		                { display: '仓库', name: 'warehouse', align: 'center', type: 'float',width:'8%'},
-		              	{ display: 'SKU预览', isSort: false, align: 'center', type: 'float',width:'20%',render: function(row) {
+		            	{ display: '小包预览', isSort: false, align: 'center', type: 'float',width:'20%',render: function(row) {
 		            		var skus = "";
 		            		if (!row._editing) {
-		            			skus += '<a href="javascript:listOutWarehouseOrderItem(' + row.id + ')">'+row.items+'</a> ';
+		            			skus += '<a href="javascript:listLittlePackages(' + row.id + ')">'+row.littlePackages+'</a> ';
 		            		}
 		            		return skus;
 	  		          	}},
@@ -201,7 +200,5 @@
 	<script type="text/javascript" src="${baseUrl}/static/calendar/lhgcalendar.min.js"></script>
 	<script type="text/javascript" src="${baseUrl}/static/calendar/prettify.js"></script>
 	<script type="text/javascript" src="${baseUrl}/static/ligerui/ligerUI/js/ligerui.all.js"></script>
-	
-	<script type="text/javascript" src="${baseUrl}/static/js/warehouse/listOutWarehouseOrder.js"></script>
 </body>
 </html>

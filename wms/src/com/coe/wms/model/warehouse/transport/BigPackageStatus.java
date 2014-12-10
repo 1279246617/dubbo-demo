@@ -19,6 +19,11 @@ public class BigPackageStatus implements Serializable {
 		public static final String WWC = "WWC";
 
 		/**
+		 * 已审核拒收
+		 */
+		public static final String WCF = "WCF";
+		
+		/**
 		 * 发送审核通过给顺丰, 待顺丰发实际货物到仓库, 待收货 Wait Receiver Goods
 		 */
 		public static final String WRG = "WRG";
@@ -28,7 +33,7 @@ public class BigPackageStatus implements Serializable {
 		 * 
 		 */
 		public static final String WRP = "WRP";
-		
+
 		/**
 		 * ,等待出库称重 Wait Warehouse Weighing
 		 */

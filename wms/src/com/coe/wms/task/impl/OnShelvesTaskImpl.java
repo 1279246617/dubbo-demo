@@ -79,7 +79,7 @@ public class OnShelvesTaskImpl implements IOnShelvesTask {
 	@Override
 	public void updateInWarehouseRecordOnShelvesStatus() {
 		List<Long> recordIdList = inWarehouseRecordDao.findUnCompleteInWarehouseRecordId();
-		logger.info("找到待更新状态的入库记录总数:" + recordIdList.size());
+		logger.debug("找到待更新状态的入库记录总数:" + recordIdList.size());
 		for (int i = 0; i < recordIdList.size(); i++) {
 			Long inWarehouseRecordId = recordIdList.get(i);
 			// 查出入库的物品明细
@@ -124,9 +124,9 @@ public class OnShelvesTaskImpl implements IOnShelvesTask {
 			inWarehouseRecordUpdate.setStatus(status);
 			int updateCount = inWarehouseRecordDao.updateInWarehouseRecordStatus(inWarehouseRecordUpdate);
 			if (updateCount > 0) {
-				logger.info("更新入库订单状态成功:recordId:" + inWarehouseRecordId + ",status:" + status);
+				logger.debug("更新入库订单状态成功:recordId:" + inWarehouseRecordId + ",status:" + status);
 			} else {
-				logger.info("更新入库订单状态失败:recordId:" + inWarehouseRecordId + ",status:" + status);
+				logger.debug("更新入库订单状态失败:recordId:" + inWarehouseRecordId + ",status:" + status);
 			}
 		}
 	}
