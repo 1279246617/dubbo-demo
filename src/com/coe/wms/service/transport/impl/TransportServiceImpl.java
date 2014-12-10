@@ -306,7 +306,7 @@ public class TransportServiceImpl implements ITransportService {
 					}
 					LittlePackageItem littlePackageItem = new LittlePackageItem();
 					littlePackageItem.setSku(itemId);
-					littlePackageItem.setQuantity(item.getItemQuantity());
+					littlePackageItem.setQuantity(item.getItemQuantity() == null ? 1 : item.getItemQuantity());
 					littlePackageItem.setLittlePackageId(littlePackageId);
 					littlePackageItem.setBigPackageId(bigPackageId);
 					littlePackageItem.setSkuName(item.getItemName());
@@ -496,9 +496,7 @@ public class TransportServiceImpl implements ITransportService {
 				continue;
 			}
 			// 执行审核,并立即返回通知顺丰,如果顺丰无返回,不能审核通过
-			
-			
-			
+
 		}
 		return map;
 	}

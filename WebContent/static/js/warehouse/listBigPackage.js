@@ -117,7 +117,7 @@ function listLittlePackages(bigPackageId){
         success : function(msg){ 
         	msg = eval("(" + msg + ")");
 			$.each(msg,function(i,e){
-			  	contentArr.push('<tr>');
+			  	contentArr.push('<tr style="border:0;">');
 			  	contentArr.push('<td>'+e.trackingNo+'</td>');
 			  	contentArr.push('<td>'+e.carrierCode+'</td>');
         		contentArr.push('<td>'+e.poNo+'</td>');

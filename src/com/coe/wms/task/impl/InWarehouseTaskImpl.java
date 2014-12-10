@@ -72,7 +72,7 @@ public class InWarehouseTaskImpl implements IInWarehouseTask {
 	@Override
 	public void updateInWarehouseOrderStatus() {
 		List<Long> orderIdList = inWarehouseOrderDao.findUnCompleteInWarehouseOrderId();
-		logger.info("找到待更新状态的入库订单,订单总数:" + orderIdList.size());
+		logger.debug("找到待更新状态的入库订单,订单总数:" + orderIdList.size());
 		for (int i = 0; i < orderIdList.size(); i++) {
 			Long inWarehouseOrderId = orderIdList.get(i);
 			// 查出入库订单的物品明细
@@ -100,9 +100,9 @@ public class InWarehouseTaskImpl implements IInWarehouseTask {
 			}
 			int updateCount = inWarehouseOrderDao.updateInWarehouseOrderStatus(inWarehouseOrderId, status);
 			if (updateCount > 0) {
-				logger.info("更新入库订单状态成功:orderId:" + inWarehouseOrderId + ",status:" + status);
+				logger.debug("更新入库订单状态成功:orderId:" + inWarehouseOrderId + ",status:" + status);
 			} else {
-				logger.info("更新入库订单状态失败:orderId:" + inWarehouseOrderId + ",status:" + status);
+				logger.debug("更新入库订单状态失败:orderId:" + inWarehouseOrderId + ",status:" + status);
 			}
 		}
 	}

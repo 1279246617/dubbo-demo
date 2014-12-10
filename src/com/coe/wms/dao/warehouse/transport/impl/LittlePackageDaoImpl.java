@@ -3,6 +3,7 @@ package com.coe.wms.dao.warehouse.transport.impl;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -49,7 +50,11 @@ public class LittlePackageDaoImpl implements ILittlePackageDao {
 				PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 				ps.setLong(1, littlePackage.getWarehouseId());
 				ps.setLong(2, littlePackage.getUserIdOfCustomer());
-				ps.setLong(3, littlePackage.getUserIdOfOperator());
+				if (littlePackage.getUserIdOfOperator() == null) {
+					ps.setNull(3, Types.BIGINT);
+				} else {
+					ps.setLong(3, littlePackage.getUserIdOfOperator());
+				}
 				ps.setString(4, littlePackage.getCarrierCode());
 				ps.setString(5, littlePackage.getTrackingNo());
 				ps.setLong(6, littlePackage.getCreatedTime());
@@ -58,7 +63,11 @@ public class LittlePackageDaoImpl implements ILittlePackageDao {
 				ps.setInt(9, littlePackage.getCallbackCount() != null ? littlePackage.getCallbackCount() : 0);
 				ps.setLong(10, littlePackage.getBigPackageId());
 				ps.setString(11, littlePackage.getStatus());
-				ps.setLong(12, littlePackage.getReceivedTime());
+				if (littlePackage.getReceivedTime() == null) {
+					ps.setNull(12, Types.BIGINT);
+				} else {
+					ps.setLong(12, littlePackage.getReceivedTime());
+				}
 				ps.setString(13, littlePackage.getPoNo());
 				return ps;
 			}
