@@ -41,11 +41,11 @@ function checkOrder(){
 	                return false;
 	            }
                 var checkResult = parent.$("#checkSuccess").attr("checked")?1:2;//1是审核通过 2是审核不通过
-                var orderIds = "";
+                var bigPackageIds = "";
             	for ( var i = 0; i < row.length; i++) {
-            		orderIds += row[i].id+",";
+            		bigPackageIds += row[i].id+",";
 				}
-        		$.post(baseUrl + '/warehouse/storage/checkOutWarehouseOrder.do',{orderIds:orderIds,checkResult:checkResult},function(msg){
+        		$.post(baseUrl + '/warehouse/transport/checkBigPackage.do',{bigPackageIds:bigPackageIds,checkResult:checkResult},function(msg){
         			if(msg.status == "1"){
         				grid.loadData();	
         				parent.$.showDialogMessage(msg.message,null,null);

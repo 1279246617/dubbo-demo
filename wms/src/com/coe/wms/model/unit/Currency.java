@@ -11,6 +11,11 @@ public class Currency implements Serializable {
 
 	public class CurrencyCode {
 		/**
+		 * 人民币分
+		 */
+		public static final String CNF = "CNF";	
+		
+		/**
 		 * 人民币
 		 */
 		public static final String CNY = "CNY";

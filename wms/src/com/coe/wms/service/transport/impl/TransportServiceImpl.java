@@ -30,9 +30,11 @@ import com.coe.wms.dao.warehouse.transport.ILittlePackageDao;
 import com.coe.wms.dao.warehouse.transport.ILittlePackageItemDao;
 import com.coe.wms.dao.warehouse.transport.ILittlePackageStatusDao;
 import com.coe.wms.exception.ServiceException;
+import com.coe.wms.model.unit.Currency.CurrencyCode;
 import com.coe.wms.model.user.User;
 import com.coe.wms.model.warehouse.Warehouse;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderReceiver;
+import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus.OutWarehouseOrderStatusCode;
 import com.coe.wms.model.warehouse.transport.BigPackage;
 import com.coe.wms.model.warehouse.transport.BigPackageAdditionalSf;
 import com.coe.wms.model.warehouse.transport.BigPackageReceiver;
@@ -205,6 +207,7 @@ public class TransportServiceImpl implements ITransportService {
 		Long warehouseId = warehouse.getId();
 		// 检测大包是否重复
 		BigPackage bigPackageParam = new BigPackage();
+		bigPackageParam.setCustomerReferenceNo(customerReferenceNo);
 		Long count = bigPackageDao.countBigPackage(bigPackageParam, null);
 		if (count > 0) {
 			response.setReason(ErrorCode.B0200_CODE);
@@ -268,7 +271,8 @@ public class TransportServiceImpl implements ITransportService {
 		bigPackageSender.setMobileNumber(senderDetail.getMobile());
 		bigPackageSender.setBigPackageId(bigPackageId);
 		bigPackageSenderDao.saveBigPackageSender(bigPackageSender);
-
+		// tradeOrder的商品详情
+		List<Item> items = tradeOrder.getItems();
 		// 保存小包
 		for (int i = 0; i < logisticsOrders.size(); i++) {
 			LogisticsOrder logisticsOrder = logisticsOrders.get(i);
@@ -287,14 +291,36 @@ public class TransportServiceImpl implements ITransportService {
 			littlePackage.setWarehouseId(warehouseId);
 			littlePackage.setRemark(logisticsOrder.getLogisticsRemark());
 			littlePackage.setBigPackageId(bigPackageId);
-			littlePackageDao.saveLittlePackage(littlePackage);
+			Long littlePackageId = littlePackageDao.saveLittlePackage(littlePackage);
 			// 小包裹物品id
 			String itemsIncluded = logisticsOrder.getItemsIncluded();
-			// 保存商品详情
-			List<Item> items = tradeOrder.getItems();
-			for (Item item : items) {
-				item.getItemId();
-
+			if (StringUtil.isNull(itemsIncluded)) {
+				continue;
+			}
+			String[] itemIds = itemsIncluded.split(",");
+			for (String itemIncluded : itemIds) {
+				for (Item item : items) {
+					String itemId = item.getItemId();
+					if (!StringUtil.isEqualIgnoreCase(itemIncluded, itemId)) {
+						continue;
+					}
+					LittlePackageItem littlePackageItem = new LittlePackageItem();
+					littlePackageItem.setSku(itemId);
+					littlePackageItem.setQuantity(item.getItemQuantity());
+					littlePackageItem.setLittlePackageId(littlePackageId);
+					littlePackageItem.setBigPackageId(bigPackageId);
+					littlePackageItem.setSkuName(item.getItemName());
+					littlePackageItem.setRemark(item.getItemRemark());
+					if (NumberUtil.isDecimal(item.getItemUnitPrice()) || NumberUtil.isNumberic(item.getItemUnitPrice())) {
+						littlePackageItem.setSkuUnitPrice(Double.valueOf(item.getItemUnitPrice()));
+					}
+					littlePackageItem.setSkuPriceCurrency(CurrencyCode.CNF);
+					littlePackageItem.setSpecification(item.getSpecification());
+					if (NumberUtil.isDecimal(item.getNetWeight()) || NumberUtil.isNumberic(item.getNetWeight())) {
+						littlePackageItem.setSkuNetWeight(Double.valueOf(item.getNetWeight()));
+					}
+					littlePackageItemDao.saveLittlePackageItem(littlePackageItem);
+				}
 			}
 		}
 		response.setSuccess(Constant.TRUE);
@@ -439,5 +465,41 @@ public class TransportServiceImpl implements ITransportService {
 			mapList.add(map);
 		}
 		return mapList;
+	}
+
+	@Override
+	public Map<String, String> checkBigPackage(String bigPackageIds, Integer checkResult, Long userIdOfOperator) throws ServiceException {
+		Map<String, String> map = new HashMap<String, String>();
+		map.put(Constant.STATUS, Constant.FAIL);
+		if (StringUtil.isNull(bigPackageIds)) {
+			map.put(Constant.MESSAGE, "转运订单id(bigPackageIds)为空,无法处理");
+			return map;
+		}
+		if (checkResult == null) {
+			map.put(Constant.MESSAGE, "审核结果(checkResult)为空,无法处理");
+			return map;
+		}
+
+		int updateQuantity = 0;
+		int noUpdateQuantity = 0;
+		String bigPackageIdArr[] = bigPackageIds.split(",");
+		for (String bigPackageId : bigPackageIdArr) {
+			if (StringUtil.isNull(bigPackageId)) {
+				continue;
+			}
+			Long bigPackageIdLong = Long.valueOf(bigPackageId);
+			// 查询订单的当前状态
+			String oldStatus = bigPackageDao.getBigPackageStatus(bigPackageIdLong);
+			// 如果不是等待审核状态的订单,直接跳过
+			if (!StringUtil.isEqual(oldStatus, BigPackageStatusCode.WWC)) {
+				noUpdateQuantity++;
+				continue;
+			}
+			// 执行审核,并立即返回通知顺丰,如果顺丰无返回,不能审核通过
+			
+			
+			
+		}
+		return map;
 	}
 }

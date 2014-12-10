@@ -48,4 +48,14 @@ public interface ITransportService {
 	public Pagination getBigPackageData(BigPackage bigPackage, Map<String, String> moreParam, Pagination page) throws ServiceException;
 
 	public List<Map<String, Object>> getLittlePackageItems(Long bigPackageId) throws ServiceException;
+
+	/**
+	 * 审核转运订单
+	 * 
+	 * @param orderIds
+	 * @param checkResult
+	 * @return
+	 * @throws ServiceException
+	 */
+	public Map<String, String> checkBigPackage(String bigPackageIds, Integer checkResult, Long userIdOfOperator) throws ServiceException;
 }
