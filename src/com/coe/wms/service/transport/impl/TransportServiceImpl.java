@@ -32,11 +32,7 @@ import com.coe.wms.dao.warehouse.transport.ILittlePackageStatusDao;
 import com.coe.wms.exception.ServiceException;
 import com.coe.wms.model.user.User;
 import com.coe.wms.model.warehouse.Warehouse;
-import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrder;
-import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderItem;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderReceiver;
-import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderSender;
-import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus;
 import com.coe.wms.model.warehouse.transport.BigPackage;
 import com.coe.wms.model.warehouse.transport.BigPackageAdditionalSf;
 import com.coe.wms.model.warehouse.transport.BigPackageReceiver;
@@ -44,11 +40,14 @@ import com.coe.wms.model.warehouse.transport.BigPackageSender;
 import com.coe.wms.model.warehouse.transport.BigPackageStatus;
 import com.coe.wms.model.warehouse.transport.BigPackageStatus.BigPackageStatusCode;
 import com.coe.wms.model.warehouse.transport.LittlePackage;
+import com.coe.wms.model.warehouse.transport.LittlePackageItem;
+import com.coe.wms.model.warehouse.transport.LittlePackageStatus;
 import com.coe.wms.model.warehouse.transport.LittlePackageStatus.LittlePackageStatusCode;
 import com.coe.wms.pojo.api.warehouse.Buyer;
 import com.coe.wms.pojo.api.warehouse.ClearanceDetail;
 import com.coe.wms.pojo.api.warehouse.ErrorCode;
 import com.coe.wms.pojo.api.warehouse.EventBody;
+import com.coe.wms.pojo.api.warehouse.Item;
 import com.coe.wms.pojo.api.warehouse.LogisticsDetail;
 import com.coe.wms.pojo.api.warehouse.LogisticsOrder;
 import com.coe.wms.pojo.api.warehouse.Response;
@@ -269,6 +268,7 @@ public class TransportServiceImpl implements ITransportService {
 		bigPackageSender.setMobileNumber(senderDetail.getMobile());
 		bigPackageSender.setBigPackageId(bigPackageId);
 		bigPackageSenderDao.saveBigPackageSender(bigPackageSender);
+
 		// 保存小包
 		for (int i = 0; i < logisticsOrders.size(); i++) {
 			LogisticsOrder logisticsOrder = logisticsOrders.get(i);
@@ -288,6 +288,14 @@ public class TransportServiceImpl implements ITransportService {
 			littlePackage.setRemark(logisticsOrder.getLogisticsRemark());
 			littlePackage.setBigPackageId(bigPackageId);
 			littlePackageDao.saveLittlePackage(littlePackage);
+			// 小包裹物品id
+			String itemsIncluded = logisticsOrder.getItemsIncluded();
+			// 保存商品详情
+			List<Item> items = tradeOrder.getItems();
+			for (Item item : items) {
+				item.getItemId();
+
+			}
 		}
 		response.setSuccess(Constant.TRUE);
 		return XmlUtil.toXml(Responses.class, responses);
@@ -374,14 +382,14 @@ public class TransportServiceImpl implements ITransportService {
 				map.put("senderName", bigPackageSender.getName());
 			}
 			// 物品明细(目前仅展示SKU*数量)
-//			String itemStr = "";
-//			OutWarehouseOrderItem outWarehouseOrderItemParam = new OutWarehouseOrderItem();
-//			outWarehouseOrderItemParam.setOutWarehouseOrderId(bigPackageId);
-//			List<OutWarehouseOrderItem> outWarehouseOrderItemList = outWarehouseOrderItemDao.findOutWarehouseOrderItem(outWarehouseOrderItemParam, null, null);
-//			for (OutWarehouseOrderItem outWarehouseOrderItem : outWarehouseOrderItemList) {
-//				itemStr += outWarehouseOrderItem.getSku() + "*" + outWarehouseOrderItem.getQuantity() + " ";
-//			}
-//			map.put("items", itemStr);
+			String littlePackages = "";
+			LittlePackage littlePackageParam = new LittlePackage();
+			littlePackageParam.setBigPackageId(bigPackageId);
+			List<LittlePackage> littlePackageList = littlePackageDao.findLittlePackage(littlePackageParam, null, null);
+			for (LittlePackage littlePackage : littlePackageList) {
+				littlePackages += littlePackage.getTrackingNo() + " ; ";
+			}
+			map.put("littlePackages", littlePackages);
 			list.add(map);
 		}
 		pagination.total = bigPackageDao.countBigPackage(param, moreParam);
@@ -389,4 +397,47 @@ public class TransportServiceImpl implements ITransportService {
 		return pagination;
 	}
 
+	@Override
+	public List<Map<String, Object>> getLittlePackageItems(Long bigPackageId) throws ServiceException {
+		LittlePackage param = new LittlePackage();
+		param.setBigPackageId(bigPackageId);
+		List<Map<String, Object>> mapList = new ArrayList<Map<String, Object>>();
+		List<LittlePackage> littlePackageList = littlePackageDao.findLittlePackage(param, null, null);
+		for (LittlePackage littlePackage : littlePackageList) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("trackingNo", littlePackage.getTrackingNo());
+			map.put("poNo", littlePackage.getPoNo());
+			map.put("carrierCode", littlePackage.getCarrierCode());
+			LittlePackageStatus littlePackageStatus = littlePackageStatusDao.findLittlePackageStatusByCode(littlePackage.getStatus());
+			if (littlePackageStatus != null) {
+				map.put("status", littlePackageStatus.getCn());
+			}
+			if (littlePackage.getReceivedTime() != null) {
+				String receivedTime = DateUtil.dateConvertString(new Date(littlePackage.getReceivedTime()), DateUtil.yyyy_MM_ddHHmmss);
+				map.put("receivedTime", receivedTime);
+			} else {
+				map.put("receivedTime", "");
+			}
+			if (littlePackage.getCreatedTime() != null) {
+				String createdTime = DateUtil.dateConvertString(new Date(littlePackage.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss);
+				map.put("createdTime", createdTime);
+			}
+			if (StringUtil.isEqual(littlePackage.getCallbackIsSuccess(), Constant.Y)) {
+				map.put("callbackIsSuccess", "成功");
+			} else {
+				if (littlePackage.getCallbackCount() != null && littlePackage.getCallbackCount() > 0) {
+					map.put("callbackIsSuccess", "失败次数:" + littlePackage.getCallbackCount());
+				} else {
+					map.put("callbackIsSuccess", "未回传");
+				}
+			}
+			// 获取小包内物品详情
+			LittlePackageItem littlePackageItemParam = new LittlePackageItem();
+			littlePackageItemParam.setLittlePackageId(littlePackage.getId());
+			List<LittlePackageItem> littlePackageItemList = littlePackageItemDao.findLittlePackageItem(littlePackageItemParam, null, null);
+			map.put("littlePackageItemList", littlePackageItemList);
+			mapList.add(map);
+		}
+		return mapList;
+	}
 }

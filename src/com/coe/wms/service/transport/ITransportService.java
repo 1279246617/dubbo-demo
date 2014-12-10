@@ -45,5 +45,7 @@ public interface ITransportService {
 	 * @param page
 	 * @return
 	 */
-	public Pagination getBigPackageData(BigPackage bigPackage, Map<String, String> moreParam, Pagination page);
+	public Pagination getBigPackageData(BigPackage bigPackage, Map<String, String> moreParam, Pagination page) throws ServiceException;
+
+	public List<Map<String, Object>> getLittlePackageItems(Long bigPackageId) throws ServiceException;
 }

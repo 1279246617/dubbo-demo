@@ -45,7 +45,7 @@ public class LittlePackageItemDaoImpl implements ILittlePackageItemDao {
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public long saveLittlePackageItem(final LittlePackageItem item) {
-		final String sql = "insert into w_t_little_package_item (little_package_id,quantity,sku,sku_name,sku_unit_price,sku_price_currency,remark,sku_net_weight,sku_no,specification) values (?,?,?,?,?,?,?,?,?,?)";
+		final String sql = "insert into w_t_little_package_item (little_package_id,quantity,sku,sku_name,sku_unit_price,sku_price_currency,remark,sku_net_weight,sku_no,specification,big_package_id) values (?,?,?,?,?,?,?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
@@ -68,6 +68,7 @@ public class LittlePackageItemDaoImpl implements ILittlePackageItemDao {
 				}
 				ps.setString(9, item.getSkuNo());
 				ps.setString(10, item.getSpecification());
+				ps.setLong(11, item.getBigPackageId());
 				return ps;
 			}
 		}, keyHolder);
@@ -81,7 +82,7 @@ public class LittlePackageItemDaoImpl implements ILittlePackageItemDao {
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public int saveBatchLittlePackageItem(final List<LittlePackageItem> itemList) {
-		final String sql = "insert into w_t_little_package_item (little_package_id,quantity,sku,sku_name,sku_unit_price,sku_price_currency,remark,sku_net_weight,sku_no,specification) values (?,?,?,?,?,?,?,?,?,?)";
+		final String sql = "insert into w_t_little_package_item (little_package_id,quantity,sku,sku_name,sku_unit_price,sku_price_currency,remark,sku_net_weight,sku_no,specification,big_package_id) values (?,?,?,?,?,?,?,?,?,?,?)";
 		int[] batchUpdateSize = jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
 			@Override
 			public void setValues(PreparedStatement ps, int i) throws SQLException {
@@ -104,6 +105,7 @@ public class LittlePackageItemDaoImpl implements ILittlePackageItemDao {
 				}
 				ps.setString(9, item.getSkuNo());
 				ps.setString(10, item.getSpecification());
+				ps.setLong(11, item.getBigPackageId());
 			}
 
 			@Override
@@ -117,7 +119,7 @@ public class LittlePackageItemDaoImpl implements ILittlePackageItemDao {
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public int saveBatchLittlePackageItemWithLittlePackageId(final List<LittlePackageItem> itemList, final Long littlePackageId) {
-		final String sql = "insert into w_t_little_package_item (little_package_id,quantity,sku,sku_name,sku_unit_price,sku_price_currency,remark,sku_net_weight,sku_no,specification) values (?,?,?,?,?,?,?,?,?,?)";
+		final String sql = "insert into w_t_little_package_item (little_package_id,quantity,sku,sku_name,sku_unit_price,sku_price_currency,remark,sku_net_weight,sku_no,specification,big_package_id) values (?,?,?,?,?,?,?,?,?,?,?)";
 		int[] batchUpdateSize = jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
 			@Override
 			public void setValues(PreparedStatement ps, int i) throws SQLException {
@@ -140,8 +142,9 @@ public class LittlePackageItemDaoImpl implements ILittlePackageItemDao {
 				}
 				ps.setString(9, item.getSkuNo());
 				ps.setString(10, item.getSpecification());
+				ps.setLong(11, item.getBigPackageId());
 			}
-
+			
 			@Override
 			public int getBatchSize() {
 				return itemList.size();
@@ -162,7 +165,7 @@ public class LittlePackageItemDaoImpl implements ILittlePackageItemDao {
 	@Override
 	public List<LittlePackageItem> findLittlePackageItem(LittlePackageItem littlePackageItem, Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select id,little_package_id,quantity,sku,sku_name,sku_unit_price,sku_price_currency,remark,sku_net_weight,sku_no,specification from w_t_little_package_item where 1=1 ");
+		sb.append("select id,little_package_id,quantity,sku,sku_name,sku_unit_price,sku_price_currency,remark,sku_net_weight,sku_no,specification,big_package_id from w_t_little_package_item where 1=1 ");
 		if (littlePackageItem != null) {
 			if (StringUtil.isNotNull(littlePackageItem.getSku())) {
 				sb.append(" and sku = '" + littlePackageItem.getSku() + "' ");
@@ -187,6 +190,9 @@ public class LittlePackageItemDaoImpl implements ILittlePackageItemDao {
 			}
 			if (littlePackageItem.getLittlePackageId() != null) {
 				sb.append(" and little_package_id = " + littlePackageItem.getLittlePackageId());
+			}
+			if (littlePackageItem.getBigPackageId() != null) {
+				sb.append(" and big_package_id = " + littlePackageItem.getBigPackageId());
 			}
 			if (littlePackageItem.getId() != null) {
 				sb.append(" and id = '" + littlePackageItem.getId() + "' ");
