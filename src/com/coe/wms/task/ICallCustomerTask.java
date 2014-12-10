@@ -16,4 +16,10 @@ public interface ICallCustomerTask {
 	 * 回传出库状态给客户(出库的最后步骤)
 	 */
 	public void sendOutWarehouseStatusToCustomer();
+
+	/**
+	 * 回传转运订单审核结果给客户
+	 */
+	public void sendBigPackageCheckResultToCustomer();
+	
 }

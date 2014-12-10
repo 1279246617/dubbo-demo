@@ -8,6 +8,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
@@ -49,8 +50,12 @@ import com.coe.wms.pojo.api.warehouse.Buyer;
 import com.coe.wms.pojo.api.warehouse.ClearanceDetail;
 import com.coe.wms.pojo.api.warehouse.ErrorCode;
 import com.coe.wms.pojo.api.warehouse.EventBody;
+import com.coe.wms.pojo.api.warehouse.EventHeader;
+import com.coe.wms.pojo.api.warehouse.EventType;
 import com.coe.wms.pojo.api.warehouse.Item;
 import com.coe.wms.pojo.api.warehouse.LogisticsDetail;
+import com.coe.wms.pojo.api.warehouse.LogisticsEvent;
+import com.coe.wms.pojo.api.warehouse.LogisticsEventsRequest;
 import com.coe.wms.pojo.api.warehouse.LogisticsOrder;
 import com.coe.wms.pojo.api.warehouse.Response;
 import com.coe.wms.pojo.api.warehouse.Responses;
@@ -61,6 +66,7 @@ import com.coe.wms.service.transport.ITransportService;
 import com.coe.wms.util.Config;
 import com.coe.wms.util.Constant;
 import com.coe.wms.util.DateUtil;
+import com.coe.wms.util.HttpUtil;
 import com.coe.wms.util.NumberUtil;
 import com.coe.wms.util.Pagination;
 import com.coe.wms.util.StringUtil;
@@ -479,7 +485,11 @@ public class TransportServiceImpl implements ITransportService {
 			map.put(Constant.MESSAGE, "审核结果(checkResult)为空,无法处理");
 			return map;
 		}
-
+		String logisticsCode = "SUCCESS";// 审核通过
+		if (checkResult == 0) {
+			// SECURITY 包裹安全监测不通过
+			logisticsCode = "OTHER_REASON";// 其他异常
+		}
 		int updateQuantity = 0;
 		int noUpdateQuantity = 0;
 		String bigPackageIdArr[] = bigPackageIds.split(",");
@@ -496,7 +506,8 @@ public class TransportServiceImpl implements ITransportService {
 				continue;
 			}
 			// 执行审核,并立即返回通知顺丰,如果顺丰无返回,不能审核通过
-
+			BigPackage bigPackage = bigPackageDao.getBigPackageById(bigPackageIdLong);
+			
 		}
 		return map;
 	}

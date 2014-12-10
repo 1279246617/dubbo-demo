@@ -79,7 +79,7 @@ public class BigPackageDaoImpl implements IBigPackageDao {
 
 	@Override
 	public BigPackage getBigPackageById(Long bigPackageId) {
-		String sql = "select id,warehouse_id,user_id_of_customer,user_id_of_operator,shipway_code,created_time,status,remark,customer_reference_no,callback_send_weight_is_success,callback_send_weigh_count,callback_send_status_is_success,callback_send_status_count,out_warehouse_weight,weight_code,trade_remark,tracking_no from w_t_big_package where id ="
+		String sql = "select id,warehouse_id,user_id_of_customer,user_id_of_operator,shipway_code,created_time,status,remark,customer_reference_no,callback_send_weight_is_success,callback_send_weigh_count,callback_send_status_is_success,callback_send_status_count,out_warehouse_weight,weight_code,trade_remark,tracking_no,callback_send_check_is_success,callback_send_check_count,check_result from w_t_big_package where id ="
 				+ bigPackageId;
 		BigPackage bigPackage = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<BigPackage>(BigPackage.class));
 		return bigPackage;
@@ -92,7 +92,7 @@ public class BigPackageDaoImpl implements IBigPackageDao {
 	@Override
 	public List<BigPackage> findBigPackage(BigPackage bigPackage, Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select id,warehouse_id,user_id_of_customer,user_id_of_operator,shipway_code,created_time,status,remark,customer_reference_no,callback_send_weight_is_success,callback_send_weigh_count,callback_send_status_is_success,callback_send_status_count,out_warehouse_weight,weight_code,trade_remark,tracking_no from w_t_big_package where 1=1 ");
+		sb.append("select id,warehouse_id,user_id_of_customer,user_id_of_operator,shipway_code,created_time,status,remark,customer_reference_no,callback_send_weight_is_success,callback_send_weigh_count,callback_send_status_is_success,callback_send_status_count,out_warehouse_weight,weight_code,trade_remark,tracking_no,callback_send_check_is_success,callback_send_check_count,check_result from w_t_big_package where 1=1 ");
 		if (moreParam != null && StringUtil.isNotNull(moreParam.get("nos"))) {
 			// 按单号 批量查询 开始---------------
 			String noType = moreParam.get("noType");
@@ -135,13 +135,18 @@ public class BigPackageDaoImpl implements IBigPackageDao {
 				if (StringUtil.isNotNull(bigPackage.getRemark())) {
 					sb.append(" and remark = '" + bigPackage.getRemark() + "' ");
 				}
+				if (StringUtil.isNotNull(bigPackage.getCallbackSendCheckIsSuccess())) {
+					sb.append(" and callback_send_check_is_success = '" + bigPackage.getCallbackSendCheckIsSuccess() + "' ");
+				}
+				if (bigPackage.getCallbackSendCheckCount() != null) {
+					sb.append(" and callback_send_check_count = " + bigPackage.getCallbackSendCheckCount());
+				}
 				if (StringUtil.isNotNull(bigPackage.getCallbackSendWeightIsSuccess())) {
 					sb.append(" and callback_send_weight_is_success = '" + bigPackage.getCallbackSendWeightIsSuccess() + "' ");
 				}
 				if (bigPackage.getCallbackSendWeighCount() != null) {
 					sb.append(" and callback_send_weigh_count = " + bigPackage.getCallbackSendWeighCount());
 				}
-
 				if (StringUtil.isNotNull(bigPackage.getCallbackSendStatusIsSuccess())) {
 					sb.append(" and callback_send_status_is_success = '" + bigPackage.getCallbackSendStatusIsSuccess() + "' ");
 				}
@@ -151,14 +156,17 @@ public class BigPackageDaoImpl implements IBigPackageDao {
 				if (bigPackage.getOutWarehouseWeight() != null) {
 					sb.append(" and out_warehouse_weight = " + bigPackage.getOutWarehouseWeight());
 				}
-				if (bigPackage.getWeightCode() != null) {
+				if (StringUtil.isNotNull(bigPackage.getWeightCode())) {
 					sb.append(" and weight_code = '" + bigPackage.getWeightCode() + "'");
 				}
-				if (bigPackage.getTradeRemark() != null) {
+				if (StringUtil.isNotNull(bigPackage.getTradeRemark())) {
 					sb.append(" and trade_remark = '" + bigPackage.getTradeRemark() + "'");
 				}
-				if (bigPackage.getTrackingNo() != null) {
+				if (StringUtil.isNotNull(bigPackage.getTrackingNo())) {
 					sb.append(" and tracking_no = '" + bigPackage.getTrackingNo() + "'");
+				}
+				if (StringUtil.isNotNull(bigPackage.getCheckResult())) {
+					sb.append(" and check_result = '" + bigPackage.getCheckResult() + "'");
 				}
 				if (StringUtil.isNotNull(bigPackage.getCustomerReferenceNo())) {
 					sb.append(" and customer_reference_no = '" + bigPackage.getCustomerReferenceNo() + "' ");
@@ -234,13 +242,18 @@ public class BigPackageDaoImpl implements IBigPackageDao {
 				if (StringUtil.isNotNull(bigPackage.getRemark())) {
 					sb.append(" and remark = '" + bigPackage.getRemark() + "' ");
 				}
+				if (StringUtil.isNotNull(bigPackage.getCallbackSendCheckIsSuccess())) {
+					sb.append(" and callback_send_check_is_success = '" + bigPackage.getCallbackSendCheckIsSuccess() + "' ");
+				}
+				if (bigPackage.getCallbackSendCheckCount() != null) {
+					sb.append(" and callback_send_check_count = " + bigPackage.getCallbackSendCheckCount());
+				}
 				if (StringUtil.isNotNull(bigPackage.getCallbackSendWeightIsSuccess())) {
 					sb.append(" and callback_send_weight_is_success = '" + bigPackage.getCallbackSendWeightIsSuccess() + "' ");
 				}
 				if (bigPackage.getCallbackSendWeighCount() != null) {
 					sb.append(" and callback_send_weigh_count = " + bigPackage.getCallbackSendWeighCount());
 				}
-
 				if (StringUtil.isNotNull(bigPackage.getCallbackSendStatusIsSuccess())) {
 					sb.append(" and callback_send_status_is_success = '" + bigPackage.getCallbackSendStatusIsSuccess() + "' ");
 				}
@@ -258,6 +271,9 @@ public class BigPackageDaoImpl implements IBigPackageDao {
 				}
 				if (bigPackage.getTrackingNo() != null) {
 					sb.append(" and tracking_no = '" + bigPackage.getTrackingNo() + "'");
+				}
+				if (StringUtil.isNotNull(bigPackage.getCheckResult())) {
+					sb.append(" and check_result = '" + bigPackage.getCheckResult() + "'");
 				}
 				if (StringUtil.isNotNull(bigPackage.getCustomerReferenceNo())) {
 					sb.append(" and customer_reference_no = '" + bigPackage.getCustomerReferenceNo() + "' ");
@@ -354,6 +370,26 @@ public class BigPackageDaoImpl implements IBigPackageDao {
 	@Override
 	public int updateBigPackageWeight(BigPackage bigPackage) {
 		String sql = "update w_t_big_package set out_warehouse_weight=" + bigPackage.getOutWarehouseWeight() + ",weight_code='" + bigPackage.getWeightCode() + "' , status='" + bigPackage.getStatus() + "' where id=" + bigPackage.getId();
+		return jdbcTemplate.update(sql);
+	}
+
+	@Override
+	public List<Long> findCallbackSendCheckUnSuccessBigPackageId() {
+		String sql = "select id from w_t_big_package where status ='" + BigPackageStatusCode.WCI + "' and (callback_send_check_is_success = 'N' or  callback_send_check_is_success is null)";
+		List<Long> bigPackageIdList = jdbcTemplate.queryForList(sql, Long.class);
+		return bigPackageIdList;
+	}
+
+	@Override
+	public int updateBigPackageCallbackSendCheck(BigPackage bigPackage) {
+		String sql = "update w_t_big_package set callback_send_check_is_success='" + bigPackage.getCallbackSendStatusIsSuccess() + "' ,callback_send_check_count = " + bigPackage.getCallbackSendStatusCount() + " , status='" + bigPackage.getStatus()
+				+ "' where id=" + bigPackage.getId();
+		return jdbcTemplate.update(sql);
+	}
+
+	@Override
+	public int updateBigPackageCheckResult(Long bigPackageId, String checkResult) {
+		String sql = "update w_t_big_package set check_result = '" + checkResult + "' where id = " + bigPackageId;
 		return jdbcTemplate.update(sql);
 	}
 }

@@ -30,7 +30,7 @@ public class BigPackage implements Serializable {
 	 * 订单所属客户id
 	 */
 	private Long userIdOfCustomer;
-	
+
 	/**
 	 * 订单所属操作员id
 	 */
@@ -76,6 +76,29 @@ public class BigPackage implements Serializable {
 	private String status;
 
 	/**
+	 * SUCCESS：接单 SECURITY：包裹安全监测不通过 OTHER_REASON：其他异常
+	 */
+	private String checkResult;
+
+	public String getCheckResult() {
+		return checkResult;
+	}
+
+	public void setCheckResult(String checkResult) {
+		this.checkResult = checkResult;
+	}
+
+	/**
+	 * 回调审核是否成功 Y 成功 N或者空失败
+	 */
+	private String callbackSendCheckIsSuccess;
+
+	/**
+	 * 回调次数
+	 */
+	private Integer callbackSendCheckCount;
+
+	/**
 	 * 回调称重是否成功 Y 成功 N或者空失败
 	 */
 	private String callbackSendWeightIsSuccess;
@@ -112,6 +135,22 @@ public class BigPackage implements Serializable {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public String getCallbackSendCheckIsSuccess() {
+		return callbackSendCheckIsSuccess;
+	}
+
+	public void setCallbackSendCheckIsSuccess(String callbackSendCheckIsSuccess) {
+		this.callbackSendCheckIsSuccess = callbackSendCheckIsSuccess;
+	}
+
+	public Integer getCallbackSendCheckCount() {
+		return callbackSendCheckCount;
+	}
+
+	public void setCallbackSendCheckCount(Integer callbackSendCheckCount) {
+		this.callbackSendCheckCount = callbackSendCheckCount;
 	}
 
 	public Long getWarehouseId() {

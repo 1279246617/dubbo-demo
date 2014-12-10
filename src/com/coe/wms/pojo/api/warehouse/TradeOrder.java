@@ -3,7 +3,10 @@ package com.coe.wms.pojo.api.warehouse;
 import java.io.Serializable;
 import java.util.List;
 
-public class TradeOrder implements Serializable{
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+
+public class TradeOrder implements Serializable {
 
 	/**
 	 * 
@@ -42,6 +45,8 @@ public class TradeOrder implements Serializable{
 		this.buyer = buyer;
 	}
 
+	@XmlElementWrapper(name = "items")
+	@XmlElement(name = "item")
 	public List<Item> getItems() {
 		return items;
 	}
