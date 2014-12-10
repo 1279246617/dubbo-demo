@@ -19,12 +19,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.coe.wms.controller.Application;
 import com.coe.wms.model.user.User;
-import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrder;
-import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderItem;
-import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus;
 import com.coe.wms.model.warehouse.transport.BigPackage;
 import com.coe.wms.model.warehouse.transport.BigPackageStatus;
-import com.coe.wms.model.warehouse.transport.LittlePackage;
 import com.coe.wms.service.storage.IStorageService;
 import com.coe.wms.service.transport.ITransportService;
 import com.coe.wms.service.user.IUserService;
@@ -155,4 +151,22 @@ public class Transport {
 		List<Map<String, Object>> littlePackageItems = transportService.getLittlePackageItems(bigPackageId);
 		return GsonUtil.toJson(littlePackageItems);
 	}
+
+	/**
+	 * 
+	 * 审核转运大包
+	 * 
+	 * checkResult:1 审核通过 2审核不通过
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/checkBigPackage")
+	public synchronized String checkBigPackage(HttpServletRequest request, String bigPackageIds, Integer checkResult) throws IOException {
+		HttpSession session = request.getSession();
+		// 当前操作员
+		Long userIdOfOperator = (Long) session.getAttribute(SessionConstant.USER_ID);
+		logger.info("审核转运订单 操作员id:" + userIdOfOperator + " checkResult:" + checkResult + " 订单:" + bigPackageIds);
+		Map<String, String> checkResultMap = transportService.checkBigPackage(bigPackageIds, checkResult, userIdOfOperator);
+		return GsonUtil.toJson(checkResultMap);
+	}
+
 }
