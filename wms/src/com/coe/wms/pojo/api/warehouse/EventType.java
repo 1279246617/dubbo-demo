@@ -36,4 +36,10 @@ public class EventType {
 	 * 转运订单入库
 	 */
 	public static final String LOGISTICS_TRADE_PAID = "LOGISTICS_TRADE_PAID";
+
+	/**
+	 * 回传审单
+	 */
+	public static final String WMS_CHECK_ORDER = "WMS_CHECK_ORDER";
+
 }
