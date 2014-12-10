@@ -32,6 +32,11 @@ public class LogisticsOrder implements Serializable {
 	 */
 	private String skuStockInId;
 
+	/**
+	 * 物流订单中包含的商品，id列表用,分割，或者是仓配物品
+	 */
+	private String itemsIncluded;
+
 	private String segmentCode;
 
 	private String poNo;
@@ -72,6 +77,14 @@ public class LogisticsOrder implements Serializable {
 
 	public String getLogisticsRemark() {
 		return logisticsRemark;
+	}
+
+	public String getItemsIncluded() {
+		return itemsIncluded;
+	}
+
+	public void setItemsIncluded(String itemsIncluded) {
+		this.itemsIncluded = itemsIncluded;
 	}
 
 	public void setLogisticsRemark(String logisticsRemark) {

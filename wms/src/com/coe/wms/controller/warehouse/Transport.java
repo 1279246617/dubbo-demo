@@ -20,9 +20,11 @@ import org.springframework.web.servlet.ModelAndView;
 import com.coe.wms.controller.Application;
 import com.coe.wms.model.user.User;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrder;
+import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderItem;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus;
 import com.coe.wms.model.warehouse.transport.BigPackage;
 import com.coe.wms.model.warehouse.transport.BigPackageStatus;
+import com.coe.wms.model.warehouse.transport.LittlePackage;
 import com.coe.wms.service.storage.IStorageService;
 import com.coe.wms.service.transport.ITransportService;
 import com.coe.wms.service.user.IUserService;
@@ -93,6 +95,8 @@ public class Transport {
 		view.addObject("userId", userId);
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
 		User user = userService.getUserById(userId);
+		List<BigPackageStatus> bigPackageStatusList = transportService.findAllBigPackageStatus();
+		view.addObject("bigPackageStatusList", bigPackageStatusList);
 		view.addObject("warehouseList", storageService.findAllWarehouse(user.getDefaultWarehouseId()));
 		view.setViewName("warehouse/transport/listWaitCheckBigPackage");
 		return view;
@@ -145,4 +149,10 @@ public class Transport {
 		return GsonUtil.toJson(map);
 	}
 
+	@ResponseBody
+	@RequestMapping(value = "/getLittlePackageItemByBigPackageId", method = RequestMethod.POST)
+	public String getLittlePackageItemByBigPackageId(Long bigPackageId) {
+		List<Map<String, Object>> littlePackageItems = transportService.getLittlePackageItems(bigPackageId);
+		return GsonUtil.toJson(littlePackageItems);
+	}
 }
