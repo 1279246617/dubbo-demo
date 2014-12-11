@@ -271,6 +271,7 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 						logger.debug("回传SKU入库信息失败");
 					}
 				} else {
+					inWarehouseRecord.setCallbackIsSuccess(Constant.N);
 					logger.error("回传SKU入库信息 返回无指明成功与否");
 				}
 				// 更新入库记录的Callback 次数和成功状态
@@ -371,6 +372,7 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 						logger.debug("回传SKU出库称重信息失败");
 					}
 				} else {
+					outWarehouseOrder.setCallbackSendWeightIsSuccess(Constant.N);
 					logger.error("回传SKU出库称重信息,返回无指明成功与否");
 				}
 				// 更新入库记录的Callback 次数和成功状态
@@ -470,6 +472,7 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 						logger.debug("回传SKU出库状态信息失败");
 					}
 				} else {
+					outWarehouseOrder.setCallbackSendStatusIsSuccess(Constant.N);
 					logger.error("回传SKU出库状态信息,返回无指明成功与否");
 				}
 				// 更新入库记录的Callback 次数和成功状态
@@ -817,12 +820,11 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 	/**
 	 * 回传转运出库给客户
 	 */
-//	@Scheduled(cron = "0 0/15 8-23 * * ? ")
-	@Scheduled(cron = "10 * 8-23 * * ? ")
+	@Scheduled(cron = "0 0/15 8-23 * * ? ")
 	@Override
 	public void sendBigPackageStatusToCustomer() {
 		List<Long> bigPackageIdList = bigPackageDao.findCallbackSendStatusUnSuccessBigPackageId();
-		logger.debug("找到待回传转运出库状态,订单总数:" + bigPackageIdList.size());
+		logger.info("找到待回传转运出库状态,订单总数:" + bigPackageIdList.size());
 		// 根据id 获取记录
 		for (int i = 0; i < bigPackageIdList.size(); i++) {
 			Long bigPackageId = bigPackageIdList.get(i);
@@ -881,12 +883,12 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 			basicNameValuePairs.add(new BasicNameValuePair("data_digest", dataDigest));
 			basicNameValuePairs.add(new BasicNameValuePair("version", "1.0"));
 			String url = user.getOppositeServiceUrl();
-			logger.debug("回传转运订单出库状态信息: url=" + url);
-			logger.debug("回传转运订单出库状态信息: logistics_interface=" + xml);
-			logger.debug("回传转运订单出库状态信息: data_digest=" + dataDigest + " msg_source=" + msgSource + " msg_type=" + serviceNameSendStatus + " logistics_provider_id=" + warehouse.getWarehouseNo());
+			logger.info("回传转运订单出库状态信息: url=" + url);
+			logger.info("回传转运订单出库状态信息: logistics_interface=" + xml);
+			logger.info("回传转运订单出库状态信息: data_digest=" + dataDigest + " msg_source=" + msgSource + " msg_type=" + serviceNameSendStatus + " logistics_provider_id=" + warehouse.getWarehouseNo());
 			try {
 				String response = HttpUtil.postRequest(url, basicNameValuePairs);
-				logger.debug("顺丰返回:" + response);
+				logger.info("顺丰返回:" + response);
 				bigPackage.setCallbackSendStatusCount(bigPackage.getCallbackSendStatusCount() == null ? 1 : bigPackage.getCallbackSendStatusCount() + 1);
 				Responses responses = (Responses) XmlUtil.toObject(response, Responses.class);
 				if (responses == null) {
@@ -903,6 +905,7 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 						logger.debug("回传转运订单出库状态信息失败");
 					}
 				} else {
+					bigPackage.setCallbackSendStatusIsSuccess(Constant.N);
 					logger.error("回传转运订单出库状态信息,返回无指明成功与否");
 				}
 				// 更新入库记录的Callback 次数和成功状态
