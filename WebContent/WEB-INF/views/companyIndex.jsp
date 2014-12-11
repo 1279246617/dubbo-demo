@@ -85,7 +85,7 @@
 						<ul class="nav nav-tabs nav-stacked" style="margin-bottom:0px;">	
 		              		<li><a href="#${baseUrl}/warehouse/transport/listBigPackage.do" tab_id="findBigPackage"><i class="icon-list"></i><span class="hidden-tablet">转运订单</span></a></li>
 		              		<li><a href=#${baseUrl}/warehouse/transport/listWaitCheckBigPackage.do  tab_id="waitCheckBigPackage"><i class="icon-eye-open"></i><span class="hidden-tablet">待审核转运订单</span></a></li>
-		              		<li><a href="#${baseUrl}/warehouse/transport/listLittlePackage.do" tab_id="findLittlePackage"><i class="icon-list"></i><span class="hidden-tablet">转运订单详情</span></a></li>
+		              		<li><a href="#${baseUrl}/warehouse/transport/listLittlePackage.do" tab_id="findLittlePackage"><i class="icon-list"></i><span class="hidden-tablet">转运订单小包</span></a></li>
 		                </ul>
 		        </div>
 		        
@@ -114,16 +114,15 @@
 		        
 		        <div title="转运管理" class=" nav-collapse sidebar-nav">
 		              <ul class="nav nav-tabs nav-stacked ">	
-		              		<li><a href="#${baseUrl}/warehouse/storage/inWarehouse.do" tab_id="doInWarehouse"><i class="icon-arrow-right"></i><span class="hidden-tablet">转运订单收货</span></a></li>
-		              		<!-- 入库主单查询 条件: 客户帐号,创建时间段,仓库,入库批次号 -->
-		              		<li><a href="#${baseUrl}/warehouse/storage/listInWarehouseRecord.do" tab_id="findInWarehouseOrderRecord"><i class="icon-list"></i><span class="hidden-tablet">转运收货记录</span></a></li>
-		              		<!-- 入库明细查询 条件: SKU, 数量, 主单号,批次号,客户帐号,时间,产品描述 -->
-		              		<li><a href="#${baseUrl}/warehouse/storage/listInWarehouseRecordItem.do"tab_id="findInWarehouseItemRecordItem"><i class="icon-list"></i><span class="hidden-tablet">转运收货明细记录</span></a></li>
-			              	<!-- (扫SKU和数量 是否和出库订单一样) -->	
-		              		<li><a href="#${baseUrl}/warehouse/storage/outWarehouseCheckPackage.do" tab_id="doOutWarehouse"><i class="icon-inbox"></i><span class="hidden-tablet">转运称重打单</span></a></li>
-		              		<li><a href="#${baseUrl}/warehouse/storage/outWarehousePackage.do" tab_id="outWarehousePackage"><i class="icon-th"></i><span class="hidden-tablet">扫描建包</span></a></li>
-		              		<li><a href="#${baseUrl}/warehouse/storage/outWarehouseShipping.do" tab_id="outWarehouseShipping"><i class="icon-plane"></i><span class="hidden-tablet">扫描发货</span></a></li>
-		              		<li><a href="#${baseUrl}/warehouse/storage/listOutWarehousePackage.do" tab_id="findOutWarehousePackage"><i class="icon-list"></i><span class="hidden-tablet">出库建包记录</span></a></li>
+		              		<li><a href="#${baseUrl}/warehouse/transport/inWarehouse.do" tab_id="doTransportInWarehouse"><i class="icon-arrow-right"></i><span class="hidden-tablet">小包收货</span></a></li>
+		              		<!-- 以小包为单位,每次收货也是收小包-->
+		              		<li><a href="#${baseUrl}/warehouse/transport/listInWarehouseRecord.do" tab_id="findtransportInWarehouseOrderRecord"><i class="icon-list"></i><span class="hidden-tablet">小包收货记录</span></a></li>
+		              		<li><a href="#${baseUrl}/warehouse/transport/outWarehouseCheckPackage.do" tab_id="dotransportOutWarehouse"><i class="icon-arrow-up"></i><span class="hidden-tablet">小包上架</span></a></li>
+		              		<li><a href="#${baseUrl}/warehouse/transport/listInWarehouseRecord.do" tab_id="findtransportInWarehouseOrderRecord"><i class="icon-list"></i><span class="hidden-tablet">小包上架记录</span></a></li>
+		              		
+		              		<li><a href="#${baseUrl}/warehouse/transport/outWarehouseCheckPackage.do" tab_id="dotransportOutWarehouse"><i class="icon-inbox"></i><span class="hidden-tablet">合大包称重打单</span></a></li>
+		              		<li><a href="#${baseUrl}/warehouse/transport/outWarehouseShipping.do" tab_id="outtransportWarehouseShipping"><i class="icon-plane"></i><span class="hidden-tablet">扫描大包发货</span></a></li>
+		              		<li><a href="#${baseUrl}/warehouse/transport/listOutWarehousePackage.do" tab_id="findtransportOutWarehousePackage"><i class="icon-list"></i><span class="hidden-tablet">大包发货记录</span></a></li>
 		                </ul>
 		        </div>
 		         <div title="用户管理" class=" nav-collapse sidebar-nav">

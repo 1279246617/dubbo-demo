@@ -87,10 +87,10 @@
 									<td style="width:15mm;">
 											${ status.index + 1}
 									</td>
-									<td style="width:40mm;">${item.sku }</td>
+									<td style="width:40mm;font-size: 16px;"><b>${item.sku }</b></td>
 									<td style="width:60mm;">${item.skuName }</td>
 									<td style="width:24mm;">${item.specification }</td>
-									<td style="width:24mm;">${item.seatCode}</td>
+									<td style="width:24mm;font-size: 18px;"><b>${item.seatCode}</b></td>
 									<td style="width:14mm;">${item.quantity }</td>
 									
 <%-- 									${item.skuPriceCurrency}  --%>
