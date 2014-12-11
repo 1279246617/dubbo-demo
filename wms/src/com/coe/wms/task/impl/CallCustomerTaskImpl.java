@@ -475,7 +475,7 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 	/**
 	 * 回传出库状态给客户(出库的最后步骤)
 	 */
-//	@Scheduled(cron = "0 0/15 * * * ? ")
+	// @Scheduled(cron = "0 0/15 * * * ? ")
 	@Scheduled(cron = "1 * * * * ? ")
 	@Override
 	public void sendBigPackageCheckResultToCustomer() {
@@ -528,6 +528,7 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 			LogisticsDetail logisticsDetail = new LogisticsDetail();
 			logisticsDetail.setLogisticsOrders(logisticsOrders);
 			eventBody.setLogisticsDetail(logisticsDetail);
+			logisticsEvent.setEventBody(eventBody);
 			logisticsEventsRequest.setLogisticsEvent(logisticsEvent);
 			String xml = XmlUtil.toXml(LogisticsEventsRequest.class, logisticsEventsRequest);
 
@@ -545,22 +546,31 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 			basicNameValuePairs.add(new BasicNameValuePair("data_digest", dataDigest));
 			basicNameValuePairs.add(new BasicNameValuePair("version", "1.0"));
 			String url = user.getOppositeServiceUrl();
-			logger.debug("回传转运订单审核: url=" + url);
-			logger.debug("回传转运订单审核: logistics_interface=" + xml);
-			logger.debug("回传转运订单审核: data_digest=" + dataDigest + " msg_source=" + msgSource + " msg_type=" + serviceNameSkuStockin + " logistics_provider_id=" + warehouse.getWarehouseNo());
+			logger.info("回传转运订单审核: url=" + url);
+			logger.info("回传转运订单审核: logistics_interface=" + xml);
+			logger.info("回传转运订单审核: data_digest=" + dataDigest + " msg_source=" + msgSource + " msg_type=" + serviceNameSkuStockin + " logistics_provider_id=" + warehouse.getWarehouseNo());
 			try {
 				String response = HttpUtil.postRequest(url, basicNameValuePairs);
-				logger.debug("顺丰返回:" + response);
-				bigPackage.setCallbackSendCheckCount(bigPackage.getCallbackSendCheckCount() == null ? 0 : bigPackage.getCallbackSendCheckCount() + 1);
+				logger.info("顺丰返回:" + response);
+				bigPackage.setCallbackSendCheckCount(bigPackage.getCallbackSendCheckCount() == null ? 1 : bigPackage.getCallbackSendCheckCount() + 1);
 				Responses responses = (Responses) XmlUtil.toObject(response, Responses.class);
 				if (responses == null) {
 					logger.error("回传转运订单审核 返回信息无法转换成Responses对象");
 					continue;
 				}
+				String newStatus = "";
 				List<Response> responseList = responses.getResponseItems();
 				if (responseList != null && responseList.size() > 0) {
 					if (StringUtil.isEqualIgnoreCase(responseList.get(0).getSuccess(), Constant.TRUE)) {
 						bigPackage.setCallbackSendCheckIsSuccess(Constant.Y);
+						if (StringUtil.isEqual(bigPackage.getCheckResult(), "SUCCESS")) {
+							newStatus = BigPackageStatusCode.WRG;
+						} else if (StringUtil.isEqual(bigPackage.getCheckResult(), "SECURITY")) {
+							newStatus = BigPackageStatusCode.WCF;
+						} else if (StringUtil.isEqual(bigPackage.getCheckResult(), "OTHER_REASON")) {
+							newStatus = BigPackageStatusCode.WCF;
+						}
+						bigPackage.setStatus(newStatus);
 						logger.debug("回传转运订单审核成功");
 					} else {
 						bigPackage.setCallbackSendCheckIsSuccess(Constant.N);
@@ -568,19 +578,11 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 					}
 				} else {
 					logger.error("回传转运订单审核 返回无指明成功与否");
+					bigPackage.setCallbackSendCheckIsSuccess(Constant.N);
 					continue;
 				}
 				// 更新 Callback 次数和成功状态
 				bigPackageDao.updateBigPackageCallbackSendCheck(bigPackage);
-				String newStatus = "";
-				if (StringUtil.isEqual(bigPackage.getCheckResult(), "SUCCESS")) {
-					newStatus = BigPackageStatusCode.WRG;
-				} else if (StringUtil.isEqual(bigPackage.getCheckResult(), "SECURITY")) {
-					newStatus = BigPackageStatusCode.WCF;
-				} else if (StringUtil.isEqual(bigPackage.getCheckResult(), "OTHER_REASON")) {
-					newStatus = BigPackageStatusCode.WCF;
-				}
-				bigPackageDao.updateBigPackageStatus(bigPackageIdLong, newStatus);
 			} catch (Exception e) {
 				logger.error("回传转运订单审核时发生异常:" + e.getMessage());
 			}

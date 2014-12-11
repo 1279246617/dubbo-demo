@@ -382,7 +382,7 @@ public class BigPackageDaoImpl implements IBigPackageDao {
 
 	@Override
 	public int updateBigPackageCallbackSendCheck(BigPackage bigPackage) {
-		String sql = "update w_t_big_package set callback_send_check_is_success='" + bigPackage.getCallbackSendStatusIsSuccess() + "' ,callback_send_check_count = " + bigPackage.getCallbackSendStatusCount() + " , status='" + bigPackage.getStatus()
+		String sql = "update w_t_big_package set callback_send_check_is_success='" + bigPackage.getCallbackSendCheckIsSuccess() + "' ,callback_send_check_count = " + bigPackage.getCallbackSendCheckCount() + " , status='" + bigPackage.getStatus()
 				+ "' where id=" + bigPackage.getId();
 		return jdbcTemplate.update(sql);
 	}
