@@ -594,4 +594,12 @@ public class TransportServiceImpl implements ITransportService {
 		page.rows = list;
 		return page;
 	}
+
+	@Override
+	public List<LittlePackageItem> getLittlePackageItemsByLittlePackageId(Long littlePackageId) throws ServiceException {
+		LittlePackageItem littlePackageItemParam = new LittlePackageItem();
+		littlePackageItemParam.setLittlePackageId(littlePackageId);
+		List<LittlePackageItem> littlePackageItemList = littlePackageItemDao.findLittlePackageItem(littlePackageItemParam, null, null);
+		return littlePackageItemList;
+	}
 }

@@ -9,6 +9,7 @@ import com.coe.wms.exception.ServiceException;
 import com.coe.wms.model.warehouse.transport.BigPackage;
 import com.coe.wms.model.warehouse.transport.BigPackageStatus;
 import com.coe.wms.model.warehouse.transport.LittlePackage;
+import com.coe.wms.model.warehouse.transport.LittlePackageItem;
 import com.coe.wms.model.warehouse.transport.LittlePackageStatus;
 import com.coe.wms.pojo.api.warehouse.EventBody;
 import com.coe.wms.util.Pagination;
@@ -60,6 +61,8 @@ public interface ITransportService {
 	public Pagination getLittlePackageData(LittlePackage littlePackage, Map<String, String> moreParam, Pagination page) throws ServiceException;
 
 	public List<Map<String, Object>> getLittlePackageItems(Long bigPackageId) throws ServiceException;
+
+	public List<LittlePackageItem> getLittlePackageItemsByLittlePackageId(Long littlePackageId) throws ServiceException;
 
 	/**
 	 * 审核转运订单

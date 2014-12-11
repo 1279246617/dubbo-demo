@@ -22,6 +22,7 @@ import com.coe.wms.model.user.User;
 import com.coe.wms.model.warehouse.transport.BigPackage;
 import com.coe.wms.model.warehouse.transport.BigPackageStatus;
 import com.coe.wms.model.warehouse.transport.LittlePackage;
+import com.coe.wms.model.warehouse.transport.LittlePackageItem;
 import com.coe.wms.model.warehouse.transport.LittlePackageStatus;
 import com.coe.wms.service.storage.IStorageService;
 import com.coe.wms.service.transport.ITransportService;
@@ -151,6 +152,13 @@ public class Transport {
 	@RequestMapping(value = "/getLittlePackageItemByBigPackageId", method = RequestMethod.POST)
 	public String getLittlePackageItemByBigPackageId(Long bigPackageId) {
 		List<Map<String, Object>> littlePackageItems = transportService.getLittlePackageItems(bigPackageId);
+		return GsonUtil.toJson(littlePackageItems);
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/getLittlePackageItemBylittlePackageId", method = RequestMethod.POST)
+	public String getLittlePackageItemBylittlePackageId(Long littlePackageId) {
+		List<LittlePackageItem> littlePackageItems = transportService.getLittlePackageItemsByLittlePackageId(littlePackageId);
 		return GsonUtil.toJson(littlePackageItems);
 	}
 
