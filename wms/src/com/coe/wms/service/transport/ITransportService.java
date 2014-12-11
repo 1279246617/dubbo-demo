@@ -8,6 +8,8 @@ import org.apache.log4j.Logger;
 import com.coe.wms.exception.ServiceException;
 import com.coe.wms.model.warehouse.transport.BigPackage;
 import com.coe.wms.model.warehouse.transport.BigPackageStatus;
+import com.coe.wms.model.warehouse.transport.LittlePackage;
+import com.coe.wms.model.warehouse.transport.LittlePackageStatus;
 import com.coe.wms.pojo.api.warehouse.EventBody;
 import com.coe.wms.util.Pagination;
 
@@ -39,6 +41,14 @@ public interface ITransportService {
 	public List<BigPackageStatus> findAllBigPackageStatus() throws ServiceException;
 
 	/**
+	 * 获取所有转运订单状态
+	 * 
+	 * @return
+	 * @throws ServiceException
+	 */
+	public List<LittlePackageStatus> findAllLittlePackageStatus() throws ServiceException;
+
+	/**
 	 * 获取转运订单
 	 * 
 	 * @param inWarehouseRecordId
@@ -46,6 +56,8 @@ public interface ITransportService {
 	 * @return
 	 */
 	public Pagination getBigPackageData(BigPackage bigPackage, Map<String, String> moreParam, Pagination page) throws ServiceException;
+
+	public Pagination getLittlePackageData(LittlePackage littlePackage, Map<String, String> moreParam, Pagination page) throws ServiceException;
 
 	public List<Map<String, Object>> getLittlePackageItems(Long bigPackageId) throws ServiceException;
 

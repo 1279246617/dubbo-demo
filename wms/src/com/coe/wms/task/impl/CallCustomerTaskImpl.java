@@ -523,6 +523,7 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 				logisticsOrder.setPoNo(littlePackage.getPoNo());
 				logisticsOrder.setLogisticsCode(bigPackage.getCheckResult());
 				logisticsOrder.setLogisticsRemark(bigPackage.getCheckResult());
+				logisticsOrder.setOccurTime(DateUtil.dateConvertString(new Date(), DateUtil.yyyy_MM_ddHHmmss));
 				logisticsOrders.add(logisticsOrder);
 			}
 			LogisticsDetail logisticsDetail = new LogisticsDetail();

@@ -70,7 +70,7 @@
                			<a class="btn btn-primary btn-small" id="btn_search"><i class="icon-search icon-white"></i>搜索</a>
                			<input style=" visibility:hidden;">
                		</span>
-               		<span class="pull-left" style="width:100px;">
+               		<span class="pull-left" style="width:100px;display: none;">
                			<a class="btn btn-primary btn-small" id="advancedSearch"><i class="icon-search icon-white"></i>批量单号搜索</a>
                			<input style=" visibility:hidden;">
                		</span>
