@@ -21,6 +21,8 @@ import com.coe.wms.controller.Application;
 import com.coe.wms.model.user.User;
 import com.coe.wms.model.warehouse.transport.BigPackage;
 import com.coe.wms.model.warehouse.transport.BigPackageStatus;
+import com.coe.wms.model.warehouse.transport.LittlePackage;
+import com.coe.wms.model.warehouse.transport.LittlePackageStatus;
 import com.coe.wms.service.storage.IStorageService;
 import com.coe.wms.service.transport.ITransportService;
 import com.coe.wms.service.user.IUserService;
@@ -167,6 +169,74 @@ public class Transport {
 		logger.info("审核转运订单 操作员id:" + userIdOfOperator + " checkResult:" + checkResult + " 订单:" + bigPackageIds);
 		Map<String, String> checkResultMap = transportService.checkBigPackage(bigPackageIds, checkResult, userIdOfOperator);
 		return GsonUtil.toJson(checkResultMap);
+	}
+
+	/**
+	 * 转运订单详情 查询
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/listLittlePackage", method = RequestMethod.GET)
+	public ModelAndView listLittlePackage(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		HttpSession session = request.getSession();
+		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
+		ModelAndView view = new ModelAndView();
+		view.addObject("userId", userId);
+		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
+		List<LittlePackageStatus> littlePackageStatusList = transportService.findAllLittlePackageStatus();
+		view.addObject("littlePackageStatusList", littlePackageStatusList);
+		User user = userService.getUserById(userId);
+		view.addObject("warehouseList", storageService.findAllWarehouse(user.getDefaultWarehouseId()));
+		view.setViewName("warehouse/transport/listLittlePackage");
+		return view;
+	}
+
+	/**
+	 * 获取转运订单小包
+	 * 
+	 * @param request
+	 * @param response
+	 * @param userLoginName
+	 * @return
+	 * @throws IOException
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/getLittlePackageData", method = RequestMethod.POST)
+	public String getLittlePackageData(HttpServletRequest request, String sortorder, String sortname, int page, int pagesize, String userLoginName, Long warehouseId, String trackingNo, String createdTimeStart, String createdTimeEnd, String status,
+			String nos, String noType) throws IOException {
+		HttpSession session = request.getSession();
+		// 当前操作员
+		Long userIdOfOperator = (Long) session.getAttribute(SessionConstant.USER_ID);
+		Pagination pagination = new Pagination();
+		pagination.curPage = page;
+		pagination.pageSize = pagesize;
+		pagination.sortName = sortname;
+		pagination.sortOrder = sortorder;
+		LittlePackage param = new LittlePackage();
+		param.setStatus(status);
+		// 客户订单号
+		param.setTrackingNo(trackingNo);
+		// 客户帐号
+		if (StringUtil.isNotNull(userLoginName)) {
+			Long userIdOfCustomer = userService.findUserIdByLoginName(userLoginName);
+			param.setUserIdOfCustomer(userIdOfCustomer);
+		}
+		// 仓库
+		param.setWarehouseId(warehouseId);
+		// 更多参数
+		Map<String, String> moreParam = new HashMap<String, String>();
+		moreParam.put("createdTimeStart", createdTimeStart);
+		moreParam.put("createdTimeEnd", createdTimeEnd);
+		moreParam.put("nos", nos);
+		moreParam.put("noType", noType);
+		pagination = transportService.getLittlePackageData(param, moreParam, pagination);
+		Map map = new HashMap();
+		map.put("Rows", pagination.rows);
+		map.put("Total", pagination.total);
+		return GsonUtil.toJson(map);
 	}
 
 }

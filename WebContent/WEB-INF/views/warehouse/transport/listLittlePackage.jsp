@@ -20,7 +20,7 @@
 </head>
 <body>
 	  <div class="toolbar1">
-           <form action="${baseUrl}/warehouse/transport/getBigPackageData.do" id="searchform" name="searchform" method="post">
+           <form action="${baseUrl}/warehouse/transport/getLittlePackageData.do" id="searchform" name="searchform" method="post">
                <div class="pull-right searchContent">
                		<span class="pull-left" style="width:125px;">
                			仓库
@@ -37,7 +37,7 @@
                			状态
                			<select style="width:80px;" id="status" name="status">
                				<option></option>
-							<c:forEach items="${bigPackageStatusList}" var="status" >
+							<c:forEach items="${littlePackageStatusList}" var="status" >
 				       	 		<option value="<c:out value='${status.code}'/>">
 				       	 			<c:out value="${status.cn}"/>
 				       		 	</option>
@@ -51,11 +51,12 @@
                		</span>
                		
 					<span class="pull-left" style="width:170px;">
-						客户订单号
-						<input type="text"  name="customerReferenceNo"  id="customerReferenceNo"   style="width:90px;"/>
+						跟踪单号
+						<input type="text"  name="trackingNo"  id="trackingNo"   style="width:90px;"/>
 						<input type="text"  name="nos"  id="nos"   style="display:none;"/>
 						<input type="text"  name="noType"  id="noType"   style="display:none;"/>
 					</span>
+						
                		
                		<span class="pull-left" style="width:175px;">
                			创建时间
@@ -75,24 +76,12 @@
                			<input style=" visibility:hidden;">
                		</span>
                </div>
-               
-               <div class="pull-left">
-           			<span class="pull-left" style="width:60px;">
-			       		<a class="btn btn-primary btn-small" onclick="checkOrder()" title="审核出库订单">
-			           		 <i class="icon-eye-open"></i>审核
-			       	 	</a>
-			       	 	<input style=" visibility:hidden;">
-		       	 	</span>
-		    	</div>    
            </form>
 	</div>
 	<div id="maingrid" class="pull-left" style="width:100%;"></div>
 	
-	
 	<script type="text/javascript" src="${baseUrl}/static/jquery/jquery.js"></script>
 	<script type="text/javascript" src="${baseUrl}/static/bootstrap/bootstrap-typeahead.js"></script>
-    	
-   	<script type="text/javascript" src="${baseUrl}/static/js/warehouse/listBigPackage.js"></script>
     <script type="text/javascript">
  		var baseUrl = "${baseUrl}";
    		$(function(){
@@ -147,43 +136,25 @@
 	    	 grid = $("#maingrid").ligerGrid({
 	                columns: [
 	                    { display: '客户帐号', name: 'userNameOfCustomer', align: 'center',type:'float',width:'9%'},
-	  		          	{ display: '客户订单号', name: 'customerReferenceNo', align: 'center', type: 'float',width:'14%'},
-		                { display: '仓库', name: 'warehouse', align: 'center', type: 'float',width:'8%'},
-	  		          	{ display: '小包预览', isSort: false, align: 'center', type: 'float',width:'20%',render: function(row) {
+	                    { display: '仓库', name: 'warehouse', align: 'center', type: 'float',width:'8%'},
+	                    { display: '状态', name: 'status', align: 'center', type: 'float',width:'8%'},
+	  		          	{ display: '跟踪单号', name: 'trackingNo', align: 'center', type: 'float',width:'12%'},
+	  		          	{ display: '承运商', name: 'carrierCode', align: 'center', type: 'float',width:'10%'},
+	  		          	{ display: '销售编号', name: 'poNo', align: 'center', type: 'float',width:'12%'},
+	  		          	{ display: '商品预览', isSort: false, align: 'center', type: 'float',width:'18%',render: function(row) {
 		            		var skus = "";
 		            		if (!row._editing) {
-		            			skus += '<a href="javascript:listLittlePackages(' + row.id + ')">'+row.littlePackages+'</a> ';
+		            			skus += '<a href="javascript:listLittlePackagesItem(' + row.id + ')">'+row.items+'</a> ';
 		            		}
 		            		return skus;
 	  		          	}},
-		                { display: '状态', name: 'status', align: 'center', type: 'float',width:'8%'},
-		                { display: '仓库审核', name: 'checkResult', align: 'center', type: 'float',width:'9%'},
-		                { display: '发货渠道', name: 'shipwayCode', align: 'center', type: 'float',width:'8%'},
-		                { display: '跟踪单号', name: 'trackingNo', align: 'center', type: 'float',width:'12%'},
-		                { display: '收件人名', name: 'receiverName', align: 'center', type: 'float',width:'8%'},
-		                { display: '收件人街道1', name: 'receiverAddressLine1', align: 'center', type: 'float',width:'12%'},
-		                { display: '收件人街道2', name: 'receiverAddressLine2', align: 'center', type: 'float',width:'8%'},
-		                { display: '收件人县区', name: 'receiverCounty', align: 'center', type: 'float',width:'8%'},
-		                { display: '收件人城市', name: 'receiverCity', align: 'center', type: 'float',width:'8%'},
-		                { display: '收件人州省', name: 'receiverStateOrProvince', align: 'center', type: 'float',width:'8%'},
-		                { display: '收件人国家', name: 'receiverCountryName', align: 'center', type: 'float',width:'8%'},
-		                { display: '收件人邮编', name: 'receiverPostalCode', align: 'center', type: 'float',width:'8%'},
-		                { display: '收件人手机', name: 'receiverPhoneNumber', align: 'center', type: 'float',width:'8%'},
-		                { display: '收件人电话', name: 'receiverMobileNumber', align: 'center', type: 'float',width:'8%'},
-		                { display: '发件人名', name: 'senderName', align: 'center', type: 'float',width:'8%'},
-		                { display: '备注', name: 'remark', align: 'center', type: 'float',width:'15%'},
-		                { display: '回传审核状态', name: 'callbackSendCheckIsSuccess', align: 'center', type: 'float',width:'8%'},
-		                { display: '回传称重状态', name: 'callbackSendWeightIsSuccess', align: 'center', type: 'float',width:'8%'},
-		                { display: '回传出库状态', name: 'callbackSendStatusIsSuccess', align: 'center', type: 'float',width:'8%'},
-		                { display: '创建时间', name: 'createdTime', align: 'center', type: 'float',width:'12%'},
-		                {display: '操作',isSort: false,width: '9%',render: function(row) {
-		            		var  h = '<a href="javascript:checkSingleOrder(' + row.id + ')">审核</a> ';
-		            		return h;
-		            	}
-		            }
+		                { display: '备注', name: 'remark', align: 'center', type: 'float',width:'12%'},
+		                { display: '回传收货状态', name: 'callbackIsSuccess', align: 'center', type: 'float',width:'8%'},
+		                { display: '收货时间', name: 'receivedTime', align: 'center', type: 'float',width:'12%'}
+		                { display: '创建时间', name: 'createdTime', align: 'center', type: 'float',width:'12%'}
 	                ],  
 	                dataAction: 'server',
-	                url: baseUrl+'/warehouse/transport/getBigPackageData.do',
+	                url: baseUrl+'/warehouse/transport/getLittlePackageData.do',
 	                pageSize: 100, 
 	                pageSizeOptions:[50,100,150,200,500],
 	                usePager: 'true',
@@ -203,6 +174,9 @@
 	        };		
 	        
 	        
+	        function listLittlePackagesItem(){
+	        	
+	        }
    	</script>
    
    	

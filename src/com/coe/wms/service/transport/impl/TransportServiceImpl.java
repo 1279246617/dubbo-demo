@@ -532,4 +532,66 @@ public class TransportServiceImpl implements ITransportService {
 		map.put(Constant.STATUS, Constant.SUCCESS);
 		return map;
 	}
+
+	@Override
+	public List<LittlePackageStatus> findAllLittlePackageStatus() throws ServiceException {
+		return littlePackageStatusDao.findAllLittlePackageStatus();
+	}
+
+	@Override
+	public Pagination getLittlePackageData(LittlePackage param, Map<String, String> moreParam, Pagination page) throws ServiceException {
+		List<LittlePackage> littlePackageList = littlePackageDao.findLittlePackage(param, moreParam, page);
+		List<Object> list = new ArrayList<Object>();
+		for (LittlePackage littlePackage : littlePackageList) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			Long bigPackageId = littlePackage.getId();
+			map.put("id", bigPackageId);
+			if (littlePackage.getCreatedTime() != null) {
+				map.put("createdTime", DateUtil.dateConvertString(new Date(littlePackage.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss));
+			}
+			if (littlePackage.getReceivedTime() != null) {
+				map.put("receivedTime", DateUtil.dateConvertString(new Date(littlePackage.getReceivedTime()), DateUtil.yyyy_MM_ddHHmmss));
+			}
+			map.put("trackingNo", littlePackage.getTrackingNo());
+			map.put("carrierCode", littlePackage.getCarrierCode());
+			// 回传审核
+			if (StringUtil.isEqual(littlePackage.getCallbackIsSuccess(), Constant.Y)) {
+				map.put("callbackIsSuccess", "成功");
+			} else {
+				if (littlePackage.getCallbackCount() != null && littlePackage.getCallbackCount() > 0) {
+					map.put("callbackIsSuccess", "失败次数:" + littlePackage.getCallbackCount());
+				} else {
+					map.put("callbackIsSuccess", "未回传");
+				}
+			}
+			// 查询用户名
+			User user = userDao.getUserById(littlePackage.getUserIdOfCustomer());
+			map.put("userNameOfCustomer", user.getLoginName());
+			map.put("poNo", littlePackage.getPoNo());
+			if (NumberUtil.greaterThanZero(littlePackage.getWarehouseId())) {
+				Warehouse warehouse = warehouseDao.getWarehouseById(littlePackage.getWarehouseId());
+				if (warehouse != null) {
+					map.put("warehouse", warehouse.getWarehouseName());
+				}
+			}
+			map.put("remark", littlePackage.getRemark());
+			LittlePackageStatus littlePackageStatus = littlePackageStatusDao.findLittlePackageStatusByCode(littlePackage.getStatus());
+			if (littlePackageStatus != null) {
+				map.put("status", littlePackageStatus.getCn());
+			}
+			// 物品明细(目前仅展示SKU*数量)
+			String items = "";
+			LittlePackageItem littlePackageItemParam = new LittlePackageItem();
+			littlePackageItemParam.setLittlePackageId(littlePackage.getId());
+			List<LittlePackageItem> littlePackageItemList = littlePackageItemDao.findLittlePackageItem(littlePackageItemParam, null, null);
+			for (LittlePackageItem littlePackageItem : littlePackageItemList) {
+				items += littlePackageItem.getSku() + " * " + littlePackageItem.getQuantity() + " ; ";
+			}
+			map.put("items", items);
+			list.add(map);
+		}
+		page.total = littlePackageDao.countLittlePackage(param, moreParam);
+		page.rows = list;
+		return page;
+	}
 }

@@ -30,12 +30,6 @@
 			       	 	</a>
 			       	 	<input style=" visibility:hidden;">
 		       	 	</span>
-		       	 	<span class="pull-left" style="width:105px;">
-<!-- 			       		<a class="btn btn-primary btn-small" onclick="inportOrder()" title="导入出库订单"> -->
-<!-- 			           		 <i class="icon-file"></i>导入出库订单 -->
-<!-- 			       	 	</a> -->
-<!-- 			       	 	<input style=" visibility:hidden;"> -->
-		       	 	</span>
 		    	</div>    
                 <div class="pull-right searchContent">
                		<span class="pull-left" style="width:140px;">
@@ -73,7 +67,7 @@
                			<a class="btn btn-primary btn-small" id="btn_search"><i class="icon-search icon-white"></i>搜索</a>
                			<input style=" visibility:hidden;">
                		</span>
-               		<span class="pull-left" style="width:100px;">
+               		<span class="pull-left" style="width:100px;display: none;">
                			<a class="btn btn-primary btn-small" id="advancedSearch"><i class="icon-search icon-white"></i>批量单号搜索</a>
                			<input style=" visibility:hidden;">
                		</span>
@@ -140,16 +134,17 @@
 	                    { display: '客户帐号', name: 'userNameOfCustomer', align: 'center',type:'float',width:'9%'},
 	  		          	{ display: '客户订单号', name: 'customerReferenceNo', align: 'center', type: 'float',width:'14%'},
 		                { display: '仓库', name: 'warehouse', align: 'center', type: 'float',width:'8%'},
-		            	{ display: '小包预览', isSort: false, align: 'center', type: 'float',width:'20%',render: function(row) {
+	  		          	{ display: '小包预览', isSort: false, align: 'center', type: 'float',width:'20%',render: function(row) {
 		            		var skus = "";
 		            		if (!row._editing) {
 		            			skus += '<a href="javascript:listLittlePackages(' + row.id + ')">'+row.littlePackages+'</a> ';
 		            		}
 		            		return skus;
 	  		          	}},
-	  		          	{ display: '状态', name: 'status', align: 'center', type: 'float',width:'8%'},
-	  		          	{ display: '发货渠道', name: 'shipwayCode', align: 'center', type: 'float',width:'8%'},
-	  		          	{ display: '跟踪单号', name: 'trackingNo', align: 'center', type: 'float',width:'12%'},
+		                { display: '状态', name: 'status', align: 'center', type: 'float',width:'8%'},
+		                { display: '仓库审核', name: 'checkResult', align: 'center', type: 'float',width:'9%'},
+		                { display: '发货渠道', name: 'shipwayCode', align: 'center', type: 'float',width:'8%'},
+		                { display: '跟踪单号', name: 'trackingNo', align: 'center', type: 'float',width:'12%'},
 		                { display: '收件人名', name: 'receiverName', align: 'center', type: 'float',width:'8%'},
 		                { display: '收件人街道1', name: 'receiverAddressLine1', align: 'center', type: 'float',width:'12%'},
 		                { display: '收件人街道2', name: 'receiverAddressLine2', align: 'center', type: 'float',width:'8%'},
@@ -162,6 +157,9 @@
 		                { display: '收件人电话', name: 'receiverMobileNumber', align: 'center', type: 'float',width:'8%'},
 		                { display: '发件人名', name: 'senderName', align: 'center', type: 'float',width:'8%'},
 		                { display: '备注', name: 'remark', align: 'center', type: 'float',width:'15%'},
+		                { display: '回传审核状态', name: 'callbackSendCheckIsSuccess', align: 'center', type: 'float',width:'8%'},
+		                { display: '回传称重状态', name: 'callbackSendWeightIsSuccess', align: 'center', type: 'float',width:'8%'},
+		                { display: '回传出库状态', name: 'callbackSendStatusIsSuccess', align: 'center', type: 'float',width:'8%'},
 		                { display: '创建时间', name: 'createdTime', align: 'center', type: 'float',width:'12%'},
 		                {display: '操作',isSort: false,width: '9%',render: function(row) {
 		            		var  h = '<a href="javascript:checkSingleOrder(' + row.id + ')">审核</a> ';
@@ -188,6 +186,7 @@
 	                enabledSort:false
 	            });
 	        };		
+	        
    	</script>
    	
 	<script type="text/javascript" src="${baseUrl}/static/jquery/jquery.showMessage.js"></script>
