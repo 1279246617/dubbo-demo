@@ -7,6 +7,7 @@ import javax.annotation.Resource;
 import org.apache.log4j.Logger;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.coe.wms.dao.user.IUserDao;
 import com.coe.wms.dao.warehouse.IWarehouseDao;
@@ -69,6 +70,7 @@ public class InWarehouseTaskImpl implements IInWarehouseTask {
 	 * 定时更新入库订单状态 部分入库,全未入库,入库完成
 	 */
 	@Scheduled(cron = "0 0/15 8-23 * * ? ")
+	@Transactional
 	@Override
 	public void updateInWarehouseOrderStatus() {
 		List<Long> orderIdList = inWarehouseOrderDao.findUnCompleteInWarehouseOrderId();

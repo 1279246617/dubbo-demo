@@ -18,6 +18,8 @@ public interface IBigPackageDao {
 
 	public String getBigPackageStatus(Long bigPackageId);
 
+	public String getCustomerReferenceNoById(Long bigPackageId);
+
 	public int updateBigPackageStatus(Long bigPackageId, String newStatus);
 
 	public int updateBigPackageCheckResult(Long bigPackageId, String checkResult);

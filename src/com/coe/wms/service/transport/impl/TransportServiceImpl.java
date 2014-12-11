@@ -602,4 +602,53 @@ public class TransportServiceImpl implements ITransportService {
 		List<LittlePackageItem> littlePackageItemList = littlePackageItemDao.findLittlePackageItem(littlePackageItemParam, null, null);
 		return littlePackageItemList;
 	}
+
+	@Override
+	public String warehouseInterfaceConfirmTransportOrder(EventBody eventBody, Long userIdOfCustomer, String warehouseNo) throws ServiceException {
+		Responses responses = new Responses();
+		List<Response> responseItems = new ArrayList<Response>();
+		Response response = new Response();
+		response.setSuccess(Constant.FALSE);
+		responseItems.add(response);
+		responses.setResponseItems(responseItems);
+		// 取 tradeDetail 中tradeOrderId 作为客户订单号
+		TradeDetail tradeDetail = eventBody.getTradeDetail();
+		if (tradeDetail == null) {
+			response.setReason(ErrorCode.S01_CODE);
+			response.setReasonDesc("EventBody对象获取TradeDetail对象得到Null");
+			return XmlUtil.toXml(Responses.class, responses);
+		}
+		List<TradeOrder> tradeOrderList = tradeDetail.getTradeOrders();
+		if (tradeOrderList == null || tradeOrderList.size() == 0) {
+			response.setReason(ErrorCode.S01_CODE);
+			response.setReasonDesc("TradeDetail对象获取TradeOrders对象得到Null");
+			return XmlUtil.toXml(Responses.class, responses);
+		}
+		TradeOrder tradeOrder = tradeOrderList.get(0);
+		// 客户订单号
+		String customerReferenceNo = tradeOrder.getTradeOrderId();
+		if (StringUtil.isNull(customerReferenceNo)) {
+			response.setReason(ErrorCode.S01_CODE);
+			response.setReasonDesc("TradeOrder对象获取tradeOrderId得到Null");
+			return XmlUtil.toXml(Responses.class, responses);
+		}
+		// 根据客户订单号 (traderOrderId)查找转运订单,修改WWO:待出库操作
+		BigPackage param = new BigPackage();
+		param.setCustomerReferenceNo(customerReferenceNo);
+		List<BigPackage> bigPackageList = bigPackageDao.findBigPackage(param, null, null);
+		if (bigPackageList == null || bigPackageList.size() == 0) {
+			response.setReason(ErrorCode.S01_CODE);
+			response.setReasonDesc("TradeOrder对象获取tradeOrderId得到Null");
+			return XmlUtil.toXml(Responses.class, responses);
+		}
+		BigPackage bigPackage = bigPackageList.get(0);
+		if (!StringUtil.isEqual(bigPackage.getStatus(), BigPackageStatusCode.WCC)) {
+			response.setReason(ErrorCode.B0100_CODE);
+			response.setReasonDesc("订单当前状态非待客户核重状态");
+			return XmlUtil.toXml(Responses.class, responses);
+		}
+		bigPackageDao.updateBigPackageStatus(bigPackage.getId(), BigPackageStatusCode.WWO);
+		response.setSuccess(Constant.TRUE);
+		return XmlUtil.toXml(Responses.class, responses);
+	}
 }

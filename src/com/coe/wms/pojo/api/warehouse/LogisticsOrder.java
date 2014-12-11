@@ -51,6 +51,8 @@ public class LogisticsOrder implements Serializable {
 
 	private ReceiverDetail receiverDetail;
 
+	private Volume volume;
+
 	public String getLogisticsCode() {
 		return logisticsCode;
 	}
@@ -73,6 +75,14 @@ public class LogisticsOrder implements Serializable {
 
 	public void setReceiverDetail(ReceiverDetail receiverDetail) {
 		this.receiverDetail = receiverDetail;
+	}
+
+	public Volume getVolume() {
+		return volume;
+	}
+
+	public void setVolume(Volume volume) {
+		this.volume = volume;
 	}
 
 	public String getLogisticsRemark() {

@@ -392,4 +392,10 @@ public class BigPackageDaoImpl implements IBigPackageDao {
 		String sql = "update w_t_big_package set check_result = '" + checkResult + "' where id = " + bigPackageId;
 		return jdbcTemplate.update(sql);
 	}
+
+	@Override
+	public String getCustomerReferenceNoById(Long bigPackageId) {
+		String sql = "select customer_reference_no from w_t_big_package where id = " + bigPackageId;
+		return jdbcTemplate.queryForObject(sql, String.class);
+	}
 }

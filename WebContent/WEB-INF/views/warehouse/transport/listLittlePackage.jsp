@@ -149,10 +149,10 @@
 		            		}
 		            		return skus;
 	  		          	}},
-		                { display: '备注', name: 'remark', align: 'center', type: 'float',width:'12%'},
+	  		          	{ display: '收货时间', name: 'receivedTime', align: 'center', type: 'float',width:'12%'},
 		                { display: '回传收货状态', name: 'callbackIsSuccess', align: 'center', type: 'float',width:'8%'},
-		                { display: '收货时间', name: 'receivedTime', align: 'center', type: 'float',width:'12%'}
-		                { display: '创建时间', name: 'createdTime', align: 'center', type: 'float',width:'12%'}
+		                { display: '创建时间', name: 'createdTime', align: 'center', type: 'float',width:'12%'},
+		                { display: '备注', name: 'remark', align: 'center', type: 'float',width:'12%'},
 	                ],  
 	                dataAction: 'server',
 	                url: baseUrl+'/warehouse/transport/getLittlePackageData.do',
