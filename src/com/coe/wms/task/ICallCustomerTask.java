@@ -31,4 +31,9 @@ public interface ICallCustomerTask {
 	 * 回传转运订单重量给客户
 	 */
 	public void sendBigPackageWeightToCustomer();
+
+	/**
+	 * 回传转运订单出库状态给客户(出库的最后步骤)
+	 */
+	public void sendBigPackageStatusToCustomer();
 }
