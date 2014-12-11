@@ -57,5 +57,5 @@ public interface ITransportService {
 	 * @return
 	 * @throws ServiceException
 	 */
-	public Map<String, String> checkBigPackage(String bigPackageIds, Integer checkResult, Long userIdOfOperator) throws ServiceException;
+	public Map<String, String> checkBigPackage(String bigPackageIds, String checkResult, Long userIdOfOperator) throws ServiceException;
 }

@@ -353,7 +353,29 @@ public class TransportServiceImpl implements ITransportService {
 				map.put("createdTime", DateUtil.dateConvertString(new Date(bigPackage.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss));
 			}
 			map.put("shipwayCode", bigPackage.getShipwayCode());
-			map.put("trackingNo", bigPackage.getTrackingNo());
+			if (StringUtil.isNotNull(bigPackage.getCheckResult())) {
+				if (StringUtil.isEqual(bigPackage.getCheckResult(), "SECURITY")) {
+					map.put("checkResult", "拒收(安全不通过)");
+				} else if (StringUtil.isEqual(bigPackage.getCheckResult(), "OTHER_REASON")) {
+					map.put("checkResult", "拒收(其他不通过)");
+				} else if (StringUtil.isEqual(bigPackage.getCheckResult(), "SUCCESS")) {
+					map.put("checkResult", "接件(审核已通过)");
+				} else {
+					map.put("checkResult", bigPackage.getCheckResult());
+				}
+			} else {
+				map.put("checkResult", "");
+			}
+			// 回传审核
+			if (StringUtil.isEqual(bigPackage.getCallbackSendCheckIsSuccess(), Constant.Y)) {
+				map.put("callbackSendCheckIsSuccess", "成功");
+			} else {
+				if (bigPackage.getCallbackSendCheckCount() != null && bigPackage.getCallbackSendCheckCount() > 0) {
+					map.put("callbackSendCheckIsSuccess", "失败次数:" + bigPackage.getCallbackSendCheckCount());
+				} else {
+					map.put("callbackSendCheckIsSuccess", "未回传");
+				}
+			}
 			// 回传称重
 			if (StringUtil.isEqual(bigPackage.getCallbackSendWeightIsSuccess(), Constant.Y)) {
 				map.put("callbackSendWeightIsSuccess", "成功");
@@ -474,24 +496,19 @@ public class TransportServiceImpl implements ITransportService {
 	}
 
 	@Override
-	public Map<String, String> checkBigPackage(String bigPackageIds, Integer checkResult, Long userIdOfOperator) throws ServiceException {
+	public Map<String, String> checkBigPackage(String bigPackageIds, String checkResult, Long userIdOfOperator) throws ServiceException {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put(Constant.STATUS, Constant.FAIL);
 		if (StringUtil.isNull(bigPackageIds)) {
 			map.put(Constant.MESSAGE, "转运订单id(bigPackageIds)为空,无法处理");
 			return map;
 		}
-		if (checkResult == null) {
+		if (StringUtil.isNull(checkResult)) {
 			map.put(Constant.MESSAGE, "审核结果(checkResult)为空,无法处理");
 			return map;
 		}
-		String logisticsCode = "SUCCESS";// 审核通过
-		if (checkResult == 0) {
-			// SECURITY 包裹安全监测不通过
-			logisticsCode = "OTHER_REASON";// 其他异常
-		}
-		int updateQuantity = 0;
-		int noUpdateQuantity = 0;
+		int updateQuantity = 0;//
+		int noUpdateQuantity = 0;// 因非待审核状态,未更新
 		String bigPackageIdArr[] = bigPackageIds.split(",");
 		for (String bigPackageId : bigPackageIdArr) {
 			if (StringUtil.isNull(bigPackageId)) {
@@ -505,10 +522,14 @@ public class TransportServiceImpl implements ITransportService {
 				noUpdateQuantity++;
 				continue;
 			}
-			// 执行审核,并立即返回通知顺丰,如果顺丰无返回,不能审核通过
-			BigPackage bigPackage = bigPackageDao.getBigPackageById(bigPackageIdLong);
-			
+			// 更改状态为审核中
+			bigPackageDao.updateBigPackageStatus(bigPackageIdLong, BigPackageStatusCode.WCI);
+			// SUCCESS SECURITY 包裹安全监测不通过 OTHER_REASON 其他异常
+			bigPackageDao.updateBigPackageCheckResult(bigPackageIdLong, checkResult);
+			updateQuantity++;
 		}
+		map.put(Constant.MESSAGE, "审核执行中:" + updateQuantity + "个转运订单,  审核无效:" + noUpdateQuantity + "个非待审核状态转运订单");
+		map.put(Constant.STATUS, Constant.SUCCESS);
 		return map;
 	}
 }

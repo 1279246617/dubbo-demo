@@ -11,12 +11,17 @@ function checkOrder(){
 
     contentArr.push('<div class="pull-left" style="width: 100%;text-align:center;line-height:20px;">');
     contentArr.push('   <span class="pull-left">审核操作：</span>');
+    
     contentArr.push('   <input class="pull-left" name="checkResult" style="margin-left:30px;vertical-align: middle;" type="radio" checked="checked" id="checkSuccess">');
     contentArr.push('   <label class="pull-left" style="margin-left: 5px;line-height:20px;vertical-align: middle;color: green;" for="checkSuccess">审核通过</label>');
-    contentArr.push('   <input class="pull-left" name="checkResult" style="margin-left:56px;vertical-align: middle;" type="radio" id="checkFail">');
-    contentArr.push('   <label class="pull-left" style="margin-left: 5px;line-height:20px;vertical-align: middle;color: red;" for="checkFail">审核不通过</label>');
+    
+    contentArr.push('   <input class="pull-left" name="checkResult" style="margin-left:26px;vertical-align: middle;" type="radio" id="checkFail1">');
+    contentArr.push('   <label class="pull-left" style="margin-left: 5px;line-height:20px;vertical-align: middle;color: red;" for="checkFail">拒收(安全不通过)</label>');
+    
+    contentArr.push('   <input class="pull-left" name="checkResult" style="margin-left:26px;vertical-align: middle;" type="radio" id="checkFail2">');
+    contentArr.push('   <label class="pull-left" style="margin-left: 5px;line-height:20px;vertical-align: middle;color: red;" for="checkFail">拒收(其他不通过)</label>');
+    
     contentArr.push('</div>');
-
     contentArr.push('<div style="color: #ff0000;margin-left: 30px;">注: 非待审核状态的订单不受审核影响</div>');
     contentArr.push('</div>');
     var contentHtml = contentArr.join('');
@@ -25,8 +30,8 @@ function checkOrder(){
   		max: false,
   		min: false,
   		title: '提示',
-  		width: 360,
-  		height: 85,
+  		width:520,
+  		height: 88,
   		content: contentHtml,
   		button: [{
   			name: '确认',
@@ -40,7 +45,14 @@ function checkOrder(){
 	                parent.$.showShortMessage({msg:"请最少选择一条数据",animate:false,left:"45%"});
 	                return false;
 	            }
-                var checkResult = parent.$("#checkSuccess").attr("checked")?1:2;//1是审核通过 2是审核不通过
+	            var checkResult = '';
+	            if(parent.$("#checkSuccess").attr("checked")=='checked'){
+	            	checkResult = 'SUCCESS';
+	            }else if(parent.$("#checkFail1").attr("checked")=='checked'){
+	            	checkResult = 'SECURITY';
+	            }else if(parent.$("#checkFail2").attr("checked")=='checked'){
+	            	checkResult = 'OTHER_REASON';
+	            }
                 var bigPackageIds = "";
             	for ( var i = 0; i < row.length; i++) {
             		bigPackageIds += row[i].id+",";
@@ -66,12 +78,17 @@ function checkSingleOrder(id){
     var contentArr = [];
     contentArr.push('<div class="pull-left" style="width: 100%;text-align:center;line-height:20px;">');
     contentArr.push('   <span class="pull-left">审核操作：</span>');
+    
     contentArr.push('   <input class="pull-left" name="checkResult" style="margin-left:30px;vertical-align: middle;" type="radio" checked="checked" id="checkSuccess">');
     contentArr.push('   <label class="pull-left" style="margin-left: 5px;line-height:20px;vertical-align: middle;color: green;" for="checkSuccess">审核通过</label>');
-    contentArr.push('   <input class="pull-left" name="checkResult" style="margin-left:56px;vertical-align: middle;" type="radio" id="checkFail">');
-    contentArr.push('   <label class="pull-left" style="margin-left: 5px;line-height:20px;vertical-align: middle;color: red;" for="checkFail">审核不通过</label>');
+    
+    contentArr.push('   <input class="pull-left" name="checkResult" style="margin-left:26px;vertical-align: middle;" type="radio" id="checkFail1">');
+    contentArr.push('   <label class="pull-left" style="margin-left: 5px;line-height:20px;vertical-align: middle;color: red;" for="checkFail">拒收(安全不通过)</label>');
+    
+    contentArr.push('   <input class="pull-left" name="checkResult" style="margin-left:26px;vertical-align: middle;" type="radio" id="checkFail2">');
+    contentArr.push('   <label class="pull-left" style="margin-left: 5px;line-height:20px;vertical-align: middle;color: red;" for="checkFail">拒收(其他不通过)</label>');
+    
     contentArr.push('</div>');
-
     contentArr.push('<div style="color: #ff0000;margin-left: 30px;">注: 非待审核状态的订单不受审核影响</div>');
     contentArr.push('</div>');
     var contentHtml = contentArr.join('');
@@ -80,14 +97,21 @@ function checkSingleOrder(id){
   		max: false,
   		min: false,
   		title: '提示',
-  		width: 360,
+  		width: 520,
   		height: 85,
   		content: contentHtml,
   		button: [{
   			name: '确认',
   			callback: function() {
-                var checkResult = parent.$("#checkSuccess").attr("checked")?1:2;//1是审核通过 2是审核不通过
-        		$.post(baseUrl + '/warehouse/storage/checkOutWarehouseOrder.do',{orderIds:id,checkResult:checkResult},function(msg){
+  				var checkResult = '';
+	            if(parent.$("#checkSuccess").attr("checked")=='checked'){
+	            	checkResult = 'SUCCESS';
+	            }else if(parent.$("#checkFail1").attr("checked")=='checked'){
+	            	checkResult = 'SECURITY';
+	            }else if(parent.$("#checkFail2").attr("checked")=='checked'){
+	            	checkResult = 'OTHER_REASON';
+	            }
+        		$.post(baseUrl + '/warehouse/transport/checkBigPackage.do',{bigPackageIds:id,checkResult:checkResult},function(msg){
         			if(msg.status == "1"){
         				grid.loadData();	
         				parent.$.showDialogMessage(msg.message,null,null);
