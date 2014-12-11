@@ -157,6 +157,7 @@
 		            		return skus;
 	  		          	}},
 		                { display: '状态', name: 'status', align: 'center', type: 'float',width:'8%'},
+		                { display: '仓库审核', name: 'checkResult', align: 'center', type: 'float',width:'8%'},
 		                { display: '发货渠道', name: 'shipwayCode', align: 'center', type: 'float',width:'8%'},
 		                { display: '跟踪单号', name: 'trackingNo', align: 'center', type: 'float',width:'12%'},
 		                { display: '收件人名', name: 'receiverName', align: 'center', type: 'float',width:'8%'},
@@ -171,6 +172,7 @@
 		                { display: '收件人电话', name: 'receiverMobileNumber', align: 'center', type: 'float',width:'8%'},
 		                { display: '发件人名', name: 'senderName', align: 'center', type: 'float',width:'8%'},
 		                { display: '备注', name: 'remark', align: 'center', type: 'float',width:'15%'},
+		                { display: '回传审核状态', name: 'callbackSendCheckIsSuccess', align: 'center', type: 'float',width:'8%'},
 		                { display: '回传称重状态', name: 'callbackSendWeightIsSuccess', align: 'center', type: 'float',width:'8%'},
 		                { display: '回传出库状态', name: 'callbackSendStatusIsSuccess', align: 'center', type: 'float',width:'8%'},
 		                { display: '创建时间', name: 'createdTime', align: 'center', type: 'float',width:'12%'},

@@ -160,7 +160,7 @@ public class Transport {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/checkBigPackage")
-	public synchronized String checkBigPackage(HttpServletRequest request, String bigPackageIds, Integer checkResult) throws IOException {
+	public String checkBigPackage(HttpServletRequest request, String bigPackageIds, String checkResult) throws IOException {
 		HttpSession session = request.getSession();
 		// 当前操作员
 		Long userIdOfOperator = (Long) session.getAttribute(SessionConstant.USER_ID);
