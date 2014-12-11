@@ -105,7 +105,7 @@
 			<tx:method name="update*" propagation="REQUIRED" isolation="READ_COMMITTED" rollback-for="com.coe.wms.exception.ServiceException"/>
 			<tx:method name="delete*" propagation="REQUIRED" isolation="READ_COMMITTED" rollback-for="com.coe.wms.exception.ServiceException"/>
 			<tx:method name="*save*" propagation="REQUIRED" isolation="READ_COMMITTED" rollback-for="com.coe.wms.exception.ServiceException"/>
-				
+			<tx:method name="execute*" propagation="REQUIRED" isolation="READ_COMMITTED" rollback-for="com.coe.wms.exception.ServiceException"/>	
 			<!-- 查询方法 提示数据库驱动程序和数据库系统，这个事务并不包含更改数据的操作 -->
 			<tx:method name="get*" read-only="true" isolation="READ_UNCOMMITTED"/>
 			<tx:method name="find*" read-only="true" isolation="READ_UNCOMMITTED" />

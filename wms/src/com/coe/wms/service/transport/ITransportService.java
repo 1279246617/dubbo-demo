@@ -34,6 +34,15 @@ public interface ITransportService {
 	public String warehouseInterfaceSaveTransportOrder(EventBody eventBody, Long userIdOfCustomer, String warehouseNo) throws ServiceException;
 
 	/**
+	 * 转运订单确认出库
+	 * 
+	 * @param eventBody
+	 * @param userIdOfCustomer
+	 * @return
+	 */
+	public String warehouseInterfaceConfirmTransportOrder(EventBody eventBody, Long userIdOfCustomer, String warehouseNo) throws ServiceException;
+
+	/**
 	 * 获取所有转运订单状态
 	 * 
 	 * @return

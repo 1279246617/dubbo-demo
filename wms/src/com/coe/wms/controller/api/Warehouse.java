@@ -101,9 +101,14 @@ public class Warehouse {
 			if (StringUtil.isEqualIgnoreCase(EventType.LOGISTICS_SEND_SKU, eventType)) { // 确认出库订单
 				responseXml = storageService.warehouseInterfaceConfirmOutWarehouseOrder(eventBody, userIdOfCustomer, eventTarget);
 			}
-			
+
 			// 转运
 			if (StringUtil.isEqualIgnoreCase(EventType.LOGISTICS_TRADE_PAID, eventType)) { // 创建转运订单
+				responseXml = transportService.warehouseInterfaceSaveTransportOrder(eventBody, userIdOfCustomer, eventTarget);
+			}
+
+			// 转运确认出库(确认重量)
+			if (StringUtil.isEqualIgnoreCase(EventType.LOGISTICS_SEND_GOODS, eventType)) { // 创建转运订单
 				responseXml = transportService.warehouseInterfaceSaveTransportOrder(eventBody, userIdOfCustomer, eventTarget);
 			}
 

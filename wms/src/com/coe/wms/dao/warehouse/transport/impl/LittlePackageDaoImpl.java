@@ -23,6 +23,7 @@ import com.coe.wms.dao.datasource.DataSource;
 import com.coe.wms.dao.datasource.DataSourceCode;
 import com.coe.wms.dao.warehouse.transport.ILittlePackageDao;
 import com.coe.wms.model.warehouse.transport.LittlePackage;
+import com.coe.wms.model.warehouse.transport.LittlePackageStatus.LittlePackageStatusCode;
 import com.coe.wms.util.DateUtil;
 import com.coe.wms.util.Pagination;
 import com.coe.wms.util.StringUtil;
@@ -227,7 +228,8 @@ public class LittlePackageDaoImpl implements ILittlePackageDao {
 	 */
 	@Override
 	public int updateLittlePackageCallback(LittlePackage LittlePackage) {
-		String sql = "update w_t_little_package set callback_is_success='" + LittlePackage.getCallbackIsSuccess() + "' ,callback_count = " + LittlePackage.getCallbackCount() + " where id=" + LittlePackage.getId();
+		String sql = "update w_t_little_package set callback_is_success='" + LittlePackage.getCallbackIsSuccess() + "' ,callback_count = " + LittlePackage.getCallbackCount() + " ,status = '" + LittlePackage.getStatus() + "' where id="
+				+ LittlePackage.getId();
 		return jdbcTemplate.update(sql);
 	}
 
@@ -236,7 +238,7 @@ public class LittlePackageDaoImpl implements ILittlePackageDao {
 	 */
 	@Override
 	public List<Long> findCallbackUnSuccessPackageId() {
-		String sql = "select id from w_t_little_package where user_id_of_customer is not null and (callback_is_success = 'N' or  callback_is_success is null)";
+		String sql = "select id from w_t_little_package where status ='" + LittlePackageStatusCode.WSR + "' and (callback_is_success = 'N' or  callback_is_success is null)";
 		List<Long> recordIdList = jdbcTemplate.queryForList(sql, Long.class);
 		return recordIdList;
 	}

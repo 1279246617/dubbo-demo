@@ -45,6 +45,7 @@ import com.coe.wms.model.warehouse.storage.record.InWarehouseRecordItem;
 import com.coe.wms.model.warehouse.transport.BigPackage;
 import com.coe.wms.model.warehouse.transport.LittlePackage;
 import com.coe.wms.model.warehouse.transport.BigPackageStatus.BigPackageStatusCode;
+import com.coe.wms.model.warehouse.transport.LittlePackageStatus.LittlePackageStatusCode;
 import com.coe.wms.pojo.api.warehouse.EventBody;
 import com.coe.wms.pojo.api.warehouse.EventHeader;
 import com.coe.wms.pojo.api.warehouse.EventType;
@@ -58,10 +59,12 @@ import com.coe.wms.pojo.api.warehouse.Sku;
 import com.coe.wms.pojo.api.warehouse.SkuDetail;
 import com.coe.wms.pojo.api.warehouse.TradeDetail;
 import com.coe.wms.pojo.api.warehouse.TradeOrder;
+import com.coe.wms.pojo.api.warehouse.Volume;
 import com.coe.wms.task.ICallCustomerTask;
 import com.coe.wms.util.Constant;
 import com.coe.wms.util.DateUtil;
 import com.coe.wms.util.HttpUtil;
+import com.coe.wms.util.NumberUtil;
 import com.coe.wms.util.StringUtil;
 import com.coe.wms.util.XmlUtil;
 
@@ -148,6 +151,11 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 	 * 回传转运订单审核结果
 	 */
 	private final String serviceNameSendCheckOrder = "logistics.event.wms.checkorder";
+
+	/**
+	 * 回传转运订单小包收货
+	 */
+	private final String serviceNameStockin = "logistics.event.wms.stockin";
 
 	/**
 	 * 发送仓配入库订单信息给客户
@@ -473,10 +481,9 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 	}
 
 	/**
-	 * 回传出库状态给客户(出库的最后步骤)
+	 * 回传转运订单审核状态给客户
 	 */
-	// @Scheduled(cron = "0 0/15 * * * ? ")
-	@Scheduled(cron = "1 * * * * ? ")
+	@Scheduled(cron = "0 0/10 8-23 * * ? ")
 	@Override
 	public void sendBigPackageCheckResultToCustomer() {
 		List<Long> bigPackageIdList = bigPackageDao.findCallbackSendCheckUnSuccessBigPackageId();
@@ -586,6 +593,223 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 				bigPackageDao.updateBigPackageCallbackSendCheck(bigPackage);
 			} catch (Exception e) {
 				logger.error("回传转运订单审核时发生异常:" + e.getMessage());
+			}
+		}
+	}
+
+	/**
+	 * 回传转运小包收货给客户
+	 */
+	@Scheduled(cron = "0 0/10 8-23 * * ? ")
+	@Override
+	public void sendLittlePackageReceivedToCustomer() {
+		List<Long> littlePackageIdList = littlePackageDao.findCallbackUnSuccessPackageId();
+		for (int i = 0; i < littlePackageIdList.size(); i++) {
+			Long littlePackageId = littlePackageIdList.get(i);
+			Long littlePackageIdLong = Long.valueOf(littlePackageId);
+			// 查询订单的当前状态
+			LittlePackage littlePackage = littlePackageDao.getLittlePackageById(littlePackageIdLong);
+			// 如果不是待发送收货状态的订单,直接跳过
+			if (!StringUtil.isEqual(littlePackage.getStatus(), LittlePackageStatusCode.WSR)) {
+				continue;
+			}
+			Warehouse warehouse = warehouseDao.getWarehouseById(littlePackage.getWarehouseId());
+			// 顺丰traderOrderId
+			String traderOrderId = bigPackageDao.getCustomerReferenceNoById(littlePackage.getBigPackageId());
+			// 封装请求体
+			LogisticsEventsRequest logisticsEventsRequest = new LogisticsEventsRequest();
+			LogisticsEvent logisticsEvent = new LogisticsEvent();
+			// 事件头
+			EventHeader eventHeader = new EventHeader();
+			eventHeader.setEventType(EventType.WMS_STOCKIN_INFO);
+			eventHeader.setEventTime(DateUtil.dateConvertString(new Date(), DateUtil.yyyy_MM_ddHHmmss));
+			// 仓库编码
+			eventHeader.setEventSource(warehouse.getWarehouseNo());
+			// CP_PARTNERFLAT 为 顺丰文档指定
+			eventHeader.setEventTarget("CP_PARTNERFLAT");
+			logisticsEvent.setEventHeader(eventHeader);
+			// 事件body
+			EventBody eventBody = new EventBody();
+			TradeDetail tradeDetail = new TradeDetail();
+			TradeOrder tradeOrder = new TradeOrder();
+			tradeOrder.setTradeOrderId(traderOrderId);
+			List<TradeOrder> tradeOrders = new ArrayList<TradeOrder>();
+			tradeOrders.add(tradeOrder);
+			tradeDetail.setTradeOrders(tradeOrders);
+			eventBody.setTradeDetail(tradeDetail);
+			List<LogisticsOrder> logisticsOrders = new ArrayList<LogisticsOrder>();
+			LogisticsOrder logisticsOrder = new LogisticsOrder();
+
+			logisticsOrder.setCarrierCode(littlePackage.getCarrierCode());
+			logisticsOrder.setMailNo(littlePackage.getTrackingNo());
+			logisticsOrder.setPoNo(littlePackage.getPoNo());
+			logisticsOrder.setOccurTime(DateUtil.dateConvertString(new Date(), DateUtil.yyyy_MM_ddHHmmss));
+			logisticsOrder.setLogisticsCode("SUCCESS");
+
+			logisticsOrders.add(logisticsOrder);
+			LogisticsDetail logisticsDetail = new LogisticsDetail();
+			logisticsDetail.setLogisticsOrders(logisticsOrders);
+			eventBody.setLogisticsDetail(logisticsDetail);
+			logisticsEvent.setEventBody(eventBody);
+			logisticsEventsRequest.setLogisticsEvent(logisticsEvent);
+			String xml = XmlUtil.toXml(LogisticsEventsRequest.class, logisticsEventsRequest);
+
+			// xml内容封装完成,开始准备发送
+			User user = userDao.getUserById(littlePackage.getUserIdOfCustomer());
+			String msgSource = user.getOppositeMsgSource();
+
+			List<BasicNameValuePair> basicNameValuePairs = new ArrayList<BasicNameValuePair>();
+			basicNameValuePairs.add(new BasicNameValuePair("logistics_interface", xml));
+			// 仓库编号
+			basicNameValuePairs.add(new BasicNameValuePair("logistics_provider_id", warehouse.getWarehouseNo()));
+			basicNameValuePairs.add(new BasicNameValuePair("msg_type", serviceNameStockin));
+			basicNameValuePairs.add(new BasicNameValuePair("msg_source", msgSource));
+			String dataDigest = StringUtil.encoderByMd5(xml + user.getOppositeToken());
+			basicNameValuePairs.add(new BasicNameValuePair("data_digest", dataDigest));
+			basicNameValuePairs.add(new BasicNameValuePair("version", "1.0"));
+			String url = user.getOppositeServiceUrl();
+			logger.info("回传转运订单收货: url=" + url);
+			logger.info("回传转运订单收货: logistics_interface=" + xml);
+			logger.info("回传转运订单收货: data_digest=" + dataDigest + " msg_source=" + msgSource + " msg_type=" + serviceNameSkuStockin + " logistics_provider_id=" + warehouse.getWarehouseNo());
+			try {
+				String response = HttpUtil.postRequest(url, basicNameValuePairs);
+				logger.info("顺丰返回:" + response);
+				littlePackage.setCallbackCount(littlePackage.getCallbackCount() == null ? 1 : littlePackage.getCallbackCount() + 1);
+				Responses responses = (Responses) XmlUtil.toObject(response, Responses.class);
+				if (responses == null) {
+					logger.error("回传转运订单收货 返回信息无法转换成Responses对象");
+					continue;
+				}
+				List<Response> responseList = responses.getResponseItems();
+				if (responseList != null && responseList.size() > 0) {
+					if (StringUtil.isEqualIgnoreCase(responseList.get(0).getSuccess(), Constant.TRUE)) {
+						littlePackage.setCallbackIsSuccess(Constant.Y);
+						littlePackage.setStatus(LittlePackageStatusCode.WOS);
+						logger.debug("回传转运订单收货成功");
+					} else {
+						littlePackage.setCallbackIsSuccess(Constant.N);
+						logger.debug("回传转运订单收货失败");
+					}
+				} else {
+					logger.error("回传转运订单收货 返回无指明成功与否");
+					littlePackage.setCallbackIsSuccess(Constant.N);
+					continue;
+				}
+				// 更新 Callback 次数和成功状态
+				littlePackageDao.updateLittlePackageCallback(littlePackage);
+			} catch (Exception e) {
+				logger.error("回传转运订单收货时发生异常:" + e.getMessage());
+			}
+		}
+	}
+
+	/**
+	 * 回传转运合包重量给客户
+	 */
+	@Scheduled(cron = "10 * 8-23 * * ? ")
+	@Override
+	public void sendBigPackageWeightToCustomer() {
+		List<Long> bigPackageIdList = bigPackageDao.findCallbackSendWeightUnSuccessBigPackageId();
+		for (int i = 0; i < bigPackageIdList.size(); i++) {
+			Long bigPackageId = bigPackageIdList.get(i);
+			Long bigPackageIdLong = Long.valueOf(bigPackageId);
+			// 查询订单的当前状态
+			String oldStatus = bigPackageDao.getBigPackageStatus(bigPackageIdLong);
+			// 如果不是待发送重量状态的订单,直接跳过
+			if (!StringUtil.isEqual(oldStatus, BigPackageStatusCode.WSW)) {
+				continue;
+			}
+			// 执行审核,并立即返回通知顺丰,如果顺丰无返回,不能审核通过
+			BigPackage bigPackage = bigPackageDao.getBigPackageById(bigPackageIdLong);
+			Warehouse warehouse = warehouseDao.getWarehouseById(bigPackage.getWarehouseId());
+
+			LogisticsEventsRequest logisticsEventsRequest = new LogisticsEventsRequest();
+			LogisticsEvent logisticsEvent = new LogisticsEvent();
+			// 事件头
+			EventHeader eventHeader = new EventHeader();
+			eventHeader.setEventType(EventType.WMS_GOODS_WEIGHT);
+			eventHeader.setEventTime(DateUtil.dateConvertString(new Date(), DateUtil.yyyy_MM_ddHHmmss));
+			// 仓库编码
+			eventHeader.setEventSource(warehouse.getWarehouseNo());
+			// CP_PARTNERFLAT 为 顺丰文档指定
+			eventHeader.setEventTarget("CP_PARTNERFLAT");
+			logisticsEvent.setEventHeader(eventHeader);
+			// 事件body
+			EventBody eventBody = new EventBody();
+			TradeDetail tradeDetail = new TradeDetail();
+			TradeOrder tradeOrder = new TradeOrder();
+			tradeOrder.setTradeOrderId(bigPackage.getCustomerReferenceNo());
+			List<TradeOrder> tradeOrders = new ArrayList<TradeOrder>();
+			tradeOrders.add(tradeOrder);
+			tradeDetail.setTradeOrders(tradeOrders);
+			eventBody.setTradeDetail(tradeDetail);
+			List<LogisticsOrder> logisticsOrders = new ArrayList<LogisticsOrder>();
+			LogisticsOrder logisticsOrder = new LogisticsOrder();
+			logisticsOrder.setLogisticsRemark("单位:G");
+			logisticsOrder.setOccurTime(DateUtil.dateConvertString(new Date(), DateUtil.yyyy_MM_ddHHmmss));
+			Double weight = bigPackage.getOutWarehouseWeight();// 合包重量
+			if (weight == null) {
+				continue;
+			}
+			logisticsOrder.setLogisticsWeight(NumberUtil.mul(weight, 1000d));
+			Volume volume = new Volume();
+			volume.setHeight(100d);
+			volume.setLength(231.1324d);
+			volume.setWidth(1351.2d);
+			logisticsOrder.setVolume(volume);
+			logisticsOrders.add(logisticsOrder);
+			LogisticsDetail logisticsDetail = new LogisticsDetail();
+			logisticsDetail.setLogisticsOrders(logisticsOrders);
+			eventBody.setLogisticsDetail(logisticsDetail);
+			logisticsEvent.setEventBody(eventBody);
+			logisticsEventsRequest.setLogisticsEvent(logisticsEvent);
+			String xml = XmlUtil.toXml(LogisticsEventsRequest.class, logisticsEventsRequest);
+
+			// xml内容封装完成,开始准备发送
+			User user = userDao.getUserById(bigPackage.getUserIdOfCustomer());
+			String msgSource = user.getOppositeMsgSource();
+
+			List<BasicNameValuePair> basicNameValuePairs = new ArrayList<BasicNameValuePair>();
+			basicNameValuePairs.add(new BasicNameValuePair("logistics_interface", xml));
+			// 仓库编号
+			basicNameValuePairs.add(new BasicNameValuePair("logistics_provider_id", warehouse.getWarehouseNo()));
+			basicNameValuePairs.add(new BasicNameValuePair("msg_type", serviceNameSendWeight));
+			basicNameValuePairs.add(new BasicNameValuePair("msg_source", msgSource));
+			String dataDigest = StringUtil.encoderByMd5(xml + user.getOppositeToken());
+			basicNameValuePairs.add(new BasicNameValuePair("data_digest", dataDigest));
+			basicNameValuePairs.add(new BasicNameValuePair("version", "1.0"));
+			String url = user.getOppositeServiceUrl();
+			logger.info("回传转运订单称重: url=" + url);
+			logger.info("回传转运订单称重: logistics_interface=" + xml);
+			logger.info("回传转运订单称重: data_digest=" + dataDigest + " msg_source=" + msgSource + " msg_type=" + serviceNameSkuStockin + " logistics_provider_id=" + warehouse.getWarehouseNo());
+			try {
+				String response = HttpUtil.postRequest(url, basicNameValuePairs);
+				logger.info("顺丰返回:" + response);
+				bigPackage.setCallbackSendWeighCount(bigPackage.getCallbackSendWeighCount() == null ? 1 : bigPackage.getCallbackSendWeighCount() + 1);
+				Responses responses = (Responses) XmlUtil.toObject(response, Responses.class);
+				if (responses == null) {
+					logger.error("回传转运订单称重 返回信息无法转换成Responses对象");
+					continue;
+				}
+				List<Response> responseList = responses.getResponseItems();
+				if (responseList != null && responseList.size() > 0) {
+					if (StringUtil.isEqualIgnoreCase(responseList.get(0).getSuccess(), Constant.TRUE)) {
+						bigPackage.setCallbackSendWeightIsSuccess(Constant.Y);
+						bigPackage.setStatus(BigPackageStatusCode.WCC);// 待客户核重
+						logger.debug("回传转运订单称重成功");
+					} else {
+						bigPackage.setCallbackSendWeightIsSuccess(Constant.N);
+						logger.debug("回传转运订单称重失败");
+					}
+				} else {
+					logger.error("回传转运订单称重 返回无指明成功与否");
+					bigPackage.setCallbackSendWeightIsSuccess(Constant.N);
+					continue;
+				}
+				// 更新 Callback 次数和成功状态
+				bigPackageDao.updateBigPackageCallbackSendWeight(bigPackage);
+			} catch (Exception e) {
+				logger.error("回传转运订单称重时发生异常:" + e.getMessage());
 			}
 		}
 	}

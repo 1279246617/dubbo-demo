@@ -10,8 +10,8 @@ function listLittlePackagesItem(littlePackageId){
         async : false, 
         success : function(msg){ 
         	msg = eval("(" + msg + ")");
-			  	contentArr.push('<tr  class="warning"><td>编号</td><td>商品名称</td><td>商品单价(元)</td><td>规格型号</td><td>净重KG</td><td>数量</td></tr>');
-			  	$.each(e.littlePackageItemList,function(j,ei){
+			  	contentArr.push('<tr  class="warning"><th>商品编号</th><th>商品名称</th><th>商品单价(元)</th><th>规格型号</th><th>净重KG</th><th>数量</th></tr>');
+			  	$.each(msg,function(j,ei){
 			  		contentArr.push('<tr>');
 				  	contentArr.push('<td>'+ei.sku+'</td>');
 				  	contentArr.push('<td>'+ei.skuName+'</td>');

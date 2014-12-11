@@ -42,4 +42,14 @@ public class EventType {
 	 */
 	public static final String WMS_CHECK_ORDER = "WMS_CHECK_ORDER";
 
+	/**
+	 * 回传转运收货
+	 */
+	public static final String WMS_STOCKIN_INFO = "WMS_STOCKIN_INFO";
+
+	/**
+	 * 转运确认出库
+	 */
+	public static final String LOGISTICS_SEND_GOODS = "LOGISTICS_SEND_GOODS";
+
 }

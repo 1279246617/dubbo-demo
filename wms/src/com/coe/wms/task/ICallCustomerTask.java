@@ -21,5 +21,14 @@ public interface ICallCustomerTask {
 	 * 回传转运订单审核结果给客户
 	 */
 	public void sendBigPackageCheckResultToCustomer();
-	
+
+	/**
+	 * 回传转运订单小包收货结果给客户
+	 */
+	public void sendLittlePackageReceivedToCustomer();
+
+	/**
+	 * 回传转运订单重量给客户
+	 */
+	public void sendBigPackageWeightToCustomer();
 }

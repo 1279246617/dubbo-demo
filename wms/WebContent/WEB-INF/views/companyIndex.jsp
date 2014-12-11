@@ -71,9 +71,9 @@
 		                	</div>
 						</div>	
 		              <ul class="nav nav-tabs nav-stacked " style="margin-bottom:0px;">	
-		              		<li><a href="#${baseUrl}/warehouse/storage/listInWarehouseOrder.do" tab_id="findInWarehouseOrder"><i class="icon-list"></i><span class="hidden-tablet">入库订单列表</span></a></li>
+		              		<li><a href="#${baseUrl}/warehouse/storage/listInWarehouseOrder.do" tab_id="findInWarehouseOrder"><i class="icon-list"></i><span class="hidden-tablet">入库订单</span></a></li>
 		              		<!-- 出库订单查询中,需要具备审核功能,反审核 -->
-		              		<li><a href="#${baseUrl}/warehouse/storage/listOutWarehouseOrder.do" tab_id="findOutWarehouseOrder"><i class="icon-list"></i><span class="hidden-tablet">出库订单列表</span></a></li>
+		              		<li><a href="#${baseUrl}/warehouse/storage/listOutWarehouseOrder.do" tab_id="findOutWarehouseOrder"><i class="icon-list"></i><span class="hidden-tablet">出库订单</span></a></li>
 		              		<!-- 待审核出库订单,只显示未审核出库订单,方便审核的人快速操作 -->
 		              		<li><a href=#${baseUrl}/warehouse/storage/listWaitCheckOutWarehouseOrder.do  tab_id="waitCheckOutWarehouseOrder"><i class="icon-eye-open"></i><span class="hidden-tablet">待审核出库订单</span></a></li>
 		                </ul>
@@ -83,9 +83,9 @@
 		                	</div>
 						</div>
 						<ul class="nav nav-tabs nav-stacked" style="margin-bottom:0px;">	
-		              		<li><a href="#${baseUrl}/warehouse/transport/listBigPackage.do" tab_id="findBigPackage"><i class="icon-list"></i><span class="hidden-tablet">转运订单列表</span></a></li>
+		              		<li><a href="#${baseUrl}/warehouse/transport/listBigPackage.do" tab_id="findBigPackage"><i class="icon-list"></i><span class="hidden-tablet">转运订单</span></a></li>
 		              		<li><a href=#${baseUrl}/warehouse/transport/listWaitCheckBigPackage.do  tab_id="waitCheckBigPackage"><i class="icon-eye-open"></i><span class="hidden-tablet">待审核转运订单</span></a></li>
-		              		<li><a href="#${baseUrl}/warehouse/transport/listLittlePackage.do" tab_id="findLittlePackage"><i class="icon-list"></i><span class="hidden-tablet">转运订单详情列表</span></a></li>
+		              		<li><a href="#${baseUrl}/warehouse/transport/listLittlePackage.do" tab_id="findLittlePackage"><i class="icon-list"></i><span class="hidden-tablet">转运订单详情</span></a></li>
 		                </ul>
 		        </div>
 		        
@@ -137,9 +137,9 @@
 		        <div title="财务管理" class=" nav-collapse sidebar-nav"> 
 		     			<ul class="nav nav-tabs nav-stacked">
 		                	<li><a href=#><i class="icon-check"></i><span class="hidden-tablet">现金收款</span></a></li>
-		                	<li><a href=#><i class="icon-check"></i><span class="hidden-tablet">入账列表</span></a></li>
+		                	<li><a href=#><i class="icon-check"></i><span class="hidden-tablet">入账</span></a></li>
 		              		<li><a href=#><i class="icon-check"></i><span class="hidden-tablet">出账审核</span></a></li>
-		              		<li><a href=#><i class="icon-check"></i><span class="hidden-tablet">出账列表</span></a></li>
+		              		<li><a href=#><i class="icon-check"></i><span class="hidden-tablet">出账</span></a></li>
 		                </ul>
 				</div>
 				
