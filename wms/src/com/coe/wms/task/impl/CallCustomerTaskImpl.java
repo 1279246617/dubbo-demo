@@ -475,7 +475,8 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 	/**
 	 * 回传出库状态给客户(出库的最后步骤)
 	 */
-	@Scheduled(cron = "0 0/15 * * * ? ")
+//	@Scheduled(cron = "0 0/15 * * * ? ")
+	@Scheduled(cron = "1 * * * * ? ")
 	@Override
 	public void sendBigPackageCheckResultToCustomer() {
 		List<Long> bigPackageIdList = bigPackageDao.findCallbackSendCheckUnSuccessBigPackageId();
@@ -567,9 +568,19 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 					}
 				} else {
 					logger.error("回传转运订单审核 返回无指明成功与否");
+					continue;
 				}
 				// 更新 Callback 次数和成功状态
 				bigPackageDao.updateBigPackageCallbackSendCheck(bigPackage);
+				String newStatus = "";
+				if (StringUtil.isEqual(bigPackage.getCheckResult(), "SUCCESS")) {
+					newStatus = BigPackageStatusCode.WRG;
+				} else if (StringUtil.isEqual(bigPackage.getCheckResult(), "SECURITY")) {
+					newStatus = BigPackageStatusCode.WCF;
+				} else if (StringUtil.isEqual(bigPackage.getCheckResult(), "OTHER_REASON")) {
+					newStatus = BigPackageStatusCode.WCF;
+				}
+				bigPackageDao.updateBigPackageStatus(bigPackageIdLong, newStatus);
 			} catch (Exception e) {
 				logger.error("回传转运订单审核时发生异常:" + e.getMessage());
 			}

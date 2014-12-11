@@ -157,7 +157,7 @@
 		            		return skus;
 	  		          	}},
 		                { display: '状态', name: 'status', align: 'center', type: 'float',width:'8%'},
-		                { display: '仓库审核', name: 'checkResult', align: 'center', type: 'float',width:'8%'},
+		                { display: '仓库审核', name: 'checkResult', align: 'center', type: 'float',width:'9%'},
 		                { display: '发货渠道', name: 'shipwayCode', align: 'center', type: 'float',width:'8%'},
 		                { display: '跟踪单号', name: 'trackingNo', align: 'center', type: 'float',width:'12%'},
 		                { display: '收件人名', name: 'receiverName', align: 'center', type: 'float',width:'8%'},
