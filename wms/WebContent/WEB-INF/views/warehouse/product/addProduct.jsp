@@ -94,9 +94,15 @@
 			<th>
 				<input type="text" name="origin" id="origin" style="width: 120px;">
 			</th>
-			<th>商品备注</th>
+			<th>商品条码</th>
 			<th>
-				<input type="text" name="remark" id="remark" style="width: 120px;">
+				<input type="text" name="barcode" id="barcode" style="width: 120px;">
+			</th>
+		</tr>
+		<tr>
+			<th>商品备注</th>
+			<th colspan="3">
+				<input type="text" name="remark" id="remark" style="width: 320px;">
 			</th>
 		</tr>
 	</table>

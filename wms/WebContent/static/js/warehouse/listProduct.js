@@ -4,7 +4,7 @@ function addProduct(){
           lock: true,
           title: '添加商品',
           width: '650px',
-          height: '400px',
+          height: '420px',
           content: 'url:' + baseUrl + '/products/addProduct.do',
           button: [{
             name: '确定',
@@ -23,6 +23,8 @@ function addProduct(){
             		var taxCode = this.content.$("#taxCode").val();
             		var origin = this.content.$("#origin").val();
             		var remark = this.content.$("#remark").val();
+            		var barcode = this.content.$("#barcode").val();
+            		
             		var that = this; 
             		if(userLoginName == null || userLoginName ==''){
             			parent.$.showShortMessage({msg:"请输入客户帐号",animate:false,left:"43%"});
@@ -41,7 +43,8 @@ function addProduct(){
      	            	customsValue:customsValue,
      	            	taxCode:taxCode,
      	            	origin:origin,
-     	            	remark:remark
+     	            	remark:remark,
+     	            	barcode:barcode
      	             },
      	             function(msg) {
      	            	if(msg.status == '1'){
@@ -129,7 +132,7 @@ function updateProduct(id){
           lock: true,
           title: '更新商品',
           width: '650px',
-          height: '400px',
+          height: '420px',
           content: 'url:' + baseUrl + '/products/updateProduct.do?id='+id,
           button: [{
             name: '确定',
@@ -149,6 +152,7 @@ function updateProduct(id){
             		var taxCode = this.content.$("#taxCode").val();
             		var origin = this.content.$("#origin").val();
             		var remark = this.content.$("#remark").val();
+            		var barcode = this.content.$("#barcode").val();
             		var that = this; 
             		if(userLoginName == null || userLoginName ==''){
             			parent.$.showShortMessage({msg:"请输入客户帐号",animate:false,left:"43%"});
@@ -168,7 +172,8 @@ function updateProduct(id){
  	            	customsValue:customsValue,
  	            	taxCode:taxCode,
  	            	origin:origin,
- 	            	remark:remark
+ 	            	remark:remark,
+ 	            	barcode:barcode
  	             },
  	             function(msg) {
  	            	if(msg.status == '1'){

@@ -182,7 +182,7 @@ public class Products {
 	@ResponseBody
 	@RequestMapping(value = "/saveAddProduct", method = RequestMethod.POST)
 	public String saveAddProduct(HttpServletRequest request, String productName, Long productTypeId, String userLoginName, String isNeedBatchNo, String sku, String warehouseSku, String model, Double volume, Double customsWeight, String currency,
-			Double customsValue, String taxCode, String origin, String remark) {
+			Double customsValue, String taxCode, String origin, String remark,String barcode) {
 		Long userIdOfCustomer = userService.findUserIdByLoginName(userLoginName);
 		Long createdTime = System.currentTimeMillis();
 		Product product = new Product();
@@ -200,6 +200,7 @@ public class Products {
 		product.setTaxCode(taxCode);
 		product.setOrigin(origin);
 		product.setRemark(remark);
+		product.setBarcode(barcode);
 		product.setCreatedTime(createdTime);
 		Map<String, String> map = productService.addProduct(product);
 		return GsonUtil.toJson(map);
@@ -246,7 +247,7 @@ public class Products {
 	@ResponseBody
 	@RequestMapping(value = "/saveUpdateProduct", method = RequestMethod.POST)
 	public String saveUpdateProduct(HttpServletRequest request, Long id, String productName, Long productTypeId, String userLoginName, String isNeedBatchNo, String sku, String warehouseSku, String model, Double volume, Double customsWeight,
-			String currency, Double customsValue, String taxCode, String origin, String remark) {
+			String currency, Double customsValue, String taxCode, String origin, String remark,String barcode) {
 		Long userId = userService.findUserIdByLoginName(userLoginName);
 		Long lastUpdateTime = System.currentTimeMillis();
 		Product product = new Product();
@@ -265,6 +266,7 @@ public class Products {
 		product.setTaxCode(taxCode);
 		product.setOrigin(origin);
 		product.setRemark(remark);
+		product.setBarcode(barcode);
 		product.setLastUpdateTime(lastUpdateTime);
 		Map<String, String> map = productService.updateProduct(product);
 		return GsonUtil.toJson(map);

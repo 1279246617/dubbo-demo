@@ -234,7 +234,7 @@ public class Print {
 		ModelAndView view = new ModelAndView();
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
 		List<Map<String, Object>> mapList = new ArrayList<Map<String, Object>>();
-		List<String> skus = new ArrayList<String>();
+		List<String> barcodes = new ArrayList<String>();
 		if (StringUtil.isNotNull(ids)) {
 			String idArray[] = ids.split(",");
 			for (int i = 0; i < idArray.length; i++) {
@@ -244,16 +244,18 @@ public class Print {
 				Long id = Long.valueOf(idArray[i]);
 				// 根据商品id,找到sku
 				Product product = productService.getProductById(id);
-				skus.add(product.getSku());
+				if (product.getBarcode() != null) {
+					barcodes.add(product.getBarcode());
+				}
 			}
 		}
 		if (StringUtil.isNotNull(sku)) {
-			skus.add(sku);
+			barcodes.add(sku);
 		}
-		if (skus.size() == 0) {
+		if (barcodes.size() == 0) {
 			return view;
 		}
-		for (String sku2 : skus) {
+		for (String sku2 : barcodes) {
 			Map<String, Object> map = printService.getPrintSkuBarcodeData(sku2);
 			if (map != null) {
 				for (int i = 0; i < quantity; i++) {// 打印份数
