@@ -76,11 +76,11 @@
 		<table class="table table-striped" style="width:1200px;margin-bottom: 0px">
 			<tr>
 					<td  >
-						<span class="pull-left" style="width:75px;">产品SKU</span>
+						<span class="pull-left" style="width:75px;">商品SKU</span>
 						<span class="pull-left" style="width:170px;">
 							<input type="text"  name="itemSku" t="2"  id="itemSku" style="width:130px;"/>
 						</span>
-						<span class="pull-left" style="width:75px;">产品数量</span>
+						<span class="pull-left" style="width:75px;">商品数量</span>
 						<span class="pull-left" style="width:112px;">
 							<input type="text"  name="itemQuantity"  id="itemQuantity" t="3" style="width:90px;" onkeyup="this.value=this.value.replace(/[^\d]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d]/g,'')"/>
 						</span>
@@ -193,14 +193,14 @@
 	     function initGrid() {
 	    	   grid = $("#maingrid").ligerGrid({
 	                columns: [
-						{display: '产品SKU',isSort: false,width: '11%',render: function(row) {
+						{display: '商品编号',isSort: false,width: '11%',render: function(row) {
 							if(row.sku ==null || row.sku ==''){
 								return '<a href="javascript:editSku(' + row.orderItemId + ')">点击补齐</a>';	
 							}else{
 								return row.sku;								
 							}
 						}},     
-	                    { display: '产品编号', name: 'skuNo', align: 'center',width:'10%'},
+	                    { display: '商品SKU', name: 'skuNo', align: 'center',width:'10%'},
 	                    { display: '总预报数量', name: 'totalQuantity', align: 'center', type: 'int',width:'8%'},
 	                    { display: '总已收货数量', name: 'totalReceivedQuantity', align: 'center', type: 'int',width:'9%'},
 	                    { display: '本次收货数量', name: 'receivedQuantity', align: 'center', type: 'int',width:'9%'},
@@ -233,7 +233,7 @@
 	        function editSku(orderItemId){
 	        	$.dialog({
       	          lock: true,
-      	          title: '补齐产品SKU',
+      	          title: '补齐商品SKU',
       	          width: '280px',
       	          height: '80px',
       	          content: 'url:' + baseUrl + '/warehouse/storage/editInWarehouseOrderItemSku.do?orderItemId='+orderItemId,
@@ -243,7 +243,7 @@
       	            	var objSku = this.content.document.getElementById("sku");
        	              var sku = $(objSku).val();		
       	              if(sku == null || sku ==''){
-      	            	parent.$.showShortMessage({msg:"请输入产品SKU",animate:false,left:"45%"});
+      	            	parent.$.showShortMessage({msg:"请输入商品SKU",animate:false,left:"45%"});
       	            	return false;
       	              }
       	              $.post(baseUrl + '/warehouse/storage/saveInWarehouseOrderItemSku.do', {
@@ -252,10 +252,10 @@
       	              },
       	              function(msg) {
       	            	  if(msg.status =="1"){
-      	            			parent.$.showShortMessage({msg:"补齐产品SKU成功",animate:false,left:"45%"});
+      	            			parent.$.showShortMessage({msg:"补齐商品SKU成功",animate:false,left:"45%"});
       	                		grid.loadData();
       	            	  }else{
-      	            			parent.$.showShortMessage({msg:"补齐产品SKU失败",animate:false,left:"45%"});  
+      	            			parent.$.showShortMessage({msg:"补齐商品SKU失败",animate:false,left:"45%"});  
       	            	  }
       	              },"json");
       	            }

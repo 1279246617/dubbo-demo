@@ -13,7 +13,7 @@
 <body>
 	<table  class="table"  style="margin-top:15px;">
 		<tr>
-			<th style="width:70px;">产品SKU</th>
+			<th style="width:70px;">商品SKU</th>
 			<th>
 				<input type="text" name="sku" id="sku" style="width: 120px;"/>
 			</th>
@@ -23,11 +23,11 @@
 			</th>
 		</tr>
 		<tr>
-			<th  >产品名称</th>
+			<th  >商品名称</th>
 			<th>
 				<input type="text" name="productName" id="productName" style="width: 120px;"/>
 			</th>
-			<th>产品类型</th>
+			<th>商品类型</th>
 			<th>
 					<select style="width:125px;" id="productTypeId" name="productTypeId">
              				<option></option>
@@ -58,7 +58,7 @@
 			<th>
 				<input type="text" name="model" id="model" style="width: 120px;"/>
 			</th>
-			<th>产品体积</th>
+			<th>商品体积</th>
 			<th>
 				<input type="text" name="volume" id="volume" style="width: 120px;" onkeyup="if(isNaN(value))execCommand('undo')" onafterpaste="if(isNaN(value))execCommand('undo')" />
 			</th>
@@ -90,11 +90,11 @@
 			</th>
 		</tr>
 		<tr>
-			<th>产品产地</th>
+			<th>商品产地</th>
 			<th>
 				<input type="text" name="origin" id="origin" style="width: 120px;">
 			</th>
-			<th>产品备注</th>
+			<th>商品备注</th>
 			<th>
 				<input type="text" name="remark" id="remark" style="width: 120px;">
 			</th>

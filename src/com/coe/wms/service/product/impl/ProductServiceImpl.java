@@ -95,13 +95,13 @@ public class ProductServiceImpl implements IProductService {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put(Constant.STATUS, Constant.FAIL);
 		if (productId == null) {
-			map.put(Constant.MESSAGE, "产品id为空，无法处理");
+			map.put(Constant.MESSAGE, "商品id为空，无法处理");
 			return map;
 		}
 		int updateCount = productDao.deleteProductById(productId);
 		if (updateCount > 0) {
 			map.put(Constant.STATUS, Constant.SUCCESS);
-			map.put(Constant.MESSAGE, "删除产品成功");
+			map.put(Constant.MESSAGE, "删除商品成功");
 		} else {
 			map.put(Constant.MESSAGE, "执行数据库更新失败，删除失败");
 		}
@@ -109,7 +109,7 @@ public class ProductServiceImpl implements IProductService {
 	}
 
 	/**
-	 * 更新产品
+	 * 更新商品
 	 * 
 	 */
 	@Override
@@ -117,11 +117,11 @@ public class ProductServiceImpl implements IProductService {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put(Constant.STATUS, Constant.FAIL);
 		if (StringUtil.isNull(product.getSku())) {
-			map.put(Constant.MESSAGE, "请输入产品SKU");
+			map.put(Constant.MESSAGE, "请输入商品SKU");
 			return map;
 		}
 		if (StringUtil.isNull(product.getProductName())) {
-			map.put(Constant.MESSAGE, "请输入产品名称");
+			map.put(Constant.MESSAGE, "请输入商品名称");
 			return map;
 		}
 		if (StringUtil.isNull(product.getWarehouseSku())) {
@@ -134,27 +134,27 @@ public class ProductServiceImpl implements IProductService {
 		}
 		long count = productDao.updateProduct(product);
 		if (count > 0) {
-			map.put(Constant.MESSAGE, "更新产品成功");
+			map.put(Constant.MESSAGE, "更新商品成功");
 			map.put(Constant.STATUS, Constant.SUCCESS);
 		} else {
-			map.put(Constant.MESSAGE, "更新产品失败");
+			map.put(Constant.MESSAGE, "更新商品失败");
 		}
 		return map;
 	}
 
 	/**
-	 * 新增产品
+	 * 新增商品
 	 */
 	@Override
 	public Map<String, String> addProduct(Product product) {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put(Constant.STATUS, Constant.FAIL);
 		if (StringUtil.isNull(product.getSku())) {
-			map.put(Constant.MESSAGE, "请输入产品SKU");
+			map.put(Constant.MESSAGE, "请输入商品SKU");
 			return map;
 		}
 		if (StringUtil.isNull(product.getProductName())) {
-			map.put(Constant.MESSAGE, "请输入产品名称");
+			map.put(Constant.MESSAGE, "请输入商品名称");
 			return map;
 		}
 		if (StringUtil.isNull(product.getWarehouseSku())) {
@@ -167,10 +167,10 @@ public class ProductServiceImpl implements IProductService {
 		}
 		long count = productDao.addProduct(product);
 		if (count > 0) {
-			map.put(Constant.MESSAGE, "新增产品成功");
+			map.put(Constant.MESSAGE, "新增商品成功");
 			map.put(Constant.STATUS, Constant.SUCCESS);
 		} else {
-			map.put(Constant.MESSAGE, "新增产品失败");
+			map.put(Constant.MESSAGE, "新增商品失败");
 		}
 		return map;
 	}
@@ -188,7 +188,7 @@ public class ProductServiceImpl implements IProductService {
 		}
 		int count = productDao.deleteProductByIds(ids);
 		map.put(Constant.STATUS, Constant.SUCCESS);
-		map.put(Constant.MESSAGE, "删除成功" + count + "个产品");
+		map.put(Constant.MESSAGE, "删除成功" + count + "个商品");
 		return map;
 	}
 }

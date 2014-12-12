@@ -17,26 +17,34 @@ public class InWarehouseOrderItem implements Serializable {
 	private Long orderId;
 
 	/**
-	 * sku下产品数量
+	 * sku下商品数量
 	 */
 	private Integer quantity;
 
 	/**
 	 * sku 等于顺丰的商品条码
+	 * 
+	 * 2014-12-12
+	 * 确认顺丰文档中的sku字段是商品条码(应当叫barcode字段)
+	 * 对应系统商品库(product)的barcode字段
 	 */
 	private String sku;
+	
 	/**
-	 * sku编号 等于顺丰的商品编号
+	 * sku编号 等于顺丰的商品编号(skuId)
+	 * 实际顺丰是以skuId作为sku
+	 * 
+	 * 2014-12-12对应系统商品库(product的sku字段)
 	 */
 	private String skuNo;
 
 	/**
-	 * 产品生产批次(也称客户批次)
+	 * 商品生产批次(也称客户批次)
 	 */
 	private String productionBatchNo;
 
 	/**
-	 * 产品有效期至
+	 * 商品有效期至
 	 */
 	private Long validityTime;
 

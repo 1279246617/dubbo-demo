@@ -38,12 +38,12 @@ public class ProductDaoImpl implements IProductDao {
 	}
 
 	/**
-	 * 查询产品
+	 * 查询商品
 	 */
 	@Override
 	public List<Product> findProduct(Product product, Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer(
-				"select id,user_id_of_customer,product_name,product_type_id,sku,warehouse_sku,remark,currency,customs_weight,is_need_batch_no,model,customs_value,origin,last_update_time,created_time,tax_code,volume from p_product where 1=1 ");
+				"select id,user_id_of_customer,product_name,product_type_id,sku,warehouse_sku,remark,currency,customs_weight,is_need_batch_no,model,customs_value,origin,last_update_time,created_time,tax_code,volume,barcode from p_product where 1=1 ");
 		if (product != null) {
 			if (product.getUserIdOfCustomer() != null) {
 				sb.append(" and user_id_of_customer= " + product.getUserIdOfCustomer());
@@ -69,11 +69,15 @@ public class ProductDaoImpl implements IProductDao {
 			if (product.getTaxCode() != null) {
 				sb.append(" and tax_code= '" + product.getTaxCode() + "'");
 			}
+			if (product.getBarcode() != null) {
+				sb.append(" and barcode= '" + product.getBarcode() + "'");
+			}
 		}
 		if (moreParam != null) {
 			if (StringUtil.isNotNull(moreParam.get("keyword"))) {
 				sb.append(" and (product_name like '%" + moreParam.get("keyword") + "%'");
-				sb.append(" or sku like '%" + moreParam.get("keyword") + "%' )");
+				sb.append(" or sku like '%" + moreParam.get("keyword") + "%' ");
+				sb.append(" or barcode like '%" + moreParam.get("keyword") + "%' )");
 			}
 			if (moreParam.get("createdTimeStart") != null) {
 				Date date = DateUtil.stringConvertDate(moreParam.get("createdTimeStart"), DateUtil.yyyy_MM_ddHHmmss);
@@ -97,7 +101,7 @@ public class ProductDaoImpl implements IProductDao {
 	}
 
 	/**
-	 * 删除产品
+	 * 删除商品
 	 */
 	@Override
 	public Long countProduct(Product product, Map<String, String> moreParam) {
@@ -127,11 +131,15 @@ public class ProductDaoImpl implements IProductDao {
 			if (product.getTaxCode() != null) {
 				sb.append(" and tax_code= '" + product.getTaxCode() + "'");
 			}
+			if (product.getBarcode() != null) {
+				sb.append(" and barcode= '" + product.getBarcode() + "'");
+			}
 		}
 		if (moreParam != null) {
 			if (StringUtil.isNotNull(moreParam.get("keyword"))) {
 				sb.append(" and (product_name like '%" + moreParam.get("keyword") + "%'");
-				sb.append(" or sku like '%" + moreParam.get("keyword") + "%' )");
+				sb.append(" or sku like '%" + moreParam.get("keyword") + "%' ");
+				sb.append(" or barcode like '%" + moreParam.get("keyword") + "%' )");
 			}
 			if (moreParam.get("createdTimeStart") != null) {
 				Date date = DateUtil.stringConvertDate(moreParam.get("createdTimeStart"), DateUtil.yyyy_MM_ddHHmmss);
@@ -150,11 +158,11 @@ public class ProductDaoImpl implements IProductDao {
 	}
 
 	/**
-	 * 新增产品
+	 * 新增商品
 	 */
 	@Override
 	public long addProduct(final Product product) {
-		final String sql = "insert into p_product (user_id_of_customer,product_name,product_type_id,sku,warehouse_sku,remark,currency,customs_weight,is_need_batch_no,model,customs_value,origin,last_update_time,created_time,tax_code,volume) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		final String sql = "insert into p_product (user_id_of_customer,product_name,product_type_id,sku,warehouse_sku,remark,currency,customs_weight,is_need_batch_no,model,customs_value,origin,last_update_time,created_time,tax_code,volume,barcode) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			@Override
@@ -196,6 +204,7 @@ public class ProductDaoImpl implements IProductDao {
 				} else {
 					ps.setDouble(16, product.getVolume());
 				}
+				ps.setString(17, product.getBarcode());
 				return ps;
 			}
 		}, keyHolder);
@@ -205,7 +214,7 @@ public class ProductDaoImpl implements IProductDao {
 
 	@Override
 	public Product getProductById(Long id) {
-		String sql = "select id,user_id_of_customer,product_name,product_type_id,sku,warehouse_sku,remark,currency,customs_weight,is_need_batch_no,model,customs_value,origin,last_update_time,created_time,tax_code,volume from p_product where id= "
+		String sql = "select id,user_id_of_customer,product_name,product_type_id,sku,warehouse_sku,remark,currency,customs_weight,is_need_batch_no,model,customs_value,origin,last_update_time,created_time,tax_code,volume,barcode from p_product where id= "
 				+ id;
 		Product product = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<Product>(Product.class));
 		return product;
@@ -220,9 +229,9 @@ public class ProductDaoImpl implements IProductDao {
 
 	@Override
 	public int updateProduct(Product product) {
-		String sql = "update p_product set user_id_of_customer=?,product_name=?,product_type_id=?,sku=?,warehouse_sku=?,remark=?,currency=?,customs_weight=?,is_need_batch_no=?,model=?,customs_value=?,origin=?,last_update_time=?,tax_code=?,volume=? where id=?";
+		String sql = "update p_product set user_id_of_customer=?,product_name=?,product_type_id=?,sku=?,warehouse_sku=?,remark=?,currency=?,customs_weight=?,is_need_batch_no=?,model=?,customs_value=?,origin=?,last_update_time=?,tax_code=?,volume=?,barcode=? where id=?";
 		int count = jdbcTemplate.update(sql, product.getUserIdOfCustomer(), product.getProductName(), product.getProductTypeId(), product.getSku(), product.getWarehouseSku(), product.getRemark(), product.getCurrency(), product.getCustomsWeight(),
-				product.getIsNeedBatchNo(), product.getModel(), product.getCustomsValue(), product.getOrigin(), product.getLastUpdateTime(), product.getTaxCode(), product.getVolume(), product.getId());
+				product.getIsNeedBatchNo(), product.getModel(), product.getCustomsValue(), product.getOrigin(), product.getLastUpdateTime(), product.getTaxCode(), product.getVolume(), product.getBarcode(), product.getId());
 		return count;
 	}
 

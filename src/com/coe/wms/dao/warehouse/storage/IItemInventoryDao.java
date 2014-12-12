@@ -38,7 +38,7 @@ public interface IItemInventoryDao {
 	public int addItemInventory(Long wareHouseId, Long userIdOfCustomer, String batchNo, String sku, Integer addQuantity);
 
 	/**
-	 * 更新产品批次库存
+	 * 更新商品批次库存
 	 * 
 	 * @param id
 	 * @param quantity

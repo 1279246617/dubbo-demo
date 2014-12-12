@@ -3,7 +3,7 @@ package com.coe.wms.model.product;
 import java.io.Serializable;
 
 /**
- * 产品类型
+ * 商品类型
  * 
  * 
  * @author Administrator

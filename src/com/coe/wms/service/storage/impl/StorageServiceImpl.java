@@ -248,11 +248,11 @@ public class StorageServiceImpl implements IStorageService {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put(Constant.STATUS, Constant.FAIL);
 		if (StringUtil.isNull(itemSku)) {
-			map.put(Constant.MESSAGE, "请输入产品SKU.");
+			map.put(Constant.MESSAGE, "请输入商品SKU.");
 			return map;
 		}
 		if (itemQuantity == null) {
-			map.put(Constant.MESSAGE, "请输入产品数量.");
+			map.put(Constant.MESSAGE, "请输入商品数量.");
 			return map;
 		}
 		Long orderId = inWarehouseRecordDao.getInWarehouseOrderIdByRecordId(inWarehouseRecordId);
@@ -274,14 +274,14 @@ public class StorageServiceImpl implements IStorageService {
 			if (orderItems.size() == 1 && StringUtil.isNull(orderItems.get(0).getSku())) {
 				// isConfirm = 'N' 表示不确认是否绑定,弹出询问框
 				if (StringUtil.isEqual(isConfirm, Constant.N)) {
-					map.put(Constant.STATUS, "2");// 该订单是薄库存情况,你确定将此SKU绑定到产品吗?
+					map.put(Constant.STATUS, "2");// 该订单是薄库存情况,你确定将此SKU绑定到商品吗?
 					return map;
 				}
 				// 薄库存,把sku更新到物品明细记录
 				long updateCount = inWarehouseOrderItemDao.saveInWarehouseOrderItemSku(orderItems.get(0).getId(), itemSku);
 				inWarehouseOrderItemList = inWarehouseOrderItemDao.findInWarehouseOrderItem(inWarehouseOrderItemParam, null, null);
 			} else {
-				map.put(Constant.MESSAGE, "该产品SKU在此订单中无预报,且不符合薄库存情况,请在下面列表补齐产品SKU");
+				map.put(Constant.MESSAGE, "该商品SKU在此订单中无预报,且不符合薄库存情况,请在下面列表补齐商品SKU");
 				return map;
 			}
 		}
@@ -934,7 +934,7 @@ public class StorageServiceImpl implements IStorageService {
 				outWarehouseOrderItem.setSkuNetWeight(sku.getSkuNetWeight());
 				outWarehouseOrderItem.setOutWarehouseOrderId(outWarehouseOrderId);
 				itemList.add(outWarehouseOrderItem);
-				// 入库订单物品加入产品库
+				// 入库订单物品加入商品库
 				Product productParam = new Product();
 				productParam.setSku(sku.getSkuCode());
 				productParam.setUserIdOfCustomer(userIdOfCustomer);
@@ -944,7 +944,7 @@ public class StorageServiceImpl implements IStorageService {
 					product.setCreatedTime(System.currentTimeMillis());
 					product.setCurrency(CurrencyCode.CNY);
 					product.setCustomsValue(NumberUtil.div(sku.getSkuUnitPrice(), 100d));// 出库订单物品单价单位是人民币分
-					product.setCustomsWeight(NumberUtil.div(sku.getSkuNetWeight(), 1000d));// 出库订单物品重量单位是G,产品库是KG
+					product.setCustomsWeight(NumberUtil.div(sku.getSkuNetWeight(), 1000d));// 出库订单物品重量单位是G,商品库是KG
 					product.setModel(sku.getSpecification());
 					product.setIsNeedBatchNo(Constant.N);
 					product.setProductName(sku.getSkuName());
@@ -1116,7 +1116,7 @@ public class StorageServiceImpl implements IStorageService {
 			}
 
 			// ==========================================================================================================================================================================
-			// 分配从库位库存找产品库位,预生成打印捡货单需要的信息
+			// 分配从库位库存找商品库位,预生成打印捡货单需要的信息
 			List<OutWarehouseOrderItemShelf> outWarehouseOrderItemShelfList = new ArrayList<OutWarehouseOrderItemShelf>();
 			List<ItemShelfInventory> waitUpdateavAilableQuantityList = new ArrayList<ItemShelfInventory>();
 			OutWarehouseOrder outWarehouseOrder = outWarehouseOrderDao.getOutWarehouseOrderById(orderIdLong);
@@ -1127,7 +1127,7 @@ public class StorageServiceImpl implements IStorageService {
 			for (OutWarehouseOrderItem item : outWarehouseOrderItemList) {
 				// 根据出库订单物品 SKU和数量,按批次,SKU查找上架表
 				List<ItemShelfInventory> itemShelfInventoryList = itemShelfInventoryDao.findItemShelfInventoryForPreOutShelf(outWarehouseOrder.getUserIdOfCustomer(), outWarehouseOrder.getWarehouseId(), item.getSku());
-				int needQuantity = item.getQuantity();// 需要预下架的产品数量
+				int needQuantity = item.getQuantity();// 需要预下架的商品数量
 				int isEnoughQuantity = needQuantity;// 循环执行完后,isEnoughQuantity大于0,代表可用库存不足,审核失败
 				for (ItemShelfInventory itemShelfInventory : itemShelfInventoryList) {
 					int quantity = 0;
@@ -1142,7 +1142,7 @@ public class StorageServiceImpl implements IStorageService {
 						isBreak = true;
 					} else {
 						// 否则此库位的可用库存全部使用,并继续找下一库位
-						// 需要下架的产品减去此货架可用库存
+						// 需要下架的商品减去此货架可用库存
 						needQuantity = needQuantity - availableQuantity;
 						quantity = availableQuantity;
 						// 更新可用库存=0
@@ -1322,7 +1322,7 @@ public class StorageServiceImpl implements IStorageService {
 		for (InWarehouseRecordItem item : inWarehouseRecordItemList) {
 			Map<String, String> map = new HashMap<String, String>();
 			map.put("sku", item.getSku());
-			// 获取sku产品名
+			// 获取sku商品名
 			InWarehouseOrderItem orderItemParam = new InWarehouseOrderItem();
 			orderItemParam.setOrderId(inWarehouseOrderId);
 			orderItemParam.setSku(item.getSku());
@@ -1481,7 +1481,7 @@ public class StorageServiceImpl implements IStorageService {
 				warehouseId = outWarehouseOrder.getWarehouseId();
 			}
 			outWarehouseOrderDao.updateOutWarehouseOrderStatus(orderId, OutWarehouseOrderStatusCode.SUCCESS);
-			// 更新出库成功,并改变产品批次库存
+			// 更新出库成功,并改变商品批次库存
 			// --------------------------------------------------------------------------------------------------------------------------------------------
 			// 查找下架时的批次,货位,sku,数量记录
 			OutWarehouseOrderItemShelf outWarehouseOrderItemShelfParam = new OutWarehouseOrderItemShelf();
@@ -1499,10 +1499,10 @@ public class StorageServiceImpl implements IStorageService {
 					int outQuantity = oItemShelf.getQuantity();
 					int updateCount = itemInventoryDao.updateItemInventoryQuantity(itemInventory.getId(), itemInventory.getQuantity() - outQuantity);
 					if (updateCount <= 0) {
-						map.put(Constant.MESSAGE, "执行产品批次库存更新失败,出库不成功");// 待添加事务回滚
+						map.put(Constant.MESSAGE, "执行商品批次库存更新失败,出库不成功");// 待添加事务回滚
 					}
 				} else {
-					map.put(Constant.MESSAGE, "找不到产品批次库存,出库不成功");// 待添加事务回滚
+					map.put(Constant.MESSAGE, "找不到商品批次库存,出库不成功");// 待添加事务回滚
 				}
 			}
 			// 更新库存结束----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------

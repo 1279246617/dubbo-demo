@@ -70,11 +70,11 @@
 		<table class="table table-striped" style="width:1200px;margin-bottom: 0px">
 			<tr>
 					<td  >
-						<span class="pull-left" style="width:75px;">产品SKU</span>
+						<span class="pull-left" style="width:75px;">商品SKU</span>
 						<span class="pull-left" style="width:170px;">
 							<input type="text"  name="itemSku" t="2"  id="itemSku" style="width:130px;"/>
 						</span>
-						<span class="pull-left" style="width:75px;">产品数量</span>
+						<span class="pull-left" style="width:75px;">商品数量</span>
 						<span class="pull-left" style="width:112px;">
 							<input type="text"  name="itemQuantity"  id="itemQuantity" t="3" style="width:90px;" onkeyup="this.value=this.value.replace(/[^\d]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d]/g,'')"/>
 						</span>

@@ -1,4 +1,4 @@
---产品类型 客户id
+--商品类型 客户id
 ALTER TABLE `p_product_type`
 ADD COLUMN `user_id_of_customer`  bigint NULL AFTER `product_type_name`;
 

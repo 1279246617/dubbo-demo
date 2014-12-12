@@ -3,13 +3,13 @@ package com.coe.wms.model.warehouse.storage.record;
 import java.io.Serializable;
 
 /**
- * 产品货位库存
+ * 商品货位库存
  * 
  * 
  * 
- * 在入库 出库时产品批次库存
+ * 在入库 出库时商品批次库存
  * 
- * 在上架和下架时修改产品货位库存
+ * 在上架和下架时修改商品货位库存
  * 
  * @author Administrator
  * 

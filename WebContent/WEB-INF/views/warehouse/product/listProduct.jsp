@@ -23,13 +23,13 @@
            <form action="${baseUrl}/products/getListProductData.do" id="searchform" name="searchform" method="post">
                <div class="pull-left">
                		<span class="pull-left" style="width:60px;">
-			       		<a class="btn btn-primary btn-small" onclick="addProduct()" title="添加产品">
+			       		<a class="btn btn-primary btn-small" onclick="addProduct()" title="添加商品">
 			           		 <i class="icon-plus"></i>添加
 			       	 	</a>
 			       	 	<input style=" visibility:hidden;">
 		       	 	</span>
 		       	 	<span class="pull-left" style="width:60px;">
-			       		<a class="btn btn-primary btn-small" onclick="deleteProductBatch()" title="删除产品">
+			       		<a class="btn btn-primary btn-small" onclick="deleteProductBatch()" title="删除商品">
 			           		 <i class="icon-remove"></i>删除
 			       	 	</a>
 			       	 	<input style=" visibility:hidden;">
@@ -54,8 +54,8 @@
                			<input type="text" name="userLoginName" data-provide="typeahead"  id="userLoginName" style="width:90px;" title="请输入客户登录名" />
                		</span>
 					<span class="pull-left" style="width:190;">
-						<!--  keyword关键字搜索产品sku或产品名-->
-						产品名/SKU	
+						<!--  keyword关键字搜索商品sku或商品名-->
+						商品名/SKU	
 						<input type="text"  name="keyword"  id="keyword"   style="width:100px;"/>
 					</span>
                		<span class="pull-left" style="width:175px;">
@@ -127,19 +127,19 @@
 	    	 grid = $("#maingrid").ligerGrid({
 	                columns: [
 	                    { display: '客户帐号', name: 'userNameOfCustomer', align: 'center',width:'7%'},
-	                    { display: '产品类型', name: 'productTypeName', align: 'center',width:'8%'},
-	                    { display: '产品名称', name: 'productName', align: 'center',width:'11%'},
-	                    { display: '产品SKU', isSort: false, align: 'center', type: 'float',width:'10%',render: function(row) {
+	                    { display: '商品类型', name: 'productTypeName', align: 'center',width:'8%'},
+	                    { display: '商品名称', name: 'productName', align: 'center',width:'11%'},
+	                    { display: '商品SKU', isSort: false, align: 'center', type: 'float',width:'10%',render: function(row) {
 	                    	return '<a href="javascript:updateProduct(' + row.id + ')">'+row.sku+'</a> ';
 	  		          	}},
 	  		          	{ display: '仓库SKU', name: 'warehouseSku', align: 'center',width:'9%'},
 	  		          	{ display: '规格型号', name: 'model', align: 'center',width:'8%'},
-		                { display: '产品产地', name: 'origin', align: 'center',width:'8%'},
+		                { display: '商品产地', name: 'origin', align: 'center',width:'8%'},
 	  		          	
 	  		            { display: '报关价值(元)', name: 'customsValue', align: 'center',width:'8%'},
-		                { display: '产品币种', name: 'currency', align: 'center',width:'6%'},
+		                { display: '商品币种', name: 'currency', align: 'center',width:'6%'},
 		                { display: '报关重量(KG)', name: 'customsWeight', align: 'center',width:'8%'},
-		                { display: '产品体积', name: 'volume', align: 'center',width:'8%'},
+		                { display: '商品体积', name: 'volume', align: 'center',width:'8%'},
 		                { display: '行邮税号', name: 'taxCode', align: 'center',width:'6%'},
 		                { display: '批次管理 ', name: 'isNeedBatchNo', align: 'center',width:'7%'},
 		                { display: '上次更新时间', name: 'lastUpdateTime', align: 'center',width:'12%'},

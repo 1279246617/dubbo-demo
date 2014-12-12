@@ -242,7 +242,7 @@ public class Print {
 					continue;
 				}
 				Long id = Long.valueOf(idArray[i]);
-				// 根据产品id,找到sku
+				// 根据商品id,找到sku
 				Product product = productService.getProductById(id);
 				skus.add(product.getSku());
 			}

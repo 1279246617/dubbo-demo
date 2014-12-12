@@ -153,7 +153,7 @@ public class ImportServiceImpl implements IImportService {
 			saveItemCount += inWarehouseOrderItemDao.saveBatchInWarehouseOrderItemWithOrderId(orderItemList, inWarehouseOrderId);
 			saveOrderCount++;
 		}
-		resultMap.put(Constant.MESSAGE, "上传成功,保存订单数量:" + saveOrderCount + " , 产品明细数量:" + saveItemCount);
+		resultMap.put(Constant.MESSAGE, "上传成功,保存订单数量:" + saveOrderCount + " , 商品明细数量:" + saveItemCount);
 		resultMap.put(Constant.STATUS, Constant.SUCCESS);
 		return resultMap;
 	}
@@ -259,31 +259,31 @@ public class ImportServiceImpl implements IImportService {
 				if (j == 4) {// 入库类型
 					map.put("inWarehouseType", cell);
 				}
-				if (j == 5) {// 产品SKU
+				if (j == 5) {// 商品SKU
 					map.put("sku", cell);
 					if (StringUtil.isNull(cell)) {
-						error += " , 产品SKU必填";
+						error += " , 商品SKU必填";
 						isError = true;
 					} else {
 						if (cell.length() > 100) {
-							error += " , 产品SKU长度不能超过100";
+							error += " , 商品SKU长度不能超过100";
 							isError = true;
 						}
 					}
 				}
 
-				if (j == 6) {// 产品编号
+				if (j == 6) {// 商品编号
 					map.put("skuNo", cell);
 				}
 
-				if (j == 7) {// 产品名称
+				if (j == 7) {// 商品名称
 					map.put("productName", cell);
 					if (StringUtil.isNull(cell)) {
-						error += " , 产品名称必填";
+						error += " , 商品名称必填";
 						isError = true;
 					} else {
 						if (cell.length() > 100) {
-							error += " , 产品名称长度不能超过100";
+							error += " , 商品名称长度不能超过100";
 							isError = true;
 						}
 					}
@@ -294,14 +294,14 @@ public class ImportServiceImpl implements IImportService {
 
 				}
 
-				if (j == 9) {// 产品数量
+				if (j == 9) {// 商品数量
 					map.put("quantity", cell);
 					if (StringUtil.isNull(cell)) {
-						error += " , 产品数量必填";
+						error += " , 商品数量必填";
 						isError = true;
 					} else {
 						if (!NumberUtil.isNumberic(cell)) {
-							error += " , 产品数量必须是正整数";
+							error += " , 商品数量必须是正整数";
 							isError = true;
 						}
 					}
@@ -322,7 +322,7 @@ public class ImportServiceImpl implements IImportService {
 
 				}
 
-				if (j == 12) {// 产品备注
+				if (j == 12) {// 商品备注
 					map.put("skuRemark", cell);
 				}
 			}
