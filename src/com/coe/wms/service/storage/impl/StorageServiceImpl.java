@@ -784,7 +784,7 @@ public class StorageServiceImpl implements IStorageService {
 			}
 			InWarehouseOrderItem inwarehouseOrderItem = new InWarehouseOrderItem();
 			inwarehouseOrderItem.setSku(sku.getSkuCode());// 商品条码
-			inwarehouseOrderItem.setSkuNo(sku.getSkuId());// 商品编号
+			inwarehouseOrderItem.setSkuNo(sku.getSkuId());// 商品条码
 			inwarehouseOrderItem.setQuantity(sku.getSkuQty());
 			inwarehouseOrderItem.setSkuName(sku.getSkuName());
 			inwarehouseOrderItem.setSkuRemark(sku.getSkuRemark());

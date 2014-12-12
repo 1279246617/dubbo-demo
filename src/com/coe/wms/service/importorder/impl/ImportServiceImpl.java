@@ -272,7 +272,7 @@ public class ImportServiceImpl implements IImportService {
 					}
 				}
 
-				if (j == 6) {// 商品编号
+				if (j == 6) {// 商品条码
 					map.put("skuNo", cell);
 				}
 

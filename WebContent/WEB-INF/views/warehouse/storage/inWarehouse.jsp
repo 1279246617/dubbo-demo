@@ -193,7 +193,7 @@
 	     function initGrid() {
 	    	   grid = $("#maingrid").ligerGrid({
 	                columns: [
-						{display: '商品编号',isSort: false,width: '11%',render: function(row) {
+						{display: '商品条码',isSort: false,width: '11%',render: function(row) {
 							if(row.sku ==null || row.sku ==''){
 								return '<a href="javascript:editSku(' + row.orderItemId + ')">点击补齐</a>';	
 							}else{

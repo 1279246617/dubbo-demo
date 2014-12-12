@@ -159,7 +159,7 @@ function listOutWarehouseOrderItem(orderId){
 	var contentArr = [];
 	contentArr.push('<div style="height:340px;overflow:auto; ">');
 	contentArr.push('<table class="table" style="width:749px">');
-	contentArr.push('<tr><th>商品编号</th><th>商品SKU</th><th>商品名称</th><th>商品规格</th><th>出库数量</th><th>单价和币种</th><th>单件重量</th></tr>');
+	contentArr.push('<tr><th>商品条码</th><th>商品SKU</th><th>商品名称</th><th>商品规格</th><th>出库数量</th><th>单价和币种</th><th>单件重量</th></tr>');
 	$.ajax({ 
         type : "post", 
         url :baseUrl + '/warehouse/storage/getOutWarehouseOrderItemByOrderId.do', 
