@@ -35,14 +35,14 @@
 			       	 	<input style=" visibility:hidden;">
 		       	 	</span>
            			<span class="pull-left" style="width:130px;">
-			       		<a class="btn btn-primary btn-small" onclick="printListSkuBarcode()" title="打印SKU条码">
-			           		 <i class="icon-folder-open"></i>打印列表SKU条码
+			       		<a class="btn btn-primary btn-small" onclick="printListSkuBarcode()" title="打印商品条码">
+			           		 <i class="icon-folder-open"></i>打印列表商品条码
 			       	 	</a>
 			       	 	<input style=" visibility:hidden;">
 		       	 	</span>
 		       	 	<span class="pull-left" style="width:130px;">
-			       		<a class="btn btn-primary btn-small" onclick="printSkuBarcode()" title="打印SKU条码">
-			           		 <i class="icon-folder-open"></i>打印指定SKU条码
+			       		<a class="btn btn-primary btn-small" onclick="printSkuBarcode()" title="打印商品条码">
+			           		 <i class="icon-folder-open"></i>打印指定商品条码
 			       	 	</a>
 			       	 	<input style=" visibility:hidden;">
 		       	 	</span>
@@ -132,6 +132,7 @@
 	                    { display: '商品SKU', isSort: false, align: 'center', type: 'float',width:'10%',render: function(row) {
 	                    	return '<a href="javascript:updateProduct(' + row.id + ')">'+row.sku+'</a> ';
 	  		          	}},
+	  		          	{ display: '商品条码', name: 'barcode', align: 'center',width:'9%'},
 	  		          	{ display: '仓库SKU', name: 'warehouseSku', align: 'center',width:'9%'},
 	  		          	{ display: '规格型号', name: 'model', align: 'center',width:'8%'},
 		                { display: '商品产地', name: 'origin', align: 'center',width:'8%'},

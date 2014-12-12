@@ -57,6 +57,7 @@ public class ProductServiceImpl implements IProductService {
 				map.put("productTypeName", productType.getProductTypeName());
 			}
 			map.put("sku", product.getSku());
+			map.put("barcode", product.getBarcode());
 			map.put("warehouseSku", product.getWarehouseSku());
 			map.put("remark", product.getRemark());
 			if (StringUtil.isNotNull(product.getCurrency())) {
