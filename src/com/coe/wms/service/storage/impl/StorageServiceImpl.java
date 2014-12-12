@@ -248,7 +248,7 @@ public class StorageServiceImpl implements IStorageService {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put(Constant.STATUS, Constant.FAIL);
 		if (StringUtil.isNull(itemSku)) {
-			map.put(Constant.MESSAGE, "请输入商品SKU.");
+			map.put(Constant.MESSAGE, "请输入商品条码.");
 			return map;
 		}
 		if (itemQuantity == null) {
@@ -281,7 +281,7 @@ public class StorageServiceImpl implements IStorageService {
 				long updateCount = inWarehouseOrderItemDao.saveInWarehouseOrderItemSku(orderItems.get(0).getId(), itemSku);
 				inWarehouseOrderItemList = inWarehouseOrderItemDao.findInWarehouseOrderItem(inWarehouseOrderItemParam, null, null);
 			} else {
-				map.put(Constant.MESSAGE, "该商品SKU在此订单中无预报,且不符合薄库存情况,请在下面列表补齐商品SKU");
+				map.put(Constant.MESSAGE, "该商品条码在此订单中无预报,且不符合薄库存情况,请在下面列表补齐商品条码");
 				return map;
 			}
 		}

@@ -233,7 +233,7 @@
 	        function editSku(orderItemId){
 	        	$.dialog({
       	          lock: true,
-      	          title: '补齐商品SKU',
+      	          title: '补齐商品条码',
       	          width: '280px',
       	          height: '80px',
       	          content: 'url:' + baseUrl + '/warehouse/storage/editInWarehouseOrderItemSku.do?orderItemId='+orderItemId,
@@ -243,7 +243,7 @@
       	            	var objSku = this.content.document.getElementById("sku");
        	              var sku = $(objSku).val();		
       	              if(sku == null || sku ==''){
-      	            	parent.$.showShortMessage({msg:"请输入商品SKU",animate:false,left:"45%"});
+      	            	parent.$.showShortMessage({msg:"请输入商品条码",animate:false,left:"45%"});
       	            	return false;
       	              }
       	              $.post(baseUrl + '/warehouse/storage/saveInWarehouseOrderItemSku.do', {
@@ -252,10 +252,10 @@
       	              },
       	              function(msg) {
       	            	  if(msg.status =="1"){
-      	            			parent.$.showShortMessage({msg:"补齐商品SKU成功",animate:false,left:"45%"});
+      	            			parent.$.showShortMessage({msg:"补齐商品条码成功",animate:false,left:"45%"});
       	                		grid.loadData();
       	            	  }else{
-      	            			parent.$.showShortMessage({msg:"补齐商品SKU失败",animate:false,left:"45%"});  
+      	            			parent.$.showShortMessage({msg:"补齐商品条码失败",animate:false,left:"45%"});  
       	            	  }
       	              },"json");
       	            }

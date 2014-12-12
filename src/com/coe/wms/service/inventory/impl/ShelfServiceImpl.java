@@ -166,7 +166,7 @@ public class ShelfServiceImpl implements IShelfService {
 			map.put("batchNo", outShelfTemp.getBatchNo());
 			map.put("seatCode", outShelfTemp.getSeatCode());
 			map.put("sku", outShelfTemp.getSku());// 商品条码
-			// 待从产品库获取 商品sku
+			// 待从产品库获取 商品条码
 			String barcode = outShelfTemp.getSku();
 			String sku = productDao.findProductSkuByBarcode(user.getId(), barcode);
 			map.put("skuNo", sku);
@@ -228,7 +228,7 @@ public class ShelfServiceImpl implements IShelfService {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put(Constant.STATUS, Constant.FAIL);
 		if (StringUtil.isNull(itemSku)) {
-			map.put(Constant.MESSAGE, "请输入商品SKU.");
+			map.put(Constant.MESSAGE, "请输入商品条码.");
 			return map;
 		}
 		if (itemQuantity == null) {
@@ -239,13 +239,13 @@ public class ShelfServiceImpl implements IShelfService {
 		// 检查该SKU是否存在入库订单收货中
 		int countInWarehouseItemSkuQuantityByRecordId = inWarehouseRecordItemDao.countInWarehouseItemSkuQuantityByRecordId(inWarehouseRecordId, itemSku);
 		if (countInWarehouseItemSkuQuantityByRecordId <= 0) {
-			map.put(Constant.MESSAGE, "该商品SKU在此收货记录未找到.");
+			map.put(Constant.MESSAGE, "该商品条码在此收货记录未找到.");
 			return map;
 		}
 		// 先统计该入库订单收货记录中,是否包含此,SKU,数量
 		int countOnShelfSkuQuantity = onShelfDao.countOnShelfSkuQuantity(inWarehouseRecordId, itemSku);
 		if (countOnShelfSkuQuantity >= countInWarehouseItemSkuQuantityByRecordId) {
-			map.put(Constant.MESSAGE, "该商品SKU在此收货记录已经完全上架.");
+			map.put(Constant.MESSAGE, "该商品条码在此收货记录已经完全上架.");
 			return map;
 		}
 		// 计算全部已上架数
@@ -300,7 +300,7 @@ public class ShelfServiceImpl implements IShelfService {
 			map.put("batchNo", onShelfTemp.getBatchNo());
 			map.put("seatCode", onShelfTemp.getSeatCode());
 			map.put("sku", onShelfTemp.getSku());
-			// 待从产品库获取 原定义的sku=商品条码和skuNo=商品SKU
+			// 待从产品库获取 原定义的sku=商品条码和skuNo=商品条码
 			String barcode = onShelfTemp.getSku();// 2014-12-12
 			String sku = productDao.findProductSkuByBarcode(user.getId(), barcode);
 			map.put("skuNo", sku);
