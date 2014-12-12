@@ -76,7 +76,7 @@
 		<table class="table table-striped" style="width:1200px;margin-bottom: 0px">
 			<tr>
 					<td  >
-						<span class="pull-left" style="width:75px;">商品SKU</span>
+						<span class="pull-left" style="width:75px;">商品条码</span>
 						<span class="pull-left" style="width:170px;">
 							<input type="text"  name="itemSku" t="2"  id="itemSku" style="width:130px;"/>
 						</span>

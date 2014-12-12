@@ -949,7 +949,8 @@ public class StorageServiceImpl implements IStorageService {
 					product.setIsNeedBatchNo(Constant.N);
 					product.setProductName(sku.getSkuName());
 					product.setWarehouseSku(sku.getSkuCode());
-					product.setSku(sku.getSkuCode());
+					product.setSku(sku.getSkuId());
+					product.setBarcode(sku.getSkuCode());
 					product.setUserIdOfCustomer(userIdOfCustomer);
 					productDao.addProduct(product);
 				}

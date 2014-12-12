@@ -33,11 +33,11 @@
 			</tr>
 			
 			<tr>
-				<th colspan="3">复核SKU数量:请扫描商品SKU(按回车,继续扫描下一个商品)</th>
+				<th colspan="3">复核SKU数量:请扫描商品条码(按回车,继续扫描下一个商品)</th>
 			</tr>
 			<tr>
 				<td colspan="2" style="height:60px;">
-					商品SKU&nbsp;&nbsp;
+					商品条码&nbsp;&nbsp;
 					<input type="text"  name="sku"  id="sku"  t="2"  style="width:120px;"/>
 				</td>
 				<td>
@@ -103,7 +103,7 @@
 						<th colspan="3">复核SKU数量和出库订单SKU数量</th>
 					</tr>
 					<tr>
-						<th>商品SKU</th>
+						<th>商品条码</th>
 						<th>出库订单数量</th>
 						<th>实际出库数量</th>
 					</tr>

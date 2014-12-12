@@ -34,8 +34,8 @@
                			<input type="text" name="userLoginName" data-provide="typeahead"  id="userLoginName" style="width:100px;" title="请输入客户登录名" />
                		</span>
                		<span class="pull-left" style="width:185px;">
-               			商品SKU
-               			 <input type="text"   style="width:100px;" name="sku" title="商品SKU">
+               			商品条码
+               			 <input type="text"   style="width:100px;" name="sku" title="商品条码">
                		</span>
                		<span class="pull-left" style="width:185px;">
                			入库批次号
@@ -124,7 +124,8 @@
 							{ display: '仓库', name: 'warehouse', type: 'float',width:'9%'},
 							{ display: '入库批次号', name: 'batch_no', type: 'int', width:'12%'},
 	  	                    { display: '跟踪单号', name: 'tracking_no',type:'float',width:'13%'},
-	  	                  	{ display: '商品SKU', name: 'sku',type:'float',width:'13%'},
+	  	                  	{ display: '商品条码', name: 'sku',type:'float',width:'13%'},
+	  	                  	{ display: '商品SKU', name: 'sku_no',type:'float',width:'13%'},
 	  	                  	{ display: '入库订单Id', name: 'in_warehouse_order_id',type:'float',width:'8%'},
 	  	                  	{ display: '入库主单Id', name: 'in_warehouse_record_id',type:'float',width:'8%'},
 		  		          	{ display: '本次收货数量', name: 'quantity', type: 'float',width:'8%'},
