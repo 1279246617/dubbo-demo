@@ -34,6 +34,7 @@ import com.coe.wms.exception.ServiceException;
 import com.coe.wms.model.unit.Currency.CurrencyCode;
 import com.coe.wms.model.user.User;
 import com.coe.wms.model.warehouse.Warehouse;
+import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderReceiver;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus.OutWarehouseOrderStatusCode;
 import com.coe.wms.model.warehouse.transport.BigPackage;
@@ -567,6 +568,10 @@ public class TransportServiceImpl implements ITransportService {
 			// 查询用户名
 			User user = userDao.getUserById(littlePackage.getUserIdOfCustomer());
 			map.put("userNameOfCustomer", user.getLoginName());
+			if (littlePackage.getUserIdOfOperator() != null) {
+				User operator = userDao.getUserById(littlePackage.getUserIdOfOperator());
+				map.put("userNameOfOperator", operator.getLoginName());
+			}
 			map.put("poNo", littlePackage.getPoNo());
 			if (NumberUtil.greaterThanZero(littlePackage.getWarehouseId())) {
 				Warehouse warehouse = warehouseDao.getWarehouseById(littlePackage.getWarehouseId());
@@ -650,5 +655,30 @@ public class TransportServiceImpl implements ITransportService {
 		bigPackageDao.updateBigPackageStatus(bigPackage.getId(), BigPackageStatusCode.WWO);
 		response.setSuccess(Constant.TRUE);
 		return XmlUtil.toXml(Responses.class, responses);
+	}
+
+	@Override
+	public List<Map<String, String>> checkReceivedLittlePackage(LittlePackage param) {
+		List<LittlePackage> littlePackageList = littlePackageDao.findLittlePackage(param, null, null);
+		List<Map<String, String>> mapList = new ArrayList<Map<String, String>>();
+		for (LittlePackage littlePackage : littlePackageList) {
+			Map<String, String> map = new HashMap<String, String>();
+			Long userId = littlePackage.getUserIdOfCustomer();
+			User user = userDao.getUserById(userId);
+			map.put("littlePackageId", String.valueOf(littlePackage.getId()));
+			map.put("userLoginName", user.getLoginName());
+			map.put("trackingNo", littlePackage.getTrackingNo());
+			map.put("carrierCode", littlePackage.getCarrierCode());
+			String time = DateUtil.dateConvertString(new Date(littlePackage.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss);
+			map.put("createdTime", time);
+			LittlePackageStatus status = littlePackageStatusDao.findLittlePackageStatusByCode(littlePackage.getStatus());
+			if (status != null) {
+				map.put("status", status.getCn());
+			} else {
+				map.put("status", "");
+			}
+			mapList.add(map);
+		}
+		return mapList;
 	}
 }

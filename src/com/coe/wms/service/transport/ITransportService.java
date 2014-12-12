@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 import com.coe.wms.exception.ServiceException;
+import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
 import com.coe.wms.model.warehouse.transport.BigPackage;
 import com.coe.wms.model.warehouse.transport.BigPackageStatus;
 import com.coe.wms.model.warehouse.transport.LittlePackage;
@@ -82,4 +83,12 @@ public interface ITransportService {
 	 * @throws ServiceException
 	 */
 	public Map<String, String> checkBigPackage(String bigPackageIds, String checkResult, Long userIdOfOperator) throws ServiceException;
+
+	/**
+	 * 收货时 输入跟踪号 后查询转运订单
+	 * 
+	 * @param inWarehouseOrder
+	 * @return
+	 */
+	public List<Map<String, String>> checkReceivedLittlePackage(LittlePackage littlePackage);
 }

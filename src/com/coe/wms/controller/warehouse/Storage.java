@@ -29,7 +29,9 @@ import com.coe.wms.model.warehouse.storage.record.InWarehouseRecord;
 import com.coe.wms.model.warehouse.storage.record.OutWarehousePackage;
 import com.coe.wms.model.warehouse.storage.record.OutWarehouseRecord;
 import com.coe.wms.model.warehouse.storage.record.OutWarehouseRecordItem;
+import com.coe.wms.model.warehouse.transport.LittlePackage;
 import com.coe.wms.service.storage.IStorageService;
+import com.coe.wms.service.transport.ITransportService;
 import com.coe.wms.service.user.IUserService;
 import com.coe.wms.util.Constant;
 import com.coe.wms.util.GsonUtil;
@@ -61,6 +63,9 @@ public class Storage {
 
 	@Resource(name = "userService")
 	private IUserService userService;
+
+	@Resource(name = "transportService")
+	private ITransportService transportService;
 
 	/**
 	 * 添加入库订单备注
@@ -113,13 +118,21 @@ public class Storage {
 		List<Map<String, String>> mapList = storageService.checkInWarehouseOrder(param);
 		if (mapList.size() < 1) {
 			map.put(Constant.STATUS, "-1");
-			map.put(Constant.MESSAGE, "该单号无预报入库订单,请先添加入库订单.");
+			// 检查是否有转运订单
+			LittlePackage littlePackage = new LittlePackage();
+			littlePackage.setTrackingNo(trackingNo);
+			mapList = transportService.checkReceivedLittlePackage(littlePackage);
+			if (mapList.size() > 0) {
+				map.put(Constant.MESSAGE, "该单号无仓配订单,但找到" + mapList.size() + "个转运订单,请确认订单类型");
+			} else {
+				map.put(Constant.MESSAGE, "该单号无仓配订单,也无转运订单,请先添加订单");
+			}
 			return GsonUtil.toJson(map);
 		}
 		map.put("mapList", mapList);
 		if (mapList.size() > 1) {
 			// 找到多个入库订单,返回跟踪号,承运商,参考号,客户等信息供操作员选择
-			map.put(Constant.MESSAGE, "该单号找到超过一个入库订单,请选择其中一个,并按回车!");
+			map.put(Constant.MESSAGE, "该单号找到" + mapList.size() + "个入库订单,请选择其中一个,并按回车!");
 			map.put(Constant.STATUS, "2");
 			return GsonUtil.toJson(map);
 		}
