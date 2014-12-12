@@ -27,8 +27,6 @@
 									<input type="text"  name="trackingNo"  id="trackingNo" t="1" onfocus="trackingNoFocus()"  onblur="trackingNoBlur()" style="width:170px;"/>
 									<!-- 用户按回车时,当入库订单id 为空是第一次提交,后台返回id,或其他提示.  不为空 提示客户可输入SKU和数量进行收货 -->
 									<input type="text"  name="littlePackageId"  id="littlePackageId" t="1"  style="display: none;"/>
-									<input type="text"  name="inWarehouseRecordId"  id="inWarehouseRecordId" t="1"  style="display: none;"/>
-									
 								</span>
 						</td>		
 						<td style="width:290px;">
@@ -56,7 +54,7 @@
 				</tr>
 		</table>
 		<div style="height:100px;width:100%;overflow:auto;" id="littlePackageDiv">
-				<table  class="table table-striped" style="width:100%;margin-bottom: 5px;display:none;" id="inWarehouseOrdertable" >
+				<table  class="table table-striped" style="width:100%;margin-bottom: 5px;display:none;" id="littlePackagetable" >
 					<tr>
 						<th style="width:25px;text-align:center;">选择</th>
 						<th style="width:155px;text-align:center;">客户帐号</th>
@@ -147,7 +145,7 @@
 	    	//回车事件
 	    	if((event.keyCode   ==   13)) {
 	    		if(focus == '1'){
-		  		  	saveInWarehouseRecord();
+		  		  	saveReceivedLittlePackage();
 		  		  	return false;
 	  		  	}
 	    		//sku焦点,回车,切换quantity焦点

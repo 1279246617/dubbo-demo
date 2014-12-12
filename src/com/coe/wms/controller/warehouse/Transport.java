@@ -312,4 +312,33 @@ public class Transport {
 		map.put(Constant.STATUS, Constant.SUCCESS);
 		return GsonUtil.toJson(map);
 	}
+
+	/**
+	 * 保存转运订单入库
+	 * 
+	 * @param request
+	 * @param trackingNo
+	 * @param userLoginName
+	 * @return
+	 * @throws IOException
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/submitInWarehouse")
+	public String submitInWarehouse(HttpServletRequest request, String trackingNo, Long warehouseId, Long littlePackageId, String remark) throws IOException {
+		// 操作员
+		Long userIdOfOperator = (Long) request.getSession().getAttribute(SessionConstant.USER_ID);
+		Map<String, String> map = new HashMap<String, String>();
+		map.put(Constant.STATUS, Constant.FAIL);
+		// 校验和保存
+		Map<String, String> serviceResult = transportService.submitInWarehouse(trackingNo, remark, userIdOfOperator, warehouseId, littlePackageId);
+		// 成功,返回id
+		map.put("id", serviceResult.get("id"));
+		// 失败
+		if (!StringUtil.isEqual(serviceResult.get(Constant.STATUS), Constant.SUCCESS)) {
+			map.put(Constant.MESSAGE, serviceResult.get(Constant.MESSAGE));
+			return GsonUtil.toJson(map);
+		}
+		map.put(Constant.STATUS, Constant.SUCCESS);
+		return GsonUtil.toJson(map);
+	}
 }

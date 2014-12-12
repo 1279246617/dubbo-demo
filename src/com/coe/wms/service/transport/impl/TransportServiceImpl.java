@@ -8,7 +8,6 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
-import org.apache.http.message.BasicNameValuePair;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
@@ -34,9 +33,9 @@ import com.coe.wms.exception.ServiceException;
 import com.coe.wms.model.unit.Currency.CurrencyCode;
 import com.coe.wms.model.user.User;
 import com.coe.wms.model.warehouse.Warehouse;
-import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderReceiver;
-import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus.OutWarehouseOrderStatusCode;
+import com.coe.wms.model.warehouse.storage.record.InWarehouseRecord;
+import com.coe.wms.model.warehouse.storage.record.InWarehouseRecordStatus.InWarehouseRecordStatusCode;
 import com.coe.wms.model.warehouse.transport.BigPackage;
 import com.coe.wms.model.warehouse.transport.BigPackageAdditionalSf;
 import com.coe.wms.model.warehouse.transport.BigPackageReceiver;
@@ -51,12 +50,8 @@ import com.coe.wms.pojo.api.warehouse.Buyer;
 import com.coe.wms.pojo.api.warehouse.ClearanceDetail;
 import com.coe.wms.pojo.api.warehouse.ErrorCode;
 import com.coe.wms.pojo.api.warehouse.EventBody;
-import com.coe.wms.pojo.api.warehouse.EventHeader;
-import com.coe.wms.pojo.api.warehouse.EventType;
 import com.coe.wms.pojo.api.warehouse.Item;
 import com.coe.wms.pojo.api.warehouse.LogisticsDetail;
-import com.coe.wms.pojo.api.warehouse.LogisticsEvent;
-import com.coe.wms.pojo.api.warehouse.LogisticsEventsRequest;
 import com.coe.wms.pojo.api.warehouse.LogisticsOrder;
 import com.coe.wms.pojo.api.warehouse.Response;
 import com.coe.wms.pojo.api.warehouse.Responses;
@@ -67,7 +62,6 @@ import com.coe.wms.service.transport.ITransportService;
 import com.coe.wms.util.Config;
 import com.coe.wms.util.Constant;
 import com.coe.wms.util.DateUtil;
-import com.coe.wms.util.HttpUtil;
 import com.coe.wms.util.NumberUtil;
 import com.coe.wms.util.Pagination;
 import com.coe.wms.util.StringUtil;
@@ -680,5 +674,28 @@ public class TransportServiceImpl implements ITransportService {
 			mapList.add(map);
 		}
 		return mapList;
+	}
+
+	@Override
+	public Map<String, String> submitInWarehouse(String trackingNo, String remark, Long userIdOfOperator, Long warehouseId, Long littlePackageId) {
+		Map<String, String> map = new HashMap<String, String>();
+		map.put(Constant.STATUS, Constant.FAIL);
+		if (StringUtil.isNull(trackingNo)) {
+			map.put(Constant.MESSAGE, "请输入跟踪单号.");
+			return map;
+		}
+		LittlePackage littlePackage = littlePackageDao.getLittlePackageById(littlePackageId);
+		if (!StringUtil.isEqual(littlePackage.getStatus(), LittlePackageStatusCode.WWR)) {
+			// 非待收货状态
+			map.put(Constant.MESSAGE, "该转运订单非待收货状态");
+			return map;
+		}
+		littlePackage.setStatus(LittlePackageStatusCode.WSR);
+		littlePackage.setReceivedTime(System.currentTimeMillis());
+		// 待添加操作日志
+		littlePackageDao.updateLittlePackageStatusAndReceivedTime(littlePackage);
+		map.put(Constant.MESSAGE, "收货成功,请继续下一单");//待区分是直接转运还是集货转运
+		map.put(Constant.STATUS, Constant.SUCCESS);
+		return map;
 	}
 }

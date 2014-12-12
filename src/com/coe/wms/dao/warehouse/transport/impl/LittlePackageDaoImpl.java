@@ -260,4 +260,10 @@ public class LittlePackageDaoImpl implements ILittlePackageDao {
 		return jdbcTemplate.update(sql);
 	}
 
+	@Override
+	public int updateLittlePackageStatusAndReceivedTime(LittlePackage LittlePackage) {
+		String sql = "update w_t_little_package set status='" + LittlePackage.getStatus() + "', received_time=" + LittlePackage.getReceivedTime() + " where id=" + LittlePackage.getId();
+		return jdbcTemplate.update(sql);
+	}
+
 }
