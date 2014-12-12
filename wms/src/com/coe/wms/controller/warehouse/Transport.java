@@ -19,6 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.coe.wms.controller.Application;
 import com.coe.wms.model.user.User;
+import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
 import com.coe.wms.model.warehouse.transport.BigPackage;
 import com.coe.wms.model.warehouse.transport.BigPackageStatus;
 import com.coe.wms.model.warehouse.transport.LittlePackage;
@@ -27,6 +28,7 @@ import com.coe.wms.model.warehouse.transport.LittlePackageStatus;
 import com.coe.wms.service.storage.IStorageService;
 import com.coe.wms.service.transport.ITransportService;
 import com.coe.wms.service.user.IUserService;
+import com.coe.wms.util.Constant;
 import com.coe.wms.util.GsonUtil;
 import com.coe.wms.util.Pagination;
 import com.coe.wms.util.SessionConstant;
@@ -214,7 +216,7 @@ public class Transport {
 	@ResponseBody
 	@RequestMapping(value = "/getLittlePackageData", method = RequestMethod.POST)
 	public String getLittlePackageData(HttpServletRequest request, String sortorder, String sortname, int page, int pagesize, String userLoginName, Long warehouseId, String trackingNo, String createdTimeStart, String createdTimeEnd, String status,
-			String nos, String noType) throws IOException {
+			String nos, String noType, String isReceived) throws IOException {
 		HttpSession session = request.getSession();
 		// 当前操作员
 		Long userIdOfOperator = (Long) session.getAttribute(SessionConstant.USER_ID);
@@ -240,6 +242,7 @@ public class Transport {
 		moreParam.put("createdTimeEnd", createdTimeEnd);
 		moreParam.put("nos", nos);
 		moreParam.put("noType", noType);
+		moreParam.put("isReceived", isReceived);
 		pagination = transportService.getLittlePackageData(param, moreParam, pagination);
 		Map map = new HashMap();
 		map.put("Rows", pagination.rows);
@@ -247,4 +250,66 @@ public class Transport {
 		return GsonUtil.toJson(map);
 	}
 
+	/**
+	 * 入库订单收货
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/inWarehouse", method = RequestMethod.GET)
+	public ModelAndView inWarehouse(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		HttpSession session = request.getSession();
+		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
+		ModelAndView view = new ModelAndView();
+		view.addObject("userId", userId);
+		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
+		User user = userService.getUserById(userId);
+		view.addObject("warehouseList", storageService.findAllWarehouse(user.getDefaultWarehouseId()));
+		view.setViewName("warehouse/transport/inWarehouse");
+		return view;
+	}
+
+	/**
+	 * 检查 跟踪号是否能找到唯一转运小包
+	 * 
+	 * @param request
+	 * @param trackingNo
+	 * @param userLoginName
+	 * @return
+	 * @throws IOException
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/checkReceivedLittlePackage")
+	public String checkReceivedLittlePackage(HttpServletRequest request, String trackingNo) throws IOException {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put(Constant.STATUS, Constant.FAIL);
+		LittlePackage param = new LittlePackage();
+		param.setTrackingNo(trackingNo);
+		// 查询转运订单
+		List<Map<String, String>> mapList = transportService.checkReceivedLittlePackage(param);
+		if (mapList.size() < 1) {
+			map.put(Constant.STATUS, "-1");
+			// 查询是否是仓配订单
+			InWarehouseOrder inWarehouseParam = new InWarehouseOrder();
+			inWarehouseParam.setTrackingNo(trackingNo);
+			mapList = storageService.checkInWarehouseOrder(inWarehouseParam);
+			if (mapList.size() > 0) {
+				map.put(Constant.MESSAGE, "该单号无转运订单,但找到" + mapList.size() + "个仓配订单,请确认订单类型");
+			} else {
+				map.put(Constant.MESSAGE, "该单号无转运订单,也无仓配订单,请先添加订单");
+			}
+			return GsonUtil.toJson(map);
+		}
+		map.put("mapList", mapList);
+		if (mapList.size() > 1) {
+			// 找到多个入库订单,返回跟踪号,承运商,参考号,客户等信息供操作员选择
+			map.put(Constant.MESSAGE, "该单号找到" + mapList.size() + "个转运订单小包,请选择其中一个,并按回车!");
+			map.put(Constant.STATUS, "2");
+			return GsonUtil.toJson(map);
+		}
+		map.put(Constant.STATUS, Constant.SUCCESS);
+		return GsonUtil.toJson(map);
+	}
 }

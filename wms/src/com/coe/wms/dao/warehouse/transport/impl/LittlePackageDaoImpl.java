@@ -24,6 +24,7 @@ import com.coe.wms.dao.datasource.DataSourceCode;
 import com.coe.wms.dao.warehouse.transport.ILittlePackageDao;
 import com.coe.wms.model.warehouse.transport.LittlePackage;
 import com.coe.wms.model.warehouse.transport.LittlePackageStatus.LittlePackageStatusCode;
+import com.coe.wms.util.Constant;
 import com.coe.wms.util.DateUtil;
 import com.coe.wms.util.Pagination;
 import com.coe.wms.util.StringUtil;
@@ -145,6 +146,10 @@ public class LittlePackageDaoImpl implements ILittlePackageDao {
 				if (date != null) {
 					sb.append(" and created_time <= " + date.getTime());
 				}
+			}
+			// isReceived = Y ,表示已收货的记录, 状态不能等于待仓库收货
+			if (StringUtil.isEqual(moreParam.get("isReceived"), Constant.Y)) {
+				sb.append(" and status != '" + LittlePackageStatusCode.WWR + "'");
 			}
 		}
 		if (page != null) {
