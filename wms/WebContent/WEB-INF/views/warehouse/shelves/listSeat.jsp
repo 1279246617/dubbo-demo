@@ -327,7 +327,7 @@
 			var contentArr = [];
 			contentArr.push('<div style="height:340px;overflow:auto; ">');
         	contentArr.push('<table class="table" style="width:549px">');
-        	contentArr.push('<tr><th>商品SKU</th><th>商品名称</th><th>实际数量</th><th>可用数量</th></tr>');
+        	contentArr.push('<tr><th>商品条码</th><th>商品名称</th><th>实际数量</th><th>可用数量</th></tr>');
         	$.ajax({ 
                 type : "post", 
                 url :baseUrl + '/warehouse/shelves/getSeatItemInventory.do', 
