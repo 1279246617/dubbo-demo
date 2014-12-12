@@ -1,5 +1,5 @@
 //点击保存主单
-function saveInWarehouseRecord(){
+function saveReceivedLittlePackage(){
 	var trackingNo = $("#trackingNo");
 	var trackingNoStr = trackingNo.val();
 	var remark = $("#orderRemark").val();
@@ -22,15 +22,15 @@ function saveInWarehouseRecord(){
 	trackingNoBlur();
 	//跟踪号不为空,入库订单id为空调用clickEnterStep1();
 	if($("#littlePackageId").val() == null || $("#littlePackageId").val() == ""){
-		saveInWarehouseRecordStep1(trackingNoStr,remark,warehouseId);	
+		saveReceivedLittlePackageStep1(trackingNoStr,remark,warehouseId);	
 	}else{
 		//入库订单id 不为空,可能是查到多个入库订单,选择后,开始保存主单
-		saveInWarehouseRecordStep2(trackingNoStr,remark,warehouseId);
+		saveReceivedLittlePackageStep2(trackingNoStr,remark,warehouseId);
 	}
 }
 
 //保存主单1(无输入客户单号)
-function saveInWarehouseRecordStep1(trackingNoStr,remark,warehouseId) {
+function saveReceivedLittlePackageStep1(trackingNoStr,remark,warehouseId) {
 	$("#littlePackagebody").html("");
 	// 检查跟踪号是否能找到唯一的入库订单
 	$.getJSON(baseUrl+ '/warehouse/transport/checkReceivedLittlePackage.do?trackingNo='+ trackingNoStr, function(msg) {
@@ -39,7 +39,7 @@ function saveInWarehouseRecordStep1(trackingNoStr,remark,warehouseId) {
 			parent.$.showDialogMessage(msg.message, null, null);
 			return false;
 		}
-		var table = $("#inWarehouseOrdertable");
+		var table = $("#littlePackagetable");
 		table.show();
 		$.each(msg.mapList, function(i, n) {
 			var tr = "<tr>";
@@ -63,25 +63,23 @@ function saveInWarehouseRecordStep1(trackingNoStr,remark,warehouseId) {
 		});
 		if (msg.status == 2) {
 			// 找到多条订
-			$("#tips").html("请选择其中一个入库订单并按回车!");
+			$("#tips").html("请选择其中一个转运订单并按回车!");
 			parent.$.showDialogMessage(msg.message, null, null);
 			return false;
 		}
 		if (msg.status == 1) {
 			//步骤1能得到唯一订单,直接调用步骤2
-			saveInWarehouseRecordStep2(trackingNoStr,remark,warehouseId);
+			saveReceivedLittlePackageStep2(trackingNoStr,remark,warehouseId);
 		}
 	});
 }
 
 
 //保存主单2(已输入客户单号)
-function saveInWarehouseRecordStep2(trackingNoStr,remark,warehouseId) {
-	var littlePackageId = $("#littlePackageId").val();
-	$.post(baseUrl+ '/warehouse/storage/saveInWarehouseRecord.do?trackingNo='+ trackingNoStr
+function saveReceivedLittlePackageStep2(trackingNoStr,remark,warehouseId) {
+	var littlePackageId = $("#littlePackageId").val();//保存转运订单入库
+	$.post(baseUrl+ '/warehouse/transport/submitInWarehouse.do?trackingNo='+ trackingNoStr
 		+'&warehouseId='+warehouseId+'&littlePackageId='+littlePackageId+'&remark='+remark, function(msg) {
-		//赋值入库记录id 到隐藏input
-		$("#inWarehouseRecordId").val(msg.id);
 		if(msg.status == 0){
 			parent.$.showShortMessage({msg:msg.message,animate:false,left:"45%"});
 			return;
@@ -90,7 +88,8 @@ function saveInWarehouseRecordStep2(trackingNoStr,remark,warehouseId) {
 			//锁定输入主单信息,直到点击提交才解锁.
 			lockTrackingNo();
 			
-			$("#tips").html("请输入SKU和数量并按回车!");
+			$("#tips").html(msg.message);
+			
 			// 光标移至产品SKU
 			$("#itemSku").focus();
 			focus = "2";
@@ -98,73 +97,6 @@ function saveInWarehouseRecordStep2(trackingNoStr,remark,warehouseId) {
 			return;
 		}
 	},"json");
-}
-
-//回车事件3 , 保存明细  isConfirm = 是否确认薄库存
-function saveInWarehouseRecordItem(isConfirm) {
-	//物品明细
-	var itemSku = $("#itemSku").val();
-	var itemQuantity = $("#itemQuantity").val();
-	var itemRemark = $("#itemRemark").val();
-	var warehouseId = $("#warehouseId").val();
-	//入库主单id
-	var inWarehouseRecordId = $("#inWarehouseRecordId").val();
-	if(inWarehouseRecordId==''){
-		parent.$.showDialogMessage("请先输入正确在跟踪单号,按回车,再保存明细",null,null);
-		return;
-	}
-	if(itemSku == ''){
-		parent.$.showShortMessage({msg:"请输入产品SKU",animate:false,left:"45%"});
-		$("#itemSku").focus();
-		return;
-	}
-	if(itemQuantity==''){
-		$("#itemQuantity").focus();
-		return;
-	}
-	
-	if(itemQuantity >500 || itemQuantity<-500){
-		var mymes = confirm("你确定输入数量:"+itemQuantity+"吗?");
-		if(mymes != true){
-			return;
-		}
-	}
-	$.post(baseUrl+ '/warehouse/storage/saveInWarehouseRecordItem.do',{
-		itemSku:itemSku,
-		itemQuantity:itemQuantity,
-		itemRemark:itemRemark,
-		warehouseId:warehouseId,
-		inWarehouseRecordId:inWarehouseRecordId,
-		isConfirm:isConfirm
-	},function(msg) {
-		if(msg.status == 0){
-			//保存失败,显示提示
-			parent.$.showDialogMessage(msg.message, null, null);
-			// 光标移至产品SKU
-			$("#itemSku").focus();
-			focus = "2";
-			return;
-		}
-		if(msg.status == 1){
-			parent.$.showShortMessage({msg:"保存入库明细成功,请继续输入新SKU和数量",animate:false,left:"40%"});
-			// 光标移至产品SKU
-			$("#itemSku").val("");
-			$("#itemSku").focus();
-			$("#tips").html("请继续输入SKU和数量,或者点击完成本次收货!");
-			focus = "2";
-			btnSearch("#searchform",grid);
-			return;
-		}
-		if(msg.status ==2){
-			var mymes = confirm("该订单是薄库存情况,你确定将此SKU绑定到产品吗?");
-			if(mymes != true){
-				return;
-			}else{
-				saveInWarehouseRecordItem('Y');
-			}
-		}
-	},"json");
-     
 }
 
 var oldTrackingNo = "";
@@ -178,7 +110,6 @@ function trackingNoBlur(){
 	var newTrackingNo = $("#trackingNo").val();
 	if(oldTrackingNo!=newTrackingNo){
 		$("#littlePackageId").val("");
-		$("#inWarehouseRecordId").val("");
 		$("#littlePackagebody").html("");
 	}
 	oldTrackingNo = newTrackingNo;
@@ -207,7 +138,6 @@ function nextInWarehouseRecord(){
 	$("#trackingNo").val("");
 	$("#orderRemark").val("");
 	$("#littlePackageId").val("");
-	$("#inWarehouseRecordId").val("");
 	$("#littlePackagebody").html("");
 	parent.$.showShortMessage({msg:"请继续下一批收货",animate:false,left:"45%"});
 	$("#tips").html("请输入新的跟踪单号并按回车!");

@@ -21,6 +21,8 @@ public interface ILittlePackageDao {
 	public int updateLittlePackageCallback(LittlePackage LittlePackage);
 
 	public int updateLittlePackageStatus(LittlePackage LittlePackage);
-	
+
+	public int updateLittlePackageStatusAndReceivedTime(LittlePackage LittlePackage);
+
 	public List<Long> findCallbackUnSuccessPackageId();
 }
