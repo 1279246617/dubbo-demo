@@ -217,7 +217,8 @@ public class GenerateReportTaskImpl implements IGenerateReportTask {
 							row[4] = "采购入库单";// 单据类型 待完善
 							row[5] = record.getId().toString();// 入库单号(流水号)
 							row[6] = order.getCustomerReferenceNo();// 客户订单号
-							row[7] = "";// SKU编码
+							String sku = productDao.findProductSkuByBarcode(userIdOfCustomer, recordItem.getSku());
+							row[7] = sku;// SKU编码
 							row[8] = recordItem.getSku();// SKU条码
 							row[9] = orderItem.getSkuName();// 商品名称
 							row[10] = "";// 奶粉批次
@@ -350,7 +351,8 @@ public class GenerateReportTaskImpl implements IGenerateReportTask {
 								String phone = receiver.getPhoneNumber() == null ? "" : (receiver.getPhoneNumber() + " ");
 								phone += (receiver.getMobileNumber() == null ? "" : receiver.getMobileNumber());
 								row[20] = phone;
-								row[21] = "";// SKU编码
+								String sku = productDao.findProductSkuByBarcode(userIdOfCustomer, orderItem.getSku());
+								row[21] = sku;// SKU编码
 								row[22] = orderItem.getSkuName();// 商品名称
 								row[23] = orderItem.getQuantity() + "";// SKU数量
 								row[24] = orderItem.getSku();// SKU条码
