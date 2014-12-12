@@ -36,7 +36,7 @@ public class OutWarehouseOrderItem implements Serializable {
 	private String sku;
 
 	/**
-	 * sku编号 等于顺丰的商品编号
+	 * sku编号 等于顺丰的商品条码
 	 */
 	private String skuNo;
 

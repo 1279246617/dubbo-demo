@@ -31,7 +31,7 @@ public class InWarehouseOrderItem implements Serializable {
 	private String sku;
 	
 	/**
-	 * sku编号 等于顺丰的商品编号(skuId)
+	 * sku编号 等于顺丰的商品条码(skuId)
 	 * 实际顺丰是以skuId作为sku
 	 * 
 	 * 2014-12-12对应系统商品库(product的sku字段)
