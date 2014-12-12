@@ -182,7 +182,7 @@
 	        	var contentArr = [];
 	        	contentArr.push('<div style="height:340px;overflow:auto; ">');
 	        	contentArr.push('<table class="table" style="width:700px">');
-	        	contentArr.push('<tr><th>产品SKU</th><th>产品编号</th><th>产品名称</th><th>预报数量</th><th>已收数量</th></tr>');
+	        	contentArr.push('<tr><th>商品编号</th><th>商品SKU</th><th>商品名称</th><th>预报数量</th><th>已收数量</th></tr>');
 	        	$.ajax({ 
 	                type : "post", 
 	                url :baseUrl + '/warehouse/storage/getInWarehouseOrderItemByOrderId.do', 

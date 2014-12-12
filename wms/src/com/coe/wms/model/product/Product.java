@@ -3,7 +3,7 @@ package com.coe.wms.model.product;
 import java.io.Serializable;
 
 /**
- * 产品信息
+ * 商品信息
  * 
  * 
  * @author Administrator
@@ -27,7 +27,7 @@ public class Product implements Serializable {
 	private Long userIdOfCustomer;
 
 	/**
-	 * 是否需要生产批次  Y || N
+	 * 是否需要生产批次 Y || N
 	 */
 	private String isNeedBatchNo;
 
@@ -37,22 +37,30 @@ public class Product implements Serializable {
 	private String model;
 
 	/**
-	 * 产品sku
+	 * 商品sku (对应顺丰文档中的skuId)
+	 * 
+	 * 2014-12-12 ,顺丰文档中的skuId才是sku的意思, sku反而是商品条码(barcode)
+	 * 系统在入库订单,出库订单,表的sku字段保存的是 顺丰文档的sku字段,即(商品条码), skuNo字段保存的是顺丰skuId字段,即真正的sku
 	 */
 	private String sku;
 
 	/**
-	 * 仓库为客户的产品sku 再次编制的sku
+	 * 商品条码(对应顺丰文档中的sku),, 以条码为单位. 一个barcode 只有一个sku 一个sku可能有多个barcode
+	 */
+	private String barcode;
+	
+	/**
+	 * 仓库为客户的商品sku 再次编制的sku
 	 */
 	private String warehouseSku;
 
 	/**
-	 * 产品名
+	 * 商品名
 	 */
 	private String productName;
 
 	/**
-	 * 产品类型id
+	 * 商品类型id
 	 */
 	private Long productTypeId;
 
@@ -133,6 +141,14 @@ public class Product implements Serializable {
 
 	public String getSku() {
 		return sku;
+	}
+
+	public String getBarcode() {
+		return barcode;
+	}
+
+	public void setBarcode(String barcode) {
+		this.barcode = barcode;
 	}
 
 	public void setSku(String sku) {

@@ -1,8 +1,8 @@
-//添加产品
+//添加商品
 function addProduct(){
 		$.dialog({
           lock: true,
-          title: '添加产品',
+          title: '添加商品',
           width: '650px',
           height: '400px',
           content: 'url:' + baseUrl + '/products/addProduct.do',
@@ -47,7 +47,7 @@ function addProduct(){
      	            	if(msg.status == '1'){
      	            		parent.$.showShortMessage({msg:msg.message,animate:false,left:"43%"});
      	            		that.close();
-     	            		grid.loadData();	 //保存成功,重新加载产品
+     	            		grid.loadData();	 //保存成功,重新加载商品
      	            		
      	            	}
 						if(msg.status =='0'){
@@ -60,7 +60,7 @@ function addProduct(){
           cancel: true
         });   			
 }
-//删除单个产品
+//删除单个商品
 function deleteProduct(id){
 	$.dialog({
   		lock: true,
@@ -69,7 +69,7 @@ function deleteProduct(id){
   		title:'提示',
 	    width:260,
 	    height:60,
-	    content: '您确认删除 1个产品吗？',
+	    content: '您确认删除 1个商品吗？',
   		button: [{
   			name: '确认',
   			callback: function() {
@@ -89,7 +89,7 @@ function deleteProduct(id){
   	})
 }
 
-//批量删除产品
+//批量删除商品
 function deleteProductBatch(){
  var row = grid.getSelectedRows();
     if(row.length < 1){
@@ -103,7 +103,7 @@ function deleteProductBatch(){
         title:'提示',
         width:260,
         height:60,
-        content: '您确认删除 '+row.length+' 个产品吗？',
+        content: '您确认删除 '+row.length+' 个商品吗？',
         button:[{name: '确认',
             callback: function (){
             	var ids = "";
@@ -123,11 +123,11 @@ function deleteProductBatch(){
     });
 }
 
-//更新产品			   		
+//更新商品			   		
 function updateProduct(id){
 	$.dialog({
           lock: true,
-          title: '更新产品',
+          title: '更新商品',
           width: '650px',
           height: '400px',
           content: 'url:' + baseUrl + '/products/updateProduct.do?id='+id,
@@ -174,7 +174,7 @@ function updateProduct(id){
  	            	if(msg.status == '1'){
  	            		parent.$.showShortMessage({msg:msg.message,animate:false,left:"43%"});
  	            		that.close();
- 	            		grid.loadData();	 //保存成功,重新加载产品
+ 	            		grid.loadData();	 //保存成功,重新加载商品
  	            	}
 					if(msg.status =='0'){
 						parent.$.showShortMessage({msg:msg.message,animate:false,left:"43%"});
@@ -270,7 +270,7 @@ function printSkuBarcode(){
   			callback: function() {
                 var sku = parent.$("#sku").val();
 	            if(sku == null || sku ==""){
-	                parent.$.showShortMessage({msg:"请输入产品SKU",animate:false,left:"45%"});
+	                parent.$.showShortMessage({msg:"请输入商品SKU",animate:false,left:"45%"});
 	                return false;
 	            }
 	            var quantity =  parent.$("#quantity").val();

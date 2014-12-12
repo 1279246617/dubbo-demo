@@ -274,8 +274,8 @@ public class ReportServiceImpl implements IReportService {
 					InWarehouseOrderItem orderItemParam = new InWarehouseOrderItem();
 					orderItemParam.setOrderId(inWarehouseOrderId);
 					orderItemParam.setSku(recordItem.getSku());
-					// 由于收货记录 无记录sku对应的产品名,
-					// 并且未建立sku产品库.目前从收货记录的sku查找产品名,只能通过次种方式查找...
+					// 由于收货记录 无记录sku对应的商品名,
+					// 并且未建立sku商品库.目前从收货记录的sku查找商品名,只能通过次种方式查找...
 					// 解决方法:建立sku库
 					List<InWarehouseOrderItem> orderItems = inWarehouseOrderItemDao.findInWarehouseOrderItem(orderItemParam, null, null);
 					InWarehouseOrderItem orderItem = orderItems.get(0);

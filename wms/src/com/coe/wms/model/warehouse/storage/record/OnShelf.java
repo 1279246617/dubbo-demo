@@ -52,7 +52,7 @@ public class OnShelf implements Serializable {
 	private String seatCode;
 
 	/**
-	 * sku下产品数量
+	 * sku下商品数量
 	 * 
 	 * 必填
 	 */

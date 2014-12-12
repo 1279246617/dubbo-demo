@@ -54,7 +54,7 @@ public class Products {
 	private IUnitService unitService;
 
 	/**
-	 * 添加产品界面
+	 * 添加商品界面
 	 * 
 	 * @param request
 	 * @param response
@@ -74,7 +74,7 @@ public class Products {
 	}
 
 	/**
-	 * 根据产品Id删除产品
+	 * 根据商品Id删除商品
 	 * 
 	 * @param request
 	 * @param id
@@ -83,7 +83,7 @@ public class Products {
 	@ResponseBody
 	@RequestMapping(value = "/deleteProductById", method = RequestMethod.POST)
 	public String deleteProductById(HttpServletRequest request, Long id) {
-		logger.info("产品ID:" + id);
+		logger.info("商品ID:" + id);
 		Map<String, String> map = productService.deleteProductById(id);
 		return GsonUtil.toJson(map);
 	}
@@ -96,7 +96,7 @@ public class Products {
 	}
 
 	/**
-	 * 产品查询
+	 * 商品查询
 	 * 
 	 * @param request
 	 * @param sortorder
@@ -140,7 +140,7 @@ public class Products {
 	}
 
 	/**
-	 * 产品 界面
+	 * 商品 界面
 	 * 
 	 * @param request
 	 * @param response
@@ -160,7 +160,7 @@ public class Products {
 	}
 
 	/**
-	 * 添加新产品
+	 * 添加新商品
 	 * 
 	 * @param request
 	 * @param productName
@@ -210,7 +210,7 @@ public class Products {
 	 * 
 	 * @param request
 	 * @param response
-	 * @return 显示选中跟新产品
+	 * @return 显示选中跟新商品
 	 */
 	@RequestMapping(value = "/updateProduct", method = RequestMethod.GET)
 	public ModelAndView updateProduct(HttpServletRequest request, HttpServletResponse response, Long id) {
@@ -239,7 +239,7 @@ public class Products {
 	}
 
 	/**
-	 * 更新产品
+	 * 更新商品
 	 * 
 	 * @return
 	 */

@@ -67,12 +67,12 @@
 							<input type="text"  name="seatCode" t="2"  id="seatCode" style="width:170px;"/>
 						</span>
 						
-						<span class="pull-left" style="width:75px;">产品SKU</span>
+						<span class="pull-left" style="width:75px;">商品SKU</span>
 						<span class="pull-left" style="width:190px;">
 							<input type="text"  name="itemSku" t="3"  id="itemSku" style="width:170px;"/>
 						</span>
 						
-						<span class="pull-left" style="width:75px;">产品数量</span>
+						<span class="pull-left" style="width:75px;">商品数量</span>
 						<span class="pull-left" style="width:120px;">
 							<input type="text"  name="itemQuantity"  id="itemQuantity" t="4" style="width:100px;" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"/>
 						</span>
@@ -190,12 +190,12 @@
 	  		}
 	  		var itemSku = $("#itemSku").val();
 	  		if(itemSku == null || itemSku ==''){
-	  			parent.$.showShortMessage({msg:"请输入产品SKU",animate:false,left:"43%"});
+	  			parent.$.showShortMessage({msg:"请输入商品SKU",animate:false,left:"43%"});
 	  			return false;
 	  		}
 	  		var itemQuantity = $("#itemQuantity").val();
 	  		if(itemQuantity == null || itemQuantity ==''){
-	  			parent.$.showShortMessage({msg:"请输入产品数量",animate:false,left:"43%"});
+	  			parent.$.showShortMessage({msg:"请输入商品数量",animate:false,left:"43%"});
 	  			return false;
 	  		}
 	  		var seatCode = $("#seatCode").val();
@@ -209,7 +209,7 @@
 	  			if(msg.status == 0){
 	  				//保存失败,显示提示
 	  				parent.$.showShortMessage({msg:msg.message,animate:false,left:"45%"});
-	  				// 光标移至产品SKU
+	  				// 光标移至商品SKU
 	  				$("#itemSku").focus();
 	  				focus = "2";
 	  				return;
@@ -217,7 +217,7 @@
 	  			
 	  			if(msg.status == 1){
 	  				parent.$.showShortMessage({msg:"保存上架记录成功.",animate:false,left:"45%"});
-	  				// 光标移至产品SKU
+	  				// 光标移至商品SKU
 	  				$("#seatCode").focus();
 	  				$("#seatCode").select();
 	  				focus = "2";

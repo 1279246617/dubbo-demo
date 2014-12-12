@@ -45,12 +45,12 @@
 							<input type="text"  name="seatCode" t="2"  id="seatCode" style="width:140px;"/>
 						</span>
 						
-						<span class="pull-left" style="width:70px;">产品SKU</span>
+						<span class="pull-left" style="width:70px;">商品SKU</span>
 						<span class="pull-left" style="width:175px;">
 							<input type="text"  name="sku" t="3"  id="sku" style="width:140px;"/>
 						</span>
 						
-						<span class="pull-left" style="width:75px;">产品数量</span>
+						<span class="pull-left" style="width:75px;">商品数量</span>
 						<span class="pull-left" style="width:102px;">
 							<input type="text"  name="quantity"  id="quantity" t="4" style="width:90px;" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"/>
 						</span>
@@ -72,8 +72,8 @@
 			<thead>
 					<tr>
 					<th>货位</th>
-					<th>产品SKU</th>
-					<th>产品数量</th>
+					<th>商品SKU</th>
+					<th>商品数量</th>
 				</tr>
 			</thead>
 			<tbody id="outShelfItemTbody">
@@ -120,14 +120,14 @@
   		  	}
 			if(focus == '2'){
 				//输入货位后按回车,去到sku
-				$("#tips").html("请输入产品SKU并按回车!");
+				$("#tips").html("请输入商品SKU并按回车!");
 				$("#sku").focus();
 				focus = '3';
 				return false;
 			}
 			if(focus == '3'){
 				//输入sku后按回车,去到quantity
-				$("#tips").html("请输入产品数量并按回车!");
+				$("#tips").html("请输入商品数量并按回车!");
 				$("#quantity").focus();
 				focus = '4';
 				return false;
@@ -174,12 +174,12 @@
   			}
 	  		var sku = $("#sku").val();
 	  		if(sku == null || sku ==''){
-	  			parent.$.showShortMessage({msg:"请输入产品SKU",animate:false,left:"43%"});
+	  			parent.$.showShortMessage({msg:"请输入商品SKU",animate:false,left:"43%"});
 	  			return false;
 	  		}
 	  		var quantity = $("#quantity").val();
 	  		if(quantity == null || quantity ==''){
-	  			parent.$.showShortMessage({msg:"请输入产品数量",animate:false,left:"43%"});
+	  			parent.$.showShortMessage({msg:"请输入商品数量",animate:false,left:"43%"});
 	  			return false;
 	  		}
 	  		var seatCode = $("#seatCode").val();
