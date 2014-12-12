@@ -13,6 +13,7 @@ import javax.annotation.Resource;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
+import com.coe.wms.dao.product.IProductDao;
 import com.coe.wms.dao.user.IUserDao;
 import com.coe.wms.dao.warehouse.ISeatDao;
 import com.coe.wms.dao.warehouse.IShelfDao;
@@ -135,6 +136,9 @@ public class ShelfServiceImpl implements IShelfService {
 	@Resource(name = "outWarehouseOrderAdditionalSfDao")
 	private IOutWarehouseOrderAdditionalSfDao outWarehouseOrderAdditionalSfDao;
 
+	@Resource(name = "productDao")
+	private IProductDao productDao;
+
 	/**
 	 * 获取下架订单数据
 	 */
@@ -161,9 +165,11 @@ public class ShelfServiceImpl implements IShelfService {
 			map.put("customerReferenceNo", outShelfTemp.getCustomerReferenceNo());
 			map.put("batchNo", outShelfTemp.getBatchNo());
 			map.put("seatCode", outShelfTemp.getSeatCode());
-			map.put("sku", outShelfTemp.getSku());//商品条码
+			map.put("sku", outShelfTemp.getSku());// 商品条码
 			// 待从产品库获取 商品sku
-			map.put("skuNo", "");
+			String barcode = outShelfTemp.getSku();
+			String sku = productDao.findProductSkuByBarcode(user.getId(), barcode);
+			map.put("skuNo", sku);
 			map.put("quantity", outShelfTemp.getQuantity());
 			map.put("outWarehouseOrderId", outShelfTemp.getOutWarehouseOrderId());
 			// 查询用户名
@@ -294,8 +300,10 @@ public class ShelfServiceImpl implements IShelfService {
 			map.put("batchNo", onShelfTemp.getBatchNo());
 			map.put("seatCode", onShelfTemp.getSeatCode());
 			map.put("sku", onShelfTemp.getSku());
-			// 待从产品库获取
-			map.put("skuNo", "");
+			// 待从产品库获取 原定义的sku=商品条码和skuNo=商品SKU
+			String barcode = onShelfTemp.getSku();// 2014-12-12
+			String sku = productDao.findProductSkuByBarcode(user.getId(), barcode);
+			map.put("skuNo", sku);
 			map.put("quantity", onShelfTemp.getQuantity());
 			map.put("inWarehouseRecordId", onShelfTemp.getInWarehouseRecordId());
 			int receivedQuantity = inWarehouseRecordItemDao.countInWarehouseItemSkuQuantityByRecordId(onShelfTemp.getInWarehouseRecordId(), onShelfTemp.getSku());

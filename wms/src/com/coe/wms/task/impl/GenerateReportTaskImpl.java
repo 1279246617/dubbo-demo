@@ -14,6 +14,7 @@ import org.apache.log4j.Logger;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import com.coe.wms.dao.product.IProductDao;
 import com.coe.wms.dao.user.IUserDao;
 import com.coe.wms.dao.warehouse.IWarehouseDao;
 import com.coe.wms.dao.warehouse.storage.IInWarehouseOrderDao;
@@ -112,6 +113,9 @@ public class GenerateReportTaskImpl implements IGenerateReportTask {
 
 	@Resource(name = "reportDao")
 	private IReportDao reportDao;
+
+	@Resource(name = "productDao")
+	private IProductDao productDao;
 
 	@Resource(name = "config")
 	private Config config;
@@ -483,8 +487,10 @@ public class GenerateReportTaskImpl implements IGenerateReportTask {
 						row[1] = warehouse.getWarehouseNo();// 仓库编号
 						row[2] = inventory.getInventoryDate().replaceAll("-", ""); // 结转日期
 						row[3] = user.getUserName();// 货主
-						row[4] = "";// SKU编码
-						row[5] = inventory.getSku();// 商品条码
+						String barcode = inventory.getSku();
+						// 根据商品条码获取商品SKU
+						row[4] = productDao.findProductSkuByBarcode(userIdOfCustomer, barcode);
+						row[5] = barcode;// 商品条码
 						// 目前无SKU库..只能从如库订单中查找SKU产品名
 						String skuName = inWarehouseOrderItemDao.getSkuNameByCustomerIdAndSku(inventory.getSku(), userIdOfCustomer);
 						row[6] = skuName;// 商品名称

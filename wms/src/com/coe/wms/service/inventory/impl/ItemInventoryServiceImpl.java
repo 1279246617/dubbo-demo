@@ -11,6 +11,7 @@ import javax.annotation.Resource;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
+import com.coe.wms.dao.product.IProductDao;
 import com.coe.wms.dao.user.IUserDao;
 import com.coe.wms.dao.warehouse.ISeatDao;
 import com.coe.wms.dao.warehouse.IWarehouseDao;
@@ -55,6 +56,9 @@ public class ItemInventoryServiceImpl implements IItemInventoryService {
 
 	@Resource(name = "onShelfDao")
 	private IOnShelfDao onShelfDao;
+
+	@Resource(name = "productDao")
+	private IProductDao productDao;
 
 	@Resource(name = "inWarehouseOrderDao")
 	private IInWarehouseOrderDao inWarehouseOrderDao;
@@ -127,6 +131,8 @@ public class ItemInventoryServiceImpl implements IItemInventoryService {
 			itemShelfInventory.setWarehouseId(itemInventory.getWarehouseId());
 			map.put("availableQuantity", itemShelfInventoryDao.sumItemAvailableQuantity(itemShelfInventory));
 			map.put("sku", itemInventory.getSku());
+			String sku = productDao.findProductSkuByBarcode(user.getId(), itemInventory.getSku());
+			map.put("skuNo", sku);
 			if (itemInventory.getWarehouseId() != null) {
 				Warehouse warehouse = warehouseDao.getWarehouseById(itemInventory.getWarehouseId());
 				if (warehouse != null) {
@@ -161,6 +167,8 @@ public class ItemInventoryServiceImpl implements IItemInventoryService {
 			map.put("quantity", itemInventory.getQuantity());
 			map.put("availableQuantity", itemInventory.getAvailableQuantity());
 			map.put("sku", itemInventory.getSku());
+			String sku = productDao.findProductSkuByBarcode(user.getId(), itemInventory.getSku());
+			map.put("skuNo", sku);
 			if (itemInventory.getWarehouseId() != null) {
 				Warehouse warehouse = warehouseDao.getWarehouseById(itemInventory.getWarehouseId());
 				if (warehouse != null) {

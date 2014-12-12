@@ -938,8 +938,15 @@ public class StorageServiceImpl implements IStorageService {
 				Product productParam = new Product();
 				productParam.setSku(sku.getSkuCode());
 				productParam.setUserIdOfCustomer(userIdOfCustomer);
-				long countProduct = productDao.countProduct(productParam, null);
-				if (countProduct <= 0) {// sku未存在,新增
+				List<Product> productList = productDao.findProduct(productParam, null, null);
+				if (productList != null && productList.size() > 0) {
+					Product product = productList.get(0);// 更新产品
+					if (StringUtil.isNull(product.getSku())) {
+						product.setSku(sku.getSkuId());
+						productDao.updateProductSku(product);
+					}
+				} else {
+					// sku未存在,新增
 					Product product = new Product();
 					product.setCreatedTime(System.currentTimeMillis());
 					product.setCurrency(CurrencyCode.CNY);

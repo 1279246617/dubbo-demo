@@ -13,6 +13,8 @@ public interface IProductDao {
 
 	public Product getProductById(Long id);
 
+	public String findProductSkuByBarcode(Long customerId, String barcode);
+	
 	public long addProduct(Product product);
 
 	public int deleteProductById(Long id);
@@ -20,5 +22,7 @@ public interface IProductDao {
 	public int deleteProductByIds(String ids);
 
 	public int updateProduct(Product product);
+
+	public int updateProductSku(Product product);
 
 }

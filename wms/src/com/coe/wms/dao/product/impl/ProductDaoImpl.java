@@ -236,8 +236,25 @@ public class ProductDaoImpl implements IProductDao {
 	}
 
 	@Override
+	public int updateProductSku(Product product) {
+		String sql = "update p_product set sku=? where id=?";
+		int count = jdbcTemplate.update(sql, product.getId());
+		return count;
+	}
+
+	@Override
 	public int deleteProductByIds(String ids) {
 		String sql = "delete from p_product where id in(" + ids + ")";
 		return jdbcTemplate.update(sql);
+	}
+
+	@Override
+	public String findProductSkuByBarcode(Long customerId, String barcode) {
+		String sql = "select sku from p_product where barcode = '" + barcode + "' and user_id_of_customer = " + customerId;
+		List<String> skus = jdbcTemplate.queryForList(sql, String.class);
+		if (skus != null && skus.size() > 0) {
+			return skus.get(0);
+		}
+		return null;
 	}
 }
