@@ -91,7 +91,7 @@ function saveInWarehouseRecordStep2(trackingNoStr,remark,warehouseId) {
 			lockTrackingNo();
 			
 			$("#tips").html("请输入SKU和数量并按回车!");
-			// 光标移至商品SKU
+			// 光标移至商品条码
 			$("#itemSku").focus();
 			focus = "2";
 			btnSearch("#searchform",grid);
@@ -114,7 +114,7 @@ function saveInWarehouseRecordItem(isConfirm) {
 		return;
 	}
 	if(itemSku == ''){
-		parent.$.showShortMessage({msg:"请输入商品SKU",animate:false,left:"45%"});
+		parent.$.showShortMessage({msg:"请输入商品条码",animate:false,left:"45%"});
 		$("#itemSku").focus();
 		return;
 	}
@@ -140,14 +140,14 @@ function saveInWarehouseRecordItem(isConfirm) {
 		if(msg.status == 0){
 			//保存失败,显示提示
 			parent.$.showDialogMessage(msg.message, null, null);
-			// 光标移至商品SKU
+			// 光标移至商品条码
 			$("#itemSku").focus();
 			focus = "2";
 			return;
 		}
 		if(msg.status == 1){
 			parent.$.showShortMessage({msg:"保存入库明细成功,请继续输入新SKU和数量",animate:false,left:"40%"});
-			// 光标移至商品SKU
+			// 光标移至商品条码
 			$("#itemSku").val("");
 			$("#itemSku").focus();
 			$("#tips").html("请继续输入SKU和数量,或者点击完成本次收货!");

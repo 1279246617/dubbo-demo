@@ -135,9 +135,9 @@ public class ImportServiceImpl implements IImportService {
 				InWarehouseOrderItem orderItem = new InWarehouseOrderItem();
 				orderItem.setProductionBatchNo(map.get("productionBatchNo"));
 				orderItem.setQuantity(Integer.valueOf(map.get("quantity")));
+				orderItem.setSkuNo(map.get("skuNo"));
 				orderItem.setSku(map.get("sku"));
 				orderItem.setSkuName(map.get("productName"));
-				orderItem.setSkuNo(map.get("skuNo"));
 				orderItem.setSkuRemark(map.get("skuRemark"));
 				orderItem.setSpecification(map.get("specification"));
 				String validityTime = map.get("validityTime");
@@ -260,7 +260,7 @@ public class ImportServiceImpl implements IImportService {
 					map.put("inWarehouseType", cell);
 				}
 				if (j == 5) {// 商品SKU
-					map.put("sku", cell);
+					map.put("skuNo", cell);
 					if (StringUtil.isNull(cell)) {
 						error += " , 商品SKU必填";
 						isError = true;
@@ -273,7 +273,7 @@ public class ImportServiceImpl implements IImportService {
 				}
 
 				if (j == 6) {// 商品条码
-					map.put("skuNo", cell);
+					map.put("sku", cell);
 				}
 
 				if (j == 7) {// 商品名称

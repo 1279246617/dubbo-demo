@@ -90,7 +90,7 @@ function saveReceivedLittlePackageStep2(trackingNoStr,remark,warehouseId) {
 			
 			$("#tips").html(msg.message);
 			
-			// 光标移至商品SKU
+			// 光标移至商品条码
 			$("#itemSku").focus();
 			focus = "2";
 			btnSearch("#searchform",grid);
