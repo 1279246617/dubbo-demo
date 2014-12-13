@@ -10,7 +10,7 @@ function listLittlePackagesItem(littlePackageId){
         async : false, 
         success : function(msg){ 
         	msg = eval("(" + msg + ")");
-			  	contentArr.push('<tr  class="warning"><th>商品条码</th><th>商品名称</th><th>商品单价(元)</th><th>规格型号</th><th>净重KG</th><th>数量</th></tr>');
+			  	contentArr.push('<tr  class="warning"><th>商品SKU</th><th>商品名称</th><th>商品单价(元)</th><th>规格型号</th><th>净重KG</th><th>数量</th></tr>');
 			  	$.each(msg,function(j,ei){
 			  		contentArr.push('<tr>');
 				  	contentArr.push('<td>'+ei.sku+'</td>');

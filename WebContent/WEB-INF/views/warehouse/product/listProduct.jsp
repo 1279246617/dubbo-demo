@@ -60,7 +60,7 @@
 					</span>
                		<span class="pull-left" style="width:175px;">
                			创建时间
-	               		<input type="text"   style="width:120px;" name="createdTimeStart" id="createdTimeStart" value="${sevenDaysAgoStart}" title="起始创建时间">
+	               		<input type="text"   style="width:120px;" name="createdTimeStart" id="createdTimeStart"  title="起始创建时间">
                		</span>
                		
                		<span class="pull-left" style="width:200px;">
@@ -155,7 +155,7 @@
 		            	}}
 	                ],  
 	                dataAction: 'server',
-	                url: baseUrl+'/products/getListProductData.do?createdTimeStart=${sevenDaysAgoStart}',
+	                url: baseUrl+'/products/getListProductData.do',
 	                pageSize: 100, 
 	                pageSizeOptions:[50,100,150,200,500],
 	                usePager: 'true',
