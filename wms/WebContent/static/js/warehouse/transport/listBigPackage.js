@@ -150,7 +150,7 @@ function listLittlePackages(bigPackageId){
         		contentArr.push('<td>'+e.callbackIsSuccess+'</td>');
         		contentArr.push('<td>'+e.createdTime+'</td>');
 			  	contentArr.push('</tr>');
-			  	contentArr.push('<tr  class="warning"><th>内件详情</th><td>商品条码</td><td>商品名称</td><td>商品单价(元)</td><td>规格型号</td><td>净重KG</td><td>数量</td></tr>');
+			  	contentArr.push('<tr  class="warning"><th>内件详情</th><td>商品SKU</td><td>商品名称</td><td>商品单价(元)</td><td>规格型号</td><td>净重KG</td><td>数量</td></tr>');
 			  	$.each(e.littlePackageItemList,function(j,ei){
 			  		contentArr.push('<tr>');
 			  		contentArr.push('<td>&nbsp;</td>');

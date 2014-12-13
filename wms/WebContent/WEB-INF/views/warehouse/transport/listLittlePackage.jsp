@@ -82,7 +82,7 @@
 	
 	<script type="text/javascript" src="${baseUrl}/static/jquery/jquery.js"></script>
 	<script type="text/javascript" src="${baseUrl}/static/bootstrap/bootstrap-typeahead.js"></script>
-	<script type="text/javascript" src="${baseUrl}/static/js/warehouse/listLittlePackage.js"></script>
+	<script type="text/javascript" src="${baseUrl}/static/js/warehouse/transport/listLittlePackage.js"></script>
     <script type="text/javascript">
  		var baseUrl = "${baseUrl}";
    		$(function(){

@@ -108,7 +108,7 @@ public class Warehouse {
 			}
 
 			// 转运确认出库(确认重量)
-			if (StringUtil.isEqualIgnoreCase(EventType.LOGISTICS_SEND_GOODS, eventType)) { // 创建转运订单
+			if (StringUtil.isEqualIgnoreCase(EventType.LOGISTICS_SEND_GOODS, eventType)) { // 转运确认出库
 				responseXml = transportService.warehouseInterfaceConfirmTransportOrder(eventBody, userIdOfCustomer, eventTarget);
 			}
 

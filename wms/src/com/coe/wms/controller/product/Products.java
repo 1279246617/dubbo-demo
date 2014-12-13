@@ -154,7 +154,6 @@ public class Products {
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
 		User user = userService.getUserById(userId);
 		view.addObject("warehouseList", storageService.findAllWarehouse(user.getDefaultWarehouseId()));
-		view.addObject("sevenDaysAgoStart", DateUtil.getSevenDaysAgoStart());
 		view.setViewName("warehouse/product/listProduct");
 		return view;
 	}
