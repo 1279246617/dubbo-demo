@@ -56,10 +56,6 @@ function saveReceivedLittlePackageStep1(trackingNoStr,remark,warehouseId) {
 			tr+="<td style='width:205px;text-align:center;'>"+n.createdTime+"</td>";
 			tr+="</tr>";
 			$("#littlePackagebody").append(tr);
-			//最高200px
-			if($("#littlePackageDiv").height()+25<=190){
-				$("#littlePackageDiv").css('height', $("#littlePackageDiv").height()+25);	
-			}
 		});
 		if (msg.status == 2) {
 			// 找到多条订
@@ -77,25 +73,32 @@ function saveReceivedLittlePackageStep1(trackingNoStr,remark,warehouseId) {
 
 //保存主单2(已输入客户单号)
 function saveReceivedLittlePackageStep2(trackingNoStr,remark,warehouseId) {
+	lockTrackingNo();
 	var littlePackageId = $("#littlePackageId").val();//保存转运订单入库
 	$.post(baseUrl+ '/warehouse/transport/submitInWarehouse.do?trackingNo='+ trackingNoStr
 		+'&warehouseId='+warehouseId+'&littlePackageId='+littlePackageId+'&remark='+remark, function(msg) {
 		if(msg.status == 0){
-			parent.$.showShortMessage({msg:msg.message,animate:false,left:"45%"});
+			parent.$.showDialogMessage(msg.message, null, null);
+			unLockTrackingNo();
 			return;
 		}
-		if(msg.status == 1){
-			//锁定输入主单信息,直到点击提交才解锁.
-			lockTrackingNo();
-			
-			$("#tips").html(msg.message);
-			
-			// 光标移至商品SKU
-			$("#itemSku").focus();
+		$("#tips").html(msg.message);
+		
+		if(msg.status == 1){//集货转运
+			// 下一票
+			nextInWarehouse(msg.message);
 			focus = "2";
-			btnSearch("#searchform",grid);
-			return;
 		}
+		if(msg.status == 2){//直接转运
+			parent.$.showShortMessage({msg:msg.message,animate:false,left:"45%"});
+			// 光标移至称重
+			$("#weight").removeAttr("readonly");
+			$("#weight").focus();
+			//显示出货渠道和单号
+			
+			focus = "1";
+		}
+		btnSearch("#searchform",grid);
 	},"json");
 }
 
@@ -133,13 +136,13 @@ function unLockTrackingNo(){
 	 });
 }
 
-function nextInWarehouseRecord(){
+function nextInWarehouse(message){
 	unLockTrackingNo();
 	$("#trackingNo").val("");
 	$("#orderRemark").val("");
 	$("#littlePackageId").val("");
 	$("#littlePackagebody").html("");
-	parent.$.showShortMessage({msg:"请继续下一批收货",animate:false,left:"45%"});
+	parent.$.showShortMessage({msg:message,animate:false,left:"45%"});
 	$("#tips").html("请输入新的跟踪单号并按回车!");
 	$("#trackingNo").focus();
 }
