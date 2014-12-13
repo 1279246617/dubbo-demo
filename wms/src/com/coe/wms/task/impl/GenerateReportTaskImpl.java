@@ -124,20 +124,20 @@ public class GenerateReportTaskImpl implements IGenerateReportTask {
 	/**
 	 * 入库记录日报表 EXCEL头
 	 */
-	private static final String[] IN_WAREHOUSE_REPORT_HEAD = { "序号", "入库时间", "仓库编号", "客户编号", "单据类型", "入库单号", "客户订单号", "SKU编码", "SKU条码", "商品名称", "批次号", "订单数量", "入库数量", "包装单位", "SKU体积", "SKU重量", "备注" };
+	private static final String[] IN_WAREHOUSE_REPORT_HEAD = { "序号", "入库时间", "仓库编号", "客户编号", "单据类型", "入库单号", "客户订单号", "商品SKU", "商品条码", "商品名称", "批次号", "订单数量", "入库数量", "包装单位", "SKU体积", "SKU重量", "备注" };
 
 	private static final String OUT_WAREHOUSE_REPORT_SHEET_TITLE = "出库报表";
 	/**
 	 * 出库记录日报表 EXCEL头
 	 */
-	private static final String[] OUT_WAREHOUSE_REPORT_HEAD = { "序号", "出库时间", "仓库编号", "客户编号", "单据类型", "订单来源", "出库订单号", "客户订单号", "运单编号", "快递公司", "商品单价", "总金额(不含运费)", "运费", "重量", "体积重量", "收货人姓名", "收货省", "收货市", "收货区", "收货人地址", "收货人电话", "SKU编码", "商品名称",
-			"SKU数量", "SKU条码", "批次号", "备注" };
+	private static final String[] OUT_WAREHOUSE_REPORT_HEAD = { "序号", "出库时间", "仓库编号", "客户编号", "单据类型", "订单来源", "出库订单号", "客户订单号", "运单编号", "快递公司", "商品单价", "总金额(不含运费)", "运费", "重量", "体积重量", "收货人姓名", "收货省", "收货市", "收货区", "收货人地址", "收货人电话", "商品SKU", "商品名称",
+			"商品数量", "商品条码", "批次号", "备注" };
 
 	private static final String INVENTORY_REPORT_SHEET_TITLE = "库存报表";
 	/**
 	 * 库存日报表 EXCEL头
 	 */
-	private static final String[] INVENTORY_REPORT_HEAD = { "序号", "仓库编号", "结转日期", "货主", "SKU编码", "商品条码", "商品名称", "批次号", "前日结余", "当日收货数量", "当日发货数量", "当日盘点调整数量", "当日剩余数量" };
+	private static final String[] INVENTORY_REPORT_HEAD = { "序号", "仓库编号", "结转日期", "货主", "商品SKU", "商品条码", "商品名称", "批次号", "前日结余", "当日收货数量", "当日发货数量", "当日盘点调整数量", "当日剩余数量" };
 
 	/**
 	 * 生成入库日报表
@@ -218,8 +218,8 @@ public class GenerateReportTaskImpl implements IGenerateReportTask {
 							row[5] = record.getId().toString();// 入库单号(流水号)
 							row[6] = order.getCustomerReferenceNo();// 客户订单号
 							String sku = productDao.findProductSkuByBarcode(userIdOfCustomer, recordItem.getSku());
-							row[7] = sku;// SKU编码
-							row[8] = recordItem.getSku();// SKU条码
+							row[7] = sku;// 商品SKU
+							row[8] = recordItem.getSku();// 商品条码
 							row[9] = orderItem.getSkuName();// 商品名称
 							row[10] = "";// 奶粉批次
 							row[11] = orderItem.getQuantity() + "";// 订单数量
@@ -352,10 +352,10 @@ public class GenerateReportTaskImpl implements IGenerateReportTask {
 								phone += (receiver.getMobileNumber() == null ? "" : receiver.getMobileNumber());
 								row[20] = phone;
 								String sku = productDao.findProductSkuByBarcode(userIdOfCustomer, orderItem.getSku());
-								row[21] = sku;// SKU编码
+								row[21] = sku;// 商品SKU
 								row[22] = orderItem.getSkuName();// 商品名称
-								row[23] = orderItem.getQuantity() + "";// SKU数量
-								row[24] = orderItem.getSku();// SKU条码
+								row[23] = orderItem.getQuantity() + "";// 商品数量
+								row[24] = orderItem.getSku();// 商品条码
 								row[25] = "";// 批次号
 								row[26] = "";// 备注
 								rows.add(row);
