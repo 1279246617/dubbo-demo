@@ -18,6 +18,8 @@ public interface ILittlePackageDao {
 
 	public Long countLittlePackage(LittlePackage LittlePackage, Map<String, String> moreParam);
 
+	public int updateLittlePackageSeatCode(LittlePackage LittlePackage);
+
 	public int updateLittlePackageCallback(LittlePackage LittlePackage);
 
 	public int updateLittlePackageStatus(LittlePackage LittlePackage);

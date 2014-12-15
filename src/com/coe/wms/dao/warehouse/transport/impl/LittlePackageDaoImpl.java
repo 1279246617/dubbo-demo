@@ -81,7 +81,7 @@ public class LittlePackageDaoImpl implements ILittlePackageDao {
 
 	@Override
 	public LittlePackage getLittlePackageById(Long LittlePackageId) {
-		String sql = "select id,warehouse_id,user_id_of_customer,user_id_of_operator,carrier_code,tracking_no,created_time,remark,callback_is_success,callback_count,big_package_id,status,received_time,po_no,transport_type from w_t_little_package where id= "
+		String sql = "select id,warehouse_id,user_id_of_customer,user_id_of_operator,carrier_code,tracking_no,created_time,remark,callback_is_success,callback_count,big_package_id,status,received_time,po_no,transport_type,seat_code from w_t_little_package where id= "
 				+ LittlePackageId;
 		LittlePackage littlePackage = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<LittlePackage>(LittlePackage.class));
 		return littlePackage;
@@ -93,7 +93,7 @@ public class LittlePackageDaoImpl implements ILittlePackageDao {
 	@Override
 	public List<LittlePackage> findLittlePackage(LittlePackage littlePackage, Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select id,warehouse_id,user_id_of_customer,user_id_of_operator,carrier_code,tracking_no,created_time,remark,callback_is_success,callback_count,big_package_id,status,received_time,po_no,transport_type from w_t_little_package where 1=1 ");
+		sb.append("select id,warehouse_id,user_id_of_customer,user_id_of_operator,carrier_code,tracking_no,created_time,remark,callback_is_success,callback_count,big_package_id,status,received_time,po_no,transport_type,seat_code from w_t_little_package where 1=1 ");
 		if (littlePackage != null) {
 			if (StringUtil.isNotNull(littlePackage.getTrackingNo())) {
 				sb.append(" and tracking_no = '" + littlePackage.getTrackingNo() + "' ");
@@ -136,6 +136,9 @@ public class LittlePackageDaoImpl implements ILittlePackageDao {
 			}
 			if (StringUtil.isNotNull(littlePackage.getTransportType())) {
 				sb.append(" and transport_type = '" + littlePackage.getTransportType() + "' ");
+			}
+			if (StringUtil.isNotNull(littlePackage.getSeatCode())) {
+				sb.append(" and seat_code = '" + littlePackage.getSeatCode() + "' ");
 			}
 		}
 		if (moreParam != null) {
@@ -228,6 +231,9 @@ public class LittlePackageDaoImpl implements ILittlePackageDao {
 			if (StringUtil.isNotNull(littlePackage.getTransportType())) {
 				sb.append(" and transport_type = '" + littlePackage.getTransportType() + "' ");
 			}
+			if (StringUtil.isNotNull(littlePackage.getSeatCode())) {
+				sb.append(" and seat_code = '" + littlePackage.getSeatCode() + "' ");
+			}
 		}
 		if (moreParam != null) {
 			if (moreParam.get("createdTimeStart") != null) {
@@ -294,6 +300,12 @@ public class LittlePackageDaoImpl implements ILittlePackageDao {
 	@Override
 	public int updateLittlePackageStatusAndReceivedTime(LittlePackage LittlePackage) {
 		String sql = "update w_t_little_package set status='" + LittlePackage.getStatus() + "', received_time=" + LittlePackage.getReceivedTime() + " where id=" + LittlePackage.getId();
+		return jdbcTemplate.update(sql);
+	}
+
+	@Override
+	public int updateLittlePackageSeatCode(LittlePackage LittlePackage) {
+		String sql = "update w_t_little_package set seat_code='" + LittlePackage.getSeatCode() + "' where id=" + LittlePackage.getId();
 		return jdbcTemplate.update(sql);
 	}
 
