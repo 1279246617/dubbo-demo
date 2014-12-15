@@ -226,8 +226,14 @@ public class TransportServiceImpl implements ITransportService {
 		// 顺丰指定,出货运单号和渠道
 		bigPackage.setTrackingNo(clearanceDetail.getMailNo());
 		bigPackage.setShipwayCode(clearanceDetail.getCarrierCode());
+		if (logisticsOrders.size() == 1) {
+			// 直接转运
+			bigPackage.setTransportType(BigPackage.TRANSPORT_TYPE_Z);
+		} else {
+			// 集货转运
+			bigPackage.setTransportType(BigPackage.TRANSPORT_TYPE_J);
+		}
 		Long bigPackageId = bigPackageDao.saveBigPackage(bigPackage);// 保存大包,得到大包id
-
 		// // 顺丰标签附加内容
 		BigPackageAdditionalSf additionalSf = new BigPackageAdditionalSf();
 		// 顺丰指定,出货运单号和渠道
@@ -292,6 +298,8 @@ public class TransportServiceImpl implements ITransportService {
 			littlePackage.setWarehouseId(warehouseId);
 			littlePackage.setRemark(logisticsOrder.getLogisticsRemark());
 			littlePackage.setBigPackageId(bigPackageId);
+			// 转运类型
+			littlePackage.setTransportType(bigPackage.getTransportType());
 			Long littlePackageId = littlePackageDao.saveLittlePackage(littlePackage);
 			// 小包裹物品id
 			String itemsIncluded = logisticsOrder.getItemsIncluded();
@@ -401,11 +409,18 @@ public class TransportServiceImpl implements ITransportService {
 					map.put("warehouse", warehouse.getWarehouseName());
 				}
 			}
+			if (StringUtil.isEqual(BigPackage.TRANSPORT_TYPE_J, bigPackage.getTransportType())) {
+				map.put("transportType", "集货转运");
+			}
+			if (StringUtil.isEqual(BigPackage.TRANSPORT_TYPE_Z, bigPackage.getTransportType())) {
+				map.put("transportType", "直接转运");
+			}
 			map.put("remark", bigPackage.getRemark());
 			BigPackageStatus bigPackageStatus = bigPackageStatusDao.findBigPackageStatusByCode(bigPackage.getStatus());
 			if (bigPackageStatus != null) {
 				map.put("status", bigPackageStatus.getCn());
 			}
+
 			// 收件人信息
 			BigPackageReceiver bigPackageReceiver = bigPackageReceiverDao.getBigPackageReceiverByPackageId(bigPackageId);
 			if (bigPackageReceiver != null) {
@@ -539,8 +554,8 @@ public class TransportServiceImpl implements ITransportService {
 		List<Object> list = new ArrayList<Object>();
 		for (LittlePackage littlePackage : littlePackageList) {
 			Map<String, Object> map = new HashMap<String, Object>();
-			Long bigPackageId = littlePackage.getId();
-			map.put("id", bigPackageId);
+			map.put("id", littlePackage.getId());
+			map.put("bigPackageId", littlePackage.getBigPackageId());
 			if (littlePackage.getCreatedTime() != null) {
 				map.put("createdTime", DateUtil.dateConvertString(new Date(littlePackage.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss));
 			}
@@ -572,6 +587,12 @@ public class TransportServiceImpl implements ITransportService {
 				if (warehouse != null) {
 					map.put("warehouse", warehouse.getWarehouseName());
 				}
+			}
+			if (StringUtil.isEqual(BigPackage.TRANSPORT_TYPE_J, littlePackage.getTransportType())) {
+				map.put("transportType", "集货转运");
+			}
+			if (StringUtil.isEqual(BigPackage.TRANSPORT_TYPE_Z, littlePackage.getTransportType())) {
+				map.put("transportType", "直接转运");
 			}
 			map.put("remark", littlePackage.getRemark());
 			LittlePackageStatus littlePackageStatus = littlePackageStatusDao.findLittlePackageStatusByCode(littlePackage.getStatus());

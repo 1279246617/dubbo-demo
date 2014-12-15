@@ -33,18 +33,6 @@
 				       		</c:forEach>
 						</select>
                		</span>
-               		<span class="pull-left" style="width:125px;">
-               			状态
-               			<select style="width:80px;" id="status" name="status">
-               				<option></option>
-							<c:forEach items="${littlePackageStatusList}" var="status" >
-				       	 		<option value="<c:out value='${status.code}'/>">
-				       	 			<c:out value="${status.cn}"/>
-				       		 	</option>
-				       		 </c:forEach>
-						</select>
-               		</span>
-               		
                		<span class="pull-left" style="width:130px;">
                			客户
                			<input type="text" name="userLoginName" data-provide="typeahead"  id="userLoginName" style="width:85px;" title="请输入客户登录名" />
@@ -56,16 +44,14 @@
 						<input type="text"  name="nos"  id="nos"   style="display:none;"/>
 						<input type="text"  name="noType"  id="noType"   style="display:none;"/>
 					</span>
-						
-               		
+					               		
                		<span class="pull-left" style="width:175px;">
-               			创建时间
-	               		<input type="text"   style="width:120px;" name="createdTimeStart" id="createdTimeStart" title="起始创建时间">
+               			收货时间
+	               		<input type="text"   style="width:120px;" name="receivedTimeStart" id="receivedTimeStart" title="起始收货时间">
                		</span>
-               		
                		<span class="pull-left" style="width:180px;">
                			至	
-               			<input type="text"   style="width:120px;" name="createdTimeEnd"  id="createdTimeEnd"  title="终止创建时间">
+               			<input type="text"   style="width:120px;" name="receivedTimeEnd"  id="receivedTimeEnd"  title="终止收货时间">
                		</span>
                		<span class="pull-left" style="width:55px;">
                			<a class="btn btn-primary btn-small" id="btn_search"><i class="icon-search icon-white"></i>搜索</a>
@@ -116,7 +102,7 @@
 	     	 }
 	      });
    			
-	        $('#createdTimeStart,#createdTimeEnd').calendar({ format:'yyyy-MM-dd HH:mm:ss' });
+	        $('#receivedTimeStart,#receivedTimeEnd').calendar({ format:'yyyy-MM-dd HH:mm:ss' });
    			initGrid();  
    			
    			//btn_search
@@ -139,12 +125,10 @@
 	                    { display: '客户帐号', name: 'userNameOfCustomer', align: 'center',type:'float',width:'9%'},
 	                    { display: '仓库', name: 'warehouse', align: 'center', type: 'float',width:'8%'},
 	                    { display: '状态', name: 'status', align: 'center', type: 'float',width:'8%'},
-// 	                    { display: '转运订单Id', name: 'bigPackageId', align: 'center', type: 'float',width:'8%'},
 	                    { display: '转运类型', name: 'transportType', align: 'center', type: 'float',width:'9%'},
 	  		          	{ display: '到货跟踪单号', name: 'trackingNo', align: 'center', type: 'float',width:'12%'},
 	  		          	{ display: '承运商', name: 'carrierCode', align: 'center', type: 'float',width:'10%'},
-	  		          	{ display: '销售编号', name: 'poNo', align: 'center', type: 'float',width:'12%'},
-	  		          	{ display: '商品预览', isSort: false, align: 'center', type: 'float',width:'18%',render: function(row) {
+	  		          	{ display: '商品预览', isSort: false, align: 'center', type: 'float',width:'12%',render: function(row) {
 		            		var skus = "";
 		            		if (!row._editing) {
 		            			skus += '<a href="javascript:listLittlePackagesItem(' + row.id + ')">'+row.items+'</a> ';
@@ -153,11 +137,11 @@
 	  		          	}},
 	  		          	{ display: '收货时间', name: 'receivedTime', align: 'center', type: 'float',width:'12%'},
 		                { display: '回传收货状态', name: 'callbackIsSuccess', align: 'center', type: 'float',width:'8%'},
-		                { display: '创建时间', name: 'createdTime', align: 'center', type: 'float',width:'12%'},
+		                { display: '操作员', name: 'userNameOfOperator',width:'8%'},
 		                { display: '备注', name: 'remark', align: 'center', type: 'float',width:'12%'},
 	                ],  
 	                dataAction: 'server',
-	                url: baseUrl+'/warehouse/transport/getLittlePackageData.do',
+	                url: baseUrl+'/warehouse/transport/getLittlePackageData.do?isReceived=Y',
 	                pageSize: 100, 
 	                pageSizeOptions:[50,100,150,200,500],
 	                usePager: 'true',

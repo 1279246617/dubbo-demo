@@ -196,15 +196,16 @@
 	     function initGrid() {
 	    	   grid = $("#maingrid").ligerGrid({
 	                columns: [
-	                    { display: '客户帐号', name: 'userNameOfCustomer', align: 'center',width:'10%'},
+	                    { display: '客户帐号', name: 'userNameOfCustomer', align: 'center',width:'9%'},
 	                    { display: '仓库', name: 'warehouse', align: 'center', type: 'float',width:'10%'},
-	                    { display: '跟踪单号', name: 'trackingNo', align: 'center', type: 'int',width:'13%'},
+	                    { display: '转运类型', name: 'transportType', align: 'center', type: 'float',width:'9%'},
+	                    { display: '到货跟踪单号', name: 'trackingNo', align: 'center', type: 'int',width:'13%'},
 	                    { display: '承运商', name: 'carrierCode', align: 'center', type: 'int',width:'10%'},
-	                    { display: '状态', name: 'status', align: 'center', type: 'int',width:'10%'},
-		                { display: '收货时间', name: 'receivedTime', align: 'center', type: 'float',width:'13%'},
-		                { display: '回传收货状态', name: 'callbackIsSuccess', align: 'center', type: 'float',width:'10%'},
-		                { display: '操作员', name: 'userNameOfOperator',width:'9%'},
-		                { display: '备注', name: 'remark', align: 'center', type: 'float',width:'13%'}
+	                    { display: '状态', name: 'status', align: 'center', type: 'int',width:'9%'},
+		                { display: '收货时间', name: 'receivedTime', align: 'center', type: 'float',width:'12%'},
+		                { display: '回传收货状态', name: 'callbackIsSuccess', align: 'center', type: 'float',width:'9%'},
+		                { display: '操作员', name: 'userNameOfOperator',width:'8%'},
+		                { display: '备注', name: 'remark', align: 'center', type: 'float',width:'9%'}
 	                ],  
 	                isScroll: true,
 	                dataAction: 'server',

@@ -133,6 +133,17 @@ public class ProductServiceImpl implements IProductService {
 			map.put(Constant.MESSAGE, "请输入正确的客户帐号");
 			return map;
 		}
+		Product oldProduct = productDao.getProductById(product.getId());
+		if (!StringUtil.isEqual(oldProduct.getBarcode(), product.getBarcode())) {
+			// 如果更改商品条码,需判断该商品条码是否已被其他商品使用
+			Product productParam = new Product();
+			productParam.setBarcode(product.getBarcode());
+			productParam.setUserIdOfCustomer(product.getUserIdOfCustomer());
+			if (productDao.countProduct(productParam, null) >= 1) {
+				map.put(Constant.MESSAGE, "修改失败,该商品条码已存在");
+				return map;
+			}
+		}
 		long count = productDao.updateProduct(product);
 		if (count > 0) {
 			map.put(Constant.MESSAGE, "更新商品成功");
@@ -164,6 +175,14 @@ public class ProductServiceImpl implements IProductService {
 		}
 		if (product.getUserIdOfCustomer() == null) {
 			map.put(Constant.MESSAGE, "请输入正确的客户帐号");
+			return map;
+		}
+		// 查商品条码是否重复 (一个sku对应多个商品条码,所以sku可以重复,商品条码不可以重复)
+		Product productParam = new Product();
+		productParam.setBarcode(product.getBarcode());
+		productParam.setUserIdOfCustomer(product.getUserIdOfCustomer());
+		if (productDao.countProduct(productParam, null) >= 1) {
+			map.put(Constant.MESSAGE, "添加失败,该商品条码已存在");
 			return map;
 		}
 		long count = productDao.addProduct(product);
