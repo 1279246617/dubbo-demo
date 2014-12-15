@@ -38,6 +38,7 @@ import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderSenderDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderStatusDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseRecordDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseRecordItemDao;
+import com.coe.wms.model.product.Product;
 import com.coe.wms.model.user.User;
 import com.coe.wms.model.warehouse.Seat;
 import com.coe.wms.model.warehouse.Shelf;
@@ -501,12 +502,23 @@ public class ShelfServiceImpl implements IShelfService {
 				}
 			}
 			map.put("shelf_code", shelfTemp.getShelfCode());
-			map.put("shelf_type", shelfTemp.getShelfType());
-			map.put("seat_start", shelfTemp.getSeatStart());
-			map.put("seat_end", shelfTemp.getSeatEnd());
+			if (StringUtil.isEqual(shelfTemp.getBusinessType(), Shelf.BUSINESS_TYPE_STORAGE)) {
+				map.put("business_type", "仓配业务");
+			} else if (StringUtil.isEqual(shelfTemp.getBusinessType(), Shelf.BUSINESS_TYPE_TRANSPORT_J)) {
+				map.put("business_type", "集货转运");
+			} else if (StringUtil.isEqual(shelfTemp.getBusinessType(), Shelf.BUSINESS_TYPE_TRANSPORT_Z)) {
+				map.put("business_type", "直接转运");
+			}
+			if (StringUtil.isEqual(shelfTemp.getShelfType(), Shelf.TYPE_BUILD)) {
+				map.put("shelf_type", "立体货架");
+				map.put("rows", shelfTemp.getRows());// 行数/起始
+				map.put("cols", shelfTemp.getCols());// 列数/终止
+			} else if (StringUtil.isEqual(shelfTemp.getShelfType(), Shelf.TYPE_GROUND)) {
+				map.put("shelf_type", "地面货架");
+				map.put("rows", shelfTemp.getSeatStart());
+				map.put("cols", shelfTemp.getSeatEnd());
+			}
 			map.put("remark", shelfTemp.getRemark());
-			map.put("cols", shelfTemp.getCols());
-			map.put("rows", shelfTemp.getRows());
 			list.add(map);
 		}
 		page.total = shelfDao.countShelf(shelf);
@@ -515,7 +527,7 @@ public class ShelfServiceImpl implements IShelfService {
 	}
 
 	@Override
-	public Map<String, String> saveAddShelf(Long warehouseId, String shelfType, String shelfTypeName, Integer start, Integer end, Integer rows, Integer cols, Integer shelfNoStart, Integer shelfNoEnd, String remark) {
+	public Map<String, String> saveAddShelf(Long warehouseId, String shelfType, String shelfTypeName, Integer start, Integer end, Integer rows, Integer cols, Integer shelfNoStart, Integer shelfNoEnd, String remark, String businessType) {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put(Constant.STATUS, Constant.FAIL);
 		if (StringUtil.isNull(shelfType)) {
@@ -609,6 +621,7 @@ public class ShelfServiceImpl implements IShelfService {
 			shelf.setSeatEnd(end);
 			shelf.setShelfType(shelfType);
 			shelf.setWarehouseId(warehouseId);
+			shelf.setBusinessType(businessType);
 			// 创建货位
 			List<Seat> seatList = Shelf.createSeatsByShelf(shelf);
 			long shelfId = shelfDao.saveShelf(shelf);
@@ -652,8 +665,16 @@ public class ShelfServiceImpl implements IShelfService {
 			map.put("availableQuantity", item.getAvailableQuantity() + "");
 			map.put("quantity", item.getQuantity() + "");
 			map.put("sku", item.getSku());
-			//
-			map.put("skuName", "");
+			// 查询产品
+			Product productParam = new Product();
+			productParam.setUserIdOfCustomer(item.getUserIdOfCustomer());
+			productParam.setBarcode(item.getSku());
+			List<Product> productList = productDao.findProduct(productParam, null, null);
+			if (productList != null && productList.size() > 0) {
+				Product product = productList.get(0);
+				map.put("skuNo", product.getSku());
+				map.put("skuName", product.getProductName());
+			}
 			mapList.add(map);
 		}
 		return mapList;

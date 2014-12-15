@@ -108,7 +108,6 @@
 <!-- 		              		<li><a href="#${baseUrl}/warehouse/storage/listOutWarehouseRecord.do" tab_id="findOutWarehouseRecord"><i class="icon-list"></i><span class="hidden-tablet">发货记录</span></a></li> -->
 		              		<li><a href="#${baseUrl}/warehouse/inventory/listInventory.do" tab_id="findItemInventory"><i class="icon-zoom-out"></i><span class="hidden-tablet">商品批次库存</span></a></li>
 		              		<li><a href="#${baseUrl}/warehouse/inventory/listItemShelfInventory.do" tab_id="findItemShelfInventory"><i class="icon-zoom-out"></i><span class="hidden-tablet">商品货位库存</span></a></li>
-		              		<li><a href="#${baseUrl}/warehouse/shelves/listSeat.do" tab_id="findSeat"><i class="icon-zoom-out"></i><span class="hidden-tablet">货架货位查询</span></a></li>
 		                </ul>
 		        </div>
 		        
@@ -125,28 +124,29 @@
 		                </ul>
 		        </div>
 		         <div title="用户管理" class=" nav-collapse sidebar-nav">
-		                <ul class="nav nav-tabs nav-stacked">
-		                	<li><a href=#><i class="icon-plus-sign"></i><span class="hidden-tablet">新建用户</span></a></li>
-		              		<li><a href=#><i class="icon-th-large"></i><span class="hidden-tablet">用户管理</span></a></li>
-		              		<li><a href=#><i class="icon-th-large"></i><span class="hidden-tablet">角色管理</span></a></li>
-		              		<li><a href=#><i class="icon-th-large"></i><span class="hidden-tablet">权限管理</span></a></li>
-		                </ul>
+<!-- 		                <ul class="nav nav-tabs nav-stacked"> -->
+<!-- 		                	<li><a href=#><i class="icon-plus-sign"></i><span class="hidden-tablet">新建用户</span></a></li> -->
+<!-- 		              		<li><a href=#><i class="icon-th-large"></i><span class="hidden-tablet">用户管理</span></a></li> -->
+<!-- 		              		<li><a href=#><i class="icon-th-large"></i><span class="hidden-tablet">角色管理</span></a></li> -->
+<!-- 		              		<li><a href=#><i class="icon-th-large"></i><span class="hidden-tablet">权限管理</span></a></li> -->
+<!-- 		                </ul> -->
 		        </div> 
 		        <div title="财务管理" class=" nav-collapse sidebar-nav"> 
 		     			<ul class="nav nav-tabs nav-stacked">
-		                	<li><a href=#><i class="icon-check"></i><span class="hidden-tablet">现金收款</span></a></li>
-		                	<li><a href=#><i class="icon-check"></i><span class="hidden-tablet">入账</span></a></li>
-		              		<li><a href=#><i class="icon-check"></i><span class="hidden-tablet">出账审核</span></a></li>
-		              		<li><a href=#><i class="icon-check"></i><span class="hidden-tablet">出账</span></a></li>
+<!-- 		                	<li><a href=#><i class="icon-check"></i><span class="hidden-tablet">现金收款</span></a></li> -->
+<!-- 		                	<li><a href=#><i class="icon-check"></i><span class="hidden-tablet">入账</span></a></li> -->
+<!-- 		              		<li><a href=#><i class="icon-check"></i><span class="hidden-tablet">出账审核</span></a></li> -->
+<!-- 		              		<li><a href=#><i class="icon-check"></i><span class="hidden-tablet">出账</span></a></li> -->
 		                </ul>
 				</div>
 				
 				<div title="基础资料" class=" nav-collapse sidebar-nav">
 						<ul class="nav nav-tabs nav-stacked">
-		                	<li><a href=#><i class="icon-cog"></i><span class="hidden-tablet">渠道管理</span></a></li>
-		              		<li><a href=#><i class="icon-check"></i><span class="hidden-tablet">报价管理</span></a></li>
-		              		<li><a href=#><i class="icon-cog"></i><span class="hidden-tablet">仓库设置</span></a></li>
-		              		<li><a href=#><i class="icon-cog"></i><span class="hidden-tablet">货架类型</span></a></li>
+<!-- 		                	<li><a href=#><i class="icon-cog"></i><span class="hidden-tablet">渠道管理</span></a></li> -->
+<!-- 		              		<li><a href=#><i class="icon-check"></i><span class="hidden-tablet">报价管理</span></a></li> -->
+<!-- 		              		<li><a href=#><i class="icon-cog"></i><span class="hidden-tablet">仓库设置</span></a></li> -->
+<!-- 		              		<li><a href=#><i class="icon-cog"></i><span class="hidden-tablet">货架类型</span></a></li> -->
+		              		<li><a href="#${baseUrl}/warehouse/shelves/listSeat.do" tab_id="findSeat"><i class="icon-zoom-out"></i><span class="hidden-tablet">货架管理</span></a></li>
 		              		<li><a href="#${baseUrl}/products/listProduct.do"><i class="icon-cog"></i><span class="hidden-tablet">商品管理</span></a></li>
 		                </ul>
 		        </div> 
@@ -154,9 +154,9 @@
 		         <div title="报表管理" class=" nav-collapse sidebar-nav">
 		                <ul class="nav nav-tabs nav-stacked">
 		              			<li><a href="#${baseUrl}/warehouse/report/listReport.do" tab_id="listReport"><i class="icon-file"></i><span class="hidden-tablet">报表文件下载</span></a></li>
-		              			<li><a href="#" tab_id=""><i class="icon-th-large"></i><span class="hidden-tablet">入库记录报表</span></a></li>
-		              			<li><a href="#" tab_id=""><i class="icon-th-large"></i><span class="hidden-tablet">出库记录报表</span></a></li>
-		              			<li><a href="#" tab_id=""><i class="icon-th-large"></i><span class="hidden-tablet">库存日结报表</span></a></li>
+<!-- 		              			<li><a href="#" tab_id=""><i class="icon-th-large"></i><span class="hidden-tablet">入库记录报表</span></a></li> -->
+<!-- 		              			<li><a href="#" tab_id=""><i class="icon-th-large"></i><span class="hidden-tablet">出库记录报表</span></a></li> -->
+<!-- 		              			<li><a href="#" tab_id=""><i class="icon-th-large"></i><span class="hidden-tablet">库存日结报表</span></a></li> -->
 		                </ul>
 		        </div>
     	</div>  

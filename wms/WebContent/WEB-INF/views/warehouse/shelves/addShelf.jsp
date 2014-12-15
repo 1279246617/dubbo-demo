@@ -38,9 +38,25 @@
 		</div>
 	</div>	
 	
+	<div style="margin-top: 6mm;width:100%;" class="pull-left">
+		<div class="pull-left" style="width:100px;margin-left: 2mm;" >
+				<span class="badge badge-success">3</span>业务类型:	
+				<input style="display: none;" id="businessType" type="text" value='S'>
+		</div>
+		<div class="pull-left" style="width:100px;">
+			<input type="radio" name="businessType" id="typeS" checked="checked" onclick="changeType()">仓配业务
+		</div>
+		<div class="pull-left" style="width:100px;">	
+			<input  type="radio" name="businessType"  id="typeZ" onclick="changeBusinessType()">直接转运
+		</div>
+		<div class="pull-left" style="width:100px;">	
+			<input  type="radio" name="businessType"  id="typeJ" onclick="changeBusinessType()">集货转运
+		</div>
+	</div>	
+	
 	<div id="step5" style="margin-top: 6mm;width:100%;" class="pull-left">
 		<div class="pull-left" style="width:100px;margin-left: 2mm;" >
-						<span class="badge badge-success">3</span>货架编号:
+						<span class="badge badge-success">4</span>货架编号:
 		</div>
 		<div class="pull-left" style="width:400px;">
 			<input name="shelfTypeName" id="shelfTypeName" style="width:40px;" type="text" value="G" readonly="readonly">
@@ -52,7 +68,7 @@
 		
 	<div id="step3" style="margin-top:6mm;width:100%;" class="pull-left">
 		<div class="pull-left" style="width:100px;margin-left: 2mm;" >
-				<span class="badge badge-success">4</span>货位设置:
+				<span class="badge badge-success">5</span>货位设置:
 		</div>
 		<div class="pull-left" style="width:180px;">
 			货位起始:<input type="text" name="start" id="start" style="width:80px;"  onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" >
@@ -64,7 +80,7 @@
 	
 	<div id="step4" style="margin-top:6mm;width:100%;display: none;" class="pull-left">
 		<div class="pull-left" style="width:100px;margin-left: 2mm;" >
-				<span class="badge badge-success">4</span>货位设置:
+				<span class="badge badge-success">5</span>货位设置:
 		</div>
 		<div class="pull-left" style="width:180px;">
 			货位层数:<input type="text" name="rows" id="rows" style="width:80px;"  onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" >
@@ -139,7 +155,15 @@
 						 $("#shelfTypeName").val("B");
 					}
 			   }
-			   
+			   function changeBusinessType(){
+				   if($('#typeS').is(':checked')){
+					   $("#businessType").val("S");
+					}else if($('#typeZ').is(':checked')){
+						$("#businessType").val("Z");
+					}else{
+						$("#businessType").val("J");
+					}
+			   }
     </script>	
 </body>
 </html>

@@ -410,10 +410,10 @@ public class Shelves {
 
 	@ResponseBody
 	@RequestMapping(value = "/saveAddShelf", method = RequestMethod.POST)
-	public String saveAddShelf(HttpServletRequest request, Long warehouseId, String shelfType, String shelfTypeName, Integer start, Integer end, Integer rows, Integer cols, Integer shelfNoStart, Integer shelfNoEnd, String remark) throws IOException {
+	public String saveAddShelf(HttpServletRequest request, Long warehouseId, String shelfType, String shelfTypeName, Integer start, Integer end, Integer rows, Integer cols, Integer shelfNoStart, Integer shelfNoEnd, String remark,String businessType) throws IOException {
 		HttpSession session = request.getSession();
 		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
-		Map<String, String> map = shelfService.saveAddShelf(warehouseId, shelfType, shelfTypeName, start, end, rows, cols, shelfNoStart, shelfNoEnd, remark);
+		Map<String, String> map = shelfService.saveAddShelf(warehouseId, shelfType, shelfTypeName, start, end, rows, cols, shelfNoStart, shelfNoEnd, remark,businessType);
 		return GsonUtil.toJson(map);
 	}
 

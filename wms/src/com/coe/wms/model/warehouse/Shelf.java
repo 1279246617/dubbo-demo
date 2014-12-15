@@ -27,8 +27,20 @@ public class Shelf implements Serializable {
 	public static final String TYPE_BUILD = "B";
 
 	/**
-	 * 
+	 * 业务类型:仓配
 	 */
+	public static final String BUSINESS_TYPE_STORAGE = "S";
+	/**
+	 * 业务类型:直接转运
+	 */
+	public static final String BUSINESS_TYPE_TRANSPORT_Z = "Z";
+	
+	/**
+	 * 业务类型:集货转运
+	 */
+	public static final String BUSINESS_TYPE_TRANSPORT_J = "J";
+	
+
 	private static final long serialVersionUID = 5963221596346743409L;
 
 	private static Map<String, String> numberToABC = new HashMap<String, String>();
@@ -76,6 +88,12 @@ public class Shelf implements Serializable {
 	 */
 	private Integer seatEnd;
 
+	/**
+	 * 货架指定业务类型
+	 * 
+	 * S:storage仓配: T:transport转运
+	 */
+	private String businessType;
 	/**
 	 * 行 当货架类型是:立体货架时
 	 */
@@ -148,6 +166,14 @@ public class Shelf implements Serializable {
 
 	public Integer getSeatStart() {
 		return seatStart;
+	}
+
+	public String getBusinessType() {
+		return businessType;
+	}
+
+	public void setBusinessType(String businessType) {
+		this.businessType = businessType;
 	}
 
 	public void setSeatStart(Integer seatStart) {

@@ -54,7 +54,7 @@ public interface IShelfService {
 
 	public Shelf getShelfById(Long shelfId);
 
-	public Map<String, String> saveAddShelf(Long warehouseId, String shelfType, String shelfTypeName, Integer start, Integer end, Integer rows, Integer cols, Integer shelfNoStart, Integer shelfNoEnd, String remark);
+	public Map<String, String> saveAddShelf(Long warehouseId, String shelfType, String shelfTypeName, Integer start, Integer end, Integer rows, Integer cols, Integer shelfNoStart, Integer shelfNoEnd, String remark,String businessType);
 
 	public List<Map<String, String>> getSeatItemInventory(Long seatId);
 
