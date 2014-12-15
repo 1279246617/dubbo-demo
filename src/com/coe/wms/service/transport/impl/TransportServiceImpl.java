@@ -714,8 +714,6 @@ public class TransportServiceImpl implements ITransportService {
 		// 更改为已收货, 待添加操作日志
 		littlePackage.setStatus(LittlePackageStatusCode.WSR);
 		littlePackage.setReceivedTime(System.currentTimeMillis());
-		
-		
 		// 更新为已收货前,查找空闲的转运业务专用货位
 		String seatCode = null;
 		littlePackageDao.updateLittlePackageStatusAndReceivedTime(littlePackage);
@@ -723,18 +721,18 @@ public class TransportServiceImpl implements ITransportService {
 		LittlePackage littlePackageParam = new LittlePackage();
 		littlePackageParam.setBigPackageId(littlePackage.getBigPackageId());
 		Long count = littlePackageDao.countLittlePackage(littlePackageParam, null);
-
+		
 		if (count >= 2) {// 集货转运
 			map.put(Constant.MESSAGE, "集货转运订单收货成功,请继续收货");
 			map.put(Constant.STATUS, Constant.SUCCESS);
 			// 返回集货转运货位
 			littlePackage.setSeatCode(seatCode);
-
+			
 		} else {// 直接转运
 			map.put(Constant.MESSAGE, "直接转运订单收货成功,请称重打单");
 			map.put(Constant.STATUS, "2");
 			// 返回直接转运货位
-
+			
 		}
 		return map;
 	}
