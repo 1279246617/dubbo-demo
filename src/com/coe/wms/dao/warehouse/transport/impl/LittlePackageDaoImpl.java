@@ -45,7 +45,7 @@ public class LittlePackageDaoImpl implements ILittlePackageDao {
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public long saveLittlePackage(final LittlePackage littlePackage) {
-		final String sql = "insert into w_t_little_package (warehouse_id,user_id_of_customer,user_id_of_operator,carrier_code,tracking_no,created_time,remark,callback_is_success,callback_count,big_package_id,status,received_time,po_no) values (?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		final String sql = "insert into w_t_little_package (warehouse_id,user_id_of_customer,user_id_of_operator,carrier_code,tracking_no,created_time,remark,callback_is_success,callback_count,big_package_id,status,received_time,po_no,transport_type) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
@@ -71,6 +71,7 @@ public class LittlePackageDaoImpl implements ILittlePackageDao {
 					ps.setLong(12, littlePackage.getReceivedTime());
 				}
 				ps.setString(13, littlePackage.getPoNo());
+				ps.setString(14, littlePackage.getTransportType());
 				return ps;
 			}
 		}, keyHolder);
@@ -80,7 +81,7 @@ public class LittlePackageDaoImpl implements ILittlePackageDao {
 
 	@Override
 	public LittlePackage getLittlePackageById(Long LittlePackageId) {
-		String sql = "select id,warehouse_id,user_id_of_customer,user_id_of_operator,carrier_code,tracking_no,created_time,remark,callback_is_success,callback_count,big_package_id,status,received_time,po_no from w_t_little_package where id= "
+		String sql = "select id,warehouse_id,user_id_of_customer,user_id_of_operator,carrier_code,tracking_no,created_time,remark,callback_is_success,callback_count,big_package_id,status,received_time,po_no,transport_type from w_t_little_package where id= "
 				+ LittlePackageId;
 		LittlePackage littlePackage = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<LittlePackage>(LittlePackage.class));
 		return littlePackage;
@@ -90,48 +91,51 @@ public class LittlePackageDaoImpl implements ILittlePackageDao {
 	 * 查询入库记录
 	 */
 	@Override
-	public List<LittlePackage> findLittlePackage(LittlePackage LittlePackage, Map<String, String> moreParam, Pagination page) {
+	public List<LittlePackage> findLittlePackage(LittlePackage littlePackage, Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select id,warehouse_id,user_id_of_customer,user_id_of_operator,carrier_code,tracking_no,created_time,remark,callback_is_success,callback_count,big_package_id,status,received_time,po_no from w_t_little_package where 1=1 ");
-		if (LittlePackage != null) {
-			if (StringUtil.isNotNull(LittlePackage.getTrackingNo())) {
-				sb.append(" and tracking_no = '" + LittlePackage.getTrackingNo() + "' ");
+		sb.append("select id,warehouse_id,user_id_of_customer,user_id_of_operator,carrier_code,tracking_no,created_time,remark,callback_is_success,callback_count,big_package_id,status,received_time,po_no,transport_type from w_t_little_package where 1=1 ");
+		if (littlePackage != null) {
+			if (StringUtil.isNotNull(littlePackage.getTrackingNo())) {
+				sb.append(" and tracking_no = '" + littlePackage.getTrackingNo() + "' ");
 			}
-			if (StringUtil.isNotNull(LittlePackage.getCarrierCode())) {
-				sb.append(" and carrier_code = '" + LittlePackage.getCarrierCode() + "' ");
+			if (StringUtil.isNotNull(littlePackage.getCarrierCode())) {
+				sb.append(" and carrier_code = '" + littlePackage.getCarrierCode() + "' ");
 			}
-			if (StringUtil.isNotNull(LittlePackage.getRemark())) {
-				sb.append(" and remark = '" + LittlePackage.getRemark() + "' ");
+			if (StringUtil.isNotNull(littlePackage.getRemark())) {
+				sb.append(" and remark = '" + littlePackage.getRemark() + "' ");
 			}
-			if (LittlePackage.getCreatedTime() != null) {
-				sb.append(" and created_time = " + LittlePackage.getCreatedTime());
+			if (littlePackage.getCreatedTime() != null) {
+				sb.append(" and created_time = " + littlePackage.getCreatedTime());
 			}
-			if (LittlePackage.getId() != null) {
-				sb.append(" and id = " + LittlePackage.getId());
+			if (littlePackage.getId() != null) {
+				sb.append(" and id = " + littlePackage.getId());
 			}
-			if (LittlePackage.getWarehouseId() != null) {
-				sb.append(" and warehouse_id = " + LittlePackage.getWarehouseId());
+			if (littlePackage.getWarehouseId() != null) {
+				sb.append(" and warehouse_id = " + littlePackage.getWarehouseId());
 			}
-			if (LittlePackage.getUserIdOfCustomer() != null) {
-				sb.append(" and user_id_of_customer = " + LittlePackage.getUserIdOfCustomer());
+			if (littlePackage.getUserIdOfCustomer() != null) {
+				sb.append(" and user_id_of_customer = " + littlePackage.getUserIdOfCustomer());
 			}
-			if (LittlePackage.getUserIdOfOperator() != null) {
-				sb.append(" and user_id_of_operator = " + LittlePackage.getUserIdOfOperator());
+			if (littlePackage.getUserIdOfOperator() != null) {
+				sb.append(" and user_id_of_operator = " + littlePackage.getUserIdOfOperator());
 			}
-			if (StringUtil.isNotNull(LittlePackage.getCallbackIsSuccess())) {
-				sb.append(" and callback_is_success = '" + LittlePackage.getCallbackIsSuccess() + "' ");
+			if (StringUtil.isNotNull(littlePackage.getCallbackIsSuccess())) {
+				sb.append(" and callback_is_success = '" + littlePackage.getCallbackIsSuccess() + "' ");
 			}
-			if (LittlePackage.getCallbackCount() != null) {
-				sb.append(" and callback_count = " + LittlePackage.getCallbackCount());
+			if (littlePackage.getCallbackCount() != null) {
+				sb.append(" and callback_count = " + littlePackage.getCallbackCount());
 			}
-			if (LittlePackage.getBigPackageId() != null) {
-				sb.append(" and big_package_id = " + LittlePackage.getBigPackageId());
+			if (littlePackage.getBigPackageId() != null) {
+				sb.append(" and big_package_id = " + littlePackage.getBigPackageId());
 			}
-			if (StringUtil.isNotNull(LittlePackage.getStatus())) {
-				sb.append(" and status = '" + LittlePackage.getStatus() + "' ");
+			if (StringUtil.isNotNull(littlePackage.getStatus())) {
+				sb.append(" and status = '" + littlePackage.getStatus() + "' ");
 			}
-			if (StringUtil.isNotNull(LittlePackage.getPoNo())) {
-				sb.append(" and po_no = '" + LittlePackage.getPoNo() + "' ");
+			if (StringUtil.isNotNull(littlePackage.getPoNo())) {
+				sb.append(" and po_no = '" + littlePackage.getPoNo() + "' ");
+			}
+			if (StringUtil.isNotNull(littlePackage.getTransportType())) {
+				sb.append(" and transport_type = '" + littlePackage.getTransportType() + "' ");
 			}
 		}
 		if (moreParam != null) {
@@ -166,48 +170,51 @@ public class LittlePackageDaoImpl implements ILittlePackageDao {
 	}
 
 	@Override
-	public Long countLittlePackage(LittlePackage LittlePackage, Map<String, String> moreParam) {
+	public Long countLittlePackage(LittlePackage littlePackage, Map<String, String> moreParam) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("select count(*)  from w_t_little_package where 1=1 ");
-		if (LittlePackage != null) {
-			if (StringUtil.isNotNull(LittlePackage.getTrackingNo())) {
-				sb.append(" and tracking_no = '" + LittlePackage.getTrackingNo() + "' ");
+		if (littlePackage != null) {
+			if (StringUtil.isNotNull(littlePackage.getTrackingNo())) {
+				sb.append(" and tracking_no = '" + littlePackage.getTrackingNo() + "' ");
 			}
-			if (StringUtil.isNotNull(LittlePackage.getCarrierCode())) {
-				sb.append(" and carrier_code = '" + LittlePackage.getCarrierCode() + "' ");
+			if (StringUtil.isNotNull(littlePackage.getCarrierCode())) {
+				sb.append(" and carrier_code = '" + littlePackage.getCarrierCode() + "' ");
 			}
-			if (StringUtil.isNotNull(LittlePackage.getRemark())) {
-				sb.append(" and remark = '" + LittlePackage.getRemark() + "' ");
+			if (StringUtil.isNotNull(littlePackage.getRemark())) {
+				sb.append(" and remark = '" + littlePackage.getRemark() + "' ");
 			}
-			if (LittlePackage.getCreatedTime() != null) {
-				sb.append(" and created_time = " + LittlePackage.getCreatedTime());
+			if (littlePackage.getCreatedTime() != null) {
+				sb.append(" and created_time = " + littlePackage.getCreatedTime());
 			}
-			if (LittlePackage.getId() != null) {
-				sb.append(" and id = " + LittlePackage.getId());
+			if (littlePackage.getId() != null) {
+				sb.append(" and id = " + littlePackage.getId());
 			}
-			if (LittlePackage.getWarehouseId() != null) {
-				sb.append(" and warehouse_id = " + LittlePackage.getWarehouseId());
+			if (littlePackage.getWarehouseId() != null) {
+				sb.append(" and warehouse_id = " + littlePackage.getWarehouseId());
 			}
-			if (LittlePackage.getUserIdOfCustomer() != null) {
-				sb.append(" and user_id_of_customer = " + LittlePackage.getUserIdOfCustomer());
+			if (littlePackage.getUserIdOfCustomer() != null) {
+				sb.append(" and user_id_of_customer = " + littlePackage.getUserIdOfCustomer());
 			}
-			if (LittlePackage.getUserIdOfOperator() != null) {
-				sb.append(" and user_id_of_operator = " + LittlePackage.getUserIdOfOperator());
+			if (littlePackage.getUserIdOfOperator() != null) {
+				sb.append(" and user_id_of_operator = " + littlePackage.getUserIdOfOperator());
 			}
-			if (StringUtil.isNotNull(LittlePackage.getCallbackIsSuccess())) {
-				sb.append(" and callback_is_success = '" + LittlePackage.getCallbackIsSuccess() + "' ");
+			if (StringUtil.isNotNull(littlePackage.getCallbackIsSuccess())) {
+				sb.append(" and callback_is_success = '" + littlePackage.getCallbackIsSuccess() + "' ");
 			}
-			if (LittlePackage.getCallbackCount() != null) {
-				sb.append(" and callback_count = " + LittlePackage.getCallbackCount());
+			if (littlePackage.getCallbackCount() != null) {
+				sb.append(" and callback_count = " + littlePackage.getCallbackCount());
 			}
-			if (LittlePackage.getBigPackageId() != null) {
-				sb.append(" and big_package_id = " + LittlePackage.getBigPackageId());
+			if (littlePackage.getBigPackageId() != null) {
+				sb.append(" and big_package_id = " + littlePackage.getBigPackageId());
 			}
-			if (StringUtil.isNotNull(LittlePackage.getStatus())) {
-				sb.append(" and status = '" + LittlePackage.getStatus() + "' ");
+			if (StringUtil.isNotNull(littlePackage.getStatus())) {
+				sb.append(" and status = '" + littlePackage.getStatus() + "' ");
 			}
-			if (StringUtil.isNotNull(LittlePackage.getPoNo())) {
-				sb.append(" and po_no = '" + LittlePackage.getPoNo() + "' ");
+			if (StringUtil.isNotNull(littlePackage.getPoNo())) {
+				sb.append(" and po_no = '" + littlePackage.getPoNo() + "' ");
+			}
+			if (StringUtil.isNotNull(littlePackage.getTransportType())) {
+				sb.append(" and transport_type = '" + littlePackage.getTransportType() + "' ");
 			}
 		}
 		if (moreParam != null) {
