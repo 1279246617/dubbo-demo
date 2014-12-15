@@ -56,6 +56,11 @@ public class LittlePackage implements Serializable {
 	private String poNo;
 
 	/**
+	 * 货架号, 收货时分配的货位号 要求上架操作时必须按此货位上架
+	 */
+	private String seatCode;
+	
+	/**
 	 * 未入库,已入库,未上架,已上架,已下架
 	 */
 	private String status;
@@ -101,6 +106,14 @@ public class LittlePackage implements Serializable {
 
 	public void setBigPackageId(Long bigPackageId) {
 		this.bigPackageId = bigPackageId;
+	}
+
+	public String getSeatCode() {
+		return seatCode;
+	}
+
+	public void setSeatCode(String seatCode) {
+		this.seatCode = seatCode;
 	}
 
 	public Long getUserIdOfCustomer() {
