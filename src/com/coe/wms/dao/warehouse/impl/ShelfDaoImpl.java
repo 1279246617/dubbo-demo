@@ -35,7 +35,7 @@ public class ShelfDaoImpl implements IShelfDao {
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public Shelf getShelfByCode(Long code) {
-		String sql = "select id,warehouse_id,shelf_type,shelf_code,cols,rows,seat_start,seat_end,remark from w_w_shelf where shelf_code = ?";
+		String sql = "select id,warehouse_id,shelf_type,shelf_code,cols,rows,seat_start,seat_end,remark,business_type from w_w_shelf where shelf_code = ?";
 		List<Shelf> shelfList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(Shelf.class));
 		if (shelfList.size() > 0) {
 			return shelfList.get(0);
@@ -47,7 +47,7 @@ public class ShelfDaoImpl implements IShelfDao {
 	@DataSource(DataSourceCode.WMS)
 	public List<Shelf> findShelf(Shelf shelf, Pagination page) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select  id,warehouse_id,shelf_type,shelf_code,cols,rows,seat_start,seat_end,remark  from w_w_shelf where 1=1");
+		sb.append("select  id,warehouse_id,shelf_type,shelf_code,cols,rows,seat_start,seat_end,remark,business_type  from w_w_shelf where 1=1");
 		if (shelf.getId() != null) {
 			sb.append(" and id = " + shelf.getId());
 		}
@@ -59,6 +59,9 @@ public class ShelfDaoImpl implements IShelfDao {
 		}
 		if (StringUtil.isNotNull(shelf.getRemark())) {
 			sb.append(" and remark = '" + shelf.getRemark() + "'");
+		}
+		if (StringUtil.isNotNull(shelf.getBusinessType())) {
+			sb.append(" and business_type = '" + shelf.getBusinessType() + "'");
 		}
 		if (shelf.getRows() != null) {
 			sb.append(" and rows = " + shelf.getRows());
@@ -72,6 +75,7 @@ public class ShelfDaoImpl implements IShelfDao {
 		if (shelf.getWarehouseId() != null) {
 			sb.append(" and warehouse_id = " + shelf.getWarehouseId());
 		}
+
 		if (page != null) {
 			// 分页sql
 			sb.append(page.generatePageSql());
@@ -97,6 +101,9 @@ public class ShelfDaoImpl implements IShelfDao {
 		if (StringUtil.isNotNull(shelf.getRemark())) {
 			sb.append(" and remark = '" + shelf.getRemark() + "'");
 		}
+		if (StringUtil.isNotNull(shelf.getBusinessType())) {
+			sb.append(" and business_type = '" + shelf.getBusinessType() + "'");
+		}
 		if (shelf.getRows() != null) {
 			sb.append(" and rows = " + shelf.getRows());
 		}
@@ -120,7 +127,7 @@ public class ShelfDaoImpl implements IShelfDao {
 
 	@Override
 	public Long saveShelf(final Shelf shelf) {
-		final String sql = "insert into w_w_shelf ( warehouse_id,shelf_type,shelf_code,cols,rows,seat_start,seat_end,remark ) values (?,?,?,?,?,?,?,?)";
+		final String sql = "insert into w_w_shelf ( warehouse_id,shelf_type,shelf_code,cols,rows,seat_start,seat_end,remark ,business_type) values (?,?,?,?,?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
@@ -149,6 +156,7 @@ public class ShelfDaoImpl implements IShelfDao {
 					ps.setInt(7, shelf.getSeatEnd());
 				}
 				ps.setString(8, shelf.getRemark());
+				ps.setString(9, shelf.getBusinessType());
 				return ps;
 			}
 		}, keyHolder);
