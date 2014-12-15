@@ -44,7 +44,7 @@ public class BigPackageDaoImpl implements IBigPackageDao {
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public long saveBigPackage(final BigPackage bigPackage) {
-		final String sql = "insert into w_t_big_package (warehouse_id,user_id_of_customer,user_id_of_operator,shipway_code,created_time,status,remark,customer_reference_no,out_warehouse_weight,weight_code,trade_remark,tracking_no) values (?,?,?,?,?,?,?,?,?,?,?,?)";
+		final String sql = "insert into w_t_big_package (warehouse_id,user_id_of_customer,user_id_of_operator,shipway_code,created_time,status,remark,customer_reference_no,out_warehouse_weight,weight_code,trade_remark,tracking_no,transport_type) values (?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
@@ -70,6 +70,7 @@ public class BigPackageDaoImpl implements IBigPackageDao {
 				ps.setString(10, bigPackage.getWeightCode());
 				ps.setString(11, bigPackage.getTradeRemark());
 				ps.setString(12, bigPackage.getTrackingNo());
+				ps.setString(13, bigPackage.getTransportType());
 				return ps;
 			}
 		}, keyHolder);
@@ -79,7 +80,7 @@ public class BigPackageDaoImpl implements IBigPackageDao {
 
 	@Override
 	public BigPackage getBigPackageById(Long bigPackageId) {
-		String sql = "select id,warehouse_id,user_id_of_customer,user_id_of_operator,shipway_code,created_time,status,remark,customer_reference_no,callback_send_weight_is_success,callback_send_weigh_count,callback_send_status_is_success,callback_send_status_count,out_warehouse_weight,weight_code,trade_remark,tracking_no,callback_send_check_is_success,callback_send_check_count,check_result from w_t_big_package where id ="
+		String sql = "select id,warehouse_id,user_id_of_customer,user_id_of_operator,shipway_code,created_time,status,remark,customer_reference_no,callback_send_weight_is_success,callback_send_weigh_count,callback_send_status_is_success,callback_send_status_count,out_warehouse_weight,weight_code,trade_remark,tracking_no,callback_send_check_is_success,callback_send_check_count,check_result,transport_type from w_t_big_package where id ="
 				+ bigPackageId;
 		BigPackage bigPackage = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<BigPackage>(BigPackage.class));
 		return bigPackage;
@@ -92,7 +93,7 @@ public class BigPackageDaoImpl implements IBigPackageDao {
 	@Override
 	public List<BigPackage> findBigPackage(BigPackage bigPackage, Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select id,warehouse_id,user_id_of_customer,user_id_of_operator,shipway_code,created_time,status,remark,customer_reference_no,callback_send_weight_is_success,callback_send_weigh_count,callback_send_status_is_success,callback_send_status_count,out_warehouse_weight,weight_code,trade_remark,tracking_no,callback_send_check_is_success,callback_send_check_count,check_result from w_t_big_package where 1=1 ");
+		sb.append("select id,warehouse_id,user_id_of_customer,user_id_of_operator,shipway_code,created_time,status,remark,customer_reference_no,callback_send_weight_is_success,callback_send_weigh_count,callback_send_status_is_success,callback_send_status_count,out_warehouse_weight,weight_code,trade_remark,tracking_no,callback_send_check_is_success,callback_send_check_count,check_result,transport_type from w_t_big_package where 1=1 ");
 		if (moreParam != null && StringUtil.isNotNull(moreParam.get("nos"))) {
 			// 按单号 批量查询 开始---------------
 			String noType = moreParam.get("noType");
@@ -170,6 +171,9 @@ public class BigPackageDaoImpl implements IBigPackageDao {
 				}
 				if (StringUtil.isNotNull(bigPackage.getCustomerReferenceNo())) {
 					sb.append(" and customer_reference_no = '" + bigPackage.getCustomerReferenceNo() + "' ");
+				}
+				if (StringUtil.isNotNull(bigPackage.getTransportType())) {
+					sb.append(" and transport_type = '" + bigPackage.getTransportType() + "' ");
 				}
 			}
 			if (moreParam != null) {
@@ -277,6 +281,9 @@ public class BigPackageDaoImpl implements IBigPackageDao {
 				}
 				if (StringUtil.isNotNull(bigPackage.getCustomerReferenceNo())) {
 					sb.append(" and customer_reference_no = '" + bigPackage.getCustomerReferenceNo() + "' ");
+				}
+				if (StringUtil.isNotNull(bigPackage.getTransportType())) {
+					sb.append(" and transport_type = '" + bigPackage.getTransportType() + "' ");
 				}
 			}
 			if (moreParam != null) {

@@ -82,6 +82,11 @@ public class LittlePackage implements Serializable {
 	 */
 	private Integer callbackCount;
 
+	/**
+	 * 转运类型:Z: 直接转运, J:集货转运
+	 */
+	private String transportType;
+
 	public Long getId() {
 		return id;
 	}
@@ -124,6 +129,14 @@ public class LittlePackage implements Serializable {
 
 	public void setCallbackCount(Integer callbackCount) {
 		this.callbackCount = callbackCount;
+	}
+
+	public String getTransportType() {
+		return transportType;
+	}
+
+	public void setTransportType(String transportType) {
+		this.transportType = transportType;
 	}
 
 	public void setUserIdOfOperator(Long userIdOfOperator) {

@@ -17,6 +17,15 @@ public class BigPackage implements Serializable {
 	 */
 	private static final long serialVersionUID = -95644842282452189L;
 	/**
+	 * 直接转运
+	 */
+	public static final String TRANSPORT_TYPE_Z = "Z";
+
+	/**
+	 * 集货转运
+	 */
+	public static final String TRANSPORT_TYPE_J = "J";
+	/**
 	 * 主键
 	 */
 	private Long id;
@@ -79,6 +88,11 @@ public class BigPackage implements Serializable {
 	 * SUCCESS：接单 SECURITY：包裹安全监测不通过 OTHER_REASON：其他异常
 	 */
 	private String checkResult;
+
+	/**
+	 * 转运类型:Z: 直接转运, J:集货转运
+	 */
+	private String transportType;
 
 	public String getCheckResult() {
 		return checkResult;
@@ -167,6 +181,14 @@ public class BigPackage implements Serializable {
 
 	public void setUserIdOfCustomer(Long userIdOfCustomer) {
 		this.userIdOfCustomer = userIdOfCustomer;
+	}
+
+	public String getTransportType() {
+		return transportType;
+	}
+
+	public void setTransportType(String transportType) {
+		this.transportType = transportType;
 	}
 
 	public Long getUserIdOfOperator() {
