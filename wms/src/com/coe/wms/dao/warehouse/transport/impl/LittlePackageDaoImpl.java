@@ -151,6 +151,18 @@ public class LittlePackageDaoImpl implements ILittlePackageDao {
 					sb.append(" and created_time <= " + date.getTime());
 				}
 			}
+			if (moreParam.get("receivedTimeStart") != null) {
+				Date date = DateUtil.stringConvertDate(moreParam.get("receivedTimeStart"), DateUtil.yyyy_MM_ddHHmmss);
+				if (date != null) {
+					sb.append(" and received_time >= " + date.getTime());
+				}
+			}
+			if (moreParam.get("receivedTimeEnd") != null) {
+				Date date = DateUtil.stringConvertDate(moreParam.get("receivedTimeEnd"), DateUtil.yyyy_MM_ddHHmmss);
+				if (date != null) {
+					sb.append(" and received_time <= " + date.getTime());
+				}
+			}
 			// isReceived = Y ,表示已收货的记录, 状态不能等于待仓库收货
 			if (StringUtil.isEqual(moreParam.get("isReceived"), Constant.Y)) {
 				sb.append(" and status != '" + LittlePackageStatusCode.WWR + "'");
@@ -228,6 +240,18 @@ public class LittlePackageDaoImpl implements ILittlePackageDao {
 				Date date = DateUtil.stringConvertDate(moreParam.get("createdTimeEnd"), DateUtil.yyyy_MM_ddHHmmss);
 				if (date != null) {
 					sb.append(" and created_time <= " + date.getTime());
+				}
+			}
+			if (moreParam.get("receivedTimeStart") != null) {
+				Date date = DateUtil.stringConvertDate(moreParam.get("receivedTimeStart"), DateUtil.yyyy_MM_ddHHmmss);
+				if (date != null) {
+					sb.append(" and received_time >= " + date.getTime());
+				}
+			}
+			if (moreParam.get("receivedTimeEnd") != null) {
+				Date date = DateUtil.stringConvertDate(moreParam.get("receivedTimeEnd"), DateUtil.yyyy_MM_ddHHmmss);
+				if (date != null) {
+					sb.append(" and received_time <= " + date.getTime());
 				}
 			}
 		}

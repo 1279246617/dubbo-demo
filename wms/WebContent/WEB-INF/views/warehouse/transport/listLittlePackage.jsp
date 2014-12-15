@@ -139,7 +139,9 @@
 	                    { display: '客户帐号', name: 'userNameOfCustomer', align: 'center',type:'float',width:'9%'},
 	                    { display: '仓库', name: 'warehouse', align: 'center', type: 'float',width:'8%'},
 	                    { display: '状态', name: 'status', align: 'center', type: 'float',width:'8%'},
-	  		          	{ display: '跟踪单号', name: 'trackingNo', align: 'center', type: 'float',width:'12%'},
+// 	                    { display: '转运订单Id', name: 'bigPackageId', align: 'center', type: 'float',width:'8%'},
+	                    { display: '转运类型', name: 'transportType', align: 'center', type: 'float',width:'9%'},
+	  		          	{ display: '到货跟踪单号', name: 'trackingNo', align: 'center', type: 'float',width:'12%'},
 	  		          	{ display: '承运商', name: 'carrierCode', align: 'center', type: 'float',width:'10%'},
 	  		          	{ display: '销售编号', name: 'poNo', align: 'center', type: 'float',width:'12%'},
 	  		          	{ display: '商品预览', isSort: false, align: 'center', type: 'float',width:'18%',render: function(row) {

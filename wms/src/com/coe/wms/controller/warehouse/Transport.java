@@ -205,6 +205,27 @@ public class Transport {
 	}
 
 	/**
+	 * 转运订单详情 查询
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/listReceivedLittlePackage", method = RequestMethod.GET)
+	public ModelAndView listReceivedLittlePackage(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		HttpSession session = request.getSession();
+		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
+		ModelAndView view = new ModelAndView();
+		view.addObject("userId", userId);
+		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
+		User user = userService.getUserById(userId);
+		view.addObject("warehouseList", storageService.findAllWarehouse(user.getDefaultWarehouseId()));
+		view.setViewName("warehouse/transport/listReceivedLittlePackage");
+		return view;
+	}
+
+	/**
 	 * 获取转运订单小包
 	 * 
 	 * @param request
@@ -215,8 +236,8 @@ public class Transport {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/getLittlePackageData", method = RequestMethod.POST)
-	public String getLittlePackageData(HttpServletRequest request, String sortorder, String sortname, int page, int pagesize, String userLoginName, Long warehouseId, String trackingNo, String createdTimeStart, String createdTimeEnd, String status,
-			String nos, String noType, String isReceived) throws IOException {
+	public String getLittlePackageData(HttpServletRequest request, String sortorder, String sortname, int page, int pagesize, String userLoginName, Long warehouseId, String trackingNo, String createdTimeStart, String createdTimeEnd,
+			String receivedTimeStart, String receivedTimeEnd, String status, String nos, String noType, String isReceived) throws IOException {
 		HttpSession session = request.getSession();
 		// 当前操作员
 		Long userIdOfOperator = (Long) session.getAttribute(SessionConstant.USER_ID);
@@ -240,6 +261,8 @@ public class Transport {
 		Map<String, String> moreParam = new HashMap<String, String>();
 		moreParam.put("createdTimeStart", createdTimeStart);
 		moreParam.put("createdTimeEnd", createdTimeEnd);
+		moreParam.put("receivedTimeStart", receivedTimeStart);
+		moreParam.put("receivedTimeEnd", receivedTimeEnd);
 		moreParam.put("nos", nos);
 		moreParam.put("noType", noType);
 		moreParam.put("isReceived", isReceived);
