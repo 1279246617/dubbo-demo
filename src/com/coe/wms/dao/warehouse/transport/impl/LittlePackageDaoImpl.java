@@ -299,7 +299,7 @@ public class LittlePackageDaoImpl implements ILittlePackageDao {
 
 	@Override
 	public int receivedLittlePackage(LittlePackage littlePackage) {
-		String sql = "update w_t_little_package set status=? received_time=?,seat_code = ? where id=" + littlePackage.getId();
+		String sql = "update w_t_little_package set status=? ,received_time=?,seat_code = ? where id=" + littlePackage.getId();
 		return jdbcTemplate.update(sql, littlePackage.getStatus(), littlePackage.getReceivedTime(), littlePackage.getSeatCode());
 	}
 

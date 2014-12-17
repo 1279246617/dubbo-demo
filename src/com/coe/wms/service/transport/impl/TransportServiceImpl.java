@@ -45,6 +45,7 @@ import com.coe.wms.model.warehouse.transport.BigPackageStatus;
 import com.coe.wms.model.warehouse.transport.BigPackageStatus.BigPackageStatusCode;
 import com.coe.wms.model.warehouse.transport.LittlePackage;
 import com.coe.wms.model.warehouse.transport.LittlePackageItem;
+import com.coe.wms.model.warehouse.transport.LittlePackageOnShelf;
 import com.coe.wms.model.warehouse.transport.LittlePackageStatus;
 import com.coe.wms.model.warehouse.transport.LittlePackageStatus.LittlePackageStatusCode;
 import com.coe.wms.pojo.api.warehouse.Buyer;
@@ -728,16 +729,27 @@ public class TransportServiceImpl implements ITransportService {
 		littlePackage.setReceivedTime(System.currentTimeMillis());
 		// 保存货位,状态,时间
 		littlePackageDao.receivedLittlePackage(littlePackage);
+
+		// 保存预分配货位上架记录
+		LittlePackageOnShelf onShelf = new LittlePackageOnShelf();
+		onShelf.setCreatedTime(System.currentTimeMillis());
+		onShelf.setLittlePackageId(littlePackageId);
+		onShelf.setBigPackageId(littlePackage.getBigPackageId());
+		onShelf.setSeatCode(seatCode);
+		onShelf.setStatus(LittlePackageOnShelf.STATUS_PRE_ON_SHELF);
+		onShelf.setTrackingNo(trackingNo);
+		onShelf.setUserIdOfCustomer(littlePackage.getUserIdOfCustomer());
+		onShelf.setUserIdOfOperator(userIdOfOperator);
+		onShelf.setWarehouseId(warehouseId);
+		littlePackageOnShelfDao.saveLittlePackageOnShelf(onShelf);
+		
+		map.put("seatCode", seatCode);
 		if (StringUtil.isEqual(littlePackage.getTransportType(), BigPackage.TRANSPORT_TYPE_J)) {// 集货转运
 			map.put(Constant.MESSAGE, "集货转运订单收货成功,请继续收货");
 			map.put(Constant.STATUS, Constant.SUCCESS);
-			map.put("seatCode", "集货货位:" + seatCode);
-			// 返回集货转运货位
 		} else if (StringUtil.isEqual(littlePackage.getTransportType(), BigPackage.TRANSPORT_TYPE_Z)) {// 直接转运
 			map.put(Constant.MESSAGE, "直接转运订单收货成功,请称重打单");
 			map.put(Constant.STATUS, "2");
-			map.put("seatCode", "直转货位:" + seatCode);
-			// 返回直接转运货位
 		}
 		return map;
 	}

@@ -89,7 +89,7 @@ function saveReceivedLittlePackageStep2(trackingNoStr,remark,warehouseId) {
 		if(msg.status == 1){//集货转运
 			// 下一票
 			nextInWarehouse(msg.message);
-			focus = "2";
+			focus = "1";
 		}
 		if(msg.status == 2){//直接转运
 			parent.$.showShortMessage({msg:msg.message,animate:false,left:"45%"});
@@ -97,7 +97,7 @@ function saveReceivedLittlePackageStep2(trackingNoStr,remark,warehouseId) {
 			$("#weight").removeAttr("readonly");
 			$("#weight").focus();
 			//显示出货渠道和单号
-			focus = "1";
+			focus = "3";
 		}
 		btnSearch("#searchform",grid);
 	},"json");
@@ -155,4 +155,10 @@ function refresh(){
 	return;  				
 	}
 	btnSearch("#searchform",grid);
+}
+
+
+function saveweight(){
+	
+	
 }

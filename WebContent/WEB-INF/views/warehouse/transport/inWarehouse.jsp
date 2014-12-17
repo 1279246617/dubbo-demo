@@ -79,7 +79,7 @@
 					<input type="text"  name="weight"  t="3"  id="weight"  style="width:130px;height:45px; font-size: 10mm;font-weight: bold;color:red;" class="pull-left" readonly="readonly" onkeyup="this.value=this.value.replace(/[^\d\.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d\.]/g,'')"/>
 					<span style="width:50px;height:30px;margin-top: 4mm;font-size: 6mm;font-weight: bold;" class="pull-left" >KG</span>
 					<span style="width:90px;height:30px;margin-top: 4mm;font-size: 4mm;" class="pull-left" >
-						<input class="pull-left" name="auto" style="vertical-align: middle;" type="checkbox" checked="checked" id="auto">
+						<input class="pull-left"  t="3" name="auto" style="vertical-align: middle;" type="checkbox" checked="checked" id="auto">
 						自动读取
 					</span>
 					<span style="height:30px;margin-top: 0mm;font-size: 8mm;" class="pull-left" >
@@ -92,7 +92,7 @@
 					</span>
 				</td>
 				<td rowspan="2">
-						<span style="width:90px;height:50px;margin-top: 4mm;font-size: 5mm;" class="pull-left" >分配货位</span>
+						<span style="width:90px;height:50px;margin-top: 4mm;font-size: mm;" class="pull-left" >分配货位</span>
 						<input type="text"  name="seatCode"  t="3"  id="seatCode"  style="width:180px;height:65px; font-size: 10mm;font-weight: bold;color:red;" class="pull-left" readonly="readonly"/>
 				</td>
 			</tr>
@@ -162,20 +162,14 @@
 		  		  	saveReceivedLittlePackage();
 		  		  	return false;
 	  		  	}
-	    		//sku焦点,回车,切换quantity焦点
-				if(focus == '2'){
-					$("#itemQuantity").val("");
-					$("#itemQuantity").focus();
-					return false;
-				}
-				//quantity焦点,回车,提交保存明细
+				//保存重量
 				if(focus == '3'){
-					saveInWarehouseRecordItem('N');
+					saveweight();
 		      		return false;
 				}
-				//remark 焦点,回车,提交保存明细
+				//打印运单
 				if(focus == '4'){
-					saveInWarehouseRecordItem('N');
+					printShipLabel();
 		      		return false;
 				}
 	    		return;
