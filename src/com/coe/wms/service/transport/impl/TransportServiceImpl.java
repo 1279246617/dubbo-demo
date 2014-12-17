@@ -28,6 +28,7 @@ import com.coe.wms.dao.warehouse.transport.IBigPackageSenderDao;
 import com.coe.wms.dao.warehouse.transport.IBigPackageStatusDao;
 import com.coe.wms.dao.warehouse.transport.ILittlePackageDao;
 import com.coe.wms.dao.warehouse.transport.ILittlePackageItemDao;
+import com.coe.wms.dao.warehouse.transport.ILittlePackageOnShelfDao;
 import com.coe.wms.dao.warehouse.transport.ILittlePackageStatusDao;
 import com.coe.wms.exception.ServiceException;
 import com.coe.wms.model.unit.Currency.CurrencyCode;
@@ -134,6 +135,9 @@ public class TransportServiceImpl implements ITransportService {
 
 	@Resource(name = "littlePackageStatusDao")
 	private ILittlePackageStatusDao littlePackageStatusDao;
+
+	@Resource(name = "littlePackageOnShelfDao")
+	private ILittlePackageOnShelfDao littlePackageOnShelfDao;
 
 	@Override
 	public String warehouseInterfaceSaveTransportOrder(EventBody eventBody, Long userIdOfCustomer, String warehouseNo) throws ServiceException {
@@ -711,28 +715,29 @@ public class TransportServiceImpl implements ITransportService {
 			map.put(Constant.MESSAGE, "该转运订单非待收货状态,请输入新的跟踪单号");
 			return map;
 		}
+		// 更新为已收货前,查找空闲的转运业务专用货位
+		String seatCode = littlePackageOnShelfDao.findSeatCodeForOnShelf(littlePackage.getTransportType());
+		if (StringUtil.isNull(seatCode)) {
+			// 货位不足,收货失败
+			map.put(Constant.MESSAGE, "转运货位不足,请添加货位再收货");
+			return map;
+		}
+		littlePackage.setSeatCode(seatCode);// 收货预分配货位 真正的货位信息要在上架记录寻找
 		// 更改为已收货, 待添加操作日志
 		littlePackage.setStatus(LittlePackageStatusCode.WSR);
 		littlePackage.setReceivedTime(System.currentTimeMillis());
-		// 更新为已收货前,查找空闲的转运业务专用货位
-		String seatCode = null;
-		littlePackageDao.updateLittlePackageStatusAndReceivedTime(littlePackage);
-		// 区分是直接转运还是集货转运
-		LittlePackage littlePackageParam = new LittlePackage();
-		littlePackageParam.setBigPackageId(littlePackage.getBigPackageId());
-		Long count = littlePackageDao.countLittlePackage(littlePackageParam, null);
-		
-		if (count >= 2) {// 集货转运
+		// 保存货位,状态,时间
+		littlePackageDao.receivedLittlePackage(littlePackage);
+		if (StringUtil.isEqual(littlePackage.getTransportType(), BigPackage.TRANSPORT_TYPE_J)) {// 集货转运
 			map.put(Constant.MESSAGE, "集货转运订单收货成功,请继续收货");
 			map.put(Constant.STATUS, Constant.SUCCESS);
+			map.put("seatCode", "集货货位:" + seatCode);
 			// 返回集货转运货位
-			littlePackage.setSeatCode(seatCode);
-			
-		} else {// 直接转运
+		} else if (StringUtil.isEqual(littlePackage.getTransportType(), BigPackage.TRANSPORT_TYPE_Z)) {// 直接转运
 			map.put(Constant.MESSAGE, "直接转运订单收货成功,请称重打单");
 			map.put(Constant.STATUS, "2");
+			map.put("seatCode", "直转货位:" + seatCode);
 			// 返回直接转运货位
-			
 		}
 		return map;
 	}
