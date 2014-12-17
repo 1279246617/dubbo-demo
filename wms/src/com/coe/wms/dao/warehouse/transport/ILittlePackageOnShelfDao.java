@@ -15,4 +15,6 @@ public interface ILittlePackageOnShelfDao {
 	public Long countLittlePackageOnShelf(LittlePackageOnShelf littlePackageOnShelf, Map<String, String> moreParam);
 
 	public int updateLittlePackageOnShelf(LittlePackageOnShelf littlePackageOnShelf);
+	
+	public String findSeatCodeForOnShelf(String businessType);
 }

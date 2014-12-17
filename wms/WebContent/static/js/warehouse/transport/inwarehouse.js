@@ -84,6 +84,8 @@ function saveReceivedLittlePackageStep2(trackingNoStr,remark,warehouseId) {
 		}
 		$("#tips").html(msg.message);
 		
+		$("#seatCode").val(msg.seatCode);
+		
 		if(msg.status == 1){//集货转运
 			// 下一票
 			nextInWarehouse(msg.message);
@@ -95,7 +97,6 @@ function saveReceivedLittlePackageStep2(trackingNoStr,remark,warehouseId) {
 			$("#weight").removeAttr("readonly");
 			$("#weight").focus();
 			//显示出货渠道和单号
-			
 			focus = "1";
 		}
 		btnSearch("#searchform",grid);

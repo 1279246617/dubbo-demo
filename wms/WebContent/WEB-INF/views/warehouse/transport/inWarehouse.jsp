@@ -91,17 +91,20 @@
 							<a class="btn  btn-primary"  onclick="saveweight();"  style="cursor:pointer;"><i class="icon-ok icon-white"></i>保存重量</a>
 					</span>
 				</td>
+				<td rowspan="2">
+						<span style="width:90px;height:50px;margin-top: 4mm;font-size: 5mm;" class="pull-left" >分配货位</span>
+						<input type="text"  name="seatCode"  t="3"  id="seatCode"  style="width:180px;height:65px; font-size: 10mm;font-weight: bold;color:red;" class="pull-left" readonly="readonly"/>
+				</td>
 			</tr>
 			<tr  >
-				<td colspan="1" style="width:300px;">
+				<td colspan="1" style="width:280px;">
 					出货渠道&nbsp;&nbsp;
 					<input type="text"  name="shipwayCode"  id="shipwayCode"   t="4" style="width:130px;" readonly="readonly"/>
 				</td>
-				<td colspan="1" style="width:350px;">
+				<td colspan="1" style="width:330px;">
 					跟踪单号&nbsp;&nbsp;
 					<input type="text"  name="trackingNo"  id="trackingNo"  t="4"  style="width:150px;" readonly="readonly"/>
 				</td>
-				
 				<td colspan="1" >
 					<a class="btn  btn-primary"  onclick="printShipLabel();" style="cursor:pointer;">
 						<i class="icon-ok icon-white"></i>打印出货运单
