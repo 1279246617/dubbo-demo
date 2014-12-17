@@ -11,6 +11,11 @@ import java.io.Serializable;
  */
 public class LittlePackageOnShelf implements Serializable {
 	/**
+	 * 预分配状态,未上架
+	 */
+	public static final String STATUS_PRE_ON_SHELF = "PRE";
+
+	/**
 	 * 已上架
 	 */
 	public static final String STATUS_ON_SHELF = "ON";
@@ -56,7 +61,7 @@ public class LittlePackageOnShelf implements Serializable {
 	 * 上架/下架
 	 */
 	private String status;
-	
+
 	private Long lastUpdateTime;
 
 	private Long createdTime;
