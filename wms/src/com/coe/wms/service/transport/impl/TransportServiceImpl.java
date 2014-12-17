@@ -32,6 +32,7 @@ import com.coe.wms.dao.warehouse.transport.ILittlePackageOnShelfDao;
 import com.coe.wms.dao.warehouse.transport.ILittlePackageStatusDao;
 import com.coe.wms.exception.ServiceException;
 import com.coe.wms.model.unit.Currency.CurrencyCode;
+import com.coe.wms.model.unit.Weight.WeightCode;
 import com.coe.wms.model.user.User;
 import com.coe.wms.model.warehouse.Warehouse;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderReceiver;
@@ -560,6 +561,12 @@ public class TransportServiceImpl implements ITransportService {
 		for (LittlePackage littlePackage : littlePackageList) {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("id", littlePackage.getId());
+			Long bigPackageId = littlePackage.getBigPackageId();
+			String bigPackageStatusCode = bigPackageDao.getBigPackageStatus(bigPackageId);
+			if (StringUtil.isNotNull(bigPackageStatusCode)) {
+				BigPackageStatus bigPackageStatus = bigPackageStatusDao.findBigPackageStatusByCode(bigPackageStatusCode);
+				map.put("bigPackageStatus", bigPackageStatus.getCn());
+			}
 			map.put("bigPackageId", littlePackage.getBigPackageId());
 			if (littlePackage.getCreatedTime() != null) {
 				map.put("createdTime", DateUtil.dateConvertString(new Date(littlePackage.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss));
@@ -688,6 +695,7 @@ public class TransportServiceImpl implements ITransportService {
 			map.put("littlePackageId", String.valueOf(littlePackage.getId()));
 			map.put("userLoginName", user.getLoginName());
 			map.put("trackingNo", littlePackage.getTrackingNo());
+			map.put("bigPackageId", littlePackage.getBigPackageId() + "");
 			map.put("carrierCode", littlePackage.getCarrierCode());
 			String time = DateUtil.dateConvertString(new Date(littlePackage.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss);
 			map.put("createdTime", time);
@@ -729,7 +737,21 @@ public class TransportServiceImpl implements ITransportService {
 		littlePackage.setReceivedTime(System.currentTimeMillis());
 		// 保存货位,状态,时间
 		littlePackageDao.receivedLittlePackage(littlePackage);
-
+		// 判断bigPackage下的所有littlePackage是否已经全部收货
+		LittlePackage littlePackageParam = new LittlePackage();
+		littlePackageParam.setBigPackageId(littlePackage.getBigPackageId());
+		List<LittlePackage> littlePackageList = littlePackageDao.findLittlePackage(littlePackageParam, null, null);
+		boolean isReceived = true;// 小包是否已经全部收货
+		for (LittlePackage temp : littlePackageList) {
+			if (StringUtil.isEqual(temp.getStatus(), LittlePackageStatusCode.WWR)) {
+				isReceived = false;
+			}
+		}
+		if (isReceived) {
+			bigPackageDao.updateBigPackageStatus(littlePackage.getBigPackageId(), BigPackageStatusCode.WWW);
+		} else {
+			bigPackageDao.updateBigPackageStatus(littlePackage.getBigPackageId(), BigPackageStatusCode.WRP);
+		}
 		// 保存预分配货位上架记录
 		LittlePackageOnShelf onShelf = new LittlePackageOnShelf();
 		onShelf.setCreatedTime(System.currentTimeMillis());
@@ -742,15 +764,48 @@ public class TransportServiceImpl implements ITransportService {
 		onShelf.setUserIdOfOperator(userIdOfOperator);
 		onShelf.setWarehouseId(warehouseId);
 		littlePackageOnShelfDao.saveLittlePackageOnShelf(onShelf);
-		
 		map.put("seatCode", seatCode);
+		map.put("bigPackageId", "" + littlePackage.getBigPackageId());
+
 		if (StringUtil.isEqual(littlePackage.getTransportType(), BigPackage.TRANSPORT_TYPE_J)) {// 集货转运
 			map.put(Constant.MESSAGE, "集货转运订单收货成功,请继续收货");
 			map.put(Constant.STATUS, Constant.SUCCESS);
 		} else if (StringUtil.isEqual(littlePackage.getTransportType(), BigPackage.TRANSPORT_TYPE_Z)) {// 直接转运
 			map.put(Constant.MESSAGE, "直接转运订单收货成功,请称重打单");
 			map.put(Constant.STATUS, "2");
+			BigPackage bigPackage = bigPackageDao.getBigPackageById(littlePackage.getBigPackageId());
+			map.put("shipwayCode", bigPackage.getShipwayCode());
+			map.put("trackingNo", bigPackage.getTrackingNo());
+			map.put("seatCode", seatCode);
 		}
+		return map;
+	}
+
+	@Override
+	public Map<String, String> bigPackageSubmitWeight(Long userIdOfOperator, Long bigPackageId, Double weight) {
+		Map<String, String> map = new HashMap<String, String>();
+		map.put(Constant.STATUS, Constant.FAIL);
+		if (weight == null || weight <= 0) {
+			map.put(Constant.MESSAGE, "请先输入装箱重量");
+			return map;
+		}
+		// 查询大包是否已经称重,不可重复称重
+		BigPackage bigPackage = bigPackageDao.getBigPackageById(bigPackageId);
+		if (bigPackage.getOutWarehouseWeight() != null) {
+			map.put(Constant.MESSAGE, "该转运订单已经称重,不能更改重量");
+			return map;
+		}
+		if (!StringUtil.isEqual(bigPackage.getStatus(), BigPackageStatusCode.WWW)) {
+			map.put(Constant.MESSAGE, "该转运订单非待称重状态,不能更改重量");
+			return map;
+		}
+		bigPackage.setOutWarehouseWeight(weight);
+		bigPackage.setStatus(BigPackageStatusCode.WSW);
+		bigPackage.setWeightCode(WeightCode.KG);
+		bigPackage.setUserIdOfOperator(userIdOfOperator);
+		bigPackageDao.updateBigPackageWeight(bigPackage);
+
+		map.put(Constant.STATUS, Constant.SUCCESS);
 		return map;
 	}
 }

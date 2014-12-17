@@ -16,7 +16,8 @@ function saveReceivedLittlePackage(){
 	//在判断跟踪号是否改变前,获取用户选择的入库订单
 	var littlePackageRadio = $('input[name="littlePackageRadio"]').filter(':checked');
 	if(littlePackageRadio.length){
-		$("#littlePackageId").val(littlePackageRadio.attr("orderId"));
+		$("#littlePackageId").val(littlePackageRadio.attr("littlePackageId"));
+		$("#bigPackageId").val(littlePackageRadio.attr("bigPackageId"));
 	}
 	//跟踪号失去焦点,判断跟踪号是否改变,若改变则清除littlePackageId
 	trackingNoBlur();
@@ -45,9 +46,10 @@ function saveReceivedLittlePackageStep1(trackingNoStr,remark,warehouseId) {
 			var tr = "<tr>";
 			if (msg.status == 1) {
 				$("#littlePackageId").val(n.littlePackageId);
-				tr+="<td style='width:25px;text-align:center;'><input type='radio' t='1' orderId='"+n.littlePackageId+"' name='littlePackageRadio' value='radiobutton' checked></td>";	
+				$("#bigPackageId").val(n.bigPackageId);
+				tr+="<td style='width:25px;text-align:center;'><input type='radio' t='1' littlePackageId='"+n.littlePackageId+"'  bigPackageId='"+n.bigPackageId+"'  name='littlePackageRadio' value='radiobutton' checked></td>";	
 			}else{
-				tr+="<td style='width:25px;text-align:center;'><input type='radio' t='1' orderId='"+n.littlePackageId+"' name='littlePackageRadio' value='radiobutton'></td>";
+				tr+="<td style='width:25px;text-align:center;'><input type='radio' t='1' littlePackageId='"+n.littlePackageId+"'  bigPackageId='"+n.bigPackageId+"'  name='littlePackageRadio' value='radiobutton'></td>";
 			}
 			tr+="<td style='width:155px;text-align:center;'>"+n.userLoginName+"</td>";
 			tr+="<td style='width:225px;text-align:center;'>"+n.trackingNo+"</td>";
@@ -85,7 +87,8 @@ function saveReceivedLittlePackageStep2(trackingNoStr,remark,warehouseId) {
 		$("#tips").html(msg.message);
 		
 		$("#seatCode").val(msg.seatCode);
-		
+		$("#bigPackageId").val(msg.bigPackageId);
+		$("#littlePackageId").val(msg.littlePackageId);
 		if(msg.status == 1){//集货转运
 			// 下一票
 			nextInWarehouse(msg.message);
@@ -94,9 +97,12 @@ function saveReceivedLittlePackageStep2(trackingNoStr,remark,warehouseId) {
 		if(msg.status == 2){//直接转运
 			parent.$.showShortMessage({msg:msg.message,animate:false,left:"45%"});
 			// 光标移至称重
-			$("#weight").removeAttr("readonly");
+//			$("#weight").removeAttr("readonly");
 			$("#weight").focus();
 			//显示出货渠道和单号
+			$("#outWarehouseTrackingNo").val(msg.trackingNo);
+			$("#shipwayCode").val(msg.shipwayCode);
+			
 			focus = "3";
 		}
 		btnSearch("#searchform",grid);
@@ -114,6 +120,7 @@ function trackingNoBlur(){
 	var newTrackingNo = $("#trackingNo").val();
 	if(oldTrackingNo!=newTrackingNo){
 		$("#littlePackageId").val("");
+		$("#bigPackageId").val("");
 		$("#littlePackagebody").html("");
 	}
 	oldTrackingNo = newTrackingNo;
@@ -142,6 +149,7 @@ function nextInWarehouse(message){
 	$("#trackingNo").val("");
 	$("#orderRemark").val("");
 	$("#littlePackageId").val("");
+	$("#bigPackageId").val("");
 	$("#littlePackagebody").html("");
 	parent.$.showShortMessage({msg:message,animate:false,left:"45%"});
 	$("#tips").html("请输入新的跟踪单号并按回车!");
@@ -159,6 +167,36 @@ function refresh(){
 
 
 function saveweight(){
-	
-	
+		var weight = $("#weight").val();
+		var bigPackageId = $("#bigPackageId").val();
+		if(bigPackageId ==null || bigPackageId == ''){
+			parent.$.showShortMessage({msg:"没有找到转运订单,刷新后重试",animate:false,left:"45%"});
+			return false;
+		}
+		if(weight ==null || weight == ''){
+			parent.$.showShortMessage({msg:"请先输入装箱重量",animate:false,left:"45%"});
+			return false;
+		}
+		$.post(baseUrl+ '/warehouse/transport/bigPackageSubmitWeight.do?bigPackageId='+ bigPackageId+'&weight='+weight, function(msg) {
+				if(msg.status == 0){
+					parent.$.showShortMessage({msg:msg.message,animate:false,left:"45%"});
+					$("#weightOk").hide();
+					return;
+				}
+				if(msg.status == 1){
+					parent.$.showShortMessage({msg:"保存转运订单装箱重量成功",animate:false,left:"45%"});
+					$("#weightOk").show();
+				}
+		},"json");
 }
+
+ //打印出货运单标签
+ function printShipLabel(){
+		var bigPackageId = $("#bigPackageId").val();
+		if(bigPackageId ==null || bigPackageId == ''){
+			parent.$.showShortMessage({msg:"没有找到转运订单,刷新后重试",animate:false,left:"45%"});
+			return false;
+		}
+		var url = baseUrl+'/warehouse/print/printTransportShipLabel.do?bigPackageId='+bigPackageId;
+		 window.open(url);
+ }

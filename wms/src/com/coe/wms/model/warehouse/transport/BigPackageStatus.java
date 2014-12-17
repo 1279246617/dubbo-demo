@@ -38,7 +38,7 @@ public class BigPackageStatus implements Serializable {
 		 * 
 		 */
 		public static final String WRP = "WRP";
-
+ 
 		/**
 		 * ,等待出库称重 Wait Warehouse Weighing
 		 */

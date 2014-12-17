@@ -91,7 +91,9 @@ public interface ITransportService {
 	 * @return
 	 */
 	public List<Map<String, String>> checkReceivedLittlePackage(LittlePackage littlePackage);
-	
-	
+
 	public Map<String, String> submitInWarehouse(String trackingNo, String remark, Long userIdOfOperator, Long warehouseId, Long inWarehouseOrderId);
+
+	public Map<String, String> bigPackageSubmitWeight(Long userIdOfOperator, Long bigPackageId, Double weight);
+
 }

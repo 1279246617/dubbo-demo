@@ -26,6 +26,7 @@
 								<input type="text"  name="trackingNo"  id="trackingNo" t="1" onfocus="trackingNoFocus()"  onblur="trackingNoBlur()" style="width:170px;"/>
 								<!-- 用户按回车时,当入库订单id 为空是第一次提交,后台返回id,或其他提示.  不为空 提示客户可输入SKU和数量进行收货 -->
 								<input type="text"  name="littlePackageId"  id="littlePackageId" t="1"  style="display: none;"/>
+								<input type="text"  name="bigPackageId"  id="bigPackageId" t="1"  style="display: none;"/>
 							</span>
 					</td>		
 					<td style="width:290px;">
@@ -103,7 +104,7 @@
 				</td>
 				<td colspan="1" style="width:330px;">
 					跟踪单号&nbsp;&nbsp;
-					<input type="text"  name="trackingNo"  id="trackingNo"  t="4"  style="width:150px;" readonly="readonly"/>
+					<input type="text"  name="outWarehouseTrackingNo"  id="outWarehouseTrackingNo"  t="4"  style="width:150px;" readonly="readonly"/>
 				</td>
 				<td colspan="1" >
 					<a class="btn  btn-primary"  onclick="printShipLabel();" style="cursor:pointer;">
@@ -180,6 +181,26 @@
 	  			//当前获取焦点的文本框是 主单还是明细
 	  			focus = $(this).attr("t");
 	  		});
+	  		//加载页面时,启动读取电子秤
+	  		toggleConnection(ports[0]);
+	  		//启动读取电子秤
+	  		autoWeight = window.setInterval(function(){ 
+	  			ws.send("getweig");		 
+			}, 300);
+			 		  	
+	  		$("#auto").click(function(){
+	  			if($("#auto").attr("checked")=="checked"){
+	  				//自动获取电子称数据
+	 	  			$("#weight").attr("readonly","readonly");
+	  				//启动读取电子秤
+		 	  		autoWeight = window.setInterval(function(){ 
+	 		  			ws.send("getweig");		 
+					}, 300);
+	 	  		 }else{
+	 	  			 $("#weight").removeAttr("readonly");
+	 	  		 clearInterval(autoWeight);//取消读取
+	 	  		 }
+	  		});
 	    	 initGrid();
    		});
   		//btn_search
@@ -198,11 +219,12 @@
 	                    { display: '转运类型', name: 'transportType', align: 'center', type: 'float',width:'9%'},
 	                    { display: '到货跟踪单号', name: 'trackingNo', align: 'center', type: 'int',width:'13%'},
 	                    { display: '承运商', name: 'carrierCode', align: 'center', type: 'int',width:'10%'},
-	                    { display: '状态', name: 'status', align: 'center', type: 'int',width:'9%'},
+	                    { display: '小包状态', name: 'status', align: 'center', type: 'int',width:'9%'},
+	                    { display: '订单状态', name: 'bigPackageStatus', align: 'center', type: 'int',width:'9%'},
 		                { display: '收货时间', name: 'receivedTime', align: 'center', type: 'float',width:'12%'},
 		                { display: '回传收货状态', name: 'callbackIsSuccess', align: 'center', type: 'float',width:'9%'},
 		                { display: '操作员', name: 'userNameOfOperator',width:'8%'},
-		                { display: '备注', name: 'remark', align: 'center', type: 'float',width:'9%'}
+// 		                { display: '备注', name: 'remark', align: 'center', type: 'float',width:'9%'}
 	                ],  
 	                isScroll: true,
 	                dataAction: 'server',
@@ -220,5 +242,52 @@
 	            });
 	        };	
 	</script>
+	
+	<script type="text/javascript">
+	    var ws;
+	    var ports = ["9999", "888", "8888", "999","8080"]; 
+	    var index = 0;
+	    function toggleConnection(port) {
+	    	  index = index+1;	 
+	            try {
+	                ws = new WebSocket("ws://127.0.0.1:"+port);//连接服务器
+					ws.onopen = function(event){
+	                	parent.$.showShortMessage({msg:'电子秤自动读取功能已经启动成功',animate:false,left:"45%"});
+	                };
+					ws.onmessage = function(event){
+						var message = event.data;
+						var weight = message.match(/([0-9\.]+)/ig);
+						$("#weight").val(weight);
+					};
+					ws.onclose = function(event){
+						parent.$.showShortMessage({msg:'电子秤自动读取功能已经关闭',animate:false,left:"45%"});
+						shutdown();
+					};
+					ws.onerror = function(event){
+						if(index>=5){
+							parent.$.showShortMessage({msg:'电子秤自动读取功能异常,请手动输入重量!',animate:false,left:"45%"});	
+							shutdown();
+						}else{
+							toggleConnection(ports[index]);	
+						}
+					};
+	            } catch (ex) {
+	            	if(index>=5){
+	            		parent.$.showShortMessage({msg:'电子秤自动读取功能异常:'+ex.message, animate:false,left:"45%"});
+	            		shutdown();
+					}else{
+						toggleConnection(ports[index]);	
+					}
+				}
+	    };
+	    
+	    //关闭自动读取
+	  	 function shutdown(){
+	  		 clearInterval(autoWeight);
+	  		$("#weight").removeAttr("readonly");
+	  	 }
+	  	 
+    </script>
+    
 </body>
 </html>

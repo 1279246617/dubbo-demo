@@ -353,4 +353,21 @@ public class Transport {
 		Map<String, String> serviceResult = transportService.submitInWarehouse(trackingNo, remark, userIdOfOperator, warehouseId, littlePackageId);
 		return GsonUtil.toJson(serviceResult);
 	}
+
+	/**
+	 * 保存转运订单入库
+	 * 
+	 * @param request
+	 * @param trackingNo
+	 * @param userLoginName
+	 * @return
+	 * @throws IOException
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/bigPackageSubmitWeight")
+	public String bigPackageSubmitWeight(HttpServletRequest request, Long bigPackageId, Double weight) throws IOException {
+		Long userIdOfOperator = (Long) request.getSession().getAttribute(SessionConstant.USER_ID);
+		Map<String, String> serviceResult = transportService.bigPackageSubmitWeight(userIdOfOperator, bigPackageId, weight);
+		return GsonUtil.toJson(serviceResult);
+	}
 }

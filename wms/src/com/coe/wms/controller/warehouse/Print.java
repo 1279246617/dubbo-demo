@@ -269,4 +269,45 @@ public class Print {
 		return view;
 	}
 
+	/**
+	 * 
+	 * 打印出库发货单
+	 * 
+	 * 根据出库渠道 判断打印顺丰运单还是ETK运单
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/printTransportShipLabel", method = RequestMethod.GET)
+	public ModelAndView printTransportShipLabel(HttpServletRequest request, HttpServletResponse response, String bigPackageIds) throws IOException {
+		HttpSession session = request.getSession();
+		ModelAndView view = new ModelAndView();
+		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
+		if (StringUtil.isNull(bigPackageIds)) {
+			return view;
+		}
+		// 返回页面的list,装map 每个map 是每个订单的数据
+		List<Map<String, Object>> mapList = new ArrayList<Map<String, Object>>();
+		String orderIdArray[] = bigPackageIds.split(",");
+		for (int i = 0; i < orderIdArray.length; i++) {
+			if (StringUtil.isNull(orderIdArray[i])) {
+				continue;
+			}
+			Long orderId = Long.valueOf(orderIdArray[i]);
+			Map<String, Object> map = printService.getPrintShipLabelData(orderId);
+			if (map != null) {
+				mapList.add(map);
+			}
+		}
+		view.addObject("mapList", mapList);
+		view.addObject("timeNow", DateUtil.dateConvertString(new Date(), DateUtil.yyyy_MM_ddHHmmss));
+
+		// 根据出库渠判断打印顺丰运单还是ETK运单判断
+		view.setViewName("warehouse/print/printSfLabel");
+		// view.setViewName("warehouse/print/printEtkLabel");
+		return view;
+	}
+
 }
