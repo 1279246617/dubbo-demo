@@ -716,6 +716,8 @@ public class TransportServiceImpl implements ITransportService {
 				map.put("onShelfstatus", "已下架");
 			} else if (StringUtil.isEqual(onShelfstatus, LittlePackageOnShelf.STATUS_PRE_ON_SHELF)) {
 				map.put("onShelfstatus", "待上架");
+			} else {
+				map.put("onShelfstatus", "");
 			}
 			mapList.add(map);
 		}
@@ -817,6 +819,35 @@ public class TransportServiceImpl implements ITransportService {
 		bigPackage.setUserIdOfOperator(userIdOfOperator);
 		bigPackageDao.updateBigPackageWeight(bigPackage);
 
+		map.put(Constant.STATUS, Constant.SUCCESS);
+		return map;
+	}
+
+	@Override
+	public Map<String, String> saveLittlePackageOnShelves(Long userIdOfOperator, Long littlePackageId, String seatCode) {
+		Map<String, String> map = new HashMap<String, String>();
+		map.put(Constant.STATUS, Constant.FAIL);
+		if (StringUtil.isNull(seatCode)) {
+			map.put(Constant.MESSAGE, "请输入货位号");
+			return map;
+		}
+		// 查找小包最新上架记录
+		LittlePackageOnShelf onshelf = littlePackageOnShelfDao.findLittlePackageOnShelfByLittlePackageId(littlePackageId);
+		if (StringUtil.isEqual(onshelf.getStatus(), LittlePackageOnShelf.STATUS_ON_SHELF)) {
+			map.put(Constant.MESSAGE, "该订单已上架,不能重复上架");
+			return map;
+		}
+		// 查询订单状态是否是待上架
+		LittlePackage littlePackage = littlePackageDao.getLittlePackageById(littlePackageId);
+		if (!StringUtil.isEqual(littlePackage.getStatus(), LittlePackageStatusCode.WOS)) {
+			map.put(Constant.MESSAGE, "该订单非待上架状态,不能上架");
+			return map;
+		}
+
+		onshelf.setStatus(LittlePackageOnShelf.STATUS_ON_SHELF);
+		// 否则修改为已上架
+		littlePackageOnShelfDao.updateLittlePackageOnShelf(onshelf);
+		
 		map.put(Constant.STATUS, Constant.SUCCESS);
 		return map;
 	}

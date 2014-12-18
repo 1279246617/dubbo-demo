@@ -96,4 +96,6 @@ public interface ITransportService {
 
 	public Map<String, String> bigPackageSubmitWeight(Long userIdOfOperator, Long bigPackageId, Double weight);
 
+	public Map<String, String> saveLittlePackageOnShelves(Long userIdOfOperator, Long littlePackageId, String seatCode);
+
 }

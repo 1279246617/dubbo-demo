@@ -392,5 +392,21 @@ public class Transport {
 		return view;
 	}
 
- 
+	/**
+	 * 保存转运订单入库
+	 * 
+	 * @param request
+	 * @param trackingNo
+	 * @param userLoginName
+	 * @return
+	 * @throws IOException
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/saveLittlePackageOnShelves")
+	public String saveLittlePackageOnShelves(HttpServletRequest request, Long littlePackageId, String seatCode) throws IOException {
+		Long userIdOfOperator = (Long) request.getSession().getAttribute(SessionConstant.USER_ID);
+		Map<String, String> serviceResult = transportService.saveLittlePackageOnShelves(userIdOfOperator, littlePackageId, seatCode);
+		return GsonUtil.toJson(serviceResult);
+	}
+
 }
