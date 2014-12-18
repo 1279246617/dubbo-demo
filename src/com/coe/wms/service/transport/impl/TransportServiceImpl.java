@@ -709,6 +709,14 @@ public class TransportServiceImpl implements ITransportService {
 			} else {
 				map.put("status", "");
 			}
+			String onShelfstatus = littlePackageOnShelfDao.findStatusByLittlePackageId(littlePackage.getId());
+			if (StringUtil.isEqual(onShelfstatus, LittlePackageOnShelf.STATUS_ON_SHELF)) {
+				map.put("onShelfstatus", "已上架");
+			} else if (StringUtil.isEqual(onShelfstatus, LittlePackageOnShelf.STATUS_OUT_SHELF)) {
+				map.put("onShelfstatus", "已下架");
+			} else if (StringUtil.isEqual(onShelfstatus, LittlePackageOnShelf.STATUS_PRE_ON_SHELF)) {
+				map.put("onShelfstatus", "待上架");
+			}
 			mapList.add(map);
 		}
 		return mapList;
