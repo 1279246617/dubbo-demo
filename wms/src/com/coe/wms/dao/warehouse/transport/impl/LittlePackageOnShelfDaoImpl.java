@@ -182,10 +182,27 @@ public class LittlePackageOnShelfDaoImpl implements ILittlePackageOnShelfDao {
 		page.pageSize = 1;
 		page.sortOrder = "asc";
 		page.sortName = "id";
-		page.generatePageSqlOnTable("a");
+		sql += page.generatePageSqlOnTable("a");
+
 		List<String> seatCodes = jdbcTemplate.queryForList(sql, String.class);
 		if (seatCodes != null && seatCodes.size() > 0) {
 			return seatCodes.get(0);
+		}
+		return null;
+	}
+
+	@Override
+	public String findStatusByLittlePackageId(Long littlePackageId) {
+		String sql = "SELECT status FROM `w_t_little_package_on_shelf` where little_package_id = " + littlePackageId;
+		Pagination page = new Pagination();
+		page.curPage = 1;
+		page.pageSize = 1;
+		page.sortOrder = "desc";
+		page.sortName = "created_time";
+		sql += page.generatePageSqlOnTable("a");
+		List<String> statuss = jdbcTemplate.queryForList(sql, String.class);
+		if (statuss != null && statuss.size() > 0) {
+			return statuss.get(0);
 		}
 		return null;
 	}
