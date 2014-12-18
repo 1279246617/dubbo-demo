@@ -696,6 +696,10 @@ public class TransportServiceImpl implements ITransportService {
 			map.put("userLoginName", user.getLoginName());
 			map.put("trackingNo", littlePackage.getTrackingNo());
 			map.put("bigPackageId", littlePackage.getBigPackageId() + "");
+			BigPackage bigPackage = bigPackageDao.getBigPackageById(littlePackage.getBigPackageId());
+			map.put("outWarehouseTrackingNo", bigPackage.getTrackingNo());
+			map.put("shipwayCode", bigPackage.getShipwayCode());
+			map.put("seatCode", littlePackage.getSeatCode());
 			map.put("carrierCode", littlePackage.getCarrierCode());
 			String time = DateUtil.dateConvertString(new Date(littlePackage.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss);
 			map.put("createdTime", time);

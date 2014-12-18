@@ -18,6 +18,9 @@ function saveReceivedLittlePackage(){
 	if(littlePackageRadio.length){
 		$("#littlePackageId").val(littlePackageRadio.attr("littlePackageId"));
 		$("#bigPackageId").val(littlePackageRadio.attr("bigPackageId"));
+		$("#seatCode").val(littlePackageRadio.attr("seatCode"));
+		$("#shipwayCode").val(littlePackageRadio.attr("shipwayCode"));
+		$("#outWarehouseTrackingNo").val(littlePackageRadio.attr("outWarehouseTrackingNo"));
 	}
 	//跟踪号失去焦点,判断跟踪号是否改变,若改变则清除littlePackageId
 	trackingNoBlur();
@@ -47,9 +50,13 @@ function saveReceivedLittlePackageStep1(trackingNoStr,remark,warehouseId) {
 			if (msg.status == 1) {
 				$("#littlePackageId").val(n.littlePackageId);
 				$("#bigPackageId").val(n.bigPackageId);
-				tr+="<td style='width:25px;text-align:center;'><input type='radio' t='1' littlePackageId='"+n.littlePackageId+"'  bigPackageId='"+n.bigPackageId+"'  name='littlePackageRadio' value='radiobutton' checked></td>";	
+				$("#seatCode").val(n.seatCode);
+				$("#shipwayCode").val(n.shipwayCode);
+				$("#outWarehouseTrackingNo").val(n.outWarehouseTrackingNo);
+				
+				tr+="<td style='width:25px;text-align:center;'><input type='radio' t='1' littlePackageId='"+n.littlePackageId+"'  bigPackageId='"+n.bigPackageId+"'  seatCode='"+n.seatCode+"' shipwayCode='"+n.shipwayCode+"' outWarehouseTrackingNo='"+n.outWarehouseTrackingNo+"' name='littlePackageRadio' value='radiobutton' checked></td>";	
 			}else{
-				tr+="<td style='width:25px;text-align:center;'><input type='radio' t='1' littlePackageId='"+n.littlePackageId+"'  bigPackageId='"+n.bigPackageId+"'  name='littlePackageRadio' value='radiobutton'></td>";
+				tr+="<td style='width:25px;text-align:center;'><input type='radio' t='1' littlePackageId='"+n.littlePackageId+"'  bigPackageId='"+n.bigPackageId+"'  seatCode='"+n.seatCode+"' shipwayCode='"+n.shipwayCode+"' outWarehouseTrackingNo='"+n.outWarehouseTrackingNo+"' name='littlePackageRadio' value='radiobutton'></td>";
 			}
 			tr+="<td style='width:155px;text-align:center;'>"+n.userLoginName+"</td>";
 			tr+="<td style='width:225px;text-align:center;'>"+n.trackingNo+"</td>";
@@ -170,7 +177,7 @@ function saveweight(){
 		var weight = $("#weight").val();
 		var bigPackageId = $("#bigPackageId").val();
 		if(bigPackageId ==null || bigPackageId == ''){
-			parent.$.showShortMessage({msg:"没有找到转运订单,刷新后重试",animate:false,left:"45%"});
+			parent.$.showShortMessage({msg:"没有找到直接转运订单,刷新后重试",animate:false,left:"45%"});
 			return false;
 		}
 		if(weight ==null || weight == ''){
@@ -194,7 +201,7 @@ function saveweight(){
  function printShipLabel(){
 		var bigPackageId = $("#bigPackageId").val();
 		if(bigPackageId ==null || bigPackageId == ''){
-			parent.$.showShortMessage({msg:"没有找到转运订单,刷新后重试",animate:false,left:"45%"});
+			parent.$.showShortMessage({msg:"没有找到直接转运订单,刷新后重试",animate:false,left:"45%"});
 			return false;
 		}
 		var url = baseUrl+'/warehouse/print/printTransportShipLabel.do?bigPackageId='+bigPackageId;

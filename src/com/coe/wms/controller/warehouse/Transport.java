@@ -370,4 +370,26 @@ public class Transport {
 		Map<String, String> serviceResult = transportService.bigPackageSubmitWeight(userIdOfOperator, bigPackageId, weight);
 		return GsonUtil.toJson(serviceResult);
 	}
+
+	/**
+	 * 上架
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/littlePackageOnShelf", method = RequestMethod.GET)
+	public ModelAndView littlePackageOnShelf(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		HttpSession session = request.getSession();
+		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
+		ModelAndView view = new ModelAndView();
+		view.addObject("userId", userId);
+		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
+		User user = userService.getUserById(userId);
+		view.addObject("warehouseList", storageService.findAllWarehouse(user.getDefaultWarehouseId()));
+		view.setViewName("warehouse/transport/littlePackageOnShelf");
+		return view;
+	}
+
 }
