@@ -453,8 +453,6 @@ public class Transport {
 		pagination.sortName = sortname;
 		pagination.sortOrder = sortorder;
 		LittlePackageOnShelf param = new LittlePackageOnShelf();
-		// 客户订单号
-		param.setTrackingNo(trackingNo);
 		// 客户帐号
 		if (StringUtil.isNotNull(userLoginName)) {
 			Long userIdOfCustomer = userService.findUserIdByLoginName(userLoginName);
@@ -462,6 +460,9 @@ public class Transport {
 		}
 		// 仓库
 		param.setWarehouseId(warehouseId);
+		param.setTrackingNo(trackingNo);
+		param.setSeatCode(seatCode);
+
 		// 更多参数
 		Map<String, String> moreParam = new HashMap<String, String>();
 		moreParam.put("createdTimeStart", createdTimeStart);
@@ -471,6 +472,27 @@ public class Transport {
 		map.put("Rows", pagination.rows);
 		map.put("Total", pagination.total);
 		return GsonUtil.toJson(map);
+	}
+
+	/**
+	 * 称重
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/bigPackageWeightAndPrint", method = RequestMethod.GET)
+	public ModelAndView bigPackageWeightAndPrint(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		HttpSession session = request.getSession();
+		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
+		ModelAndView view = new ModelAndView();
+		view.addObject("userId", userId);
+		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
+		User user = userService.getUserById(userId);
+		view.addObject("warehouseList", storageService.findAllWarehouse(user.getDefaultWarehouseId()));
+		view.setViewName("warehouse/transport/bigPackageWeightAndPrint");
+		return view;
 	}
 
 }

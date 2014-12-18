@@ -37,8 +37,8 @@
                			客户
                			<input type="text" name="userLoginName" data-provide="typeahead"  id="userLoginName" style="width:85px;" title="请输入客户登录名" />
                		</span>
-					<span class="pull-left" style="width:170px;">
-						跟踪单号
+					<span class="pull-left" style="width:190px;">
+						到货跟踪单号
 						<input type="text"  name="trackingNo"  id="trackingNo"   style="width:90px;"/>
 					</span>
 					<span class="pull-left" style="width:170px;">
@@ -112,14 +112,13 @@
 	                columns: [
 	                    { display: '客户帐号', name: 'userNameOfCustomer', align: 'center',type:'float',width:'9%'},
 	                    { display: '仓库', name: 'warehouse', align: 'center', type: 'float',width:'8%'},
-	                    { display: '状态', name: 'status', align: 'center', type: 'float',width:'8%'},
-	                    { display: '转运类型', name: 'transportType', align: 'center', type: 'float',width:'9%'},
-	  		          	{ display: '到货跟踪单号', name: 'trackingNo', align: 'center', type: 'float',width:'12%'},
-	  		          	{ display: '货位', name: 'seatCode', align: 'center', type: 'float',width:'14%'},
-		  		        { display: '出货运输方式', name: 'outWarehouseTrackingNo', align: 'center', type: 'float',width:'12%'},
-	  		          	{ display: '出货跟踪单号', name: 'outWarehouseShipwayCode', align: 'center', type: 'float',width:'12%'},
-		                { display: '创建时间', name: 'createdTime', align: 'center', type: 'float',width:'12%'},
-		                { display: '备注', name: 'remark', align: 'center', type: 'float',width:'12%'},
+	                    { display: '到货跟踪单号', name: 'trackingNo', align: 'center', type: 'float',width:'12%'},
+	  		          	{ display: '货位', name: 'seatCode', align: 'center', type: 'float',width:'13%'},
+	                    { display: '上架状态', name: 'status', align: 'center', type: 'float',width:'9%'},
+	                    { display: '转运类型', name: 'transportType', align: 'center', type: 'float',width:'10%'},
+		  		        { display: '出货运输方式', name: 'outWarehouseShipwayCode', align: 'center', type: 'float',width:'11%'},
+	  		          	{ display: '出货跟踪单号', name: 'outWarehouseTrackingNo', align: 'center', type: 'float',width:'11%'},
+		                { display: '创建时间', name: 'createdTime', align: 'center', type: 'float',width:'13%'}
 	                ],  
 	                dataAction: 'server',
 	                url: baseUrl+'/warehouse/transport/getLittlePackageOnShelfData.do',

@@ -863,17 +863,11 @@ public class TransportServiceImpl implements ITransportService {
 		for (LittlePackageOnShelf littlePackageOnShelf : littlePackageOnShelfList) {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("id", littlePackageOnShelf.getId());
-			Long bigPackageId = littlePackageOnShelf.getBigPackageId();
-			String bigPackageStatusCode = bigPackageDao.getBigPackageStatus(bigPackageId);
-			if (StringUtil.isNotNull(bigPackageStatusCode)) {
-				BigPackageStatus bigPackageStatus = bigPackageStatusDao.findBigPackageStatusByCode(bigPackageStatusCode);
-				map.put("bigPackageStatus", bigPackageStatus.getCn());
-			}
-			map.put("bigPackageId", littlePackageOnShelf.getBigPackageId());
 			if (littlePackageOnShelf.getCreatedTime() != null) {
 				map.put("createdTime", DateUtil.dateConvertString(new Date(littlePackageOnShelf.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss));
 			}
 			map.put("trackingNo", littlePackageOnShelf.getTrackingNo());
+			map.put("seatCode", littlePackageOnShelf.getSeatCode());
 			// 查询用户名
 			User user = userDao.getUserById(littlePackageOnShelf.getUserIdOfCustomer());
 			map.put("userNameOfCustomer", user.getLoginName());
@@ -887,19 +881,22 @@ public class TransportServiceImpl implements ITransportService {
 					map.put("warehouse", warehouse.getWarehouseName());
 				}
 			}
-			LittlePackageStatus littlePackageStatus = littlePackageStatusDao.findLittlePackageStatusByCode(littlePackageOnShelf.getStatus());
-			if (littlePackageStatus != null) {
-				map.put("status", littlePackageStatus.getCn());
+			if (StringUtil.isEqual(littlePackageOnShelf.getStatus(), LittlePackageOnShelf.STATUS_ON_SHELF)) {
+				map.put("status", "已上架");
+			} else if (StringUtil.isEqual(littlePackageOnShelf.getStatus(), LittlePackageOnShelf.STATUS_OUT_SHELF)) {
+				map.put("status", "已下架");
+			} else if (StringUtil.isEqual(littlePackageOnShelf.getStatus(), LittlePackageOnShelf.STATUS_PRE_ON_SHELF)) {
+				map.put("status", "预上架");
 			}
-			// 物品明细(目前仅展示SKU*数量)
-			String items = "";
-			LittlePackageItem littlePackageItemParam = new LittlePackageItem();
-			littlePackageItemParam.setLittlePackageId(littlePackageOnShelf.getId());
-			List<LittlePackageItem> littlePackageItemList = littlePackageItemDao.findLittlePackageItem(littlePackageItemParam, null, null);
-			for (LittlePackageItem littlePackageItem : littlePackageItemList) {
-				items += littlePackageItem.getSku() + " * " + littlePackageItem.getQuantity() + " ; ";
+			BigPackage bigPackage = bigPackageDao.getBigPackageById(littlePackageOnShelf.getBigPackageId());
+			String transportType = bigPackage.getTransportType();
+			if (StringUtil.isEqual(transportType, BigPackage.TRANSPORT_TYPE_J)) {
+				map.put("transportType", "集货转运");
+			} else if (StringUtil.isEqual(transportType, BigPackage.TRANSPORT_TYPE_Z)) {
+				map.put("transportType", "直接转运");
 			}
-			map.put("items", items);
+			map.put("outWarehouseTrackingNo", bigPackage.getTrackingNo());
+			map.put("outWarehouseShipwayCode", bigPackage.getShipwayCode());
 			list.add(map);
 		}
 		page.total = littlePackageOnShelfDao.countLittlePackageOnShelf(param, moreParam);
