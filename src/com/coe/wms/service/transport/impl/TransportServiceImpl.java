@@ -833,6 +833,10 @@ public class TransportServiceImpl implements ITransportService {
 		}
 		// 查找小包最新上架记录
 		LittlePackageOnShelf onshelf = littlePackageOnShelfDao.findLittlePackageOnShelfByLittlePackageId(littlePackageId);
+		if (onshelf == null) {
+			map.put(Constant.MESSAGE, "预分配货位丢失,请联系管理员");
+			return map;
+		}
 		if (StringUtil.isEqual(onshelf.getStatus(), LittlePackageOnShelf.STATUS_ON_SHELF)) {
 			map.put(Constant.MESSAGE, "该订单已上架,不能重复上架");
 			return map;
@@ -847,8 +851,59 @@ public class TransportServiceImpl implements ITransportService {
 		onshelf.setStatus(LittlePackageOnShelf.STATUS_ON_SHELF);
 		// 否则修改为已上架
 		littlePackageOnShelfDao.updateLittlePackageOnShelf(onshelf);
-		
+
 		map.put(Constant.STATUS, Constant.SUCCESS);
 		return map;
+	}
+
+	@Override
+	public Pagination getLittlePackageOnShelfData(LittlePackageOnShelf param, Map<String, String> moreParam, Pagination page) throws ServiceException {
+		List<LittlePackageOnShelf> littlePackageOnShelfList = littlePackageOnShelfDao.findLittlePackageOnShelf(param, moreParam, page);
+		List<Object> list = new ArrayList<Object>();
+		for (LittlePackageOnShelf littlePackageOnShelf : littlePackageOnShelfList) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("id", littlePackageOnShelf.getId());
+			Long bigPackageId = littlePackageOnShelf.getBigPackageId();
+			String bigPackageStatusCode = bigPackageDao.getBigPackageStatus(bigPackageId);
+			if (StringUtil.isNotNull(bigPackageStatusCode)) {
+				BigPackageStatus bigPackageStatus = bigPackageStatusDao.findBigPackageStatusByCode(bigPackageStatusCode);
+				map.put("bigPackageStatus", bigPackageStatus.getCn());
+			}
+			map.put("bigPackageId", littlePackageOnShelf.getBigPackageId());
+			if (littlePackageOnShelf.getCreatedTime() != null) {
+				map.put("createdTime", DateUtil.dateConvertString(new Date(littlePackageOnShelf.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss));
+			}
+			map.put("trackingNo", littlePackageOnShelf.getTrackingNo());
+			// 查询用户名
+			User user = userDao.getUserById(littlePackageOnShelf.getUserIdOfCustomer());
+			map.put("userNameOfCustomer", user.getLoginName());
+			if (littlePackageOnShelf.getUserIdOfOperator() != null) {
+				User operator = userDao.getUserById(littlePackageOnShelf.getUserIdOfOperator());
+				map.put("userNameOfOperator", operator.getLoginName());
+			}
+			if (NumberUtil.greaterThanZero(littlePackageOnShelf.getWarehouseId())) {
+				Warehouse warehouse = warehouseDao.getWarehouseById(littlePackageOnShelf.getWarehouseId());
+				if (warehouse != null) {
+					map.put("warehouse", warehouse.getWarehouseName());
+				}
+			}
+			LittlePackageStatus littlePackageStatus = littlePackageStatusDao.findLittlePackageStatusByCode(littlePackageOnShelf.getStatus());
+			if (littlePackageStatus != null) {
+				map.put("status", littlePackageStatus.getCn());
+			}
+			// 物品明细(目前仅展示SKU*数量)
+			String items = "";
+			LittlePackageItem littlePackageItemParam = new LittlePackageItem();
+			littlePackageItemParam.setLittlePackageId(littlePackageOnShelf.getId());
+			List<LittlePackageItem> littlePackageItemList = littlePackageItemDao.findLittlePackageItem(littlePackageItemParam, null, null);
+			for (LittlePackageItem littlePackageItem : littlePackageItemList) {
+				items += littlePackageItem.getSku() + " * " + littlePackageItem.getQuantity() + " ; ";
+			}
+			map.put("items", items);
+			list.add(map);
+		}
+		page.total = littlePackageOnShelfDao.countLittlePackageOnShelf(param, moreParam);
+		page.rows = list;
+		return page;
 	}
 }

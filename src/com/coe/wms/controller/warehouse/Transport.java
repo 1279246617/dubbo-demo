@@ -24,6 +24,7 @@ import com.coe.wms.model.warehouse.transport.BigPackage;
 import com.coe.wms.model.warehouse.transport.BigPackageStatus;
 import com.coe.wms.model.warehouse.transport.LittlePackage;
 import com.coe.wms.model.warehouse.transport.LittlePackageItem;
+import com.coe.wms.model.warehouse.transport.LittlePackageOnShelf;
 import com.coe.wms.model.warehouse.transport.LittlePackageStatus;
 import com.coe.wms.service.storage.IStorageService;
 import com.coe.wms.service.transport.ITransportService;
@@ -407,6 +408,69 @@ public class Transport {
 		Long userIdOfOperator = (Long) request.getSession().getAttribute(SessionConstant.USER_ID);
 		Map<String, String> serviceResult = transportService.saveLittlePackageOnShelves(userIdOfOperator, littlePackageId, seatCode);
 		return GsonUtil.toJson(serviceResult);
+	}
+
+	/**
+	 * 上架记录
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/listLittlePackageOnShelf", method = RequestMethod.GET)
+	public ModelAndView listLittlePackageOnShelf(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		HttpSession session = request.getSession();
+		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
+		ModelAndView view = new ModelAndView();
+		view.addObject("userId", userId);
+		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
+		User user = userService.getUserById(userId);
+		view.addObject("warehouseList", storageService.findAllWarehouse(user.getDefaultWarehouseId()));
+		view.setViewName("warehouse/transport/listLittlePackageOnShelf");
+		return view;
+	}
+
+	/**
+	 * 获取转运订单上架记录
+	 * 
+	 * @param request
+	 * @param response
+	 * @param userLoginName
+	 * @return
+	 * @throws IOException
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/getLittlePackageOnShelfData", method = RequestMethod.POST)
+	public String getLittlePackageOnShelfData(HttpServletRequest request, String sortorder, String sortname, int page, int pagesize, String userLoginName, Long warehouseId, String trackingNo, String seatCode, String createdTimeStart,
+			String createdTimeEnd) throws IOException {
+		HttpSession session = request.getSession();
+		// 当前操作员
+		Long userIdOfOperator = (Long) session.getAttribute(SessionConstant.USER_ID);
+		Pagination pagination = new Pagination();
+		pagination.curPage = page;
+		pagination.pageSize = pagesize;
+		pagination.sortName = sortname;
+		pagination.sortOrder = sortorder;
+		LittlePackageOnShelf param = new LittlePackageOnShelf();
+		// 客户订单号
+		param.setTrackingNo(trackingNo);
+		// 客户帐号
+		if (StringUtil.isNotNull(userLoginName)) {
+			Long userIdOfCustomer = userService.findUserIdByLoginName(userLoginName);
+			param.setUserIdOfCustomer(userIdOfCustomer);
+		}
+		// 仓库
+		param.setWarehouseId(warehouseId);
+		// 更多参数
+		Map<String, String> moreParam = new HashMap<String, String>();
+		moreParam.put("createdTimeStart", createdTimeStart);
+		moreParam.put("createdTimeEnd", createdTimeEnd);
+		pagination = transportService.getLittlePackageOnShelfData(param, moreParam, pagination);
+		Map map = new HashMap();
+		map.put("Rows", pagination.rows);
+		map.put("Total", pagination.total);
+		return GsonUtil.toJson(map);
 	}
 
 }

@@ -35,7 +35,7 @@ public class LittlePackageOnShelfDaoImpl implements ILittlePackageOnShelfDao {
 
 	@Override
 	public long saveLittlePackageOnShelf(final LittlePackageOnShelf littlePackageOnShelf) {
-		final String sql = "insert into w_t_little_package_on_shelf ( warehouse_id,little_package_id,big_package_id,user_id_of_customer,user_id_of_operator,seat_code,tracking_no,created_time,last_updateTime,status) values (?,?,?,?,?,?,?,?,?,?)";
+		final String sql = "insert into w_t_little_package_on_shelf ( warehouse_id,little_package_id,big_package_id,user_id_of_customer,user_id_of_operator,seat_code,tracking_no,created_time,last_update_time,status) values (?,?,?,?,?,?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
@@ -68,7 +68,7 @@ public class LittlePackageOnShelfDaoImpl implements ILittlePackageOnShelfDao {
 	@Override
 	public List<LittlePackageOnShelf> findLittlePackageOnShelf(LittlePackageOnShelf littlePackageOnShelf, Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select  id,warehouse_id,little_package_id,big_package_id,user_id_of_customer,user_id_of_operator,seat_code,tracking_no,created_time,last_updateTime,status from w_t_little_package_on_shelf where 1=1");
+		sb.append("select  id,warehouse_id,little_package_id,big_package_id,user_id_of_customer,user_id_of_operator,seat_code,tracking_no,created_time,last_update_time,status from w_t_little_package_on_shelf where 1=1");
 		if (littlePackageOnShelf.getId() != null) {
 			sb.append(" and id = " + littlePackageOnShelf.getId());
 		}
@@ -209,7 +209,7 @@ public class LittlePackageOnShelfDaoImpl implements ILittlePackageOnShelfDao {
 
 	@Override
 	public LittlePackageOnShelf findLittlePackageOnShelfByLittlePackageId(Long littlePackageId) {
-		String sql = "SELECT id,warehouse_id,little_package_id,big_package_id,user_id_of_customer,user_id_of_operator,seat_code,tracking_no,created_time,last_updateTime,status FROM `w_t_little_package_on_shelf` where little_package_id = "
+		String sql = "SELECT id,warehouse_id,little_package_id,big_package_id,user_id_of_customer,user_id_of_operator,seat_code,tracking_no,created_time,last_update_time,status FROM `w_t_little_package_on_shelf` where little_package_id = "
 				+ littlePackageId;
 		Pagination page = new Pagination();
 		page.curPage = 1;
