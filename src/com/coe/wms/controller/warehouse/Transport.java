@@ -495,4 +495,27 @@ public class Transport {
 		return view;
 	}
 
+	/**
+	 * 待审核转运订单 查询
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/listWaitOutWarehouseBigPackage", method = RequestMethod.GET)
+	public ModelAndView listWaitOutWarehouseBigPackage(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		HttpSession session = request.getSession();
+		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
+		ModelAndView view = new ModelAndView();
+		view.addObject("userId", userId);
+		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
+		User user = userService.getUserById(userId);
+		List<BigPackageStatus> bigPackageStatusList = transportService.findAllBigPackageStatus();
+		view.addObject("bigPackageStatusList", bigPackageStatusList);
+		view.addObject("warehouseList", storageService.findAllWarehouse(user.getDefaultWarehouseId()));
+		view.setViewName("warehouse/transport/listWaitOutWarehouseBigPackage");
+		return view;
+	}
+
 }

@@ -7,7 +7,7 @@
   	 			countSku();
   	 		}
   	 		if(focus == "3"){
-  	 			saveOutWarehouseOrderWeight();
+  	 			saveweight();
   	 		}
   		}
   	 	 
@@ -40,7 +40,7 @@
 					});
 					
 					//切换焦点
-					$("#outWarehouseOrderWeight").focus();
+					$("#weight").focus();
 					focus = "3";
  	 				return;
  	 				}
@@ -60,18 +60,18 @@
  	 	}
  	 	 
  	 	 //保存重量
- 	 	 function saveOutWarehouseOrderWeight(){
- 	 		var outWarehouseOrderWeight = $("#outWarehouseOrderWeight").val();
+ 	 	 function saveweight(){
+ 	 		var weight = $("#weight").val();
  	 		var customerReferenceNo  = $("#customerReferenceNo").val();
  	 		if(customerReferenceNo == null||customerReferenceNo==''){
  	 			parent.$.showShortMessage({msg:"请先输入客户订单号",animate:false,left:"45%"});
  	 			return false;
  	 		}
- 	 		if(outWarehouseOrderWeight ==null || outWarehouseOrderWeight == ''){
+ 	 		if(weight ==null || weight == ''){
  	 			parent.$.showShortMessage({msg:"请先输入出库订单总重量",animate:false,left:"45%"});
  	 			return false;
  	 		}
- 	 		$.post(baseUrl+ '/warehouse/storage/outWarehouseSubmitWeight.do?customerReferenceNo='+ customerReferenceNo+'&outWarehouseOrderWeight='+outWarehouseOrderWeight, function(msg) {
+ 	 		$.post(baseUrl+ '/warehouse/storage/outWarehouseSubmitWeight.do?customerReferenceNo='+ customerReferenceNo+'&outWarehouseOrderWeight='+weight, function(msg) {
 	 				if(msg.status == 0){
 	 					parent.$.showShortMessage({msg:msg.message,animate:false,left:"45%"});
 	 					$("#weightOk").hide();

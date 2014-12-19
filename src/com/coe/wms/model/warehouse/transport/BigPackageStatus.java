@@ -38,7 +38,17 @@ public class BigPackageStatus implements Serializable {
 		 * 
 		 */
 		public static final String WRP = "WRP";
- 
+
+		/**
+		 * 完成收货 ,待完成上架
+		 */
+		public static final String WOS = "WOS";
+
+		/**
+		 * ,等待打印捡货 Wait Warehouse Print
+		 */
+		public static final String WWP = "WWP";
+
 		/**
 		 * ,等待出库称重 Wait Warehouse Weighing
 		 */
