@@ -58,6 +58,7 @@ import com.coe.wms.model.warehouse.transport.BigPackageReceiver;
 import com.coe.wms.model.warehouse.transport.BigPackageSender;
 import com.coe.wms.model.warehouse.transport.BigPackageStatus.BigPackageStatusCode;
 import com.coe.wms.model.warehouse.transport.LittlePackage;
+import com.coe.wms.model.warehouse.transport.LittlePackageItem;
 import com.coe.wms.service.print.IPrintService;
 import com.coe.wms.util.BarcodeUtil;
 import com.coe.wms.util.Constant;
@@ -361,7 +362,8 @@ public class PrintServiceImpl implements IPrintService {
 		BigPackageSender sender = bigPackageSenderDao.getBigPackageSenderByPackageId(bigPackageId);
 		LittlePackage littlePackageParam = new LittlePackage();
 		littlePackageParam.setBigPackageId(bigPackageId);
-		List<LittlePackage> LittlePackageList = littlePackageDao.findLittlePackage(littlePackageParam, null, null);
+		// List<LittlePackage> LittlePackageList =
+		// littlePackageDao.findLittlePackage(littlePackageParam, null, null);
 		BigPackageAdditionalSf additionalSf = bigPackageAdditionalSfDao.getBigPackageAdditionalSfByPackageId(bigPackageId);
 		map.put("additionalSf", additionalSf);
 		map.put("sender", sender);
@@ -379,14 +381,18 @@ public class PrintServiceImpl implements IPrintService {
 		map.put("receiverPhoneNumber", receiver.getPhoneNumber());
 		map.put("receiverMobileNumber", receiver.getMobileNumber());
 		Integer totalQuantity = 0;
-		for (OutWarehouseOrderItem item : items) {
+		
+		LittlePackageItem littlePackageItemParam = new LittlePackageItem();
+		littlePackageItemParam.setBigPackageId(bigPackageId);
+		List<LittlePackageItem> items = littlePackageItemDao.findLittlePackageItem(littlePackageItemParam, null, null);
+		for (LittlePackageItem item : items) {
 			totalQuantity += item.getQuantity();
 		}
+		map.put("items", items);
 		// 寄托物品数量
 		map.put("totalQuantity", totalQuantity);
 		// 总重量
-		map.put("totalWeight", outWarehouseOrder.getOutWarehouseWeight());
-		map.put("items", items);
+		map.put("totalWeight", bigPackage.getOutWarehouseWeight());
 		return map;
 	}
 }
