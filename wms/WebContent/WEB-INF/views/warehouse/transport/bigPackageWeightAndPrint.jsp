@@ -19,39 +19,17 @@
 </head>
 <body style="font-size: 16px;">
 	<table class="table" style="width:100%;background-color:#f5f5f5;margin-bottom: 1px;">
-			<tr style="height:13px;">
-					<td style="width:290px;">
-							<span class="pull-left" style="width:75px;">跟踪单号</span>
-							<span class="pull-left" style="width:200px;">
-								<input type="text"  name="trackingNo"  id="trackingNo" t="1" onfocus="trackingNoFocus()"  onblur="trackingNoBlur()" style="width:170px;"/>
-								<!-- 用户按回车时,当入库订单id 为空是第一次提交,后台返回id,或其他提示.  不为空 提示客户可输入SKU和数量进行收货 -->
-								<input type="text"  name="littlePackageId"  id="littlePackageId" t="1"  style="display: none;"/>
-								<input type="text"  name="bigPackageId"  id="bigPackageId" t="1"  style="display: none;"/>
-							</span>
-					</td>		
-					<td>
-						<span class="pull-left" style="width:70px;" ><b>操作提示:</b></span>
-						<span class="pull-left" style="width:300px;color:red;" id="tips">请输入任意一个小包裹到货跟踪单号并按回车!</span>
-					</td>
+			<tr>
+				<td colspan="3" style="height:70px;">
+					客户订单号(捡货单的右上角)&nbsp;&nbsp;
+					<input type="text"  name="customerReferenceNo"   t="1" id="customerReferenceNo"  style="width:160px;"/>
+					&nbsp;&nbsp;
+					订单状态<input type="text"  name="status"   t="1" id="status"  style="width:60px;" readonly="readonly"/>
+					<input type="text"  name="bigPackageId"  id="bigPackageId" t="1"  style="display: none;"/>
+				</td>
 			</tr>
 	</table>
-	
-	<div style="height:140px;width:100%;overflow:auto;margin-bottom: 2px;" id="littlePackageDiv">
-			<table   class="table"  style="width:100%;background-color:#f5f5f5;" id="littlePackagetable" >
-				<tr>
-					<th style="width:50px;text-align:center;">选择</th>
-					<th style="width:155px;text-align:center;">客户帐号</th>
-					<th style="width:225px;text-align:center;">出货跟踪单号</th> 
-					<th style="width:205px;text-align:center;">出货运输方式</th>
-					<th style="width:205px;text-align:center;">状态</th> 
-					<th style="width:205px;text-align:center;">创建时间</th>
-				</tr>
-				<tbody id="littlePackagebody" style="color:#555555;">
-					
-				</tbody>
-		</table>
-	</div>
-	
+	  
 		<table class="table" style="background-color:#f5f5f5;margin-bottom: 2px;"  >
 			<tr>
 				<th>转运订单称重与打出货运单</th>
@@ -91,21 +69,6 @@
 				</td>
 			</tr>
 	</table>			
-	<table  class="table table-striped" style="margin-bottom: 0px;height: 10px;">
-		<tr style="height: 10px;">
-			<td>
-              <form action="${baseUrl}/warehouse/transport/getLittlePackageData.do?isReceived=Y" id="searchform" name="searchform" method="post">
-                  <div class="pull-right searchContent">
-                          跟踪单号&nbsp;<input type="text"  name="trackingNo" id="searchFormTrackingNo" title="跟踪单号">
-                          <a class="btn btn-primary btn-small" id="btn_search"><i class="icon-search icon-white"></i>搜索</a>
-                  </div>
-              </form>
-			</td>
-		</tr>
-	</table>	
-	
-	<div id="maingrid" class="pull-left" style="width:100%;height:14%;">
-	</div> 
 	
 	 <script type="text/javascript" src="${baseUrl}/static/jquery/jquery.js"></script>
 	     
@@ -122,7 +85,9 @@
 	<script type="text/javascript" src="${baseUrl}/static/lhgdialog/prettify/prettify.js"></script>
 	<script type="text/javascript" src="${baseUrl}/static/lhgdialog/prettify/lhgdialog.js"></script>
     
-    <script  type="text/javascript" src="${baseUrl}/static/js/warehouse/transport/inwarehouse.js" ></script>
+    <script  type="text/javascript" src="${baseUrl}/static/js/warehouse/webSocketReadScales.js" ></script>
+    <script  type="text/javascript" src="${baseUrl}/static/js/warehouse/transport/bigPackageWeightAndPrint.js" ></script>
+    
     
     <script type="text/javascript">
 	   var baseUrl = "${baseUrl}";
@@ -176,96 +141,11 @@
 					}, 300);
 	 	  		 }else{
 	 	  			 $("#weight").removeAttr("readonly");
-	 	  		 clearInterval(autoWeight);//取消读取
+	 	  		 	clearInterval(autoWeight);//取消读取
 	 	  		 }
 	  		});
-	    	 initGrid();
    		});
-  		//btn_search
-		$("#btn_search").click(function(){
-			btnSearch("#searchform",grid);
-		});
     </script>	
-    
-	<script type="text/javascript">
-	   	 var grid = null;
-	     function initGrid() {
-	    	   grid = $("#maingrid").ligerGrid({
-	                columns: [
-	                    { display: '客户帐号', name: 'userNameOfCustomer', align: 'center',width:'9%'},
-	                    { display: '仓库', name: 'warehouse', align: 'center', type: 'float',width:'10%'},
-	                    { display: '转运类型', name: 'transportType', align: 'center', type: 'float',width:'9%'},
-	                    { display: '到货跟踪单号', name: 'trackingNo', align: 'center', type: 'int',width:'13%'},
-	                    { display: '承运商', name: 'carrierCode', align: 'center', type: 'int',width:'10%'},
-	                    { display: '小包状态', name: 'status', align: 'center', type: 'int',width:'9%'},
-	                    { display: '订单状态', name: 'bigPackageStatus', align: 'center', type: 'int',width:'9%'},
-		                { display: '收货时间', name: 'receivedTime', align: 'center', type: 'float',width:'12%'},
-		                { display: '回传收货状态', name: 'callbackIsSuccess', align: 'center', type: 'float',width:'9%'},
-		                { display: '操作员', name: 'userNameOfOperator',width:'8%'},
-// 		                { display: '备注', name: 'remark', align: 'center', type: 'float',width:'9%'}
-	                ],  
-	                isScroll: true,
-	                dataAction: 'server',
-	                url: baseUrl+'/warehouse/transport/getLittlePackageData.do?isReceived=Y',
-	                pageSize: 5, 
-	                usePager: 'true',
-	                sortName: 'received_time',
-	                sortOrder: 'desc',
-	                width: '100%',
-	                height: '99%',
-	                title:"转运订单称重记录(最新)",
-	                checkbox: false,
-	                rownumbers:true,
-	                enabledSort:false
-	            });
-	        };	
-	</script>
-	
-	<script type="text/javascript">
-	    var ws;
-	    var ports = ["9999", "888", "8888", "999","8080"]; 
-	    var index = 0;
-	    function toggleConnection(port) {
-	    	  index = index+1;	 
-	            try {
-	                ws = new WebSocket("ws://127.0.0.1:"+port);//连接服务器
-					ws.onopen = function(event){
-	                	parent.$.showShortMessage({msg:'电子秤自动读取功能已经启动成功',animate:false,left:"45%"});
-	                };
-					ws.onmessage = function(event){
-						var message = event.data;
-						var weight = message.match(/([0-9\.]+)/ig);
-						$("#weight").val(weight);
-					};
-					ws.onclose = function(event){
-						parent.$.showShortMessage({msg:'电子秤自动读取功能已经关闭',animate:false,left:"45%"});
-						shutdown();
-					};
-					ws.onerror = function(event){
-						if(index>=5){
-							parent.$.showShortMessage({msg:'电子秤自动读取功能异常,请手动输入重量!',animate:false,left:"45%"});	
-							shutdown();
-						}else{
-							toggleConnection(ports[index]);	
-						}
-					};
-	            } catch (ex) {
-	            	if(index>=5){
-	            		parent.$.showShortMessage({msg:'电子秤自动读取功能异常:'+ex.message, animate:false,left:"45%"});
-	            		shutdown();
-					}else{
-						toggleConnection(ports[index]);	
-					}
-				}
-	    };
-	    
-	    //关闭自动读取
-	  	 function shutdown(){
-	  		 clearInterval(autoWeight);
-	  		$("#weight").removeAttr("readonly");
-	  	 }
-	  	 
-    </script>
     
 </body>
 </html>

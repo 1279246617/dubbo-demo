@@ -762,7 +762,7 @@ public class TransportServiceImpl implements ITransportService {
 			}
 		}
 		if (isReceived) {
-			bigPackageDao.updateBigPackageStatus(littlePackage.getBigPackageId(), BigPackageStatusCode.WWW);
+			bigPackageDao.updateBigPackageStatus(littlePackage.getBigPackageId(), BigPackageStatusCode.WOS);// 收货完成
 		} else {
 			bigPackageDao.updateBigPackageStatus(littlePackage.getBigPackageId(), BigPackageStatusCode.WRP);
 		}
@@ -831,6 +831,12 @@ public class TransportServiceImpl implements ITransportService {
 			map.put(Constant.MESSAGE, "请输入货位号");
 			return map;
 		}
+		// 查询订单状态是否是待上架
+		LittlePackage littlePackage = littlePackageDao.getLittlePackageById(littlePackageId);
+		if (!StringUtil.isEqual(littlePackage.getStatus(), LittlePackageStatusCode.WOS)) {
+			map.put(Constant.MESSAGE, "该订单非待上架状态,不能上架");
+			return map;
+		}
 		// 查找小包最新上架记录
 		LittlePackageOnShelf onshelf = littlePackageOnShelfDao.findLittlePackageOnShelfByLittlePackageId(littlePackageId);
 		if (onshelf == null) {
@@ -841,17 +847,26 @@ public class TransportServiceImpl implements ITransportService {
 			map.put(Constant.MESSAGE, "该订单已上架,不能重复上架");
 			return map;
 		}
-		// 查询订单状态是否是待上架
-		LittlePackage littlePackage = littlePackageDao.getLittlePackageById(littlePackageId);
-		if (!StringUtil.isEqual(littlePackage.getStatus(), LittlePackageStatusCode.WOS)) {
-			map.put(Constant.MESSAGE, "该订单非待上架状态,不能上架");
-			return map;
-		}
+		littlePackage.setStatus(LittlePackageStatusCode.W_OUT_S);
+		littlePackageDao.updateLittlePackageStatus(littlePackage);
 
 		onshelf.setStatus(LittlePackageOnShelf.STATUS_ON_SHELF);
 		// 否则修改为已上架
 		littlePackageOnShelfDao.updateLittlePackageOnShelf(onshelf);
-
+		
+		// 判断bigpackage下是不是所有littlepackage都已经上架
+		LittlePackage littlePackageParam = new LittlePackage();
+		littlePackageParam.setBigPackageId(littlePackage.getBigPackageId());
+		List<LittlePackage> littlePackageList = littlePackageDao.findLittlePackage(littlePackageParam, null, null);
+		boolean isReceived = true;// 小包是否已经全部收货
+		for (LittlePackage temp : littlePackageList) {
+			if (!StringUtil.isEqual(temp.getStatus(), LittlePackageStatusCode.W_OUT_S)) {
+				isReceived = false;
+			}
+		}
+		if (isReceived) {
+			bigPackageDao.updateBigPackageStatus(littlePackage.getBigPackageId(), BigPackageStatusCode.WWP);// 上架完成待打印捡货
+		}
 		map.put(Constant.STATUS, Constant.SUCCESS);
 		return map;
 	}
