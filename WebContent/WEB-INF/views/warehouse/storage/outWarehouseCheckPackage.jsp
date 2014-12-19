@@ -26,7 +26,7 @@
 					客户订单号(捡货单的右上角)&nbsp;&nbsp;
 					<input type="text"  name="customerReferenceNo"   t="1" id="customerReferenceNo"  style="width:160px;"/>
 					&nbsp;&nbsp;
-					订单状态<input type="text"  name="status"   t="1" id="status"  style="width:60px;" readonly="readonly"/>
+					订单状态<input type="text"  name="status"   t="1" id="status"  style="width:90px;" readonly="readonly"/>
 						
 					<input type="text" name="outWarehouseOrderId" id="outWarehouseOrderId" style="display:none;">
 				</td>

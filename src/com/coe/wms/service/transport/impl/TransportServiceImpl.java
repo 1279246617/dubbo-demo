@@ -853,7 +853,7 @@ public class TransportServiceImpl implements ITransportService {
 		onshelf.setStatus(LittlePackageOnShelf.STATUS_ON_SHELF);
 		// 否则修改为已上架
 		littlePackageOnShelfDao.updateLittlePackageOnShelf(onshelf);
-		
+
 		// 判断bigpackage下是不是所有littlepackage都已经上架
 		LittlePackage littlePackageParam = new LittlePackage();
 		littlePackageParam.setBigPackageId(littlePackage.getBigPackageId());
@@ -917,5 +917,35 @@ public class TransportServiceImpl implements ITransportService {
 		page.total = littlePackageOnShelfDao.countLittlePackageOnShelf(param, moreParam);
 		page.rows = list;
 		return page;
+	}
+
+	@Override
+	public Map<String, String> bigPackageWeightSubmitCustomerReferenceNo(String customerReferenceNo, Long userIdOfOperator) {
+		Map<String, String> map = new HashMap<String, String>();
+		map.put(Constant.STATUS, Constant.FAIL);
+		if (StringUtil.isNull(customerReferenceNo)) {
+			map.put(Constant.MESSAGE, "请输入客户订单号(扫描捡货单右上角条码即可)");
+			return map;
+		}
+		BigPackage param = new BigPackage();
+		param.setCustomerReferenceNo(customerReferenceNo);
+		List<BigPackage> bigPackageList = bigPackageDao.findBigPackage(param, null, null);
+		if (bigPackageList == null || bigPackageList.size() <= 0) {
+			map.put(Constant.MESSAGE, "根据该客户订单号找不到转运订单,请输入正确客户订单号");
+			return map;
+		}
+		BigPackage bigPackage = bigPackageList.get(0);
+		if (!StringUtil.isEqual(bigPackage.getStatus(), BigPackageStatusCode.WWW)) {
+			map.put(Constant.MESSAGE, "该转运订单非待称重状态,不能称重");
+			return map;
+		}
+
+		map.put("bigPackageId", bigPackage.getId() + "");
+		BigPackageStatus status = bigPackageStatusDao.findBigPackageStatusByCode(bigPackage.getStatus());
+		map.put("bigPackageStatus", status.getCn());
+		map.put("shipwayCode", bigPackage.getShipwayCode());
+		map.put("trackingNo", bigPackage.getTrackingNo());
+		map.put(Constant.STATUS, Constant.SUCCESS);
+		return map;
 	}
 }

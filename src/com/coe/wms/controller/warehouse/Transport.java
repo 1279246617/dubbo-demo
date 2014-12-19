@@ -518,4 +518,21 @@ public class Transport {
 		return view;
 	}
 
+	/**
+	 * 
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/bigPackageWeightSubmitCustomerReferenceNo", method = RequestMethod.POST)
+	public String bigPackageWeightSubmitCustomerReferenceNo(HttpServletRequest request, HttpServletResponse response, String customerReferenceNo) throws IOException {
+		HttpSession session = request.getSession();
+		Long userIdOfOperator = (Long) session.getAttribute(SessionConstant.USER_ID);
+		Map<String, String> checkResultMap = transportService.bigPackageWeightSubmitCustomerReferenceNo(customerReferenceNo, userIdOfOperator);
+		return GsonUtil.toJson(checkResultMap);
+	}
+
 }

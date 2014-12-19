@@ -69,9 +69,9 @@ public interface ITransportService {
 	public Pagination getBigPackageData(BigPackage bigPackage, Map<String, String> moreParam, Pagination page) throws ServiceException;
 
 	public Pagination getLittlePackageData(LittlePackage littlePackage, Map<String, String> moreParam, Pagination page) throws ServiceException;
-	
+
 	public Pagination getLittlePackageOnShelfData(LittlePackageOnShelf param, Map<String, String> moreParam, Pagination page) throws ServiceException;
-	
+
 	public List<Map<String, Object>> getLittlePackageItems(Long bigPackageId) throws ServiceException;
 
 	public List<LittlePackageItem> getLittlePackageItemsByLittlePackageId(Long littlePackageId) throws ServiceException;
@@ -99,5 +99,7 @@ public interface ITransportService {
 	public Map<String, String> bigPackageSubmitWeight(Long userIdOfOperator, Long bigPackageId, Double weight);
 
 	public Map<String, String> saveLittlePackageOnShelves(Long userIdOfOperator, Long littlePackageId, String seatCode);
+
+	public Map<String, String> bigPackageWeightSubmitCustomerReferenceNo(String customerReferenceNo, Long userIdOfOperator);
 
 }
