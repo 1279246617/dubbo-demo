@@ -32,6 +32,15 @@ import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderStatusDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehousePackageDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseRecordDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseRecordItemDao;
+import com.coe.wms.dao.warehouse.transport.IBigPackageAdditionalSfDao;
+import com.coe.wms.dao.warehouse.transport.IBigPackageDao;
+import com.coe.wms.dao.warehouse.transport.IBigPackageReceiverDao;
+import com.coe.wms.dao.warehouse.transport.IBigPackageSenderDao;
+import com.coe.wms.dao.warehouse.transport.IBigPackageStatusDao;
+import com.coe.wms.dao.warehouse.transport.ILittlePackageDao;
+import com.coe.wms.dao.warehouse.transport.ILittlePackageItemDao;
+import com.coe.wms.dao.warehouse.transport.ILittlePackageOnShelfDao;
+import com.coe.wms.dao.warehouse.transport.ILittlePackageStatusDao;
 import com.coe.wms.model.warehouse.Seat;
 import com.coe.wms.model.warehouse.Warehouse;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrder;
@@ -43,8 +52,15 @@ import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderSender;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus.OutWarehouseOrderStatusCode;
 import com.coe.wms.model.warehouse.storage.record.OutWarehousePackage;
 import com.coe.wms.model.warehouse.storage.record.OutWarehouseRecordItem;
+import com.coe.wms.model.warehouse.transport.BigPackage;
+import com.coe.wms.model.warehouse.transport.BigPackageAdditionalSf;
+import com.coe.wms.model.warehouse.transport.BigPackageReceiver;
+import com.coe.wms.model.warehouse.transport.BigPackageSender;
+import com.coe.wms.model.warehouse.transport.BigPackageStatus.BigPackageStatusCode;
+import com.coe.wms.model.warehouse.transport.LittlePackage;
 import com.coe.wms.service.print.IPrintService;
 import com.coe.wms.util.BarcodeUtil;
+import com.coe.wms.util.Constant;
 import com.coe.wms.util.DateUtil;
 import com.coe.wms.util.NumberUtil;
 import com.coe.wms.util.StringUtil;
@@ -116,6 +132,33 @@ public class PrintServiceImpl implements IPrintService {
 
 	@Resource(name = "onShelfDao")
 	private IOnShelfDao onShelfDao;
+
+	@Resource(name = "bigPackageAdditionalSfDao")
+	private IBigPackageAdditionalSfDao bigPackageAdditionalSfDao;
+
+	@Resource(name = "bigPackageDao")
+	private IBigPackageDao bigPackageDao;
+
+	@Resource(name = "bigPackageReceiverDao")
+	private IBigPackageReceiverDao bigPackageReceiverDao;
+
+	@Resource(name = "bigPackageSenderDao")
+	private IBigPackageSenderDao bigPackageSenderDao;
+
+	@Resource(name = "bigPackageStatusDao")
+	private IBigPackageStatusDao bigPackageStatusDao;
+
+	@Resource(name = "littlePackageItemDao")
+	private ILittlePackageItemDao littlePackageItemDao;
+
+	@Resource(name = "littlePackageDao")
+	private ILittlePackageDao littlePackageDao;
+
+	@Resource(name = "littlePackageStatusDao")
+	private ILittlePackageStatusDao littlePackageStatusDao;
+
+	@Resource(name = "littlePackageOnShelfDao")
+	private ILittlePackageOnShelfDao littlePackageOnShelfDao;
 
 	@Override
 	public Map<String, Object> getPrintPackageListData(Long outWarehouseOrderId) {
@@ -302,6 +345,48 @@ public class PrintServiceImpl implements IPrintService {
 		String skuBarcodeData = BarcodeUtil.createCode128(sku, false, 9d, null);
 		map.put("skuBarcodeData", skuBarcodeData);
 		map.put("sku", sku);
+		return map;
+	}
+
+	@Override
+	public Map<String, Object> printTransportShipLabel(Long bigPackageId) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put(Constant.STATUS, Constant.FAIL);
+		BigPackage bigPackage = bigPackageDao.getBigPackageById(bigPackageId);
+		if (StringUtil.isEqual(bigPackage.getStatus(), BigPackageStatusCode.WWC) || StringUtil.isEqual(bigPackage.getStatus(), BigPackageStatusCode.WCI) || StringUtil.isEqual(bigPackage.getStatus(), BigPackageStatusCode.WCF)
+				|| StringUtil.isEqual(bigPackage.getStatus(), BigPackageStatusCode.WRG) || StringUtil.isEqual(bigPackage.getStatus(), BigPackageStatusCode.WRP)) {
+			return null;
+		}
+		BigPackageReceiver receiver = bigPackageReceiverDao.getBigPackageReceiverByPackageId(bigPackageId);
+		BigPackageSender sender = bigPackageSenderDao.getBigPackageSenderByPackageId(bigPackageId);
+		LittlePackage littlePackageParam = new LittlePackage();
+		littlePackageParam.setBigPackageId(bigPackageId);
+		List<LittlePackage> LittlePackageList = littlePackageDao.findLittlePackage(littlePackageParam, null, null);
+		BigPackageAdditionalSf additionalSf = bigPackageAdditionalSfDao.getBigPackageAdditionalSfByPackageId(bigPackageId);
+		map.put("additionalSf", additionalSf);
+		map.put("sender", sender);
+		// 创建条码
+		String trackingNo = bigPackage.getTrackingNo();
+		String trackingNoBarcodeData = BarcodeUtil.createCode128(trackingNo, true, 11d, null);
+		map.put("trackingNoBarcodeData", trackingNoBarcodeData);
+		// 清单号 (出库订单主键)
+		map.put("outWarehouseOrderId", String.valueOf(bigPackage.getId()));
+		map.put("customerReferenceNo", bigPackage.getCustomerReferenceNo());
+		map.put("tradeRemark", bigPackage.getTradeRemark());
+		map.put("logisticsRemark", bigPackage.getRemark());
+		map.put("receiverName", receiver.getName());
+		map.put("receiver", receiver);
+		map.put("receiverPhoneNumber", receiver.getPhoneNumber());
+		map.put("receiverMobileNumber", receiver.getMobileNumber());
+		Integer totalQuantity = 0;
+		for (OutWarehouseOrderItem item : items) {
+			totalQuantity += item.getQuantity();
+		}
+		// 寄托物品数量
+		map.put("totalQuantity", totalQuantity);
+		// 总重量
+		map.put("totalWeight", outWarehouseOrder.getOutWarehouseWeight());
+		map.put("items", items);
 		return map;
 	}
 }

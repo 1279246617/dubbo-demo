@@ -295,8 +295,8 @@ public class Print {
 			if (StringUtil.isNull(orderIdArray[i])) {
 				continue;
 			}
-			Long orderId = Long.valueOf(orderIdArray[i]);
-			Map<String, Object> map = printService.getPrintShipLabelData(orderId);
+			Long bigPackageId = Long.valueOf(orderIdArray[i]);
+			Map<String, Object> map = printService.printTransportShipLabel(bigPackageId);
 			if (map != null) {
 				mapList.add(map);
 			}
@@ -305,7 +305,7 @@ public class Print {
 		view.addObject("timeNow", DateUtil.dateConvertString(new Date(), DateUtil.yyyy_MM_ddHHmmss));
 
 		// 根据出库渠判断打印顺丰运单还是ETK运单判断
-		view.setViewName("warehouse/print/printSfLabel");
+		view.setViewName("warehouse/print/printTransportShipSfLabel");
 		// view.setViewName("warehouse/print/printEtkLabel");
 		return view;
 	}
