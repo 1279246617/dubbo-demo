@@ -193,6 +193,9 @@ function saveweight(){
 				if(msg.status == 1){
 					parent.$.showShortMessage({msg:"保存转运订单装箱重量成功",animate:false,left:"45%"});
 					$("#weightOk").show();
+					focus = '4';
+					$("#outWarehouseTrackingNo").focus();
+					$("#outWarehouseTrackingNo").select();
 				}
 		},"json");
 }

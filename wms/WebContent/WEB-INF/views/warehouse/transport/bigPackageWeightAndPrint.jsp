@@ -24,7 +24,7 @@
 					客户订单号(捡货单的右上角)&nbsp;&nbsp;
 					<input type="text"  name="customerReferenceNo"   t="1" id="customerReferenceNo"  style="width:160px;"/>
 					&nbsp;&nbsp;
-					订单状态<input type="text"  name="status"   t="1" id="status"  style="width:60px;" readonly="readonly"/>
+					订单状态<input type="text"  name="status"   t="1" id="status"  style="width:120px;" readonly="readonly"/>
 					<input type="text"  name="bigPackageId"  id="bigPackageId" t="1"  style="display: none;"/>
 				</td>
 			</tr>
@@ -37,10 +37,10 @@
 			<tr  style="color:#555555;">
 				<td colspan="2" style="height:50px;">
 					<span style="width:90px;height:30px;margin-top: 4mm;font-size: 5mm;" class="pull-left" >装箱重量</span>
-					<input type="text"  name="weight"  t="3"  id="weight"  style="width:130px;height:45px; font-size: 10mm;font-weight: bold;color:red;" class="pull-left" readonly="readonly" onkeyup="this.value=this.value.replace(/[^\d\.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d\.]/g,'')"/>
+					<input type="text"  name="weight"  t="2"  id="weight"  style="width:130px;height:45px; font-size: 10mm;font-weight: bold;color:red;" class="pull-left" readonly="readonly" onkeyup="this.value=this.value.replace(/[^\d\.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d\.]/g,'')"/>
 					<span style="width:50px;height:30px;margin-top: 4mm;font-size: 6mm;font-weight: bold;" class="pull-left" >KG</span>
 					<span style="width:90px;height:30px;margin-top: 4mm;font-size: 4mm;" class="pull-left" >
-						<input class="pull-left"  t="3" name="auto" style="vertical-align: middle;" type="checkbox" checked="checked" id="auto">
+						<input class="pull-left"  t="2" name="auto" style="vertical-align: middle;" type="checkbox" checked="checked" id="auto">
 						自动读取
 					</span>
 					<span style="height:30px;margin-top: 0mm;font-size: 8mm;" class="pull-left" >
@@ -56,11 +56,11 @@
 			<tr  >
 				<td colspan="1" style="width:280px;">
 					出货渠道&nbsp;&nbsp;
-					<input type="text"  name="shipwayCode"  id="shipwayCode"   t="4" style="width:130px;" readonly="readonly"/>
+					<input type="text"  name="shipwayCode"  id="shipwayCode"   t="3" style="width:130px;" readonly="readonly"/>
 				</td>
 				<td colspan="1" style="width:330px;">
 					跟踪单号&nbsp;&nbsp;
-					<input type="text"  name="outWarehouseTrackingNo"  id="outWarehouseTrackingNo"  t="4"  style="width:150px;" readonly="readonly"/>
+					<input type="text"  name="outWarehouseTrackingNo"  id="outWarehouseTrackingNo"  t="3"  style="width:150px;" readonly="readonly"/>
 				</td>
 				<td colspan="1" >
 					<a class="btn  btn-primary"  onclick="printShipLabel();" style="cursor:pointer;">
@@ -103,16 +103,16 @@
 	    	//回车事件
 	    	if((event.keyCode   ==   13)) {
 	    		if(focus == '1'){
-		  		  	saveReceivedLittlePackage();
+	    			submitCustomerReferenceNo();
 		  		  	return false;
 	  		  	}
 				//保存重量
-				if(focus == '3'){
+				if(focus == '2'){
 					saveweight();
 		      		return false;
 				}
 				//打印运单
-				if(focus == '4'){
+				if(focus == '3'){
 					printShipLabel();
 		      		return false;
 				}
