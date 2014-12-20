@@ -1255,6 +1255,62 @@ public class StorageServiceImpl implements IStorageService {
 		return XmlUtil.toXml(Responses.class, responses);
 	}
 
+	@Override
+	public String warehouseInterfaceCancelOutWarehouseOrder(EventBody eventBody, Long userIdOfCustomer, String warehouseNo) throws ServiceException {
+		Responses responses = new Responses();
+		List<Response> responseItems = new ArrayList<Response>();
+		Response response = new Response();
+		response.setSuccess(Constant.FALSE);
+		responseItems.add(response);
+		responses.setResponseItems(responseItems);
+		// 取 tradeDetail 中tradeOrderId 作为客户订单号
+		TradeDetail tradeDetail = eventBody.getTradeDetail();
+		if (tradeDetail == null) {
+			response.setReason(ErrorCode.S01_CODE);
+			response.setReasonDesc("EventBody对象获取TradeDetail对象得到Null");
+			return XmlUtil.toXml(Responses.class, responses);
+		}
+		List<TradeOrder> tradeOrderList = tradeDetail.getTradeOrders();
+		if (tradeOrderList == null || tradeOrderList.size() == 0) {
+			response.setReason(ErrorCode.S01_CODE);
+			response.setReasonDesc("TradeDetail对象获取TradeOrders对象得到Null");
+			return XmlUtil.toXml(Responses.class, responses);
+		}
+		// 客户订单号
+		String customerReferenceNo = tradeOrderList.get(0).getTradeOrderId();
+		if (StringUtil.isNull(customerReferenceNo)) {
+			response.setReason(ErrorCode.S01_CODE);
+			response.setReasonDesc("TradeOrder对象获取tradeOrderId得到Null");
+			return XmlUtil.toXml(Responses.class, responses);
+		}
+		// 根据客户订单号和客户帐号查找出库订单
+		OutWarehouseOrder outWarehouseOrderParam = new OutWarehouseOrder();
+		outWarehouseOrderParam.setUserIdOfCustomer(userIdOfCustomer);
+		outWarehouseOrderParam.setCustomerReferenceNo(customerReferenceNo);
+		List<OutWarehouseOrder> outWarehouseOrderList = outWarehouseOrderDao.findOutWarehouseOrder(outWarehouseOrderParam, null, null);
+		if (outWarehouseOrderList.size() <= 0) {
+			response.setReason(ErrorCode.B0005_CODE);
+			response.setReasonDesc("根据客户订单号(tradeOrderId)和客户帐号(msgSource)查找订单得到Null");
+			return XmlUtil.toXml(Responses.class, responses);
+		}
+		OutWarehouseOrder outWarehouseOrder = outWarehouseOrderList.get(0);
+		// 只有当前状态 是等待顺丰确认的订单 才允许处理
+		if (StringUtil.isEqual(outWarehouseOrder.getStatus(), OutWarehouseOrderStatusCode.SUCCESS)) {
+			response.setReason(ErrorCode.B0100_CODE);
+			response.setReasonDesc("出库订单已经完成出库,不能取消");
+			return XmlUtil.toXml(Responses.class, responses);
+		}
+		if (!StringUtil.isEqual(outWarehouseOrder.getStatus(), OutWarehouseOrderStatusCode.WWC)) {
+			response.setReason(ErrorCode.B0100_CODE);
+			response.setReasonDesc("出库订单已经开始出库,不能取消");
+			return XmlUtil.toXml(Responses.class, responses);
+		}
+		int count = outWarehouseOrderDao.deleteOutWarehouseOrder(outWarehouseOrder.getId());
+		logger.info("取消出库成功: 影响行数=" + count);
+		response.setSuccess(Constant.TRUE);
+		return XmlUtil.toXml(Responses.class, responses);
+	}
+
 	/**
 	 * 获取所有仓库
 	 */
@@ -1990,4 +2046,5 @@ public class StorageServiceImpl implements IStorageService {
 	public List<InWarehouseOrderStatus> findAllInWarehouseOrderStatus() throws ServiceException {
 		return inWarehouseOrderStatusDao.findAllInWarehouseOrderStatus();
 	}
+
 }

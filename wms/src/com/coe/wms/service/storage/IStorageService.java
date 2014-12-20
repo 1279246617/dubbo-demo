@@ -241,7 +241,16 @@ public interface IStorageService {
 	 * @return
 	 */
 	public String warehouseInterfaceConfirmOutWarehouseOrder(EventBody eventBody, Long userIdOfCustomer, String warehouseNo) throws ServiceException;
-
+	
+	/**
+	 * 顺丰取消出库订单
+	 * 
+	 * @param eventBody
+	 * @param userIdOfCustomer
+	 * @return
+	 */
+	public String warehouseInterfaceCancelOutWarehouseOrder(EventBody eventBody, Long userIdOfCustomer, String warehouseNo) throws ServiceException;
+	
 	/**
 	 * 审核出库订单
 	 * 

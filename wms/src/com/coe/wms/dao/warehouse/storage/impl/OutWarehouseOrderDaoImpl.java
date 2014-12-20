@@ -381,4 +381,19 @@ public class OutWarehouseOrderDaoImpl implements IOutWarehouseOrderDao {
 		String sql = "update w_s_out_warehouse_order set printed_count= " + newPrintedCount + " where id=" + id;
 		return jdbcTemplate.update(sql);
 	}
+
+	@Override
+	public int deleteOutWarehouseOrder(Long outWarehouseOrderId) {
+		String sql = "delete from w_s_out_warehouse_order where id = " + outWarehouseOrderId;
+		int count = jdbcTemplate.update(sql);
+		sql = "delete from w_s_out_warehouse_order_additional_sf where out_warehouse_order_id =" + outWarehouseOrderId;
+		jdbcTemplate.update(sql);
+		sql = "delete from w_s_out_warehouse_order_item where out_warehouse_order_id = " + outWarehouseOrderId;
+		jdbcTemplate.update(sql);
+		sql = "delete from w_s_out_warehouse_order_receiver where out_warehouse_order_id =" + outWarehouseOrderId;
+		jdbcTemplate.update(sql);
+		sql = "delete from w_s_out_warehouse_order_sender where out_warehouse_order_id =" + outWarehouseOrderId;
+		jdbcTemplate.update(sql);
+		return count;
+	}
 }
