@@ -6,7 +6,7 @@ function toggleConnection(port) {
         try {
             ws = new WebSocket("ws://127.0.0.1:"+port);//连接服务器
 			ws.onopen = function(event){
-            	parent.$.showShortMessage({msg:'电子秤自动读取功能已经启动成功',animate:false,left:"45%"});
+            	parent.$.showShortMessage({msg:'电子秤自动读取功能已经启动成功',animate:false,left:"42%"});
             };
 			ws.onmessage = function(event){
 				var message = event.data;
@@ -14,12 +14,12 @@ function toggleConnection(port) {
 				$("#weight").val(weight);
 			};
 			ws.onclose = function(event){
-				parent.$.showShortMessage({msg:'电子秤自动读取功能已经关闭',animate:false,left:"45%"});
+				parent.$.showShortMessage({msg:'电子秤自动读取功能已经关闭',animate:false,left:"42%"});
 				shutdown();
 			};
 			ws.onerror = function(event){
 				if(index>=5){
-					parent.$.showShortMessage({msg:'电子秤自动读取功能异常,请手动输入重量!',animate:false,left:"45%"});	
+					parent.$.showShortMessage({msg:'电子秤自动读取功能异常,请手动输入重量!',animate:false,left:"42%"});	
 					shutdown();
 				}else{
 					toggleConnection(ports[index]);	

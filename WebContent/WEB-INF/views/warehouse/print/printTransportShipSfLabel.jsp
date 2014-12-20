@@ -162,7 +162,7 @@
 							<td>订单号</td>
 						</tr>
 						<tr>
-							<td><c:out value="${map.additionalSf.orderId}"/></td>
+							<td><c:out value="${map.additionalSf.customerOrderId}"/></td>
 						</tr>
 						
 					</table>

@@ -946,21 +946,21 @@ public class TransportServiceImpl implements ITransportService {
 			return map;
 		}
 		BigPackage bigPackage = bigPackageList.get(0);
-		// 集货转运订单,非待称重状态不可称重
-		// 直接转运订单:收货(大包:收货完成,小包:待发送入库) 称重(大包:待发送重量 ,小包:无变化) 打印捡货单:无需做上架就可以打
-		if (StringUtil.isEqual(bigPackage.getTransportType(), BigPackage.TRANSPORT_TYPE_J)) {
-			if (!StringUtil.isEqual(bigPackage.getStatus(), BigPackageStatusCode.WWW)) {
-				map.put(Constant.MESSAGE, "该集货转运订单非待称重状态,不能称重");
-				return map;
-			}
-		}
-		if (StringUtil.isEqual(bigPackage.getTransportType(), BigPackage.TRANSPORT_TYPE_Z)) {
-			// 直接转运订单,在几个状态都可以称重
-			if (!(StringUtil.isEqual(bigPackage.getStatus(), BigPackageStatusCode.WOS) || StringUtil.isEqual(bigPackage.getStatus(), BigPackageStatusCode.WWP) || StringUtil.isEqual(bigPackage.getStatus(), BigPackageStatusCode.WWW))) {
-				map.put(Constant.MESSAGE, "该直接转运订单非待称重状态,不能称重");
-				return map;
-			}
-		}
+//		// 集货转运订单,非待称重状态不可称重
+//		// 直接转运订单:收货(大包:收货完成,小包:待发送入库) 称重(大包:待发送重量 ,小包:无变化) 打印捡货单:无需做上架就可以打
+//		if (StringUtil.isEqual(bigPackage.getTransportType(), BigPackage.TRANSPORT_TYPE_J)) {
+//			if (!StringUtil.isEqual(bigPackage.getStatus(), BigPackageStatusCode.WWW)) {
+//				map.put(Constant.MESSAGE, "该集货转运订单非待称重状态,不能称重");
+//				return map;
+//			}
+//		}
+//		if (StringUtil.isEqual(bigPackage.getTransportType(), BigPackage.TRANSPORT_TYPE_Z)) {
+//			// 直接转运订单,在几个状态都可以称重
+//			if (!(StringUtil.isEqual(bigPackage.getStatus(), BigPackageStatusCode.WOS) || StringUtil.isEqual(bigPackage.getStatus(), BigPackageStatusCode.WWP) || StringUtil.isEqual(bigPackage.getStatus(), BigPackageStatusCode.WWW))) {
+//				map.put(Constant.MESSAGE, "该直接转运订单非待称重状态,不能称重");
+//				return map;
+//			}
+//		}
 		map.put("bigPackageId", bigPackage.getId() + "");
 		BigPackageStatus status = bigPackageStatusDao.findBigPackageStatusByCode(bigPackage.getStatus());
 		map.put("bigPackageStatus", status.getCn());
