@@ -362,8 +362,6 @@ public class PrintServiceImpl implements IPrintService {
 		BigPackageSender sender = bigPackageSenderDao.getBigPackageSenderByPackageId(bigPackageId);
 		LittlePackage littlePackageParam = new LittlePackage();
 		littlePackageParam.setBigPackageId(bigPackageId);
-		// List<LittlePackage> LittlePackageList =
-		// littlePackageDao.findLittlePackage(littlePackageParam, null, null);
 		BigPackageAdditionalSf additionalSf = bigPackageAdditionalSfDao.getBigPackageAdditionalSfByPackageId(bigPackageId);
 		map.put("additionalSf", additionalSf);
 		map.put("sender", sender);

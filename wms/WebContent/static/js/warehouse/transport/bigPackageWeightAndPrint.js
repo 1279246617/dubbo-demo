@@ -62,7 +62,7 @@ function printShipLabel(){
 		parent.$.showShortMessage({msg:"没有找到直接转运订单,刷新后重试",animate:false,left:"45%"});
 		return false;
 	}
-	var url = baseUrl+'/warehouse/print/printTransportShipLabel.do?bigPackageId='+bigPackageId;
+	var url = baseUrl+'/warehouse/print/printTransportShipLabel.do?bigPackageIds='+bigPackageId;
 	 window.open(url);
 }
 
