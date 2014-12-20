@@ -28,6 +28,11 @@ public class EventType {
 	public static final String LOGISTICS_SEND_SKU = "LOGISTICS_SEND_SKU";
 
 	/**
+	 * SF 取消出库
+	 */
+	public static final String LOGISTICS_CANCEL = "LOGISTICS_CANCEL";
+
+	/**
 	 * 仓库回传出库状态
 	 */
 	public static final String WMS_STOCKOUT_INFO = "WMS_STOCKOUT_INFO";

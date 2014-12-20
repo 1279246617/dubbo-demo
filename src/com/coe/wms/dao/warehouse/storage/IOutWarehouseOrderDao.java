@@ -31,4 +31,6 @@ public interface IOutWarehouseOrderDao {
 	public int updateOutWarehouseOrderCallbackSendStatus(OutWarehouseOrder outWarehouseOrder);
 
 	public int updateOutWarehouseOrderWeight(OutWarehouseOrder outWarehouseOrder);
+	
+	public int deleteOutWarehouseOrder(Long outWarehouseOrderId);
 }
