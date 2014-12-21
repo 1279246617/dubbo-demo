@@ -185,77 +185,15 @@ function listLittlePackages(bigPackageId){
   	})
 }
 
-function advancedSearch(){
-	   $.dialog({
-	          lock: true,
-	          title: '批量单号搜索',
-	          width: '600px',
-	          height: '200px',
-	          content: 'url:' + baseUrl + '/warehouse/storage/searchOutWarehouseOrder.do',
-	          button: [{
-	            name: '确定',
-	            callback: function() {
-	              var nos = this.content.$("#nos").val();
-	              var noType = this.content.$("#noType").val();
-	              //执行查询,返回不能查到出库订单的 客户订单号
-	              $.post(baseUrl + '/warehouse/storage/executeSearchOutWarehouseOrder.do', {
-	            	  nos:nos,
-	            	  noType:noType
-	              },
-	              function(msg) {
-	            	  var  allNos = msg.allNos;
-	            	  if(msg.status =='0'){
-	            			parent.$.showDialogMessage(msg.message, null, null);
-	            	  }
-	            	  if(msg.status =='1'){
-	            		  if(msg.unAbleNoCount !='0'){
-	            			  var  str = ('一共查询到'+msg.orderCount+'个订单,' +msg.unAbleNoCount+ '个单号不能查询到订单,它们是:<br/>'+msg.unAbleNos+'.');
-	            			  if(str.length>100){
-		            			 var contentArr = [];
-		             			 contentArr.push('<p style="width:500px;height:100%;margin-left:2mm;margin-top:2mm;word-break:break-all;">');
-		             			 contentArr.push('<b>'+str+'</b>');
-		             		     contentArr.push('</p>');
-		             		     var contentHtml = contentArr.join('');
-		             			 $.dialog({
-		             		  		lock: true,
-		             		  		max: false,
-		             		  		min: false,
-		             		  		title: '提示',
-		             		  		width: 550,
-		             		  		height: 350,
-		             		  		content: contentHtml,
-		             		  		button: [{
-		             		  			name: '确认',
-		             		  			callback: function() {
-		             		  				
-		             		  			}
-		             		  		}]
-		             			  });
-		            		  }else{
-		            			  parent.$.showDialogMessage(str, null, null);
-		            		  }
-	            		  }
-	            		  if(msg.unAbleNoCount == '0'){
-	            			  var str = ('一共查询到'+msg.orderCount+'个订单,没有单号查询不到订单.');
-	            			  parent.$.showShortMessage({msg:str,animate:false,left:"45%"});
-	            		  }
-	            		  //对 searchfrom 赋值, 执行查询
-	            		  $("#noType").val(noType);
-	            		  $("#nos").val(allNos);
-	            		  btnSearch("#searchform",grid);
-	            		  //查询完成后把隐藏的条件去掉
-	            		  $("#noType").val("");
-	            		  $("#nos").val("");
-	            	 }
-	              },"json");
-	            }
-	          }],
-	          cancel: true
-	        });
+
+//打印订单
+function printSingleOrder(id){
+	    var url = baseUrl+'/warehouse/print/printTransportPackageList.do?bigPackageIds='+id;
+		window.open(url);
 }
 
 //打印订单
-function printOrder(id){
+function printOrder(){
     var contentArr = [];
     contentArr.push('<div id="changeContent" style="padding:10px;width: 240px;">');
     contentArr.push('   <div class="pull-left" style="width: 100%">');
@@ -279,22 +217,18 @@ function printOrder(id){
   			name: '确认',
   			callback: function() {
   				var orderIds = "";
-  				if(id =='0'){
-  					var  row = grid.getSelectedRows();
-  	                var all = parent.$("#all").attr("checked");
-  	                if(all){
-  	                	row = grid.getRows();	 
-  	                }
-  		            if(row.length < 1){
-  		                parent.$.showShortMessage({msg:"请最少选择一条数据",animate:false,left:"45%"});
-  		                return false;
-  		            }
-  	            	for ( var i = 0; i < row.length; i++) {
-  	            		orderIds += row[i].id+",";
-  					}
-  				}else{
-  					orderIds = id;
-  				}
+				var  row = grid.getSelectedRows();
+                var all = parent.$("#all").attr("checked");
+                if(all){
+                	row = grid.getRows();	 
+                }
+	            if(row.length < 1){
+	                parent.$.showShortMessage({msg:"请最少选择一条数据",animate:false,left:"45%"});
+	                return false;
+	            }
+            	for ( var i = 0; i < row.length; i++) {
+            		orderIds += row[i].id+",";
+				}
             	if(orderIds!=""){
             		//打印捡货单,新建标签页
     			    var url = baseUrl+'/warehouse/print/printTransportPackageList.do?bigPackageIds='+orderIds;

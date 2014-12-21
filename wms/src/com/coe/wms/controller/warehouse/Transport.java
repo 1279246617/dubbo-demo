@@ -503,8 +503,8 @@ public class Transport {
 	 * @return
 	 * @throws IOException
 	 */
-	@RequestMapping(value = "/listWaitOutWarehouseBigPackage", method = RequestMethod.GET)
-	public ModelAndView listWaitOutWarehouseBigPackage(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	@RequestMapping(value = "/listWaiPrintBigPackage", method = RequestMethod.GET)
+	public ModelAndView listWaiPrintBigPackage(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		HttpSession session = request.getSession();
 		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
 		ModelAndView view = new ModelAndView();
@@ -514,7 +514,7 @@ public class Transport {
 		List<BigPackageStatus> bigPackageStatusList = transportService.findAllBigPackageStatus();
 		view.addObject("bigPackageStatusList", bigPackageStatusList);
 		view.addObject("warehouseList", storageService.findAllWarehouse(user.getDefaultWarehouseId()));
-		view.setViewName("warehouse/transport/listWaitOutWarehouseBigPackage");
+		view.setViewName("warehouse/transport/listWaiPrintBigPackage");
 		return view;
 	}
 

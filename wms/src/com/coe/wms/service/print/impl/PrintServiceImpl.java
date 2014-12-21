@@ -59,6 +59,7 @@ import com.coe.wms.model.warehouse.transport.BigPackageSender;
 import com.coe.wms.model.warehouse.transport.BigPackageStatus.BigPackageStatusCode;
 import com.coe.wms.model.warehouse.transport.LittlePackage;
 import com.coe.wms.model.warehouse.transport.LittlePackageItem;
+import com.coe.wms.model.warehouse.transport.LittlePackageOnShelf;
 import com.coe.wms.service.print.IPrintService;
 import com.coe.wms.util.BarcodeUtil;
 import com.coe.wms.util.Constant;
@@ -170,7 +171,6 @@ public class PrintServiceImpl implements IPrintService {
 			return null;
 		}
 		OutWarehouseOrderReceiver receiver = outWarehouseOrderReceiverDao.getOutWarehouseOrderReceiverByOrderId(outWarehouseOrderId);
-		// 清单号 (出库订单主键)
 		map.put("outWarehouseOrderId", String.valueOf(outWarehouseOrder.getId()));
 		map.put("customerReferenceNo", outWarehouseOrder.getCustomerReferenceNo());
 		OutWarehouseOrderAdditionalSf outWarehouseOrderAdditionalSf = outWarehouseOrderAdditionalSfDao.getOutWarehouseOrderAdditionalSfByOrderId(outWarehouseOrderId);
@@ -379,7 +379,7 @@ public class PrintServiceImpl implements IPrintService {
 		map.put("receiverPhoneNumber", receiver.getPhoneNumber());
 		map.put("receiverMobileNumber", receiver.getMobileNumber());
 		Integer totalQuantity = 0;
-		
+
 		LittlePackageItem littlePackageItemParam = new LittlePackageItem();
 		littlePackageItemParam.setBigPackageId(bigPackageId);
 		List<LittlePackageItem> items = littlePackageItemDao.findLittlePackageItem(littlePackageItemParam, null, null);
@@ -391,6 +391,46 @@ public class PrintServiceImpl implements IPrintService {
 		map.put("totalQuantity", totalQuantity);
 		// 总重量
 		map.put("totalWeight", bigPackage.getOutWarehouseWeight());
+		return map;
+	}
+
+	@Override
+	public Map<String, Object> getPrintTransportPackageListData(Long bigPackageId) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		BigPackage bigPackage = bigPackageDao.getBigPackageById(bigPackageId);
+		// 未完成收货不能打印捡货单
+		if (StringUtil.isEqual(bigPackage.getStatus(), BigPackageStatusCode.WWC) || StringUtil.isEqual(bigPackage.getStatus(), BigPackageStatusCode.WCI) || StringUtil.isEqual(bigPackage.getStatus(), BigPackageStatusCode.WCF)
+				|| StringUtil.isEqual(bigPackage.getStatus(), BigPackageStatusCode.WRG) || StringUtil.isEqual(bigPackage.getStatus(), BigPackageStatusCode.WRP)) {
+			return null;
+		}
+		BigPackageReceiver receiver = bigPackageReceiverDao.getBigPackageReceiverByPackageId(bigPackageId);
+		map.put("customerReferenceNo", bigPackage.getCustomerReferenceNo());
+		BigPackageAdditionalSf bigPackageAdditionalSf = bigPackageAdditionalSfDao.getBigPackageAdditionalSfByPackageId(bigPackageId);
+		if (bigPackageAdditionalSf != null) {
+			map.put("customerOrderNo", bigPackageAdditionalSf.getCustomerOrderId());
+		}
+		// 创建图片
+		String customerReferenceNoBarcodeData = BarcodeUtil.createCode128(bigPackage.getCustomerReferenceNo(), true, 12d, null);
+		map.put("customerReferenceNoBarcodeData", customerReferenceNoBarcodeData);
+		map.put("tradeRemark", bigPackage.getTradeRemark());
+		map.put("trackingNo", bigPackage.getTrackingNo());
+		map.put("logisticsRemark", bigPackage.getRemark());
+		map.put("receiverName", receiver.getName());
+		map.put("receiverPhoneNumber", receiver.getPhoneNumber());
+		map.put("receiverMobileNumber", receiver.getMobileNumber());
+		map.put("receiverMobileNumber", receiver.getMobileNumber());
+
+		LittlePackageOnShelf littlePackageOnShelfParam = new LittlePackageOnShelf();
+		littlePackageOnShelfParam.setBigPackageId(bigPackageId);
+		List<LittlePackageOnShelf> littlePackageOnShelfList = littlePackageOnShelfDao.findLittlePackageOnShelf(littlePackageOnShelfParam, null, null);
+		// 商品总数
+		int totalQuantity = 0;
+		double totalPrice = 0d;
+		for (LittlePackageOnShelf littlePackageOnShelf : littlePackageOnShelfList) {
+			
+		}
+		map.put("totalQuantity", totalQuantity);
+		map.put("totalPrice", totalPrice);
 		return map;
 	}
 }
