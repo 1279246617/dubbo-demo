@@ -43,6 +43,14 @@ public interface IPrintService {
 	public List<Map<String, String>> getOutWarehouseShippings(Long coeTrackingNoId);
 
 	/**
+	 * 获取打印捡货单数据
+	 * 
+	 * @param outWarehouseOrderId
+	 * @return
+	 */
+	public Map<String, Object> getPrintTransportPackageListData(Long bigPackageId);
+
+	/**
 	 * 转运订单出货sf标签
 	 * 
 	 * @param outWarehouseOrderId

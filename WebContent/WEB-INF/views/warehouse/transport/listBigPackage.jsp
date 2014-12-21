@@ -83,6 +83,12 @@
 			       	 	</a>
 			       	 	<input style=" visibility:hidden;">
 		       	 	</span>
+		       	 	<span class="pull-left" style="width:55px;">
+			       		<a class="btn btn-primary btn-small" onclick="printOrder()" title="打印捡货单">
+			           		 <i class="icon-eye-open"></i>打印捡货单
+			       	 	</a>
+			       	 	<input style=" visibility:hidden;">
+		       	 	</span>
 		    	</div>    
            </form>
 	</div>
@@ -178,7 +184,8 @@
 		                { display: '回传出库状态', name: 'callbackSendStatusIsSuccess', align: 'center', type: 'float',width:'8%'},
 		                { display: '创建时间', name: 'createdTime', align: 'center', type: 'float',width:'12%'},
 		                {display: '操作',isSort: false,width: '9%',render: function(row) {
-		            		var  h = '<a href="javascript:checkSingleOrder(' + row.id + ')">审核</a> ';
+		            		var  h = '<a href="javascript:checkSingleOrder(' + row.id + ')">审核</a> &nbsp;';
+		            		h += '<a href="javascript:printSingleOrder(' + row.id + ')">打印捡货单</a> ';
 		            		return h;
 		            	}
 		            }
