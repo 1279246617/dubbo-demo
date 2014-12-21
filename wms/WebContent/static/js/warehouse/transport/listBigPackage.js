@@ -241,4 +241,60 @@ function printOrder(){
   		}]
   	})
 }
+
+
+//打印运单
+function printSingleShipLabel(id){
+	var url = baseUrl+'/warehouse/print/printTransportShipLabel.do?bigPackageIds='+id;
+	 window.open(url);
+}
+
+//打印运单
+function printShipLabel(){
+    var contentArr = [];
+    contentArr.push('<div id="changeContent" style="padding:10px;width: 240px;">');
+    contentArr.push('   <div class="pull-left" style="width: 100%">');
+    contentArr.push('       <input class="pull-left" name="chooseOption" style="margin-left: 30px;" type="radio" checked="checked" value="selected" id="selected">');
+    contentArr.push('       <label class="pull-left" style="margin-left: 5px" for="selected">打印选中</label>');
+    contentArr.push('       <input class="pull-left" name="chooseOption" style="margin-left: 30px;" type="radio" value="all" id="all">');
+    contentArr.push('       <label class="pull-left" style="margin-left: 5px;" for="all">打印当前页</label>');
+    contentArr.push('   </div>');
+    contentArr.push('</div>');
+    contentArr.push('<div style="color: #ff0000;margin-left: 40px;">注：未完成称重的订单不能打印出货运单</div>');
+    var contentHtml = contentArr.join('');
+	$.dialog({
+  		lock: true,
+  		max: false,
+  		min: false,
+  		title: '打印出货运单',
+  	     width: 260,
+         height: 60,
+  		content: contentHtml,
+  		button: [{
+  			name: '确认',
+  			callback: function() {
+  				var orderIds = "";
+				var  row = grid.getSelectedRows();
+                var all = parent.$("#all").attr("checked");
+                if(all){
+                	row = grid.getRows();	 
+                }
+	            if(row.length < 1){
+	                parent.$.showShortMessage({msg:"请最少选择一条数据",animate:false,left:"45%"});
+	                return false;
+	            }
+            	for ( var i = 0; i < row.length; i++) {
+            		orderIds += row[i].id+",";
+				}
+            	if(orderIds!=""){
+            		var url = baseUrl+'/warehouse/print/printTransportShipLabel.do?bigPackageIds='+orderIds;
+            		 window.open(url);
+            	}
+  			}
+  		},
+  		{
+  			name: '取消'
+  		}]
+  	})
+}
  

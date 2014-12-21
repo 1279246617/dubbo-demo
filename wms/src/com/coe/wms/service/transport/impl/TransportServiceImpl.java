@@ -34,9 +34,11 @@ import com.coe.wms.exception.ServiceException;
 import com.coe.wms.model.unit.Currency.CurrencyCode;
 import com.coe.wms.model.unit.Weight.WeightCode;
 import com.coe.wms.model.user.User;
+import com.coe.wms.model.warehouse.TrackingNo;
 import com.coe.wms.model.warehouse.Warehouse;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderReceiver;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecord;
+import com.coe.wms.model.warehouse.storage.record.OutWarehouseRecordItem;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecordStatus.InWarehouseRecordStatusCode;
 import com.coe.wms.model.warehouse.transport.BigPackage;
 import com.coe.wms.model.warehouse.transport.BigPackageAdditionalSf;
@@ -946,27 +948,36 @@ public class TransportServiceImpl implements ITransportService {
 			return map;
 		}
 		BigPackage bigPackage = bigPackageList.get(0);
-//		// 集货转运订单,非待称重状态不可称重
-//		// 直接转运订单:收货(大包:收货完成,小包:待发送入库) 称重(大包:待发送重量 ,小包:无变化) 打印捡货单:无需做上架就可以打
-//		if (StringUtil.isEqual(bigPackage.getTransportType(), BigPackage.TRANSPORT_TYPE_J)) {
-//			if (!StringUtil.isEqual(bigPackage.getStatus(), BigPackageStatusCode.WWW)) {
-//				map.put(Constant.MESSAGE, "该集货转运订单非待称重状态,不能称重");
-//				return map;
-//			}
-//		}
-//		if (StringUtil.isEqual(bigPackage.getTransportType(), BigPackage.TRANSPORT_TYPE_Z)) {
-//			// 直接转运订单,在几个状态都可以称重
-//			if (!(StringUtil.isEqual(bigPackage.getStatus(), BigPackageStatusCode.WOS) || StringUtil.isEqual(bigPackage.getStatus(), BigPackageStatusCode.WWP) || StringUtil.isEqual(bigPackage.getStatus(), BigPackageStatusCode.WWW))) {
-//				map.put(Constant.MESSAGE, "该直接转运订单非待称重状态,不能称重");
-//				return map;
-//			}
-//		}
 		map.put("bigPackageId", bigPackage.getId() + "");
 		BigPackageStatus status = bigPackageStatusDao.findBigPackageStatusByCode(bigPackage.getStatus());
 		map.put("bigPackageStatus", status.getCn());
 		map.put("shipwayCode", bigPackage.getShipwayCode());
 		map.put("trackingNo", bigPackage.getTrackingNo());
 		map.put(Constant.STATUS, Constant.SUCCESS);
+		return map;
+	}
+
+	@Override
+	public Map<String, Object> outWarehouseShippingEnterCoeTrackingNo(String coeTrackingNo) throws ServiceException {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put(Constant.STATUS, Constant.FAIL);
+		OutWarehouseRecordItem outWarehouseShipping = new OutWarehouseRecordItem();
+		outWarehouseShipping.setCoeTrackingNo(coeTrackingNo);
+		List<OutWarehouseRecordItem> outWarehouseShippingList = outWarehouseRecordItemDao.findOutWarehouseRecordItem(outWarehouseShipping, null, null);
+		List<TrackingNo> trackingNos = trackingNoDao.findTrackingNo(coeTrackingNo, TrackingNo.TYPE_COE);
+		// 暂不处理,单号可能重复问题
+		if (trackingNos == null || trackingNos.size() <= 0) {
+			map.put(Constant.MESSAGE, "该COE交接单号无效,请输入新单号");
+			return map;
+		}
+		TrackingNo trackingNo = trackingNos.get(0);
+		if (StringUtil.isEqual(trackingNo.getStatus(), TrackingNo.STATUS_USED + "")) {
+			map.put(Constant.MESSAGE, "该COE交接单号已经使用,请输入新单号");
+			return map;
+		}
+		map.put("coeTrackingNo", trackingNo);
+		map.put(Constant.STATUS, Constant.SUCCESS);
+		map.put("outWarehouseShippingList", outWarehouseShippingList);
 		return map;
 	}
 }
