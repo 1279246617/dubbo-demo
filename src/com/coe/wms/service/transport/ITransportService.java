@@ -102,4 +102,6 @@ public interface ITransportService {
 
 	public Map<String, String> bigPackageWeightSubmitCustomerReferenceNo(String customerReferenceNo, Long userIdOfOperator);
 
+	public Map<String, Object> outWarehouseShippingEnterCoeTrackingNo(String coeTrackingNo);
+
 }

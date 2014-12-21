@@ -22,7 +22,7 @@
 	  <div class="toolbar1">
            <form action="${baseUrl}/warehouse/transport/getBigPackageData.do" id="searchform" name="searchform" method="post">
                <div class="pull-right searchContent">
-               		<span class="pull-left" style="width:125px;">
+               		<span class="pull-left" style="width:120px;">
                			仓库
                			<select style="width:80px;" id="warehouseId" name="warehouseId">
                				<option></option>
@@ -33,7 +33,7 @@
 				       		</c:forEach>
 						</select>
                		</span>
-               		<span class="pull-left" style="width:125px;">
+               		<span class="pull-left" style="width:120px;">
                			状态
                			<select style="width:80px;" id="status" name="status">
                				<option></option>
@@ -62,16 +62,12 @@
 	               		<input type="text"   style="width:120px;" name="createdTimeStart" id="createdTimeStart" title="起始创建时间">
                		</span>
                		
-               		<span class="pull-left" style="width:180px;">
+               		<span class="pull-left" style="width:170px;">
                			至	
                			<input type="text"   style="width:120px;" name="createdTimeEnd"  id="createdTimeEnd"  title="终止创建时间">
                		</span>
                		<span class="pull-left" style="width:55px;">
                			<a class="btn btn-primary btn-small" id="btn_search"><i class="icon-search icon-white"></i>搜索</a>
-               			<input style=" visibility:hidden;">
-               		</span>
-               		<span class="pull-left" style="width:100px;display: none;">
-               			<a class="btn btn-primary btn-small" id="advancedSearch"><i class="icon-search icon-white"></i>批量单号搜索</a>
                			<input style=" visibility:hidden;">
                		</span>
                </div>
@@ -83,9 +79,15 @@
 			       	 	</a>
 			       	 	<input style=" visibility:hidden;">
 		       	 	</span>
-		       	 	<span class="pull-left" style="width:55px;">
+		       	 	<span class="pull-left" style="width:95px;">
 			       		<a class="btn btn-primary btn-small" onclick="printOrder()" title="打印捡货单">
-			           		 <i class="icon-eye-open"></i>打印捡货单
+			           		 <i class="icon-folder-open"></i>打印捡货单
+			       	 	</a>
+			       	 	<input style=" visibility:hidden;">
+		       	 	</span>
+		       	 	<span class="pull-left" style="width:70px;">
+			       		<a class="btn btn-primary btn-small" onclick="printShipLabel()" title="打印运单">
+			           		 <i class="icon-folder-open"></i>打印运单
 			       	 	</a>
 			       	 	<input style=" visibility:hidden;">
 		       	 	</span>
@@ -137,15 +139,8 @@
    			
    			//btn_search
    			$("#btn_search").click(function(){
-   				$("#noType").val("");//清空高级搜索隐藏框的内容
-   				$("#nos").val("");
    				btnSearch("#searchform",grid);
    			});
-   			//高级搜索
-   			$("#advancedSearch").click(function(){
-   				advancedSearch();
-   			});
-   			
    		});
    		  
    	 	 var grid = null;
@@ -183,9 +178,10 @@
 		                { display: '回传称重状态', name: 'callbackSendWeightIsSuccess', align: 'center', type: 'float',width:'8%'},
 		                { display: '回传出库状态', name: 'callbackSendStatusIsSuccess', align: 'center', type: 'float',width:'8%'},
 		                { display: '创建时间', name: 'createdTime', align: 'center', type: 'float',width:'12%'},
-		                {display: '操作',isSort: false,width: '9%',render: function(row) {
+		                {display: '操作',isSort: false,width: '11%',render: function(row) {
 		            		var  h = '<a href="javascript:checkSingleOrder(' + row.id + ')">审核</a> &nbsp;';
-		            		h += '<a href="javascript:printSingleOrder(' + row.id + ')">打印捡货单</a> ';
+		            		h += '<a href="javascript:printSingleOrder(' + row.id + ')">捡货单</a>&nbsp; ';
+		            		h += '<a href="javascript:printSingleShipLabel(' + row.id + ')">运单</a> ';
 		            		return h;
 		            	}
 		            }

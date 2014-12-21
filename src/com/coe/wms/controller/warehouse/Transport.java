@@ -19,7 +19,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.coe.wms.controller.Application;
 import com.coe.wms.model.user.User;
+import com.coe.wms.model.warehouse.TrackingNo;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
+import com.coe.wms.model.warehouse.storage.record.OutWarehouseRecordItem;
 import com.coe.wms.model.warehouse.transport.BigPackage;
 import com.coe.wms.model.warehouse.transport.BigPackageStatus;
 import com.coe.wms.model.warehouse.transport.LittlePackage;
@@ -535,4 +537,55 @@ public class Transport {
 		return GsonUtil.toJson(checkResultMap);
 	}
 
+	/**
+	 * 出库扫描运单建包界面
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/outWarehousePackage", method = RequestMethod.GET)
+	public ModelAndView outWarehousePackage(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		HttpSession session = request.getSession();
+		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
+		ModelAndView view = new ModelAndView();
+		view.addObject("userId", userId);
+		User user = userService.getUserById(userId);
+		view.addObject("warehouseList", storageService.findAllWarehouse(user.getDefaultWarehouseId()));
+		// 进入界面 分配coe单号,并锁定coe单号,下次不能再使用
+		TrackingNo trackingNo = storageService.getCoeTrackingNoforOutWarehouseShipping();
+
+		if (trackingNo != null) {
+			view.addObject("coeTrackingNo", trackingNo.getTrackingNo());
+			view.addObject("coeTrackingNoId", trackingNo.getId());
+		}
+		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
+		view.setViewName("warehouse/transport/outWarehousePackage");
+		return view;
+	}
+
+	/**
+	 * 
+	 * 出货重新输入coe交接单号
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/outWarehouseShippingEnterCoeTrackingNo")
+	public String outWarehouseShippingEnterCoeTrackingNo(HttpServletRequest request, HttpServletResponse response, String coeTrackingNo) throws IOException {
+		HttpSession session = request.getSession();
+		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
+		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> objectMap = transportService.outWarehouseShippingEnterCoeTrackingNo(coeTrackingNo);
+		List<OutWarehouseRecordItem> outWarehouseShippingList = (List<OutWarehouseRecordItem>) objectMap.get("outWarehouseShippingList");
+		map.put("outWarehouseShippingList", outWarehouseShippingList);
+		map.put(Constant.STATUS, objectMap.get(Constant.STATUS));
+		map.put(Constant.MESSAGE, objectMap.get(Constant.MESSAGE));
+		map.put("coeTrackingNo", objectMap.get("coeTrackingNo"));
+		return GsonUtil.toJson(map);
+	}
 }

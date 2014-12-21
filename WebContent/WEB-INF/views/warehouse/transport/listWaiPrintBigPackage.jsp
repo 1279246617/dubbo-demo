@@ -26,7 +26,7 @@
            		<div class="pull-left">
            			<span class="pull-left" style="width:55px;">
 			       		<a class="btn btn-primary btn-small" onclick="printOrder()" title="打印捡货单">
-			           		 <i class="icon-eye-open"></i>打印捡货单
+			           		 <i class="icon-folder-open"></i>打印捡货单
 			       	 	</a>
 			       	 	<input style=" visibility:hidden;">
 		       	 	</span>
