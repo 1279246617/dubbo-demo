@@ -30,6 +30,8 @@ import com.coe.wms.dao.warehouse.transport.ILittlePackageDao;
 import com.coe.wms.dao.warehouse.transport.ILittlePackageItemDao;
 import com.coe.wms.dao.warehouse.transport.ILittlePackageOnShelfDao;
 import com.coe.wms.dao.warehouse.transport.ILittlePackageStatusDao;
+import com.coe.wms.dao.warehouse.transport.IPackageRecordDao;
+import com.coe.wms.dao.warehouse.transport.IPackageRecordItemDao;
 import com.coe.wms.exception.ServiceException;
 import com.coe.wms.model.unit.Currency.CurrencyCode;
 import com.coe.wms.model.unit.Weight.WeightCode;
@@ -37,9 +39,6 @@ import com.coe.wms.model.user.User;
 import com.coe.wms.model.warehouse.TrackingNo;
 import com.coe.wms.model.warehouse.Warehouse;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderReceiver;
-import com.coe.wms.model.warehouse.storage.record.InWarehouseRecord;
-import com.coe.wms.model.warehouse.storage.record.OutWarehouseRecordItem;
-import com.coe.wms.model.warehouse.storage.record.InWarehouseRecordStatus.InWarehouseRecordStatusCode;
 import com.coe.wms.model.warehouse.transport.BigPackage;
 import com.coe.wms.model.warehouse.transport.BigPackageAdditionalSf;
 import com.coe.wms.model.warehouse.transport.BigPackageReceiver;
@@ -51,6 +50,7 @@ import com.coe.wms.model.warehouse.transport.LittlePackageItem;
 import com.coe.wms.model.warehouse.transport.LittlePackageOnShelf;
 import com.coe.wms.model.warehouse.transport.LittlePackageStatus;
 import com.coe.wms.model.warehouse.transport.LittlePackageStatus.LittlePackageStatusCode;
+import com.coe.wms.model.warehouse.transport.PackageRecordItem;
 import com.coe.wms.pojo.api.warehouse.Buyer;
 import com.coe.wms.pojo.api.warehouse.ClearanceDetail;
 import com.coe.wms.pojo.api.warehouse.ErrorCode;
@@ -142,6 +142,12 @@ public class TransportServiceImpl implements ITransportService {
 
 	@Resource(name = "littlePackageOnShelfDao")
 	private ILittlePackageOnShelfDao littlePackageOnShelfDao;
+
+	@Resource(name = "packageRecordDao")
+	private IPackageRecordDao packageRecordDao;
+
+	@Resource(name = "IPackageRecordItemDao")
+	private IPackageRecordItemDao packageRecordItemDao;
 
 	@Override
 	public String warehouseInterfaceSaveTransportOrder(EventBody eventBody, Long userIdOfCustomer, String warehouseNo) throws ServiceException {
@@ -961,9 +967,9 @@ public class TransportServiceImpl implements ITransportService {
 	public Map<String, Object> outWarehouseShippingEnterCoeTrackingNo(String coeTrackingNo) throws ServiceException {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put(Constant.STATUS, Constant.FAIL);
-		OutWarehouseRecordItem outWarehouseShipping = new OutWarehouseRecordItem();
+		PackageRecordItem outWarehouseShipping = new PackageRecordItem();
 		outWarehouseShipping.setCoeTrackingNo(coeTrackingNo);
-		List<OutWarehouseRecordItem> outWarehouseShippingList = outWarehouseRecordItemDao.findOutWarehouseRecordItem(outWarehouseShipping, null, null);
+		List<PackageRecordItem> outWarehouseShippingList = packageRecordItemDao.findPackageRecordItem(outWarehouseShipping, null, null);
 		List<TrackingNo> trackingNos = trackingNoDao.findTrackingNo(coeTrackingNo, TrackingNo.TYPE_COE);
 		// 暂不处理,单号可能重复问题
 		if (trackingNos == null || trackingNos.size() <= 0) {
