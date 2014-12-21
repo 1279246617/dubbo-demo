@@ -120,14 +120,14 @@
 	  	  		if(msg.status == 1){
 	  	  			var coeTrackingNoId = msg.coeTrackingNo.id;
 	  	  			$("#coeTrackingNoId").val(coeTrackingNoId);
-		  	  		$.each(msg.outWarehouseShippingList,function(i,e){
+		  	  		$.each(msg.packageRecordItemList,function(i,e){
 			  			//添加从数据库查出来的运单
 						var tr = "<tr style='height:25px;' id="+e.id+">";
-				  		tr += "<td style='text-align: center'>"+e.outWarehouseOrderTrackingNo+"</td>";
+				  		tr += "<td style='text-align: center'>"+e.bigPackageTrackingNo+"</td>";
 				  		tr += "</tr>";
 			  			$("#trackingNos").append(tr);
 			  			$("#total").html( parseInt($("#total").html()) + 1);
-			  			orderIds +=e.outWarehouseOrderId+"||";
+			  			orderIds +=e.bigPackageId+"||";
 	    			});
 	  	  			// 光标移至跟踪号
 	  	  			$("#trackingNo").focus();
@@ -171,7 +171,7 @@
 		  
   	 	 //isBatch是否批量提交, 如果批量提交不显示每个详细的提示
   	 	function submitSingleTrackingNo(trackingNo,coeTrackingNoId,coeTrackingNo,addOrSub,isBatch){
-	  	  	$.post(baseUrl+ '/warehouse/transport/checkOutWarehouseShipping.do?trackingNo='+ trackingNo+'&coeTrackingNoId='+coeTrackingNoId+'&coeTrackingNo='+coeTrackingNo+'&addOrSub='+addOrSub+"&orderIds="+orderIds, function(msg) {
+	  	  	$.post(baseUrl+ '/warehouse/transport/checkOutWarehousePackage.do?trackingNo='+ trackingNo+'&coeTrackingNoId='+coeTrackingNoId+'&coeTrackingNo='+coeTrackingNo+'&addOrSub='+addOrSub+"&orderIds="+orderIds, function(msg) {
 	  	  		if(msg.status == 0 && isBatch=='N'){
 	  	  			parent.$.showShortMessage({msg:msg.message,animate:false,left:"42%"});
 	  	  			return false;

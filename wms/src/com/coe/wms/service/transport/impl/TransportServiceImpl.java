@@ -38,7 +38,10 @@ import com.coe.wms.model.unit.Weight.WeightCode;
 import com.coe.wms.model.user.User;
 import com.coe.wms.model.warehouse.TrackingNo;
 import com.coe.wms.model.warehouse.Warehouse;
+import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrder;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderReceiver;
+import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus.OutWarehouseOrderStatusCode;
+import com.coe.wms.model.warehouse.storage.record.OutWarehouseRecordItem;
 import com.coe.wms.model.warehouse.transport.BigPackage;
 import com.coe.wms.model.warehouse.transport.BigPackageAdditionalSf;
 import com.coe.wms.model.warehouse.transport.BigPackageReceiver;
@@ -747,7 +750,18 @@ public class TransportServiceImpl implements ITransportService {
 			return map;
 		}
 		// 更新为已收货前,查找空闲的转运业务专用货位
-		String seatCode = littlePackageOnShelfDao.findSeatCodeForOnShelf(littlePackage.getTransportType());
+		// 查找其他小包是否已经上架
+		LittlePackageOnShelf onShelfParam = new LittlePackageOnShelf();
+		onShelfParam.setBigPackageId(littlePackage.getBigPackageId());
+		List<LittlePackageOnShelf> littlePackageOnShelfList = littlePackageOnShelfDao.findLittlePackageOnShelf(onShelfParam, null, null);
+		String seatCode = null;
+		if (littlePackageOnShelfList != null && littlePackageOnShelfList.size() > 0) {
+			LittlePackageOnShelf littlePackageOnShelf = littlePackageOnShelfList.get(0);
+			seatCode = littlePackageOnShelf.getSeatCode();
+		}
+		if (StringUtil.isNull(seatCode)) {
+			seatCode = littlePackageOnShelfDao.findSeatCodeForOnShelf(littlePackage.getTransportType());
+		}
 		if (StringUtil.isNull(seatCode)) {
 			// 货位不足,收货失败
 			map.put(Constant.MESSAGE, "转运货位不足,请添加货位再收货");
@@ -967,9 +981,9 @@ public class TransportServiceImpl implements ITransportService {
 	public Map<String, Object> outWarehouseShippingEnterCoeTrackingNo(String coeTrackingNo) throws ServiceException {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put(Constant.STATUS, Constant.FAIL);
-		PackageRecordItem outWarehouseShipping = new PackageRecordItem();
-		outWarehouseShipping.setCoeTrackingNo(coeTrackingNo);
-		List<PackageRecordItem> outWarehouseShippingList = packageRecordItemDao.findPackageRecordItem(outWarehouseShipping, null, null);
+		PackageRecordItem packageRecordItem = new PackageRecordItem();
+		packageRecordItem.setCoeTrackingNo(coeTrackingNo);
+		List<PackageRecordItem> packageRecordItemList = packageRecordItemDao.findPackageRecordItem(packageRecordItem, null, null);
 		List<TrackingNo> trackingNos = trackingNoDao.findTrackingNo(coeTrackingNo, TrackingNo.TYPE_COE);
 		// 暂不处理,单号可能重复问题
 		if (trackingNos == null || trackingNos.size() <= 0) {
@@ -983,7 +997,95 @@ public class TransportServiceImpl implements ITransportService {
 		}
 		map.put("coeTrackingNo", trackingNo);
 		map.put(Constant.STATUS, Constant.SUCCESS);
-		map.put("outWarehouseShippingList", outWarehouseShippingList);
+		map.put("packageRecordItemList", packageRecordItemList);
+		return map;
+	}
+
+	/**
+	 * 出货检查每个跟踪号是否有效,并保存到出货单PackageRecordItem表;
+	 * 
+	 */
+	@Override
+	public Map<String, String> checkOutWarehousePackage(String trackingNo, Long userIdOfOperator, Long coeTrackingNoId, String coeTrackingNo, String addOrSub, String orderIds) throws ServiceException {
+		Map<String, String> map = new HashMap<String, String>();
+		map.put(Constant.STATUS, Constant.FAIL);
+		if (StringUtil.isNull(trackingNo)) {
+			map.put(Constant.MESSAGE, "请输入出货跟踪单号");
+			return map;
+		}
+		BigPackage param = new BigPackage();
+		param.setTrackingNo(trackingNo);
+		List<BigPackage> bigPackageList = bigPackageDao.findBigPackage(param, null, null);
+		if (bigPackageList == null || bigPackageList.size() == 0) {
+			map.put(Constant.MESSAGE, "查询不到转运订单,请重新输入转运订单出货跟踪单号");
+			return map;
+		}
+		if (bigPackageList.size() > 1) {
+			map.put(Constant.MESSAGE, "查询不到唯一的转运订单,暂无法处理");
+			// 找到多个出库订单的情况,待处理
+			// map.put(Constant.MESSAGE, "查询到多个出库订单,请输入客户订单号");
+			return map;
+		}
+		BigPackage bigPackage = bigPackageList.get(0);
+		// 只有顺丰确认出库,顺丰已确认的订单 可以出库
+		if (StringUtil.isEqual(bigPackage.getStatus(), BigPackageStatusCode.WWO)) {
+			Long bigPackageId = bigPackage.getId();
+			map.put("orderId", bigPackageId + "");
+			if (StringUtil.isEqual(addOrSub, "1")) {
+				// 检查出库订单 是否已经和COE交接单号绑定
+				PackageRecordItem checkTrackingNoParam = new PackageRecordItem();
+				checkTrackingNoParam.setBigPackageId(bigPackageId);
+				Long countTrackingNoResult = packageRecordItemDao.countPackageRecordItem(checkTrackingNoParam, null);
+				if (countTrackingNoResult > 0) {
+					// 说明该出库订单已经和其他COE交接单号绑定了,不能再绑定此单号
+					map.put(Constant.MESSAGE, "该转运订单已经绑定的了其他COE交接单号");
+					return map;
+				}
+				// 保存到OutWarehouseShipping,但不改变出库订单的状态.
+				// 只有当操作员点击完成出货总单才改变一个COE单号下面对应的所有出库订单的状态
+				PackageRecordItem packageRecordItem = new PackageRecordItem();
+				packageRecordItem.setCoeTrackingNo(coeTrackingNo);
+				packageRecordItem.setCoeTrackingNoId(coeTrackingNoId);
+				packageRecordItem.setCreatedTime(System.currentTimeMillis());
+				packageRecordItem.setBigPackageTrackingNo(trackingNo);
+				packageRecordItem.setBigPackageId(bigPackage.getId());
+				packageRecordItem.setUserIdOfCustomer(bigPackage.getUserIdOfCustomer());
+				packageRecordItem.setUserIdOfOperator(userIdOfOperator);
+				packageRecordItem.setWarehouseId(bigPackage.getWarehouseId());
+				long outShippingId = packageRecordItemDao.savePackageRecordItem(packageRecordItem);
+				map.put("outWarehouseShippingId", outShippingId + "");
+				map.put(Constant.STATUS, Constant.SUCCESS);
+			} else {
+				// 1 = 添加出货运单号 ,2 是减去
+				// 根据出货运单号+coe单号查找出货记录
+				PackageRecordItem packageRecordItem = new PackageRecordItem();
+				packageRecordItem.setCoeTrackingNoId(coeTrackingNoId);
+				packageRecordItem.setCoeTrackingNo(coeTrackingNo);
+				packageRecordItem.setBigPackageTrackingNo(trackingNo);
+				List<PackageRecordItem> packageRecordItemList = packageRecordItemDao.findPackageRecordItem(packageRecordItem, null, null);
+				String deleteShippingIds = "";
+				int sub = 0;
+				for (PackageRecordItem item : packageRecordItemList) {
+					packageRecordItemDao.deletePackageRecordItemById(item.getId());
+					// 加#是为了 jquery可以直接$("#id1,#id2,#id3,#id4")
+					deleteShippingIds += ("#" + item.getId() + ",");
+					orderIds = orderIds.replaceAll(item.getBigPackageId() + "\\|\\|", "");
+					sub++;
+				}
+				map.put("sub", sub + "");
+				map.put("deleteShippingIds", deleteShippingIds);
+				map.put("orderIds", orderIds);
+				map.put(Constant.STATUS, "2");
+			}
+		} else if (StringUtil.isEqual(bigPackage.getStatus(), OutWarehouseOrderStatusCode.SUCCESS)) {
+			map.put(Constant.MESSAGE, "转运订单当前状态已经是出库成功");
+		} else if (StringUtil.isEqual(bigPackage.getStatus(), OutWarehouseOrderStatusCode.WCC)) {
+			map.put(Constant.MESSAGE, "转运订单当前状态是等待客户确认出库,不能出库");
+		} else if (StringUtil.isEqual(bigPackage.getStatus(), OutWarehouseOrderStatusCode.WSW)) {
+			map.put(Constant.MESSAGE, "转运订单当前状态是等待发送出库重量给客户,不能出库");
+		} else {
+			map.put(Constant.MESSAGE, "转运订单当前状态不能扫描建包出库");
+		}
 		return map;
 	}
 }

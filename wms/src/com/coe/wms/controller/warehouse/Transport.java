@@ -28,6 +28,7 @@ import com.coe.wms.model.warehouse.transport.LittlePackage;
 import com.coe.wms.model.warehouse.transport.LittlePackageItem;
 import com.coe.wms.model.warehouse.transport.LittlePackageOnShelf;
 import com.coe.wms.model.warehouse.transport.LittlePackageStatus;
+import com.coe.wms.model.warehouse.transport.PackageRecordItem;
 import com.coe.wms.service.storage.IStorageService;
 import com.coe.wms.service.transport.ITransportService;
 import com.coe.wms.service.user.IUserService;
@@ -581,11 +582,28 @@ public class Transport {
 		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
 		Map<String, Object> map = new HashMap<String, Object>();
 		Map<String, Object> objectMap = transportService.outWarehouseShippingEnterCoeTrackingNo(coeTrackingNo);
-		List<OutWarehouseRecordItem> outWarehouseShippingList = (List<OutWarehouseRecordItem>) objectMap.get("outWarehouseShippingList");
-		map.put("outWarehouseShippingList", outWarehouseShippingList);
+		List<PackageRecordItem> packageRecordItemList = (List<PackageRecordItem>) objectMap.get("packageRecordItemList");
+		map.put("outWarehouseShippingList", packageRecordItemList);
 		map.put(Constant.STATUS, objectMap.get(Constant.STATUS));
 		map.put(Constant.MESSAGE, objectMap.get(Constant.MESSAGE));
 		map.put("coeTrackingNo", objectMap.get("coeTrackingNo"));
 		return GsonUtil.toJson(map);
+	}
+
+	/**
+	 * 建包扫运单动作, 检查每个运单
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/checkOutWarehousePackage")
+	public String checkOutWarehousePackage(HttpServletRequest request, HttpServletResponse response, String trackingNo, Long coeTrackingNoId, String coeTrackingNo, String addOrSub, String orderIds) throws IOException {
+		HttpSession session = request.getSession();
+		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
+		Map<String, String> checkResultMap = transportService.checkOutWarehousePackage(trackingNo, userId, coeTrackingNoId, coeTrackingNo, addOrSub, orderIds);
+		return GsonUtil.toJson(checkResultMap);
 	}
 }

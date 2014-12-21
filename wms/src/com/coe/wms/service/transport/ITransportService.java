@@ -103,5 +103,7 @@ public interface ITransportService {
 	public Map<String, String> bigPackageWeightSubmitCustomerReferenceNo(String customerReferenceNo, Long userIdOfOperator);
 
 	public Map<String, Object> outWarehouseShippingEnterCoeTrackingNo(String coeTrackingNo);
+	
+	public Map<String, String> checkOutWarehousePackage(String trackingNo, Long userIdOfOperator, Long coeTrackingNoId, String coeTrackingNo, String addOrSub, String orderIds) throws ServiceException;
 
 }
