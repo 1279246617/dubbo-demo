@@ -27,20 +27,10 @@ public class PackageRecordItem implements Serializable {
 	 */
 	private Long warehouseId;
 
-	private Long packageRecordId;
-
 	/**
 	 * 出货时绑定的coe跟踪号码
 	 */
 	private String coeTrackingNo;
-
-	public Long getPackageRecordId() {
-		return packageRecordId;
-	}
-
-	public void setPackageRecordId(Long packageRecordId) {
-		this.packageRecordId = packageRecordId;
-	}
 
 	/**
 	 * 跟踪号码的id

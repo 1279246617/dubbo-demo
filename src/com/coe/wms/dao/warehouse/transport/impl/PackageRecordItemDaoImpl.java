@@ -42,24 +42,24 @@ public class PackageRecordItemDaoImpl implements IPackageRecordItemDao {
 
 	@Override
 	@DataSource(DataSourceCode.WMS)
-	public long savePackageRecordItem(final PackageRecordItem shipping) {
-		final String sql = "insert into w_t_out_warehouse_package_record (warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,big_package_tracking_no,big_package_id) values (?,?,?,?,?,?,?,?)";
+	public long savePackageRecordItem(final PackageRecordItem item) {
+		final String sql = "insert into w_t_little_package_item (warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,big_package_tracking_no,big_package_id) values (?,?,?,?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
 				PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-				ps.setLong(1, shipping.getWarehouseId());
-				ps.setLong(2, shipping.getUserIdOfCustomer());
-				if (shipping.getUserIdOfOperator() == null) {
+				ps.setLong(1, item.getWarehouseId());
+				ps.setLong(2, item.getUserIdOfCustomer());
+				if (item.getUserIdOfOperator() == null) {
 					ps.setNull(3, Types.BIGINT);
 				} else {
-					ps.setDouble(3, shipping.getUserIdOfOperator());
+					ps.setDouble(3, item.getUserIdOfOperator());
 				}
-				ps.setString(4, shipping.getCoeTrackingNo());
-				ps.setLong(5, shipping.getCoeTrackingNoId());
-				ps.setLong(6, shipping.getCreatedTime());
-				ps.setString(7, shipping.getBigPackageTrackingNo());
-				ps.setLong(8, shipping.getBigPackageId());
+				ps.setString(4, item.getCoeTrackingNo());
+				ps.setLong(5, item.getCoeTrackingNoId());
+				ps.setLong(6, item.getCreatedTime());
+				ps.setString(7, item.getBigPackageTrackingNo());
+				ps.setLong(8, item.getBigPackageId());
 				return ps;
 			}
 		}, keyHolder);
@@ -68,10 +68,10 @@ public class PackageRecordItemDaoImpl implements IPackageRecordItemDao {
 	}
 
 	@Override
-	public PackageRecordItem getPackageRecordItemById(Long outWarehouseShippingId) {
-		String sql = "select id,warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,big_package_tracking_no,big_package_id from w_t_out_warehouse_package_record where id =" + outWarehouseShippingId;
-		PackageRecordItem shipping = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<PackageRecordItem>(PackageRecordItem.class));
-		return shipping;
+	public PackageRecordItem getPackageRecordItemById(Long packageRecordItemId) {
+		String sql = "select id,warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,big_package_tracking_no,big_package_id from w_t_little_package_item where id =" + packageRecordItemId;
+		PackageRecordItem item = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<PackageRecordItem>(PackageRecordItem.class));
+		return item;
 	}
 
 	/**
@@ -80,36 +80,36 @@ public class PackageRecordItemDaoImpl implements IPackageRecordItemDao {
 	 * 参数一律使用实体类加Map .
 	 */
 	@Override
-	public List<PackageRecordItem> findPackageRecordItem(PackageRecordItem outWarehouseShipping, Map<String, String> moreParam, Pagination page) {
+	public List<PackageRecordItem> findPackageRecordItem(PackageRecordItem packageRecordItem, Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select id,warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,big_package_tracking_no,big_package_id from w_t_out_warehouse_package_record where 1=1 ");
-		if (outWarehouseShipping != null) {
-			if (outWarehouseShipping.getId() != null) {
-				sb.append(" and id = " + outWarehouseShipping.getId());
+		sb.append("select id,warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,big_package_tracking_no,big_package_id from w_t_little_package_item where 1=1 ");
+		if (packageRecordItem != null) {
+			if (packageRecordItem.getId() != null) {
+				sb.append(" and id = " + packageRecordItem.getId());
 			}
-			if (outWarehouseShipping.getWarehouseId() != null) {
-				sb.append(" and warehouse_id = " + outWarehouseShipping.getWarehouseId());
+			if (packageRecordItem.getWarehouseId() != null) {
+				sb.append(" and warehouse_id = " + packageRecordItem.getWarehouseId());
 			}
-			if (outWarehouseShipping.getBigPackageId() != null) {
-				sb.append(" and big_package_id = " + outWarehouseShipping.getBigPackageId());
+			if (packageRecordItem.getBigPackageId() != null) {
+				sb.append(" and big_package_id = " + packageRecordItem.getBigPackageId());
 			}
-			if (outWarehouseShipping.getUserIdOfCustomer() != null) {
-				sb.append(" and user_id_of_customer = " + outWarehouseShipping.getUserIdOfCustomer());
+			if (packageRecordItem.getUserIdOfCustomer() != null) {
+				sb.append(" and user_id_of_customer = " + packageRecordItem.getUserIdOfCustomer());
 			}
-			if (outWarehouseShipping.getUserIdOfOperator() != null) {
-				sb.append(" and user_id_of_operator = " + outWarehouseShipping.getUserIdOfOperator());
+			if (packageRecordItem.getUserIdOfOperator() != null) {
+				sb.append(" and user_id_of_operator = " + packageRecordItem.getUserIdOfOperator());
 			}
-			if (StringUtil.isNotNull(outWarehouseShipping.getCoeTrackingNo())) {
-				sb.append(" and coe_tracking_no = '" + outWarehouseShipping.getCoeTrackingNo() + "' ");
+			if (StringUtil.isNotNull(packageRecordItem.getCoeTrackingNo())) {
+				sb.append(" and coe_tracking_no = '" + packageRecordItem.getCoeTrackingNo() + "' ");
 			}
-			if (outWarehouseShipping.getCoeTrackingNoId() != null) {
-				sb.append(" and coe_tracking_no_id = " + outWarehouseShipping.getCoeTrackingNoId());
+			if (packageRecordItem.getCoeTrackingNoId() != null) {
+				sb.append(" and coe_tracking_no_id = " + packageRecordItem.getCoeTrackingNoId());
 			}
-			if (outWarehouseShipping.getCreatedTime() != null) {
-				sb.append(" and created_time = " + outWarehouseShipping.getCreatedTime());
+			if (packageRecordItem.getCreatedTime() != null) {
+				sb.append(" and created_time = " + packageRecordItem.getCreatedTime());
 			}
-			if (StringUtil.isNotNull(outWarehouseShipping.getBigPackageTrackingNo())) {
-				sb.append(" and big_package_tracking_no = '" + outWarehouseShipping.getBigPackageTrackingNo() + "' ");
+			if (StringUtil.isNotNull(packageRecordItem.getBigPackageTrackingNo())) {
+				sb.append(" and big_package_tracking_no = '" + packageRecordItem.getBigPackageTrackingNo() + "' ");
 			}
 		}
 		if (moreParam != null) {
@@ -131,41 +131,41 @@ public class PackageRecordItemDaoImpl implements IPackageRecordItemDao {
 			sb.append(page.generatePageSql());
 		}
 		String sql = sb.toString();
-		List<PackageRecordItem> outWarehouseShippingList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(PackageRecordItem.class));
-		return outWarehouseShippingList;
+		List<PackageRecordItem> packageRecordItemList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(PackageRecordItem.class));
+		return packageRecordItemList;
 	}
 
 	@Override
-	public Long countPackageRecordItem(PackageRecordItem outWarehouseShipping, Map<String, String> moreParam) {
+	public Long countPackageRecordItem(PackageRecordItem packageRecordItem, Map<String, String> moreParam) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select count(id) from w_t_out_warehouse_package_record where 1=1 ");
-		if (outWarehouseShipping != null) {
-			if (outWarehouseShipping.getId() != null) {
-				sb.append(" and id = " + outWarehouseShipping.getId());
+		sb.append("select count(id) from w_t_little_package_item where 1=1 ");
+		if (packageRecordItem != null) {
+			if (packageRecordItem.getId() != null) {
+				sb.append(" and id = " + packageRecordItem.getId());
 			}
-			if (outWarehouseShipping.getWarehouseId() != null) {
-				sb.append(" and warehouse_id = " + outWarehouseShipping.getWarehouseId());
+			if (packageRecordItem.getWarehouseId() != null) {
+				sb.append(" and warehouse_id = " + packageRecordItem.getWarehouseId());
 			}
-			if (outWarehouseShipping.getBigPackageId() != null) {
-				sb.append(" and big_package_id = " + outWarehouseShipping.getBigPackageId());
+			if (packageRecordItem.getBigPackageId() != null) {
+				sb.append(" and big_package_id = " + packageRecordItem.getBigPackageId());
 			}
-			if (outWarehouseShipping.getUserIdOfCustomer() != null) {
-				sb.append(" and user_id_of_customer = " + outWarehouseShipping.getUserIdOfCustomer());
+			if (packageRecordItem.getUserIdOfCustomer() != null) {
+				sb.append(" and user_id_of_customer = " + packageRecordItem.getUserIdOfCustomer());
 			}
-			if (outWarehouseShipping.getUserIdOfOperator() != null) {
-				sb.append(" and user_id_of_operator = " + outWarehouseShipping.getUserIdOfOperator());
+			if (packageRecordItem.getUserIdOfOperator() != null) {
+				sb.append(" and user_id_of_operator = " + packageRecordItem.getUserIdOfOperator());
 			}
-			if (StringUtil.isNotNull(outWarehouseShipping.getCoeTrackingNo())) {
-				sb.append(" and coe_tracking_no = '" + outWarehouseShipping.getCoeTrackingNo() + "' ");
+			if (StringUtil.isNotNull(packageRecordItem.getCoeTrackingNo())) {
+				sb.append(" and coe_tracking_no = '" + packageRecordItem.getCoeTrackingNo() + "' ");
 			}
-			if (outWarehouseShipping.getCoeTrackingNoId() != null) {
-				sb.append(" and coe_tracking_no_id = " + outWarehouseShipping.getCoeTrackingNoId());
+			if (packageRecordItem.getCoeTrackingNoId() != null) {
+				sb.append(" and coe_tracking_no_id = " + packageRecordItem.getCoeTrackingNoId());
 			}
-			if (outWarehouseShipping.getCreatedTime() != null) {
-				sb.append(" and created_time = " + outWarehouseShipping.getCreatedTime());
+			if (packageRecordItem.getCreatedTime() != null) {
+				sb.append(" and created_time = " + packageRecordItem.getCreatedTime());
 			}
-			if (StringUtil.isNotNull(outWarehouseShipping.getBigPackageTrackingNo())) {
-				sb.append(" and big_package_tracking_no = '" + outWarehouseShipping.getBigPackageTrackingNo() + "' ");
+			if (StringUtil.isNotNull(packageRecordItem.getBigPackageTrackingNo())) {
+				sb.append(" and big_package_tracking_no = '" + packageRecordItem.getBigPackageTrackingNo() + "' ");
 			}
 		}
 		if (moreParam != null) {
@@ -188,7 +188,7 @@ public class PackageRecordItemDaoImpl implements IPackageRecordItemDao {
 
 	@Override
 	public int deletePackageRecordItemById(Long id) {
-		String sql = "delete from w_t_out_warehouse_package_record where id =" + id;
+		String sql = "delete from w_t_little_package_item where id =" + id;
 		return jdbcTemplate.update(sql);
 	}
 
@@ -199,7 +199,7 @@ public class PackageRecordItemDaoImpl implements IPackageRecordItemDao {
 	@Override
 	public List<Long> getBigPackageIdsByRecordTime(String startTime, String endTime, Long userIdOfCustomer, Long warehouseId) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select big_package_id  from w_t_out_warehouse_package_record i inner join w_s_out_warehouse_record r on i.coe_tracking_no_id=r.coe_tracking_no_id where 1=1 ");
+		sb.append("select big_package_id  from w_t_little_package_item i inner join w_t_little_package r on i.coe_tracking_no_id=r.coe_tracking_no_id where 1=1 ");
 		sb.append(" and r.user_id_of_customer = " + userIdOfCustomer);
 		sb.append(" and r.warehouse_id = " + warehouseId);
 		if (startTime != null) {
@@ -214,8 +214,8 @@ public class PackageRecordItemDaoImpl implements IPackageRecordItemDao {
 				sb.append(" and r.created_time <= " + date.getTime());
 			}
 		}
-		List<Long> outWarehouseShippingList = jdbcTemplate.queryForList(sb.toString(), Long.class);
-		return outWarehouseShippingList;
+		List<Long> packageRecordItemList = jdbcTemplate.queryForList(sb.toString(), Long.class);
+		return packageRecordItemList;
 	}
 
 }
