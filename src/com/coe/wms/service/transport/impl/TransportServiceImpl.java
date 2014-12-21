@@ -149,7 +149,7 @@ public class TransportServiceImpl implements ITransportService {
 	@Resource(name = "packageRecordDao")
 	private IPackageRecordDao packageRecordDao;
 
-	@Resource(name = "IPackageRecordItemDao")
+	@Resource(name = "packageRecordItemDao")
 	private IPackageRecordItemDao packageRecordItemDao;
 
 	@Override
