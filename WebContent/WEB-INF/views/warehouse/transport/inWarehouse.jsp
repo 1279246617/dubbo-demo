@@ -49,7 +49,7 @@
 					</td>
 					<td>
 						<span class="pull-left" style="width:70px;" ><b>操作提示:</b></span>
-						<span class="pull-left" style="width:300px;color:red;" id="tips">请输入跟踪单号并按回车!</span>
+						<span class="pull-left" style="width:260px;color:red;" id="tips">请输入跟踪单号并按回车!</span>
 					</td>
 			</tr>
 	</table>
@@ -92,9 +92,9 @@
 							<a class="btn  btn-primary"  onclick="saveweight();"  style="cursor:pointer;"><i class="icon-ok icon-white"></i>保存重量</a>
 					</span>
 				</td>
-				<td rowspan="2">
+				<td rowspan="3">
 						<span style="width:90px;height:50px;margin-top: 4mm;font-size: mm;" class="pull-left" >分配货位</span>
-						<input type="text"  name="seatCode"  t="3"  id="seatCode"  style="width:180px;height:65px; font-size: 10mm;font-weight: bold;color:red;" class="pull-left" readonly="readonly"/>
+						<input type="text"  name="seatCode"  t="3"  id="seatCode"  style="width:180px;height:50px; font-size: 10mm;font-weight: bold;color:red;" class="pull-left" readonly="readonly"/>
 				</td>
 			</tr>
 			<tr  >
@@ -106,9 +106,13 @@
 					跟踪单号&nbsp;&nbsp;
 					<input type="text"  name="outWarehouseTrackingNo"  id="outWarehouseTrackingNo"  t="4"  style="width:150px;" readonly="readonly"/>
 				</td>
-				<td colspan="1" >
+				<td colspan="2" >
 					<a class="btn  btn-primary"  onclick="printShipLabel();" style="cursor:pointer;">
 						<i class="icon-ok icon-white"></i>打印出货运单
+					</a>
+					&nbsp;&nbsp;&nbsp;
+					<a class="btn  btn-primary"  onclick="printOrder();" style="cursor:pointer;">
+						<i class="icon-ok icon-white"></i>打印捡货清单
 					</a>
 				</td>
 			</tr>

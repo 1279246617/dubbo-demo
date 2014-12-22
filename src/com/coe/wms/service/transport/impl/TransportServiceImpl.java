@@ -903,7 +903,11 @@ public class TransportServiceImpl implements ITransportService {
 			}
 		}
 		if (isReceived) {
-			bigPackageDao.updateBigPackageStatus(littlePackage.getBigPackageId(), BigPackageStatusCode.WWP);// 上架完成待打印捡货
+			// 判断大包当前状态是否是收货完成,待上架完成
+			String status = bigPackageDao.getBigPackageStatus(littlePackage.getBigPackageId());
+			if (StringUtil.isEqual(status, BigPackageStatusCode.WOS)) {
+				bigPackageDao.updateBigPackageStatus(littlePackage.getBigPackageId(), BigPackageStatusCode.WWP);// 上架完成待打印捡货
+			}
 		}
 		map.put(Constant.STATUS, Constant.SUCCESS);
 		return map;

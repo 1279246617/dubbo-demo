@@ -52,7 +52,7 @@
 							</td>
 							<td>
 								<span class="pull-left" style="width:70px;" ><b>操作提示:</b></span>
-								<span class="pull-left" style="width:300px;color:red;" id="tips">请输入跟踪单号并按回车!</span>
+								<span class="pull-left" style="width:260px;color:red;" id="tips">请输入跟踪单号并按回车!</span>
 							</td>
 					</tr>
 			</table>
