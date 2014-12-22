@@ -112,7 +112,7 @@
 			$("#coeTrackingNoId").val("");
 			$("#trackingNo").val("");
 			$("#trackingNos").html("");
-			$.post(baseUrl+ '/warehouse/transport/outWarehouseShippingEnterCoeTrackingNo.do?&coeTrackingNo='+coeTrackingNo, function(msg) {
+			$.post(baseUrl+ '/warehouse/transport/outWarehousePackageEnterCoeTrackingNo.do?&coeTrackingNo='+coeTrackingNo, function(msg) {
 	  	  		if(msg.status == 0){
 	  	  			parent.$.showDialogMessage(msg.message, null, null);
 	  	  			return false;
@@ -151,7 +151,7 @@
 	 		 }
   	 		 var trackingNo = $("#trackingNo").val();
   	 		 if(trackingNo == null || trackingNo==''){
-  	 			parent.$.showShortMessage({msg:"请输入出货跟踪单号再按回车!",animate:false,left:"43%"});
+  	 			parent.$.showShortMessage({msg:"请输入转运订单跟踪单号再按回车!",animate:false,left:"43%"});
   	 			return false;	 
   	 		 }
  	 		var addOrSub = 1; //1标识加,2表示减
@@ -178,7 +178,7 @@
 	  	  		}
 	  	  		if(msg.status == 1){
 	  	  			//添加一行运单
-					var tr = "<tr style='height:25px;' id="+msg.outWarehouseShippingId+">";
+					var tr = "<tr style='height:25px;' id="+msg.packageRecordItemId+">";
 			  		tr += "<td style='text-align: center'>"+trackingNo+"</td>";
 			  		tr += "</tr>";
 		  			$("#trackingNos").append(tr);
@@ -192,7 +192,7 @@
 	  	  		}
 	  	  		if(msg.status ==2){
 	  	  			//删除
-	  	  			$(msg.deleteShippingIds).html("");
+	  	  			$(msg.packageRecordItemIds).html("");
 	  	  			$("#total").html( parseInt($("#total").html()) - msg.sub);
 	  	  			//后台处理 需要删除的orderId
 	  	  			orderIds = msg.orderIds;
@@ -209,7 +209,7 @@
   	 		isSubmintIng ="Y";
   	 		$("#submitAll").attr("disabled","disabled");
   	 		 if(trackingNos == null || trackingNos ==''){
-  	 			parent.$.showShortMessage({msg:"请输入出货跟踪单号再按完成出货建包!",animate:false,left:"43%"});
+  	 			parent.$.showShortMessage({msg:"请输入转运订单跟踪单号再按完成出货建包!",animate:false,left:"43%"});
   	 			isSubmintIng = 'N';
   	 			$("#submitAll").removeAttr("disabled");
   	 			return false;

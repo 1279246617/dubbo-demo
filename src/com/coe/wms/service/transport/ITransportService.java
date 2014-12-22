@@ -102,8 +102,17 @@ public interface ITransportService {
 
 	public Map<String, String> bigPackageWeightSubmitCustomerReferenceNo(String customerReferenceNo, Long userIdOfOperator);
 
-	public Map<String, Object> outWarehouseShippingEnterCoeTrackingNo(String coeTrackingNo);
+	public Map<String, Object> outWarehousePackageEnterCoeTrackingNo(String coeTrackingNo);
 	
 	public Map<String, String> checkOutWarehousePackage(String trackingNo, Long userIdOfOperator, Long coeTrackingNoId, String coeTrackingNo, String addOrSub, String orderIds) throws ServiceException;
+	
+	/**
+	 * 出库建包
+	 * 
+	 * @param TrackingNo
+	 * @return
+	 * @throws ServiceException
+	 */
+	public Map<String, String> outWarehousePackageConfirm(String coeTrackingNo, Long coeTrackingNoId, String orderIds, Long userIdOfOperator) throws ServiceException;
 
 }

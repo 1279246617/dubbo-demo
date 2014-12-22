@@ -41,6 +41,7 @@ import com.coe.wms.model.warehouse.Warehouse;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrder;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderReceiver;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus.OutWarehouseOrderStatusCode;
+import com.coe.wms.model.warehouse.storage.record.OutWarehousePackage;
 import com.coe.wms.model.warehouse.storage.record.OutWarehouseRecordItem;
 import com.coe.wms.model.warehouse.transport.BigPackage;
 import com.coe.wms.model.warehouse.transport.BigPackageAdditionalSf;
@@ -53,6 +54,7 @@ import com.coe.wms.model.warehouse.transport.LittlePackageItem;
 import com.coe.wms.model.warehouse.transport.LittlePackageOnShelf;
 import com.coe.wms.model.warehouse.transport.LittlePackageStatus;
 import com.coe.wms.model.warehouse.transport.LittlePackageStatus.LittlePackageStatusCode;
+import com.coe.wms.model.warehouse.transport.PackageRecord;
 import com.coe.wms.model.warehouse.transport.PackageRecordItem;
 import com.coe.wms.pojo.api.warehouse.Buyer;
 import com.coe.wms.pojo.api.warehouse.ClearanceDetail;
@@ -978,7 +980,7 @@ public class TransportServiceImpl implements ITransportService {
 	}
 
 	@Override
-	public Map<String, Object> outWarehouseShippingEnterCoeTrackingNo(String coeTrackingNo) throws ServiceException {
+	public Map<String, Object> outWarehousePackageEnterCoeTrackingNo(String coeTrackingNo) throws ServiceException {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put(Constant.STATUS, Constant.FAIL);
 		PackageRecordItem packageRecordItem = new PackageRecordItem();
@@ -1052,8 +1054,8 @@ public class TransportServiceImpl implements ITransportService {
 				packageRecordItem.setUserIdOfCustomer(bigPackage.getUserIdOfCustomer());
 				packageRecordItem.setUserIdOfOperator(userIdOfOperator);
 				packageRecordItem.setWarehouseId(bigPackage.getWarehouseId());
-				long outShippingId = packageRecordItemDao.savePackageRecordItem(packageRecordItem);
-				map.put("outWarehouseShippingId", outShippingId + "");
+				long packageRecordItemId = packageRecordItemDao.savePackageRecordItem(packageRecordItem);
+				map.put("packageRecordItemId", packageRecordItemId + "");
 				map.put(Constant.STATUS, Constant.SUCCESS);
 			} else {
 				// 1 = 添加出货运单号 ,2 是减去
@@ -1063,17 +1065,17 @@ public class TransportServiceImpl implements ITransportService {
 				packageRecordItem.setCoeTrackingNo(coeTrackingNo);
 				packageRecordItem.setBigPackageTrackingNo(trackingNo);
 				List<PackageRecordItem> packageRecordItemList = packageRecordItemDao.findPackageRecordItem(packageRecordItem, null, null);
-				String deleteShippingIds = "";
+				String packageRecordItemIds = "";
 				int sub = 0;
 				for (PackageRecordItem item : packageRecordItemList) {
 					packageRecordItemDao.deletePackageRecordItemById(item.getId());
 					// 加#是为了 jquery可以直接$("#id1,#id2,#id3,#id4")
-					deleteShippingIds += ("#" + item.getId() + ",");
+					packageRecordItemIds += ("#" + item.getId() + ",");
 					orderIds = orderIds.replaceAll(item.getBigPackageId() + "\\|\\|", "");
 					sub++;
 				}
 				map.put("sub", sub + "");
-				map.put("deleteShippingIds", deleteShippingIds);
+				map.put("packageRecordItemIds", packageRecordItemIds);
 				map.put("orderIds", orderIds);
 				map.put(Constant.STATUS, "2");
 			}
@@ -1088,4 +1090,77 @@ public class TransportServiceImpl implements ITransportService {
 		}
 		return map;
 	}
+
+	@Override
+	public Map<String, String> outWarehousePackageConfirm(String coeTrackingNo, Long coeTrackingNoId, String orderIds, Long userIdOfOperator) throws ServiceException {
+		Map<String, String> map = new HashMap<String, String>();
+		map.put(Constant.STATUS, Constant.FAIL);
+		if (StringUtil.isNull(orderIds)) {
+			map.put(Constant.MESSAGE, "请输入转运订单跟踪单号再按完成出货建包!");
+			return map;
+		}
+		// 前端用||分割多个跟踪单号
+		String orderIdsArray[] = orderIds.split("\\|\\|");
+		if (orderIdsArray.length < 1) {
+			map.put(Constant.MESSAGE, "请输入转运订单跟踪单号再按完成出货建包!");
+			return map;
+		}
+		if (StringUtil.isNull(coeTrackingNo)) {
+			map.put(Constant.MESSAGE, "请输入COE交接单号,或刷新页面重试!");
+			return map;
+		}
+		TrackingNo trackingNo = trackingNoDao.getTrackingNoById(coeTrackingNoId);
+		if (trackingNo == null) {
+			map.put(Constant.MESSAGE, "该COE交接单号无效,请输入新单号");
+			return map;
+		}
+		if (StringUtil.isEqual(trackingNo.getStatus(), TrackingNo.STATUS_USED + "")) {
+			map.put(Constant.MESSAGE, "该COE交接单号已经使用,请输入新单号");
+			return map;
+		}
+		Long userIdOfCustomer = null;
+		Long warehouseId = null;
+		// 迭代,检查跟踪号
+		for (String orderId : orderIdsArray) {
+			if (StringUtil.isNotNull(orderId)) {
+				Long orderIdLong = Long.valueOf(orderId);
+				if (userIdOfCustomer == null) {
+					BigPackage bigPackage = bigPackageDao.getBigPackageById(orderIdLong);
+					userIdOfCustomer = bigPackage.getUserIdOfCustomer();
+					warehouseId = bigPackage.getWarehouseId();
+				}
+			}
+		}
+		if (userIdOfCustomer == null) {
+			map.put(Constant.MESSAGE, "请输入转运订单跟踪单号再按完成出货建包!");
+			return map;
+		}
+		PackageRecord packageRecord = new PackageRecord();
+		packageRecord.setCoeTrackingNo(coeTrackingNo);
+		packageRecord.setCoeTrackingNoId(coeTrackingNoId);
+		packageRecord.setCreatedTime(System.currentTimeMillis());
+		packageRecord.setUserIdOfCustomer(userIdOfCustomer);
+		packageRecord.setUserIdOfOperator(userIdOfOperator);
+		packageRecord.setWarehouseId(warehouseId);
+		packageRecordDao.savePackageRecord(packageRecord);
+		
+		// 标记coe单号已经使用
+		trackingNoDao.usedTrackingNo(coeTrackingNoId);
+		// 返回新COE单号,供下一批出库
+		TrackingNo nextTrackingNo = trackingNoDao.getAvailableTrackingNoByType(TrackingNo.TYPE_COE);
+		if (nextTrackingNo == null) {
+			map.put(Constant.MESSAGE, "本次转运订单建包已完成,但COE单号不足,不能继续操作建包!");
+			map.put(Constant.STATUS, "2");
+			map.put("coeTrackingNo", "");
+			map.put("coeTrackingNoId", "");
+			return map;
+		}
+		trackingNoDao.lockTrackingNo(nextTrackingNo.getId());
+		map.put("coeTrackingNo", nextTrackingNo.getTrackingNo());
+		map.put("coeTrackingNoId", nextTrackingNo.getId().toString());
+		map.put(Constant.STATUS, Constant.SUCCESS);
+		map.put(Constant.MESSAGE, "完成转运订单建包成功,请继续下一批!");
+		return map;
+	}
+
 }
