@@ -222,8 +222,8 @@
 	                    { display: '小包状态', name: 'status', align: 'center', type: 'int',width:'9%'},
 	                    { display: '订单状态', name: 'bigPackageStatus', align: 'center', type: 'int',width:'9%'},
 		                { display: '收货时间', name: 'receivedTime', align: 'center', type: 'float',width:'12%'},
-		                { display: '回传收货状态', name: 'callbackIsSuccess', align: 'center', type: 'float',width:'9%'},
-		                { display: '操作员', name: 'userNameOfOperator',width:'8%'},
+		                { display: '回传收货状态', name: 'callbackIsSuccess', align: 'center', type: 'float',width:'8%'},
+		                { display: '操作员', name: 'userNameOfOperator',width:'7%'},
 // 		                { display: '备注', name: 'remark', align: 'center', type: 'float',width:'9%'}
 	                ],  
 	                isScroll: true,

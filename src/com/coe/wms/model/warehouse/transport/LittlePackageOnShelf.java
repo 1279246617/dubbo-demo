@@ -1,6 +1,7 @@
 package com.coe.wms.model.warehouse.transport;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 转运订单小包上架
@@ -66,6 +67,8 @@ public class LittlePackageOnShelf implements Serializable {
 
 	private Long createdTime;
 
+	private List<LittlePackageItem> littlePackageItemList;
+
 	public Long getId() {
 		return id;
 	}
@@ -120,6 +123,14 @@ public class LittlePackageOnShelf implements Serializable {
 
 	public void setTrackingNo(String trackingNo) {
 		this.trackingNo = trackingNo;
+	}
+
+	public List<LittlePackageItem> getLittlePackageItemList() {
+		return littlePackageItemList;
+	}
+
+	public void setLittlePackageItemList(List<LittlePackageItem> littlePackageItemList) {
+		this.littlePackageItemList = littlePackageItemList;
 	}
 
 	public String getSeatCode() {

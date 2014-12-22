@@ -63,7 +63,7 @@
 					</div>					
 					<!-- 第六行  商品列表 不指定高度,不管有多少item 都必须显示-->
 					<div style="weight:100%;" >
-							<table style="width:204mm;height:auto;margin-left: 2mm;" rules="all" border="1">
+							<table style="width:204mm;height:auto;margin-left: 2mm;" rules="all" border="1" >
 							<tr>
 								<td colspan="7">
 										<span style="float: left;width:15mm;">收货人:</span>
@@ -82,21 +82,27 @@
 								<th style="text-align:left">数量</th>
 								<th style="text-align:left">金额</th>
 							</tr>
-							<c:forEach var="item"  items="${map.items}" varStatus="status">  
-								<tr style="height:7mm;">
-									<td style="width:15mm;">
-											${ status.index + 1}
-									</td>
-									<td style="width:40mm;font-size: 16px;"><b>${item.sku }</b></td>
-									<td style="width:60mm;">${item.skuName }</td>
-									<td style="width:24mm;">${item.specification }</td>
-									<td style="width:24mm;font-size: 18px;"><b>${item.seatCode}</b></td>
-									<td style="width:14mm;">${item.quantity }</td>
-									
-<%-- 									${item.skuPriceCurrency}  --%>
-									<td style="width:auto;">${item.quantity * item.skuUnitPrice /100}  元</td>
-									
-								</tr>
+							<%
+								int index = 0;
+							%>
+							<c:forEach var="littlePackage"  items="${map.littlePackageOnShelfList}" varStatus="status">
+									<c:forEach var="item"  items="${littlePackage.littlePackageItemList}" varStatus="status1">
+										<%index++; %>	
+										<tr style="height:7mm;">
+											<td style="width:15mm;">
+												<%= index%>
+											</td>
+											<td style="width:40mm;font-size: 16px;"><b>${item.sku }</b></td>
+											<td style="width:60mm;">${item.skuName }</td>
+											<td style="width:24mm;">${item.specification }</td>
+											<td style="width:24mm;font-size: 18px;"><b>${littlePackage.seatCode}</b></td>
+											<td style="width:14mm;">${item.quantity }</td>
+											<td style="width:auto;">${item.quantity * item.skuUnitPrice /100}  元</td>
+										</tr>
+									</c:forEach>
+									<tr style="height:1px;border: 0px;line-height: 2mm;">
+										<td colspan="7" style="border: 0px;height: 1px;background-color: gray;">&nbsp;</td>
+									</tr>
 							</c:forEach>
 						</table>
 					</div>
