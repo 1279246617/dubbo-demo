@@ -37,6 +37,7 @@ import com.coe.wms.model.warehouse.storage.record.ItemShelfInventory;
 import com.coe.wms.service.inventory.IItemInventoryService;
 import com.coe.wms.util.DateUtil;
 import com.coe.wms.util.Pagination;
+import com.coe.wms.util.StringUtil;
 
 /**
  * 仓配服务
@@ -107,6 +108,7 @@ public class ItemInventoryServiceImpl implements IItemInventoryService {
 
 	@Override
 	public Pagination getListInventoryData(ItemInventory param, Map<String, String> moreParam, Pagination pagination) {
+		pagination.sortNameFormat();// 排序字段从驼峰转下划线分割
 		List<ItemInventory> itemInventoryList = itemInventoryDao.findItemInventory(param, moreParam, pagination);
 		List<Object> list = new ArrayList<Object>();
 		for (ItemInventory itemInventory : itemInventoryList) {
@@ -148,6 +150,7 @@ public class ItemInventoryServiceImpl implements IItemInventoryService {
 
 	@Override
 	public Pagination getListItemShelfInventoryData(ItemShelfInventory param, Map<String, String> moreParam, Pagination pagination) {
+		pagination.sortNameFormat();// 排序字段从驼峰转下划线分割
 		List<ItemShelfInventory> itemInventoryList = itemShelfInventoryDao.findItemShelfInventory(param, moreParam, pagination);
 		List<Object> list = new ArrayList<Object>();
 		for (ItemShelfInventory itemInventory : itemInventoryList) {

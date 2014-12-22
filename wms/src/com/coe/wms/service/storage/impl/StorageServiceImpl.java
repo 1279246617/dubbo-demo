@@ -289,6 +289,7 @@ public class StorageServiceImpl implements IStorageService {
 		map.put(Constant.STATUS, Constant.SUCCESS);
 		// 查询入库主单信息,用于更新库存
 		InWarehouseRecord inWarehouseRecord = inWarehouseRecordDao.getInWarehouseRecordById(inWarehouseRecordId);
+		Long userIdOfCustomer = inWarehouseRecord.getUserIdOfCustomer();
 		// 检查该SKU是否已经存在,已经存在则直接改变数量(同一个入库主单,同一个SKU只允许一个收货明细)
 		InWarehouseRecordItem param = new InWarehouseRecordItem();
 		param.setInWarehouseRecordId(inWarehouseRecordId);
@@ -302,7 +303,7 @@ public class StorageServiceImpl implements IStorageService {
 			int updateCount = inWarehouseRecordItemDao.updateInWarehouseRecordItemReceivedQuantity(recordItemId, newQuantity);
 			// 更新入库明细成功,则添加库存
 			if (updateCount > 0) {
-				itemInventoryDao.addItemInventory(warehouseId, inWarehouseRecord.getUserIdOfCustomer(), inWarehouseRecord.getBatchNo(), itemSku, itemQuantity);
+				itemInventoryDao.addItemInventory(warehouseId, userIdOfCustomer, inWarehouseRecord.getBatchNo(), itemSku, itemQuantity);
 			}
 			return map;
 		}
@@ -316,11 +317,32 @@ public class StorageServiceImpl implements IStorageService {
 		inWarehouseRecordItem.setUserIdOfOperator(userIdOfOperator);
 		// 返回id
 		long id = inWarehouseRecordItemDao.saveInWarehouseRecordItem(inWarehouseRecordItem);
+		map.put("id", "" + id);
 		// 保存成功,添加库存
 		if (id > 0) {
-			itemInventoryDao.addItemInventory(warehouseId, inWarehouseRecord.getUserIdOfCustomer(), inWarehouseRecord.getBatchNo(), itemSku, itemQuantity);
+			itemInventoryDao.addItemInventory(warehouseId, userIdOfCustomer, inWarehouseRecord.getBatchNo(), itemSku, itemQuantity);
 		}
-		map.put("id", "" + id);
+		// 入库订单物品加入商品库 --------------开始
+		Product productParam = new Product();
+		productParam.setBarcode(itemSku);// 根据商品条码查询产品库, 同一个客户下的商品条码不能重复
+		productParam.setUserIdOfCustomer(userIdOfCustomer);
+		Long countProduct = productDao.countProduct(productParam, null);
+		if (countProduct > 0) {
+			return map;
+		}
+		// sku未存在,新增
+		Product product = new Product();
+		product.setCreatedTime(System.currentTimeMillis());
+		product.setCurrency(CurrencyCode.CNY);
+		product.setModel(orderItem.getSpecification());
+		product.setIsNeedBatchNo(Constant.N);
+		product.setProductName(orderItem.getSkuName());
+		product.setWarehouseSku(orderItem.getSkuNo());
+		product.setSku(orderItem.getSkuNo());
+		product.setBarcode(itemSku);
+		product.setUserIdOfCustomer(userIdOfCustomer);
+		productDao.addProduct(product);
+		// 入库订单物品加入商品库 --------------结束
 		return map;
 	}
 
@@ -934,39 +956,13 @@ public class StorageServiceImpl implements IStorageService {
 				outWarehouseOrderItem.setSkuNetWeight(sku.getSkuNetWeight());
 				outWarehouseOrderItem.setOutWarehouseOrderId(outWarehouseOrderId);
 				itemList.add(outWarehouseOrderItem);
-				// 入库订单物品加入商品库
-				Product productParam = new Product();
-				productParam.setSku(sku.getSkuCode());
-				productParam.setUserIdOfCustomer(userIdOfCustomer);
-				List<Product> productList = productDao.findProduct(productParam, null, null);
-				if (productList != null && productList.size() > 0) {
-					Product product = productList.get(0);// 更新产品
-					if (StringUtil.isNull(product.getSku())) {
-						product.setSku(sku.getSkuId());
-						productDao.updateProductSku(product);
-					}
-				} else {
-					// sku未存在,新增
-					Product product = new Product();
-					product.setCreatedTime(System.currentTimeMillis());
-					product.setCurrency(CurrencyCode.CNY);
-					product.setCustomsValue(NumberUtil.div(sku.getSkuUnitPrice(), 100d));// 出库订单物品单价单位是人民币分
-					product.setCustomsWeight(NumberUtil.div(sku.getSkuNetWeight(), 1000d));// 出库订单物品重量单位是G,商品库是KG
-					product.setModel(sku.getSpecification());
-					product.setIsNeedBatchNo(Constant.N);
-					product.setProductName(sku.getSkuName());
-					product.setWarehouseSku(sku.getSkuCode());
-					product.setSku(sku.getSkuId());
-					product.setBarcode(sku.getSkuCode());
-					product.setUserIdOfCustomer(userIdOfCustomer);
-					productDao.addProduct(product);
-				}
+
 			}
 			// 保存出库订单明细
 			long itemCount = outWarehouseOrderItemDao.saveBatchOutWarehouseOrderItemWithOrderId(itemList, outWarehouseOrderId);
 			logger.info("出库订单:第" + (i + 1) + "客户订单号customerReferenceNo(tradeOrderId):" + customerReferenceNo + " 保存出库订单明细条数:" + itemCount);
 			// 收件人
-
+			
 			OutWarehouseOrderReceiver outWarehouseOrderReceiver = new OutWarehouseOrderReceiver();
 			outWarehouseOrderReceiver.setAddressLine1(buyer.getStreetAddress());
 			outWarehouseOrderReceiver.setCity(buyer.getCity());
