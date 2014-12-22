@@ -1,6 +1,8 @@
 package com.coe.wms.util;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 分页类，所有需要分页的查询返回该类
@@ -93,5 +95,18 @@ public class Pagination {
 		int start = (curPage - 1) * pageSize;
 		sql += " limit " + start + "," + pageSize;
 		return sql;
+	}
+
+	/**
+	 * 排序字段格式化
+	 * 
+	 * @return
+	 */
+	public String sortNameFormat() {
+		if (StringUtil.isNotNull(this.sortName)) {
+			this.sortName = StringUtil.toInRowName(this.sortName);
+			return this.sortName;
+		}
+		return null;
 	}
 }

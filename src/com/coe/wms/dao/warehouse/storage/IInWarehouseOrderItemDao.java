@@ -22,4 +22,6 @@ public interface IInWarehouseOrderItemDao {
 
 	public String getSkuNameByCustomerIdAndSku(String sku, Long userIdOfCustomer);
 
+	public Map<String, Object> findInWarehouseOrderItem(Long itemId);
+	
 }

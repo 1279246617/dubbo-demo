@@ -1198,33 +1198,15 @@ public class TransportServiceImpl implements ITransportService {
 			map.put(Constant.MESSAGE, "该交接单号已经存在出库记录,请勿重复操作");
 			return map;
 		}
-
-		Long userIdOfCustomer = null;
-		Long warehouseId = null;
 		// 根据coe交接单号 获取建包记录,获取每个出库订单(小包)
-		OutWarehouseRecordItem itemParam = new OutWarehouseRecordItem();
+		PackageRecordItem itemParam = new PackageRecordItem();
 		itemParam.setCoeTrackingNoId(coeTrackingNoId);
-		List<OutWarehouseRecordItem> outWarehouseRecordItemList = outWarehouseRecordItemDao.findOutWarehouseRecordItem(itemParam, null, null);
+		List<PackageRecordItem> outWarehouseRecordItemList = packageRecordItemDao.findPackageRecordItem(itemParam, null, null);
 		// 迭代,检查跟踪号
-		for (OutWarehouseRecordItem recordItem : outWarehouseRecordItemList) {
-			// 改变状态 ,发送到哲盟
-			Long orderId = recordItem.getOutWarehouseOrderId();
-			// logger.info("出货,待发送到哲盟新系统的出库订单id: = " + orderId);
-
-			if (userIdOfCustomer == null) {
-				OutWarehouseOrder outWarehouseOrder = outWarehouseOrderDao.getOutWarehouseOrderById(orderId);
-				userIdOfCustomer = outWarehouseOrder.getUserIdOfCustomer();
-				warehouseId = outWarehouseOrder.getWarehouseId();
-			}
-			outWarehouseOrderDao.updateOutWarehouseOrderStatus(orderId, OutWarehouseOrderStatusCode.SUCCESS);
+		for (PackageRecordItem recordItem : outWarehouseRecordItemList) {
+			Long bigPackageId = recordItem.getBigPackageId();
+			bigPackageDao.updateBigPackageStatus(bigPackageId, BigPackageStatusCode.SUCCESS);
 		}
-		// 保存出库记录
-		packageRecord.setCoeTrackingNo(coeTrackingNo);
-		packageRecord.setCreatedTime(System.currentTimeMillis());
-		packageRecord.setUserIdOfCustomer(userIdOfCustomer);
-		packageRecord.setUserIdOfOperator(userIdOfOperator);
-		packageRecord.setWarehouseId(warehouseId);
-		packageRecordDao.saveOutWarehouseRecord(packageRecord);
 		map.put(Constant.STATUS, Constant.SUCCESS);
 		map.put(Constant.MESSAGE, "完成出货总单成功,请继续下一批!");
 		return map;

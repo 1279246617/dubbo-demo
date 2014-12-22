@@ -139,7 +139,7 @@
 	                isScroll: true,
 	                enabledEdit: false,
 	                clickToEdit: false,
-	                enabledSort:false
+	                enabledSort:true
 	            });
 	        };		
    	</script>
