@@ -458,10 +458,8 @@ public class Storage {
 		pagination.sortOrder = sortorder;
 		// 客户id
 		pagination = storageService.getInWarehouseRecordItemData(inWarehouseRecordId, pagination);
-		if (pagination != null) {
-			map.put("Rows", pagination.rows);
-			map.put("Total", pagination.total);
-		}
+		map.put("Rows", pagination.rows);
+		map.put("Total", pagination.total);
 		return GsonUtil.toJson(map);
 	}
 
