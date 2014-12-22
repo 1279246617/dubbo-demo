@@ -403,6 +403,9 @@ public class PrintServiceImpl implements IPrintService {
 				|| StringUtil.isEqual(bigPackage.getStatus(), BigPackageStatusCode.WRG) || StringUtil.isEqual(bigPackage.getStatus(), BigPackageStatusCode.WRP)) {
 			return null;
 		}
+		// 修改状态到等待称重打单
+		bigPackageDao.updateBigPackageStatus(bigPackageId, BigPackageStatusCode.WWW);
+
 		BigPackageReceiver receiver = bigPackageReceiverDao.getBigPackageReceiverByPackageId(bigPackageId);
 		map.put("customerReferenceNo", bigPackage.getCustomerReferenceNo());
 		BigPackageAdditionalSf bigPackageAdditionalSf = bigPackageAdditionalSfDao.getBigPackageAdditionalSfByPackageId(bigPackageId);
@@ -427,10 +430,20 @@ public class PrintServiceImpl implements IPrintService {
 		int totalQuantity = 0;
 		double totalPrice = 0d;
 		for (LittlePackageOnShelf littlePackageOnShelf : littlePackageOnShelfList) {
-			
+			LittlePackageItem littlePackageItem = new LittlePackageItem();
+			littlePackageItem.setLittlePackageId(littlePackageOnShelf.getLittlePackageId());
+			List<LittlePackageItem> littlePackageItemList = littlePackageItemDao.findLittlePackageItem(littlePackageItem, null, null);
+			for (LittlePackageItem item : littlePackageItemList) {
+				totalQuantity += item.getQuantity();
+				if (item.getSkuUnitPrice() != null) {
+					totalPrice += (item.getQuantity() * item.getSkuUnitPrice() / 100);
+				}
+			}
+			littlePackageOnShelf.setLittlePackageItemList(littlePackageItemList);
 		}
 		map.put("totalQuantity", totalQuantity);
 		map.put("totalPrice", totalPrice);
+		map.put("littlePackageOnShelfList", littlePackageOnShelfList);
 		return map;
 	}
 }
