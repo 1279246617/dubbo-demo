@@ -57,8 +57,8 @@ function saveInWarehouseRecordStep1(trackingNoStr,remark,warehouseId) {
 			tr+="</tr>";
 			$("#inWarehouseOrdertbody").append(tr);
 			//最高200px
-			if($("#inWarehouseOrderDiv").height()+25<=190){
-				$("#inWarehouseOrderDiv").css('height', $("#inWarehouseOrderDiv").height()+25);	
+			if($("#inWarehouseOrderDiv").height()+15<=190){
+				$("#inWarehouseOrderDiv").css('height', $("#inWarehouseOrderDiv").height()+15);	
 			}
 		});
 		if (msg.status == 2) {

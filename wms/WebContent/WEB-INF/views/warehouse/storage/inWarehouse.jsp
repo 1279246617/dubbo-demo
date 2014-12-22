@@ -20,7 +20,7 @@
 <body style="font-size: 16px;">
 	<div class="pull-left" style="width:100%;height:280px; margin-top: 1px;" >
 		 <form action="${baseUrl}/warehouse/storage/getInWarehouseRecordItemData.do" id="searchform" name="searchform" method="post">
-			<table class="table table-striped" style="width:100%;margin-bottom: 5px">
+			<table class="table table-striped" style="width:100%;margin-bottom: 1px">
 					<tr style="height:15px;">
 							<td style="width:290px;">
 									<span class="pull-left" style="width:75px;">跟踪单号</span>
@@ -56,10 +56,10 @@
 							</td>
 					</tr>
 			</table>
-			<div style="height:100px;width:100%;overflow:auto;" id="inWarehouseOrderDiv">
-					<table  class="table table-striped" style="width:100%;margin-bottom: 5px;display:none;" id="inWarehouseOrdertable" >
+			<div style="height:130px;width:100%;overflow:auto;" id="inWarehouseOrderDiv">
+					<table  class="table table-striped" style="width:100%;margin-bottom: 5px;" id="inWarehouseOrdertable" >
 						<tr>
-							<th style="width:25px;text-align:center;">选择</th>
+							<th style="width:30px;text-align:center;">选择</th>
 							<th style="width:155px;text-align:center;">客户帐号</th>
 							<th style="width:225px;text-align:center;">跟踪单号</th> 
 							<th style="width:205px;text-align:center;">承运商</th>
@@ -104,10 +104,6 @@
 	<table  class="table table-striped" style="margin-bottom: 0px">
 		<tr>
 			<td>
-				<div class="pull-left">
-<!--                    <a class="btn btn-small btn-primary" onclick=""><i class="icon-cog icon-white"></i>设置仓库</a> -->
-               </div>
-              
               <form action="#" id="searchform2" name="searchform2" method="post">
                   <div class="pull-right searchContent">
                           SKU&nbsp;<input type="text"  name="sku" title="可输入sku搜索">
@@ -216,12 +212,13 @@
 	                isScroll: true,
 	                dataAction: 'server',
 	                url: baseUrl+'/warehouse/storage/getInWarehouseRecordItemData.do',
-	                pageSize: 20, 
-	                usePager: 'true',
+	                pageSize: 200, 
+	                pageSizeOptions:[200],	          
+	                usePager: 'false',
 	                sortName: 'sku',
 	                width: '100%',
 	                height: '99%',
-	                title:"入库订单SKU预报和实际收货详情",
+	                title:"当前收货入库订单SKU预报和实际收货详情",
 	                checkbox: false,
 	                rownumbers:true,
 	                enabledEdit: true,
