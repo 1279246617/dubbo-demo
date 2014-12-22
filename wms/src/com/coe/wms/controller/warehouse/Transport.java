@@ -576,14 +576,14 @@ public class Transport {
 	 * @throws IOException
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/outWarehouseShippingEnterCoeTrackingNo")
-	public String outWarehouseShippingEnterCoeTrackingNo(HttpServletRequest request, HttpServletResponse response, String coeTrackingNo) throws IOException {
+	@RequestMapping(value = "/outWarehousePackageEnterCoeTrackingNo")
+	public String outWarehousePackageEnterCoeTrackingNo(HttpServletRequest request, HttpServletResponse response, String coeTrackingNo) throws IOException {
 		HttpSession session = request.getSession();
 		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
 		Map<String, Object> map = new HashMap<String, Object>();
-		Map<String, Object> objectMap = transportService.outWarehouseShippingEnterCoeTrackingNo(coeTrackingNo);
+		Map<String, Object> objectMap = transportService.outWarehousePackageEnterCoeTrackingNo(coeTrackingNo);
 		List<PackageRecordItem> packageRecordItemList = (List<PackageRecordItem>) objectMap.get("packageRecordItemList");
-		map.put("outWarehouseShippingList", packageRecordItemList);
+		map.put("packageRecordItemList", packageRecordItemList);
 		map.put(Constant.STATUS, objectMap.get(Constant.STATUS));
 		map.put(Constant.MESSAGE, objectMap.get(Constant.MESSAGE));
 		map.put("coeTrackingNo", objectMap.get("coeTrackingNo"));
@@ -605,5 +605,76 @@ public class Transport {
 		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
 		Map<String, String> checkResultMap = transportService.checkOutWarehousePackage(trackingNo, userId, coeTrackingNoId, coeTrackingNo, addOrSub, orderIds);
 		return GsonUtil.toJson(checkResultMap);
+	}
+
+	@RequestMapping(value = "/outWarehousePackageBatchTrackingNo", method = RequestMethod.GET)
+	public ModelAndView outWarehousePackageBatchTrackingNo(HttpServletRequest request, HttpServletResponse response, String trackingNo) throws IOException {
+		ModelAndView view = new ModelAndView();
+		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
+		if (trackingNo == null) {
+			trackingNo = "";
+		}
+		view.addObject("trackingNo", trackingNo);
+		view.setViewName("warehouse/transport/outWarehousePackageBatchTrackingNo");
+		return view;
+	}
+
+	/**
+	 * 提交出货建包
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/outWarehousePackageConfirm")
+	public String outWarehousePackageConfirm(HttpServletRequest request, HttpServletResponse response, String orderIds, String coeTrackingNo, Long coeTrackingNoId) throws IOException {
+		HttpSession session = request.getSession();
+		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
+		Map<String, String> checkResultMap = transportService.outWarehousePackageConfirm(coeTrackingNo, coeTrackingNoId, orderIds, userId);
+		return GsonUtil.toJson(checkResultMap);
+	}
+
+	/**
+	 * 出库扫描运单界面
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/outWarehouseShipping", method = RequestMethod.GET)
+	public ModelAndView outWarehouseShipping(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		HttpSession session = request.getSession();
+		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
+		ModelAndView view = new ModelAndView();
+		view.addObject("userId", userId);
+		User user = userService.getUserById(userId);
+		view.addObject("warehouseList", storageService.findAllWarehouse(user.getDefaultWarehouseId()));
+		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
+		view.setViewName("warehouse/transport/outWarehouseShipping");
+		return view;
+	}
+	
+	/**
+	 * 出库建包记录
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/listOutWarehousePackage", method = RequestMethod.GET)
+	public ModelAndView listOutWarehousePackage(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		HttpSession session = request.getSession();
+		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
+		ModelAndView view = new ModelAndView();
+		view.addObject("userId", userId);
+		User user = userService.getUserById(userId);
+		view.addObject("warehouseList", storageService.findAllWarehouse(user.getDefaultWarehouseId()));
+		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
+		view.setViewName("warehouse/transport/listOutWarehousePackage");
+		return view;
 	}
 }
