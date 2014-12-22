@@ -656,7 +656,7 @@ public class Transport {
 		view.setViewName("warehouse/transport/outWarehouseShipping");
 		return view;
 	}
-	
+
 	/**
 	 * 出库建包记录
 	 * 
@@ -677,4 +677,22 @@ public class Transport {
 		view.setViewName("warehouse/transport/listOutWarehousePackage");
 		return view;
 	}
+
+	/**
+	 * 提交出货总单
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/outWarehouseShippingConfirm")
+	public synchronized String outWarehouseShippingConfirm(HttpServletRequest request, HttpServletResponse response, String coeTrackingNo) throws IOException {
+		HttpSession session = request.getSession();
+		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
+		Map<String, String> checkResultMap = transportService.outWarehouseShippingConfirm(coeTrackingNo, userId);
+		return GsonUtil.toJson(checkResultMap);
+	}
+
 }

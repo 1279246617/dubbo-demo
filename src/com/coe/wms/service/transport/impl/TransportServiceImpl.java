@@ -39,9 +39,12 @@ import com.coe.wms.model.user.User;
 import com.coe.wms.model.warehouse.TrackingNo;
 import com.coe.wms.model.warehouse.Warehouse;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrder;
+import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderItemShelf;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderReceiver;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus.OutWarehouseOrderStatusCode;
+import com.coe.wms.model.warehouse.storage.record.ItemInventory;
 import com.coe.wms.model.warehouse.storage.record.OutWarehousePackage;
+import com.coe.wms.model.warehouse.storage.record.OutWarehouseRecord;
 import com.coe.wms.model.warehouse.storage.record.OutWarehouseRecordItem;
 import com.coe.wms.model.warehouse.transport.BigPackage;
 import com.coe.wms.model.warehouse.transport.BigPackageAdditionalSf;
@@ -1143,7 +1146,7 @@ public class TransportServiceImpl implements ITransportService {
 		packageRecord.setUserIdOfOperator(userIdOfOperator);
 		packageRecord.setWarehouseId(warehouseId);
 		packageRecordDao.savePackageRecord(packageRecord);
-		
+
 		// 标记coe单号已经使用
 		trackingNoDao.usedTrackingNo(coeTrackingNoId);
 		// 返回新COE单号,供下一批出库
@@ -1163,4 +1166,67 @@ public class TransportServiceImpl implements ITransportService {
 		return map;
 	}
 
+	@Override
+	public Map<String, String> outWarehouseShippingConfirm(String coeTrackingNo, Long userIdOfOperator) throws ServiceException {
+		Map<String, String> map = new HashMap<String, String>();
+		map.put(Constant.STATUS, Constant.FAIL);
+		if (StringUtil.isNull(coeTrackingNo)) {
+			map.put(Constant.MESSAGE, "请输入COE交接单号");
+			return map;
+		}
+		List<TrackingNo> trackingNoList = trackingNoDao.findTrackingNo(coeTrackingNo, TrackingNo.TYPE_COE);
+		if (trackingNoList == null || trackingNoList.size() < 1) {
+			map.put(Constant.MESSAGE, "该COE交接单号无效,请输入新单号");
+			return map;
+		}
+		TrackingNo trackingNo = trackingNoList.get(0);
+		Long coeTrackingNoId = trackingNo.getId();
+		// 根据出库交接单号查询建包记录.
+		PackageRecord packageRecordParam = new PackageRecord();
+		packageRecordParam.setCoeTrackingNoId(coeTrackingNoId);
+		Long countPackageRecord = packageRecordDao.countPackageRecord(packageRecordParam, null);
+		if (countPackageRecord <= 0) {
+			map.put(Constant.MESSAGE, "没有找到出库建包记录,请先完成建包");
+			return map;
+		}
+
+		// 出库记录
+		PackageRecord packageRecord = new PackageRecord();
+		packageRecord.setCoeTrackingNoId(coeTrackingNoId);
+		Long countOutWarehouseRecord = packageRecordDao.countPackageRecord(packageRecordParam, null);
+		if (countOutWarehouseRecord >= 1) {
+			map.put(Constant.MESSAGE, "该交接单号已经存在出库记录,请勿重复操作");
+			return map;
+		}
+
+		Long userIdOfCustomer = null;
+		Long warehouseId = null;
+		// 根据coe交接单号 获取建包记录,获取每个出库订单(小包)
+		OutWarehouseRecordItem itemParam = new OutWarehouseRecordItem();
+		itemParam.setCoeTrackingNoId(coeTrackingNoId);
+		List<OutWarehouseRecordItem> outWarehouseRecordItemList = outWarehouseRecordItemDao.findOutWarehouseRecordItem(itemParam, null, null);
+		// 迭代,检查跟踪号
+		for (OutWarehouseRecordItem recordItem : outWarehouseRecordItemList) {
+			// 改变状态 ,发送到哲盟
+			Long orderId = recordItem.getOutWarehouseOrderId();
+			// logger.info("出货,待发送到哲盟新系统的出库订单id: = " + orderId);
+
+			if (userIdOfCustomer == null) {
+				OutWarehouseOrder outWarehouseOrder = outWarehouseOrderDao.getOutWarehouseOrderById(orderId);
+				userIdOfCustomer = outWarehouseOrder.getUserIdOfCustomer();
+				warehouseId = outWarehouseOrder.getWarehouseId();
+			}
+			outWarehouseOrderDao.updateOutWarehouseOrderStatus(orderId, OutWarehouseOrderStatusCode.SUCCESS);
+		}
+		// 保存出库记录
+		packageRecord.setCoeTrackingNo(coeTrackingNo);
+		packageRecord.setCreatedTime(System.currentTimeMillis());
+		packageRecord.setUserIdOfCustomer(userIdOfCustomer);
+		packageRecord.setUserIdOfOperator(userIdOfOperator);
+		packageRecord.setWarehouseId(warehouseId);
+		packageRecordDao.saveOutWarehouseRecord(packageRecord);
+		map.put(Constant.STATUS, Constant.SUCCESS);
+		map.put(Constant.MESSAGE, "完成出货总单成功,请继续下一批!");
+		return map;
+	}
 }

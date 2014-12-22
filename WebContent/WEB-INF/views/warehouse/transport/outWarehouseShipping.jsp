@@ -73,7 +73,7 @@
 		 			parent.$.showDialogMessage("请输入有效的COE单号并按回车!", null, null);
 		 			return false;
 		 	}
-  	 		$.post(baseUrl+ '/warehouse/storage/outWarehouseShippingConfirm.do',{
+  	 		$.post(baseUrl+ '/warehouse/transport/outWarehouseShippingConfirm.do',{
   	 			coeTrackingNo:coeTrackingNo
   	 		},function(msg) {
   	 			isSubmintIng = 'N';	
