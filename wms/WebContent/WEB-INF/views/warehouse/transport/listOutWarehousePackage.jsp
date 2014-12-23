@@ -64,8 +64,8 @@
     
     <script type="text/javascript">
  		var baseUrl = "${baseUrl}";
- 		var printEIRUrl= (baseUrl+'/warehouse/print/printOutWarehouseEIR.do?coeTrackingNoId=');
- 		var printLabelUrl= (baseUrl+'/warehouse/print/printCoeLabel.do?coeTrackingNoId=');
+ 		var printEIRUrl= (baseUrl+'/warehouse/print/printTransportEIR.do?coeTrackingNoId=');
+ 		var printLabelUrl= (baseUrl+'/warehouse/print/printTransportCoeLabel.do?coeTrackingNoId=');
    		$(function(){
    			//客户帐号自动完成
 	        $("#userLoginName").typeahead({
