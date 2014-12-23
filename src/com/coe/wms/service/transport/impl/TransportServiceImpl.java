@@ -1155,6 +1155,7 @@ public class TransportServiceImpl implements ITransportService {
 		packageRecord.setUserIdOfCustomer(userIdOfCustomer);
 		packageRecord.setUserIdOfOperator(userIdOfOperator);
 		packageRecord.setWarehouseId(warehouseId);
+		packageRecord.setIsShiped(Constant.N);
 		packageRecordDao.savePackageRecord(packageRecord);
 
 		// 标记coe单号已经使用
@@ -1194,18 +1195,15 @@ public class TransportServiceImpl implements ITransportService {
 		// 根据出库交接单号查询建包记录.
 		PackageRecord packageRecordParam = new PackageRecord();
 		packageRecordParam.setCoeTrackingNoId(coeTrackingNoId);
-		Long countPackageRecord = packageRecordDao.countPackageRecord(packageRecordParam, null);
-		if (countPackageRecord <= 0) {
+		List<PackageRecord> packageRecordList = packageRecordDao.findPackageRecord(packageRecordParam, null, null);
+		if (packageRecordList == null || packageRecordList.size() <= 0) {
 			map.put(Constant.MESSAGE, "没有找到出库建包记录,请先完成建包");
 			return map;
 		}
-
 		// 出库记录
-		PackageRecord packageRecord = new PackageRecord();
-		packageRecord.setCoeTrackingNoId(coeTrackingNoId);
-		Long countOutWarehouseRecord = packageRecordDao.countPackageRecord(packageRecordParam, null);
-		if (countOutWarehouseRecord >= 1) {
-			map.put(Constant.MESSAGE, "该交接单号已经存在出库记录,请勿重复操作");
+		PackageRecord packageRecord = packageRecordList.get(0);
+		if (StringUtil.isEqual(packageRecord.getIsShiped(), Constant.Y)) {
+			map.put(Constant.MESSAGE, "该交接单号对应大包已经出库,请勿重复操作");
 			return map;
 		}
 		// 根据coe交接单号 获取建包记录,获取每个出库订单(小包)

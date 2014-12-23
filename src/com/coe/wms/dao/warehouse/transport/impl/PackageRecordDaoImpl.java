@@ -43,7 +43,7 @@ public class PackageRecordDaoImpl implements IPackageRecordDao {
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public long savePackageRecord(final PackageRecord record) {
-		final String sql = "insert into w_s_out_warehouse_record (warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,remark) values (?,?,?,?,?,?,?)";
+		final String sql = "insert into w_t_package_record (warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,remark,is_shiped) values (?,?,?,?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
@@ -53,12 +53,13 @@ public class PackageRecordDaoImpl implements IPackageRecordDao {
 				if (record.getUserIdOfOperator() == null) {
 					ps.setNull(3, Types.BIGINT);
 				} else {
-					ps.setDouble(3, record.getUserIdOfOperator());
+					ps.setLong(3, record.getUserIdOfOperator());
 				}
 				ps.setString(4, record.getCoeTrackingNo());
 				ps.setLong(5, record.getCoeTrackingNoId());
 				ps.setLong(6, record.getCreatedTime());
 				ps.setString(7, record.getRemark());
+				ps.setString(8, record.getIsShiped());
 				return ps;
 			}
 		}, keyHolder);
@@ -68,7 +69,7 @@ public class PackageRecordDaoImpl implements IPackageRecordDao {
 
 	@Override
 	public PackageRecord getPackageRecordById(Long outWarehouseRecordId) {
-		String sql = "select id,warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,remark from w_s_out_warehouse_record where id =" + outWarehouseRecordId;
+		String sql = "select id,warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,remark,is_shiped from w_t_package_record where id =" + outWarehouseRecordId;
 		PackageRecord record = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<PackageRecord>(PackageRecord.class));
 		return record;
 	}
@@ -76,15 +77,18 @@ public class PackageRecordDaoImpl implements IPackageRecordDao {
 	/**
 	 * 查询入库订单
 	 * 
-	 * 参数一律使用实体类加Map . 
+	 * 参数一律使用实体类加Map .
 	 */
 	@Override
 	public List<PackageRecord> findPackageRecord(PackageRecord outWarehouseRecord, Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select id,warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,remark from w_s_out_warehouse_record where 1=1 ");
+		sb.append("select id,warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,remark,is_shiped from w_t_package_record where 1=1 ");
 		if (outWarehouseRecord != null) {
 			if (outWarehouseRecord.getId() != null) {
 				sb.append(" and id = " + outWarehouseRecord.getId());
+			}
+			if (outWarehouseRecord.getWarehouseId() != null) {
+				sb.append(" and warehouse_id = " + outWarehouseRecord.getWarehouseId());
 			}
 			if (outWarehouseRecord.getUserIdOfCustomer() != null) {
 				sb.append(" and user_id_of_customer = " + outWarehouseRecord.getUserIdOfCustomer());
@@ -103,6 +107,9 @@ public class PackageRecordDaoImpl implements IPackageRecordDao {
 			}
 			if (StringUtil.isNotNull(outWarehouseRecord.getRemark())) {
 				sb.append(" and remark = '" + outWarehouseRecord.getRemark() + "' ");
+			}
+			if (StringUtil.isNotNull(outWarehouseRecord.getIsShiped())) {
+				sb.append(" and is_shiped = '" + outWarehouseRecord.getIsShiped() + "' ");
 			}
 		}
 		if (moreParam != null) {
@@ -124,7 +131,6 @@ public class PackageRecordDaoImpl implements IPackageRecordDao {
 			sb.append(page.generatePageSql());
 		}
 		String sql = sb.toString();
-		logger.debug("查询出库记录sql:" + sql);
 		List<PackageRecord> outWarehouseRecordList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(PackageRecord.class));
 		return outWarehouseRecordList;
 	}
@@ -132,10 +138,13 @@ public class PackageRecordDaoImpl implements IPackageRecordDao {
 	@Override
 	public Long countPackageRecord(PackageRecord outWarehouseRecord, Map<String, String> moreParam) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select count(id) from w_s_out_warehouse_record where 1=1 ");
+		sb.append("select count(id) from w_t_package_record where 1=1 ");
 		if (outWarehouseRecord != null) {
 			if (outWarehouseRecord.getId() != null) {
 				sb.append(" and id = " + outWarehouseRecord.getId());
+			}
+			if (outWarehouseRecord.getWarehouseId() != null) {
+				sb.append(" and warehouse_id = " + outWarehouseRecord.getWarehouseId());
 			}
 			if (outWarehouseRecord.getUserIdOfCustomer() != null) {
 				sb.append(" and user_id_of_customer = " + outWarehouseRecord.getUserIdOfCustomer());
@@ -155,6 +164,9 @@ public class PackageRecordDaoImpl implements IPackageRecordDao {
 			if (StringUtil.isNotNull(outWarehouseRecord.getRemark())) {
 				sb.append(" and remark = '" + outWarehouseRecord.getRemark() + "' ");
 			}
+			if (StringUtil.isNotNull(outWarehouseRecord.getIsShiped())) {
+				sb.append(" and is_shiped = '" + outWarehouseRecord.getIsShiped() + "' ");
+			}
 		}
 		if (moreParam != null) {
 			if (moreParam.get("createdTimeStart") != null) {
@@ -171,17 +183,23 @@ public class PackageRecordDaoImpl implements IPackageRecordDao {
 			}
 		}
 		String sql = sb.toString();
-		logger.debug("统计出库记录sql:" + sql);
 		return jdbcTemplate.queryForObject(sql, Long.class);
 	}
-	
+
 	@Override
 	public int updatePackageRecordRemark(Long outWarehouseRecordId, String remark) {
-		String sql = "update w_s_out_warehouse_record set remark ='" + remark + "' where id=" + outWarehouseRecordId;
+		String sql = "update w_t_package_record set remark ='" + remark + "' where id=" + outWarehouseRecordId;
 		return jdbcTemplate.update(sql);
 	}
-	
+
+	@Override
+	public int updatePackageRecordIsShiped(Long outWarehouseRecordId, String isShiped) {
+		String sql = "update w_t_package_record set is_shiped ='" + isShiped + "' where id=" + outWarehouseRecordId;
+		return jdbcTemplate.update(sql);
+	}
+
 	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
 	}
+
 }
