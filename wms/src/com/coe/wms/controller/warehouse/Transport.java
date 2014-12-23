@@ -359,7 +359,8 @@ public class Transport {
 	}
 
 	/**
-	 * 保存转运订单入库
+	 * 大包称重
+	 * 小包下架
 	 * 
 	 * @param request
 	 * @param trackingNo

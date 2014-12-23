@@ -34,7 +34,7 @@ public class LittlePackageStatus implements Serializable {
 		public static final String W_OUT_S = "W_OUT_S";
 
 		/**
-		 * 出库成功 Out Warehouse Success
+		 * 已下架合包 Out Warehouse Success
 		 */
 		public static final String SUCCESS = "SUCCESS";
 

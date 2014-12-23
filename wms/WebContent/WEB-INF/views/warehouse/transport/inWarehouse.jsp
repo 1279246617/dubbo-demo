@@ -70,53 +70,65 @@
 		</table>
 	</div>
 	
-		<table class="table" style="background-color:#f5f5f5;margin-bottom: 2px;"  >
-			<tr>
-				<th>直接转运订单称重与打出货运单</th>
-			</tr>
-			<tr  style="color:#555555;">
-				<td colspan="2" style="height:50px;">
-					<span style="width:90px;height:30px;margin-top: 4mm;font-size: 5mm;" class="pull-left" >装箱重量</span>
-					<input type="text"  name="weight"  t="3"  id="weight"  style="width:130px;height:45px; font-size: 10mm;font-weight: bold;color:red;" class="pull-left" readonly="readonly" onkeyup="this.value=this.value.replace(/[^\d\.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d\.]/g,'')"/>
-					<span style="width:50px;height:30px;margin-top: 4mm;font-size: 6mm;font-weight: bold;" class="pull-left" >KG</span>
-					<span style="width:90px;height:30px;margin-top: 4mm;font-size: 4mm;" class="pull-left" >
-						<input class="pull-left"  t="3" name="auto" style="vertical-align: middle;" type="checkbox" checked="checked" id="auto">
-						自动读取
-					</span>
-					<span style="height:30px;margin-top: 0mm;font-size: 8mm;" class="pull-left" >
-						<img id="weightOk" src="${baseUrl}/static/img/nike.png" style="display:none;width:15mm;height:15mm;" >
-					</span>
-				</td>
-				<td colspan="1">
-					<span style="width:90px;height:30px;margin-top: 4mm;font-size: 5mm;" class="pull-left" >
-							<a class="btn  btn-primary"  onclick="saveweight();"  style="cursor:pointer;"><i class="icon-ok icon-white"></i>保存重量</a>
-					</span>
-				</td>
-				<td rowspan="3">
-						<span style="width:90px;height:50px;margin-top: 4mm;font-size: mm;" class="pull-left" >分配货位</span>
-						<input type="text"  name="seatCode"  t="3"  id="seatCode"  style="width:180px;height:50px; font-size: 10mm;font-weight: bold;color:red;" class="pull-left" readonly="readonly"/>
-				</td>
-			</tr>
-			<tr  >
-				<td colspan="1" style="width:280px;">
-					出货渠道&nbsp;&nbsp;
-					<input type="text"  name="shipwayCode"  id="shipwayCode"   t="4" style="width:130px;" readonly="readonly"/>
-				</td>
-				<td colspan="1" style="width:330px;">
-					跟踪单号&nbsp;&nbsp;
-					<input type="text"  name="outWarehouseTrackingNo"  id="outWarehouseTrackingNo"  t="4"  style="width:150px;" readonly="readonly"/>
-				</td>
-				<td colspan="2" >
-					<a class="btn  btn-primary"  onclick="printShipLabel();" style="cursor:pointer;">
-						<i class="icon-ok icon-white"></i>打印出货运单
-					</a>
-					&nbsp;&nbsp;&nbsp;
-					<a class="btn  btn-primary"  onclick="printOrder();" style="cursor:pointer;">
-						<i class="icon-ok icon-white"></i>打印捡货清单
-					</a>
-				</td>
-			</tr>
-	</table>			
+	<table class="table" style="background-color:#f5f5f5;margin-bottom: 2px;"  >
+		<tr>
+			<td>
+				<span style="width:90px;height:50px;margin-top: 4mm;font-size: mm;" class="pull-left" >分配货位</span>
+				<input type="text"  name="seatCode"  id="seatCode"  style="width:180px;height:50px; font-size: 10mm;font-weight: bold;color:red;" class="pull-left" readonly="readonly"/>
+			</td>
+		</tr>
+	</table>
+	
+<!-- 直接转运订单收货时称重打单 开始-           如需解开 ,释放注释 和 inwarehouse.js 104行处理直接转运结果 , 后台submitInWarehouse方法 修改直接转运订单的提示内容--------------------->
+<!-- 		<table class="table" style="background-color:#f5f5f5;margin-bottom: 2px;"  > -->
+<!-- 			<tr> -->
+<!-- 				<th>直接转运订单称重与打出货运单</th> -->
+<!-- 			</tr> -->
+<!-- 			<tr  style="color:#555555;"> -->
+<!-- 				<td colspan="2" style="height:50px;"> -->
+<!-- 					<span style="width:90px;height:30px;margin-top: 4mm;font-size: 5mm;" class="pull-left" >装箱重量</span> -->
+<!-- 					<input type="text"  name="weight"  t="3"  id="weight"  style="width:130px;height:45px; font-size: 10mm;font-weight: bold;color:red;" class="pull-left" readonly="readonly" onkeyup="this.value=this.value.replace(/[^\d\.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d\.]/g,'')"/> -->
+<!-- 					<span style="width:50px;height:30px;margin-top: 4mm;font-size: 6mm;font-weight: bold;" class="pull-left" >KG</span> -->
+<!-- 					<span style="width:90px;height:30px;margin-top: 4mm;font-size: 4mm;" class="pull-left" > -->
+<!-- 						<input class="pull-left"  t="3" name="auto" style="vertical-align: middle;" type="checkbox" checked="checked" id="auto"> -->
+<!-- 						自动读取 -->
+<!-- 					</span> -->
+<!-- 					<span style="height:30px;margin-top: 0mm;font-size: 8mm;" class="pull-left" > -->
+<%-- 						<img id="weightOk" src="${baseUrl}/static/img/nike.png" style="display:none;width:15mm;height:15mm;" > --%>
+<!-- 					</span> -->
+<!-- 				</td> -->
+<!-- 				<td colspan="1"> -->
+<!-- 					<span style="width:90px;height:30px;margin-top: 4mm;font-size: 5mm;" class="pull-left" > -->
+<!-- 							<a class="btn  btn-primary"  onclick="saveweight();"  style="cursor:pointer;"><i class="icon-ok icon-white"></i>保存重量</a> -->
+<!-- 					</span> -->
+<!-- 				</td> -->
+<!-- 				<td rowspan="3"> -->
+<!-- 						<span style="width:90px;height:50px;margin-top: 4mm;font-size: mm;" class="pull-left" >分配货位</span> -->
+<!-- 						<input type="text"  name="seatCode"  t="3"  id="seatCode"  style="width:180px;height:50px; font-size: 10mm;font-weight: bold;color:red;" class="pull-left" readonly="readonly"/> -->
+<!-- 				</td> -->
+<!-- 			</tr> -->
+<!-- 			<tr  > -->
+<!-- 				<td colspan="1" style="width:280px;"> -->
+<!-- 					出货渠道&nbsp;&nbsp; -->
+<!-- 					<input type="text"  name="shipwayCode"  id="shipwayCode"   t="4" style="width:130px;" readonly="readonly"/> -->
+<!-- 				</td> -->
+<!-- 				<td colspan="1" style="width:330px;"> -->
+<!-- 					跟踪单号&nbsp;&nbsp; -->
+<!-- 					<input type="text"  name="outWarehouseTrackingNo"  id="outWarehouseTrackingNo"  t="4"  style="width:150px;" readonly="readonly"/> -->
+<!-- 				</td> -->
+<!-- 				<td colspan="2" > -->
+<!-- 					<a class="btn  btn-primary"  onclick="printShipLabel();" style="cursor:pointer;"> -->
+<!-- 						<i class="icon-ok icon-white"></i>打印出货运单 -->
+<!-- 					</a> -->
+<!-- 					&nbsp;&nbsp;&nbsp; -->
+<!-- 					<a class="btn  btn-primary"  onclick="printOrder();" style="cursor:pointer;"> -->
+<!-- 						<i class="icon-ok icon-white"></i>打印捡货清单 -->
+<!-- 					</a> -->
+<!-- 				</td> -->
+<!-- 			</tr> -->
+<!-- 	</table>			 -->
+<!-- 直接转运订单收货时称重打单 结束---------------------->
+
 	<table  class="table table-striped" style="margin-bottom: 0px;height: 10px;">
 		<tr style="height: 10px;">
 			<td>
@@ -185,13 +197,13 @@
 	  			//当前获取焦点的文本框是 主单还是明细
 	  			focus = $(this).attr("t");
 	  		});
-	  		//加载页面时,启动读取电子秤
-	  		toggleConnection(ports[0]);
-	  		//启动读取电子秤
-	  		autoWeight = window.setInterval(function(){ 
-	  			ws.send("getweig");		 
-			}, 300);
-			 		  	
+	  		//自动读取电子秤重量代码开始--------------------
+	  		//toggleConnection(ports[0]);//加载页面时,启动读取电子秤
+	  		//autoWeight = window.setInterval(function(){ 
+				//ws.send("getweig");//启动读取电子秤
+			//}, 300);
+	  		//自动读取电子秤重量代码结束-------------------
+	  		
 	  		$("#auto").click(function(){
 	  			if($("#auto").attr("checked")=="checked"){
 	  				//自动获取电子称数据
@@ -227,8 +239,7 @@
 	                    { display: '订单状态', name: 'bigPackageStatus', align: 'center', type: 'int',width:'9%'},
 		                { display: '收货时间', name: 'receivedTime', align: 'center', type: 'float',width:'12%'},
 		                { display: '回传收货状态', name: 'callbackIsSuccess', align: 'center', type: 'float',width:'8%'},
-		                { display: '操作员', name: 'userNameOfOperator',width:'7%'},
-// 		                { display: '备注', name: 'remark', align: 'center', type: 'float',width:'9%'}
+		                { display: '操作员', name: 'userNameOfOperator',width:'9%'},
 	                ],  
 	                isScroll: true,
 	                dataAction: 'server',

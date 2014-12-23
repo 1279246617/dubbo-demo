@@ -31,7 +31,7 @@ function saveweight(){
 	var weight = $("#weight").val();
 	var bigPackageId = $("#bigPackageId").val();
 	if(bigPackageId ==null || bigPackageId == ''){
-		parent.$.showShortMessage({msg:"没有找到直接转运订单,刷新后重试",animate:false,left:"45%"});
+		parent.$.showShortMessage({msg:"没有找到转运订单,刷新后重试",animate:false,left:"45%"});
 		return false;
 	}
 	if(weight ==null || weight == ''){
@@ -59,7 +59,7 @@ function saveweight(){
 function printShipLabel(){
 	var bigPackageId = $("#bigPackageId").val();
 	if(bigPackageId ==null || bigPackageId == ''){
-		parent.$.showShortMessage({msg:"没有找到直接转运订单,刷新后重试",animate:false,left:"45%"});
+		parent.$.showShortMessage({msg:"没有找到转运订单,刷新后重试",animate:false,left:"45%"});
 		return false;
 	}
 	var url = baseUrl+'/warehouse/print/printTransportShipLabel.do?bigPackageIds='+bigPackageId;

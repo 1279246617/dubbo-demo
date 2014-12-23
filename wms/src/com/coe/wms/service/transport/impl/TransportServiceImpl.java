@@ -438,6 +438,7 @@ public class TransportServiceImpl implements ITransportService {
 				map.put("transportType", "直接转运");
 			}
 			map.put("remark", bigPackage.getRemark());
+			map.put("trackingNo", bigPackage.getTrackingNo());
 			BigPackageStatus bigPackageStatus = bigPackageStatusDao.findBigPackageStatusByCode(bigPackage.getStatus());
 			if (bigPackageStatus != null) {
 				map.put("status", bigPackageStatus.getCn());
@@ -812,7 +813,9 @@ public class TransportServiceImpl implements ITransportService {
 			map.put(Constant.MESSAGE, "集货转运订单收货成功,请继续收货");
 			map.put(Constant.STATUS, Constant.SUCCESS);
 		} else if (StringUtil.isEqual(littlePackage.getTransportType(), BigPackage.TRANSPORT_TYPE_Z)) {// 直接转运
-			map.put(Constant.MESSAGE, "直接转运订单收货成功,请称重打单");
+			// map.put(Constant.MESSAGE, "直接转运订单收货成功,请称重打单");
+			// 2014-12-23取消直接转运订单称重打单, 后台修改提示内容, 前台修改操作流程
+			map.put(Constant.MESSAGE, "直接转运订单收货成功,请继续收货");
 			map.put(Constant.STATUS, "2");
 			BigPackage bigPackage = bigPackageDao.getBigPackageById(littlePackage.getBigPackageId());
 			map.put("shipwayCode", bigPackage.getShipwayCode());
@@ -856,7 +859,10 @@ public class TransportServiceImpl implements ITransportService {
 		bigPackage.setWeightCode(WeightCode.KG);
 		bigPackage.setUserIdOfOperator(userIdOfOperator);
 		bigPackageDao.updateBigPackageWeight(bigPackage);
-
+		// 小包修改下架 :已下架合包
+		littlePackageDao.updateLittlePackageStatus(bigPackageId, LittlePackageStatusCode.SUCCESS);
+		// 修改上架记录为已下架
+		littlePackageOnShelfDao.updateLittlePackageOnShelf(bigPackageId, LittlePackageOnShelf.STATUS_OUT_SHELF);
 		map.put(Constant.STATUS, Constant.SUCCESS);
 		return map;
 	}

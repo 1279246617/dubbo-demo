@@ -23,6 +23,8 @@ public interface ILittlePackageDao {
 	public int updateLittlePackageCallback(LittlePackage LittlePackage);
 
 	public int updateLittlePackageStatus(LittlePackage LittlePackage);
+	
+	public int updateLittlePackageStatus(Long bigPackageId,String newStatus);
 
 	public int receivedLittlePackage(LittlePackage LittlePackage);
 
