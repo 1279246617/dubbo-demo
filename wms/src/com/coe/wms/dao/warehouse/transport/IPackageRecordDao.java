@@ -15,6 +15,8 @@ public interface IPackageRecordDao {
 	public List<PackageRecord> findPackageRecord(PackageRecord outWarehouseRecord, Map<String, String> moreParam, Pagination page);
 
 	public Long countPackageRecord(PackageRecord outWarehouseRecord, Map<String, String> moreParam);
-	
+
 	public int updatePackageRecordRemark(Long outWarehouseRecordId, String remark);
+
+	public int updatePackageRecordIsShiped(Long outWarehouseRecordId, String isShiped);
 }

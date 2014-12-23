@@ -53,6 +53,10 @@ public class PackageRecord implements Serializable {
 	 * 创建时间
 	 */
 	private Long createdTime;
+	/**
+	 * 是否已经扫描出货
+	 */
+	private String isShiped;
 
 	private String remark;
 
@@ -70,6 +74,14 @@ public class PackageRecord implements Serializable {
 
 	public void setWarehouseId(Long warehouseId) {
 		this.warehouseId = warehouseId;
+	}
+
+	public String getIsShiped() {
+		return isShiped;
+	}
+
+	public void setIsShiped(String isShiped) {
+		this.isShiped = isShiped;
 	}
 
 	public Long getUserIdOfOperator() {

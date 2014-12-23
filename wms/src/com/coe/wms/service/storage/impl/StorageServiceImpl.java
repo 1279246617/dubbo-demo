@@ -1520,7 +1520,7 @@ public class StorageServiceImpl implements IStorageService {
 		outWarehouseRecord.setCoeTrackingNoId(coeTrackingNoId);
 		Long countOutWarehouseRecord = outWarehouseRecordDao.countOutWarehouseRecord(outWarehouseRecord, null);
 		if (countOutWarehouseRecord >= 1) {
-			map.put(Constant.MESSAGE, "该交接单号已经存在出库记录,请勿重复操作");
+			map.put(Constant.MESSAGE, "该交接单号对应大包已经出库,请勿重复操作");
 			return map;
 		}
 
