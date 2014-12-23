@@ -19,6 +19,8 @@ public interface IPrintService {
 
 	public Map<String, Object> getPrintCoeLabelData(Long coeTrackingNoId);
 
+	public Map<String, Object> getPrintTransportCoeLabelData(Long coeTrackingNoId);
+
 	/**
 	 * 获取打印货位号数据
 	 * 
@@ -43,6 +45,13 @@ public interface IPrintService {
 	public List<Map<String, String>> getOutWarehouseShippings(Long coeTrackingNoId);
 
 	/**
+	 * 获取出库记录
+	 * 
+	 * @return
+	 */
+	public List<Map<String, String>> getPrintTransportEIRData(Long coeTrackingNoId);
+
+	/**
 	 * 获取打印捡货单数据
 	 * 
 	 * @param outWarehouseOrderId
@@ -56,5 +65,5 @@ public interface IPrintService {
 	 * @param outWarehouseOrderId
 	 * @return
 	 */
-	public Map<String, Object> printTransportShipLabel(Long bigPackageId);
+	public Map<String, Object> getPrintTransportShipLabedData(Long bigPackageId);
 }

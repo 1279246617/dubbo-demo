@@ -296,7 +296,7 @@ public class Print {
 				continue;
 			}
 			Long bigPackageId = Long.valueOf(orderIdArray[i]);
-			Map<String, Object> map = printService.printTransportShipLabel(bigPackageId);
+			Map<String, Object> map = printService.getPrintTransportShipLabedData(bigPackageId);
 			if (map != null) {
 				mapList.add(map);
 			}
@@ -362,7 +362,7 @@ public class Print {
 	public ModelAndView printTransportEIR(HttpServletRequest request, HttpServletResponse response, Long coeTrackingNoId) throws IOException {
 		ModelAndView view = new ModelAndView();
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
-		List<Map<String, String>> mapList = printService.getOutWarehouseShippings(coeTrackingNoId);
+		List<Map<String, String>> mapList = printService.getPrintTransportEIRData(coeTrackingNoId);
 		int total = 0;
 		double totalWeight = 0;
 		if (mapList != null && mapList.size() > 0) {
@@ -405,7 +405,7 @@ public class Print {
 			return view;
 		}
 		// 返回页面的list,装map 每个map 是每个订单的数据
-		Map<String, Object> map = printService.getPrintCoeLabelData(coeTrackingNoId);
+		Map<String, Object> map = printService.getPrintTransportCoeLabelData(coeTrackingNoId);
 		view.addObject("map", map);
 		view.addObject("timeNow", DateUtil.dateConvertString(new Date(), DateUtil.yyyy_MM_ddHHmmss));
 		view.setViewName("warehouse/print/printTransportCoeLabel");
