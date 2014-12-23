@@ -48,6 +48,8 @@ public interface IStorageService {
 	 * @return
 	 */
 	public Map<String, String> saveInWarehouseRecord(String trackingNo, String remark, Long userIdOfOperator, Long warehouseId, Long inWarehouseOrderId);
+	
+	public Map<String, String> submitInWarehouseRecord(Long inWarehouseRecordId);
 
 	/**
 	 * 保存入库明细 返回成功,失败,错误信息
@@ -241,7 +243,7 @@ public interface IStorageService {
 	 * @return
 	 */
 	public String warehouseInterfaceConfirmOutWarehouseOrder(EventBody eventBody, Long userIdOfCustomer, String warehouseNo) throws ServiceException;
-	
+
 	/**
 	 * 顺丰取消出库订单
 	 * 
@@ -250,7 +252,7 @@ public interface IStorageService {
 	 * @return
 	 */
 	public String warehouseInterfaceCancelOutWarehouseOrder(EventBody eventBody, Long userIdOfCustomer, String warehouseNo) throws ServiceException;
-	
+
 	/**
 	 * 审核出库订单
 	 * 

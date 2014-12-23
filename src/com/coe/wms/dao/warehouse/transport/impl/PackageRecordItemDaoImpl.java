@@ -43,7 +43,7 @@ public class PackageRecordItemDaoImpl implements IPackageRecordItemDao {
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public long savePackageRecordItem(final PackageRecordItem item) {
-		final String sql = "insert into w_t_little_package_item (warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,big_package_tracking_no,big_package_id) values (?,?,?,?,?,?,?,?)";
+		final String sql = "insert into w_t_package_record_item (warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,big_package_tracking_no,big_package_id) values (?,?,?,?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
@@ -69,7 +69,7 @@ public class PackageRecordItemDaoImpl implements IPackageRecordItemDao {
 
 	@Override
 	public PackageRecordItem getPackageRecordItemById(Long packageRecordItemId) {
-		String sql = "select id,warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,big_package_tracking_no,big_package_id from w_t_little_package_item where id =" + packageRecordItemId;
+		String sql = "select id,warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,big_package_tracking_no,big_package_id from w_t_package_record_item where id =" + packageRecordItemId;
 		PackageRecordItem item = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<PackageRecordItem>(PackageRecordItem.class));
 		return item;
 	}
@@ -82,7 +82,7 @@ public class PackageRecordItemDaoImpl implements IPackageRecordItemDao {
 	@Override
 	public List<PackageRecordItem> findPackageRecordItem(PackageRecordItem packageRecordItem, Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select id,warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,big_package_tracking_no,big_package_id from w_t_little_package_item where 1=1 ");
+		sb.append("select id,warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,big_package_tracking_no,big_package_id from w_t_package_record_item where 1=1 ");
 		if (packageRecordItem != null) {
 			if (packageRecordItem.getId() != null) {
 				sb.append(" and id = " + packageRecordItem.getId());
@@ -138,7 +138,7 @@ public class PackageRecordItemDaoImpl implements IPackageRecordItemDao {
 	@Override
 	public Long countPackageRecordItem(PackageRecordItem packageRecordItem, Map<String, String> moreParam) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select count(id) from w_t_little_package_item where 1=1 ");
+		sb.append("select count(id) from w_t_package_record_item where 1=1 ");
 		if (packageRecordItem != null) {
 			if (packageRecordItem.getId() != null) {
 				sb.append(" and id = " + packageRecordItem.getId());
@@ -188,7 +188,7 @@ public class PackageRecordItemDaoImpl implements IPackageRecordItemDao {
 
 	@Override
 	public int deletePackageRecordItemById(Long id) {
-		String sql = "delete from w_t_little_package_item where id =" + id;
+		String sql = "delete from w_t_package_record_item where id =" + id;
 		return jdbcTemplate.update(sql);
 	}
 
@@ -199,7 +199,7 @@ public class PackageRecordItemDaoImpl implements IPackageRecordItemDao {
 	@Override
 	public List<Long> getBigPackageIdsByRecordTime(String startTime, String endTime, Long userIdOfCustomer, Long warehouseId) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select big_package_id  from w_t_little_package_item i inner join w_t_little_package r on i.coe_tracking_no_id=r.coe_tracking_no_id where 1=1 ");
+		sb.append("select big_package_id  from w_t_package_record_item i inner join w_t_little_package r on i.coe_tracking_no_id=r.coe_tracking_no_id where 1=1 ");
 		sb.append(" and r.user_id_of_customer = " + userIdOfCustomer);
 		sb.append(" and r.warehouse_id = " + warehouseId);
 		if (startTime != null) {

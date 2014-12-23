@@ -18,6 +18,12 @@ public class InWarehouseRecordStatus implements Serializable {
 	private static final long serialVersionUID = 8724055406707917657L;
 
 	public class InWarehouseRecordStatusCode {
+
+		/**
+		 * 新建状态,操作员在界面未提交确认,不能回传收货给顺丰
+		 */
+		public static final String NEW = "NEW";
+
 		/**
 		 * 全未上架
 		 */
@@ -31,7 +37,6 @@ public class InWarehouseRecordStatus implements Serializable {
 		 */
 		public static final String COMPLETE = "COMPLETE";
 	}
-	
 
 	private Long id;
 

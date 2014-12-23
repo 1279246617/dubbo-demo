@@ -510,7 +510,8 @@ public class StorageServiceImpl implements IStorageService {
 		inWarehouseRecord.setInWarehouseOrderId(inWarehouseOrderId);
 		inWarehouseRecord.setRemark(remark);
 		inWarehouseRecord.setUserIdOfOperator(userIdOfOperator);
-		inWarehouseRecord.setStatus(InWarehouseRecordStatusCode.NONE);
+		// 2014-12-23修改成新入库状态,界面未提交保存,不能发送入库给顺丰
+		inWarehouseRecord.setStatus(InWarehouseRecordStatusCode.NEW);
 		// 创建批次号
 		String batchNo = InWarehouseRecord.generateBatchNo(null, null, Constant.SYMBOL_UNDERLINE, trackingNo, null, null);
 		inWarehouseRecord.setBatchNo(batchNo);
@@ -962,7 +963,7 @@ public class StorageServiceImpl implements IStorageService {
 			long itemCount = outWarehouseOrderItemDao.saveBatchOutWarehouseOrderItemWithOrderId(itemList, outWarehouseOrderId);
 			logger.info("出库订单:第" + (i + 1) + "客户订单号customerReferenceNo(tradeOrderId):" + customerReferenceNo + " 保存出库订单明细条数:" + itemCount);
 			// 收件人
-			
+
 			OutWarehouseOrderReceiver outWarehouseOrderReceiver = new OutWarehouseOrderReceiver();
 			outWarehouseOrderReceiver.setAddressLine1(buyer.getStreetAddress());
 			outWarehouseOrderReceiver.setCity(buyer.getCity());
@@ -2041,6 +2042,20 @@ public class StorageServiceImpl implements IStorageService {
 	@Override
 	public List<InWarehouseOrderStatus> findAllInWarehouseOrderStatus() throws ServiceException {
 		return inWarehouseOrderStatusDao.findAllInWarehouseOrderStatus();
+	}
+
+	@Override
+	public Map<String, String> submitInWarehouseRecord(Long inWarehouseRecordId) {
+		InWarehouseRecord inWarehouseRecord = new InWarehouseRecord();
+		inWarehouseRecord.setId(inWarehouseRecordId);
+		inWarehouseRecord.setStatus(InWarehouseRecordStatusCode.NONE);
+		Map<String, String> map = new HashMap<String, String>();
+		if (inWarehouseRecordDao.updateInWarehouseRecordStatus(inWarehouseRecord) > 0) {
+			map.put(Constant.STATUS, Constant.SUCCESS);
+		} else {
+			map.put(Constant.STATUS, Constant.FAIL);
+		}
+		return map;
 	}
 
 }

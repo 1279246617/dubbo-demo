@@ -123,7 +123,7 @@ function saveInWarehouseRecordItem(isConfirm) {
 		return;
 	}
 	
-	if(itemQuantity >500 || itemQuantity<-500){
+	if(itemQuantity >1000 || itemQuantity<-1000){
 		var mymes = confirm("你确定输入数量:"+itemQuantity+"吗?");
 		if(mymes != true){
 			return;
@@ -203,13 +203,23 @@ function unLockTrackingNo(){
 }
 
 function nextInWarehouseRecord(){
-	unLockTrackingNo();
-	$("#trackingNo").val("");
-	$("#orderRemark").val("");
-	$("#inWarehouseOrderId").val("");
-	$("#inWarehouseRecordId").val("");
-	$("#inWarehouseOrdertbody").html("");
-	parent.$.showShortMessage({msg:"请继续下一批收货",animate:false,left:"45%"});
-	$("#tips").html("请输入新的跟踪单号并按回车!");
-	$("#trackingNo").focus();
+	//入库主单id
+	var inWarehouseRecordId = $("#inWarehouseRecordId").val();
+	if(inWarehouseRecordId == null || inWarehouseRecordId ==''){
+		return;
+	}
+	//修改收货记录为完成
+	$.post(baseUrl+ '/warehouse/storage/submitInWarehouseRecord.do',{
+		inWarehouseRecordId:inWarehouseRecordId
+	},function(msg) {
+		unLockTrackingNo();
+		$("#trackingNo").val("");
+		$("#orderRemark").val("");
+		$("#inWarehouseOrderId").val("");
+		$("#inWarehouseRecordId").val("");
+		$("#inWarehouseOrdertbody").html("");
+		parent.$.showShortMessage({msg:"请继续下一批收货",animate:false,left:"45%"});
+		$("#tips").html("请输入新的跟踪单号并按回车!");
+		$("#trackingNo").focus();
+	},"json");
 }

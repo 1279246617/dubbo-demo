@@ -164,6 +164,7 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 	@Override
 	public void sendInWarehouseInfoToCustomer() {
 		List<Long> recordIdList = inWarehouseRecordDao.findCallbackUnSuccessRecordId();
+		System.out.println(recordIdList);
 		logger.debug("找到待回传SKU入库信息,总数:" + recordIdList.size());
 		// 根据id 获取记录
 		for (int i = 0; i < recordIdList.size(); i++) {
