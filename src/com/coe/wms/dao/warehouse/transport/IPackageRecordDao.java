@@ -18,5 +18,5 @@ public interface IPackageRecordDao {
 
 	public int updatePackageRecordRemark(Long outWarehouseRecordId, String remark);
 
-	public int updatePackageRecordIsShiped(Long outWarehouseRecordId, String isShiped);
+	public int updatePackageRecordIsShiped(Long outWarehouseRecordId, String isShiped, Long shippedTime);
 }

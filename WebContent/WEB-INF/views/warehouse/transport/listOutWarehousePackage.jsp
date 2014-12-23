@@ -20,16 +20,7 @@
 </head>
 <body>
 	  <div class="toolbar1">
-           <form action="${baseUrl}/warehouse/storage/getOutWarehousePackageData.do" id="searchform" name="searchform" method="post">
-           		<div class="pull-left">
-<!-- 		       	 	<span class="pull-left" style="width:105px;"> -->
-<!-- 			       		<a class="btn btn-primary btn-small" onclick="printCoeLabel()" title="完成出库"> -->
-<!-- 			           		 <i class="icon-folder-open"></i>完成出库 -->
-<!-- 			       	 	</a> -->
-<!-- 			       	 		<input style=" visibility:hidden;"> -->
-<!-- 		       	 	</span> -->
-		    	</div>    
-		    	
+           <form action="${baseUrl}/warehouse/transport/getPackageRecordData.do" id="searchform" name="searchform" method="post">
                <div class="pull-right searchContent">
                		<span class="pull-left" style="width:145px;">
                			仓库
@@ -120,38 +111,38 @@
 	     function initGrid() {
 	    	 grid = $("#maingrid").ligerGrid({
 	                columns: [
-							{ display: '客户帐号', name: 'userLoginNameOfCustomer',type:'float',width:'8%'},
+							{ display: '客户帐号', name: 'userLoginNameOfCustomer',type:'float',width:'7%'},
 							{ display: '仓库', name: 'warehouse', type: 'float',width:'8%'},
-							{ display: '发货状态', name: 'isShipped', type: 'float',width:'8%'},
-	  	                    { display: '交接单号', name: 'coeTrackingNo',type:'float',width:'11%'},
+							{ display: '发货状态', name: 'isShipped', type: 'float',width:'7%'},
+	  	                    { display: '交接单号', name: 'coeTrackingNo',type:'float',width:'10%'},
 	  	                    { display: '建包时间', name: 'packageTime', align: 'center', type: 'float',width:'12%'},
-		  		            { display: '出库订单数量', name: 'quantity', type: 'float',width:'9%'},
-		  		        	{ display: '建包详情', isSort: false, align: 'center', type: 'float',width:'15%',render: function(row) {
+		  		            { display: '转运订单数量', name: 'quantity', type: 'float',width:'8%'},
+		  		        	{ display: '建包详情', isSort: false, align: 'center', type: 'float',width:'13%',render: function(row) {
 			            		var skus = "";
 			            		if (!row._editing) {
 			            			skus += '<a href="javascript:listInWarehouseRecordItem(' + row.id + ')">'+row.orders+'</a> ';
 			            		}
 			            		return skus;
 		  		          	}},
-			                { display: '操作员', name: 'userLoginNameOfOperator',type:'float',width:'8%'},
+			                { display: '操作员', name: 'userLoginNameOfOperator',type:'float',width:'7%'},
 			                { display: '出库时间', name: 'shippedTime', align: 'center', type: 'float',width:'12%'},
-			                {display: '出库备注',isSort: false,width: '12%',render: function(row) {
+			                {display: '打印',isSort: false,width: '14%',render: function(row) {
+		                		var print = '<a target=blank  href='+printLabelUrl+row.coeTrackingNoId+'>COE运单</a>&nbsp;&nbsp;&nbsp;';
+		                		print += '<a target=blank  href='+printEIRUrl+row.coeTrackingNoId+'>出货交接单</a>';
+		            			return print;
+		            			}
+		           			},
+			                {display: '出库备注',isSort: false,width: '8%',render: function(row) {
 			                		if(row.remark ==''){
 			                			return  "<a href=javascript:addRemark(" + row.id + ",'"+row.remark+"')>添加备注</a>&nbsp;";	
 			                		}else{
 			                			return  "<a href=javascript:addRemark(" + row.id + ",'"+row.remark+"')> "+row.remark+"</a>&nbsp;";
 			                		}
 			            		}
-			           		 },
-			                {display: '打印',isSort: false,width: '15%',render: function(row) {
-			                		var print = '<a target=blank  href='+printLabelUrl+row.coeTrackingNoId+'>COE运单</a>&nbsp;&nbsp;&nbsp;';
-			                		print += '<a target=blank  href='+printEIRUrl+row.coeTrackingNoId+'>出货交接单</a>';
-			            			return print;
-			            		}
-			           		}
+			           		 }
 		             ],   
 	                dataAction: 'server',
-	                url: baseUrl+'/warehouse/storage/getOutWarehousePackageData.do',
+	                url: baseUrl+'/warehouse/transport/getPackageRecordData.do',
 	                pageSize: 100, 
 	                pageSizeOptions:[50,100,150,200,500],
 	                usePager: 'true',
@@ -176,11 +167,11 @@
 	        	var contentArr = [];
 	        	contentArr.push('<div style="height:340px;overflow:auto; ">');
 	        	contentArr.push('<table class="table" style="width:549px">');
-	        	contentArr.push('<tr><th>出库订单Id</th><th>出库订单跟踪单号</th><th>出库订单重量KG</th><th>出库订单客户帐号</th></tr>');
+	        	contentArr.push('<tr><th>转运订单Id</th><th>转运订单跟踪单号</th><th>转运订单重量KG</th><th>转运订单客户帐号</th></tr>');
 	        	$.ajax({ 
 	                type : "post", 
-	                url :baseUrl + '/warehouse/storage/getOutWarehouseRecordItemByPackageId.do', 
-	                data : "recordId="+recordId, 
+	                url :baseUrl + '/warehouse/transport/getPackageRecordItemByPackageRecordId.do', 
+	                data : "packageRecordId="+recordId, 
 	                async : false, 
 	                success : function(msg){ 
 	                	msg = eval("(" + msg + ")");
@@ -220,13 +211,13 @@
 	        	          title: '备注',
 	        	          width: '450px',
 	        	          height: '290px',
-	        	          content: 'url:' + baseUrl + '/warehouse/storage/editOutWarehousePackageRemark.do?id='+id+"&remark="+remark,
+	        	          content: 'url:' + baseUrl + '/warehouse/transport/editPackageRecordRemark.do?id='+id+"&remark="+remark,
 	        	          button: [{
 	        	            name: '确定',
 	        	            callback: function() {
 	        	              var objRemark = this.content.document.getElementById("remark");
 	        	              var remark = $(objRemark).val();
-	        	              $.post(baseUrl + '/warehouse/storage/saveOutWarehousePackageRemark.do', {
+	        	              $.post(baseUrl + '/warehouse/transport/savePackageRecordRemark.do', {
 	        	            	  remark:remark,
 	        	            	  id:id
 	        	              },
