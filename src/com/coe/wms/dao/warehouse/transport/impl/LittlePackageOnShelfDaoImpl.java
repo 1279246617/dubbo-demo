@@ -168,6 +168,12 @@ public class LittlePackageOnShelfDaoImpl implements ILittlePackageOnShelfDao {
 	}
 
 	@Override
+	public int updateLittlePackageOnShelf(Long bigPackageId, String newStatus) {
+		String sql = "update w_t_little_package_on_shelf set status= ?,last_update_time= ? where big_package_id=?";
+		return jdbcTemplate.update(sql, newStatus, System.currentTimeMillis(), bigPackageId);
+	}
+
+	@Override
 	public int updateLittlePackageOnShelf(LittlePackageOnShelf littlePackageOnShelf) {
 		String sql = "update w_t_little_package_on_shelf set status= ?,last_update_time= ? where id=" + littlePackageOnShelf.getId();
 		return jdbcTemplate.update(sql, littlePackageOnShelf.getStatus(), littlePackageOnShelf.getLastUpdateTime());

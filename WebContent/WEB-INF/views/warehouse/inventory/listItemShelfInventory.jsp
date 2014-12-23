@@ -20,24 +20,32 @@
 </head>
 <body>
 			<div class="toolbar1">
+		    <div class="pull-left">
+           			<span class="pull-left" style="width:105px;">
+			       		<a class="btn btn-primary btn-small" onclick="exportShelfInventory()" title="导出商品货位库存">
+			           		 <i class="icon-file"></i>导出库存
+			       	 	</a>
+			       	 	<input style=" visibility:hidden;">
+		       	 	</span>
+		    </div>   
            <form action="${baseUrl}/warehouse/inventory/getListItemShelfInventoryData.do" id="searchform" name="searchform" method="post">
                <div class="pull-right searchContent">
-               		<span class="pull-left" style="width:175px;">
+               		<span class="pull-left" style="width:145px;">
                			仓库
-               			<select style="width:100px;" id="warehouseId" name="warehouseId">
+               			<select style="width:90px;" id="warehouseId" name="warehouseId">
                				<option></option>
 							<option value="1">1-香港仓</option>
 						</select>
                		</span>
-               		<span class="pull-left" style="width:175px;">
+               		<span class="pull-left" style="width:165px;">
                			客户帐号
                			<input type="text" name="userLoginName" data-provide="typeahead"  id="userLoginName" style="width:100px;" title="请输入客户登录名" />
                		</span>
-               		<span class="pull-left" style="width:185px;">
+               		<span class="pull-left" style="width:165px;">
                			商品条码
                			 <input type="text"   style="width:100px;" name="sku" title="商品条码">
                		</span>
-               		<span class="pull-left" style="width:185px;">
+               		<span class="pull-left" style="width:165px;">
                			货位号
                			 <input type="text"   style="width:100px;" name="seatCode" title="可输入货位号">
                		</span>
@@ -47,7 +55,7 @@
 	               		<input type="text"   style="width:120px;" name="timeStart" id="timeStart">
                		</span>
                		
-               		<span class="pull-left" style="width:200px;">
+               		<span class="pull-left" style="width:170px;">
                			至	
                			<input type="text"   style="width:120px;" name="timeEnd"  id="timeEnd" >
                		</span>
@@ -56,6 +64,7 @@
                			<a class="btn btn-primary btn-small" id="btn_search"><i class="icon-search icon-white"></i>搜索</a>
                			<input style=" visibility:hidden;">
                		</span>
+               		
                </div>
            </form>
   		 </div>
@@ -142,6 +151,12 @@
 	                enabledSort:true
 	            });
 	        };		
+   	</script>
+   	<script type="text/javascript">
+   		function exportShelfInventory(){
+   			var url = baseUrl + '/warehouse/inventory/exportShelfInventory.do';
+   			window.open(url);
+   		}
    	</script>
    	
 	<script type="text/javascript" src="${baseUrl}/static/jquery/jquery.showMessage.js"></script>

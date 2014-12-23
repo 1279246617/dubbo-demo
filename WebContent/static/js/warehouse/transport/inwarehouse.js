@@ -101,6 +101,16 @@ function saveReceivedLittlePackageStep2(trackingNoStr,remark,warehouseId) {
 			nextInWarehouse(msg.message);
 			focus = "1";
 		}
+		//---取消去直接转运称重打单代码 ---开始
+		if(msg.status == 2){//直接转运
+			//下一票
+			nextInWarehouse(msg.message);
+			focus = "1";
+			btnSearch("#searchform",grid);
+			return;
+		}
+		//---取消去直接转运称重打单代码 --- 结束
+		
 		if(msg.status == 2){//直接转运
 			parent.$.showShortMessage({msg:msg.message,animate:false,left:"45%"});
 			// 光标移至称重
@@ -109,7 +119,6 @@ function saveReceivedLittlePackageStep2(trackingNoStr,remark,warehouseId) {
 			//显示出货渠道和单号
 			$("#outWarehouseTrackingNo").val(msg.trackingNo);
 			$("#shipwayCode").val(msg.shipwayCode);
-			
 			focus = "3";
 		}
 		btnSearch("#searchform",grid);

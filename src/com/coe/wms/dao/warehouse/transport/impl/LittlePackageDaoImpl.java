@@ -292,6 +292,12 @@ public class LittlePackageDaoImpl implements ILittlePackageDao {
 	}
 
 	@Override
+	public int updateLittlePackageStatus(Long bigPackageId, String newStatus) {
+		String sql = "update w_t_little_package set status='" + newStatus + "' where big_package_id=" + bigPackageId;
+		return jdbcTemplate.update(sql);
+	}
+
+	@Override
 	public int deleteLittlePackageById(Long LittlePackageId) {
 		String sql = "delete from w_t_little_package where id=" + LittlePackageId;
 		return jdbcTemplate.update(sql);

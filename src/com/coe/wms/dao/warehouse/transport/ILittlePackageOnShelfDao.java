@@ -16,9 +16,11 @@ public interface ILittlePackageOnShelfDao {
 
 	public int updateLittlePackageOnShelf(LittlePackageOnShelf littlePackageOnShelf);
 
+	public int updateLittlePackageOnShelf(Long bigPackageId, String newStatus);
+
 	public String findSeatCodeForOnShelf(String businessType);
 
 	public String findStatusByLittlePackageId(Long littlePackageId);
-	
+
 	public LittlePackageOnShelf findLittlePackageOnShelfByLittlePackageId(Long littlePackageId);
 }
