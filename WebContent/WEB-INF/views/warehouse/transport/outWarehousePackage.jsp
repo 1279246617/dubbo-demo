@@ -274,13 +274,13 @@
 	  	  		  	      		//打印COE运单
 	  	                    	var isPrintLabel = parent.$("#printLabel").attr("checked")=="checked"?true:false;
 								if(isPrintLabel){
-									var url = baseUrl+'/warehouse/print/printCoeLabel.do?coeTrackingNoId='+coeTrackingNoId;
+									var url = baseUrl+'/warehouse/print/printTransportCoeLabel.do?coeTrackingNoId='+coeTrackingNoId;
 		  	     			  		window.open(url);
 	  	                      	}
 	  	                      	//打印出货交接单
 	  	                   	   	var isPrintCustoms = parent.$("#printCustoms").attr("checked")=="checked"?true:false;
 	  	                      	if(isPrintCustoms){
-		  	  		            	var url = baseUrl+'/warehouse/print/printOutWarehouseEIR.do?coeTrackingNo='+coeTrackingNo+'&coeTrackingNoId='+coeTrackingNoId;
+		  	  		            	var url = baseUrl+'/warehouse/print/printTransportEIR.do?coeTrackingNo='+coeTrackingNo+'&coeTrackingNoId='+coeTrackingNoId;
 		  	     			  		window.open(url);
 	  	                      	}
 	  	  		  			}

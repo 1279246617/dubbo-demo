@@ -342,10 +342,73 @@ public class Print {
 		}
 		view.addObject("mapList", mapList);
 		view.addObject("timeNow", DateUtil.dateConvertString(new Date(), DateUtil.yyyy_MM_ddHHmmss));
-		
+
 		// 根据出库渠判断打印顺丰运单还是ETK运单判断
 		view.setViewName("warehouse/print/printTransportPackageList");
 		// view.setViewName("warehouse/print/printEtkLabel");
+		return view;
+	}
+
+	/**
+	 * 
+	 * 打印出货交接单
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/printTransportEIR", method = RequestMethod.GET)
+	public ModelAndView printTransportEIR(HttpServletRequest request, HttpServletResponse response, Long coeTrackingNoId) throws IOException {
+		ModelAndView view = new ModelAndView();
+		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
+		List<Map<String, String>> mapList = printService.getOutWarehouseShippings(coeTrackingNoId);
+		int total = 0;
+		double totalWeight = 0;
+		if (mapList != null && mapList.size() > 0) {
+			Long warehouseId = Long.valueOf(mapList.get(0).get("warehouseId"));
+			Warehouse warehouse = storageService.getWarehouseById(warehouseId);
+			view.addObject("warehouse", warehouse);
+			for (Map<String, String> map : mapList) {
+				totalWeight += Double.valueOf(map.get("outWarehouseWeight"));
+				total++;
+			}
+		}
+		TrackingNo trackingNo = storageService.getTrackingNoById(coeTrackingNoId);
+		// 跟踪号 (COE交接单号)
+		String coeTrackingNo = trackingNo.getTrackingNo();
+		view.addObject("totalWeight", NumberUtil.getNumPrecision(totalWeight, 2));
+		view.addObject("total", total);
+		view.addObject("mapList", mapList);
+		view.addObject("coeTrackingNo", coeTrackingNo);
+		view.addObject("timeNow", DateUtil.dateConvertString(new Date(), DateUtil.yyyy_MM_ddHHmmss));
+		view.setViewName("warehouse/print/printTransportEIR");
+		return view;
+	}
+
+	/**
+	 * 
+	 * 打印出库COE标签
+	 * 
+	 * 根据出库渠道 判断打印顺丰运单还是ETK运单
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/printTransportCoeLabel", method = RequestMethod.GET)
+	public ModelAndView printTransportCoeLabel(HttpServletRequest request, HttpServletResponse response, Long coeTrackingNoId) throws IOException {
+		ModelAndView view = new ModelAndView();
+		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
+		if (coeTrackingNoId == null) {
+			return view;
+		}
+		// 返回页面的list,装map 每个map 是每个订单的数据
+		Map<String, Object> map = printService.getPrintCoeLabelData(coeTrackingNoId);
+		view.addObject("map", map);
+		view.addObject("timeNow", DateUtil.dateConvertString(new Date(), DateUtil.yyyy_MM_ddHHmmss));
+		view.setViewName("warehouse/print/printTransportCoeLabel");
 		return view;
 	}
 
