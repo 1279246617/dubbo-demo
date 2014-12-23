@@ -54,6 +54,11 @@ public class PackageRecord implements Serializable {
 	 */
 	private Long createdTime;
 	/**
+	 * 创建时间
+	 */
+	private Long shippedTime;
+
+	/**
 	 * 是否已经扫描出货
 	 */
 	private String isShiped;
@@ -82,6 +87,14 @@ public class PackageRecord implements Serializable {
 
 	public void setIsShiped(String isShiped) {
 		this.isShiped = isShiped;
+	}
+
+	public Long getShippedTime() {
+		return shippedTime;
+	}
+
+	public void setShippedTime(Long shippedTime) {
+		this.shippedTime = shippedTime;
 	}
 
 	public Long getUserIdOfOperator() {

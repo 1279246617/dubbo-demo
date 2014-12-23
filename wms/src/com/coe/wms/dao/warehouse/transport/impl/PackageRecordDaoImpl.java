@@ -69,7 +69,7 @@ public class PackageRecordDaoImpl implements IPackageRecordDao {
 
 	@Override
 	public PackageRecord getPackageRecordById(Long outWarehouseRecordId) {
-		String sql = "select id,warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,remark,is_shiped from w_t_package_record where id =" + outWarehouseRecordId;
+		String sql = "select id,warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,remark,is_shiped,shipped_time from w_t_package_record where id =" + outWarehouseRecordId;
 		PackageRecord record = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<PackageRecord>(PackageRecord.class));
 		return record;
 	}
@@ -82,7 +82,7 @@ public class PackageRecordDaoImpl implements IPackageRecordDao {
 	@Override
 	public List<PackageRecord> findPackageRecord(PackageRecord outWarehouseRecord, Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select id,warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,remark,is_shiped from w_t_package_record where 1=1 ");
+		sb.append("select id,warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,remark,is_shiped,shipped_time from w_t_package_record where 1=1 ");
 		if (outWarehouseRecord != null) {
 			if (outWarehouseRecord.getId() != null) {
 				sb.append(" and id = " + outWarehouseRecord.getId());
@@ -193,9 +193,9 @@ public class PackageRecordDaoImpl implements IPackageRecordDao {
 	}
 
 	@Override
-	public int updatePackageRecordIsShiped(Long outWarehouseRecordId, String isShiped) {
-		String sql = "update w_t_package_record set is_shiped ='" + isShiped + "' where id=" + outWarehouseRecordId;
-		return jdbcTemplate.update(sql);
+	public int updatePackageRecordIsShiped(Long outWarehouseRecordId, String isShiped, Long shippedTime) {
+		String sql = "update w_t_package_record set is_shiped = ?,shipped_time = ? where id= ?";
+		return jdbcTemplate.update(sql, isShiped, shippedTime, outWarehouseRecordId);
 	}
 
 	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {

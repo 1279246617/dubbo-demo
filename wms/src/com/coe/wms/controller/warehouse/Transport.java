@@ -21,13 +21,13 @@ import com.coe.wms.controller.Application;
 import com.coe.wms.model.user.User;
 import com.coe.wms.model.warehouse.TrackingNo;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
-import com.coe.wms.model.warehouse.storage.record.OutWarehouseRecordItem;
 import com.coe.wms.model.warehouse.transport.BigPackage;
 import com.coe.wms.model.warehouse.transport.BigPackageStatus;
 import com.coe.wms.model.warehouse.transport.LittlePackage;
 import com.coe.wms.model.warehouse.transport.LittlePackageItem;
 import com.coe.wms.model.warehouse.transport.LittlePackageOnShelf;
 import com.coe.wms.model.warehouse.transport.LittlePackageStatus;
+import com.coe.wms.model.warehouse.transport.PackageRecord;
 import com.coe.wms.model.warehouse.transport.PackageRecordItem;
 import com.coe.wms.service.storage.IStorageService;
 import com.coe.wms.service.transport.ITransportService;
@@ -359,8 +359,7 @@ public class Transport {
 	}
 
 	/**
-	 * 大包称重
-	 * 小包下架
+	 * 大包称重 小包下架
 	 * 
 	 * @param request
 	 * @param trackingNo
@@ -696,4 +695,79 @@ public class Transport {
 		return GsonUtil.toJson(checkResultMap);
 	}
 
+	/**
+	 * 获取出库建包记录
+	 * 
+	 * @param request
+	 * @param response
+	 * @param userLoginName
+	 *            客户登录名,仅当根据跟踪号无法找到订单时,要求输入
+	 * @return
+	 * @throws IOException
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/getPackageRecordData")
+	public String getPackageRecordData(HttpServletRequest request, String sortorder, String sortname, int page, int pagesize, String userLoginName, Long warehouseId, String coeTrackingNo, String createdTimeStart, String createdTimeEnd)
+			throws IOException {
+		HttpSession session = request.getSession();
+		// 当前操作员
+		Long userIdOfOperator = (Long) session.getAttribute(SessionConstant.USER_ID);
+		Pagination pagination = new Pagination();
+		pagination.curPage = page;
+		pagination.pageSize = pagesize;
+		pagination.sortName = sortname;
+		pagination.sortOrder = sortorder;
+		PackageRecord param = new PackageRecord();
+		param.setCoeTrackingNo(coeTrackingNo);
+		if (StringUtil.isNotNull(userLoginName)) {
+			Long userIdOfCustomer = userService.findUserIdByLoginName(userLoginName);
+			param.setUserIdOfCustomer(userIdOfCustomer);
+		}
+		param.setWarehouseId(warehouseId);
+		// 更多参数
+		Map<String, String> moreParam = new HashMap<String, String>();
+		moreParam.put("createdTimeStart", createdTimeStart);
+		moreParam.put("createdTimeEnd", createdTimeEnd);
+		pagination = transportService.getPackageRecordData(param, moreParam, pagination);
+		Map map = new HashMap();
+		map.put("Rows", pagination.rows);
+		map.put("Total", pagination.total);
+		return GsonUtil.toJson(map);
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/getPackageRecordItemByPackageRecordId", method = RequestMethod.POST)
+	public String getPackageRecordItemByPackageRecordId(Long packageRecordId) {
+		List<Map<String, String>> mapList = transportService.getPackageRecordItemByPackageRecordId(packageRecordId);
+		return GsonUtil.toJson(mapList);
+	}
+
+	/**
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/editPackageRecordRemark", method = RequestMethod.GET)
+	public ModelAndView editPackageRecordRemark(HttpServletRequest request, HttpServletResponse response, Long id, String remark) throws IOException {
+		ModelAndView view = new ModelAndView();
+		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
+		if (remark == null) {
+			remark = "";
+		}
+		view.addObject("remark", remark);
+		view.setViewName("warehouse/transport/editPackageRecordRemark");
+		return view;
+	}
+
+	/**
+	 * @throws IOException
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/savePackageRecordRemark")
+	public String savePackageRecordRemark(HttpServletRequest request, Long id, String remark) throws IOException {
+		Map<String, String> map = transportService.savePackageRecordRemark(remark, id);
+		return GsonUtil.toJson(map);
+	}
 }

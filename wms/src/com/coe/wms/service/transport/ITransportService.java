@@ -12,6 +12,7 @@ import com.coe.wms.model.warehouse.transport.LittlePackage;
 import com.coe.wms.model.warehouse.transport.LittlePackageItem;
 import com.coe.wms.model.warehouse.transport.LittlePackageOnShelf;
 import com.coe.wms.model.warehouse.transport.LittlePackageStatus;
+import com.coe.wms.model.warehouse.transport.PackageRecord;
 import com.coe.wms.pojo.api.warehouse.EventBody;
 import com.coe.wms.util.Pagination;
 
@@ -124,4 +125,16 @@ public interface ITransportService {
 	 */
 	public Map<String, String> outWarehouseShippingConfirm(String coeTrackingNo, Long userIdOfOperator) throws ServiceException;
 
+	/**
+	 * 获取建包记录
+	 * 
+	 * @param inWarehouseRecordId
+	 * @param page
+	 * @return
+	 */
+	public Pagination getPackageRecordData(PackageRecord outWarehousePackage, Map<String, String> moreParam, Pagination page);
+
+	public List<Map<String, String>> getPackageRecordItemByPackageRecordId(Long packageId);
+
+	public Map<String, String> savePackageRecordRemark(String remark, Long id) throws ServiceException;
 }

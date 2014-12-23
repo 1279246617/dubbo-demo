@@ -39,10 +39,7 @@ import com.coe.wms.model.user.User;
 import com.coe.wms.model.warehouse.TrackingNo;
 import com.coe.wms.model.warehouse.Warehouse;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrder;
-import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderItemShelf;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderReceiver;
-import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus.OutWarehouseOrderStatusCode;
-import com.coe.wms.model.warehouse.storage.record.ItemInventory;
 import com.coe.wms.model.warehouse.storage.record.OutWarehousePackage;
 import com.coe.wms.model.warehouse.storage.record.OutWarehouseRecord;
 import com.coe.wms.model.warehouse.storage.record.OutWarehouseRecordItem;
@@ -1206,6 +1203,7 @@ public class TransportServiceImpl implements ITransportService {
 			map.put(Constant.MESSAGE, "该交接单号对应大包已经出库,请勿重复操作");
 			return map;
 		}
+		packageRecordDao.updatePackageRecordIsShiped(packageRecord.getId(), Constant.Y, System.currentTimeMillis());
 		// 根据coe交接单号 获取建包记录,获取每个出库订单(小包)
 		PackageRecordItem itemParam = new PackageRecordItem();
 		itemParam.setCoeTrackingNoId(coeTrackingNoId);
@@ -1217,6 +1215,91 @@ public class TransportServiceImpl implements ITransportService {
 		}
 		map.put(Constant.STATUS, Constant.SUCCESS);
 		map.put(Constant.MESSAGE, "完成出货总单成功,请继续下一批!");
+		return map;
+	}
+
+	/**
+	 * 获取出库建包记录
+	 */
+	@Override
+	public Pagination getPackageRecordData(PackageRecord outWarehousePackage, Map<String, String> moreParam, Pagination page) {
+		List<PackageRecord> packageRecordList = packageRecordDao.findPackageRecord(outWarehousePackage, moreParam, page);
+		List<Object> list = new ArrayList<Object>();
+		for (PackageRecord packageRecord : packageRecordList) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("id", packageRecord.getId());
+			if (packageRecord.getCreatedTime() != null) {
+				map.put("packageTime", DateUtil.dateConvertString(new Date(packageRecord.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss));
+			}
+			OutWarehouseRecord recordParam = new OutWarehouseRecord();
+			recordParam.setCoeTrackingNoId(packageRecord.getCoeTrackingNoId());
+			if (StringUtil.isEqual(packageRecord.getIsShiped(), Constant.Y)) {
+				map.put("isShipped", "已发货");
+				map.put("shippedTime", DateUtil.dateConvertString(new Date(packageRecord.getShippedTime()), DateUtil.yyyy_MM_ddHHmmss));
+			} else {
+				map.put("isShipped", "未发货");
+			}
+			// 查询用户名
+			User user = userDao.getUserById(packageRecord.getUserIdOfCustomer());
+			map.put("userLoginNameOfCustomer", user.getLoginName());
+			// 查询操作员
+			if (NumberUtil.greaterThanZero(packageRecord.getUserIdOfOperator())) {
+				User userOfOperator = userDao.getUserById(packageRecord.getUserIdOfOperator());
+				map.put("userLoginNameOfOperator", userOfOperator.getLoginName());
+			}
+			map.put("coeTrackingNo", packageRecord.getCoeTrackingNo());
+			map.put("coeTrackingNoId", packageRecord.getCoeTrackingNoId());
+			if (NumberUtil.greaterThanZero(packageRecord.getWarehouseId())) {
+				Warehouse warehouse = warehouseDao.getWarehouseById(packageRecord.getWarehouseId());
+				map.put("warehouse", warehouse.getWarehouseName());
+			}
+			map.put("remark", packageRecord.getRemark() == null ? "" : packageRecord.getRemark());
+			PackageRecordItem param = new PackageRecordItem();
+			param.setCoeTrackingNoId(packageRecord.getCoeTrackingNoId());
+			List<PackageRecordItem> itemList = packageRecordItemDao.findPackageRecordItem(param, null, null);
+			Integer quantity = 0;
+			String orders = "";
+			for (PackageRecordItem item : itemList) {
+				orders += item.getBigPackageTrackingNo() + " ; ";
+				quantity++;
+			}
+			map.put("orders", orders);
+			map.put("quantity", quantity);
+			list.add(map);
+		}
+		page.total = packageRecordDao.countPackageRecord(outWarehousePackage, moreParam);
+		page.rows = list;
+		return page;
+	}
+
+	@Override
+	public List<Map<String, String>> getPackageRecordItemByPackageRecordId(Long packageId) {
+		PackageRecord packageRecord = packageRecordDao.getPackageRecordById(packageId);
+		PackageRecordItem param = new PackageRecordItem();
+		param.setCoeTrackingNoId(packageRecord.getCoeTrackingNoId());
+		List<PackageRecordItem> packageRecordItemList = packageRecordItemDao.findPackageRecordItem(param, null, null);
+		List<Map<String, String>> mapList = new ArrayList<Map<String, String>>();
+		for (PackageRecordItem item : packageRecordItemList) {
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("orderId", item.getBigPackageId() + "");
+			map.put("trackingNo", item.getBigPackageTrackingNo());
+			User user = userDao.getUserById(item.getUserIdOfCustomer());
+			map.put("customer", user.getLoginName());
+			BigPackage bigPackage = bigPackageDao.getBigPackageById(item.getBigPackageId());
+			map.put("weight", bigPackage.getOutWarehouseWeight() + "");
+			mapList.add(map);
+		}
+		return mapList;
+	}
+
+	@Override
+	public Map<String, String> savePackageRecordRemark(String remark, Long id) throws ServiceException {
+		Map<String, String> map = new HashMap<String, String>();
+		if (packageRecordDao.updatePackageRecordRemark(id, remark) > 0) {
+			map.put(Constant.STATUS, Constant.SUCCESS);
+		} else {
+			map.put(Constant.STATUS, Constant.FAIL);
+		}
 		return map;
 	}
 }
