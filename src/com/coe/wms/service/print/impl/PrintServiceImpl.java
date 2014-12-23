@@ -41,6 +41,8 @@ import com.coe.wms.dao.warehouse.transport.ILittlePackageDao;
 import com.coe.wms.dao.warehouse.transport.ILittlePackageItemDao;
 import com.coe.wms.dao.warehouse.transport.ILittlePackageOnShelfDao;
 import com.coe.wms.dao.warehouse.transport.ILittlePackageStatusDao;
+import com.coe.wms.dao.warehouse.transport.IPackageRecordDao;
+import com.coe.wms.dao.warehouse.transport.IPackageRecordItemDao;
 import com.coe.wms.model.warehouse.Seat;
 import com.coe.wms.model.warehouse.Warehouse;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrder;
@@ -60,6 +62,8 @@ import com.coe.wms.model.warehouse.transport.BigPackageStatus.BigPackageStatusCo
 import com.coe.wms.model.warehouse.transport.LittlePackage;
 import com.coe.wms.model.warehouse.transport.LittlePackageItem;
 import com.coe.wms.model.warehouse.transport.LittlePackageOnShelf;
+import com.coe.wms.model.warehouse.transport.PackageRecord;
+import com.coe.wms.model.warehouse.transport.PackageRecordItem;
 import com.coe.wms.service.print.IPrintService;
 import com.coe.wms.util.BarcodeUtil;
 import com.coe.wms.util.Constant;
@@ -161,6 +165,12 @@ public class PrintServiceImpl implements IPrintService {
 
 	@Resource(name = "littlePackageOnShelfDao")
 	private ILittlePackageOnShelfDao littlePackageOnShelfDao;
+
+	@Resource(name = "packageRecordDao")
+	private IPackageRecordDao packageRecordDao;
+
+	@Resource(name = "packageRecordItemDao")
+	private IPackageRecordItemDao packageRecordItemDao;
 
 	@Override
 	public Map<String, Object> getPrintPackageListData(Long outWarehouseOrderId) {
@@ -350,7 +360,7 @@ public class PrintServiceImpl implements IPrintService {
 	}
 
 	@Override
-	public Map<String, Object> printTransportShipLabel(Long bigPackageId) {
+	public Map<String, Object> getPrintTransportShipLabedData(Long bigPackageId) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put(Constant.STATUS, Constant.FAIL);
 		BigPackage bigPackage = bigPackageDao.getBigPackageById(bigPackageId);
@@ -446,4 +456,65 @@ public class PrintServiceImpl implements IPrintService {
 		map.put("littlePackageOnShelfList", littlePackageOnShelfList);
 		return map;
 	}
+
+	@Override
+	public List<Map<String, String>> getPrintTransportEIRData(Long coeTrackingNoId) {
+		PackageRecordItem itemParam = new PackageRecordItem();
+		itemParam.setCoeTrackingNoId(coeTrackingNoId);
+		List<PackageRecordItem> itemParamList = packageRecordItemDao.findPackageRecordItem(itemParam, null, null);
+		List<Map<String, String>> mapList = new ArrayList<Map<String, String>>();
+		for (PackageRecordItem item : itemParamList) {
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("ourWarehouseOrderTrackingNo", item.getBigPackageTrackingNo());
+			Long outWarehouseOrderId = item.getBigPackageId();
+			BigPackage bigPackage = bigPackageDao.getBigPackageById(outWarehouseOrderId);
+			if (bigPackage == null) {
+				continue;
+			}
+			map.put("warehouseId", bigPackage.getWarehouseId() + "");
+			map.put("customerReferenceNo", bigPackage.getCustomerReferenceNo());
+			map.put("outWarehouseWeight", bigPackage.getOutWarehouseWeight() + "");
+			mapList.add(map);
+		}
+		return mapList;
+	}
+
+	/**
+	 * 打印coe交接单,根据建包记录
+	 */
+	@Override
+	public Map<String, Object> getPrintTransportCoeLabelData(Long coeTrackingNoId) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		PackageRecord recordParam = new PackageRecord();
+		recordParam.setCoeTrackingNoId(coeTrackingNoId);
+		List<PackageRecord> packageRecordList = packageRecordDao.findPackageRecord(recordParam, null, null);
+		if (packageRecordList == null || packageRecordList.size() == 0) {
+			return map;
+		}
+		PackageRecord record = packageRecordList.get(0);
+		// 出貨詳情
+		PackageRecordItem recordItemParam = new PackageRecordItem();
+		recordItemParam.setCoeTrackingNoId(coeTrackingNoId);
+		List<PackageRecordItem> packageRecordItemList = packageRecordItemDao.findPackageRecordItem(recordItemParam, null, null);
+		// 總重量
+		double totalWeight = 0d;
+		int quantity = 0;
+		for (PackageRecordItem item : packageRecordItemList) {
+			BigPackage bigPackage = bigPackageDao.getBigPackageById(item.getBigPackageId());
+			totalWeight += bigPackage.getOutWarehouseWeight();
+			quantity++;
+		}
+		String trackingNoBarcodeData = BarcodeUtil.createCode128(record.getCoeTrackingNo(), false, 29d, 0.5d);
+		map.put("coeTrackingNoBarcodeData", trackingNoBarcodeData);
+		map.put("totalWeight", NumberUtil.getNumPrecision(totalWeight, 3));
+		map.put("quantity", quantity);
+		map.put("outWarehouseRecord", record);
+		if (record.getShippedTime() != null) {
+			map.put("shipdate", DateUtil.dateConvertString(new Date(record.getCreatedTime()), DateUtil.yyyy_MM_dd));
+		} else {
+			map.put("shipdate", DateUtil.dateConvertString(new Date(record.getCreatedTime()), DateUtil.yyyy_MM_dd));
+		}
+		return map;
+	}
+
 }
