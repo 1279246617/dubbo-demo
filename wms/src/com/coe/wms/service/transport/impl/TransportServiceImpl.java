@@ -1092,11 +1092,11 @@ public class TransportServiceImpl implements ITransportService {
 				map.put("orderIds", orderIds);
 				map.put(Constant.STATUS, "2");
 			}
-		} else if (StringUtil.isEqual(bigPackage.getStatus(), OutWarehouseOrderStatusCode.SUCCESS)) {
+		} else if (StringUtil.isEqual(bigPackage.getStatus(), BigPackageStatusCode.SUCCESS)) {
 			map.put(Constant.MESSAGE, "转运订单当前状态已经是出库成功");
-		} else if (StringUtil.isEqual(bigPackage.getStatus(), OutWarehouseOrderStatusCode.WCC)) {
+		} else if (StringUtil.isEqual(bigPackage.getStatus(), BigPackageStatusCode.WCC)) {
 			map.put(Constant.MESSAGE, "转运订单当前状态是等待客户确认出库,不能出库");
-		} else if (StringUtil.isEqual(bigPackage.getStatus(), OutWarehouseOrderStatusCode.WSW)) {
+		} else if (StringUtil.isEqual(bigPackage.getStatus(), BigPackageStatusCode.WSW)) {
 			map.put(Constant.MESSAGE, "转运订单当前状态是等待发送出库重量给客户,不能出库");
 		} else {
 			map.put(Constant.MESSAGE, "转运订单当前状态不能扫描建包出库");

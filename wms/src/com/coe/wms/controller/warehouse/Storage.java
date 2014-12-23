@@ -942,6 +942,16 @@ public class Storage {
 		return GsonUtil.toJson(map);
 	}
 
+	@ResponseBody
+	@RequestMapping(value = "/submitInWarehouseRecord", method = RequestMethod.POST)
+	public String submitInWarehouseRecord(HttpServletRequest request, Long inWarehouseRecordId) throws IOException {
+		// 操作员
+		Long userIdOfOperator = (Long) request.getSession().getAttribute(SessionConstant.USER_ID);
+		// 校验和保存
+		Map<String, String> serviceResult = storageService.submitInWarehouseRecord(inWarehouseRecordId);
+		return GsonUtil.toJson(serviceResult);
+	}
+
 	/**
 	 * 保存入库明细
 	 * 
