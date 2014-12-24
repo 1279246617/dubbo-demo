@@ -1,6 +1,8 @@
 package com.coe.wms.controller.warehouse;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +26,7 @@ import com.coe.wms.model.warehouse.storage.record.ItemShelfInventory;
 import com.coe.wms.service.inventory.IItemInventoryService;
 import com.coe.wms.service.storage.IStorageService;
 import com.coe.wms.service.user.IUserService;
+import com.coe.wms.util.FileUtil;
 import com.coe.wms.util.GsonUtil;
 import com.coe.wms.util.Pagination;
 import com.coe.wms.util.SessionConstant;
@@ -159,5 +163,45 @@ public class Inventory {
 		map.put("Rows", pagination.rows);
 		map.put("Total", pagination.total);
 		return GsonUtil.toJson(map);
+	}
+
+	/**
+	 * 导出库存文件
+	 * 
+	 * @param response
+	 * @throws IOException
+	 */
+	@ResponseBody
+	@RequestMapping(value = "exportShelfInventory", method = RequestMethod.GET)
+	public void exportShelfInventory(HttpServletResponse response, String userLoginName, Long warehouseId, String sku, String seatCode, String timeStart, String timeEnd) throws IOException {
+		ItemShelfInventory param = new ItemShelfInventory();
+		param.setWarehouseId(warehouseId);
+		param.setSeatCode(seatCode);
+		param.setSku(sku);
+		// 客户帐号
+		if (StringUtil.isNotNull(userLoginName)) {
+			Long userIdOfCustomer = userService.findUserIdByLoginName(userLoginName);
+			param.setUserIdOfCustomer(userIdOfCustomer);
+		}
+		// 更多参数
+		Map<String, String> moreParam = new HashMap<String, String>();
+		moreParam.put("lastUpdateTimeStart", timeStart);
+		moreParam.put("lastUpdateTimeEnd", timeEnd);
+
+		OutputStream os = response.getOutputStream();
+		try {
+			String filePathAndName = itemInventoryService.exportShelfInventory(param, moreParam);
+			String fileName = FileUtil.getFileName(filePathAndName);
+			response.reset();
+			response.setHeader("Content-Disposition", "attachment; filename=" + java.net.URLEncoder.encode(fileName, "UTF-8"));
+			response.setContentType("application/octet-stream; charset=utf-8");
+			File file = new File(filePathAndName);
+			os.write(FileUtils.readFileToByteArray(file));
+			os.flush();
+		} finally {
+			if (os != null) {
+				os.close();
+			}
+		}
 	}
 }

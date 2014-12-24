@@ -1,5 +1,6 @@
 package com.coe.wms.service.inventory.impl;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -35,9 +36,11 @@ import com.coe.wms.model.warehouse.Warehouse;
 import com.coe.wms.model.warehouse.storage.record.ItemInventory;
 import com.coe.wms.model.warehouse.storage.record.ItemShelfInventory;
 import com.coe.wms.service.inventory.IItemInventoryService;
+import com.coe.wms.util.Config;
 import com.coe.wms.util.DateUtil;
+import com.coe.wms.util.FileUtil;
+import com.coe.wms.util.POIExcelUtil;
 import com.coe.wms.util.Pagination;
-import com.coe.wms.util.StringUtil;
 
 /**
  * 仓配服务
@@ -105,6 +108,9 @@ public class ItemInventoryServiceImpl implements IItemInventoryService {
 
 	@Resource(name = "outWarehouseOrderAdditionalSfDao")
 	private IOutWarehouseOrderAdditionalSfDao outWarehouseOrderAdditionalSfDao;
+
+	@Resource(name = "config")
+	private Config config;
 
 	@Override
 	public Pagination getListInventoryData(ItemInventory param, Map<String, String> moreParam, Pagination pagination) {
@@ -183,5 +189,56 @@ public class ItemInventoryServiceImpl implements IItemInventoryService {
 		pagination.total = itemShelfInventoryDao.countItemShelfInventory(param, moreParam);
 		pagination.rows = list;
 		return pagination;
+	}
+
+	@Override
+	public String exportShelfInventory(ItemShelfInventory param, Map<String, String> moreParam) {
+		String filePath = config.getRuntimeFilePath() + "/export/";
+		FileUtil.mkdirs(filePath);
+		String filePathAndName = filePath + "shelf_inventory_" + System.currentTimeMillis() + ".xls";
+		String[] IN_WAREHOUSE_REPORT_HEAD = { "序号", "客户帐号", "仓库", "货位号", "商品条码", "商品SKU", "实际库存数量", "可用库存数量", "批次号", "上次更新时间", "创建时间" };
+		List<String[]> rows = new ArrayList<String[]>();
+		List<ItemShelfInventory> itemShelfInventoryList = itemShelfInventoryDao.findItemShelfInventory(param, moreParam, null);
+		for (int i = 0; i < itemShelfInventoryList.size(); i++) {
+			ItemShelfInventory item = itemShelfInventoryList.get(i);
+			String[] row = new String[11];
+			row[0] = (i + 1) + "";// 序号
+
+			User user = userDao.getUserById(item.getUserIdOfCustomer());
+			row[1] = user.getLoginName();// 客户帐号
+
+			Warehouse warehouse = warehouseDao.getWarehouseById(item.getWarehouseId());
+			if (warehouse != null) {
+				row[2] = warehouse.getWarehouseName();// 仓库
+			}
+
+			row[3] = item.getSeatCode();// 货位号
+
+			row[4] = item.getSku();// 商品条码
+
+			String sku = productDao.findProductSkuByBarcode(user.getId(), item.getSku());
+			row[5] = sku;// 商品SKU
+
+			row[6] = item.getQuantity() + "";// 实际库存数量
+
+			row[7] = item.getAvailableQuantity() + "";// 可用库存数量
+
+			row[8] = item.getBatchNo();// 批次号
+
+			if (item.getLastUpdateTime() != null) {
+				row[9] = DateUtil.dateConvertString(new Date(item.getLastUpdateTime()), DateUtil.yyyy_MM_ddHHmmss);// 上次更新时间
+			}
+
+			if (item.getCreatedTime() != null) {
+				row[10] = DateUtil.dateConvertString(new Date(item.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss);// 创建时间
+			}
+			rows.add(row);
+		}
+		try {
+			POIExcelUtil.createExcel("商品货位库存", IN_WAREHOUSE_REPORT_HEAD, rows, filePathAndName);
+		} catch (IOException e) {
+			logger.error("导出商品货位库存异常:" + e);
+		}
+		return filePathAndName;
 	}
 }

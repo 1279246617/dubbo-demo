@@ -321,4 +321,17 @@ public class FileUtil {
 		}
 		zis.close();
 	}
+
+	/**
+	 * 根据文件路径和文件名获取文件名
+	 * 
+	 * @param filePathAndName
+	 * @return
+	 */
+	public static String getFileName(String filePathAndName) {
+		int a = filePathAndName.lastIndexOf("\\");
+		int b = filePathAndName.lastIndexOf("/");
+		String fileName = filePathAndName.substring((a > b ? a : b) + 1, filePathAndName.length());
+		return fileName;
+	}
 }
