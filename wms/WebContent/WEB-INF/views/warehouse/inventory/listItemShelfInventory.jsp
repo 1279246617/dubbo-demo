@@ -154,7 +154,20 @@
    	</script>
    	<script type="text/javascript">
    		function exportShelfInventory(){
-   			var url = baseUrl + '/warehouse/inventory/exportShelfInventory.do';
+			var userLoginName = $("#userLoginName").val();
+			var warehouseId = $("#warehouseId").val();
+			var sku = $("#sku").val();
+			var seatCode = $("#seatCode").val();
+			var timeStart = $("#timeStart").val();
+			var timeEnd = $("#timeEnd").val();
+			
+   			var url = baseUrl + '/warehouse/inventory/exportShelfInventory.do?userLoginName='+userLoginName
+   					+'&warehouseId='+warehouseId
+   					+'&sku='+sku
+   					+'&seatCode='+seatCode
+   					+'&timeStart='+timeStart
+   					+'&timeEnd='+timeEnd;
+   			
    			window.open(url);
    		}
    	</script>
