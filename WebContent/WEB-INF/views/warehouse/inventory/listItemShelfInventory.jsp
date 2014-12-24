@@ -43,11 +43,11 @@
                		</span>
                		<span class="pull-left" style="width:165px;">
                			商品条码
-               			 <input type="text"   style="width:100px;" name="sku" title="商品条码">
+               			 <input type="text"   style="width:100px;" name="sku" id="sku" title="商品条码">
                		</span>
                		<span class="pull-left" style="width:165px;">
                			货位号
-               			 <input type="text"   style="width:100px;" name="seatCode" title="可输入货位号">
+               			 <input type="text"   style="width:100px;" name="seatCode" id="seatCode" title="可输入货位号">
                		</span>
                		
                		<span class="pull-left" style="width:200px;">
