@@ -8,8 +8,6 @@ import javax.annotation.Resource;
 
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.log4j.Logger;
-import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -33,7 +31,6 @@ import com.coe.wms.dao.warehouse.transport.IBigPackageStatusDao;
 import com.coe.wms.dao.warehouse.transport.ILittlePackageDao;
 import com.coe.wms.dao.warehouse.transport.ILittlePackageItemDao;
 import com.coe.wms.dao.warehouse.transport.ILittlePackageStatusDao;
-import com.coe.wms.dao.warehouse.transport.impl.BigPackageDaoImpl;
 import com.coe.wms.model.unit.Weight;
 import com.coe.wms.model.user.User;
 import com.coe.wms.model.warehouse.Warehouse;
@@ -43,8 +40,8 @@ import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus.OutWare
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecord;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecordItem;
 import com.coe.wms.model.warehouse.transport.BigPackage;
-import com.coe.wms.model.warehouse.transport.LittlePackage;
 import com.coe.wms.model.warehouse.transport.BigPackageStatus.BigPackageStatusCode;
+import com.coe.wms.model.warehouse.transport.LittlePackage;
 import com.coe.wms.model.warehouse.transport.LittlePackageStatus.LittlePackageStatusCode;
 import com.coe.wms.pojo.api.warehouse.EventBody;
 import com.coe.wms.pojo.api.warehouse.EventHeader;
@@ -235,7 +232,7 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 			logisticsEvent.setEventBody(eventBody);
 			logisticsEventsRequest.setLogisticsEvent(logisticsEvent);
 
-			String xml = XmlUtil.toXml(LogisticsEventsRequest.class, logisticsEventsRequest);
+			String xml = XmlUtil.toXml(logisticsEventsRequest);
 			User user = userDao.getUserById(inWarehouseRecord.getUserIdOfCustomer());
 
 			String msgSource = user.getOppositeMsgSource();
@@ -335,7 +332,7 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 			eventBody.setLogisticsDetail(logisticsDetail);
 			logisticsEvent.setEventBody(eventBody);
 			logisticsEventsRequest.setLogisticsEvent(logisticsEvent);
-			String xml = XmlUtil.toXml(LogisticsEventsRequest.class, logisticsEventsRequest);
+			String xml = XmlUtil.toXml(logisticsEventsRequest);
 			User user = userDao.getUserById(outWarehouseOrder.getUserIdOfCustomer());
 
 			String msgSource = user.getOppositeMsgSource();
@@ -436,7 +433,7 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 			eventBody.setLogisticsDetail(logisticsDetail);
 			logisticsEvent.setEventBody(eventBody);
 			logisticsEventsRequest.setLogisticsEvent(logisticsEvent);
-			String xml = XmlUtil.toXml(LogisticsEventsRequest.class, logisticsEventsRequest);
+			String xml = XmlUtil.toXml(logisticsEventsRequest);
 			User user = userDao.getUserById(outWarehouseOrder.getUserIdOfCustomer());
 
 			String msgSource = user.getOppositeMsgSource();
@@ -541,7 +538,7 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 			eventBody.setLogisticsDetail(logisticsDetail);
 			logisticsEvent.setEventBody(eventBody);
 			logisticsEventsRequest.setLogisticsEvent(logisticsEvent);
-			String xml = XmlUtil.toXml(LogisticsEventsRequest.class, logisticsEventsRequest);
+			String xml = XmlUtil.toXml(logisticsEventsRequest);
 
 			// xml内容封装完成,开始准备发送
 			User user = userDao.getUserById(bigPackage.getUserIdOfCustomer());
@@ -655,7 +652,7 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 			eventBody.setLogisticsDetail(logisticsDetail);
 			logisticsEvent.setEventBody(eventBody);
 			logisticsEventsRequest.setLogisticsEvent(logisticsEvent);
-			String xml = XmlUtil.toXml(LogisticsEventsRequest.class, logisticsEventsRequest);
+			String xml = XmlUtil.toXml(logisticsEventsRequest);
 
 			// xml内容封装完成,开始准备发送
 			User user = userDao.getUserById(littlePackage.getUserIdOfCustomer());
@@ -766,7 +763,7 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 			eventBody.setLogisticsDetail(logisticsDetail);
 			logisticsEvent.setEventBody(eventBody);
 			logisticsEventsRequest.setLogisticsEvent(logisticsEvent);
-			String xml = XmlUtil.toXml(LogisticsEventsRequest.class, logisticsEventsRequest);
+			String xml = XmlUtil.toXml(logisticsEventsRequest);
 
 			// xml内容封装完成,开始准备发送
 			User user = userDao.getUserById(bigPackage.getUserIdOfCustomer());
@@ -869,7 +866,7 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 			eventBody.setLogisticsDetail(logisticsDetail);
 			logisticsEvent.setEventBody(eventBody);
 			logisticsEventsRequest.setLogisticsEvent(logisticsEvent);
-			String xml = XmlUtil.toXml(LogisticsEventsRequest.class, logisticsEventsRequest);
+			String xml = XmlUtil.toXml(logisticsEventsRequest);
 			User user = userDao.getUserById(bigPackage.getUserIdOfCustomer());
 
 			String msgSource = user.getOppositeMsgSource();
