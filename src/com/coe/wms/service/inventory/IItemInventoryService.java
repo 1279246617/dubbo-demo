@@ -23,4 +23,7 @@ public interface IItemInventoryService {
 	public Pagination getListInventoryData(ItemInventory itemInventory, Map<String, String> moreParam, Pagination page);
 
 	public Pagination getListItemShelfInventoryData(ItemShelfInventory itemShelfInventory, Map<String, String> moreParam, Pagination page);
+
+	public String exportShelfInventory(ItemShelfInventory param, Map<String, String> moreParam);
+
 }
