@@ -167,13 +167,13 @@ public class TransportServiceImpl implements ITransportService {
 		if (tradeDetail == null) {
 			response.setReason(ErrorCode.S01_CODE);
 			response.setReasonDesc("EventBody对象获取TradeDetail对象得到Null");
-			return XmlUtil.toXml(Responses.class, responses);
+			return XmlUtil.toXml(responses);
 		}
 		List<TradeOrder> tradeOrderList = tradeDetail.getTradeOrders();
 		if (tradeOrderList == null || tradeOrderList.size() == 0) {
 			response.setReason(ErrorCode.S01_CODE);
 			response.setReasonDesc("TradeDetail对象获取TradeOrders对象得到Null");
-			return XmlUtil.toXml(Responses.class, responses);
+			return XmlUtil.toXml(responses);
 		}
 		TradeOrder tradeOrder = tradeOrderList.get(0);
 		// 客户订单号
@@ -181,7 +181,7 @@ public class TransportServiceImpl implements ITransportService {
 		if (StringUtil.isNull(customerReferenceNo)) {
 			response.setReason(ErrorCode.S01_CODE);
 			response.setReasonDesc("TradeOrder对象获取tradeOrderId得到Null");
-			return XmlUtil.toXml(Responses.class, responses);
+			return XmlUtil.toXml(responses);
 		}
 		// 交易备注,等于打印捡货单上的买家备注
 		String tradeRemark = tradeOrder.getTradeRemark();
@@ -189,26 +189,26 @@ public class TransportServiceImpl implements ITransportService {
 		if (buyer == null) {
 			response.setReason(ErrorCode.S01_CODE);
 			response.setReasonDesc("TradeOrder对象获取Buyer对象得到Null");
-			return XmlUtil.toXml(Responses.class, responses);
+			return XmlUtil.toXml(responses);
 		}
 		// 小包
 		LogisticsDetail logisticsDetail = eventBody.getLogisticsDetail();
 		if (logisticsDetail == null) {
 			response.setReason(ErrorCode.S01_CODE);
 			response.setReasonDesc("EventBody对象获取LogisticsDetail对象得到Null");
-			return XmlUtil.toXml(Responses.class, responses);
+			return XmlUtil.toXml(responses);
 		}
 		ClearanceDetail clearanceDetail = eventBody.getClearanceDetail();
 		if (clearanceDetail == null) {
 			response.setReason(ErrorCode.S01_CODE);
 			response.setReasonDesc("EventBody对象获取ClearanceDetail对象得到Null");
-			return XmlUtil.toXml(Responses.class, responses);
+			return XmlUtil.toXml(responses);
 		}
 		List<LogisticsOrder> logisticsOrders = logisticsDetail.getLogisticsOrders();
 		if (logisticsOrders == null || logisticsOrders.size() == 0) {
 			response.setReason(ErrorCode.S01_CODE);
 			response.setReasonDesc("LogisticsDetail对象获取LogisticsOrders对象得到Null");
-			return XmlUtil.toXml(Responses.class, responses);
+			return XmlUtil.toXml(responses);
 		}
 		// 2014-12-09顺丰确认 多个 logisticsOrder的SenderDetail 是一样的. 所以仅需保存一份
 		LogisticsOrder logisticsOrderFirst = logisticsOrders.get(0);
@@ -216,13 +216,13 @@ public class TransportServiceImpl implements ITransportService {
 		if (senderDetail == null) {
 			response.setReason(ErrorCode.S01_CODE);
 			response.setReasonDesc("LogisticsOrders对象获取SenderDetail对象得到Null");
-			return XmlUtil.toXml(Responses.class, responses);
+			return XmlUtil.toXml(responses);
 		}
 		Warehouse warehouse = warehouseDao.getWarehouseByNo(warehouseNo);
 		if (warehouse == null) {
 			response.setReason(ErrorCode.B0003_CODE);
 			response.setReasonDesc("根据仓库编号(eventTarget)获取仓库得到Null");
-			return XmlUtil.toXml(Responses.class, responses);
+			return XmlUtil.toXml(responses);
 		}
 		Long warehouseId = warehouse.getId();
 		// 检测大包是否重复
@@ -232,7 +232,7 @@ public class TransportServiceImpl implements ITransportService {
 		if (count > 0) {
 			response.setReason(ErrorCode.B0200_CODE);
 			response.setReasonDesc("客户订单号(tradeOrderId)重复,保存失败");
-			return XmlUtil.toXml(Responses.class, responses);
+			return XmlUtil.toXml(responses);
 		}
 		// 创建大包
 		BigPackage bigPackage = new BigPackage();
@@ -352,7 +352,7 @@ public class TransportServiceImpl implements ITransportService {
 			}
 		}
 		response.setSuccess(Constant.TRUE);
-		return XmlUtil.toXml(Responses.class, responses);
+		return XmlUtil.toXml(responses);
 	}
 
 	@Override
@@ -662,13 +662,13 @@ public class TransportServiceImpl implements ITransportService {
 		if (tradeDetail == null) {
 			response.setReason(ErrorCode.S01_CODE);
 			response.setReasonDesc("EventBody对象获取TradeDetail对象得到Null");
-			return XmlUtil.toXml(Responses.class, responses);
+			return XmlUtil.toXml(responses);
 		}
 		List<TradeOrder> tradeOrderList = tradeDetail.getTradeOrders();
 		if (tradeOrderList == null || tradeOrderList.size() == 0) {
 			response.setReason(ErrorCode.S01_CODE);
 			response.setReasonDesc("TradeDetail对象获取TradeOrders对象得到Null");
-			return XmlUtil.toXml(Responses.class, responses);
+			return XmlUtil.toXml(responses);
 		}
 		TradeOrder tradeOrder = tradeOrderList.get(0);
 		// 客户订单号
@@ -676,7 +676,7 @@ public class TransportServiceImpl implements ITransportService {
 		if (StringUtil.isNull(customerReferenceNo)) {
 			response.setReason(ErrorCode.S01_CODE);
 			response.setReasonDesc("TradeOrder对象获取tradeOrderId得到Null");
-			return XmlUtil.toXml(Responses.class, responses);
+			return XmlUtil.toXml(responses);
 		}
 		// 根据客户订单号 (traderOrderId)查找转运订单,修改WWO:待出库操作
 		BigPackage param = new BigPackage();
@@ -685,17 +685,17 @@ public class TransportServiceImpl implements ITransportService {
 		if (bigPackageList == null || bigPackageList.size() == 0) {
 			response.setReason(ErrorCode.S01_CODE);
 			response.setReasonDesc("TradeOrder对象获取tradeOrderId得到Null");
-			return XmlUtil.toXml(Responses.class, responses);
+			return XmlUtil.toXml(responses);
 		}
 		BigPackage bigPackage = bigPackageList.get(0);
 		if (!StringUtil.isEqual(bigPackage.getStatus(), BigPackageStatusCode.WCC)) {
 			response.setReason(ErrorCode.B0100_CODE);
 			response.setReasonDesc("订单当前状态非待客户核重状态");
-			return XmlUtil.toXml(Responses.class, responses);
+			return XmlUtil.toXml(responses);
 		}
 		bigPackageDao.updateBigPackageStatus(bigPackage.getId(), BigPackageStatusCode.WWO);
 		response.setSuccess(Constant.TRUE);
-		return XmlUtil.toXml(Responses.class, responses);
+		return XmlUtil.toXml(responses);
 	}
 
 	@Override

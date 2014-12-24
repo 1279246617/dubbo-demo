@@ -130,7 +130,7 @@ public class Warehouse {
 
 			responseItems.add(serviceResponse);
 			responses.setResponseItems(responseItems);
-			String responseXml = XmlUtil.toXml(Responses.class, responses);
+			String responseXml = XmlUtil.toXml(responses);
 			logger.warn("API异常:" + "  responseXml:" + responseXml);
 			return responseXml;
 		}
