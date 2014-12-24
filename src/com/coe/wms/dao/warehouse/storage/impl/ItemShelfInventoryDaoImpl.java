@@ -226,25 +226,26 @@ public class ItemShelfInventoryDaoImpl implements IItemShelfInventoryDao {
 
 	@Override
 	public int updateItemShelfInventoryAvailableQuantity(Long id, Integer availableQuantity) {
-		String sql = "update w_s_item_shelf_inventory set available_quantity=" + availableQuantity + " where id=" + id;
+		String sql = "update w_s_item_shelf_inventory set available_quantity=" + availableQuantity + " , last_update_time =" + System.currentTimeMillis() + " where id=" + id;
 		return jdbcTemplate.update(sql);
 	}
 
 	@Override
 	public int updateItemShelfInventoryQuantity(Long id, Integer quantity) {
-		String sql = "update w_s_item_shelf_inventory set quantity=" + quantity + " where id=" + id;
+		String sql = "update w_s_item_shelf_inventory set quantity=" + quantity + " , last_update_time=" + System.currentTimeMillis() + "  where id=" + id;
 		return jdbcTemplate.update(sql);
 	}
 
 	@Override
 	public int updateBatchItemShelfInventoryAvailableQuantity(final List<ItemShelfInventory> itemShelfInventoryList) {
-		final String sql = "update w_s_item_shelf_inventory set available_quantity = ? where id = ?";
+		final String sql = "update w_s_item_shelf_inventory set available_quantity = ? , last_update_time=? where id = ?";
 		int[] batchUpdateSize = jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
 			@Override
 			public void setValues(PreparedStatement ps, int i) throws SQLException {
 				ItemShelfInventory item = itemShelfInventoryList.get(i);
 				ps.setInt(1, item.getAvailableQuantity());
-				ps.setLong(2, item.getId());
+				ps.setLong(2, System.currentTimeMillis());
+				ps.setLong(3, item.getId());
 			}
 
 			@Override
