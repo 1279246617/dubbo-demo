@@ -197,8 +197,4 @@ public class DateUtil {
 		String timeTo = time + " 23:59:59";
 		return timeTo;
 	}
-
-	public static void main(String[] args) {
-		System.out.println("2014-12-12".matches("\\d{4}-\\d{1,2}-\\d{1,2}"));
-	}
 }
