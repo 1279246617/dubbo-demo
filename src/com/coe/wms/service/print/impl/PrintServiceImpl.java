@@ -401,6 +401,8 @@ public class PrintServiceImpl implements IPrintService {
 		map.put("totalQuantity", totalQuantity);
 		// 总重量
 		map.put("totalWeight", bigPackage.getOutWarehouseWeight());
+		String shipwayCode = bigPackage.getShipwayCode();// 出货渠道
+		map.put("shipwayCode", shipwayCode);
 		return map;
 	}
 

@@ -70,3 +70,14 @@ body{font-family:"Arial",sans-serif;margin: 0;padding: 0; -webkit-text-size-adju
 .widAll{width: 100%;}
 .ta-center{text-align: center;}
 
+.label-etk-105-156{border:0px solid #000;width: 98mm;height: 147mm;}
+.label-etk-105-156 .label-top-1{height: 41mm;padding-top:0.1mm;width: 98mm;border-bottom:2px solid #000;}
+.label-etk-105-156 .etk{float:left;height: 3.5mm;margin-top:1mm; width: 10mm;border:1px solid #000;margin-left: 1mm;font-size: 12;text-align: center;}
+.label-etk-105-156 .receiver{height: 3.5mm;width: 10mm;margin-left: 27mm;font-size: 12;text-align: left;display:inline;}
+.label-etk-105-156 .tracking-no-top1{height: 4mm;width: 10mm;margin-left: 12mm;font-size: 12;text-align: left;display:inline}
+.label-etk-105-156 .etkpng{height: 9mm;width: 38mm;text-align: left;display:inline}
+.label-etk-105-156 .zone{height: 10mm;width: 36mm;text-align: center;float:left;border:2px solid #000;}
+.label-etk-105-156 .label-top-2{height: 49mm;padding-top:0mm;width: 98mm;border-bottom:2px solid #000;}
+.label-etk-105-156 .label-top-3{height: auto;width: 98mm;}
+
+
