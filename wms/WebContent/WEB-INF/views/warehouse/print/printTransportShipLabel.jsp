@@ -7,26 +7,27 @@
 <link href="${baseUrl}/static/css/print/common.css" rel="stylesheet" type="text/css" />
 
 <body class="print-page-label">
-		<!-- 循环订单,生成DIV -->
-		<c:forEach var="map"  items="${mapList}">  
-			<div class="label-100-150 change-page mt_1mm">
+	<c:forEach var="map"  items="${mapList}"><!-- 循环订单,生成DIV -->
+	
+		<c:if test="${map.shipwayCode == 'SF'}">
+			<!-- 顺丰渠道标签,shipwayCode:SF   --------------------------------------------------------------开始------------------------------------------------------------>
+			<div class="label-100-150 change-page mt_1mm" id="SF">
 				<div style="height:11mm;width:100%; border-bottom:1px solid  #000;" >
 						<div style="width:54mm;float: left;margin-top: 2mm;margin-left: 2mm;">
-<%-- 							<img src="${baseUrl}/static/img/print/sflogo.png" style="height:7mm;width: 19mm;float: left;"> --%>
+						<%-- <img src="${baseUrl}/static/img/print/sflogo.png" style="height:7mm;width: 19mm;float: left;"> --%>
 						</div>
 						<div style="width: 8mm;float: left;margin-top: -1.5mm;font-size: 10mm;;">
 							E
 						</div>
 						<div style="width: 32mm;float: right;margin-top: 3mm;">
 							<div style="height:2mm;line-height: 2mm;">
-<!-- 								0800 088 830 -->
+									<!--0800 088 830 -->
 							</div>
 							<div style="height:2mm;line-height: 2mm;">
-<!-- 								www.sf-express.com -->
+									<!--www.sf-express.com -->
 							</div>
 						</div>
 				</div>
-				
 				<div style="height:12.5mm;width:96mm; border-bottom:1px solid  #000;">
 						<div style="height:12mm;width:57mm; border-right:1px solid  #000;line-height:3mm; font-size:12px; overflow: hidden;" class="pull-left">
 							<span style="margin-top:0mm;margin-left: 0mm;"  class="pull-left">
@@ -35,7 +36,6 @@
 									<c:out value="${map.sender.addressLine1}"/>	
 							</span>
 						</div>
-						
 						<div style="height:12mm;width:38mm;line-height:3mm;font-size: 12px;" class="pull-right">
 							<span style="margin-top:2mm;; width: 16mm;"  class="pull-left">
 								原寄地
@@ -45,7 +45,6 @@
 							</span>
 						</div>
 				</div>
-				
 				<div style="height:12.5mm;width:100%; border-bottom:1mm solid  #000;">
 						<div style="height:12.5mm;width:57mm; border-right:1px solid  #000;line-height:3.5mm; overflow: hidden;font-size: 12px;" class="pull-left">
 								收方:	<c:out value="${map.receiver.countryName}"/>
@@ -69,12 +68,10 @@
 							</span>
 						</div>
 				</div>	
-					
 				<div style="height:22mm;width:100%; border-bottom:1mm solid  #000;">
 						<div style="height:22mm;width:57mm;text-align: center; border-right:1px solid  #000;" class="pull-left">
 									<img  style="margin-top:3mm;margin-left: 2mm;width:80%" src="data:image/png;base64,<c:out value="${map.trackingNoBarcodeData}"/>">
 						</div>
-						
 						<div style="height:12mm;width:38mm;" class="pull-left">
 							<table rules="all"style="width:100%;">
 								<tr><td style="text-align: center;"><font style="font-weight: bold;font-size: 5mm;">全球顺</font></td></tr>
@@ -84,7 +81,6 @@
 							</table>
 						</div>
 				</div>	
-				
 				<div style="height:10mm;width:100%; border-bottom:1px solid  #000;">
 					<table rules="all"style="width:100%;height:10mm;border-color: #000;">
 						<tr>
@@ -110,28 +106,23 @@
 							<td style="width:34mm;">月结帐号:<c:out value="${map.additionalSf.custId}"/></td>
 							<td>第三方地区:<c:out value="${map.additionalSf.deliveryCode}"/></td>
 						</tr>
-						
 						<tr>
 							<td style="width:31mm;">保价声明值:</td>
 							<td style="width:34mm;">保费:</td>
 							<td></td>
 						</tr>
-						
 						<tr>
 							<td style="width:31mm;">代收货款金额:</td>
 							<td style="width:34mm;">卡号:</td>
 							<td>收方签署:</td>
 						</tr>
-						
 						<tr>
 							<td colspan="3"><span class="pull-right">日期:
 							&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;月
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;日</span></td>
 						</tr>
-						
 					</table>
 				</div>	
-				
 				<div style="height:34mm;width:100%; border-bottom:1px solid  #000;">
 					<table  rules="all" style="line-height: 4mm;width:100%;height:31mm;border-color: #000;">
 						<tr>
@@ -164,7 +155,6 @@
 						<tr>
 							<td><c:out value="${map.additionalSf.customerOrderId}"/></td>
 						</tr>
-						
 					</table>
 				</div>	
 				<div style="height:auto;width:100%; border-bottom:0px solid  #000;">
@@ -180,35 +170,195 @@
 									<c:out value="${item.remark}"/>
 									&nbsp;&nbsp;&nbsp;&nbsp;
 							</c:forEach>
-							
 						</div>
-						
-<!-- 						<table style="height:auto;width:100%;border-color: #000;" rules="rows"> -->
-<!-- 							<tr  style="height:4mm;"> -->
-<!-- 								<th style="width:19">寄托物</th> -->
-<!-- 								<th style="width:19">SKU</th> -->
-<!-- 								<th style="width:19">数量</th> -->
-<!-- 								<th>备注</th> -->
-<!-- 							</tr> -->
-<%-- 							<c:forEach var="item"  items="${map.items}">   --%>
-<!-- 								<tr style="height:4mm;"> -->
-<!-- 									<td style="text-align: center;"> -->
-<%-- 										<c:out value="${item.skuName}"/> --%>
-<!-- 									</td> -->
-<!-- 									<td style="text-align: center;"> -->
-<%-- 										<c:out value="${item.sku}"/> --%>
-<!-- 									</td> -->
-<!-- 									<td style="text-align: center;"> -->
-<%-- 										<c:out value="${item.quantity}"/> --%>
-<!-- 									</td> -->
-<!-- 									<td style="text-align: center;"> -->
-<%-- 										<c:out value="${item.remark}"/> --%>
-<!-- 									</td>						 -->
-<!-- 								</tr>		 -->
-<%-- 							</c:forEach> --%>
-<!-- 						</table> -->
 				</div>	
 			</div>
-		</c:forEach>
+			<!-- 顺丰渠道标签,shipwayCode:SF   --------------------------------------------------------------结束------------------------------------------------------------>
+		</c:if>		
+		
+		
+		
+		
+		<c:if test="${map.shipwayCode == 'ETK'}">
+			<!-- ETK渠道标签,shipwayCode:ETK   --------------------------------------------------------------开始------------------------------------------------------------>	
+			<div class="label-etk-105-156 change-page mt_1mm"  id="etk">
+					<div class="pull-left label-top-1">
+				    	<!-- 第一行内容 -->
+				    	<div class="etk">
+						    e特快 
+				    	</div>
+				    	<div class="receiver"><b>收件人联</b></div>
+				    	<div class="tracking-no-top1">EL 005 674 891 HK</div>
+				    	<!-- 第二行内容 -->
+				    	<table style="height:10mm;margin-left:1mm;width: 100%">
+				    		<tbody>
+				    		<tr>
+				    			<td style="width:50%;"><img class="etkpng" src="${baseUrl}/static/img/print/etk.png"></td>
+				    			<td style="width:50%;">
+				    					<div class="zone" style="margin-left: 6mm;">
+				    						<div style="font-size: 41px;margin-top: -8px;">B1</div>
+				    					</div>
+				    			</td>
+				    		</tr>
+				    	</tbody>
+				    </table>
+			    	<!-- 寄件人信息 居左-->
+			    	<div style="float: left;margin-left: 1mm;line-height: 4mm;font-size: 12px;">
+			    		<span style="line-height:3mm;">寄件人姓名及地址</span><br>
+			    		<span style="width:32mm;">ECMTEST</span>
+			    		<span style="margin-left:7mm;">852-27555000</span>
+			    		<br>
+			    		<span style="">Flat G &amp; H, 6/F, Blk 1,</span>
+			    		<br>
+			    		<span style="">Kwai Tak Industrial Centre,</span>
+			    		<br>
+			    		<span style="">No 15-33 Kwai Tak St, Kwai Chung</span>
+			    		<br>
+			    		<span style="">HK&nbsp;&nbsp;NT</span><span style="font-weight: bold;margin-left: 10mm;"><b>邮政编码</b>321000</span>
+			    		<br>
+			    	</div>
+			    	<!-- 收件人信息 巨右 -->
+			    	<div style="float: right;width:42mm;line-height: 4mm;font-size: 12px;">
+			    		<span style="line-height:3mm;">收件人姓名及地址</span>
+			    		<br>
+			    		<div style="float:left; overflow: hidden;width:16mm;height:3.5mm;">朱冰清</div>
+			    		<div style="float:right;overflow: hidden;width:24mm;height:3.5mm;">13967938267</div>
+			    		<br>
+			    		<div style="float: left;width:40mm;height:4mm;overflow:hidden;">
+			    			永康市花川工业区玉桂路88-5号
+			    		</div>	
+			    		<div style="width:15mm;float: left;">金华市</div>
+			    		<div style="float: right;margin-right: 10mm;text-align: left;">中国</div>
+			    		<br>
+			    		<div style="width:15mm;float: left;">总重</div>
+			    		<div style="float: right;margin-right: 10mm;text-align: left;">1.0公斤</div>
+			    	</div>	
+				 </div>
+			     
+			   <div class="pull-left label-top-2">
+			    	<div class="etk">e特快</div>
+			      	<div class="receiver" style="margin-top: -10mm;line-height:5.2mm;"><b>投递局联</b></div>
+			      	<br>
+			      	<!-- 收件人姓名及地址  居左-->
+			    	<div style="float: left;width:54mm;margin-left: 1mm;margin-top: 1mm;line-height: 3.9mm;font-size: 12px;">
+			    		<span style="line-height:5px;">收件人信息</span>
+			    		<div style="float:right; width: 35mm; overflow:hidden">20141023091795</div>
+			    		<br>
+			    		<div style="float:left; overflow: hidden;width:20mm;height:3.5mm;">朱冰清</div>
+			    		<div style="float:right;overflow: hidden;width:34mm;height:3.5mm;">13967938267</div>
+			    		<div style="float:left;overflow: hidden;width:52mm;height:7mm;">
+			    			永康市花川工业区玉桂路88-5号
+			    		</div>
+				    	<br>
+				    	<div style="width:25mm;float: left;">金华市</div>
+			    		<div style="float: right;margin-right: 10mm;text-align: left;">浙江</div>
+			    		<br>
+			    		<div style="width:20mm;float: left;">中国</div>
+			    		<div style="float: right;text-align: left;">邮政编码&nbsp;&nbsp;321000</div>
+			    		<br>
+			    		<div style="width:15mm;float: left;">运单号码</div>
+			    		<div style="float: right;text-align: left;">EL 005 674 891 HK</div>
+			    		<br>
+			    		<div style="text-align: left;">
+			    			<img style="margin-left: -1mm; "  src="${baseUrl}/static/img/print/printBarcode.jpg">
+			            </div>
+			    	</div>
+			    	<div style="float: right;width:42mm;margin-right: -1mm;line-height: 3.9mm;font-size: 12px;">
+			    		<span>总重</span>
+			    		<div style="float: right;margin-right: 10mm;text-align: left;">
+			    			1.0公斤
+			    		</div>
+			    		<br>
+			    		<span>收件人簽名</span><br>
+			    		<div style="border-bottom:1px solid #000;margin-right: 5mm;height:16mm;"></div>
+			    		<span>日期</span><br>
+			    		<div style="border-bottom:1px solid #000;margin-right: 5mm;margin-left: 7mm;height:4mm;"></div>
+		    		<span>時間</span>
+		    		<div style="border-bottom:1px solid #000;margin-right: 5mm;margin-left: 7mm;height:4mm;"></div>
+		    	</div>
+		     </div>
+		     <div class="pull-left label-top-3">
+		    	<div class="etk">e特快</div>
+		      	<div class="receiver" style="line-height:5.2mm;"><b>海关联</b></div>
+		      	<br>
+		      	<!-- 寄件人信息 居左-->
+		    	<div style="float: left;line-height: 3.2mm;font-size: 12px;margin-left: 1mm;">
+		    		<span style="line-height:3mm;">寄件人姓名及地址</span>
+		    		<br>
+		    		<span style="width:32mm;">ECMTEST</span>
+		    		<br>
+		    		<span style="">Flat G &amp; H, 6/F, Blk 1,</span>
+		    		<br>
+		    		<span style="">Kwai Tak Industrial Centre,</span>
+		    		<br>
+		    		<span style="">No 15-33 Kwai Tak St</span>
+		    		<br>
+		    		<span style=""> Kwai Chung &nbsp;HK&nbsp;&nbsp;NT</span>
+		    		<br>
+		    		<span style="width:15mm;float: left;">运单号码</span>
+		    		<span style=";text-align: left;">EL 005 674 891 HK</span>
+		    	</div>
+    	
+		    	<!-- 收件人信息 巨右 -->
+		    	<div style="float: right;width:48mm;margin-right: 1mm;line-height: 3.2mm;font-size: 12px;">
+		    		<span style="line-height:3mm;">收件人姓名及地址</span>
+		    		<br>
+		    		<div style="float:left; overflow: hidden;width:16mm;height:3.5mm;">朱冰清</div>
+		    		<div style="float:right;overflow: hidden;width:31mm;height:3.5mm;">13967938267</div>
+		    		<span style="">永康市花川工业区玉桂路88-5号</span><br>
+		    		<div style="width:15mm;float: left;">金华市</div>
+		    		<div style="float: right;margin-right: 10mm;text-align: left;">浙江</div>
+		    		<br>
+		    		<div style="width:15mm;float: left;">中国</div>
+		    		<div style="float: right;text-align: left; margin-right: 5mm">邮政编码&nbsp;&nbsp;321000</div>
+		    		<div style="width:15mm;float: left;">总重</div>
+		    		<div style="float: right;margin-right: 10mm;text-align: left;">1.0公斤</div>
+		    	</div>	
+		    	
+		    	<table style="float: left;border:2px solid #000;width:97mm;margin-left: 0.5mm;font-size: 12;line-height: 3mm;" rules="all">
+		    			<tbody><tr style="height:3mm">
+		    				<td colspan="5" style="text-align: center">货物信息</td>
+		    			</tr>
+						<tr style="height:3mm">
+							<td>货品详细描述</td>
+							<td>重量</td>
+							<td>单价</td>
+							<td>件数</td>
+							<td>海关申报值</td>
+						</tr>
+						
+							<tr style="height:3.2mm">
+								<td>護護品</td>
+								<td>1.0</td>
+								<td>238.8</td>
+								<td>1</td>
+								<td>238.8</td>
+						</tr>  
+							<tr style="height:3.2mm">
+								<td> </td>
+								<td> </td>
+								<td> </td>
+								<td> </td>
+								<td> </td>
+						</tr>  
+							<tr style="height:3.2mm">
+								<td> </td>
+								<td> </td>
+								<td> </td>
+								<td> </td>
+								<td> </td>
+						</tr>  
+						<tr style="height:4.5mm">
+		    				<td colspan="3" style="text-align: center">海关申报总值</td>
+		    				<td colspan="1" style="text-align: center">人民币</td>
+		    				<td colspan="1" style="text-align: center">238.8</td>
+		    			</tr>
+		    		</tbody>
+		    	</table>
+		     </div> 
+			</div>	 
+			<!-- ETK渠道标签,shipwayCode:ETK   --------------------------------------------------------------结束------------------------------------------------------------>
+		</c:if>	
+	</c:forEach>
 </body>
 </html>

@@ -115,10 +115,7 @@ public class Print {
 		}
 		view.addObject("mapList", mapList);
 		view.addObject("timeNow", DateUtil.dateConvertString(new Date(), DateUtil.yyyy_MM_ddHHmmss));
-
-		// 根据出库渠判断打印顺丰运单还是ETK运单判断
-		view.setViewName("warehouse/print/printSfLabel");
-		// view.setViewName("warehouse/print/printEtkLabel");
+		view.setViewName("warehouse/print/printShipLabel");
 		return view;
 	}
 
@@ -303,10 +300,7 @@ public class Print {
 		}
 		view.addObject("mapList", mapList);
 		view.addObject("timeNow", DateUtil.dateConvertString(new Date(), DateUtil.yyyy_MM_ddHHmmss));
-
-		// 根据出库渠判断打印顺丰运单还是ETK运单判断
-		view.setViewName("warehouse/print/printTransportShipSfLabel");
-		// view.setViewName("warehouse/print/printEtkLabel");
+		view.setViewName("warehouse/print/printTransportShipLabel");
 		return view;
 	}
 
@@ -342,10 +336,7 @@ public class Print {
 		}
 		view.addObject("mapList", mapList);
 		view.addObject("timeNow", DateUtil.dateConvertString(new Date(), DateUtil.yyyy_MM_ddHHmmss));
-
-		// 根据出库渠判断打印顺丰运单还是ETK运单判断
 		view.setViewName("warehouse/print/printTransportPackageList");
-		// view.setViewName("warehouse/print/printEtkLabel");
 		return view;
 	}
 
