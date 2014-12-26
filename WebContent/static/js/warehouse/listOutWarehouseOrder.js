@@ -285,8 +285,6 @@ function inportOrder(){
 	        });
  }
 
-
-
 function clickTrackingNoCheckBox(){
 	 var trackingNoCheckBox = $("#trackingNoCheckBox").attr("checked");
 	 if(trackingNoCheckBox){
@@ -296,3 +294,140 @@ function clickTrackingNoCheckBox(){
 	 }
 	 btnSearch("#searchform",grid);
 }
+
+//打印运单
+function printShipLabel(){
+    var contentArr = [];
+    contentArr.push('<div id="changeContent" style="padding:10px;width: 240px;">');
+    contentArr.push('   <div class="pull-left" style="width: 100%">');
+    contentArr.push('       <input class="pull-left" name="chooseOption" style="margin-left: 30px;" type="radio" checked="checked" value="selected" id="selected">');
+    contentArr.push('       <label class="pull-left" style="margin-left: 5px" for="selected">打印选中</label>');
+    contentArr.push('       <input class="pull-left" name="chooseOption" style="margin-left: 30px;" type="radio" value="all" id="all">');
+    contentArr.push('       <label class="pull-left" style="margin-left: 5px;" for="all">打印当前页</label>');
+    contentArr.push('   </div>');
+    contentArr.push('</div>');
+    contentArr.push('<div style="color: #ff0000;margin-left: 40px;">注：未完成称重的订单不能打印出货运单</div>');
+    var contentHtml = contentArr.join('');
+	$.dialog({
+  		lock: true,
+  		max: false,
+  		min: false,
+  		title: '打印出货运单',
+  	     width: 260,
+         height: 60,
+  		content: contentHtml,
+  		button: [{
+  			name: '确认',
+  			callback: function() {
+  				var orderIds = "";
+				var  row = grid.getSelectedRows();
+                var all = parent.$("#all").attr("checked");
+                if(all){
+                	row = grid.getRows();	 
+                }
+	            if(row.length < 1){
+	                parent.$.showShortMessage({msg:"请最少选择一条数据",animate:false,left:"45%"});
+	                return false;
+	            }
+            	for ( var i = 0; i < row.length; i++) {
+            		orderIds += row[i].id+",";
+				}
+            	if(orderIds!=""){
+            		var url = baseUrl+'/warehouse/print/printShipLabel.do?orderIds='+orderIds;
+            		 window.open(url);
+            	}
+  			}
+  		},
+  		{
+  			name: '取消'
+  		}]
+  	});
+}
+
+//申请单号
+function applyTrackingNo(){
+        var contentArr = [];
+        contentArr.push('  <div class="pull-left" style="width:660px;height:60px;">');
+        contentArr.push('       <input class="pull-left" name="chooseOption" style="margin-left: 10px;" type="radio" checked="checked" value="selected" id="selected">');
+        contentArr.push('       <label class="pull-left" style="margin-left: 5px" for="selected">申请选中</label>');
+        contentArr.push('       <input class="pull-left" name="chooseOption" style="margin-left: 30px;" type="radio" value="all" id="all">');
+        contentArr.push('       <label class="pull-left" style="margin-left: 5px;" for="all">申请当前页</label>');
+        contentArr.push('  </div>');
+        contentArr.push('  <div  class="pull-left" style="width:660px;height:340px;margin-left: 10px;overflow:auto;">');
+        contentArr.push('  <table class="table table-striped">');
+        contentArr.push(' <tr>');
+        contentArr.push(' <th>申请单号总数</th>');
+        contentArr.push(' <th><span id="registerTotal"></span></th>');
+        contentArr.push(' </tr>');
+        contentArr.push('  <table>');
+        contentArr.push('  <table class="table table-striped" id="registerResult">');
+        contentArr.push(' <tr>');
+        contentArr.push(' <th>序号</th>');
+        contentArr.push(' <th>状态</th>');
+        contentArr.push(' <th>结果</th>');
+        contentArr.push(' </tr>');
+        contentArr.push('  <table>');
+        contentArr.push('  </div>');
+        var contentHtml = contentArr.join('');
+        $.dialog({
+                lock: true,
+                max: false,
+                min: false,
+                title: '申请跟踪单号',
+                width: 660,
+                height: 400,
+                content:contentHtml ,
+                button: [{
+					name: '确认',
+					callback: function() {
+						var that = this;
+						var orderIds = "";
+						var  row = grid.getSelectedRows();
+		                var all = parent.$("#all").attr("checked");
+		                if(all){
+		                	row = grid.getRows();	 
+		                }
+			            if(row.length < 1){
+			                parent.$.showShortMessage({msg:"请最少选择一条数据",animate:false,left:"43%"});
+			                return false;
+			            }
+		            	for ( var i = 0; i < row.length; i++) {
+		            		orderIds += row[i].id+",";
+						}
+	                    var registerTotal = 0;  //预报的总数
+	                    var orderIdArray = orderIds.split(",");
+	                    $(orderIdArray).each(function(i,e){
+	                    	if(e!=null && e!=''){
+	                    		registerTotal++;
+	                    	}
+	                    });
+	                    parent.$("#registerTotal").html(registerTotal);
+	                    $(orderIdArray).each(function(i,e){
+	                        $.getJSON(baseUrl + '/warehouse/storage/applyTrackingNo.do',{orderId:e},function(msg) {
+	                    		var tr = "<tr>";
+                    			tr+=("<td>"+(i+1)+"</td>");
+                    			if(msg.status == 1){
+                    				tr+=("<td>成功</td>");
+                    			}else{
+                    				tr+=("<td>失败</td>");
+                    			}
+                    			tr+=("<td>"+msg.message+"</td>");
+                    			tr+="<tr/>";
+                    			parent.$("#registerResult tr:last").after(tr);
+	                    		if(i == registerTotal-1){//到最后一条,开始刷新订单,关闭界面
+	                    			grid.loadData();	
+	        	                    setTimeout(function(){
+	        	                    	that.close();	
+	        	                    }, 30000);	
+	                    		}
+	    					});
+	                    });
+	                    return false;
+					}
+				},
+				{
+					name: '关闭'
+		        }]
+	    });
+};
+

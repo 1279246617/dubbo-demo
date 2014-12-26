@@ -1109,4 +1109,11 @@ public class Storage {
 		Map<String, String> map = storageService.executeSearchOutWarehouseOrder(nos, noType);
 		return GsonUtil.toJson(map);
 	}
+
+	@ResponseBody
+	@RequestMapping(value = "/applyTrackingNo")
+	public String applyTrackingNo(Long orderId) {
+		Map<String, String> map = storageService.applyTrackingNo(orderId);
+		return GsonUtil.toJson(map);
+	}
 }

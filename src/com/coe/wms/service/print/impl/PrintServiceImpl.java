@@ -377,6 +377,9 @@ public class PrintServiceImpl implements IPrintService {
 		map.put("sender", sender);
 		// 创建条码
 		String trackingNo = bigPackage.getTrackingNo();
+		if (StringUtil.isNull(trackingNo)) {
+			return null;
+		}
 		String trackingNoBarcodeData = BarcodeUtil.createCode128(trackingNo, true, 11d, null);
 		map.put("trackingNoBarcodeData", trackingNoBarcodeData);
 		// 清单号 (出库订单主键)

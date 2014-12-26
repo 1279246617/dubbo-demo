@@ -192,7 +192,7 @@ public class StorageServiceImpl implements IStorageService {
 
 	@Resource(name = "config")
 	private Config config;
-	
+
 	@Resource(name = "shipwayDao")
 	private IShipwayDao shipwayDao;
 
@@ -2066,5 +2066,15 @@ public class StorageServiceImpl implements IStorageService {
 	@Override
 	public List<Shipway> findAllShipway() throws ServiceException {
 		return shipwayDao.findAllShipway();
+	}
+
+	@Override
+	public Map<String, String> applyTrackingNo(Long orderId) throws ServiceException {
+		Map<String, String> map = new HashMap<String, String>();
+		map.put(Constant.STATUS, Constant.FAIL);
+		
+		
+		map.put(Constant.STATUS, Constant.SUCCESS);
+		return map;
 	}
 }
