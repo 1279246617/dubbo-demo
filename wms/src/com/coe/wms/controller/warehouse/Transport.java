@@ -792,4 +792,11 @@ public class Transport {
 		Map<String, String> map = transportService.savePackageRecordRemark(remark, id);
 		return GsonUtil.toJson(map);
 	}
+
+	@ResponseBody
+	@RequestMapping(value = "/applyTrackingNo")
+	public String applyTrackingNo(Long orderId) {
+		Map<String, String> map = transportService.applyTrackingNo(orderId);
+		return GsonUtil.toJson(map);
+	}
 }

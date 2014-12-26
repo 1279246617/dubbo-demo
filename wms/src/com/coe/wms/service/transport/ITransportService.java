@@ -140,4 +140,6 @@ public interface ITransportService {
 	public List<Map<String, String>> getPackageRecordItemByPackageRecordId(Long packageId);
 
 	public Map<String, String> savePackageRecordRemark(String remark, Long id) throws ServiceException;
+	
+	public Map<String, String> applyTrackingNo(Long orderId) throws ServiceException;
 }
