@@ -31,7 +31,10 @@ import com.coe.wms.model.warehouse.storage.record.OutWarehousePackage;
 import com.coe.wms.model.warehouse.storage.record.OutWarehouseRecord;
 import com.coe.wms.model.warehouse.storage.record.OutWarehouseRecordItem;
 import com.coe.wms.model.warehouse.transport.LittlePackage;
+import com.coe.wms.service.storage.IInWarehouseOrderService;
+import com.coe.wms.service.storage.IOutWarehouseOrderService;
 import com.coe.wms.service.storage.IStorageService;
+import com.coe.wms.service.storage.IWarehouseInterfaceService;
 import com.coe.wms.service.transport.ITransportService;
 import com.coe.wms.service.user.IUserService;
 import com.coe.wms.util.Constant;
@@ -68,6 +71,14 @@ public class Storage {
 	@Resource(name = "transportService")
 	private ITransportService transportService;
 
+	@Resource(name = "inWarehouseOrderService")
+	private IInWarehouseOrderService inWarehouseOrderService;
+
+	@Resource(name = "outWarehouseOrderService")
+	private IOutWarehouseOrderService outWarehouseOrderService;
+
+	@Resource(name = "warehouseInterfaceService")
+	private IWarehouseInterfaceService warehouseInterfaceService;
 	/**
 	 * 添加入库订单备注
 	 * 
@@ -116,7 +127,7 @@ public class Storage {
 		map.put(Constant.STATUS, Constant.FAIL);
 		InWarehouseOrder param = new InWarehouseOrder();
 		param.setTrackingNo(trackingNo);
-		List<Map<String, String>> mapList = storageService.checkInWarehouseOrder(param);
+		List<Map<String, String>> mapList = inWarehouseOrderService.checkInWarehouseOrder(param);
 		if (mapList.size() < 1) {
 			map.put(Constant.STATUS, "-1");
 			// 检查是否有转运订单
@@ -154,7 +165,7 @@ public class Storage {
 		// 当前操作员
 		Long userIdOfOperator = (Long) session.getAttribute(SessionConstant.USER_ID);
 		logger.info("审核出库 操作员id:" + userIdOfOperator + " checkResult:" + checkResult + " 订单:" + orderIds);
-		Map<String, String> checkResultMap = storageService.checkOutWarehouseOrder(orderIds, checkResult, userIdOfOperator);
+		Map<String, String> checkResultMap = outWarehouseOrderService.checkOutWarehouseOrder(orderIds, checkResult, userIdOfOperator);
 		return GsonUtil.toJson(checkResultMap);
 	}
 
@@ -173,7 +184,7 @@ public class Storage {
 	public String checkOutWarehouseShipping(HttpServletRequest request, HttpServletResponse response, String trackingNo, Long coeTrackingNoId, String coeTrackingNo, String addOrSub, String orderIds) throws IOException {
 		HttpSession session = request.getSession();
 		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
-		Map<String, String> checkResultMap = storageService.checkOutWarehouseShipping(trackingNo, userId, coeTrackingNoId, coeTrackingNo, addOrSub, orderIds);
+		Map<String, String> checkResultMap = outWarehouseOrderService.checkOutWarehouseShipping(trackingNo, userId, coeTrackingNoId, coeTrackingNo, addOrSub, orderIds);
 		return GsonUtil.toJson(checkResultMap);
 	}
 
@@ -234,7 +245,7 @@ public class Storage {
 		moreParam.put("createdTimeStart", createdTimeStart);
 		moreParam.put("createdTimeEnd", createdTimeEnd);
 
-		pagination = storageService.getInWarehouseOrderData(param, moreParam, pagination);
+		pagination = inWarehouseOrderService.getInWarehouseOrderData(param, moreParam, pagination);
 		Map map = new HashMap();
 		map.put("Rows", pagination.rows);
 		map.put("Total", pagination.total);
@@ -271,12 +282,12 @@ public class Storage {
 		param.setTrackingNo(trackingNo);
 		param.setUserIdOfCustomer(userIdOfCustomer);
 		// 执行查询(应当只有1个结果, 多个结果,只取第一个结果. 跟踪号重复的情况 ,待处理)
-		List<InWarehouseOrder> inWarehouseOrderList = storageService.findInWarehouseOrder(param, null, null);
+		List<InWarehouseOrder> inWarehouseOrderList = inWarehouseOrderService.findInWarehouseOrder(param, null, null);
 		if (inWarehouseOrderList.size() < 0) {
 			return GsonUtil.toJson(map);
 		}
 		InWarehouseOrder order = inWarehouseOrderList.get(0);
-		pagination = storageService.getInWarehouseOrderItemData(order.getId(), pagination);
+		pagination = inWarehouseOrderService.getInWarehouseOrderItemData(order.getId(), pagination);
 		map.put("Rows", pagination.rows);
 		map.put("Total", pagination.total);
 
@@ -286,7 +297,7 @@ public class Storage {
 	@ResponseBody
 	@RequestMapping(value = "/getInWarehouseOrderItemByOrderId", method = RequestMethod.POST)
 	public String getInWarehouseOrderItemByOrderId(Long orderId) {
-		List<Map<String, String>> mapList = storageService.getInWarehouseOrderItemMap(orderId);
+		List<Map<String, String>> mapList = inWarehouseOrderService.getInWarehouseOrderItemMap(orderId);
 		return GsonUtil.toJson(mapList);
 	}
 
@@ -325,7 +336,7 @@ public class Storage {
 		Map<String, String> moreParam = new HashMap<String, String>();
 		moreParam.put("createdTimeStart", createdTimeStart);
 		moreParam.put("createdTimeEnd", createdTimeEnd);
-		pagination = storageService.getInWarehouseRecordData(param, moreParam, pagination);
+		pagination = inWarehouseOrderService.getInWarehouseRecordData(param, moreParam, pagination);
 		Map map = new HashMap();
 		map.put("Rows", pagination.rows);
 		map.put("Total", pagination.total);
@@ -365,7 +376,7 @@ public class Storage {
 		Map<String, String> moreParam = new HashMap<String, String>();
 		moreParam.put("createdTimeStart", createdTimeStart);
 		moreParam.put("createdTimeEnd", createdTimeEnd);
-		pagination = storageService.getOutWarehouseRecordData(param, moreParam, pagination);
+		pagination = outWarehouseOrderService.getOutWarehouseRecordData(param, moreParam, pagination);
 		Map map = new HashMap();
 		map.put("Rows", pagination.rows);
 		map.put("Total", pagination.total);
@@ -405,7 +416,7 @@ public class Storage {
 		Map<String, String> moreParam = new HashMap<String, String>();
 		moreParam.put("createdTimeStart", createdTimeStart);
 		moreParam.put("createdTimeEnd", createdTimeEnd);
-		pagination = storageService.getOutWarehousePackageData(param, moreParam, pagination);
+		pagination = outWarehouseOrderService.getOutWarehousePackageData(param, moreParam, pagination);
 		Map map = new HashMap();
 		map.put("Rows", pagination.rows);
 		map.put("Total", pagination.total);
@@ -415,21 +426,21 @@ public class Storage {
 	@ResponseBody
 	@RequestMapping(value = "/getOutWarehouseRecordItemByRecordId", method = RequestMethod.POST)
 	public String getOutWarehouseRecordItemByRecordId(Long recordId) {
-		List<Map<String, String>> mapList = storageService.getOutWarehouseRecordItemMapByRecordId(recordId);
+		List<Map<String, String>> mapList = outWarehouseOrderService.getOutWarehouseRecordItemMapByRecordId(recordId);
 		return GsonUtil.toJson(mapList);
 	}
 
 	@ResponseBody
 	@RequestMapping(value = "/getOutWarehouseRecordItemByPackageId", method = RequestMethod.POST)
 	public String getOutWarehouseRecordItemByPackageId(Long recordId) {
-		List<Map<String, String>> mapList = storageService.getOutWarehouseRecordItemByPackageId(recordId);
+		List<Map<String, String>> mapList = outWarehouseOrderService.getOutWarehouseRecordItemByPackageId(recordId);
 		return GsonUtil.toJson(mapList);
 	}
 
 	@ResponseBody
 	@RequestMapping(value = "/getInWarehouseRecordItemByRecordId", method = RequestMethod.POST)
 	public String getInWarehouseRecordItemByRecordId(Long recordId) {
-		List<Map<String, String>> mapList = storageService.getInWarehouseRecordItemMapByRecordId(recordId);
+		List<Map<String, String>> mapList = inWarehouseOrderService.getInWarehouseRecordItemMapByRecordId(recordId);
 		return GsonUtil.toJson(mapList);
 	}
 
@@ -458,7 +469,7 @@ public class Storage {
 		pagination.sortName = sortname;
 		pagination.sortOrder = sortorder;
 		// 客户id
-		pagination = storageService.getInWarehouseRecordItemData(inWarehouseRecordId, pagination);
+		pagination = inWarehouseOrderService.getInWarehouseRecordItemData(inWarehouseRecordId, pagination);
 		map.put("Rows", pagination.rows);
 		map.put("Total", pagination.total);
 		return GsonUtil.toJson(map);
@@ -502,7 +513,7 @@ public class Storage {
 			moreParam.put("warehouseId", warehouseId.toString());
 		}
 
-		pagination = storageService.getInWarehouseRecordItemListData(moreParam, pagination);
+		pagination = inWarehouseOrderService.getInWarehouseRecordItemListData(moreParam, pagination);
 		Map map = new HashMap();
 		map.put("Rows", pagination.rows);
 		map.put("Total", pagination.total);
@@ -551,7 +562,7 @@ public class Storage {
 		moreParam.put("nos", nos);
 		moreParam.put("noType", noType);
 		moreParam.put("trackingNoIsNull", trackingNoIsNull);// 跟踪号是否为空
-		pagination = storageService.getOutWarehouseOrderData(param, moreParam, pagination);
+		pagination = outWarehouseOrderService.getOutWarehouseOrderData(param, moreParam, pagination);
 		Map map = new HashMap();
 		map.put("Rows", pagination.rows);
 		map.put("Total", pagination.total);
@@ -561,7 +572,7 @@ public class Storage {
 	@ResponseBody
 	@RequestMapping(value = "/getOutWarehouseOrderItemByOrderId", method = RequestMethod.POST)
 	public String getOutWarehouseOrderItemByOrderId(Long orderId) {
-		List<OutWarehouseOrderItem> outWarehouseOrderItemList = storageService.getOutWarehouseOrderItem(orderId);
+		List<OutWarehouseOrderItem> outWarehouseOrderItemList = outWarehouseOrderService.getOutWarehouseOrderItem(orderId);
 		return GsonUtil.toJson(outWarehouseOrderItemList);
 	}
 
@@ -603,7 +614,7 @@ public class Storage {
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
 		User user = userService.getUserById(userId);
 		view.addObject("warehouseList", storageService.findAllWarehouse(user.getDefaultWarehouseId()));
-		List<InWarehouseOrderStatus> inWarehouseOrderStatusList = storageService.findAllInWarehouseOrderStatus();
+		List<InWarehouseOrderStatus> inWarehouseOrderStatusList = inWarehouseOrderService.findAllInWarehouseOrderStatus();
 		view.addObject("inWarehouseOrderStatusList", inWarehouseOrderStatusList);
 		view.setViewName("warehouse/storage/listInWarehouseOrder");
 		return view;
@@ -708,7 +719,7 @@ public class Storage {
 		ModelAndView view = new ModelAndView();
 		view.addObject("userId", userId);
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
-		List<OutWarehouseOrderStatus> outWarehouseOrderStatusList = storageService.findAllOutWarehouseOrderStatus();
+		List<OutWarehouseOrderStatus> outWarehouseOrderStatusList = outWarehouseOrderService.findAllOutWarehouseOrderStatus();
 		view.addObject("outWarehouseOrderStatusList", outWarehouseOrderStatusList);
 		List<Shipway> shipwayList = storageService.findAllShipway();
 		view.addObject("shipwayList", shipwayList);
@@ -780,7 +791,7 @@ public class Storage {
 		User user = userService.getUserById(userId);
 		view.addObject("warehouseList", storageService.findAllWarehouse(user.getDefaultWarehouseId()));
 		// 进入界面 分配coe单号,并锁定coe单号,下次不能再使用
-		TrackingNo trackingNo = storageService.getCoeTrackingNoforOutWarehouseShipping();
+		TrackingNo trackingNo = outWarehouseOrderService.getCoeTrackingNoforOutWarehouseShipping();
 		if (trackingNo != null) {
 			view.addObject("coeTrackingNo", trackingNo.getTrackingNo());
 			view.addObject("coeTrackingNoId", trackingNo.getId());
@@ -824,7 +835,7 @@ public class Storage {
 	public String outWarehousePackageConfirm(HttpServletRequest request, HttpServletResponse response, String orderIds, String coeTrackingNo, Long coeTrackingNoId) throws IOException {
 		HttpSession session = request.getSession();
 		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
-		Map<String, String> checkResultMap = storageService.outWarehousePackageConfirm(coeTrackingNo, coeTrackingNoId, orderIds, userId);
+		Map<String, String> checkResultMap = outWarehouseOrderService.outWarehousePackageConfirm(coeTrackingNo, coeTrackingNoId, orderIds, userId);
 		return GsonUtil.toJson(checkResultMap);
 	}
 
@@ -841,7 +852,7 @@ public class Storage {
 	public synchronized String outWarehouseShippingConfirm(HttpServletRequest request, HttpServletResponse response, String coeTrackingNo) throws IOException {
 		HttpSession session = request.getSession();
 		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
-		Map<String, String> checkResultMap = storageService.outWarehouseShippingConfirm(coeTrackingNo, userId);
+		Map<String, String> checkResultMap = outWarehouseOrderService.outWarehouseShippingConfirm(coeTrackingNo, userId);
 		return GsonUtil.toJson(checkResultMap);
 	}
 
@@ -860,7 +871,7 @@ public class Storage {
 		HttpSession session = request.getSession();
 		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
 		Map<String, Object> map = new HashMap<String, Object>();
-		Map<String, Object> objectMap = storageService.outWarehouseShippingEnterCoeTrackingNo(coeTrackingNo);
+		Map<String, Object> objectMap = outWarehouseOrderService.outWarehouseShippingEnterCoeTrackingNo(coeTrackingNo);
 		List<OutWarehouseRecordItem> outWarehouseShippingList = (List<OutWarehouseRecordItem>) objectMap.get("outWarehouseShippingList");
 		map.put("outWarehouseShippingList", outWarehouseShippingList);
 		map.put(Constant.STATUS, objectMap.get(Constant.STATUS));
@@ -883,7 +894,7 @@ public class Storage {
 	public String outWarehouseSubmitCustomerReferenceNo(HttpServletRequest request, HttpServletResponse response, String customerReferenceNo) throws IOException {
 		HttpSession session = request.getSession();
 		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
-		Map<String, Object> checkResultMap = storageService.outWarehouseSubmitCustomerReferenceNo(customerReferenceNo, userId);
+		Map<String, Object> checkResultMap = outWarehouseOrderService.outWarehouseSubmitCustomerReferenceNo(customerReferenceNo, userId);
 		return GsonUtil.toJson(checkResultMap);
 	}
 
@@ -900,7 +911,7 @@ public class Storage {
 	public String outWarehouseSubmitWeight(HttpServletRequest request, HttpServletResponse response, String customerReferenceNo, Double outWarehouseOrderWeight) throws IOException {
 		HttpSession session = request.getSession();
 		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
-		Map<String, Object> checkResultMap = storageService.outWarehouseSubmitWeight(customerReferenceNo, outWarehouseOrderWeight, userId);
+		Map<String, Object> checkResultMap = outWarehouseOrderService.outWarehouseSubmitWeight(customerReferenceNo, outWarehouseOrderWeight, userId);
 		return GsonUtil.toJson(checkResultMap);
 	}
 
@@ -917,7 +928,7 @@ public class Storage {
 	@ResponseBody
 	@RequestMapping(value = "/saveInWarehouseOrderRemark")
 	public String saveInWarehouseOrderRemark(HttpServletRequest request, Long id, String remark) throws IOException {
-		Map<String, String> map = storageService.saveInWarehouseOrderRemark(remark, id);
+		Map<String, String> map = inWarehouseOrderService.saveInWarehouseOrderRemark(remark, id);
 		return GsonUtil.toJson(map);
 	}
 
@@ -938,7 +949,7 @@ public class Storage {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put(Constant.STATUS, Constant.FAIL);
 		// 校验和保存
-		Map<String, String> serviceResult = storageService.saveInWarehouseRecord(trackingNo, remark, userIdOfOperator, warehouseId, inWarehouseOrderId);
+		Map<String, String> serviceResult = inWarehouseOrderService.saveInWarehouseRecord(trackingNo, remark, userIdOfOperator, warehouseId, inWarehouseOrderId);
 		// 成功,返回id
 		map.put("id", serviceResult.get("id"));
 		// 失败
@@ -956,7 +967,7 @@ public class Storage {
 		// 操作员
 		Long userIdOfOperator = (Long) request.getSession().getAttribute(SessionConstant.USER_ID);
 		// 校验和保存
-		Map<String, String> serviceResult = storageService.submitInWarehouseRecord(inWarehouseRecordId);
+		Map<String, String> serviceResult = inWarehouseOrderService.submitInWarehouseRecord(inWarehouseRecordId);
 		return GsonUtil.toJson(serviceResult);
 	}
 
@@ -987,7 +998,7 @@ public class Storage {
 		// 操作员
 		Long userIdOfOperator = (Long) request.getSession().getAttribute(SessionConstant.USER_ID);
 		// 校验和保存
-		Map<String, String> serviceResult = storageService.saveInWarehouseRecordItem(itemSku, itemQuantity, itemRemark, warehouseId, inWarehouseRecordId, userIdOfOperator, isConfirm);
+		Map<String, String> serviceResult = inWarehouseOrderService.saveInWarehouseRecordItem(itemSku, itemQuantity, itemRemark, warehouseId, inWarehouseRecordId, userIdOfOperator, isConfirm);
 		return GsonUtil.toJson(serviceResult);
 	}
 
@@ -997,7 +1008,7 @@ public class Storage {
 	@ResponseBody
 	@RequestMapping(value = "/saveInWarehouseRecordRemark")
 	public String saveInWarehouseRecordRemark(HttpServletRequest request, Long id, String remark) throws IOException {
-		Map<String, String> map = storageService.saveInWarehouseRecordRemark(remark, id);
+		Map<String, String> map = inWarehouseOrderService.saveInWarehouseRecordRemark(remark, id);
 		return GsonUtil.toJson(map);
 	}
 
@@ -1007,7 +1018,7 @@ public class Storage {
 	@ResponseBody
 	@RequestMapping(value = "/saveInWarehouseOrderItemSku")
 	public String saveInWarehouseOrderItemSku(HttpServletRequest request, Long id, String sku) throws IOException {
-		Map<String, String> map = storageService.saveInWarehouseOrderItemSku(id, sku);
+		Map<String, String> map = inWarehouseOrderService.saveInWarehouseOrderItemSku(id, sku);
 		return GsonUtil.toJson(map);
 	}
 
@@ -1070,7 +1081,7 @@ public class Storage {
 	@ResponseBody
 	@RequestMapping(value = "/saveOutWarehouseRecordRemark")
 	public String saveOutWarehouseRecordRemark(HttpServletRequest request, Long id, String remark) throws IOException {
-		Map<String, String> map = storageService.saveOutWarehouseRecordRemark(remark, id);
+		Map<String, String> map = outWarehouseOrderService.saveOutWarehouseRecordRemark(remark, id);
 		return GsonUtil.toJson(map);
 	}
 
@@ -1080,7 +1091,7 @@ public class Storage {
 	@ResponseBody
 	@RequestMapping(value = "/saveOutWarehousePackageRemark")
 	public String saveOutWarehousePackageRemark(HttpServletRequest request, Long id, String remark) throws IOException {
-		Map<String, String> map = storageService.saveOutWarehousePackageRemark(remark, id);
+		Map<String, String> map = outWarehouseOrderService.saveOutWarehousePackageRemark(remark, id);
 		return GsonUtil.toJson(map);
 	}
 
@@ -1106,14 +1117,14 @@ public class Storage {
 	@ResponseBody
 	@RequestMapping(value = "/executeSearchOutWarehouseOrder")
 	public String executeSearchOutWarehouseOrder(HttpServletRequest request, String nos, String noType) throws IOException {
-		Map<String, String> map = storageService.executeSearchOutWarehouseOrder(nos, noType);
+		Map<String, String> map = outWarehouseOrderService.executeSearchOutWarehouseOrder(nos, noType);
 		return GsonUtil.toJson(map);
 	}
 
 	@ResponseBody
 	@RequestMapping(value = "/applyTrackingNo")
 	public String applyTrackingNo(Long orderId) {
-		Map<String, String> map = storageService.applyTrackingNo(orderId);
+		Map<String, String> map = outWarehouseOrderService.applyTrackingNo(orderId);
 		return GsonUtil.toJson(map);
 	}
 }

@@ -30,7 +30,10 @@ import com.coe.wms.model.warehouse.transport.LittlePackageOnShelf;
 import com.coe.wms.model.warehouse.transport.LittlePackageStatus;
 import com.coe.wms.model.warehouse.transport.PackageRecord;
 import com.coe.wms.model.warehouse.transport.PackageRecordItem;
+import com.coe.wms.service.storage.IInWarehouseOrderService;
+import com.coe.wms.service.storage.IOutWarehouseOrderService;
 import com.coe.wms.service.storage.IStorageService;
+import com.coe.wms.service.storage.IWarehouseInterfaceService;
 import com.coe.wms.service.transport.ITransportService;
 import com.coe.wms.service.user.IUserService;
 import com.coe.wms.util.Constant;
@@ -61,6 +64,15 @@ public class Transport {
 
 	@Resource(name = "userService")
 	private IUserService userService;
+
+	@Resource(name = "inWarehouseOrderService")
+	private IInWarehouseOrderService inWarehouseOrderService;
+
+	@Resource(name = "outWarehouseOrderService")
+	private IOutWarehouseOrderService outWarehouseOrderService;
+
+	@Resource(name = "warehouseInterfaceService")
+	private IWarehouseInterfaceService warehouseInterfaceService;
 
 	/**
 	 * 转运订单 查询
@@ -152,7 +164,7 @@ public class Transport {
 		moreParam.put("nos", nos);
 		moreParam.put("noType", noType);
 		moreParam.put("trackingNoIsNull", trackingNoIsNull);// 跟踪号是否为空
-		
+
 		pagination = transportService.getBigPackageData(param, moreParam, pagination);
 		Map map = new HashMap();
 		map.put("Rows", pagination.rows);
@@ -331,7 +343,7 @@ public class Transport {
 			// 查询是否是仓配订单
 			InWarehouseOrder inWarehouseParam = new InWarehouseOrder();
 			inWarehouseParam.setTrackingNo(trackingNo);
-			mapList = storageService.checkInWarehouseOrder(inWarehouseParam);
+			mapList = inWarehouseOrderService.checkInWarehouseOrder(inWarehouseParam);
 			if (mapList.size() > 0) {
 				map.put(Constant.MESSAGE, "该单号无转运订单,但找到" + mapList.size() + "个仓配订单,请确认订单类型");
 			} else {
@@ -565,7 +577,7 @@ public class Transport {
 		User user = userService.getUserById(userId);
 		view.addObject("warehouseList", storageService.findAllWarehouse(user.getDefaultWarehouseId()));
 		// 进入界面 分配coe单号,并锁定coe单号,下次不能再使用
-		TrackingNo trackingNo = storageService.getCoeTrackingNoforOutWarehouseShipping();
+		TrackingNo trackingNo = outWarehouseOrderService.getCoeTrackingNoforOutWarehouseShipping();
 
 		if (trackingNo != null) {
 			view.addObject("coeTrackingNo", trackingNo.getTrackingNo());
