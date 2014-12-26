@@ -18,10 +18,12 @@ public class Shipway implements Serializable {
 	private static final long serialVersionUID = -2813364290521655728L;
 
 	public class ShipwayCode {
-		
+
 		public static final String ETK = "ETK";
 
 		public static final String B2C = "B2C";
+
+		public static final String SF = "SF";
 	}
 
 	private Long id;

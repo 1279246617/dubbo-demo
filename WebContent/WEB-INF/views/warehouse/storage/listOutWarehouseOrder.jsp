@@ -33,6 +33,17 @@
 				       		</c:forEach>
 						</select>
                		</span>
+               		<span class="pull-left" style="width:145px;">
+               			运输方式
+               			<select style="width:80px;" id="shipway" name="shipway">
+               				<option></option>
+							<c:forEach items="${shipwayList}" var="shipway" >
+				       	 		<option value="<c:out value='${shipway.code}'/>">
+				       	 			<c:out value="${shipway.cn}"/>
+				       		 	</option>
+				       		 </c:forEach>
+						</select>
+               		</span>
                		<span class="pull-left" style="width:125px;">
                			状态
                			<select style="width:80px;" id="status" name="status">
@@ -62,7 +73,7 @@
 	               		<input type="text"   style="width:120px;" name="createdTimeStart" id="createdTimeStart" title="起始创建时间">
                		</span>
                		
-               		<span class="pull-left" style="width:180px;">
+               		<span class="pull-left" style="width:170px;">
                			至	
                			<input type="text"   style="width:120px;" name="createdTimeEnd"  id="createdTimeEnd"  title="终止创建时间">
                		</span>
@@ -70,13 +81,27 @@
                			<a class="btn btn-primary btn-small" id="btn_search"><i class="icon-search icon-white"></i>搜索</a>
                			<input style=" visibility:hidden;">
                		</span>
-               		<span class="pull-left" style="width:100px;">
-               			<a class="btn btn-primary btn-small" id="advancedSearch"><i class="icon-search icon-white"></i>批量单号搜索</a>
+               		<span class="pull-left" style="width:75px;">
+               			<a class="btn btn-primary btn-small" id="advancedSearch"><i class="icon-search icon-white"></i>单号搜索</a>
                			<input style=" visibility:hidden;">
                		</span>
                </div>
                
                <div class="pull-left">
+               		<span class="pull-left" style="width:105px;">
+			       		<a class="btn btn-primary btn-small" onclick="inportOrder()" title="导入出库订单">
+			           		 <i class="icon-file"></i>导入出库订单
+			       	 	</a>
+			       	 	<input style=" visibility:hidden;">
+		       	 	</span>
+		       	 	
+               		<span class="pull-left" style="width:82px;">
+			       		<a class="btn btn-primary btn-small" onclick="checkOrder()" title="申请出库跟踪单号">
+			           		 <i class="icon-folder-open"></i>申请单号
+			       	 	</a>
+			       	 	<input style=" visibility:hidden;">
+		       	 	</span>
+		       	 	
            			<span class="pull-left" style="width:60px;">
 			       		<a class="btn btn-primary btn-small" onclick="checkOrder()" title="审核出库订单">
 			           		 <i class="icon-eye-open"></i>审核
@@ -90,13 +115,21 @@
 			       	 	</a>
 			       	 	<input style=" visibility:hidden;">
 		       	 	</span>
-		       	 	
-		       	 	<span class="pull-left" style="width:105px;">
-<!-- 			       		<a class="btn btn-primary btn-small" onclick="inportOrder()" title="导入出库订单"> -->
-<!-- 			           		 <i class="icon-file"></i>导入出库订单 -->
-<!-- 			       	 	</a> -->
-<!-- 			       	 	<input style=" visibility:hidden;"> -->
+		       	 	<span class="pull-left" style="width:80px;">
+			       		<a class="btn btn-primary btn-small" onclick="printShipLabel()" title="打印运单">
+			           		 <i class="icon-folder-open"></i>打印运单
+			       	 	</a>
+			       	 	<input style=" visibility:hidden;">
 		       	 	</span>
+		       	 	
+		       	 	<input type="text" name="trackingNoIsNull" id="trackingNoIsNull" style="display:none;">
+		       	 	<span class="pull-left" style="width:85px;">
+			       		<a class="btn btn-primary btn-small"  title="显示所有缺少跟踪单号的订单">
+							<input type="checkbox"  style="margin-bottom: 0px;margin-top: 0px;"onclick="clickTrackingNoCheckBox()" id="trackingNoCheckBox" name="trackingNoCheckBox">无跟踪单号				       			
+			       	 	</a>
+			       	 	<input style=" visibility:hidden;">
+		       	 	</span>
+		       	 	
 		    	</div>    
            </form>
 	</div>
@@ -147,10 +180,18 @@
    			$("#btn_search").click(function(){
    				$("#noType").val("");//清空高级搜索隐藏框的内容
    				$("#nos").val("");
+   				
+   				$("#trackingNoIsNull").val("N");
+	   			$("#trackingNoCheckBox").removeAttr("checked");
+	   			
    				btnSearch("#searchform",grid);
    			});
    			//高级搜索
    			$("#advancedSearch").click(function(){
+
+   				$("#trackingNoIsNull").val("N");
+	   			$("#trackingNoCheckBox").removeAttr("checked");
+	   			
    				advancedSearch();
    			});
    			

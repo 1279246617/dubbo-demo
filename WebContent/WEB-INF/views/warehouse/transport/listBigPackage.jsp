@@ -33,6 +33,19 @@
 				       		</c:forEach>
 						</select>
                		</span>
+               		
+               		<span class="pull-left" style="width:145px;">
+               			运输方式
+               			<select style="width:80px;" id="shipway" name="shipway">
+               				<option></option>
+							<c:forEach items="${shipwayList}" var="shipway" >
+				       	 		<option value="<c:out value='${shipway.code}'/>">
+				       	 			<c:out value="${shipway.cn}"/>
+				       		 	</option>
+				       		 </c:forEach>
+						</select>
+               		</span>
+               		
                		<span class="pull-left" style="width:120px;">
                			状态
                			<select style="width:80px;" id="status" name="status">
@@ -73,6 +86,13 @@
                </div>
                
                <div class="pull-left">
+               		<span class="pull-left" style="width:82px;">
+			       		<a class="btn btn-primary btn-small" onclick="checkOrder()" title="申请出库跟踪单号">
+			           		 <i class="icon-folder-open"></i>申请单号
+			       	 	</a>
+			       	 	<input style=" visibility:hidden;">
+		       	 	</span>
+		       	 	
            			<span class="pull-left" style="width:60px;">
 			       		<a class="btn btn-primary btn-small" onclick="checkOrder()" title="审核出库订单">
 			           		 <i class="icon-eye-open"></i>审核
@@ -85,12 +105,22 @@
 			       	 	</a>
 			       	 	<input style=" visibility:hidden;">
 		       	 	</span>
-		       	 	<span class="pull-left" style="width:70px;">
+		       	 	<span class="pull-left" style="width:80px;">
 			       		<a class="btn btn-primary btn-small" onclick="printShipLabel()" title="打印运单">
 			           		 <i class="icon-folder-open"></i>打印运单
 			       	 	</a>
 			       	 	<input style=" visibility:hidden;">
 		       	 	</span>
+		       	 	
+					<input type="text" name="trackingNoIsNull" id="trackingNoIsNull" style="display:none;">
+													       	 	
+		       	 	<span class="pull-left" style="width:85px;">
+			       		<a class="btn btn-primary btn-small"  title="显示所有缺少跟踪单号的订单">
+							<input type="checkbox"  style="margin-bottom: 0px;margin-top: 0px;"onclick="clickTrackingNoCheckBox()" id="trackingNoCheckBox" name="trackingNoCheckBox">无跟踪单号				       			
+			       	 	</a>
+			       	 	<input style=" visibility:hidden;">
+		       	 	</span>
+		       	 	
 		    	</div>    
            </form>
 	</div>
@@ -139,6 +169,8 @@
    			
    			//btn_search
    			$("#btn_search").click(function(){
+   				$("#trackingNoIsNull").val("N");
+	   			$("#trackingNoCheckBox").removeAttr("checked");
    				btnSearch("#searchform",grid);
    			});
    		});

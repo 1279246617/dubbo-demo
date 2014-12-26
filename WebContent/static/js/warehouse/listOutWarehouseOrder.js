@@ -284,3 +284,15 @@ function inportOrder(){
 	          }]
 	        });
  }
+
+
+
+function clickTrackingNoCheckBox(){
+	 var trackingNoCheckBox = $("#trackingNoCheckBox").attr("checked");
+	 if(trackingNoCheckBox){
+		 $("#trackingNoIsNull").val("Y");
+	 }else{
+		 $("#trackingNoIsNull").val("N");
+	 }
+	 btnSearch("#searchform",grid);
+}

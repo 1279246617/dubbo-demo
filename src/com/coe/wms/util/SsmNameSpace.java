@@ -26,6 +26,8 @@ public class SsmNameSpace {
 
 	public static final String CURRENCY = "CURRENCY";
 
+	public static final String SHIPWAY = "SHIPWAY";
+
 	public static final String ON_SHELF_STATUS = "ON_SHELF_STATUS";
 
 	public static final String REPORT_TYPE = "REPORT_TYPE";
