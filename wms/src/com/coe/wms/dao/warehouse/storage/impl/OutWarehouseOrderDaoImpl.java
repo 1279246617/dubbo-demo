@@ -116,6 +116,8 @@ public class OutWarehouseOrderDaoImpl implements IOutWarehouseOrderDao {
 				sb.append(" and tracking_no in(" + in + ")");
 			}
 			// 按单号 批量查询 结束------------
+		} else if (moreParam != null && StringUtil.isEqual(moreParam.get("trackingNoIsNull"), Constant.Y)) {
+			sb.append(" and (tracking_no is null or tracking_no = '') ");
 		} else {
 			if (outWarehouseOrder != null) {
 				if (outWarehouseOrder.getId() != null) {
@@ -145,7 +147,6 @@ public class OutWarehouseOrderDaoImpl implements IOutWarehouseOrderDao {
 				if (outWarehouseOrder.getCallbackSendWeighCount() != null) {
 					sb.append(" and callback_send_weigh_count = " + outWarehouseOrder.getCallbackSendWeighCount());
 				}
-
 				if (StringUtil.isNotNull(outWarehouseOrder.getCallbackSendStatusIsSuccess())) {
 					sb.append(" and callback_send_status_is_success = '" + outWarehouseOrder.getCallbackSendStatusIsSuccess() + "' ");
 				}
@@ -188,10 +189,10 @@ public class OutWarehouseOrderDaoImpl implements IOutWarehouseOrderDao {
 					}
 				}
 			}
-			if (page != null) {
-				// 分页sql
-				sb.append(page.generatePageSql());
-			}
+		}
+		if (page != null) {
+			// 分页sql
+			sb.append(page.generatePageSql());
 		}
 		String sql = sb.toString();
 		logger.debug("查询出库订单sql:" + sql);
@@ -222,6 +223,8 @@ public class OutWarehouseOrderDaoImpl implements IOutWarehouseOrderDao {
 				sb.append(" and tracking_no in(" + in + ")");
 			}
 			// 按单号 批量查询 结束------------
+		} else if (moreParam != null && StringUtil.isEqual(moreParam.get("trackingNoIsNull"), Constant.Y)) {
+			sb.append(" and (tracking_no is null or tracking_no = '') ");
 		} else {
 			if (outWarehouseOrder != null) {
 				if (outWarehouseOrder.getId() != null) {
@@ -251,7 +254,6 @@ public class OutWarehouseOrderDaoImpl implements IOutWarehouseOrderDao {
 				if (outWarehouseOrder.getCallbackSendWeighCount() != null) {
 					sb.append(" and callback_send_weigh_count = " + outWarehouseOrder.getCallbackSendWeighCount());
 				}
-
 				if (StringUtil.isNotNull(outWarehouseOrder.getCallbackSendStatusIsSuccess())) {
 					sb.append(" and callback_send_status_is_success = '" + outWarehouseOrder.getCallbackSendStatusIsSuccess() + "' ");
 				}

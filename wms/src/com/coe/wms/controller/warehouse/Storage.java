@@ -522,7 +522,7 @@ public class Storage {
 	@ResponseBody
 	@RequestMapping(value = "/getOutWarehouseOrderData", method = RequestMethod.POST)
 	public String getOutWarehouseOrderData(HttpServletRequest request, String sortorder, String sortname, int page, int pagesize, String userLoginName, Long warehouseId, String customerReferenceNo, String createdTimeStart, String createdTimeEnd,
-			String status, String shipway, String nos, String noType) throws IOException {
+			String status, String shipway, String nos, String noType, String trackingNoIsNull) throws IOException {
 		HttpSession session = request.getSession();
 		// 当前操作员
 		Long userIdOfOperator = (Long) session.getAttribute(SessionConstant.USER_ID);
@@ -550,6 +550,7 @@ public class Storage {
 		moreParam.put("createdTimeEnd", createdTimeEnd);
 		moreParam.put("nos", nos);
 		moreParam.put("noType", noType);
+		moreParam.put("trackingNoIsNull", trackingNoIsNull);// 跟踪号是否为空
 		pagination = storageService.getOutWarehouseOrderData(param, moreParam, pagination);
 		Map map = new HashMap();
 		map.put("Rows", pagination.rows);
