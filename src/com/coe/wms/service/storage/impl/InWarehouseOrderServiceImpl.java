@@ -559,34 +559,6 @@ public class InWarehouseOrderServiceImpl implements IInWarehouseOrderService {
 		return pagination;
 	}
 
-	/**
-	 * 获取所有仓库
-	 */
-	@Override
-	public List<Warehouse> findAllWarehouse() throws ServiceException {
-		return warehouseDao.findAllWarehouse();
-	}
-
-	@Override
-	public List<Warehouse> findAllWarehouse(Long firstWarehouseId) throws ServiceException {
-		if (firstWarehouseId == null) {
-			return warehouseDao.findAllWarehouse();
-		}
-		List<Warehouse> newWarehouseList = new ArrayList<Warehouse>();
-		newWarehouseList.add(warehouseDao.getWarehouseById(firstWarehouseId));
-
-		List<Warehouse> warehouseList = warehouseDao.findAllWarehouse();
-		for (int i = 0; i < warehouseList.size(); i++) {
-			Warehouse warehouse = warehouseList.get(i);
-			if (warehouse.getId() - firstWarehouseId == 0) {
-				warehouseList.remove(i);
-				break;
-			}
-		}
-		newWarehouseList.addAll(warehouseList);
-		return newWarehouseList;
-	}
-
 	@Override
 	public List<Map<String, String>> checkInWarehouseOrder(InWarehouseOrder inWarehouseOrder) {
 		List<InWarehouseOrder> inWarehouseOrderList = inWarehouseOrderDao.findInWarehouseOrder(inWarehouseOrder, null, null);
@@ -689,16 +661,6 @@ public class InWarehouseOrderServiceImpl implements IInWarehouseOrderService {
 	}
 
 	@Override
-	public Warehouse getWarehouseById(Long fwarehouseId) throws ServiceException {
-		return warehouseDao.getWarehouseById(fwarehouseId);
-	}
-
-	@Override
-	public TrackingNo getTrackingNoById(Long id) throws ServiceException {
-		return trackingNoDao.getTrackingNoById(id);
-	}
-
-	@Override
 	public Map<String, String> saveInWarehouseOrderItemSku(Long id, String sku) throws ServiceException {
 		Map<String, String> map = new HashMap<String, String>();
 		if (inWarehouseOrderItemDao.saveInWarehouseOrderItemSku(id, sku) > 0) {
@@ -728,8 +690,4 @@ public class InWarehouseOrderServiceImpl implements IInWarehouseOrderService {
 		return map;
 	}
 
-	@Override
-	public List<Shipway> findAllShipway() throws ServiceException {
-		return shipwayDao.findAllShipway();
-	}
 }

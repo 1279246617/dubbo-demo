@@ -155,31 +155,10 @@ public interface IInWarehouseOrderService {
 	 */
 	public List<InWarehouseOrderStatus> findAllInWarehouseOrderStatus() throws ServiceException;
 
-	/**
-	 * 获取所有仓库
-	 * 
-	 * @return
-	 * @throws ServiceException
-	 */
-	public List<Warehouse> findAllWarehouse() throws ServiceException;
-
-	/**
-	 * 获取所有仓库,并指定排在第一位的仓库id
-	 * 
-	 * @return
-	 * @throws ServiceException
-	 */
-	public List<Warehouse> findAllWarehouse(Long firstWarehouseId) throws ServiceException;
-
-	public Warehouse getWarehouseById(Long fwarehouseId) throws ServiceException;
-
 	public Map<String, String> saveInWarehouseOrderRemark(String remark, Long id) throws ServiceException;
 
 	public Map<String, String> saveInWarehouseRecordRemark(String remark, Long id) throws ServiceException;
 
 	public Map<String, String> saveInWarehouseOrderItemSku(Long id, String sku) throws ServiceException;
 
-	public TrackingNo getTrackingNoById(Long id) throws ServiceException;
-
-	public List<Shipway> findAllShipway() throws ServiceException;
 }
