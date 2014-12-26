@@ -735,6 +735,8 @@ public class Storage {
 		view.addObject("userId", userId);
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
 		User user = userService.getUserById(userId);
+		List<Shipway> shipwayList = storageService.findAllShipway();
+		view.addObject("shipwayList", shipwayList);
 		view.addObject("warehouseList", storageService.findAllWarehouse(user.getDefaultWarehouseId()));
 		view.setViewName("warehouse/storage/listWaitCheckOutWarehouseOrder");
 		return view;
