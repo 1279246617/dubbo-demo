@@ -11,6 +11,10 @@ import javax.annotation.Resource;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
+import com.coe.etk.api.Client;
+import com.coe.etk.api.request.Order;
+import com.coe.etk.api.request.Receiver;
+import com.coe.etk.api.request.Sender;
 import com.coe.wms.dao.product.IProductDao;
 import com.coe.wms.dao.user.IUserDao;
 import com.coe.wms.dao.warehouse.ISeatDao;
@@ -38,6 +42,7 @@ import com.coe.wms.model.unit.Currency.CurrencyCode;
 import com.coe.wms.model.unit.Weight.WeightCode;
 import com.coe.wms.model.user.User;
 import com.coe.wms.model.warehouse.Shipway;
+import com.coe.wms.model.warehouse.Shipway.ShipwayCode;
 import com.coe.wms.model.warehouse.TrackingNo;
 import com.coe.wms.model.warehouse.Warehouse;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderReceiver;
@@ -1308,5 +1313,67 @@ public class TransportServiceImpl implements ITransportService {
 	@Override
 	public List<Shipway> findAllShipway() throws ServiceException {
 		return shipwayDao.findAllShipway();
+	}
+
+	@Override
+	public Map<String, String> applyTrackingNo(Long bigPackageId) throws ServiceException {
+		Map<String, String> map = new HashMap<String, String>();
+		map.put(Constant.STATUS, Constant.FAIL);
+		BigPackage bigPackage = bigPackageDao.getBigPackageById(bigPackageId);
+		BigPackageReceiver bigPackageReceiver = bigPackageReceiverDao.getBigPackageReceiverByPackageId(bigPackageId);
+		BigPackageSender bigPackageSender = bigPackageSenderDao.getBigPackageSenderByPackageId(bigPackageId);
+		// 出货渠道是ETK
+		if (StringUtil.isEqual(bigPackage.getShipwayCode(), ShipwayCode.ETK)) {
+			Order etkOrder = new Order();
+			etkOrder.setCurrency(CurrencyCode.CNY);
+			etkOrder.setCustomerNo("sam");// 测试
+			etkOrder.setReferenceId(bigPackage.getCustomerReferenceNo());// 客户参考号
+			LittlePackageItem itemParam = new LittlePackageItem();
+			itemParam.setBigPackageId(bigPackageId);
+			List<LittlePackageItem> littlePackageItems = littlePackageItemDao.findLittlePackageItem(itemParam, null, null);
+			List<com.coe.etk.api.request.Item> items = new ArrayList<com.coe.etk.api.request.Item>();
+			for (LittlePackageItem littlePackageItem : littlePackageItems) {
+				com.coe.etk.api.request.Item item = new com.coe.etk.api.request.Item();
+				item.setItemDescription(littlePackageItem.getSkuName());// 报关描述
+				double price = 10d;// 报关价值
+				if (littlePackageItem.getSkuUnitPrice() != null) {
+					price = NumberUtil.div(littlePackageItem.getSkuUnitPrice(), 100d, 2);// 分转元
+				}
+				item.setItemPrice(price);
+				item.setItemQuantity(littlePackageItem.getQuantity() == null ? 1 : littlePackageItem.getQuantity());// 报关数量
+				double weight = 0.1d;// 报关重量
+				if (littlePackageItem.getSkuNetWeight() != null) {
+					weight = littlePackageItem.getSkuNetWeight();
+				}
+				item.setItemWeight(weight);
+				items.add(item);
+			}
+			etkOrder.setItems(items);
+			// 收件人
+			Receiver receiver = new Receiver();
+			receiver.setReceiverAddress1(bigPackageReceiver.getAddressLine1());
+			receiver.setReceiverAddress2(bigPackageReceiver.getAddressLine2());
+			receiver.setReceiverCity(bigPackageReceiver.getCity());
+			receiver.setReceiverCode(bigPackageReceiver.getPostalCode());
+			receiver.setReceiverName(bigPackageReceiver.getName());
+			receiver.setReceiverCountry(bigPackageReceiver.getCountryCode());
+			receiver.setReceiverPhone(bigPackageReceiver.getPhoneNumber());
+			receiver.setReceiverProvince(bigPackageReceiver.getStateOrProvince());
+			etkOrder.setReceiver(receiver);
+			// 发件人
+			Sender sender = new Sender();
+			sender.setSenderAddress(bigPackageSender.getAddressLine1());
+			sender.setSenderName(bigPackageSender.getName());
+			sender.setSenderPhone(bigPackageReceiver.getPhoneNumber());
+			etkOrder.setSender(sender);
+
+			Client client = new Client();
+			client.setToken("c587efdfcb6e4cd3");
+			client.setTokenKey("b5e3d9769218deb3");
+			client.setUrl("http://58.96.174.216:8080/coeimport/orderApi");
+			client.applyTrackingNo(etkOrder);
+		}
+		map.put(Constant.STATUS, Constant.SUCCESS);
+		return map;
 	}
 }
