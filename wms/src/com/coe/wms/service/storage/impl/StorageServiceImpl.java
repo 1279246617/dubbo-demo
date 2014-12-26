@@ -49,6 +49,7 @@ import com.coe.wms.model.user.User;
 import com.coe.wms.model.warehouse.Shipway;
 import com.coe.wms.model.warehouse.TrackingNo;
 import com.coe.wms.model.warehouse.Warehouse;
+import com.coe.wms.model.warehouse.Shipway.ShipwayCode;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrderItem;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrderStatus;
@@ -2072,8 +2073,17 @@ public class StorageServiceImpl implements IStorageService {
 	public Map<String, String> applyTrackingNo(Long orderId) throws ServiceException {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put(Constant.STATUS, Constant.FAIL);
-		
-		
+		OutWarehouseOrder order = outWarehouseOrderDao.getOutWarehouseOrderById(orderId);
+		OutWarehouseOrderReceiver receiver = outWarehouseOrderReceiverDao.getOutWarehouseOrderReceiverByOrderId(orderId);
+		OutWarehouseOrderSender sender = outWarehouseOrderSenderDao.getOutWarehouseOrderSenderByOrderId(orderId);
+		OutWarehouseOrderItem itemParam = new OutWarehouseOrderItem();
+		itemParam.setOutWarehouseOrderId(orderId);
+		List<OutWarehouseOrderItem> itemList = outWarehouseOrderItemDao.findOutWarehouseOrderItem(itemParam, null, null);
+		//ETK
+		if (StringUtil.isEqual(order.getShipwayCode(), ShipwayCode.ETK)) {
+
+		}
+
 		map.put(Constant.STATUS, Constant.SUCCESS);
 		return map;
 	}

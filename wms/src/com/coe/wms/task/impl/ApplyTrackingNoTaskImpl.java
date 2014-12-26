@@ -114,7 +114,7 @@ public class ApplyTrackingNoTaskImpl implements IApplyTrackingNoTask {
 	 * 2点,仓配订单申请单号
 	 * 
 	 */
-	@Scheduled(cron = "0 0 3 * * ? ")
+//	@Scheduled(cron = "0 0 3 * * ? ")
 	@Override
 	public void storageOrderApplyTrackingNo() {
 
@@ -123,7 +123,7 @@ public class ApplyTrackingNoTaskImpl implements IApplyTrackingNoTask {
 	/**
 	 * 转运订单申请单号
 	 */
-	@Scheduled(cron = "0 30 3 * * ? ")
+//	@Scheduled(cron = "0 30 3 * * ? ")
 	@Override
 	public void transportOrderApplyTrackingNo() {
 		// 1出单号为空,并且状态是未审核
