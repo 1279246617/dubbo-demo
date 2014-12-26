@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 import com.coe.wms.exception.ServiceException;
+import com.coe.wms.model.warehouse.Shipway;
 import com.coe.wms.model.warehouse.transport.BigPackage;
 import com.coe.wms.model.warehouse.transport.BigPackageStatus;
 import com.coe.wms.model.warehouse.transport.LittlePackage;
@@ -59,6 +60,8 @@ public interface ITransportService {
 	 * @throws ServiceException
 	 */
 	public List<LittlePackageStatus> findAllLittlePackageStatus() throws ServiceException;
+
+	public List<Shipway> findAllShipway() throws ServiceException;
 
 	/**
 	 * 获取转运订单

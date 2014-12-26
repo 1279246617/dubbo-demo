@@ -383,7 +383,7 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 	/**
 	 * 回传出库状态给客户(出库的最后步骤)
 	 */
-	@Scheduled(cron = "0 0/15 * * * ? ")
+	@Scheduled(cron = "0 0/15 8-23 * * ? ")
 	@Override
 	public void sendOutWarehouseStatusToCustomer() {
 		List<Long> orderIdList = outWarehouseOrderDao.findCallbackSendStatusUnSuccessOrderId();

@@ -19,6 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.coe.wms.controller.Application;
 import com.coe.wms.model.user.User;
+import com.coe.wms.model.warehouse.Shipway;
 import com.coe.wms.model.warehouse.TrackingNo;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrderStatus;
@@ -521,7 +522,7 @@ public class Storage {
 	@ResponseBody
 	@RequestMapping(value = "/getOutWarehouseOrderData", method = RequestMethod.POST)
 	public String getOutWarehouseOrderData(HttpServletRequest request, String sortorder, String sortname, int page, int pagesize, String userLoginName, Long warehouseId, String customerReferenceNo, String createdTimeStart, String createdTimeEnd,
-			String status, String nos, String noType) throws IOException {
+			String status, String shipway, String nos, String noType) throws IOException {
 		HttpSession session = request.getSession();
 		// 当前操作员
 		Long userIdOfOperator = (Long) session.getAttribute(SessionConstant.USER_ID);
@@ -533,6 +534,7 @@ public class Storage {
 
 		OutWarehouseOrder param = new OutWarehouseOrder();
 		param.setStatus(status);
+		param.setShipwayCode(shipway);
 		// 客户订单号
 		param.setCustomerReferenceNo(customerReferenceNo);
 		// 客户帐号
@@ -707,6 +709,9 @@ public class Storage {
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
 		List<OutWarehouseOrderStatus> outWarehouseOrderStatusList = storageService.findAllOutWarehouseOrderStatus();
 		view.addObject("outWarehouseOrderStatusList", outWarehouseOrderStatusList);
+		List<Shipway> shipwayList = storageService.findAllShipway();
+		view.addObject("shipwayList", shipwayList);
+
 		User user = userService.getUserById(userId);
 		view.addObject("warehouseList", storageService.findAllWarehouse(user.getDefaultWarehouseId()));
 		view.setViewName("warehouse/storage/listOutWarehouseOrder");

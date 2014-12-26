@@ -28,6 +28,8 @@ public interface IBigPackageDao {
 
 	public List<Long> findCallbackSendCheckUnSuccessBigPackageId();
 
+	public List<Long> findUnCheckAndTackingNoIsNullBigPackageId();
+
 	public List<Long> findCallbackSendWeightUnSuccessBigPackageId();
 
 	public List<Long> findCallbackSendStatusUnSuccessBigPackageId();

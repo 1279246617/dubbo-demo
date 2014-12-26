@@ -15,6 +15,7 @@ import com.coe.wms.dao.product.IProductDao;
 import com.coe.wms.dao.user.IUserDao;
 import com.coe.wms.dao.warehouse.ISeatDao;
 import com.coe.wms.dao.warehouse.IShelfDao;
+import com.coe.wms.dao.warehouse.IShipwayDao;
 import com.coe.wms.dao.warehouse.ITrackingNoDao;
 import com.coe.wms.dao.warehouse.IWarehouseDao;
 import com.coe.wms.dao.warehouse.storage.IOnShelfDao;
@@ -36,13 +37,11 @@ import com.coe.wms.exception.ServiceException;
 import com.coe.wms.model.unit.Currency.CurrencyCode;
 import com.coe.wms.model.unit.Weight.WeightCode;
 import com.coe.wms.model.user.User;
+import com.coe.wms.model.warehouse.Shipway;
 import com.coe.wms.model.warehouse.TrackingNo;
 import com.coe.wms.model.warehouse.Warehouse;
-import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrder;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderReceiver;
-import com.coe.wms.model.warehouse.storage.record.OutWarehousePackage;
 import com.coe.wms.model.warehouse.storage.record.OutWarehouseRecord;
-import com.coe.wms.model.warehouse.storage.record.OutWarehouseRecordItem;
 import com.coe.wms.model.warehouse.transport.BigPackage;
 import com.coe.wms.model.warehouse.transport.BigPackageAdditionalSf;
 import com.coe.wms.model.warehouse.transport.BigPackageReceiver;
@@ -153,6 +152,9 @@ public class TransportServiceImpl implements ITransportService {
 
 	@Resource(name = "packageRecordItemDao")
 	private IPackageRecordItemDao packageRecordItemDao;
+
+	@Resource(name = "shipwayDao")
+	private IShipwayDao shipwayDao;
 
 	@Override
 	public String warehouseInterfaceSaveTransportOrder(EventBody eventBody, Long userIdOfCustomer, String warehouseNo) throws ServiceException {
@@ -1301,5 +1303,10 @@ public class TransportServiceImpl implements ITransportService {
 			map.put(Constant.STATUS, Constant.FAIL);
 		}
 		return map;
+	}
+
+	@Override
+	public List<Shipway> findAllShipway() throws ServiceException {
+		return shipwayDao.findAllShipway();
 	}
 }

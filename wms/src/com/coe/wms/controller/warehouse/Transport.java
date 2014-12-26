@@ -19,6 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.coe.wms.controller.Application;
 import com.coe.wms.model.user.User;
+import com.coe.wms.model.warehouse.Shipway;
 import com.coe.wms.model.warehouse.TrackingNo;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
 import com.coe.wms.model.warehouse.transport.BigPackage;
@@ -78,6 +79,8 @@ public class Transport {
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
 		List<BigPackageStatus> bigPackageStatusList = transportService.findAllBigPackageStatus();
 		view.addObject("bigPackageStatusList", bigPackageStatusList);
+		List<Shipway> shipwayList = transportService.findAllShipway();
+		view.addObject("shipwayList", shipwayList);
 		User user = userService.getUserById(userId);
 		view.addObject("warehouseList", storageService.findAllWarehouse(user.getDefaultWarehouseId()));
 		view.setViewName("warehouse/transport/listBigPackage");
@@ -120,7 +123,7 @@ public class Transport {
 	@ResponseBody
 	@RequestMapping(value = "/getBigPackageData", method = RequestMethod.POST)
 	public String getBigPackageData(HttpServletRequest request, String sortorder, String sortname, int page, int pagesize, String userLoginName, Long warehouseId, String customerReferenceNo, String createdTimeStart, String createdTimeEnd,
-			String status, String nos, String noType) throws IOException {
+			String status, String shipway, String nos, String noType, String trackingNoIsNull) throws IOException {
 		HttpSession session = request.getSession();
 		// 当前操作员
 		Long userIdOfOperator = (Long) session.getAttribute(SessionConstant.USER_ID);
@@ -132,6 +135,7 @@ public class Transport {
 
 		BigPackage param = new BigPackage();
 		param.setStatus(status);
+		param.setShipwayCode(shipway);
 		// 客户订单号
 		param.setCustomerReferenceNo(customerReferenceNo);
 		// 客户帐号
@@ -147,6 +151,8 @@ public class Transport {
 		moreParam.put("createdTimeEnd", createdTimeEnd);
 		moreParam.put("nos", nos);
 		moreParam.put("noType", noType);
+		moreParam.put("trackingNoIsNull", trackingNoIsNull);// 跟踪号是否为空
+		
 		pagination = transportService.getBigPackageData(param, moreParam, pagination);
 		Map map = new HashMap();
 		map.put("Rows", pagination.rows);
@@ -200,8 +206,12 @@ public class Transport {
 		ModelAndView view = new ModelAndView();
 		view.addObject("userId", userId);
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
+
 		List<LittlePackageStatus> littlePackageStatusList = transportService.findAllLittlePackageStatus();
 		view.addObject("littlePackageStatusList", littlePackageStatusList);
+
+		List<Shipway> shipwayList = transportService.findAllShipway();
+		view.addObject("shipwayList", shipwayList);
 		User user = userService.getUserById(userId);
 		view.addObject("warehouseList", storageService.findAllWarehouse(user.getDefaultWarehouseId()));
 		view.setViewName("warehouse/transport/listLittlePackage");

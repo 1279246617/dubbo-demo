@@ -24,6 +24,7 @@ import com.coe.wms.dao.datasource.DataSourceCode;
 import com.coe.wms.dao.warehouse.transport.IBigPackageDao;
 import com.coe.wms.model.warehouse.transport.BigPackage;
 import com.coe.wms.model.warehouse.transport.BigPackageStatus.BigPackageStatusCode;
+import com.coe.wms.util.Constant;
 import com.coe.wms.util.DateUtil;
 import com.coe.wms.util.Pagination;
 import com.coe.wms.util.StringUtil;
@@ -94,8 +95,8 @@ public class BigPackageDaoImpl implements IBigPackageDao {
 	public List<BigPackage> findBigPackage(BigPackage bigPackage, Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("select id,warehouse_id,user_id_of_customer,user_id_of_operator,shipway_code,created_time,status,remark,customer_reference_no,callback_send_weight_is_success,callback_send_weigh_count,callback_send_status_is_success,callback_send_status_count,out_warehouse_weight,weight_code,trade_remark,tracking_no,callback_send_check_is_success,callback_send_check_count,check_result,transport_type from w_t_big_package where 1=1 ");
+		// 按单号 批量查询 开始---------------
 		if (moreParam != null && StringUtil.isNotNull(moreParam.get("nos"))) {
-			// 按单号 批量查询 开始---------------
 			String noType = moreParam.get("noType");
 			String nos = moreParam.get("nos");
 			String noArray[] = StringUtil.splitW(nos);
@@ -113,6 +114,8 @@ public class BigPackageDaoImpl implements IBigPackageDao {
 				sb.append(" and tracking_no in(" + in + ")");
 			}
 			// 按单号 批量查询 结束------------
+		} else if (moreParam != null && StringUtil.isEqual(moreParam.get("trackingNoIsNull"), Constant.Y)) {// 显示无跟踪单号的订单
+			sb.append(" and (tracking_no is null or tracking_no = '') ");
 		} else {
 			if (bigPackage != null) {
 				if (bigPackage.getId() != null) {
@@ -190,10 +193,10 @@ public class BigPackageDaoImpl implements IBigPackageDao {
 					}
 				}
 			}
-			if (page != null) {
-				// 分页sql
-				sb.append(page.generatePageSql());
-			}
+		}
+		if (page != null) {
+			// 分页sql
+			sb.append(page.generatePageSql());
 		}
 		String sql = sb.toString();
 		List<BigPackage> bigPackageList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(BigPackage.class));
@@ -204,8 +207,8 @@ public class BigPackageDaoImpl implements IBigPackageDao {
 	public Long countBigPackage(BigPackage bigPackage, Map<String, String> moreParam) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("select count(id) from w_t_big_package where 1=1");
+		// 按单号 批量查询 开始---------------
 		if (moreParam != null && StringUtil.isNotNull(moreParam.get("nos"))) {
-			// 按单号 批量查询 开始---------------
 			String noType = moreParam.get("noType");
 			String nos = moreParam.get("nos");
 			String noArray[] = StringUtil.splitW(nos);
@@ -223,6 +226,8 @@ public class BigPackageDaoImpl implements IBigPackageDao {
 				sb.append(" and tracking_no in(" + in + ")");
 			}
 			// 按单号 批量查询 结束------------
+		} else if (moreParam != null && StringUtil.isNotNull(moreParam.get("trackingNoIsNull"))) {// 显示无跟踪单号的订单
+			sb.append(" and (tracking_no is null or tracking_no = '') ");
 		} else {
 			if (bigPackage != null) {
 				if (bigPackage.getId() != null) {
@@ -267,13 +272,13 @@ public class BigPackageDaoImpl implements IBigPackageDao {
 				if (bigPackage.getOutWarehouseWeight() != null) {
 					sb.append(" and out_warehouse_weight = " + bigPackage.getOutWarehouseWeight());
 				}
-				if (bigPackage.getWeightCode() != null) {
+				if (StringUtil.isNotNull(bigPackage.getWeightCode())) {
 					sb.append(" and weight_code = '" + bigPackage.getWeightCode() + "'");
 				}
-				if (bigPackage.getTradeRemark() != null) {
+				if (StringUtil.isNotNull(bigPackage.getTradeRemark())) {
 					sb.append(" and trade_remark = '" + bigPackage.getTradeRemark() + "'");
 				}
-				if (bigPackage.getTrackingNo() != null) {
+				if (StringUtil.isNotNull(bigPackage.getTrackingNo())) {
 					sb.append(" and tracking_no = '" + bigPackage.getTrackingNo() + "'");
 				}
 				if (StringUtil.isNotNull(bigPackage.getCheckResult())) {
@@ -404,5 +409,12 @@ public class BigPackageDaoImpl implements IBigPackageDao {
 	public String getCustomerReferenceNoById(Long bigPackageId) {
 		String sql = "select customer_reference_no from w_t_big_package where id = " + bigPackageId;
 		return jdbcTemplate.queryForObject(sql, String.class);
+	}
+
+	@Override
+	public List<Long> findUnCheckAndTackingNoIsNullBigPackageId() {
+		String sql = "select id from w_t_big_package where status ='" + BigPackageStatusCode.WWC + "' and tracking_no  is null";
+		List<Long> bigPackageIdList = jdbcTemplate.queryForList(sql, Long.class);
+		return bigPackageIdList;
 	}
 }

@@ -255,7 +255,7 @@ public class GenerateReportTaskImpl implements IGenerateReportTask {
 	 * 
 	 * 每天凌晨2点统计昨天出库
 	 */
-	@Scheduled(cron = "0 0 2 * * ? ")
+	@Scheduled(cron = "0 30 1 * * ? ")
 	@Override
 	public void outWarehouseReport() {
 		Long current = System.currentTimeMillis();
@@ -385,7 +385,7 @@ public class GenerateReportTaskImpl implements IGenerateReportTask {
 	 * 
 	 * 每天凌晨2点30分统计昨日库存
 	 */
-	@Scheduled(cron = "0 30 2 * * ? ")
+	@Scheduled(cron = "0 0 2 * * ? ")
 	@Override
 	public void dailyInventory() {
 		Calendar calendar = Calendar.getInstance();
@@ -428,7 +428,7 @@ public class GenerateReportTaskImpl implements IGenerateReportTask {
 	 * 
 	 * 每天凌晨3点统计库存
 	 */
-	@Scheduled(cron = "0 0 3 * * ? ")
+	@Scheduled(cron = "0 30 2 * * ? ")
 	@Override
 	public void inventoryReport() {
 		Long current = System.currentTimeMillis();
