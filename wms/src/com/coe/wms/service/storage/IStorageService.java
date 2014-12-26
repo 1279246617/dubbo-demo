@@ -364,6 +364,8 @@ public interface IStorageService {
 
 	public Map<String, String> executeSearchOutWarehouseOrder(String nos, String noType) throws ServiceException;
 
+	public Map<String, String> applyTrackingNo(Long orderId) throws ServiceException;
+
 	public TrackingNo getTrackingNoById(Long id) throws ServiceException;
 
 	public List<Shipway> findAllShipway() throws ServiceException;

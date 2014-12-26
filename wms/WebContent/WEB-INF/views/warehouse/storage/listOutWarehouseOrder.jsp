@@ -96,7 +96,7 @@
 		       	 	</span>
 		       	 	
                		<span class="pull-left" style="width:82px;">
-			       		<a class="btn btn-primary btn-small" onclick="checkOrder()" title="申请出库跟踪单号">
+			       		<a class="btn btn-primary btn-small" onclick="applyTrackingNo()" title="申请出库跟踪单号">
 			           		 <i class="icon-folder-open"></i>申请单号
 			       	 	</a>
 			       	 	<input style=" visibility:hidden;">
