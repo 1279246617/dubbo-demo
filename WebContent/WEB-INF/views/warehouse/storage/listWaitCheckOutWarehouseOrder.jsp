@@ -30,12 +30,6 @@
 			       	 	</a>
 			       	 	<input style=" visibility:hidden;">
 		       	 	</span>
-		       	 	<span class="pull-left" style="width:105px;">
-<!-- 			       		<a class="btn btn-primary btn-small" onclick="inportOrder()" title="导入出库订单"> -->
-<!-- 			           		 <i class="icon-file"></i>导入出库订单 -->
-<!-- 			       	 	</a> -->
-<!-- 			       	 	<input style=" visibility:hidden;"> -->
-		       	 	</span>
 		    	</div>    
                 <div class="pull-right searchContent">
                		<span class="pull-left" style="width:140px;">
@@ -47,6 +41,17 @@
 				       	 			<c:out value="${w.id}-${w.warehouseName}"/>
 				       		 	</option>
 				       		</c:forEach>
+						</select>
+               		</span>
+               		<span class="pull-left" style="width:145px;">
+               			运输方式
+               			<select style="width:80px;" id="shipway" name="shipway">
+               				<option></option>
+							<c:forEach items="${shipwayList}" var="shipway" >
+				       	 		<option value="<c:out value='${shipway.code}'/>">
+				       	 			<c:out value="${shipway.cn}"/>
+				       		 	</option>
+				       		 </c:forEach>
 						</select>
                		</span>
                		<span class="pull-left" style="width:140px;">
