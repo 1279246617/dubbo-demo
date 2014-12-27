@@ -18,6 +18,8 @@ public interface IOutWarehouseOrderDao {
 
 	public int updateOutWarehouseOrderStatus(Long orderId, String newStatus);
 
+	public int updateOutWarehouseOrderTrackingNo(OutWarehouseOrder outWarehouseOrder);
+
 	public String getOutWarehouseOrderStatus(Long orderId);
 
 	public List<Long> findCallbackSendWeightUnSuccessOrderId();
@@ -31,6 +33,6 @@ public interface IOutWarehouseOrderDao {
 	public int updateOutWarehouseOrderCallbackSendStatus(OutWarehouseOrder outWarehouseOrder);
 
 	public int updateOutWarehouseOrderWeight(OutWarehouseOrder outWarehouseOrder);
-	
+
 	public int deleteOutWarehouseOrder(Long outWarehouseOrderId);
 }

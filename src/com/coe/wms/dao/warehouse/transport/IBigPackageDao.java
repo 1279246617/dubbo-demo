@@ -3,6 +3,7 @@ package com.coe.wms.dao.warehouse.transport;
 import java.util.List;
 import java.util.Map;
 
+import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrder;
 import com.coe.wms.model.warehouse.transport.BigPackage;
 import com.coe.wms.util.Pagination;
 
@@ -40,4 +41,5 @@ public interface IBigPackageDao {
 
 	public int updateBigPackageCallbackSendStatus(BigPackage bigPackage);
 
+	public int updateBigPackageTrackingNo(BigPackage bigPackage);
 }

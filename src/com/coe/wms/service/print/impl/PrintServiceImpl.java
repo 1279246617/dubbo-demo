@@ -44,6 +44,7 @@ import com.coe.wms.dao.warehouse.transport.ILittlePackageStatusDao;
 import com.coe.wms.dao.warehouse.transport.IPackageRecordDao;
 import com.coe.wms.dao.warehouse.transport.IPackageRecordItemDao;
 import com.coe.wms.model.warehouse.Seat;
+import com.coe.wms.model.warehouse.Shipway;
 import com.coe.wms.model.warehouse.Warehouse;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrder;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderAdditionalSf;
@@ -380,6 +381,8 @@ public class PrintServiceImpl implements IPrintService {
 		if (StringUtil.isNull(trackingNo)) {
 			return null;
 		}
+		String etkTrackingNo = Shipway.getEtkTrackingNoPrintFormat(trackingNo);// ETK跟踪号打印格式
+		map.put("etkTrackingNo", etkTrackingNo);
 		String trackingNoBarcodeData = BarcodeUtil.createCode128(trackingNo, true, 11d, null);
 		map.put("trackingNoBarcodeData", trackingNoBarcodeData);
 		// 清单号 (出库订单主键)

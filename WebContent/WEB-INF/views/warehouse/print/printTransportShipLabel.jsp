@@ -188,7 +188,7 @@
 						    e特快 
 				    	</div>
 				    	<div class="receiver"><b>收件人联</b></div>
-				    	<div class="tracking-no-top1">EL 005 674 891 HK</div>
+				    	<div class="tracking-no-top1">${map.etkTrackingNo}</div>
 				    	<!-- 第二行内容 -->
 				    	<table style="height:10mm;margin-left:1mm;width: 100%">
 				    		<tbody>

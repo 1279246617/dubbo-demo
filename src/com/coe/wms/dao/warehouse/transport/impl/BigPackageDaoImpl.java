@@ -22,7 +22,9 @@ import org.springframework.stereotype.Repository;
 import com.coe.wms.dao.datasource.DataSource;
 import com.coe.wms.dao.datasource.DataSourceCode;
 import com.coe.wms.dao.warehouse.transport.IBigPackageDao;
+import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrder;
 import com.coe.wms.model.warehouse.transport.BigPackage;
+import com.coe.wms.model.warehouse.transport.BigPackageReceiver;
 import com.coe.wms.model.warehouse.transport.BigPackageStatus.BigPackageStatusCode;
 import com.coe.wms.util.Constant;
 import com.coe.wms.util.DateUtil;
@@ -81,10 +83,13 @@ public class BigPackageDaoImpl implements IBigPackageDao {
 
 	@Override
 	public BigPackage getBigPackageById(Long bigPackageId) {
-		String sql = "select id,warehouse_id,user_id_of_customer,user_id_of_operator,shipway_code,created_time,status,remark,customer_reference_no,callback_send_weight_is_success,callback_send_weigh_count,callback_send_status_is_success,callback_send_status_count,out_warehouse_weight,weight_code,trade_remark,tracking_no,callback_send_check_is_success,callback_send_check_count,check_result,transport_type from w_t_big_package where id ="
+		String sql = "select id,warehouse_id,user_id_of_customer,user_id_of_operator,shipway_code,created_time,status,remark,customer_reference_no,callback_send_weight_is_success,callback_send_weigh_count,callback_send_status_is_success,callback_send_status_count,out_warehouse_weight,weight_code,trade_remark,tracking_no,callback_send_check_is_success,callback_send_check_count,check_result,transport_type,shipway_extra1,shipway_extra2 from w_t_big_package where id ="
 				+ bigPackageId;
-		BigPackage bigPackage = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<BigPackage>(BigPackage.class));
-		return bigPackage;
+		List<BigPackage> bigPackageList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(BigPackage.class));
+		if (bigPackageList != null && bigPackageList.size() > 0) {
+			return bigPackageList.get(0);
+		}
+		return null;
 	}
 
 	/**
@@ -94,7 +99,7 @@ public class BigPackageDaoImpl implements IBigPackageDao {
 	@Override
 	public List<BigPackage> findBigPackage(BigPackage bigPackage, Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select id,warehouse_id,user_id_of_customer,user_id_of_operator,shipway_code,created_time,status,remark,customer_reference_no,callback_send_weight_is_success,callback_send_weigh_count,callback_send_status_is_success,callback_send_status_count,out_warehouse_weight,weight_code,trade_remark,tracking_no,callback_send_check_is_success,callback_send_check_count,check_result,transport_type from w_t_big_package where 1=1 ");
+		sb.append("select id,warehouse_id,user_id_of_customer,user_id_of_operator,shipway_code,created_time,status,remark,customer_reference_no,callback_send_weight_is_success,callback_send_weigh_count,callback_send_status_is_success,callback_send_status_count,out_warehouse_weight,weight_code,trade_remark,tracking_no,callback_send_check_is_success,callback_send_check_count,check_result,transport_type,shipway_extra1,shipway_extra2 from w_t_big_package where 1=1 ");
 		// 按单号 批量查询 开始---------------
 		if (moreParam != null && StringUtil.isNotNull(moreParam.get("nos"))) {
 			String noType = moreParam.get("noType");
@@ -416,5 +421,11 @@ public class BigPackageDaoImpl implements IBigPackageDao {
 		String sql = "select id from w_t_big_package where status ='" + BigPackageStatusCode.WWC + "' and tracking_no  is null";
 		List<Long> bigPackageIdList = jdbcTemplate.queryForList(sql, Long.class);
 		return bigPackageIdList;
+	}
+
+	@Override
+	public int updateBigPackageTrackingNo(BigPackage bigPackage) {
+		String sql = "update w_t_big_package set tracking_no= ?,shipway_extra1=?,shipway_extra2=? where id=?";
+		return jdbcTemplate.update(sql, bigPackage.getTrackingNo(), bigPackage.getShipwayExtra1(), bigPackage.getShipwayExtra2(), bigPackage.getId());
 	}
 }

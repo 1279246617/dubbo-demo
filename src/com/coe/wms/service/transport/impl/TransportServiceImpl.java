@@ -15,6 +15,7 @@ import com.coe.etk.api.Client;
 import com.coe.etk.api.request.Order;
 import com.coe.etk.api.request.Receiver;
 import com.coe.etk.api.request.Sender;
+import com.coe.etk.api.response.ResponseItems;
 import com.coe.wms.dao.product.IProductDao;
 import com.coe.wms.dao.user.IUserDao;
 import com.coe.wms.dao.warehouse.ISeatDao;
@@ -736,7 +737,7 @@ public class TransportServiceImpl implements ITransportService {
 			} else if (StringUtil.isEqual(onShelfstatus, LittlePackageOnShelf.STATUS_OUT_SHELF)) {
 				map.put("onShelfstatus", "已下架");
 			} else if (StringUtil.isEqual(onShelfstatus, LittlePackageOnShelf.STATUS_PRE_ON_SHELF)) {
-				map.put("onShelfstatus", "待上架");
+				map.put("onShelfstatus", "未上架");
 			} else {
 				map.put("onShelfstatus", "");
 			}
@@ -881,6 +882,10 @@ public class TransportServiceImpl implements ITransportService {
 		}
 		// 查询订单状态是否是待上架
 		LittlePackage littlePackage = littlePackageDao.getLittlePackageById(littlePackageId);
+		if (StringUtil.isEqual(littlePackage.getStatus(), LittlePackageStatusCode.WSR)) {
+			map.put(Constant.MESSAGE, "该订单等待回传收货给客户,不能上架");
+			return map;
+		}
 		if (!StringUtil.isEqual(littlePackage.getStatus(), LittlePackageStatusCode.WOS)) {
 			map.put(Constant.MESSAGE, "该订单非待上架状态,不能上架");
 			return map;
@@ -893,6 +898,10 @@ public class TransportServiceImpl implements ITransportService {
 		}
 		if (StringUtil.isEqual(onshelf.getStatus(), LittlePackageOnShelf.STATUS_ON_SHELF)) {
 			map.put(Constant.MESSAGE, "该订单已上架,不能重复上架");
+			return map;
+		}
+		if (!StringUtil.isEqual(onshelf.getSeatCode(), seatCode)) {
+			map.put(Constant.MESSAGE, "输入的货位号与预分配货位号不相同,不能上架");
 			return map;
 		}
 		littlePackage.setStatus(LittlePackageStatusCode.W_OUT_S);
@@ -1317,62 +1326,113 @@ public class TransportServiceImpl implements ITransportService {
 
 	@Override
 	public Map<String, String> applyTrackingNo(Long bigPackageId) throws ServiceException {
-		Map<String, String> map = new HashMap<String, String>();
-		map.put(Constant.STATUS, Constant.FAIL);
+		Map<String, String> resultMap = new HashMap<String, String>();
+		resultMap.put(Constant.STATUS, Constant.FAIL);
+		if (bigPackageId == null) {
+			return resultMap;
+		}
 		BigPackage bigPackage = bigPackageDao.getBigPackageById(bigPackageId);
+		if (StringUtil.isNotNull(bigPackage.getTrackingNo())) {
+			resultMap.put(Constant.MESSAGE, "该订单已有跟踪单号,申请失效");
+			return resultMap;
+		}
 		BigPackageReceiver bigPackageReceiver = bigPackageReceiverDao.getBigPackageReceiverByPackageId(bigPackageId);
 		BigPackageSender bigPackageSender = bigPackageSenderDao.getBigPackageSenderByPackageId(bigPackageId);
 		// 出货渠道是ETK
 		if (StringUtil.isEqual(bigPackage.getShipwayCode(), ShipwayCode.ETK)) {
-			Order etkOrder = new Order();
-			etkOrder.setCurrency(CurrencyCode.CNY);
-			etkOrder.setCustomerNo("sam");// 测试
-			etkOrder.setReferenceId(bigPackage.getCustomerReferenceNo());// 客户参考号
-			LittlePackageItem itemParam = new LittlePackageItem();
-			itemParam.setBigPackageId(bigPackageId);
-			List<LittlePackageItem> littlePackageItems = littlePackageItemDao.findLittlePackageItem(itemParam, null, null);
-			List<com.coe.etk.api.request.Item> items = new ArrayList<com.coe.etk.api.request.Item>();
-			for (LittlePackageItem littlePackageItem : littlePackageItems) {
-				com.coe.etk.api.request.Item item = new com.coe.etk.api.request.Item();
-				item.setItemDescription(littlePackageItem.getSkuName());// 报关描述
-				double price = 10d;// 报关价值
-				if (littlePackageItem.getSkuUnitPrice() != null) {
-					price = NumberUtil.div(littlePackageItem.getSkuUnitPrice(), 100d, 2);// 分转元
-				}
-				item.setItemPrice(price);
-				item.setItemQuantity(littlePackageItem.getQuantity() == null ? 1 : littlePackageItem.getQuantity());// 报关数量
-				double weight = 0.1d;// 报关重量
-				if (littlePackageItem.getSkuNetWeight() != null) {
-					weight = littlePackageItem.getSkuNetWeight();
-				}
-				item.setItemWeight(weight);
-				items.add(item);
-			}
-			etkOrder.setItems(items);
-			// 收件人
-			Receiver receiver = new Receiver();
-			receiver.setReceiverAddress1(bigPackageReceiver.getAddressLine1());
-			receiver.setReceiverAddress2(bigPackageReceiver.getAddressLine2());
-			receiver.setReceiverCity(bigPackageReceiver.getCity());
-			receiver.setReceiverCode(bigPackageReceiver.getPostalCode());
-			receiver.setReceiverName(bigPackageReceiver.getName());
-			receiver.setReceiverCountry(bigPackageReceiver.getCountryCode());
-			receiver.setReceiverPhone(bigPackageReceiver.getPhoneNumber());
-			receiver.setReceiverProvince(bigPackageReceiver.getStateOrProvince());
-			etkOrder.setReceiver(receiver);
-			// 发件人
-			Sender sender = new Sender();
-			sender.setSenderAddress(bigPackageSender.getAddressLine1());
-			sender.setSenderName(bigPackageSender.getName());
-			sender.setSenderPhone(bigPackageReceiver.getPhoneNumber());
-			etkOrder.setSender(sender);
-
-			Client client = new Client();
-			client.setToken("c587efdfcb6e4cd3");
-			client.setTokenKey("b5e3d9769218deb3");
-			client.setUrl("http://58.96.174.216:8080/coeimport/orderApi");
-			client.applyTrackingNo(etkOrder);
+			resultMap = applyEtkTrackingNo(bigPackage, bigPackageReceiver, bigPackageSender);
 		}
+		// 出货渠道顺丰
+		if (StringUtil.isEqual(bigPackage.getShipwayCode(), ShipwayCode.SF)) {
+			resultMap = applyEtkTrackingNo(bigPackage, bigPackageReceiver, bigPackageSender);
+		}
+		return resultMap;
+	}
+
+	/**
+	 * 申请ETK跟踪单号
+	 * 
+	 * @param bigPackage
+	 * @param bigPackageReceiver
+	 * @param bigPackageSender
+	 * @return
+	 */
+	private Map<String, String> applyEtkTrackingNo(BigPackage bigPackage, BigPackageReceiver bigPackageReceiver, BigPackageSender bigPackageSender) {
+		Map<String, String> map = new HashMap<String, String>();
+		map.put(Constant.STATUS, Constant.FAIL);
+		Order etkOrder = new Order();
+		etkOrder.setCurrency(CurrencyCode.CNY);
+		etkOrder.setCustomerNo("sam");// 测试
+		etkOrder.setReferenceId(bigPackage.getCustomerReferenceNo());// 客户参考号
+		LittlePackageItem itemParam = new LittlePackageItem();
+		itemParam.setBigPackageId(bigPackage.getId());
+		List<LittlePackageItem> littlePackageItems = littlePackageItemDao.findLittlePackageItem(itemParam, null, null);
+		List<com.coe.etk.api.request.Item> items = new ArrayList<com.coe.etk.api.request.Item>();
+		for (LittlePackageItem littlePackageItem : littlePackageItems) {
+			com.coe.etk.api.request.Item item = new com.coe.etk.api.request.Item();
+			item.setItemDescription(littlePackageItem.getSkuName());// 报关描述
+			double price = 10d;// 报关价值
+			if (littlePackageItem.getSkuUnitPrice() != null) {
+				price = NumberUtil.div(littlePackageItem.getSkuUnitPrice(), 100d, 2);// 分转元
+			}
+			item.setItemPrice(price);
+			item.setItemQuantity(littlePackageItem.getQuantity() == null ? 1 : littlePackageItem.getQuantity());// 报关数量
+			double weight = 0.1d;// 报关重量
+			if (littlePackageItem.getSkuNetWeight() != null) {
+				weight = littlePackageItem.getSkuNetWeight();
+			}
+			item.setItemWeight(weight);
+			items.add(item);
+		}
+		etkOrder.setItems(items);
+		// 收件人
+		Receiver receiver = new Receiver();
+		receiver.setReceiverAddress1(bigPackageReceiver.getAddressLine1());
+		receiver.setReceiverAddress2(bigPackageReceiver.getAddressLine2());
+		receiver.setReceiverCity(bigPackageReceiver.getCity());
+		receiver.setReceiverCode(bigPackageReceiver.getPostalCode());
+		receiver.setReceiverName(bigPackageReceiver.getName());
+		receiver.setReceiverCountry(bigPackageReceiver.getCountryCode());
+		receiver.setReceiverPhone(bigPackageReceiver.getPhoneNumber());
+		receiver.setReceiverProvince(bigPackageReceiver.getStateOrProvince());
+		etkOrder.setReceiver(receiver);
+		// 发件人
+		Sender sender = new Sender();
+		sender.setSenderAddress(bigPackageSender.getAddressLine1());
+		sender.setSenderName(bigPackageSender.getName());
+		sender.setSenderPhone(bigPackageReceiver.getPhoneNumber());
+		etkOrder.setSender(sender);
+
+		Client client = new Client();
+		client.setToken("c587efdfcb6e4cd3");
+		client.setTokenKey("b5e3d9769218deb3");
+		client.setUrl("http://58.96.174.216:8080/coeimport/orderApi");
+		com.coe.etk.api.response.Responses responses = client.applyTrackingNo(etkOrder);
+		if (responses == null) {
+			map.put(Constant.STATUS, Constant.FAIL);
+			map.put(Constant.MESSAGE, "对方系统异常,返回非法XML格式");
+			return map;
+		}
+		ResponseItems responseItems = responses.getResponseItems();
+		if (responseItems == null) {
+			map.put(Constant.STATUS, Constant.FAIL);
+			map.put(Constant.MESSAGE, "对方系统异常,返回非法XML格式");
+			return map;
+		}
+		com.coe.etk.api.response.Response response = responseItems.getResponse();
+		if (response == null) {
+			map.put(Constant.STATUS, Constant.FAIL);
+			map.put(Constant.MESSAGE, "对方系统异常,返回非法XML格式");
+			return map;
+		}
+		if (StringUtil.isEqualIgnoreCase(response.getSuccess(), Constant.FALSE)) {
+			map.put(Constant.STATUS, Constant.FAIL);
+			map.put(Constant.MESSAGE, response.getErrorInfo());
+			return map;
+		}
+		// 成功
+		String trackingNo = response.getTrackingNo();
+		map.put("trackingNo", trackingNo);
 		map.put(Constant.STATUS, Constant.SUCCESS);
 		return map;
 	}

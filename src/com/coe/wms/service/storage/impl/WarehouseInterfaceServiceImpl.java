@@ -600,7 +600,7 @@ public class WarehouseInterfaceServiceImpl implements IWarehouseInterfaceService
 				additionalSf.setSenderAddress(clearanceDetail.getSenderAddress());
 				additionalSf.setShipperCode(clearanceDetail.getShipperCode());
 				Long outWarehouseOrderAdditionalSfId = outWarehouseOrderAdditionalSfDao.saveOutWarehouseOrderAdditionalSf(additionalSf);
-				logger.info("出库订单:第" + (i + 1) + "客户订单号customerReferenceNo(tradeOrderId):" + customerReferenceNo + " 保存顺丰标签附近内容人,outWarehouseOrderAdditionalSfId:" + outWarehouseOrderAdditionalSfId);
+				logger.info("出库订单:第" + (i + 1) + "客户订单号customerReferenceNo(tradeOrderId):" + customerReferenceNo + " 保存顺丰标签内容,outWarehouseOrderAdditionalSfId:" + outWarehouseOrderAdditionalSfId);
 			}
 			// 发件人信息
 			OutWarehouseOrderSender outWarehouseOrderSender = new OutWarehouseOrderSender();

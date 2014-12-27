@@ -41,6 +41,15 @@ public class OutWarehouseOrder implements Serializable {
 	private String shipwayCode;
 
 	/**
+	 * 运输渠道附加字段1 不同渠道,对此字段用法不一样,命名为附加字段
+	 */
+	private String shipwayExtra1;
+
+	/**
+	 * 运输渠道附加字段2
+	 */
+	private String shipwayExtra2;
+	/**
 	 * 出货跟踪号
 	 */
 	private String trackingNo;
@@ -159,11 +168,25 @@ public class OutWarehouseOrder implements Serializable {
 		return logisticsRemark;
 	}
 
+	public String getShipwayExtra1() {
+		return shipwayExtra1;
+	}
+
+	public void setShipwayExtra1(String shipwayExtra1) {
+		this.shipwayExtra1 = shipwayExtra1;
+	}
+
+	public String getShipwayExtra2() {
+		return shipwayExtra2;
+	}
+
+	public void setShipwayExtra2(String shipwayExtra2) {
+		this.shipwayExtra2 = shipwayExtra2;
+	}
+
 	public void setLogisticsRemark(String logisticsRemark) {
 		this.logisticsRemark = logisticsRemark;
 	}
-
- 
 
 	public Integer getPrintedCount() {
 		return printedCount;
