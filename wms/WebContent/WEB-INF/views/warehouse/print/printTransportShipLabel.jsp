@@ -196,7 +196,7 @@
 				    			<td style="width:50%;"><img class="etkpng" src="${baseUrl}/static/img/print/etk.png"></td>
 				    			<td style="width:50%;">
 				    					<div class="zone" style="margin-left: 6mm;">
-				    						<div style="font-size: 41px;margin-top: -8px;">B1</div>
+				    						<div style="font-size: 41px;margin-top: -8px;">${map.shipwayExtra1}</div>
 				    					</div>
 				    			</td>
 				    		</tr>
@@ -205,7 +205,7 @@
 			    	<!-- 寄件人信息 居左-->
 			    	<div style="float: left;margin-left: 1mm;line-height: 4mm;font-size: 12px;">
 			    		<span style="line-height:3mm;">寄件人姓名及地址</span><br>
-			    		<span style="width:32mm;">ECMTEST</span>
+			    		<span style="width:32mm;">${map.customerNo}</span>
 			    		<span style="margin-left:7mm;">852-27555000</span>
 			    		<br>
 			    		<span style="">Flat G &amp; H, 6/F, Blk 1,</span>
@@ -214,24 +214,24 @@
 			    		<br>
 			    		<span style="">No 15-33 Kwai Tak St, Kwai Chung</span>
 			    		<br>
-			    		<span style="">HK&nbsp;&nbsp;NT</span><span style="font-weight: bold;margin-left: 10mm;"><b>邮政编码</b>321000</span>
+			    		<span style="">HK&nbsp;&nbsp;NT</span><span style="font-weight: bold;margin-left: 10mm;"><b>邮政编码</b>${map.receiver.postalCode}</span>
 			    		<br>
 			    	</div>
 			    	<!-- 收件人信息 巨右 -->
 			    	<div style="float: right;width:42mm;line-height: 4mm;font-size: 12px;">
 			    		<span style="line-height:3mm;">收件人姓名及地址</span>
 			    		<br>
-			    		<div style="float:left; overflow: hidden;width:16mm;height:3.5mm;">朱冰清</div>
-			    		<div style="float:right;overflow: hidden;width:24mm;height:3.5mm;">13967938267</div>
+			    		<div style="float:left; overflow: hidden;width:16mm;height:3.5mm;">${map.receiverName}</div>
+			    		<div style="float:right;overflow: hidden;width:24mm;height:3.5mm;">${map.phoneOrMobileNumber}</div>
 			    		<br>
 			    		<div style="float: left;width:40mm;height:4mm;overflow:hidden;">
-			    			永康市花川工业区玉桂路88-5号
+			    			${map.receiver.addressLine1}
 			    		</div>	
-			    		<div style="width:15mm;float: left;">金华市</div>
-			    		<div style="float: right;margin-right: 10mm;text-align: left;">中国</div>
+			    		<div style="width:15mm;float: left;">${map.receiver.city}</div>
+			    		<div style="float: right;margin-right: 10mm;text-align: left;">${map.receiver.countryName}</div>
 			    		<br>
 			    		<div style="width:15mm;float: left;">总重</div>
-			    		<div style="float: right;margin-right: 10mm;text-align: left;">1.0公斤</div>
+			    		<div style="float: right;margin-right: 10mm;text-align: left;">${map.totalWeight}公斤</div>
 			    	</div>	
 				 </div>
 			     
@@ -242,31 +242,31 @@
 			      	<!-- 收件人姓名及地址  居左-->
 			    	<div style="float: left;width:54mm;margin-left: 1mm;margin-top: 1mm;line-height: 3.9mm;font-size: 12px;">
 			    		<span style="line-height:5px;">收件人信息</span>
-			    		<div style="float:right; width: 35mm; overflow:hidden">20141023091795</div>
+			    		<div style="float:right; width: 35mm; overflow:hidden">${map.customerReferenceNo}</div>
 			    		<br>
-			    		<div style="float:left; overflow: hidden;width:20mm;height:3.5mm;">朱冰清</div>
-			    		<div style="float:right;overflow: hidden;width:34mm;height:3.5mm;">13967938267</div>
+			    		<div style="float:left; overflow: hidden;width:20mm;height:3.5mm;">${map.receiverName}</div>
+			    		<div style="float:right;overflow: hidden;width:34mm;height:3.5mm;">${map.phoneOrMobileNumber}</div>
 			    		<div style="float:left;overflow: hidden;width:52mm;height:7mm;">
-			    			永康市花川工业区玉桂路88-5号
+			    				${map.receiver.addressLine1} ${map.receiver.addressLine2}
 			    		</div>
 				    	<br>
-				    	<div style="width:25mm;float: left;">金华市</div>
-			    		<div style="float: right;margin-right: 10mm;text-align: left;">浙江</div>
+				    	<div style="width:25mm;float: left;">${map.receiver.city}</div>
+			    		<div style="float: right;margin-right: 10mm;text-align: left;">${map.receiver.stateOrProvince}</div>
 			    		<br>
-			    		<div style="width:20mm;float: left;">中国</div>
-			    		<div style="float: right;text-align: left;">邮政编码&nbsp;&nbsp;321000</div>
+			    		<div style="width:20mm;float: left;">${map.receiver.countryName}</div>
+			    		<div style="float: right;text-align: left;">邮政编码&nbsp;&nbsp;${map.receiver.postalCode}</div>
 			    		<br>
 			    		<div style="width:15mm;float: left;">运单号码</div>
-			    		<div style="float: right;text-align: left;">EL 005 674 891 HK</div>
+			    		<div style="float: right;text-align: left;">${map.etkTrackingNo}</div>
 			    		<br>
 			    		<div style="text-align: left;">
-			    			<img style="margin-left: -1mm; "  src="${baseUrl}/static/img/print/printBarcode.jpg">
+			    			<img  style="margin-top:1mm;" src="data:image/png;base64,<c:out value="${map.trackingNoBarcodeData2}"/>">
 			            </div>
 			    	</div>
 			    	<div style="float: right;width:42mm;margin-right: -1mm;line-height: 3.9mm;font-size: 12px;">
 			    		<span>总重</span>
 			    		<div style="float: right;margin-right: 10mm;text-align: left;">
-			    			1.0公斤
+			    			${map.totalWeight}公斤
 			    		</div>
 			    		<br>
 			    		<span>收件人簽名</span><br>
@@ -285,7 +285,7 @@
 		    	<div style="float: left;line-height: 3.2mm;font-size: 12px;margin-left: 1mm;">
 		    		<span style="line-height:3mm;">寄件人姓名及地址</span>
 		    		<br>
-		    		<span style="width:32mm;">ECMTEST</span>
+		    		<span style="width:32mm;">${map.customerNo}</span>
 		    		<br>
 		    		<span style="">Flat G &amp; H, 6/F, Blk 1,</span>
 		    		<br>
@@ -296,23 +296,23 @@
 		    		<span style=""> Kwai Chung &nbsp;HK&nbsp;&nbsp;NT</span>
 		    		<br>
 		    		<span style="width:15mm;float: left;">运单号码</span>
-		    		<span style=";text-align: left;">EL 005 674 891 HK</span>
+		    		<span style=";text-align: left;">${map.etkTrackingNo}</span>
 		    	</div>
     	
 		    	<!-- 收件人信息 巨右 -->
 		    	<div style="float: right;width:48mm;margin-right: 1mm;line-height: 3.2mm;font-size: 12px;">
 		    		<span style="line-height:3mm;">收件人姓名及地址</span>
 		    		<br>
-		    		<div style="float:left; overflow: hidden;width:16mm;height:3.5mm;">朱冰清</div>
-		    		<div style="float:right;overflow: hidden;width:31mm;height:3.5mm;">13967938267</div>
-		    		<span style="">永康市花川工业区玉桂路88-5号</span><br>
-		    		<div style="width:15mm;float: left;">金华市</div>
-		    		<div style="float: right;margin-right: 10mm;text-align: left;">浙江</div>
+		    		<div style="float:left; overflow: hidden;width:16mm;height:3.5mm;">${map.receiverName}</div>
+		    		<div style="float:right;overflow: hidden;width:31mm;height:3.5mm;">${map.phoneOrMobileNumber}</div>
+		    		<span style="">${map.receiver.addressLine1} ${map.receiver.addressLine2}</span><br>
+		    		<div style="width:15mm;float: left;">${map.receiver.city}</div>
+		    		<div style="float: right;margin-right: 10mm;text-align: left;">${map.receiver.stateOrProvince}</div>
 		    		<br>
-		    		<div style="width:15mm;float: left;">中国</div>
-		    		<div style="float: right;text-align: left; margin-right: 5mm">邮政编码&nbsp;&nbsp;321000</div>
+		    		<div style="width:15mm;float: left;">${map.receiver.countryName}</div>
+		    		<div style="float: right;text-align: left; margin-right: 5mm">邮政编码&nbsp;&nbsp;${map.receiver.postalCode}</div>
 		    		<div style="width:15mm;float: left;">总重</div>
-		    		<div style="float: right;margin-right: 10mm;text-align: left;">1.0公斤</div>
+		    		<div style="float: right;margin-right: 10mm;text-align: left;">${map.totalWeight}公斤</div>
 		    	</div>	
 		    	
 		    	<table style="float: left;border:2px solid #000;width:97mm;margin-left: 0.5mm;font-size: 12;line-height: 3mm;" rules="all">
@@ -326,32 +326,19 @@
 							<td>件数</td>
 							<td>海关申报值</td>
 						</tr>
-						
+						<c:forEach var="customs"  items="${map.etkCustoms}">
 							<tr style="height:3.2mm">
-								<td>護護品</td>
-								<td>1.0</td>
-								<td>238.8</td>
-								<td>1</td>
-								<td>238.8</td>
-						</tr>  
-							<tr style="height:3.2mm">
-								<td> </td>
-								<td> </td>
-								<td> </td>
-								<td> </td>
-								<td> </td>
-						</tr>  
-							<tr style="height:3.2mm">
-								<td> </td>
-								<td> </td>
-								<td> </td>
-								<td> </td>
-								<td> </td>
-						</tr>  
+								<td><c:out value="${customs.skuName}"/></td>
+								<td><c:out value="${customs.customsWeight}"/></td>
+								<td><c:out value="${customs.customsValue}"/></td>
+								<td><c:out value="${customs.quantity}"/></td>
+								<td><c:out value="${customs.totalvalue}"/></td>
+							</tr>  
+						</c:forEach>
 						<tr style="height:4.5mm">
 		    				<td colspan="3" style="text-align: center">海关申报总值</td>
-		    				<td colspan="1" style="text-align: center">人民币</td>
-		    				<td colspan="1" style="text-align: center">238.8</td>
+		    				<td colspan="1" style="text-align: center">${map.currency}人民币</td>
+		    				<td colspan="1" style="text-align: center">${map.totalPrice}</td>
 		    			</tr>
 		    		</tbody>
 		    	</table>
