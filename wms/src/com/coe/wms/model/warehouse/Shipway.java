@@ -2,6 +2,7 @@ package com.coe.wms.model.warehouse;
 
 import java.io.Serializable;
 
+import com.coe.wms.util.StringUtil;
 import com.google.code.ssm.api.CacheKeyMethod;
 
 /**
@@ -84,5 +85,31 @@ public class Shipway implements Serializable {
 
 	public void setRemark(String remark) {
 		this.remark = remark;
+	}
+
+	/**
+	 * 获取ETK跟踪号 打印格式
+	 * 
+	 * @param trackingNo
+	 * @return
+	 */
+	public static String getEtkTrackingNoPrintFormat(String trackingNo) {
+		if (StringUtil.isNotNull(trackingNo) && trackingNo.matches("^[a-zA-Z]+\\d+[a-zA-Z]+$")) {
+			String etkTrackingNo = "";
+			trackingNo = trackingNo.replaceAll("\\s+", "");
+			// 所有字母
+			String s1 = trackingNo.replaceAll("\\d+", " ");
+			etkTrackingNo += (s1.split(" ")[0] + " ");
+			// 所有数字
+			String s2 = trackingNo.replaceAll("[a-zA-Z]+", "");
+			while (s2.length() >= 3) {
+				etkTrackingNo += s2.substring(0, 3) + " ";
+				s2 = s2.replaceAll("^\\d{3}", "");
+			}
+			etkTrackingNo += s2;
+			etkTrackingNo += s1.split(" ")[1];
+			return etkTrackingNo;
+		}
+		return trackingNo;
 	}
 }

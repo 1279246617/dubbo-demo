@@ -346,36 +346,44 @@ function printShipLabel(){
 
 //申请单号
 function applyTrackingNo(){
-        var contentArr = [];
-        contentArr.push('  <div class="pull-left" style="width:660px;height:60px;">');
-        contentArr.push('       <input class="pull-left" name="chooseOption" style="margin-left: 10px;" type="radio" checked="checked" value="selected" id="selected">');
-        contentArr.push('       <label class="pull-left" style="margin-left: 5px" for="selected">申请选中</label>');
-        contentArr.push('       <input class="pull-left" name="chooseOption" style="margin-left: 30px;" type="radio" value="all" id="all">');
-        contentArr.push('       <label class="pull-left" style="margin-left: 5px;" for="all">申请当前页</label>');
-        contentArr.push('  </div>');
-        contentArr.push('  <div  class="pull-left" style="width:660px;height:340px;margin-left: 10px;overflow:auto;">');
-        contentArr.push('  <table class="table table-striped">');
-        contentArr.push(' <tr>');
-        contentArr.push(' <th>申请单号总数</th>');
-        contentArr.push(' <th><span id="registerTotal"></span></th>');
-        contentArr.push(' </tr>');
-        contentArr.push('  <table>');
-        contentArr.push('  <table class="table table-striped" id="registerResult">');
-        contentArr.push(' <tr>');
-        contentArr.push(' <th>序号</th>');
-        contentArr.push(' <th>状态</th>');
-        contentArr.push(' <th>结果</th>');
-        contentArr.push(' </tr>');
-        contentArr.push('  <table>');
-        contentArr.push('  </div>');
-        var contentHtml = contentArr.join('');
+	  var contentArr = [];
+      contentArr.push('  <div class="pull-left" style="width:660px;height:30px;">');
+      contentArr.push('       <input class="pull-left" name="chooseOption" style="margin-left: 10px;" type="radio" checked="checked" value="selected" id="selected">');
+      contentArr.push('       <label class="pull-left" style="margin-left: 5px" for="selected">申请选中</label>');
+      contentArr.push('       <input class="pull-left" name="chooseOption" style="margin-left: 30px;" type="radio" value="all" id="all">');
+      contentArr.push('       <label class="pull-left" style="margin-left: 5px;" for="all">申请当前页</label>');
+      contentArr.push('  </div>');
+      
+      contentArr.push('  <table class="table table-striped" style="margin-bottom:6px;">');
+      contentArr.push(' <tr>');
+      contentArr.push(' <th style="color:red">注:已经有跟踪号码的订单不能重复申请单号,此操作对已经有跟踪单号的订单无影响</th>');
+      contentArr.push(' </tr>');
+      contentArr.push('  </table>');
+      
+      contentArr.push('  <table class="table table-striped" style="margin-top:0px;margin-bottom:2px;">');
+      contentArr.push(' <tr>');
+      contentArr.push(' <th>申请单号总数</th>');
+      contentArr.push(' <th><span id="registerTotal"></span></th>');
+      contentArr.push(' </tr>');
+      contentArr.push('  </table>');
+      
+      contentArr.push('  <div  class="pull-left" style="width:660px;height:340px;overflow:auto;">');
+      contentArr.push('  <table class="table table-striped" id="registerResult" style="margin-top:0px;">');
+      contentArr.push(' <tr>');
+      contentArr.push(' <th>序号</th>');
+      contentArr.push(' <th>状态</th>');
+      contentArr.push(' <th>结果</th>');
+      contentArr.push(' </tr>');
+      contentArr.push('  </table>');
+      contentArr.push('  </div>');
+      var contentHtml = contentArr.join('');
         $.dialog({
                 lock: true,
                 max: false,
                 min: false,
                 title: '申请跟踪单号',
                 width: 660,
-                height: 400,
+                height: 420,
                 content:contentHtml ,
                 button: [{
 					name: '确认',
@@ -402,6 +410,7 @@ function applyTrackingNo(){
 	                    	}
 	                    });
 	                    parent.$("#registerTotal").html(registerTotal);
+	                    $.ajaxSettings.async = false; 
 	                    $(orderIdArray).each(function(i,e){
 	                        $.getJSON(baseUrl + '/warehouse/storage/applyTrackingNo.do',{orderId:e},function(msg) {
 	                    		var tr = "<tr>";
@@ -418,7 +427,7 @@ function applyTrackingNo(){
 	                    			grid.loadData();	
 	        	                    setTimeout(function(){
 	        	                    	that.close();	
-	        	                    }, 30000);	
+	        	                    }, 60000);	
 	                    		}
 	    					});
 	                    });

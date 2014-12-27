@@ -82,7 +82,7 @@ public class OutWarehouseOrderDaoImpl implements IOutWarehouseOrderDao {
 
 	@Override
 	public OutWarehouseOrder getOutWarehouseOrderById(Long outWarehouseOrderId) {
-		String sql = "select id,warehouse_id,user_id_of_customer,user_id_of_operator,shipway_code,created_time,status,remark,customer_reference_no,callback_send_weight_is_success,callback_send_weigh_count,callback_send_status_is_success,callback_send_status_count,out_warehouse_weight,weight_code,trade_remark,logistics_remark,tracking_no,printed_count from w_s_out_warehouse_order where id ="
+		String sql = "select id,warehouse_id,user_id_of_customer,user_id_of_operator,shipway_code,created_time,status,remark,customer_reference_no,callback_send_weight_is_success,callback_send_weigh_count,callback_send_status_is_success,callback_send_status_count,out_warehouse_weight,weight_code,trade_remark,logistics_remark,tracking_no,printed_count,shipway_extra1,shipway_extra2 from w_s_out_warehouse_order where id ="
 				+ outWarehouseOrderId;
 		OutWarehouseOrder order = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<OutWarehouseOrder>(OutWarehouseOrder.class));
 		return order;
@@ -96,7 +96,7 @@ public class OutWarehouseOrderDaoImpl implements IOutWarehouseOrderDao {
 	@Override
 	public List<OutWarehouseOrder> findOutWarehouseOrder(OutWarehouseOrder outWarehouseOrder, Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select id,warehouse_id,user_id_of_customer,user_id_of_operator,shipway_code,created_time,status,remark,customer_reference_no,callback_send_weight_is_success,callback_send_weigh_count,callback_send_status_is_success,callback_send_status_count,out_warehouse_weight,weight_code,trade_remark,logistics_remark,tracking_no,printed_count from w_s_out_warehouse_order where 1=1 ");
+		sb.append("select id,warehouse_id,user_id_of_customer,user_id_of_operator,shipway_code,created_time,status,remark,customer_reference_no,callback_send_weight_is_success,callback_send_weigh_count,callback_send_status_is_success,callback_send_status_count,out_warehouse_weight,weight_code,trade_remark,logistics_remark,tracking_no,printed_count,shipway_extra1,shipway_extra2 from w_s_out_warehouse_order where 1=1 ");
 		if (moreParam != null && StringUtil.isNotNull(moreParam.get("nos"))) {
 			// 按单号 批量查询 开始---------------
 			String noType = moreParam.get("noType");
@@ -397,5 +397,11 @@ public class OutWarehouseOrderDaoImpl implements IOutWarehouseOrderDao {
 		sql = "delete from w_s_out_warehouse_order_sender where out_warehouse_order_id =" + outWarehouseOrderId;
 		jdbcTemplate.update(sql);
 		return count;
+	}
+
+	@Override
+	public int updateOutWarehouseOrderTrackingNo(OutWarehouseOrder outWarehouseOrder) {
+		String sql = "update w_s_out_warehouse_order set tracking_no= ?,shipway_extra1=?,shipway_extra2=? where id=?";
+		return jdbcTemplate.update(sql, outWarehouseOrder.getTrackingNo(), outWarehouseOrder.getShipwayExtra1(), outWarehouseOrder.getShipwayExtra2(), outWarehouseOrder.getId());
 	}
 }

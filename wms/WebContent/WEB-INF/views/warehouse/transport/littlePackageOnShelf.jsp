@@ -67,7 +67,7 @@
 					<td  >
 						<span style="width:70px;height:50px;margin-top: 4mm;font-size: mm;font-size: 7mm;" class="pull-left" >货位</span>
 						<span class="pull-left" style="width:210px;">
-							<input type="text"  name="seatCode" t="2"  id="seatCode" style="width:180px;height:65px; font-size: 10mm;font-weight: bold;color:red;"readonly="readonly"/>
+							<input type="text"  name="seatCode" t="2"  id="seatCode" style="width:180px;height:65px; font-size: 10mm;font-weight: bold;color:red;" />
 						</span>
 						
 						<span style="width:120px;height:50px;margin-top: 4mm;font-size: mm;font-size: 7mm;" class="pull-left" >
@@ -123,7 +123,7 @@
   		if(littlePackageRadio.length){
   			$("#littlePackageId").val(littlePackageRadio.attr("littlePackageId"));
   			$("#bigPackageId").val(littlePackageRadio.attr("bigPackageId"));
-  			$("#seatCode").val(littlePackageRadio.attr("seatCode"));
+//   			$("#seatCode").val(littlePackageRadio.attr("seatCode"));
   		}
   		trackingNoBlur();
   		var  littlePackageId = $("#littlePackageId").val();
@@ -148,7 +148,7 @@
     				if (msg.status == 1) {
     					$("#littlePackageId").val(n.littlePackageId);
     					$("#bigPackageId").val(n.bigPackageId);
-    					$("#seatCode").val(n.seatCode);
+//     					$("#seatCode").val(n.seatCode);
     					$("#outWarehouseTrackingNo").val(n.outWarehouseTrackingNo);
     					tr+="<td style='width:25px;text-align:center;'><input type='radio' t='1' littlePackageId='"+n.littlePackageId+"'  bigPackageId='"+n.bigPackageId+"'  seatCode='"+n.seatCode+"' name='littlePackageRadio' value='radiobutton' checked></td>";	
     				}else{
@@ -203,7 +203,7 @@
   				+ seatCode+'&littlePackageId='+littlePackageId, function(msg) {
   			if(msg.status == 0){
   				//保存失败,显示提示
-  				parent.$.showShortMessage({msg:msg.message,animate:false,left:"45%"});
+  				parent.$.showShortMessage({msg:msg.message,animate:false,left:"43%"});
   				// 光标移至商品条码
   				$("#seatCode").focus();
   				focus = "2";
@@ -217,7 +217,7 @@
   				$("#bigPackageId").val("");
   				$("#seatCode").val("");
   				$("#littlePackagebody").html("");
-  				
+  				$("#trackingNo").val("");
   				$("#trackingNo").focus();
   				$("#trackingNo").select();
   				focus = "1";

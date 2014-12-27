@@ -69,10 +69,22 @@ public class BigPackage implements Serializable {
 	 * 出货渠道
 	 */
 	private String shipwayCode;
+
+	/**
+	 * 运输渠道附加字段1 不同渠道,对此字段用法不一样,命名为附加字段
+	 */
+	private String shipwayExtra1;
+
+	/**
+	 * 运输渠道附加字段2
+	 */
+	private String shipwayExtra2;
+
 	/**
 	 * 出货跟踪号
 	 */
 	private String trackingNo;
+
 	/**
 	 * 状态
 	 * 
@@ -169,6 +181,22 @@ public class BigPackage implements Serializable {
 
 	public Long getWarehouseId() {
 		return warehouseId;
+	}
+
+	public String getShipwayExtra1() {
+		return shipwayExtra1;
+	}
+
+	public void setShipwayExtra1(String shipwayExtra1) {
+		this.shipwayExtra1 = shipwayExtra1;
+	}
+
+	public String getShipwayExtra2() {
+		return shipwayExtra2;
+	}
+
+	public void setShipwayExtra2(String shipwayExtra2) {
+		this.shipwayExtra2 = shipwayExtra2;
 	}
 
 	public void setWarehouseId(Long warehouseId) {
