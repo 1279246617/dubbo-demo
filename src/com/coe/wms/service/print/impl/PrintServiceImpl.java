@@ -251,7 +251,7 @@ public class PrintServiceImpl implements IPrintService {
 		}
 		// 创建条码
 		String trackingNo = outWarehouseOrder.getTrackingNo();
-		String trackingNoBarcodeData = BarcodeUtil.createCode128(trackingNo, true, 11d, null);
+		String trackingNoBarcodeData = BarcodeUtil.createCode128(trackingNo, true, 13d, null);
 		map.put("trackingNoBarcodeData", trackingNoBarcodeData);
 		// 清单号 (出库订单主键)
 		map.put("outWarehouseOrderId", String.valueOf(outWarehouseOrder.getId()));
@@ -383,25 +383,54 @@ public class PrintServiceImpl implements IPrintService {
 		}
 		String etkTrackingNo = Shipway.getEtkTrackingNoPrintFormat(trackingNo);// ETK跟踪号打印格式
 		map.put("etkTrackingNo", etkTrackingNo);
+		// ETK客户帐号
+		map.put("customerNo", "ECMTEST");
 		String trackingNoBarcodeData = BarcodeUtil.createCode128(trackingNo, true, 11d, null);
 		map.put("trackingNoBarcodeData", trackingNoBarcodeData);
+
+		String trackingNoBarcodeData2 = BarcodeUtil.createCode128(trackingNo, false, 14d, null);
+		map.put("trackingNoBarcodeData2", trackingNoBarcodeData2);
 		// 清单号 (出库订单主键)
 		map.put("outWarehouseOrderId", String.valueOf(bigPackage.getId()));
 		map.put("customerReferenceNo", bigPackage.getCustomerReferenceNo());
 		map.put("tradeRemark", bigPackage.getTradeRemark());
 		map.put("logisticsRemark", bigPackage.getRemark());
+		map.put("shipwayExtra1", bigPackage.getShipwayExtra1());
+		map.put("shipwayExtra2", bigPackage.getShipwayExtra2());
 		map.put("receiverName", receiver.getName());
 		map.put("receiver", receiver);
 		map.put("receiverPhoneNumber", receiver.getPhoneNumber());
 		map.put("receiverMobileNumber", receiver.getMobileNumber());
+		if (StringUtil.isNotNull(receiver.getMobileNumber())) {
+			map.put("phoneOrMobileNumber", receiver.getMobileNumber());
+		} else {
+			map.put("phoneOrMobileNumber", receiver.getPhoneNumber());
+		}
 		Integer totalQuantity = 0;
-
+		double totalPrice = 0d;
 		LittlePackageItem littlePackageItemParam = new LittlePackageItem();
 		littlePackageItemParam.setBigPackageId(bigPackageId);
+		List<Map<String, String>> etkCustoms = new ArrayList<Map<String, String>>();
 		List<LittlePackageItem> items = littlePackageItemDao.findLittlePackageItem(littlePackageItemParam, null, null);
+		int i = 0;
 		for (LittlePackageItem item : items) {
 			totalQuantity += item.getQuantity();
+			totalPrice += item.getSkuUnitPrice();// 目前全部是人民币分
+			i++;
+			if (i <= 3) {// ETK只打印3行报关信息
+				Map<String, String> customs = new HashMap<String, String>();
+				customs.put("skuName", item.getSkuName());
+				customs.put("customsWeight", "1.01");
+				customs.put("customsValue", "2.01");
+				customs.put("quantity", "5");
+				customs.put("totalvalue", "15");
+				etkCustoms.add(customs);
+			}
 		}
+		map.put("etkCustoms", etkCustoms);
+		totalPrice = NumberUtil.div(totalPrice, 100d, 2);
+		map.put("currency", "人民币");// 币种目前只有人民币
+		map.put("totalPrice", totalPrice);
 		map.put("items", items);
 		// 寄托物品数量
 		map.put("totalQuantity", totalQuantity);
