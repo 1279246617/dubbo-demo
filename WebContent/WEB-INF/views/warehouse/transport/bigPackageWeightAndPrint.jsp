@@ -29,21 +29,21 @@
 				</td>
 			</tr>
 	</table>
-	<table class="table" style="width:100%;background-color:#f5f5f5;margin-bottom: 1px;">
-		<tr>
-			<th>复核转运订单小包</th>
-		</tr>
-		<tr>
-				<td>
-					<!-- 转运订单的所有小包 -->
-					<input id="littlePackage_trackingNo"  disabled="disabled">
-				</td>
+<!-- 	<table class="table" style="width:100%;background-color:#f5f5f5;margin-bottom: 1px;"> -->
+<!-- 		<tr> -->
+<!-- 			<th>复核转运订单小包</th> -->
+<!-- 		</tr> -->
+<!-- 		<tr> -->
+<!-- 				<td> -->
+<!-- 					转运订单的所有小包 -->
+<!-- 					<input id="littlePackage_trackingNo"  disabled="disabled"> -->
+<!-- 				</td> -->
 				
-				<td>
-					<!-- 新扫描 -->
-				</td>
-		</tr>
-	</table>	  
+<!-- 				<td> -->
+<!-- 					新扫描 -->
+<!-- 				</td> -->
+<!-- 		</tr> -->
+<!-- 	</table>	   -->
 	  
 	<table class="table" style="background-color:#f5f5f5;margin-bottom: 2px;"  >
 			<tr>

@@ -22,7 +22,7 @@ function submitCustomerReferenceNo(){
  					$("#shipwayCode").val(msg.shipwayCode);
  					var trackingNos = msg.trackingNos;
  					
- 					$("#littlePackage_trackingNo").val(trackingNos);
+// 					$("#littlePackage_trackingNo").val(trackingNos);
  					focus = '2';
  					$("#weight").focus();
  					$("#weight").select();
