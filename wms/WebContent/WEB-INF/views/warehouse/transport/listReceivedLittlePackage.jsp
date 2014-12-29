@@ -128,6 +128,7 @@
 	                    { display: '转运类型', name: 'transportType', align: 'center', type: 'float',width:'9%'},
 	  		          	{ display: '到货跟踪单号', name: 'trackingNo', align: 'center', type: 'float',width:'12%'},
 	  		          	{ display: '承运商', name: 'carrierCode', align: 'center', type: 'float',width:'10%'},
+	  		          	{ display: '分配货位', name: 'seatCode', align: 'center', type: 'float',width:'10%'},
 	  		          	{ display: '商品预览', isSort: false, align: 'center', type: 'float',width:'12%',render: function(row) {
 		            		var skus = "";
 		            		if (!row._editing) {
