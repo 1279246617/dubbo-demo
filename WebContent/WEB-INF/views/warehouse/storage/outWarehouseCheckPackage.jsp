@@ -100,7 +100,7 @@
 			<table class="table" id="skus">
 				<thead>
 					<tr>
-						<th colspan="3">复核SKU数量和出库订单SKU数量</th>
+						<th colspan="3">复核商品数量</th>
 					</tr>
 					<tr>
 						<th>商品条码</th>

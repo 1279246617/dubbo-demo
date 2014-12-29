@@ -20,7 +20,7 @@
 <body style="font-size: 16px;">
 	<table class="table" style="width:100%;background-color:#f5f5f5;margin-bottom: 1px;">
 			<tr>
-				<td colspan="3" style="height:70px;">
+				<td colspan="3" style="height:40px;">
 					客户订单号(捡货单的右上角)&nbsp;&nbsp;
 					<input type="text"  name="customerReferenceNo"   t="1" id="customerReferenceNo"  style="width:160px;"/>
 					&nbsp;&nbsp;
@@ -29,8 +29,21 @@
 				</td>
 			</tr>
 	</table>
+	<table class="table" style="width:100%;background-color:#f5f5f5;margin-bottom: 1px;">
+		<tr>
+			<th>复核转运订单小包</th>
+		</tr>
+		<tr>
+				<td>
+					
+				</td>
+				<td>
+					
+				</td>
+		</tr>
+	</table>	  
 	  
-		<table class="table" style="background-color:#f5f5f5;margin-bottom: 2px;"  >
+	<table class="table" style="background-color:#f5f5f5;margin-bottom: 2px;"  >
 			<tr>
 				<th>转运订单称重与打出货运单</th>
 			</tr>
