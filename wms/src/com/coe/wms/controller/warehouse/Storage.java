@@ -761,8 +761,8 @@ public class Storage {
 	 * @return
 	 * @throws IOException
 	 */
-	@RequestMapping(value = "/outWarehouseCheckPackage", method = RequestMethod.GET)
-	public ModelAndView outWarehouseCheckPackage(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	@RequestMapping(value = "/outWarehouseWeightAndPrint", method = RequestMethod.GET)
+	public ModelAndView outWarehouseWeightAndPrint(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		HttpSession session = request.getSession();
 		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
 		ModelAndView view = new ModelAndView();
@@ -770,7 +770,7 @@ public class Storage {
 		User user = userService.getUserById(userId);
 		view.addObject("warehouseList", storageService.findAllWarehouse(user.getDefaultWarehouseId()));
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
-		view.setViewName("warehouse/storage/outWarehouseCheckPackage");
+		view.setViewName("warehouse/storage/outWarehouseWeightAndPrint");
 		return view;
 	}
 

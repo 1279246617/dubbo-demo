@@ -14,7 +14,7 @@
 <link href="${baseUrl}/static/calendar/lhgcalendar.css" rel="stylesheet" type="text/css" />
 <link href="${baseUrl}/static/ligerui/ligerUI/skins/Aqua/css/ligerui-all.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="${baseUrl}/static/jquery/jquery.js"></script>
-<script type="text/javascript" src="${baseUrl}/static/js/warehouse/outWarehouseCheckPackage.js"></script>
+<script type="text/javascript" src="${baseUrl}/static/js/warehouse/outWarehouseWeightAndPrint.js"></script>
 <title>COE</title>
 </head>
 <body style="font-size: 16px;">
