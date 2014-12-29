@@ -387,7 +387,7 @@ function applyTrackingNo(){
                 height: 420,
                 content:contentHtml ,
                 button: [{
-					name: '确认',
+					name: '确认申请',
 					callback: function() {
 						if(!isEnableClick){
 		  					return false;
