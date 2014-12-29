@@ -971,6 +971,10 @@ public class OutWarehouseOrderServiceImpl implements IOutWarehouseOrderService {
 	public Map<String, String> applyTrackingNo(Long orderId) throws ServiceException {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put(Constant.STATUS, Constant.FAIL);
+		if (orderId == null || orderId == 0) {
+			map.put(Constant.MESSAGE, "出库订单Id不能为空");
+			return map;
+		}
 		OutWarehouseOrder order = outWarehouseOrderDao.getOutWarehouseOrderById(orderId);
 		OutWarehouseOrderReceiver receiver = outWarehouseOrderReceiverDao.getOutWarehouseOrderReceiverByOrderId(orderId);
 		OutWarehouseOrderSender sender = outWarehouseOrderSenderDao.getOutWarehouseOrderSenderByOrderId(orderId);
@@ -979,10 +983,15 @@ public class OutWarehouseOrderServiceImpl implements IOutWarehouseOrderService {
 		List<OutWarehouseOrderItem> itemList = outWarehouseOrderItemDao.findOutWarehouseOrderItem(itemParam, null, null);
 		// ETK
 		if (StringUtil.isEqual(order.getShipwayCode(), ShipwayCode.ETK)) {
-
+			// Client client =
 		}
+		map.put(Constant.MESSAGE, "未支持");
+//		map.put(Constant.STATUS, Constant.SUCCESS);
+		return map;
+	}
 
-		map.put(Constant.STATUS, Constant.SUCCESS);
+	private Map<String, String> applyEtkTrackingNo() {
+		Map<String, String> map = new HashMap<String, String>();
 		return map;
 	}
 }

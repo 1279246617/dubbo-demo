@@ -418,24 +418,26 @@ function applyTrackingNo(){
 	                    parent.$("#registerTotal").html(registerTotal);
 	                    $.ajaxSettings.async = false; 
 	                    $(orderIdArray).each(function(i,e){
-	                        $.getJSON(baseUrl + '/warehouse/storage/applyTrackingNo.do',{orderId:e},function(msg) {
-	                    		var tr = "<tr>";
-                    			tr+=("<td>"+(i+1)+"</td>");
-                    			if(msg.status == 1){
-                    				tr+=("<td>成功</td>");
-                    			}else{
-                    				tr+=("<td>失败</td>");
-                    			}
-                    			tr+=("<td>"+msg.message+"</td>");
-                    			tr+="<tr/>";
-                    			parent.$("#registerResult tr:last").after(tr);
-	                    		if(i == registerTotal-1){//到最后一条,开始刷新订单,关闭界面
-	                    			grid.loadData();	
-	        	                    setTimeout(function(){
-	        	                    	that.close();	
-	        	                    }, 60000);	
-	                    		}
-	    					});
+	                    	if(e!=null && e!=''){
+	                    	    $.getJSON(baseUrl + '/warehouse/storage/applyTrackingNo.do',{orderId:e},function(msg) {
+		                    		var tr = "<tr>";
+	                    			tr+=("<td>"+(i+1)+"</td>");
+	                    			if(msg.status == 1){
+	                    				tr+=("<td>成功</td>");
+	                    			}else{
+	                    				tr+=("<td>失败</td>");
+	                    			}
+	                    			tr+=("<td>"+msg.message+"</td>");
+	                    			tr+="<tr/>";
+	                    			parent.$("#registerResult tr:last").after(tr);
+		                    		if(i == registerTotal-1){//到最后一条,开始刷新订单,关闭界面
+		                    			grid.loadData();	
+		        	                    setTimeout(function(){
+		        	                    	that.close();	
+		        	                    }, 60000);	
+		                    		}
+		    					});
+	                    	}
 	                    });
 	                    return false;
 					}
