@@ -26,6 +26,7 @@ import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderStatusDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehousePackageDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseRecordDao;
 import com.coe.wms.exception.ServiceException;
+import com.coe.wms.model.unit.Currency.CurrencyCode;
 import com.coe.wms.model.warehouse.Shipway.ShipwayCode;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrderItem;
@@ -539,12 +540,14 @@ public class ImportServiceImpl implements IImportService {
 				if (j == 19) {// 商品SKU(可选)
 					map.put("sku", cell);
 				}
-				
+
 				if (j == 20) {// 商品名称(可选)
 					map.put("skuName", cell);
 				}
-				
-				if (j == 21) {// 商品单价(分)(可选))
+				if (j == 21) {// 规格型号(可选)
+					map.put("specification", cell);
+				}
+				if (j == 22) {// 商品单价(分)(可选))
 					if (StringUtil.isNotNull(cell)) {
 						if (!(NumberUtil.isDecimal(cell) || NumberUtil.isNumberic(cell))) {
 							message += " ,  商品单价必须是数字";
@@ -553,8 +556,8 @@ public class ImportServiceImpl implements IImportService {
 					}
 					map.put("skuUnitPrice", cell);
 				}
-				
-				if (j == 21) {// 商品重量(克)(可选)
+
+				if (j == 23) {// 商品重量(克)(可选)
 					if (StringUtil.isNotNull(cell)) {
 						if (!(NumberUtil.isDecimal(cell) || NumberUtil.isNumberic(cell))) {
 							message += " ,  商品重量必须是数字";
@@ -674,11 +677,13 @@ public class ImportServiceImpl implements IImportService {
 				if (StringUtil.isNotNull(map.get("skuUnitPrice"))) {
 					double skuUnitPrice = Double.valueOf(map.get("skuUnitPrice"));
 					item.setSkuUnitPrice(skuUnitPrice);
+					item.setSkuPriceCurrency(CurrencyCode.CNF);
 				}
 				if (StringUtil.isNotNull(map.get("skuNetWeight"))) {
 					double skuNetWeight = Double.valueOf(map.get("skuNetWeight"));
 					item.setSkuNetWeight(skuNetWeight);
 				}
+				item.setSpecification(map.get("specification"));
 				orderItemList.add(item);
 			}
 			Long outWarehouseOrderId = outWarehouseOrderDao.saveOutWarehouseOrder(outWarehouseOrder);// 订单di;
