@@ -272,6 +272,7 @@ function printShipLabel(){
   		content: contentHtml,
   		button: [{
   			name: '确认',
+  			focus: true,
   			callback: function() {
   				var orderIds = "";
 				var  row = grid.getSelectedRows();
@@ -341,6 +342,7 @@ function applyTrackingNo(){
         contentArr.push('  </table>');
         contentArr.push('  </div>');
         var contentHtml = contentArr.join('');
+        var isEnableClick = true;
         $.dialog({
                 lock: true,
                 max: false,
@@ -350,8 +352,13 @@ function applyTrackingNo(){
                 height: 420,
                 content:contentHtml ,
                 button: [{
-					name: '确认',
+					name: '确认申请',
 					callback: function() {
+						if(!isEnableClick){
+		  					return false;
+		  				}
+		  				isEnableClick = false;
+		  				
 						var that = this;
 						var orderIds = "";
 						var  row = grid.getSelectedRows();
