@@ -11,6 +11,11 @@ import javax.annotation.Resource;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
+import com.coe.etk.api.Client;
+import com.coe.etk.api.request.Order;
+import com.coe.etk.api.request.Receiver;
+import com.coe.etk.api.request.Sender;
+import com.coe.etk.api.response.ResponseItems;
 import com.coe.wms.dao.product.IProductDao;
 import com.coe.wms.dao.user.IUserDao;
 import com.coe.wms.dao.warehouse.ISeatDao;
@@ -41,6 +46,7 @@ import com.coe.wms.dao.warehouse.storage.IOutWarehouseRecordItemDao;
 import com.coe.wms.dao.warehouse.storage.IReportDao;
 import com.coe.wms.dao.warehouse.storage.IReportTypeDao;
 import com.coe.wms.exception.ServiceException;
+import com.coe.wms.model.unit.Currency.CurrencyCode;
 import com.coe.wms.model.unit.Weight.WeightCode;
 import com.coe.wms.model.user.User;
 import com.coe.wms.model.warehouse.Shipway.ShipwayCode;
@@ -59,6 +65,10 @@ import com.coe.wms.model.warehouse.storage.record.ItemShelfInventory;
 import com.coe.wms.model.warehouse.storage.record.OutWarehousePackage;
 import com.coe.wms.model.warehouse.storage.record.OutWarehouseRecord;
 import com.coe.wms.model.warehouse.storage.record.OutWarehouseRecordItem;
+import com.coe.wms.model.warehouse.transport.BigPackage;
+import com.coe.wms.model.warehouse.transport.BigPackageReceiver;
+import com.coe.wms.model.warehouse.transport.BigPackageSender;
+import com.coe.wms.model.warehouse.transport.LittlePackageItem;
 import com.coe.wms.service.storage.IOutWarehouseOrderService;
 import com.coe.wms.util.Config;
 import com.coe.wms.util.Constant;
@@ -969,11 +979,11 @@ public class OutWarehouseOrderServiceImpl implements IOutWarehouseOrderService {
 
 	@Override
 	public Map<String, String> applyTrackingNo(Long orderId) throws ServiceException {
-		Map<String, String> map = new HashMap<String, String>();
-		map.put(Constant.STATUS, Constant.FAIL);
+		Map<String, String> resultMap = new HashMap<String, String>();
+		resultMap.put(Constant.STATUS, Constant.FAIL);
 		if (orderId == null || orderId == 0) {
-			map.put(Constant.MESSAGE, "出库订单Id不能为空");
-			return map;
+			resultMap.put(Constant.MESSAGE, "出库订单Id不能为空");
+			return resultMap;
 		}
 		OutWarehouseOrder order = outWarehouseOrderDao.getOutWarehouseOrderById(orderId);
 		OutWarehouseOrderReceiver receiver = outWarehouseOrderReceiverDao.getOutWarehouseOrderReceiverByOrderId(orderId);
@@ -981,17 +991,116 @@ public class OutWarehouseOrderServiceImpl implements IOutWarehouseOrderService {
 		OutWarehouseOrderItem itemParam = new OutWarehouseOrderItem();
 		itemParam.setOutWarehouseOrderId(orderId);
 		List<OutWarehouseOrderItem> itemList = outWarehouseOrderItemDao.findOutWarehouseOrderItem(itemParam, null, null);
-		// ETK
+		// 出货渠道是ETK
 		if (StringUtil.isEqual(order.getShipwayCode(), ShipwayCode.ETK)) {
-			// Client client =
+			resultMap = applyEtkTrackingNo(order, receiver, sender, itemList);
 		}
-		map.put(Constant.MESSAGE, "未支持");
-//		map.put(Constant.STATUS, Constant.SUCCESS);
+		// 出货渠道顺丰
+		if (StringUtil.isEqual(order.getShipwayCode(), ShipwayCode.SF)) {
+			resultMap = applySFTrackingNo(order, receiver, sender, itemList);
+		}
+		resultMap.put(Constant.STATUS, Constant.SUCCESS);
+		return resultMap;
+	}
+
+	private Map<String, String> applyEtkTrackingNo(OutWarehouseOrder outWarehouseOrder, OutWarehouseOrderReceiver outWarehouseOrderReceiver, OutWarehouseOrderSender outWarehouseOrderSender, List<OutWarehouseOrderItem> itemList) {
+		Map<String, String> map = new HashMap<String, String>();
+		map.put(Constant.STATUS, Constant.FAIL);
+		Order etkOrder = new Order();
+		etkOrder.setCurrency(CurrencyCode.CNY);
+		etkOrder.setCustomerNo("sam");// 测试
+		etkOrder.setReferenceId(outWarehouseOrder.getCustomerReferenceNo());// 客户参考号
+		List<com.coe.etk.api.request.Item> items = new ArrayList<com.coe.etk.api.request.Item>();
+		for (OutWarehouseOrderItem orderItem : itemList) {
+			com.coe.etk.api.request.Item item = new com.coe.etk.api.request.Item();
+			item.setItemDescription(orderItem.getSkuName());// 报关描述
+			double price = 10d;// 报关价值
+			if (orderItem.getSkuUnitPrice() != null) {
+				price = NumberUtil.div(orderItem.getSkuUnitPrice(), 100d, 2);// 分转元
+			}
+			item.setItemPrice(price);
+			item.setItemQuantity(orderItem.getQuantity() == null ? 1 : orderItem.getQuantity());// 报关数量
+			double weight = 0.1d;// 报关重量
+			if (orderItem.getSkuNetWeight() != null) {
+				weight = (orderItem.getSkuNetWeight() / 1000);
+			}
+			item.setItemWeight(weight);
+			items.add(item);
+		}
+		etkOrder.setItems(items);
+		// 收件人
+		Receiver receiver = new Receiver();
+		receiver.setReceiverAddress1(outWarehouseOrderReceiver.getAddressLine1());
+		receiver.setReceiverAddress2(outWarehouseOrderReceiver.getAddressLine2());
+		receiver.setReceiverCity(outWarehouseOrderReceiver.getCity());
+		receiver.setReceiverCode(outWarehouseOrderReceiver.getPostalCode());
+		receiver.setReceiverName(outWarehouseOrderReceiver.getName());
+		receiver.setReceiverCountry(outWarehouseOrderReceiver.getCountryCode());
+		receiver.setReceiverPhone(outWarehouseOrderReceiver.getPhoneNumber());
+		receiver.setReceiverProvince(outWarehouseOrderReceiver.getStateOrProvince());
+		etkOrder.setReceiver(receiver);
+		// 发件人
+		Sender sender = new Sender();
+		sender.setSenderAddress(outWarehouseOrderSender.getAddressLine1());
+		sender.setSenderName(outWarehouseOrderSender.getName());
+		sender.setSenderPhone(outWarehouseOrderReceiver.getPhoneNumber());
+		etkOrder.setSender(sender);
+		Client client = new Client();
+		client.setToken("11");
+		client.setTokenKey("22");
+		client.setUrl("http://58.96.174.216:8080/coeimport/orderApi");
+		com.coe.etk.api.response.Responses responses = client.applyTrackingNo(etkOrder);
+		if (responses == null) {
+			map.put(Constant.STATUS, Constant.FAIL);
+			map.put(Constant.MESSAGE, "对方系统返回非法XML格式");
+			return map;
+		}
+		ResponseItems responseItems = responses.getResponseItems();
+		if (responseItems == null) {
+			map.put(Constant.STATUS, Constant.FAIL);
+			map.put(Constant.MESSAGE, "对方系统返回非法XML格式");
+			return map;
+		}
+		com.coe.etk.api.response.Response response = responseItems.getResponse();
+		if (response == null) {
+			map.put(Constant.STATUS, Constant.FAIL);
+			map.put(Constant.MESSAGE, "对方系统返回非法XML格式");
+			return map;
+		}
+		if (StringUtil.isEqualIgnoreCase(response.getSuccess(), Constant.FALSE)) {
+			map.put(Constant.STATUS, Constant.FAIL);
+			map.put(Constant.MESSAGE, response.getErrorInfo());
+			return map;
+		}
+		// 成功
+		String trackingNo = response.getTrackingNo();
+		String zoneCode = response.getZoneCode();
+		map.put("zoneCode", zoneCode);
+		map.put(Constant.MESSAGE, trackingNo);
+		map.put(Constant.STATUS, Constant.SUCCESS);
+		if (StringUtil.isNotNull(trackingNo)) {
+			outWarehouseOrder.setTrackingNo(trackingNo);
+			outWarehouseOrder.setShipwayExtra1(zoneCode);// ETK分区号
+			outWarehouseOrderDao.updateOutWarehouseOrderTrackingNo(outWarehouseOrder);
+		} else {
+			map.put(Constant.MESSAGE, "对方系统返回成功,但返回空的ETK单号");
+			map.put(Constant.STATUS, Constant.FAIL);
+		}
 		return map;
 	}
 
-	private Map<String, String> applyEtkTrackingNo() {
+	/**
+	 * 申请SF跟踪单号
+	 * 
+	 * @param bigPackage
+	 * @param bigPackageReceiver
+	 * @param bigPackageSender
+	 * @return
+	 */
+	private Map<String, String> applySFTrackingNo(OutWarehouseOrder outWarehouseOrder, OutWarehouseOrderReceiver outWarehouseOrderReceiver, OutWarehouseOrderSender outWarehouseOrderSender, List<OutWarehouseOrderItem> itemList) {
 		Map<String, String> map = new HashMap<String, String>();
+		map.put(Constant.STATUS, Constant.FAIL);
+		map.put(Constant.MESSAGE, "未支持对顺丰渠道申请单号");
 		return map;
 	}
 }
