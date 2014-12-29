@@ -997,7 +997,19 @@ public class TransportServiceImpl implements ITransportService {
 			return map;
 		}
 		BigPackage bigPackage = bigPackageList.get(0);
-		map.put("bigPackageId", bigPackage.getId() + "");
+		Long bigPackageId = bigPackage.getId();
+		map.put("bigPackageId", bigPackageId.toString());
+		LittlePackage littlePackageParam = new LittlePackage();
+		littlePackageParam.setBigPackageId(bigPackageId);
+		List<String> trackingNoList = littlePackageDao.findLittlePackageTrackingNos(bigPackageId);
+		String trackingNos = "";
+		for (String trackingNo : trackingNoList) {
+			trackingNos += trackingNo + ",";
+		}
+		if (trackingNos.indexOf(",") >= 0) {
+			trackingNos = trackingNos.substring(0, trackingNos.length() - 1);
+		}
+		map.put("trackingNos", trackingNos);
 		BigPackageStatus status = bigPackageStatusDao.findBigPackageStatusByCode(bigPackage.getStatus());
 		map.put("bigPackageStatus", status.getCn());
 		map.put("shipwayCode", bigPackage.getShipwayCode());

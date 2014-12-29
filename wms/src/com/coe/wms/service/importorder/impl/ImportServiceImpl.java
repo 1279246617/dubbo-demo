@@ -205,7 +205,7 @@ public class ImportServiceImpl implements IImportService {
 			if (i == 0) {
 				continue;
 			}
-			String error = "第" + (i + 1) + "列";
+			String message = "第" + (i + 1) + "行";
 			boolean isError = false;
 			ArrayList<String> row = rows.get(i);
 			Map<String, String> map = new HashMap<String, String>();
@@ -213,18 +213,16 @@ public class ImportServiceImpl implements IImportService {
 				String cell = row.get(j);
 				if (j == 0) {// 序号
 					map.put("index", cell);
-					if (StringUtil.isNotNull(cell) && i == 1) {
-						error += " , 序号:" + cell;
+					if (StringUtil.isNotNull(cell)) {
+						message += " , 序号:" + cell;
 					}
 				}
+
 				if (j == 1) {// 客户订单号
 					map.put("customerReferenceNo", cell);
-					if (StringUtil.isNull(cell) && i == 1) {
-						error += " , 客户订单号必填";
-						isError = true;
-					} else {
+					if (StringUtil.isNotNull(cell)) {
 						if (cell.length() > 100) {
-							error += " , 客户订单号长度不能超过100";
+							message += " , 客户订单号长度不能超过100";
 							isError = true;
 						}
 						// 判断客户订单号是否重复
@@ -232,31 +230,38 @@ public class ImportServiceImpl implements IImportService {
 						inWarehouseOrder.setCustomerReferenceNo(cell);
 						long count = inWarehouseOrderDao.countInWarehouseOrder(inWarehouseOrder, null);
 						if (count >= 1) {
-							error += " , 客户订单号重复";
+							message += " , 客户订单号重复";
+							isError = true;
+						}
+					} else {
+						if (i == 1) {
+							message += " , 客户订单号必填";
 							isError = true;
 						}
 					}
 				}
+
 				if (j == 2) {// 跟踪号码
 					map.put("trackingNo", cell);
-					if (StringUtil.isNull(cell) && i == 1) {
-						error += " , 跟踪号码必填";
+					if (StringUtil.isNotNull(cell) && cell.length() > 100) {
+						message += " , 跟踪号码长度不能超过100";
 						isError = true;
 					} else {
-						if (cell.length() > 100) {
-							error += " , 跟踪号码长度不能超过100";
+						if (i == 1) {
+							message += " , 跟踪号码必填";
 							isError = true;
 						}
 					}
 				}
+
 				if (j == 3) {// 承运商
 					map.put("carrierCode", cell);
-					if (StringUtil.isNull(cell) && i == 1) {
-						error += " , 承运商必填";
+					if (StringUtil.isNotNull(cell) && cell.length() > 100) {
+						message += " , 承运商长度不能超过100";
 						isError = true;
 					} else {
-						if (cell.length() > 100) {
-							error += " , 承运商长度不能超过100";
+						if (i == 1) {
+							message += " , 承运商必填";
 							isError = true;
 						}
 					}
@@ -266,7 +271,7 @@ public class ImportServiceImpl implements IImportService {
 						if (NumberUtil.isNumberic(cell)) {
 							int num = Integer.parseInt(cell);
 							if (num < 1 || num > 3) {
-								error += " , 入库类型必须是[1,2,3]";
+								message += " , 入库类型必须是[1,2,3]";
 								isError = true;
 							}
 						}
@@ -279,11 +284,11 @@ public class ImportServiceImpl implements IImportService {
 				if (j == 6) {// 商品条码
 					map.put("sku", cell);
 					if (StringUtil.isNull(cell)) {
-						error += " ,  商品条码必填";
+						message += " ,  商品条码必填";
 						isError = true;
 					} else {
 						if (cell.length() > 100) {
-							error += " ,  商品条码长度不能超过100";
+							message += " ,  商品条码长度不能超过100";
 							isError = true;
 						}
 					}
@@ -291,11 +296,11 @@ public class ImportServiceImpl implements IImportService {
 				if (j == 7) {// 商品名称
 					map.put("productName", cell);
 					if (StringUtil.isNull(cell)) {
-						error += " , 商品名称必填";
+						message += " , 商品名称必填";
 						isError = true;
 					} else {
 						if (cell.length() > 100) {
-							error += " , 商品名称长度不能超过100";
+							message += " , 商品名称长度不能超过100";
 							isError = true;
 						}
 					}
@@ -306,11 +311,11 @@ public class ImportServiceImpl implements IImportService {
 				if (j == 9) {// 商品数量
 					map.put("quantity", cell);
 					if (StringUtil.isNull(cell)) {
-						error += " , 商品数量必填";
+						message += " , 商品数量必填";
 						isError = true;
 					} else {
 						if (!NumberUtil.isNumberic(cell)) {
-							error += " , 商品数量必须是正整数";
+							message += " , 商品数量必须是正整数";
 							isError = true;
 						}
 					}
@@ -319,7 +324,7 @@ public class ImportServiceImpl implements IImportService {
 					map.put("validityTime", cell);
 					if (StringUtil.isNotNull(cell)) {
 						if (DateUtil.stringConvertDate(cell, DateUtil.yyyy_MM_dd) == null) {
-							error += " , 有效期正确格式如:" + DateUtil.dateConvertString(new Date(), DateUtil.yyyy_MM_dd);
+							message += " , 有效期正确格式如:" + DateUtil.dateConvertString(new Date(), DateUtil.yyyy_MM_dd);
 							isError = true;
 						}
 					}
@@ -332,7 +337,7 @@ public class ImportServiceImpl implements IImportService {
 				}
 			}
 			if (isError) {
-				errors.add(error);
+				errors.add(message);
 			}
 			mapList.add(map);
 		}
@@ -361,7 +366,7 @@ public class ImportServiceImpl implements IImportService {
 			if (i == 0 || i == 1) {
 				continue;
 			}
-			String error = "第" + (i + 1) + "列";
+			String message = "第" + (i + 1) + "行";
 			boolean isError = false;
 			ArrayList<String> row = rows.get(i);
 			Map<String, String> map = new HashMap<String, String>();
@@ -369,18 +374,16 @@ public class ImportServiceImpl implements IImportService {
 				String cell = row.get(j);
 				if (j == 0) {// 序号
 					map.put("index", cell);
-					if (StringUtil.isNotNull(cell) && i == 1) {
-						error += " , 序号:" + cell;
+					if (StringUtil.isNotNull(cell)) {
+						message += " , 序号:" + cell;
 					}
 				}
+
 				if (j == 1) {// 客户订单号
 					map.put("customerReferenceNo", cell);
-					if (StringUtil.isNull(cell) && i == 1) {
-						error += " , 客户订单号必填";
-						isError = true;
-					} else {
+					if (StringUtil.isNotNull(cell)) {
 						if (cell.length() > 100) {
-							error += " , 客户订单号长度不能超过100";
+							message += " , 客户订单号长度不能超过100";
 							isError = true;
 						}
 						// 判断客户订单号是否重复
@@ -388,144 +391,181 @@ public class ImportServiceImpl implements IImportService {
 						outWarehouseOrder.setCustomerReferenceNo(cell);
 						long count = outWarehouseOrderDao.countOutWarehouseOrder(outWarehouseOrder, null);
 						if (count >= 1) {
-							error += " , 客户订单号重复";
+							message += " , 客户订单号重复";
+							isError = true;
+						}
+					} else {
+						if (i == 1) {
+							message += " , 客户订单号必填";
 							isError = true;
 						}
 					}
 				}
+
 				if (j == 2) {// 发货渠道
 					map.put("shipway", cell);
-					if (StringUtil.isNull(cell) && i == 1) {
-						error += " , 发货渠道必填";
-						isError = true;
-					} else {
+					if (StringUtil.isNotNull(cell)) {
 						if (!(StringUtil.isEqual(ShipwayCode.ETK, cell) || StringUtil.isEqual(ShipwayCode.SF, cell))) {
-							error += " , 发货渠道必须是[" + ShipwayCode.ETK + "," + ShipwayCode.SF + "]";
+							message += " , 发货渠道必须是[" + ShipwayCode.ETK + "," + ShipwayCode.SF + "]";
+							isError = true;
+						}
+					} else {
+						if (i == 1) {
+							message += " , 发货渠道必填";
 							isError = true;
 						}
 					}
 				}
+
 				if (j == 3) {// 跟踪号码
 					map.put("trackingNo", cell);
 				}
+
 				if (j == 4) {// 出库类型
 					if (StringUtil.isNotNull(cell)) {
-						if (NumberUtil.isNumberic(cell)) {
-							int num = Integer.parseInt(cell);
-							if (num < 1 || num > 3) {
-								error += " , 出库类型必须是[1,2,3]";
-								isError = true;
-							}
+						if (!cell.matches("^[1,2,3]$")) {
+							message += " , 出库类型必须是[1,2,3]";
+							isError = true;
 						}
 					}
 					map.put("outWarehouseType", cell);
 				}
+
 				if (j == 5) {// 收件人名(必填)
-					if (StringUtil.isNull(cell)) {
-						error += " , 收件人名必填";
+					if (StringUtil.isNull(cell) && i == 1) {
+						message += " , 收件人名必填";
 						isError = true;
 					}
 					map.put("receiverName", cell);
 				}
+
 				if (j == 6) {// 收件人街道1(必填)
-					if (StringUtil.isNull(cell)) {
-						error += " , 收件人街道1必填";
+					if (StringUtil.isNull(cell) && i == 1) {
+						message += " , 收件人街道1必填";
 						isError = true;
 					}
 					map.put("receiverAddressline1", cell);
 				}
+
 				if (j == 7) {// 收件人街道2(可选)
 					map.put("receiverAddressline2", cell);
 				}
+
 				if (j == 8) {// 收件人县区(可选)
 					map.put("receiverCounty", cell);
 				}
+
 				if (j == 9) {// 收件人街道1(必填)
-					if (StringUtil.isNull(cell)) {
-						error += " , 收件人城市必填";
+					if (StringUtil.isNull(cell) && i == 1) {
+						message += " , 收件人城市必填";
 						isError = true;
 					}
 					map.put("receiverCity", cell);
 				}
+
 				if (j == 10) {// 收件人州省(必填)
-					if (StringUtil.isNull(cell)) {
-						error += " ,  收件人州省必填";
+					if (StringUtil.isNull(cell) && i == 1) {
+						message += " ,  收件人州省必填";
 						isError = true;
 					}
 					map.put("receiverProvince", cell);
 				}
+
 				if (j == 11) {// 收件人国家(必填)
-					if (StringUtil.isNull(cell)) {
-						error += " ,  收件人州国家必填";
+					if (StringUtil.isNull(cell) && i == 1) {
+						message += " ,  收件人州国家必填";
 						isError = true;
 					}
 					map.put("receiverCountry", cell);
 				}
+
 				if (j == 12) {// 收件人邮编(必填)postal_code
-					if (StringUtil.isNull(cell)) {
-						error += " ,  收件人州邮编必填";
+					if (StringUtil.isNull(cell) && i == 1) {
+						message += " ,  收件人州邮编必填";
 						isError = true;
 					}
 					map.put("receiverPostalCode", cell);
 				}
+
 				if (j == 13) {// 收件人手机(必填)
-					if (StringUtil.isNull(cell)) {
-						error += " ,  收件人手机必填";
+					if (StringUtil.isNull(cell) && i == 1) {
+						message += " ,  收件人手机必填";
 						isError = true;
 					}
 					map.put("receiverMobile", cell);
 				}
+
 				if (j == 14) {// 收件人电话(可选)
 					map.put("receiverPhone", cell);
 				}
+
 				if (j == 15) {// 发件人名(必填)
-					if (StringUtil.isNull(cell)) {
-						error += " ,  发件人名必填";
+					if (StringUtil.isNull(cell) && i == 1) {
+						message += " ,  发件人名必填";
 						isError = true;
 					}
 					map.put("senderName", cell);
 				}
+
 				if (j == 16) {// 发件人地址(必填)
-					if (StringUtil.isNull(cell)) {
-						error += " ,  发件人地址必填";
+					if (StringUtil.isNull(cell) && i == 1) {
+						message += " ,  发件人地址必填";
 						isError = true;
 					}
 					map.put("senderAddress", cell);
 				}
+
 				if (j == 17) {// 商品条码(必填)
 					if (StringUtil.isNull(cell)) {
-						error += " ,  商品条码必填";
+						message += " ,  商品条码必填";
 						isError = true;
 					}
 					map.put("barCode", cell);
 				}
+
 				if (j == 18) {// 出库数量(必填)
 					if (StringUtil.isNull(cell)) {
-						error += " ,  出库数量必填";
+						message += " ,  出库数量必填";
 						isError = true;
 					} else {
 						if (!NumberUtil.isNumberic(cell)) {
-							error += " ,  出库数量必须是正整数";
+							message += " ,  出库数量必须是正整数";
 							isError = true;
 						}
 					}
 					map.put("quantity", cell);
 				}
+
 				if (j == 19) {// 商品SKU(可选)
 					map.put("sku", cell);
 				}
+				
 				if (j == 20) {// 商品名称(可选)
 					map.put("skuName", cell);
 				}
+				
 				if (j == 21) {// 商品单价(分)(可选))
+					if (StringUtil.isNotNull(cell)) {
+						if (!(NumberUtil.isDecimal(cell) || NumberUtil.isNumberic(cell))) {
+							message += " ,  商品单价必须是数字";
+							isError = true;
+						}
+					}
 					map.put("skuUnitPrice", cell);
 				}
+				
 				if (j == 21) {// 商品重量(克)(可选)
+					if (StringUtil.isNotNull(cell)) {
+						if (!(NumberUtil.isDecimal(cell) || NumberUtil.isNumberic(cell))) {
+							message += " ,  商品重量必须是数字";
+							isError = true;
+						}
+					}
 					map.put("skuNetWeight", cell);
 				}
 			}
 			if (isError) {
-				errors.add(error);
+				errors.add(message);
 			}
 			mapList.add(map);
 		}
@@ -538,6 +578,9 @@ public class ImportServiceImpl implements IImportService {
 		return resultMap;
 	}
 
+	/**
+	 * 执行出库订单导入
+	 */
 	@Override
 	public Map<String, Object> executeImportOutWarehouseOrder(List<Map<String, String>> mapList, Long userIdOfCustomer, Long warehouseId, Long userIdOfOperator) throws ServiceException {
 		Map<String, Object> resultMap = new HashMap<String, Object>();

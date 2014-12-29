@@ -16,6 +16,8 @@ public interface ILittlePackageDao {
 
 	public List<LittlePackage> findLittlePackage(LittlePackage LittlePackage, Map<String, String> moreParam, Pagination page);
 
+	public List<String> findLittlePackageTrackingNos(Long bigPackageId);
+
 	public Long countLittlePackage(LittlePackage LittlePackage, Map<String, String> moreParam);
 
 	public int updateLittlePackageSeatCode(LittlePackage LittlePackage);
@@ -23,8 +25,8 @@ public interface ILittlePackageDao {
 	public int updateLittlePackageCallback(LittlePackage LittlePackage);
 
 	public int updateLittlePackageStatus(LittlePackage LittlePackage);
-	
-	public int updateLittlePackageStatus(Long bigPackageId,String newStatus);
+
+	public int updateLittlePackageStatus(Long bigPackageId, String newStatus);
 
 	public int receivedLittlePackage(LittlePackage LittlePackage);
 

@@ -315,4 +315,10 @@ public class LittlePackageDaoImpl implements ILittlePackageDao {
 		return jdbcTemplate.update(sql);
 	}
 
+	@Override
+	public List<String> findLittlePackageTrackingNos(Long bigPackageId) {
+		String sql = "select tracking_no from w_t_little_package where big_package_id= " + bigPackageId;
+		return jdbcTemplate.queryForList(sql, String.class);
+	}
+
 }

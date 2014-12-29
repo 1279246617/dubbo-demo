@@ -234,8 +234,17 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 
 			String xml = XmlUtil.toXml(logisticsEventsRequest);
 			User user = userDao.getUserById(inWarehouseRecord.getUserIdOfCustomer());
-
 			String msgSource = user.getOppositeMsgSource();
+			String url = user.getOppositeServiceUrl();
+
+			if (StringUtil.isNull(msgSource) || StringUtil.isNull(url)) {
+				// 订单所属用户无回调地址,直接设置为成功
+				inWarehouseRecord.setCallbackCount(0);// 回调次数0,是非API回调特有
+				inWarehouseRecord.setCallbackIsSuccess(Constant.Y);
+				inWarehouseRecordDao.updateInWarehouseRecordCallback(inWarehouseRecord);
+				continue;
+			}
+
 			List<BasicNameValuePair> basicNameValuePairs = new ArrayList<BasicNameValuePair>();
 			basicNameValuePairs.add(new BasicNameValuePair("logistics_interface", xml));
 			// 仓库编号
@@ -245,14 +254,14 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 			String dataDigest = StringUtil.encoderByMd5(xml + user.getOppositeToken());
 			basicNameValuePairs.add(new BasicNameValuePair("data_digest", dataDigest));
 			basicNameValuePairs.add(new BasicNameValuePair("version", "1.0"));
-			String url = user.getOppositeServiceUrl();
+
 			logger.debug("回传SKU入库信息: url=" + url);
 			logger.debug("回传SKU入库信息: logistics_interface=" + xml);
 			logger.debug("回传SKU入库信息: data_digest=" + dataDigest + " msg_source=" + msgSource + " msg_type=" + serviceNameSkuStockin + " logistics_provider_id=" + warehouse.getWarehouseNo());
 			try {
 				String response = HttpUtil.postRequest(url, basicNameValuePairs);
 				logger.debug("顺丰返回:" + response);
-				inWarehouseRecord.setCallbackCount(inWarehouseRecord.getCallbackCount() == null ? 0 : inWarehouseRecord.getCallbackCount() + 1);
+				inWarehouseRecord.setCallbackCount(inWarehouseRecord.getCallbackCount() == null ? 1 : inWarehouseRecord.getCallbackCount() + 1);
 				Responses responses = (Responses) XmlUtil.toObject(response, Responses.class);
 				if (responses == null) {
 					logger.error("回传SKU入库信息 返回信息无法转换成Responses对象");
@@ -334,8 +343,18 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 			logisticsEventsRequest.setLogisticsEvent(logisticsEvent);
 			String xml = XmlUtil.toXml(logisticsEventsRequest);
 			User user = userDao.getUserById(outWarehouseOrder.getUserIdOfCustomer());
-
 			String msgSource = user.getOppositeMsgSource();
+			String url = user.getOppositeServiceUrl();
+
+			if (StringUtil.isNull(msgSource) || StringUtil.isNull(url)) {
+				// 订单所属用户无回调地址,直接设置为成功
+				outWarehouseOrder.setCallbackSendWeighCount(0);// 回调次数0,是非API回调特有
+				outWarehouseOrder.setCallbackSendWeightIsSuccess(Constant.Y);
+				outWarehouseOrder.setStatus(OutWarehouseOrderStatusCode.WWO);// 直接更改至等待操作出库
+				outWarehouseOrderDao.updateOutWarehouseOrderCallbackSendWeight(outWarehouseOrder);
+				continue;
+			}
+
 			List<BasicNameValuePair> basicNameValuePairs = new ArrayList<BasicNameValuePair>();
 			basicNameValuePairs.add(new BasicNameValuePair("logistics_interface", xml));
 			// 仓库编号
@@ -345,7 +364,6 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 			String dataDigest = StringUtil.encoderByMd5(xml + user.getOppositeToken());
 			basicNameValuePairs.add(new BasicNameValuePair("data_digest", dataDigest));
 			basicNameValuePairs.add(new BasicNameValuePair("version", "1.0"));
-			String url = user.getOppositeServiceUrl();
 			logger.debug("回传SKU出库称重信息: url=" + url);
 			logger.debug("回传SKU出库称重信息: logistics_interface=" + xml);
 			logger.debug("回传SKU出库称重信息: data_digest=" + dataDigest + " msg_source=" + msgSource + " msg_type=" + serviceNameSendWeight + " logistics_provider_id=" + warehouse.getWarehouseNo());
@@ -435,8 +453,17 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 			logisticsEventsRequest.setLogisticsEvent(logisticsEvent);
 			String xml = XmlUtil.toXml(logisticsEventsRequest);
 			User user = userDao.getUserById(outWarehouseOrder.getUserIdOfCustomer());
-
+			String url = user.getOppositeServiceUrl();
 			String msgSource = user.getOppositeMsgSource();
+
+			if (StringUtil.isNull(msgSource) || StringUtil.isNull(url)) {
+				// 订单所属用户无回调地址,直接设置为成功
+				outWarehouseOrder.setCallbackSendStatusCount(0);// 回调次数0,是非API回调特有
+				outWarehouseOrder.setCallbackSendStatusIsSuccess(Constant.Y);
+				outWarehouseOrderDao.updateOutWarehouseOrderCallbackSendStatus(outWarehouseOrder);
+				continue;
+			}
+
 			List<BasicNameValuePair> basicNameValuePairs = new ArrayList<BasicNameValuePair>();
 			basicNameValuePairs.add(new BasicNameValuePair("logistics_interface", xml));
 			// 仓库编号
@@ -446,7 +473,7 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 			String dataDigest = StringUtil.encoderByMd5(xml + user.getOppositeToken());
 			basicNameValuePairs.add(new BasicNameValuePair("data_digest", dataDigest));
 			basicNameValuePairs.add(new BasicNameValuePair("version", "1.0"));
-			String url = user.getOppositeServiceUrl();
+
 			logger.debug("回传SKU出库状态信息: url=" + url);
 			logger.debug("回传SKU出库状态信息: logistics_interface=" + xml);
 			logger.debug("回传SKU出库状态信息: data_digest=" + dataDigest + " msg_source=" + msgSource + " msg_type=" + serviceNameSendStatus + " logistics_provider_id=" + warehouse.getWarehouseNo());

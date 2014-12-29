@@ -20,6 +20,9 @@ function submitCustomerReferenceNo(){
  					$("#bigPackageId").val(msg.bigPackageId);
  					$("#outWarehouseTrackingNo").val(msg.trackingNo);
  					$("#shipwayCode").val(msg.shipwayCode);
+ 					var trackingNos = msg.trackingNos;
+ 					
+ 					$("#littlePackage_trackingNo").val(trackingNos);
  					focus = '2';
  					$("#weight").focus();
  					$("#weight").select();
