@@ -328,7 +328,7 @@
 						</tr>
 						<c:forEach var="customs"  items="${map.etkCustoms}">
 							<tr style="height:3.2mm">
-								<td><c:out value="${customs.skuName}"/></td>
+								<td style="width:130px;overflow: hidden;height:10px;"><c:out value="${customs.skuName}"/></td>
 								<td><c:out value="${customs.customsWeight}"/></td>
 								<td><c:out value="${customs.customsValue}"/></td>
 								<td><c:out value="${customs.quantity}"/></td>
@@ -337,7 +337,7 @@
 						</c:forEach>
 						<tr style="height:4.5mm">
 		    				<td colspan="3" style="text-align: center">海关申报总值</td>
-		    				<td colspan="1" style="text-align: center">${map.currency}人民币</td>
+		    				<td colspan="1" style="text-align: center">${map.currency}</td>
 		    				<td colspan="1" style="text-align: center">${map.totalPrice}</td>
 		    			</tr>
 		    		</tbody>

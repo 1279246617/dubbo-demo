@@ -228,53 +228,6 @@ public class PrintServiceImpl implements IPrintService {
 	}
 
 	@Override
-	public Map<String, Object> getPrintShipLabelData(Long outWarehouseOrderId) {
-		OutWarehouseOrder outWarehouseOrder = outWarehouseOrderDao.getOutWarehouseOrderById(outWarehouseOrderId);
-		// 等待仓库审核的订单 不能打印捡货单
-		if (StringUtil.isEqual(outWarehouseOrder.getStatus(), OutWarehouseOrderStatusCode.WWC)) {
-			return null;
-		}
-		OutWarehouseOrderReceiver receiver = outWarehouseOrderReceiverDao.getOutWarehouseOrderReceiverByOrderId(outWarehouseOrderId);
-		OutWarehouseOrderSender sender = outWarehouseOrderSenderDao.getOutWarehouseOrderSenderByOrderId(outWarehouseOrderId);
-		OutWarehouseOrderItem itemParam = new OutWarehouseOrderItem();
-		itemParam.setOutWarehouseOrderId(outWarehouseOrderId);
-		List<OutWarehouseOrderItem> items = outWarehouseOrderItemDao.findOutWarehouseOrderItem(itemParam, null, null);
-		// 根据批次排序,找到货位
-		// 顺丰label 内容
-		OutWarehouseOrderAdditionalSf additionalSf = outWarehouseOrderAdditionalSfDao.getOutWarehouseOrderAdditionalSfByOrderId(outWarehouseOrderId);
-		Map<String, Object> map = new HashMap<String, Object>();
-		if (additionalSf != null) {
-			map.put("additionalSf", additionalSf);
-		}
-		if (sender != null) {
-			map.put("sender", sender);
-		}
-		// 创建条码
-		String trackingNo = outWarehouseOrder.getTrackingNo();
-		String trackingNoBarcodeData = BarcodeUtil.createCode128(trackingNo, true, 13d, null);
-		map.put("trackingNoBarcodeData", trackingNoBarcodeData);
-		// 清单号 (出库订单主键)
-		map.put("outWarehouseOrderId", String.valueOf(outWarehouseOrder.getId()));
-		map.put("customerReferenceNo", outWarehouseOrder.getCustomerReferenceNo());
-		map.put("tradeRemark", outWarehouseOrder.getTradeRemark());
-		map.put("logisticsRemark", outWarehouseOrder.getLogisticsRemark());
-		map.put("receiverName", receiver.getName());
-		map.put("receiver", receiver);
-		map.put("receiverPhoneNumber", receiver.getPhoneNumber());
-		map.put("receiverMobileNumber", receiver.getMobileNumber());
-		Integer totalQuantity = 0;
-		for (OutWarehouseOrderItem item : items) {
-			totalQuantity += item.getQuantity();
-		}
-		// 寄托物品数量
-		map.put("totalQuantity", totalQuantity);
-		// 总重量
-		map.put("totalWeight", outWarehouseOrder.getOutWarehouseWeight());
-		map.put("items", items);
-		return map;
-	}
-
-	@Override
 	public Map<String, Object> getPrintSeatCodeLabelData(Long seatId) {
 		Seat param = new Seat();
 		param.setId(seatId);
@@ -361,6 +314,105 @@ public class PrintServiceImpl implements IPrintService {
 	}
 
 	@Override
+	public Map<String, Object> getPrintShipLabelData(Long outWarehouseOrderId) {
+		OutWarehouseOrder outWarehouseOrder = outWarehouseOrderDao.getOutWarehouseOrderById(outWarehouseOrderId);
+		// 等待仓库审核的订单 不能打印捡货单
+		if (StringUtil.isEqual(outWarehouseOrder.getStatus(), OutWarehouseOrderStatusCode.WWC)) {
+			return null;
+		}
+		OutWarehouseOrderReceiver receiver = outWarehouseOrderReceiverDao.getOutWarehouseOrderReceiverByOrderId(outWarehouseOrderId);
+		OutWarehouseOrderSender sender = outWarehouseOrderSenderDao.getOutWarehouseOrderSenderByOrderId(outWarehouseOrderId);
+		OutWarehouseOrderItem itemParam = new OutWarehouseOrderItem();
+		itemParam.setOutWarehouseOrderId(outWarehouseOrderId);
+		List<OutWarehouseOrderItem> items = outWarehouseOrderItemDao.findOutWarehouseOrderItem(itemParam, null, null);
+		// 根据批次排序,找到货位
+		// 顺丰label 内容
+		OutWarehouseOrderAdditionalSf additionalSf = outWarehouseOrderAdditionalSfDao.getOutWarehouseOrderAdditionalSfByOrderId(outWarehouseOrderId);
+		Map<String, Object> map = new HashMap<String, Object>();
+		if (additionalSf != null) {
+			map.put("additionalSf", additionalSf);
+		}
+		if (sender != null) {
+			map.put("sender", sender);
+		}
+		// 创建条码
+		String trackingNo = outWarehouseOrder.getTrackingNo();
+		outWarehouseOrder.getShipwayExtra1();
+		String etkTrackingNo = Shipway.getEtkTrackingNoPrintFormat(trackingNo);// ETK跟踪号打印格式
+		map.put("etkTrackingNo", etkTrackingNo);
+		// ETK客户帐号
+		map.put("customerNo", "ECMTEST");
+
+		String trackingNoBarcodeData = BarcodeUtil.createCode128(trackingNo, true, 13d, null);
+		map.put("trackingNoBarcodeData", trackingNoBarcodeData);
+		String trackingNoBarcodeData2 = BarcodeUtil.createCode128(trackingNo, false, 14d, null);
+		map.put("trackingNoBarcodeData2", trackingNoBarcodeData2);
+		map.put("shipwayExtra1", outWarehouseOrder.getShipwayExtra1());
+		map.put("shipwayExtra2", outWarehouseOrder.getShipwayExtra2());
+		// 清单号 (出库订单主键)
+		map.put("outWarehouseOrderId", String.valueOf(outWarehouseOrder.getId()));
+		map.put("customerReferenceNo", outWarehouseOrder.getCustomerReferenceNo());
+		map.put("tradeRemark", outWarehouseOrder.getTradeRemark());
+		map.put("logisticsRemark", outWarehouseOrder.getLogisticsRemark());
+		map.put("receiverName", receiver.getName());
+		map.put("receiver", receiver);
+		map.put("receiverPhoneNumber", receiver.getPhoneNumber());
+		map.put("receiverMobileNumber", receiver.getMobileNumber());
+		Integer totalQuantity = 0;
+		for (OutWarehouseOrderItem item : items) {
+			totalQuantity += item.getQuantity();
+		}
+		// 寄托物品数量
+		map.put("totalQuantity", totalQuantity);
+		// 总重量
+		map.put("totalWeight", outWarehouseOrder.getOutWarehouseWeight());
+		map.put("items", items);
+		List<Map<String, String>> etkCustoms = new ArrayList<Map<String, String>>();
+		double totalPrice = 0;
+		int i = 0;
+		for (OutWarehouseOrderItem item : items) {
+			totalQuantity += item.getQuantity();
+			totalPrice += item.getSkuUnitPrice();// 目前全部是人民币分
+			i++;
+			if (i <= 3) {// ETK只打印3行报关信息
+				Map<String, String> customs = new HashMap<String, String>();
+				String skuName = item.getSkuName();
+				if (StringUtil.isNotNull(skuName)) {
+					if (skuName.length() > 10) {
+						skuName = skuName.substring(0, 10);
+					}
+				}
+				customs.put("skuName", skuName);
+				customs.put("customsWeight", "1.01");
+				customs.put("customsValue", "2.01");
+				customs.put("quantity", "5");
+				customs.put("totalvalue", "15");
+				etkCustoms.add(customs);
+			}
+		}
+		// ETK标签固定是3行报关信息,所以控制etkCustoms size=3
+		if (etkCustoms.size() == 0) {
+			Map<String, String> customs = new HashMap<String, String>();
+			etkCustoms.add(customs);
+		}
+		if (etkCustoms.size() == 1) {
+			Map<String, String> customs = new HashMap<String, String>();
+			etkCustoms.add(customs);
+		}
+		if (etkCustoms.size() == 2) {
+			Map<String, String> customs = new HashMap<String, String>();
+			etkCustoms.add(customs);
+		}
+		map.put("etkCustoms", etkCustoms);
+		totalPrice = NumberUtil.div(totalPrice, 100d, 2);
+		map.put("currency", "人民币");// 币种目前只有人民币
+		map.put("totalPrice", totalPrice);
+		String shipwayCode = outWarehouseOrder.getShipwayCode();// 出货渠道
+		map.put("shipwayCode", shipwayCode);
+		return map;
+	}
+
+	@Override
 	public Map<String, Object> getPrintTransportShipLabedData(Long bigPackageId) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put(Constant.STATUS, Constant.FAIL);
@@ -419,13 +471,32 @@ public class PrintServiceImpl implements IPrintService {
 			i++;
 			if (i <= 3) {// ETK只打印3行报关信息
 				Map<String, String> customs = new HashMap<String, String>();
-				customs.put("skuName", item.getSkuName());
+				String skuName = item.getSkuName();
+				if (StringUtil.isNotNull(skuName)) {
+					if (skuName.length() > 10) {
+						skuName = skuName.substring(0, 10);
+					}
+				}
+				customs.put("skuName", skuName);
 				customs.put("customsWeight", "1.01");
 				customs.put("customsValue", "2.01");
 				customs.put("quantity", "5");
 				customs.put("totalvalue", "15");
 				etkCustoms.add(customs);
 			}
+		}
+		// ETK标签固定是3行报关信息,所以控制etkCustoms size=3
+		if (etkCustoms.size() == 0) {
+			Map<String, String> customs = new HashMap<String, String>();
+			etkCustoms.add(customs);
+		}
+		if (etkCustoms.size() == 1) {
+			Map<String, String> customs = new HashMap<String, String>();
+			etkCustoms.add(customs);
+		}
+		if (etkCustoms.size() == 2) {
+			Map<String, String> customs = new HashMap<String, String>();
+			etkCustoms.add(customs);
 		}
 		map.put("etkCustoms", etkCustoms);
 		totalPrice = NumberUtil.div(totalPrice, 100d, 2);
