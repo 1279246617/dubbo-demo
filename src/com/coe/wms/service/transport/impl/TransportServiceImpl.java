@@ -1344,7 +1344,7 @@ public class TransportServiceImpl implements ITransportService {
 		}
 		// 出货渠道顺丰
 		if (StringUtil.isEqual(bigPackage.getShipwayCode(), ShipwayCode.SF)) {
-			resultMap = applyEtkTrackingNo(bigPackage, bigPackageReceiver, bigPackageSender);
+			resultMap = applySFTrackingNo(bigPackage, bigPackageReceiver, bigPackageSender);
 		}
 		return resultMap;
 	}
@@ -1379,7 +1379,7 @@ public class TransportServiceImpl implements ITransportService {
 			item.setItemQuantity(littlePackageItem.getQuantity() == null ? 1 : littlePackageItem.getQuantity());// 报关数量
 			double weight = 0.1d;// 报关重量
 			if (littlePackageItem.getSkuNetWeight() != null) {
-				weight = littlePackageItem.getSkuNetWeight();
+				weight = (littlePackageItem.getSkuNetWeight() / 1000);
 			}
 			item.setItemWeight(weight);
 			items.add(item);
@@ -1404,25 +1404,25 @@ public class TransportServiceImpl implements ITransportService {
 		etkOrder.setSender(sender);
 
 		Client client = new Client();
-		client.setToken("c587efdfcb6e4cd3");
-		client.setTokenKey("b5e3d9769218deb3");
+		client.setToken("11");
+		client.setTokenKey("22");
 		client.setUrl("http://58.96.174.216:8080/coeimport/orderApi");
 		com.coe.etk.api.response.Responses responses = client.applyTrackingNo(etkOrder);
 		if (responses == null) {
 			map.put(Constant.STATUS, Constant.FAIL);
-			map.put(Constant.MESSAGE, "对方系统异常,返回非法XML格式");
+			map.put(Constant.MESSAGE, "对方系统返回非法XML格式");
 			return map;
 		}
 		ResponseItems responseItems = responses.getResponseItems();
 		if (responseItems == null) {
 			map.put(Constant.STATUS, Constant.FAIL);
-			map.put(Constant.MESSAGE, "对方系统异常,返回非法XML格式");
+			map.put(Constant.MESSAGE, "对方系统返回非法XML格式");
 			return map;
 		}
 		com.coe.etk.api.response.Response response = responseItems.getResponse();
 		if (response == null) {
 			map.put(Constant.STATUS, Constant.FAIL);
-			map.put(Constant.MESSAGE, "对方系统异常,返回非法XML格式");
+			map.put(Constant.MESSAGE, "对方系统返回非法XML格式");
 			return map;
 		}
 		if (StringUtil.isEqualIgnoreCase(response.getSuccess(), Constant.FALSE)) {
@@ -1432,8 +1432,34 @@ public class TransportServiceImpl implements ITransportService {
 		}
 		// 成功
 		String trackingNo = response.getTrackingNo();
-		map.put("trackingNo", trackingNo);
+		String zoneCode = response.getZoneCode();
+		map.put("zoneCode", zoneCode);
+		map.put(Constant.MESSAGE, trackingNo);
 		map.put(Constant.STATUS, Constant.SUCCESS);
+		if (StringUtil.isNotNull(trackingNo)) {
+			bigPackage.setTrackingNo(trackingNo);
+			bigPackage.setShipwayExtra1(zoneCode);// ETK分区号
+			bigPackageDao.updateBigPackageTrackingNo(bigPackage);
+		} else {
+			map.put(Constant.MESSAGE, "对方系统返回成功,但返回空的ETK单号");
+			map.put(Constant.STATUS, Constant.FAIL);
+		}
 		return map;
 	}
+
+	/**
+	 * 申请SF跟踪单号
+	 * 
+	 * @param bigPackage
+	 * @param bigPackageReceiver
+	 * @param bigPackageSender
+	 * @return
+	 */
+	private Map<String, String> applySFTrackingNo(BigPackage bigPackage, BigPackageReceiver bigPackageReceiver, BigPackageSender bigPackageSender) {
+		Map<String, String> map = new HashMap<String, String>();
+		map.put(Constant.STATUS, Constant.FAIL);
+		map.put(Constant.MESSAGE, "未支持对顺丰渠道申请单号");
+		return map;
+	}
+
 }

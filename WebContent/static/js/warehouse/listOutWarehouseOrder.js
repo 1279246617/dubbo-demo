@@ -376,6 +376,7 @@ function applyTrackingNo(){
       contentArr.push(' </tr>');
       contentArr.push('  </table>');
       contentArr.push('  </div>');
+      var isEnableClick= true; 
       var contentHtml = contentArr.join('');
         $.dialog({
                 lock: true,
@@ -388,6 +389,11 @@ function applyTrackingNo(){
                 button: [{
 					name: '确认',
 					callback: function() {
+						if(!isEnableClick){
+		  					return false;
+		  				}
+		  				isEnableClick = false;
+		  				
 						var that = this;
 						var orderIds = "";
 						var  row = grid.getSelectedRows();
