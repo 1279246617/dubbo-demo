@@ -358,7 +358,7 @@ public class ImportServiceImpl implements IImportService {
 		List<ArrayList<String>> rows = poiUtil.readFile(filePathAndName);
 		List<String> errors = new ArrayList<String>();
 		for (int i = 0; i < rows.size(); i++) {
-			if (i == 0) {
+			if (i == 0 || i == 1) {
 				continue;
 			}
 			String error = "第" + (i + 1) + "列";
