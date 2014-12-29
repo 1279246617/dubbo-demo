@@ -35,10 +35,12 @@
 		</tr>
 		<tr>
 				<td>
-					
+					<!-- 转运订单的所有小包 -->
+					<input id="littlePackage_trackingNo"  disabled="disabled">
 				</td>
+				
 				<td>
-					
+					<!-- 新扫描 -->
 				</td>
 		</tr>
 	</table>	  
