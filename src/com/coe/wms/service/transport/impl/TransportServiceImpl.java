@@ -597,6 +597,7 @@ public class TransportServiceImpl implements ITransportService {
 				map.put("receivedTime", DateUtil.dateConvertString(new Date(littlePackage.getReceivedTime()), DateUtil.yyyy_MM_ddHHmmss));
 			}
 			map.put("trackingNo", littlePackage.getTrackingNo());
+			map.put("seatCode", littlePackage.getSeatCode());
 			map.put("carrierCode", littlePackage.getCarrierCode());
 			// 回传审核
 			if (StringUtil.isEqual(littlePackage.getCallbackIsSuccess(), Constant.Y)) {

@@ -999,7 +999,6 @@ public class OutWarehouseOrderServiceImpl implements IOutWarehouseOrderService {
 		if (StringUtil.isEqual(order.getShipwayCode(), ShipwayCode.SF)) {
 			resultMap = applySFTrackingNo(order, receiver, sender, itemList);
 		}
-		resultMap.put(Constant.STATUS, Constant.SUCCESS);
 		return resultMap;
 	}
 
