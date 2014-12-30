@@ -1475,4 +1475,19 @@ public class TransportServiceImpl implements ITransportService {
 		return map;
 	}
 
+	@Override
+	public Map<String, String> checkLittlePackage(Long bigPackageId, String trackingNo) throws ServiceException {
+		Map<String, String> map = new HashMap<String, String>();
+		map.put(Constant.STATUS, Constant.FAIL);
+		LittlePackage littlePackage = new LittlePackage();
+		littlePackage.setBigPackageId(bigPackageId);
+		littlePackage.setTrackingNo(trackingNo);
+		Long count = littlePackageDao.countLittlePackage(littlePackage, null);
+		if (count >= 1) {
+			map.put(Constant.STATUS, Constant.SUCCESS);// 成功
+		} else {
+			map.put(Constant.MESSAGE, "转运订单找不到此小包");
+		}
+		return map;
+	}
 }

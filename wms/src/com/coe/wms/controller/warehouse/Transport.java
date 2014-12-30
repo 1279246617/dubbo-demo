@@ -701,6 +701,23 @@ public class Transport {
 	}
 
 	/**
+	 * 复核小包数量
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/checkLittlePackage")
+	public synchronized String checkLittlePackage(HttpServletRequest request, HttpServletResponse response, Long bigPackageId, String trackingNo) throws IOException {
+		HttpSession session = request.getSession();
+		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
+		Map<String, String> checkResultMap = transportService.checkLittlePackage(bigPackageId, trackingNo);
+		return GsonUtil.toJson(checkResultMap);
+	}
+
+	/**
 	 * 提交出货总单
 	 * 
 	 * @param request

@@ -29,21 +29,33 @@
 				</td>
 			</tr>
 	</table>
-<!-- 	<table class="table" style="width:100%;background-color:#f5f5f5;margin-bottom: 1px;"> -->
-<!-- 		<tr> -->
-<!-- 			<th>复核转运订单小包</th> -->
-<!-- 		</tr> -->
-<!-- 		<tr> -->
-<!-- 				<td> -->
-<!-- 					转运订单的所有小包 -->
-<!-- 					<input id="littlePackage_trackingNo"  disabled="disabled"> -->
-<!-- 				</td> -->
-				
-<!-- 				<td> -->
-<!-- 					新扫描 -->
-<!-- 				</td> -->
-<!-- 		</tr> -->
-<!-- 	</table>	   -->
+	
+	<table class="table" style="width:100%;background-color:#f5f5f5;margin-bottom: 0px;">
+				<tr>
+					<th>
+							扫描跟踪号码复核小包:&nbsp;&nbsp;&nbsp;<input style="width:200px;" id="trackingNo"    t="2" name="trackingNo">
+					</th>
+				</tr>
+	</table>	
+	<div style="width:100%;height:200px;overflow:auto;">
+			<div style="width:9%;height:200px;margin-left:10px; float: left; ">
+				<div style="margin-top: 10px;">
+					<b>待扫描小包:</b>
+				</div>	
+			</div>			
+			<table class="table" style="width:25%;margin-bottom: 1px;float: left;">
+				<tbody  id="littlePackageTrackingNos"></tbody>
+			</table>
+			
+			<div style="width:9%;height:200px;margin-left:30px; float: left;">
+				<div style="margin-top: 10px;">	
+					<b>已扫描小包:</b>
+				</div>	
+			</div>
+			<table class="table" style="width:25%;margin-bottom: 1px;float: right;">
+				<tbody  id="scanTrackingNos"></tbody>
+			</table>	  
+	</div>
 	  
 	<table class="table" style="background-color:#f5f5f5;margin-bottom: 2px;"  >
 			<tr>
@@ -52,10 +64,10 @@
 			<tr  style="color:#555555;">
 				<td colspan="2" style="height:50px;">
 					<span style="width:90px;height:30px;margin-top: 4mm;font-size: 5mm;" class="pull-left" >装箱重量</span>
-					<input type="text"  name="weight"  t="2"  id="weight"  style="width:130px;height:45px; font-size: 10mm;font-weight: bold;color:red;" class="pull-left" readonly="readonly" onkeyup="this.value=this.value.replace(/[^\d\.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d\.]/g,'')"/>
+					<input type="text"  name="weight"  t="3"  id="weight"  style="width:130px;height:45px; font-size: 10mm;font-weight: bold;color:red;" class="pull-left" readonly="readonly" onkeyup="this.value=this.value.replace(/[^\d\.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d\.]/g,'')"/>
 					<span style="width:50px;height:30px;margin-top: 4mm;font-size: 6mm;font-weight: bold;" class="pull-left" >KG</span>
 					<span style="width:90px;height:30px;margin-top: 4mm;font-size: 4mm;" class="pull-left" >
-						<input class="pull-left"  t="2" name="auto" style="vertical-align: middle;" type="checkbox" checked="checked" id="auto">
+						<input class="pull-left"  t="3" name="auto" style="vertical-align: middle;" type="checkbox" checked="checked" id="auto">
 						自动读取
 					</span>
 					<span style="height:30px;margin-top: 0mm;font-size: 8mm;" class="pull-left" >
@@ -71,11 +83,11 @@
 			<tr  >
 				<td colspan="1" style="width:280px;">
 					出货渠道&nbsp;&nbsp;
-					<input type="text"  name="shipwayCode"  id="shipwayCode"   t="3" style="width:130px;" readonly="readonly"/>
+					<input type="text"  name="shipwayCode"  id="shipwayCode"   t="4" style="width:130px;" readonly="readonly"/>
 				</td>
 				<td colspan="1" style="width:330px;">
 					跟踪单号&nbsp;&nbsp;
-					<input type="text"  name="outWarehouseTrackingNo"  id="outWarehouseTrackingNo"  t="3"  style="width:150px;" readonly="readonly"/>
+					<input type="text"  name="outWarehouseTrackingNo"  id="outWarehouseTrackingNo"  t="4"  style="width:150px;" readonly="readonly"/>
 				</td>
 				<td colspan="1" >
 					<a class="btn  btn-primary"  onclick="printShipLabel();" style="cursor:pointer;">
@@ -107,7 +119,7 @@
     <script type="text/javascript">
 	   var baseUrl = "${baseUrl}";
 	   //进入页面,焦点跟踪单号
-	   $("#trackingNo").focus();
+	   $("#customerReferenceNo").focus();
 	   var focus = "1";
 	    $(window).keydown(function(event){
 	    	//回车加ctrl 下一单
@@ -121,13 +133,18 @@
 	    			submitCustomerReferenceNo();
 		  		  	return false;
 	  		  	}
-				//保存重量
+	    		//复核小包
 				if(focus == '2'){
+					checkLittlePackage();
+		      		return false;
+				}
+				//保存重量
+				if(focus == '3'){
 					saveweight();
 		      		return false;
 				}
 				//打印运单
-				if(focus == '3'){
+				if(focus == '4'){
 					printShipLabel();
 		      		return false;
 				}
