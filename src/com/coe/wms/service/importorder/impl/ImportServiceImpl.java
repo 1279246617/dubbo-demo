@@ -218,10 +218,13 @@ public class ImportServiceImpl implements IImportService {
 						message += " , 序号:" + cell;
 					}
 				}
-
+				boolean isRequired = false;// 如果客户订单号不为空,isRequired =
+				// true,表示该行是新一条订单,所有Excel标注必填字段都必填
+				// isRequired = false,表示该行是跟随上一条订单的商品明细, 只有商品明细是必填
 				if (j == 1) {// 客户订单号
 					map.put("customerReferenceNo", cell);
 					if (StringUtil.isNotNull(cell)) {
+						isRequired = true;
 						if (cell.length() > 100) {
 							message += " , 客户订单号长度不能超过100";
 							isError = true;
@@ -244,11 +247,13 @@ public class ImportServiceImpl implements IImportService {
 
 				if (j == 2) {// 跟踪号码
 					map.put("trackingNo", cell);
-					if (StringUtil.isNotNull(cell) && cell.length() > 100) {
-						message += " , 跟踪号码长度不能超过100";
-						isError = true;
+					if (StringUtil.isNotNull(cell)) {
+						if (cell.length() > 100) {
+							message += " , 跟踪号码长度不能超过100";
+							isError = true;
+						}
 					} else {
-						if (i == 1) {
+						if (isRequired) {
 							message += " , 跟踪号码必填";
 							isError = true;
 						}
@@ -257,16 +262,19 @@ public class ImportServiceImpl implements IImportService {
 
 				if (j == 3) {// 承运商
 					map.put("carrierCode", cell);
-					if (StringUtil.isNotNull(cell) && cell.length() > 100) {
-						message += " , 承运商长度不能超过100";
-						isError = true;
+					if (StringUtil.isNotNull(cell)) {
+						if (cell.length() > 100) {
+							message += " , 承运商长度不能超过100";
+							isError = true;
+						}
 					} else {
-						if (i == 1) {
+						if (isRequired) {
 							message += " , 承运商必填";
 							isError = true;
 						}
 					}
 				}
+
 				if (j == 4) {// 入库类型
 					if (StringUtil.isNotNull(cell)) {
 						if (NumberUtil.isNumberic(cell)) {
@@ -279,9 +287,11 @@ public class ImportServiceImpl implements IImportService {
 					}
 					map.put("inWarehouseType", cell);
 				}
+
 				if (j == 5) {// 商品SKU
 					map.put("skuNo", cell);
 				}
+
 				if (j == 6) {// 商品条码
 					map.put("sku", cell);
 					if (StringUtil.isNull(cell)) {
@@ -294,6 +304,7 @@ public class ImportServiceImpl implements IImportService {
 						}
 					}
 				}
+
 				if (j == 7) {// 商品名称
 					map.put("productName", cell);
 					if (StringUtil.isNull(cell)) {
@@ -306,9 +317,11 @@ public class ImportServiceImpl implements IImportService {
 						}
 					}
 				}
+
 				if (j == 8) {// 规格型号
 					map.put("specification", cell);
 				}
+
 				if (j == 9) {// 商品数量
 					map.put("quantity", cell);
 					if (StringUtil.isNull(cell)) {
@@ -321,6 +334,7 @@ public class ImportServiceImpl implements IImportService {
 						}
 					}
 				}
+
 				if (j == 10) {// 有效期
 					map.put("validityTime", cell);
 					if (StringUtil.isNotNull(cell)) {
@@ -379,10 +393,13 @@ public class ImportServiceImpl implements IImportService {
 						message += " , 序号:" + cell;
 					}
 				}
-
+				boolean isRequired = false;// 如果客户订单号不为空,isRequired =
+				// true,表示该行是新一条订单,所有Excel标注必填字段都必填
+				// isRequired = false,表示该行是跟随上一条订单的商品明细, 只有商品明细是必填
 				if (j == 1) {// 客户订单号
 					map.put("customerReferenceNo", cell);
 					if (StringUtil.isNotNull(cell)) {
+						isRequired = true;
 						if (cell.length() > 100) {
 							message += " , 客户订单号长度不能超过100";
 							isError = true;
@@ -411,7 +428,7 @@ public class ImportServiceImpl implements IImportService {
 							isError = true;
 						}
 					} else {
-						if (i == 1) {
+						if (isRequired) {
 							message += " , 发货渠道必填";
 							isError = true;
 						}
@@ -433,22 +450,42 @@ public class ImportServiceImpl implements IImportService {
 				}
 
 				if (j == 5) {// 收件人名(必填)
-					if (StringUtil.isNull(cell) && i == 1) {
-						message += " , 收件人名必填";
-						isError = true;
+					if (StringUtil.isNotNull(cell)) {
+						if (cell.length() > 50) {
+							message += " , 收件人名长度不能超过50";
+							isError = true;
+						}
+					} else {
+						if (isRequired) {
+							message += " , 收件人名必填";
+							isError = true;
+						}
 					}
 					map.put("receiverName", cell);
 				}
 
 				if (j == 6) {// 收件人街道1(必填)
-					if (StringUtil.isNull(cell) && i == 1) {
-						message += " , 收件人街道1必填";
-						isError = true;
+					if (StringUtil.isNotNull(cell)) {
+						if (cell.length() > 100) {
+							message += " , 收件人街道1长度不能超过100";
+							isError = true;
+						}
+					} else {
+						if (isRequired) {
+							message += " , 收件人街道1必填";
+							isError = true;
+						}
 					}
 					map.put("receiverAddressline1", cell);
 				}
 
 				if (j == 7) {// 收件人街道2(可选)
+					if (StringUtil.isNotNull(cell)) {
+						if (cell.length() > 100) {
+							message += " , 收件人街道2长度不能超过100";
+							isError = true;
+						}
+					}
 					map.put("receiverAddressline2", cell);
 				}
 
@@ -456,24 +493,38 @@ public class ImportServiceImpl implements IImportService {
 					map.put("receiverCounty", cell);
 				}
 
-				if (j == 9) {// 收件人街道1(必填)
-					if (StringUtil.isNull(cell) && i == 1) {
-						message += " , 收件人城市必填";
-						isError = true;
+				if (j == 9) {// 收件人城市(必填)
+					if (StringUtil.isNotNull(cell)) {
+						if (cell.length() > 50) {
+							message += " , 收件人城市长度不能超过50";
+							isError = true;
+						}
+					} else {
+						if (isRequired) {
+							message += " , 收件人城市必填";
+							isError = true;
+						}
 					}
 					map.put("receiverCity", cell);
 				}
 
 				if (j == 10) {// 收件人州省(必填)
-					if (StringUtil.isNull(cell) && i == 1) {
-						message += " ,  收件人州省必填";
-						isError = true;
+					if (StringUtil.isNotNull(cell)) {
+						if (cell.length() > 50) {
+							message += " , 收件人州省长度不能超过50";
+							isError = true;
+						}
+					} else {
+						if (isRequired) {
+							message += " , 收件人州省必填";
+							isError = true;
+						}
 					}
 					map.put("receiverProvince", cell);
 				}
 
 				if (j == 11) {// 收件人国家(必填)
-					if (StringUtil.isNull(cell) && i == 1) {
+					if (StringUtil.isNull(cell) && isRequired) {
 						message += " ,  收件人州国家必填";
 						isError = true;
 					}
@@ -481,7 +532,7 @@ public class ImportServiceImpl implements IImportService {
 				}
 
 				if (j == 12) {// 收件人邮编(必填)postal_code
-					if (StringUtil.isNull(cell) && i == 1) {
+					if (StringUtil.isNull(cell) && isRequired) {
 						message += " ,  收件人州邮编必填";
 						isError = true;
 					}
@@ -489,7 +540,7 @@ public class ImportServiceImpl implements IImportService {
 				}
 
 				if (j == 13) {// 收件人手机(必填)
-					if (StringUtil.isNull(cell) && i == 1) {
+					if (StringUtil.isNull(cell) && isRequired) {
 						message += " ,  收件人手机必填";
 						isError = true;
 					}
@@ -501,7 +552,7 @@ public class ImportServiceImpl implements IImportService {
 				}
 
 				if (j == 15) {// 发件人名(必填)
-					if (StringUtil.isNull(cell) && i == 1) {
+					if (StringUtil.isNull(cell) && isRequired) {
 						message += " ,  发件人名必填";
 						isError = true;
 					}
@@ -509,7 +560,7 @@ public class ImportServiceImpl implements IImportService {
 				}
 
 				if (j == 16) {// 发件人地址(必填)
-					if (StringUtil.isNull(cell) && i == 1) {
+					if (StringUtil.isNull(cell) && isRequired) {
 						message += " ,  发件人地址必填";
 						isError = true;
 					}
