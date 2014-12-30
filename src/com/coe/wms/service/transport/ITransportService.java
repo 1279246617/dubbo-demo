@@ -129,6 +129,15 @@ public interface ITransportService {
 	public Map<String, String> outWarehouseShippingConfirm(String coeTrackingNo, Long userIdOfOperator) throws ServiceException;
 
 	/**
+	 * 复核小包
+	 * 
+	 * @param TrackingNo
+	 * @return
+	 * @throws ServiceException
+	 */
+	public Map<String, String> checkLittlePackage(Long bigPackageId, String trackingNo) throws ServiceException;
+
+	/**
 	 * 获取建包记录
 	 * 
 	 * @param inWarehouseRecordId
@@ -140,6 +149,6 @@ public interface ITransportService {
 	public List<Map<String, String>> getPackageRecordItemByPackageRecordId(Long packageId);
 
 	public Map<String, String> savePackageRecordRemark(String remark, Long id) throws ServiceException;
-	
+
 	public Map<String, String> applyTrackingNo(Long orderId) throws ServiceException;
 }

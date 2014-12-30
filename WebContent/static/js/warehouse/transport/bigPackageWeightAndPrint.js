@@ -21,15 +21,57 @@ function submitCustomerReferenceNo(){
  					$("#outWarehouseTrackingNo").val(msg.trackingNo);
  					$("#shipwayCode").val(msg.shipwayCode);
  					var trackingNos = msg.trackingNos;
- 					
-// 					$("#littlePackage_trackingNo").val(trackingNos);
- 					focus = '2';
- 					$("#weight").focus();
- 					$("#weight").select();
+ 					//按,号分开多个跟踪号
+ 					var trackingNosArray = trackingNos.split(",");
+ 					$("#littlePackageTrackingNos").html("");
+                    $(trackingNosArray).each(function(i,e){
+                    	if(e!=null && e!=''){
+                    		var tr = "<tr>";
+                    		tr+="<td>"+e+"</td>";
+                    		tr+="</tr>";	
+                    		$("#littlePackageTrackingNos").append(tr);
+                    	}
+                    });
+                    //进入复核
+                    focus = '2';
+ 					$("#trackingNo").focus();
+ 					$("#trackingNo").select();
  				}
  		},"json");
 }
  				
+//复核小包
+function checkLittlePackage(){
+		var trackingNo = $("#trackingNo");
+		if(trackingNo ==null || trackingNo == ''){
+			parent.$.showShortMessage({msg:"请先输入小包跟踪号码",animate:false,left:"45%"});
+			return false;
+		}
+		var bigPackageId = $("#bigPackageId").val();
+		if(bigPackageId ==null || bigPackageId == ''){
+			parent.$.showShortMessage({msg:"没有找到转运订单,刷新后重试",animate:false,left:"45%"});
+			return false;
+		}
+		$.post(baseUrl+ '/warehouse/transport/checkLittlePackage.do?bigPackageId='+ bigPackageId+'&trackingNo='+trackingNo, function(msg) {
+			if(msg.status == 0){
+				parent.$.showShortMessage({msg:msg.message,animate:false,left:"45%"});
+				$("#trackingNo").focus();
+				return;
+			}
+			if(msg.status == 1){
+				parent.$.showShortMessage({msg:"复核成功,请继续下一个小包",animate:false,left:"45%"});
+				$("#"+trackingNo).html("");
+				
+			}
+		},"json");
+		
+		
+		focus = '3';
+		$("#weight").focus();
+		$("#weight").select();
+}
+
+//称重
 function saveweight(){
 	var weight = $("#weight").val();
 	var bigPackageId = $("#bigPackageId").val();
