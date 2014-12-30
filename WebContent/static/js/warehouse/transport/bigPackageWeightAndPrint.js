@@ -84,6 +84,7 @@ function checkLittlePackage(){
 				$("#trackingNo").focus();
 				
 				if(littlePackageTrackingNoQuantity ==0){//如果左边的跟踪号已经全部减完,进入称重
+					parent.$.showShortMessage({msg:"复核完成,请开始称重和打单",animate:false,left:"45%"});
 					focus = '3';
 					$("#weight").focus();
 					$("#weight").select();
@@ -96,7 +97,7 @@ function checkLittlePackage(){
 //称重
 function saveweight(){
 	if(littlePackageTrackingNoQuantity != 0){
-		parent.$.showShortMessage({msg:"需要复核完成,才能称重",animate:false,left:"45%"});
+		parent.$.showDialogMessage("需要复核完成,才能称重", null, null);
 		return false;
 	}
 	var weight = $("#weight").val();
