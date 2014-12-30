@@ -52,7 +52,7 @@
 					<b>已扫描小包:</b>
 				</div>	
 			</div>
-			<table class="table" style="width:25%;margin-bottom: 1px;float: right;">
+			<table class="table" style="width:25%;margin-bottom: 1px;float: left;">
 				<tbody  id="scanTrackingNos"></tbody>
 			</table>	  
 	</div>
