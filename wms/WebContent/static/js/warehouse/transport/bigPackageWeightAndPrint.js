@@ -1,3 +1,5 @@
+var littlePackageTrackingNoQuantity = 0;//每个客户参考号下,对应的小包跟踪号个数
+
 function submitCustomerReferenceNo(){
  		var customerReferenceNo  = $("#customerReferenceNo").val();
  		//清空运单信息
@@ -7,7 +9,7 @@ function submitCustomerReferenceNo(){
  		$("#shipwayCode").val("");
 		$("#outWarehouseTrackingNo").val("");
 		$("#weightOk").hide();
-		
+		littlePackageTrackingNoQuantity = 0;
  		$.post(baseUrl+ '/warehouse/transport/bigPackageWeightSubmitCustomerReferenceNo.do',{
  			customerReferenceNo:customerReferenceNo
  		}, function(msg) {
@@ -24,12 +26,14 @@ function submitCustomerReferenceNo(){
  					//按,号分开多个跟踪号
  					var trackingNosArray = trackingNos.split(",");
  					$("#littlePackageTrackingNos").html("");
+ 					$("#scanTrackingNos").html("");
                     $(trackingNosArray).each(function(i,e){
                     	if(e!=null && e!=''){
-                    		var tr = "<tr>";
+                    		var tr = "<tr id='"+e+"'>";
                     		tr+="<td>"+e+"</td>";
                     		tr+="</tr>";	
                     		$("#littlePackageTrackingNos").append(tr);
+                    		littlePackageTrackingNoQuantity++;
                     	}
                     });
                     //进入复核
@@ -42,7 +46,7 @@ function submitCustomerReferenceNo(){
  				
 //复核小包
 function checkLittlePackage(){
-		var trackingNo = $("#trackingNo");
+		var trackingNo = $("#trackingNo").val();
 		if(trackingNo ==null || trackingNo == ''){
 			parent.$.showShortMessage({msg:"请先输入小包跟踪号码",animate:false,left:"45%"});
 			return false;
@@ -59,20 +63,42 @@ function checkLittlePackage(){
 				return;
 			}
 			if(msg.status == 1){
+				if($("#"+trackingNo).html() ==''){//重复扫描
+					parent.$.showShortMessage({msg:"该小包重复扫描,请扫描下一个小包",animate:false,left:"45%"});
+					$("#trackingNo").val("");
+					$("#trackingNo").focus();
+					return;
+				}
+				if(littlePackageTrackingNoQuantity ==0){
+					focus = '3';
+					$("#weight").focus();
+					$("#weight").select();
+				}
 				parent.$.showShortMessage({msg:"复核成功,请继续下一个小包",animate:false,left:"45%"});
-				$("#"+trackingNo).html("");
+				littlePackageTrackingNoQuantity--;
+				$("#"+trackingNo).html("");//左侧减
+				var tr = "<tr><td>"+trackingNo+"</td></tr>";//右侧加
+				$("#scanTrackingNos").append(tr);
+				//复核成功,请继续下一个小包
+				$("#trackingNo").val("");
+				$("#trackingNo").focus();
 				
+				if(littlePackageTrackingNoQuantity ==0){//如果左边的跟踪号已经全部减完,进入称重
+					focus = '3';
+					$("#weight").focus();
+					$("#weight").select();
+					return;
+				}
 			}
 		},"json");
-		
-		
-		focus = '3';
-		$("#weight").focus();
-		$("#weight").select();
 }
 
 //称重
 function saveweight(){
+	if(littlePackageTrackingNoQuantity != 0){
+		parent.$.showShortMessage({msg:"需要复核完成,才能称重",animate:false,left:"45%"});
+		return false;
+	}
 	var weight = $("#weight").val();
 	var bigPackageId = $("#bigPackageId").val();
 	if(bigPackageId ==null || bigPackageId == ''){
