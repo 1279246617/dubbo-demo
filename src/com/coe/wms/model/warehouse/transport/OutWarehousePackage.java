@@ -6,7 +6,6 @@ import java.io.Serializable;
  * 出库单 (主单)
  * 
  * 
- * 出库主单: 根据coeTrackingNoId 找OutWarehouseShippping, 找到本次出库订单
  * 
  * 
  * @author Administrator

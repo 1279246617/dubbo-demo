@@ -5,6 +5,8 @@ import java.io.Serializable;
 /**
  * 出库建包记录
  * 
+ * 建包是否发货,根据OutWarehouseRecord 是否有记录...(变更需求原因,导致,是否发货需要新建一张表)
+ * 
  * 
  * 出库建包: 根据coeTrackingNoId 找OutWarehouseRecordId, 找到本次建包订单
  * 

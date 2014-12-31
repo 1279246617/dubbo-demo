@@ -152,11 +152,11 @@ public class TransportServiceImpl implements ITransportService {
 	@Resource(name = "firstWaybillOnShelfDao")
 	private IFirstWaybillOnShelfDao firstWaybillOnShelfDao;
 
-	@Resource(name = "outWarehousePackageDao")
-	private IOutWarehousePackageDao outWarehousePackageDao;
+	@Resource(name = "transportPackageDao")
+	private IOutWarehousePackageDao transportPackageDao;
 
-	@Resource(name = "packageRecordItemDao")
-	private IOutWarehousePackageItemDao packageRecordItemDao;
+	@Resource(name = "transportPackageItemDao")
+	private IOutWarehousePackageItemDao transportPackageItemDao;
 
 	@Resource(name = "shipwayDao")
 	private IShipwayDao shipwayDao;
@@ -1023,7 +1023,7 @@ public class TransportServiceImpl implements ITransportService {
 		map.put(Constant.STATUS, Constant.FAIL);
 		OutWarehousePackageItem packageRecordItem = new OutWarehousePackageItem();
 		packageRecordItem.setCoeTrackingNo(coeTrackingNo);
-		List<OutWarehousePackageItem> packageRecordItemList = packageRecordItemDao.findOutWarehousePackageItem(packageRecordItem, null, null);
+		List<OutWarehousePackageItem> packageRecordItemList = transportPackageItemDao.findOutWarehousePackageItem(packageRecordItem, null, null);
 		List<TrackingNo> trackingNos = trackingNoDao.findTrackingNo(coeTrackingNo, TrackingNo.TYPE_COE);
 		// 暂不处理,单号可能重复问题
 		if (trackingNos == null || trackingNos.size() <= 0) {
@@ -1075,7 +1075,7 @@ public class TransportServiceImpl implements ITransportService {
 				// 检查出库订单 是否已经和COE交接单号绑定
 				OutWarehousePackageItem checkTrackingNoParam = new OutWarehousePackageItem();
 				checkTrackingNoParam.setOrderId(orderId);
-				Long countTrackingNoResult = packageRecordItemDao.countOutWarehousePackageItem(checkTrackingNoParam, null);
+				Long countTrackingNoResult = transportPackageItemDao.countOutWarehousePackageItem(checkTrackingNoParam, null);
 				if (countTrackingNoResult > 0) {
 					// 说明该出库订单已经和其他COE交接单号绑定了,不能再绑定此单号
 					map.put(Constant.MESSAGE, "该转运订单已经绑定的了其他COE交接单号");
@@ -1092,7 +1092,7 @@ public class TransportServiceImpl implements ITransportService {
 				packageRecordItem.setUserIdOfCustomer(order.getUserIdOfCustomer());
 				packageRecordItem.setUserIdOfOperator(userIdOfOperator);
 				packageRecordItem.setWarehouseId(order.getWarehouseId());
-				long packageRecordItemId = packageRecordItemDao.saveOutWarehousePackageItem(packageRecordItem);
+				long packageRecordItemId = transportPackageItemDao.saveOutWarehousePackageItem(packageRecordItem);
 				map.put("packageRecordItemId", packageRecordItemId + "");
 				map.put(Constant.STATUS, Constant.SUCCESS);
 			} else {
@@ -1102,11 +1102,11 @@ public class TransportServiceImpl implements ITransportService {
 				packageRecordItem.setCoeTrackingNoId(coeTrackingNoId);
 				packageRecordItem.setCoeTrackingNo(coeTrackingNo);
 				packageRecordItem.setOrderTrackingNo(trackingNo);
-				List<OutWarehousePackageItem> packageRecordItemList = packageRecordItemDao.findOutWarehousePackageItem(packageRecordItem, null, null);
+				List<OutWarehousePackageItem> packageRecordItemList = transportPackageItemDao.findOutWarehousePackageItem(packageRecordItem, null, null);
 				String packageRecordItemIds = "";
 				int sub = 0;
 				for (OutWarehousePackageItem item : packageRecordItemList) {
-					packageRecordItemDao.deleteOutWarehousePackageItemById(item.getId());
+					transportPackageItemDao.deleteOutWarehousePackageItemById(item.getId());
 					// 加#是为了 jquery可以直接$("#id1,#id2,#id3,#id4")
 					packageRecordItemIds += ("#" + item.getId() + ",");
 					orderIds = orderIds.replaceAll(item.getOrderId() + "\\|\\|", "");
@@ -1181,7 +1181,7 @@ public class TransportServiceImpl implements ITransportService {
 		packageRecord.setUserIdOfOperator(userIdOfOperator);
 		packageRecord.setWarehouseId(warehouseId);
 		packageRecord.setIsShiped(Constant.N);
-		outWarehousePackageDao.saveOutWarehousePackage(packageRecord);
+		transportPackageDao.saveOutWarehousePackage(packageRecord);
 
 		// 标记coe单号已经使用
 		trackingNoDao.usedTrackingNo(coeTrackingNoId);
@@ -1220,7 +1220,7 @@ public class TransportServiceImpl implements ITransportService {
 		// 根据出库交接单号查询建包记录.
 		OutWarehousePackage packageRecordParam = new OutWarehousePackage();
 		packageRecordParam.setCoeTrackingNoId(coeTrackingNoId);
-		List<OutWarehousePackage> packageRecordList = outWarehousePackageDao.findOutWarehousePackage(packageRecordParam, null, null);
+		List<OutWarehousePackage> packageRecordList = transportPackageDao.findOutWarehousePackage(packageRecordParam, null, null);
 		if (packageRecordList == null || packageRecordList.size() <= 0) {
 			map.put(Constant.MESSAGE, "没有找到出库建包记录,请先完成建包");
 			return map;
@@ -1231,11 +1231,11 @@ public class TransportServiceImpl implements ITransportService {
 			map.put(Constant.MESSAGE, "该交接单号对应大包已经出库,请勿重复操作");
 			return map;
 		}
-		outWarehousePackageDao.updateOutWarehousePackageIsShiped(packageRecord.getId(), Constant.Y, System.currentTimeMillis());
+		transportPackageDao.updateOutWarehousePackageIsShiped(packageRecord.getId(), Constant.Y, System.currentTimeMillis());
 		// 根据coe交接单号 获取建包记录,获取每个出库订单(小包)
 		OutWarehousePackageItem itemParam = new OutWarehousePackageItem();
 		itemParam.setCoeTrackingNoId(coeTrackingNoId);
-		List<OutWarehousePackageItem> outWarehouseRecordItemList = packageRecordItemDao.findOutWarehousePackageItem(itemParam, null, null);
+		List<OutWarehousePackageItem> outWarehouseRecordItemList = transportPackageItemDao.findOutWarehousePackageItem(itemParam, null, null);
 		// 迭代,检查跟踪号
 		for (OutWarehousePackageItem recordItem : outWarehouseRecordItemList) {
 			Long orderId = recordItem.getOrderId();
@@ -1251,7 +1251,7 @@ public class TransportServiceImpl implements ITransportService {
 	 */
 	@Override
 	public Pagination getOutWarehousePackageData(OutWarehousePackage outWarehousePackage, Map<String, String> moreParam, Pagination page) {
-		List<OutWarehousePackage> packageRecordList = outWarehousePackageDao.findOutWarehousePackage(outWarehousePackage, moreParam, page);
+		List<OutWarehousePackage> packageRecordList = transportPackageDao.findOutWarehousePackage(outWarehousePackage, moreParam, page);
 		List<Object> list = new ArrayList<Object>();
 		for (OutWarehousePackage packageRecord : packageRecordList) {
 			Map<String, Object> map = new HashMap<String, Object>();
@@ -1284,7 +1284,7 @@ public class TransportServiceImpl implements ITransportService {
 			map.put("remark", packageRecord.getRemark() == null ? "" : packageRecord.getRemark());
 			OutWarehousePackageItem param = new OutWarehousePackageItem();
 			param.setCoeTrackingNoId(packageRecord.getCoeTrackingNoId());
-			List<OutWarehousePackageItem> itemList = packageRecordItemDao.findOutWarehousePackageItem(param, null, null);
+			List<OutWarehousePackageItem> itemList = transportPackageItemDao.findOutWarehousePackageItem(param, null, null);
 			Integer quantity = 0;
 			String orders = "";
 			for (OutWarehousePackageItem item : itemList) {
@@ -1295,17 +1295,17 @@ public class TransportServiceImpl implements ITransportService {
 			map.put("quantity", quantity);
 			list.add(map);
 		}
-		page.total = outWarehousePackageDao.countOutWarehousePackage(outWarehousePackage, moreParam);
+		page.total = transportPackageDao.countOutWarehousePackage(outWarehousePackage, moreParam);
 		page.rows = list;
 		return page;
 	}
 
 	@Override
 	public List<Map<String, String>> getOutWarehousePackageItemByOutWarehousePackageId(Long packageId) {
-		OutWarehousePackage packageRecord = outWarehousePackageDao.getOutWarehousePackageById(packageId);
+		OutWarehousePackage packageRecord = transportPackageDao.getOutWarehousePackageById(packageId);
 		OutWarehousePackageItem param = new OutWarehousePackageItem();
 		param.setCoeTrackingNoId(packageRecord.getCoeTrackingNoId());
-		List<OutWarehousePackageItem> packageRecordItemList = packageRecordItemDao.findOutWarehousePackageItem(param, null, null);
+		List<OutWarehousePackageItem> packageRecordItemList = transportPackageItemDao.findOutWarehousePackageItem(param, null, null);
 		List<Map<String, String>> mapList = new ArrayList<Map<String, String>>();
 		for (OutWarehousePackageItem item : packageRecordItemList) {
 			Map<String, String> map = new HashMap<String, String>();
@@ -1323,7 +1323,7 @@ public class TransportServiceImpl implements ITransportService {
 	@Override
 	public Map<String, String> saveOutWarehousePackageRemark(String remark, Long id) throws ServiceException {
 		Map<String, String> map = new HashMap<String, String>();
-		if (outWarehousePackageDao.updateOutWarehousePackageRemark(id, remark) > 0) {
+		if (transportPackageDao.updateOutWarehousePackageRemark(id, remark) > 0) {
 			map.put(Constant.STATUS, Constant.SUCCESS);
 		} else {
 			map.put(Constant.STATUS, Constant.FAIL);

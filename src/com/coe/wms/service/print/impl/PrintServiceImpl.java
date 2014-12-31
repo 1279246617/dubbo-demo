@@ -165,11 +165,11 @@ public class PrintServiceImpl implements IPrintService {
 	@Resource(name = "firstWaybillOnShelfDao")
 	private IFirstWaybillOnShelfDao firstWaybillOnShelfDao;
 
-	@Resource(name = "outWarehousePackageDao")
-	private com.coe.wms.dao.warehouse.transport.IOutWarehousePackageDao transportOutWarehousePackageDao;
+	@Resource(name = "transportPackageDao")
+	private com.coe.wms.dao.warehouse.transport.IOutWarehousePackageDao transportPackageDao;
 
-	@Resource(name = "packageRecordItemDao")
-	private IOutWarehousePackageItemDao packageRecordItemDao;
+	@Resource(name = "transportPackageItemDao")
+	private IOutWarehousePackageItemDao transportPackageItemDao;
 
 	@Override
 	public Map<String, Object> getPrintPackageListData(Long outWarehouseOrderId) {
@@ -567,7 +567,7 @@ public class PrintServiceImpl implements IPrintService {
 	public List<Map<String, String>> getPrintTransportEIRData(Long coeTrackingNoId) {
 		OutWarehousePackageItem itemParam = new OutWarehousePackageItem();
 		itemParam.setCoeTrackingNoId(coeTrackingNoId);
-		List<OutWarehousePackageItem> itemParamList = packageRecordItemDao.findOutWarehousePackageItem(itemParam, null, null);
+		List<OutWarehousePackageItem> itemParamList = transportPackageItemDao.findOutWarehousePackageItem(itemParam, null, null);
 		List<Map<String, String>> mapList = new ArrayList<Map<String, String>>();
 		for (OutWarehousePackageItem item : itemParamList) {
 			Map<String, String> map = new HashMap<String, String>();
@@ -593,7 +593,7 @@ public class PrintServiceImpl implements IPrintService {
 		Map<String, Object> map = new HashMap<String, Object>();
 		com.coe.wms.model.warehouse.transport.OutWarehousePackage recordParam = new com.coe.wms.model.warehouse.transport.OutWarehousePackage();
 		recordParam.setCoeTrackingNoId(coeTrackingNoId);
-		List<com.coe.wms.model.warehouse.transport.OutWarehousePackage> packageRecordList = transportOutWarehousePackageDao.findOutWarehousePackage(recordParam, null, null);
+		List<com.coe.wms.model.warehouse.transport.OutWarehousePackage> packageRecordList = transportPackageDao.findOutWarehousePackage(recordParam, null, null);
 		if (packageRecordList == null || packageRecordList.size() == 0) {
 			return map;
 		}
@@ -601,7 +601,7 @@ public class PrintServiceImpl implements IPrintService {
 		// 出貨詳情
 		OutWarehousePackageItem recordItemParam = new OutWarehousePackageItem();
 		recordItemParam.setCoeTrackingNoId(coeTrackingNoId);
-		List<OutWarehousePackageItem> packageRecordItemList = packageRecordItemDao.findOutWarehousePackageItem(recordItemParam, null, null);
+		List<OutWarehousePackageItem> packageRecordItemList = transportPackageItemDao.findOutWarehousePackageItem(recordItemParam, null, null);
 		// 總重量
 		double totalWeight = 0d;
 		int quantity = 0;
