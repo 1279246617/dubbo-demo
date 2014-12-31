@@ -25,8 +25,8 @@
 							<span class="pull-left" style="width:200px;">
 								<input type="text"  name="trackingNo"  id="trackingNo" t="1" onfocus="trackingNoFocus()"  onblur="trackingNoBlur()" style="width:170px;"/>
 								<!-- 用户按回车时,当入库订单id 为空是第一次提交,后台返回id,或其他提示.  不为空 提示客户可输入SKU和数量进行收货 -->
-								<input type="text"  name="littlePackageId"  id="littlePackageId" t="1"  style="display: none;"/>
-								<input type="text"  name="bigPackageId"  id="bigPackageId" t="1"  style="display: none;"/>
+								<input type="text"  name="firstWaybillId"  id="firstWaybillId" t="1"  style="display: none;"/>
+								<input type="text"  name="orderId"  id="orderId" t="1"  style="display: none;"/>
 							</span>
 					</td>		
 					<td style="width:290px;">
@@ -54,8 +54,8 @@
 			</tr>
 	</table>
 	
-	<div style="height:140px;width:100%;overflow:auto;margin-bottom: 2px;" id="littlePackageDiv">
-			<table   class="table"  style="width:100%;background-color:#f5f5f5;" id="littlePackagetable" >
+	<div style="height:140px;width:100%;overflow:auto;margin-bottom: 2px;" id="firstWaybillDiv">
+			<table   class="table"  style="width:100%;background-color:#f5f5f5;" id="firstWaybilltable" >
 				<tr>
 					<th style="width:50px;text-align:center;">选择</th>
 					<th style="width:155px;text-align:center;">客户帐号</th>
@@ -64,7 +64,7 @@
 					<th style="width:205px;text-align:center;">状态</th> 
 					<th style="width:205px;text-align:center;">创建时间</th>
 				</tr>
-				<tbody id="littlePackagebody" style="color:#555555;">
+				<tbody id="firstWaybillbody" style="color:#555555;">
 					
 				</tbody>
 		</table>
@@ -132,7 +132,7 @@
 	<table  class="table table-striped" style="margin-bottom: 0px;height: 10px;">
 		<tr style="height: 10px;">
 			<td>
-              <form action="${baseUrl}/warehouse/transport/getLittlePackageData.do?isReceived=Y" id="searchform" name="searchform" method="post">
+              <form action="${baseUrl}/warehouse/transport/getFirstWaybillData.do?isReceived=Y" id="searchform" name="searchform" method="post">
                   <div class="pull-right searchContent">
                           跟踪单号&nbsp;<input type="text"  name="trackingNo" id="searchFormTrackingNo" title="跟踪单号">
                           <a class="btn btn-primary btn-small" id="btn_search"><i class="icon-search icon-white"></i>搜索</a>
@@ -176,7 +176,7 @@
 	    	//回车事件
 	    	if((event.keyCode   ==   13)) {
 	    		if(focus == '1'){
-		  		  	saveReceivedLittlePackage();
+		  		  	saveReceivedFirstWaybill();
 		  		  	return false;
 	  		  	}
 				//保存重量
@@ -236,14 +236,14 @@
 	                    { display: '到货跟踪单号', name: 'trackingNo', align: 'center', type: 'int',width:'13%'},
 	                    { display: '承运商', name: 'carrierCode', align: 'center', type: 'int',width:'10%'},
 	                    { display: '小包状态', name: 'status', align: 'center', type: 'int',width:'9%'},
-	                    { display: '订单状态', name: 'bigPackageStatus', align: 'center', type: 'int',width:'9%'},
+	                    { display: '订单状态', name: 'orderStatus', align: 'center', type: 'int',width:'9%'},
 		                { display: '收货时间', name: 'receivedTime', align: 'center', type: 'float',width:'12%'},
 		                { display: '回传收货状态', name: 'callbackIsSuccess', align: 'center', type: 'float',width:'8%'},
 		                { display: '操作员', name: 'userNameOfOperator',width:'9%'},
 	                ],  
 	                isScroll: true,
 	                dataAction: 'server',
-	                url: baseUrl+'/warehouse/transport/getLittlePackageData.do?isReceived=Y',
+	                url: baseUrl+'/warehouse/transport/getFirstWaybillData.do?isReceived=Y',
 	                pageSize: 5, 
 	                usePager: 'true',
 	                sortName: 'received_time',

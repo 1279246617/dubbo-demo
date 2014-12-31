@@ -22,7 +22,7 @@ public class FirstWaybill implements Serializable {
 	/**
 	 * 大包id
 	 */
-	private Long bigPackageId;
+	private Long orderId;
 	/**
 	 * 订单所属客户id
 	 */
@@ -100,12 +100,12 @@ public class FirstWaybill implements Serializable {
 		this.id = id;
 	}
 
-	public Long getBigPackageId() {
-		return bigPackageId;
+	public Long getOrderId() {
+		return orderId;
 	}
 
-	public void setBigPackageId(Long bigPackageId) {
-		this.bigPackageId = bigPackageId;
+	public void setOrderId(Long orderId) {
+		this.orderId = orderId;
 	}
 
 	public String getSeatCode() {

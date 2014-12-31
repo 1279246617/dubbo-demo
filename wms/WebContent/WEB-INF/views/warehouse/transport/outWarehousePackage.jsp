@@ -123,11 +123,11 @@
 		  	  		$.each(msg.packageRecordItemList,function(i,e){
 			  			//添加从数据库查出来的运单
 						var tr = "<tr style='height:25px;' id="+e.id+">";
-				  		tr += "<td style='text-align: center'>"+e.bigPackageTrackingNo+"</td>";
+				  		tr += "<td style='text-align: center'>"+e.orderTrackingNo+"</td>";
 				  		tr += "</tr>";
 			  			$("#trackingNos").append(tr);
 			  			$("#total").html( parseInt($("#total").html()) + 1);
-			  			orderIds +=e.bigPackageId+"||";
+			  			orderIds +=e.orderId+"||";
 	    			});
 	  	  			// 光标移至跟踪号
 	  	  			$("#trackingNo").focus();

@@ -57,7 +57,7 @@ public interface IPrintService {
 	 * @param outWarehouseOrderId
 	 * @return
 	 */
-	public Map<String, Object> getPrintTransportPackageListData(Long bigPackageId);
+	public Map<String, Object> getPrintTransportPackageListData(Long orderId);
 
 	/**
 	 * 转运订单出货sf标签
@@ -65,5 +65,5 @@ public interface IPrintService {
 	 * @param outWarehouseOrderId
 	 * @return
 	 */
-	public Map<String, Object> getPrintTransportShipLabedData(Long bigPackageId);
+	public Map<String, Object> getPrintTransportShipLabedData(Long orderId);
 }

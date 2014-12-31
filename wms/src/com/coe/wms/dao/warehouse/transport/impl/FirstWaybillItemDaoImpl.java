@@ -20,7 +20,7 @@ import org.springframework.stereotype.Repository;
 
 import com.coe.wms.dao.datasource.DataSource;
 import com.coe.wms.dao.datasource.DataSourceCode;
-import com.coe.wms.dao.warehouse.transport.ILittlePackageItemDao;
+import com.coe.wms.dao.warehouse.transport.IFirstWaybillItemDao;
 import com.coe.wms.model.warehouse.transport.FirstWaybillItem;
 import com.coe.wms.util.NumberUtil;
 import com.coe.wms.util.Pagination;
@@ -31,10 +31,10 @@ import com.mysql.jdbc.Statement;
  * 
  * @author Administrator
  */
-@Repository("littlePackageItemDao")
-public class LittlePackageItemDaoImpl implements ILittlePackageItemDao {
+@Repository("firstWaybillItemDao")
+public class FirstWaybillItemDaoImpl implements IFirstWaybillItemDao {
 
-	Logger logger = Logger.getLogger(LittlePackageItemDaoImpl.class);
+	Logger logger = Logger.getLogger(FirstWaybillItemDaoImpl.class);
 
 	@Resource(name = "jdbcTemplate")
 	private JdbcTemplate jdbcTemplate;
@@ -44,13 +44,13 @@ public class LittlePackageItemDaoImpl implements ILittlePackageItemDao {
 	 */
 	@Override
 	@DataSource(DataSourceCode.WMS)
-	public long saveLittlePackageItem(final FirstWaybillItem item) {
-		final String sql = "insert into w_t_first_waybill_item (little_package_id,quantity,sku,sku_name,sku_unit_price,sku_price_currency,remark,sku_net_weight,sku_no,specification,big_package_id) values (?,?,?,?,?,?,?,?,?,?,?)";
+	public long saveFirstWaybillItem(final FirstWaybillItem item) {
+		final String sql = "insert into w_t_first_waybill_item (first_waybill_id,quantity,sku,sku_name,sku_unit_price,sku_price_currency,remark,sku_net_weight,sku_no,specification,order_id) values (?,?,?,?,?,?,?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
 				PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-				ps.setLong(1, item.getLittlePackageId());
+				ps.setLong(1, item.getFirstWaybillId());
 				ps.setLong(2, item.getQuantity());
 				ps.setString(3, item.getSku());
 				ps.setString(4, item.getSkuName());
@@ -68,7 +68,7 @@ public class LittlePackageItemDaoImpl implements ILittlePackageItemDao {
 				}
 				ps.setString(9, item.getSkuNo());
 				ps.setString(10, item.getSpecification());
-				ps.setLong(11, item.getBigPackageId());
+				ps.setLong(11, item.getOrderId());
 				return ps;
 			}
 		}, keyHolder);
@@ -81,13 +81,13 @@ public class LittlePackageItemDaoImpl implements ILittlePackageItemDao {
 	 */
 	@Override
 	@DataSource(DataSourceCode.WMS)
-	public int saveBatchLittlePackageItem(final List<FirstWaybillItem> itemList) {
-		final String sql = "insert into w_t_first_waybill_item (little_package_id,quantity,sku,sku_name,sku_unit_price,sku_price_currency,remark,sku_net_weight,sku_no,specification,big_package_id) values (?,?,?,?,?,?,?,?,?,?,?)";
+	public int saveBatchFirstWaybillItem(final List<FirstWaybillItem> itemList) {
+		final String sql = "insert into w_t_first_waybill_item (first_waybill_id,quantity,sku,sku_name,sku_unit_price,sku_price_currency,remark,sku_net_weight,sku_no,specification,order_id) values (?,?,?,?,?,?,?,?,?,?,?)";
 		int[] batchUpdateSize = jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
 			@Override
 			public void setValues(PreparedStatement ps, int i) throws SQLException {
 				FirstWaybillItem item = itemList.get(i);
-				ps.setLong(1, item.getLittlePackageId());
+				ps.setLong(1, item.getFirstWaybillId());
 				ps.setLong(2, item.getQuantity());
 				ps.setString(3, item.getSku());
 				ps.setString(4, item.getSkuName());
@@ -105,7 +105,7 @@ public class LittlePackageItemDaoImpl implements ILittlePackageItemDao {
 				}
 				ps.setString(9, item.getSkuNo());
 				ps.setString(10, item.getSpecification());
-				ps.setLong(11, item.getBigPackageId());
+				ps.setLong(11, item.getOrderId());
 			}
 
 			@Override
@@ -118,13 +118,13 @@ public class LittlePackageItemDaoImpl implements ILittlePackageItemDao {
 
 	@Override
 	@DataSource(DataSourceCode.WMS)
-	public int saveBatchLittlePackageItemWithLittlePackageId(final List<FirstWaybillItem> itemList, final Long littlePackageId) {
-		final String sql = "insert into w_t_first_waybill_item (little_package_id,quantity,sku,sku_name,sku_unit_price,sku_price_currency,remark,sku_net_weight,sku_no,specification,big_package_id) values (?,?,?,?,?,?,?,?,?,?,?)";
+	public int saveBatchFirstWaybillItemWithFirstWaybillId(final List<FirstWaybillItem> itemList, final Long FirstWaybillId) {
+		final String sql = "insert into w_t_first_waybill_item (first_waybill_id,quantity,sku,sku_name,sku_unit_price,sku_price_currency,remark,sku_net_weight,sku_no,specification,order_id) values (?,?,?,?,?,?,?,?,?,?,?)";
 		int[] batchUpdateSize = jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
 			@Override
 			public void setValues(PreparedStatement ps, int i) throws SQLException {
 				FirstWaybillItem item = itemList.get(i);
-				ps.setLong(1, littlePackageId);
+				ps.setLong(1, FirstWaybillId);
 				ps.setLong(2, item.getQuantity());
 				ps.setString(3, item.getSku());
 				ps.setString(4, item.getSkuName());
@@ -142,7 +142,7 @@ public class LittlePackageItemDaoImpl implements ILittlePackageItemDao {
 				}
 				ps.setString(9, item.getSkuNo());
 				ps.setString(10, item.getSpecification());
-				ps.setLong(11, item.getBigPackageId());
+				ps.setLong(11, item.getOrderId());
 			}
 			
 			@Override
@@ -163,45 +163,45 @@ public class LittlePackageItemDaoImpl implements ILittlePackageItemDao {
 	 * 参数一律使用实体类加Map .
 	 */
 	@Override
-	public List<FirstWaybillItem> findLittlePackageItem(FirstWaybillItem littlePackageItem, Map<String, String> moreParam, Pagination page) {
+	public List<FirstWaybillItem> findFirstWaybillItem(FirstWaybillItem FirstWaybillItem, Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select id,little_package_id,quantity,sku,sku_name,sku_unit_price,sku_price_currency,remark,sku_net_weight,sku_no,specification,big_package_id from w_t_first_waybill_item where 1=1 ");
-		if (littlePackageItem != null) {
-			if (StringUtil.isNotNull(littlePackageItem.getSku())) {
-				sb.append(" and sku = '" + littlePackageItem.getSku() + "' ");
+		sb.append("select id,first_waybill_id,quantity,sku,sku_name,sku_unit_price,sku_price_currency,remark,sku_net_weight,sku_no,specification,order_id from w_t_first_waybill_item where 1=1 ");
+		if (FirstWaybillItem != null) {
+			if (StringUtil.isNotNull(FirstWaybillItem.getSku())) {
+				sb.append(" and sku = '" + FirstWaybillItem.getSku() + "' ");
 			}
-			if (StringUtil.isNotNull(littlePackageItem.getSkuNo())) {
-				sb.append(" and sku_no = '" + littlePackageItem.getSkuNo() + "' ");
+			if (StringUtil.isNotNull(FirstWaybillItem.getSkuNo())) {
+				sb.append(" and sku_no = '" + FirstWaybillItem.getSkuNo() + "' ");
 			}
-			if (StringUtil.isNotNull(littlePackageItem.getSpecification())) {
-				sb.append(" and specification = '" + littlePackageItem.getSpecification() + "' ");
+			if (StringUtil.isNotNull(FirstWaybillItem.getSpecification())) {
+				sb.append(" and specification = '" + FirstWaybillItem.getSpecification() + "' ");
 			}
-			if (StringUtil.isNotNull(littlePackageItem.getSkuName())) {
-				sb.append(" and sku_name = '" + littlePackageItem.getSkuName() + "' ");
+			if (StringUtil.isNotNull(FirstWaybillItem.getSkuName())) {
+				sb.append(" and sku_name = '" + FirstWaybillItem.getSkuName() + "' ");
 			}
-			if (StringUtil.isNotNull(littlePackageItem.getSkuPriceCurrency())) {
-				sb.append(" and sku_price_currency = '" + littlePackageItem.getSkuPriceCurrency() + "' ");
+			if (StringUtil.isNotNull(FirstWaybillItem.getSkuPriceCurrency())) {
+				sb.append(" and sku_price_currency = '" + FirstWaybillItem.getSkuPriceCurrency() + "' ");
 			}
-			if (littlePackageItem.getSkuUnitPrice() != null) {
-				sb.append(" and sku_price_currency = '" + littlePackageItem.getSkuUnitPrice() + "' ");
+			if (FirstWaybillItem.getSkuUnitPrice() != null) {
+				sb.append(" and sku_price_currency = '" + FirstWaybillItem.getSkuUnitPrice() + "' ");
 			}
-			if (StringUtil.isNotNull(littlePackageItem.getRemark())) {
-				sb.append(" and remark = '" + littlePackageItem.getRemark() + "' ");
+			if (StringUtil.isNotNull(FirstWaybillItem.getRemark())) {
+				sb.append(" and remark = '" + FirstWaybillItem.getRemark() + "' ");
 			}
-			if (littlePackageItem.getLittlePackageId() != null) {
-				sb.append(" and little_package_id = " + littlePackageItem.getLittlePackageId());
+			if (FirstWaybillItem.getFirstWaybillId() != null) {
+				sb.append(" and first_waybill_id = " + FirstWaybillItem.getFirstWaybillId());
 			}
-			if (littlePackageItem.getBigPackageId() != null) {
-				sb.append(" and big_package_id = " + littlePackageItem.getBigPackageId());
+			if (FirstWaybillItem.getOrderId() != null) {
+				sb.append(" and order_id = " + FirstWaybillItem.getOrderId());
 			}
-			if (littlePackageItem.getId() != null) {
-				sb.append(" and id = '" + littlePackageItem.getId() + "' ");
+			if (FirstWaybillItem.getId() != null) {
+				sb.append(" and id = '" + FirstWaybillItem.getId() + "' ");
 			}
-			if (littlePackageItem.getQuantity() != null) {
-				sb.append(" and quantity = " + littlePackageItem.getQuantity());
+			if (FirstWaybillItem.getQuantity() != null) {
+				sb.append(" and quantity = " + FirstWaybillItem.getQuantity());
 			}
-			if (littlePackageItem.getSkuNetWeight() != null) {
-				sb.append(" and sku_net_weight = " + littlePackageItem.getSkuNetWeight());
+			if (FirstWaybillItem.getSkuNetWeight() != null) {
+				sb.append(" and sku_net_weight = " + FirstWaybillItem.getSkuNetWeight());
 			}
 		}
 		// 分页sql
@@ -209,7 +209,7 @@ public class LittlePackageItemDaoImpl implements ILittlePackageItemDao {
 			sb.append(page.generatePageSql());
 		}
 		String sql = sb.toString();
-		List<FirstWaybillItem> littlePackageItemList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(FirstWaybillItem.class));
-		return littlePackageItemList;
+		List<FirstWaybillItem> FirstWaybillItemList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(FirstWaybillItem.class));
+		return FirstWaybillItemList;
 	}
 }

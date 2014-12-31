@@ -25,14 +25,14 @@ import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderItemDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderReceiverDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderSenderDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderStatusDao;
-import com.coe.wms.dao.warehouse.transport.IBigPackageAdditionalSfDao;
-import com.coe.wms.dao.warehouse.transport.IBigPackageDao;
+import com.coe.wms.dao.warehouse.transport.IOrderAdditionalSfDao;
+import com.coe.wms.dao.warehouse.transport.IOrderDao;
 import com.coe.wms.dao.warehouse.transport.IBigPackageReceiverDao;
 import com.coe.wms.dao.warehouse.transport.IBigPackageSenderDao;
 import com.coe.wms.dao.warehouse.transport.IBigPackageStatusDao;
-import com.coe.wms.dao.warehouse.transport.ILittlePackageDao;
-import com.coe.wms.dao.warehouse.transport.ILittlePackageItemDao;
-import com.coe.wms.dao.warehouse.transport.ILittlePackageStatusDao;
+import com.coe.wms.dao.warehouse.transport.IFirstWaybillDao;
+import com.coe.wms.dao.warehouse.transport.IFirstWaybillItemDao;
+import com.coe.wms.dao.warehouse.transport.IFirstWaybillStatusDao;
 import com.coe.wms.model.unit.Currency.CurrencyCode;
 import com.coe.wms.model.warehouse.Shipway.ShipwayCode;
 import com.coe.wms.model.warehouse.transport.Order;
@@ -84,29 +84,29 @@ public class ApplyTrackingNoTaskImpl implements IApplyTrackingNoTask {
 	@Resource(name = "userDao")
 	private IUserDao userDao;
 
-	@Resource(name = "bigPackageAdditionalSfDao")
-	private IBigPackageAdditionalSfDao bigPackageAdditionalSfDao;
+	@Resource(name = "orderAdditionalSfDao")
+	private IOrderAdditionalSfDao orderAdditionalSfDao;
 
-	@Resource(name = "bigPackageDao")
-	private IBigPackageDao bigPackageDao;
+	@Resource(name = "orderDao")
+	private IOrderDao orderDao;
 
-	@Resource(name = "bigPackageReceiverDao")
-	private IBigPackageReceiverDao bigPackageReceiverDao;
+	@Resource(name = "orderReceiverDao")
+	private IBigPackageReceiverDao orderReceiverDao;
 
-	@Resource(name = "bigPackageSenderDao")
-	private IBigPackageSenderDao bigPackageSenderDao;
+	@Resource(name = "orderSenderDao")
+	private IBigPackageSenderDao orderSenderDao;
 
-	@Resource(name = "bigPackageStatusDao")
-	private IBigPackageStatusDao bigPackageStatusDao;
+	@Resource(name = "orderStatusDao")
+	private IBigPackageStatusDao orderStatusDao;
 
-	@Resource(name = "littlePackageItemDao")
-	private ILittlePackageItemDao littlePackageItemDao;
+	@Resource(name = "firstWaybillItemDao")
+	private IFirstWaybillItemDao firstWaybillItemDao;
 
-	@Resource(name = "littlePackageDao")
-	private ILittlePackageDao littlePackageDao;
+	@Resource(name = "firstWaybillDao")
+	private IFirstWaybillDao firstWaybillDao;
 
-	@Resource(name = "littlePackageStatusDao")
-	private ILittlePackageStatusDao littlePackageStatusDao;
+	@Resource(name = "firstWaybillStatusDao")
+	private IFirstWaybillStatusDao firstWaybillStatusDao;
 
 	/**
 	 * 
@@ -126,34 +126,34 @@ public class ApplyTrackingNoTaskImpl implements IApplyTrackingNoTask {
 	@Override
 	public void transportOrderApplyTrackingNo() {
 		// 1出单号为空,并且状态是未审核
-		List<Long> bigPackageIds = bigPackageDao.findUnCheckAndTackingNoIsNullBigPackageId();
-		for (int i = 0; i < bigPackageIds.size(); i++) {
-			Long bigPackageId = bigPackageIds.get(i);
-			Order bigPackage = bigPackageDao.getBigPackageById(bigPackageId);
-			OrderReceiver bigPackageReceiver = bigPackageReceiverDao.getBigPackageReceiverByPackageId(bigPackageId);
-			OrderSender bigPackageSender = bigPackageSenderDao.getBigPackageSenderByPackageId(bigPackageId);
+		List<Long> orderIds = orderDao.findUnCheckAndTackingNoIsNullorderId();
+		for (int i = 0; i < orderIds.size(); i++) {
+			Long orderId = orderIds.get(i);
+			Order order = orderDao.getOrderById(orderId);
+			OrderReceiver orderReceiver = orderReceiverDao.getBigPackageReceiverByPackageId(orderId);
+			OrderSender orderSender = orderSenderDao.getBigPackageSenderByPackageId(orderId);
 			// 出货渠道是ETK
-			if (StringUtil.isEqual(bigPackage.getShipwayCode(), ShipwayCode.ETK)) {
+			if (StringUtil.isEqual(order.getShipwayCode(), ShipwayCode.ETK)) {
 				com.coe.etk.api.request.Order order = new com.coe.etk.api.request.Order();
 				order.setCurrency(CurrencyCode.CNY);
 				order.setCustomerNo("sam");// 测试
-				order.setReferenceId(bigPackage.getCustomerReferenceNo());// 客户参考号
+				order.setReferenceId(order.getCustomerReferenceNo());// 客户参考号
 				FirstWaybillItem itemParam = new FirstWaybillItem();
-				itemParam.setBigPackageId(bigPackageId);
-				List<FirstWaybillItem> littlePackageItems = littlePackageItemDao.findLittlePackageItem(itemParam, null, null);
+				itemParam.setOrderId(orderId);
+				List<FirstWaybillItem> firstWaybillItems = firstWaybillItemDao.findFirstWaybillItem(itemParam, null, null);
 				List<Item> items = new ArrayList<Item>();
-				for (FirstWaybillItem littlePackageItem : littlePackageItems) {
+				for (FirstWaybillItem firstWaybillItem : firstWaybillItems) {
 					Item item = new Item();
-					item.setItemDescription(littlePackageItem.getSkuName());// 报关描述
+					item.setItemDescription(firstWaybillItem.getSkuName());// 报关描述
 					double price = 10d;// 报关价值
-					if (littlePackageItem.getSkuUnitPrice() != null) {
-						price = NumberUtil.div(littlePackageItem.getSkuUnitPrice(), 100d, 2);// 分转元
+					if (firstWaybillItem.getSkuUnitPrice() != null) {
+						price = NumberUtil.div(firstWaybillItem.getSkuUnitPrice(), 100d, 2);// 分转元
 					}
 					item.setItemPrice(price);
-					item.setItemQuantity(littlePackageItem.getQuantity() == null ? 1 : littlePackageItem.getQuantity());// 报关数量
+					item.setItemQuantity(firstWaybillItem.getQuantity() == null ? 1 : firstWaybillItem.getQuantity());// 报关数量
 					double weight = 0.1d;// 报关重量
-					if (littlePackageItem.getSkuNetWeight() != null) {
-						weight = littlePackageItem.getSkuNetWeight();
+					if (firstWaybillItem.getSkuNetWeight() != null) {
+						weight = firstWaybillItem.getSkuNetWeight();
 					}
 					item.setItemWeight(weight);
 					items.add(item);
@@ -161,20 +161,20 @@ public class ApplyTrackingNoTaskImpl implements IApplyTrackingNoTask {
 				order.setItems(items);
 				// 收件人
 				Receiver receiver = new Receiver();
-				receiver.setReceiverAddress1(bigPackageReceiver.getAddressLine1());
-				receiver.setReceiverAddress2(bigPackageReceiver.getAddressLine2());
-				receiver.setReceiverCity(bigPackageReceiver.getCity());
-				receiver.setReceiverCode(bigPackageReceiver.getPostalCode());
-				receiver.setReceiverName(bigPackageReceiver.getName());
-				receiver.setReceiverCountry(bigPackageReceiver.getCountryCode());
-				receiver.setReceiverPhone(bigPackageReceiver.getPhoneNumber());
-				receiver.setReceiverProvince(bigPackageReceiver.getStateOrProvince());
+				receiver.setReceiverAddress1(orderReceiver.getAddressLine1());
+				receiver.setReceiverAddress2(orderReceiver.getAddressLine2());
+				receiver.setReceiverCity(orderReceiver.getCity());
+				receiver.setReceiverCode(orderReceiver.getPostalCode());
+				receiver.setReceiverName(orderReceiver.getName());
+				receiver.setReceiverCountry(orderReceiver.getCountryCode());
+				receiver.setReceiverPhone(orderReceiver.getPhoneNumber());
+				receiver.setReceiverProvince(orderReceiver.getStateOrProvince());
 				order.setReceiver(receiver);
 				// 发件人
 				Sender sender = new Sender();
-				sender.setSenderAddress(bigPackageSender.getAddressLine1());
-				sender.setSenderName(bigPackageSender.getName());
-				sender.setSenderPhone(bigPackageReceiver.getPhoneNumber());
+				sender.setSenderAddress(orderSender.getAddressLine1());
+				sender.setSenderName(orderSender.getName());
+				sender.setSenderPhone(orderReceiver.getPhoneNumber());
 				order.setSender(sender);
 
 				Client client = new Client();

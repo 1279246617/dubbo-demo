@@ -25,7 +25,7 @@
 					<input type="text"  name="customerReferenceNo"   t="1" id="customerReferenceNo"  style="width:160px;"/>
 					&nbsp;&nbsp;
 					订单状态<input type="text"  name="status"   t="1" id="status"  style="width:120px;" readonly="readonly"/>
-					<input type="text"  name="bigPackageId"  id="bigPackageId" t="1"  style="display: none;"/>
+					<input type="text"  name="orderId"  id="orderId" t="1"  style="display: none;"/>
 				</td>
 			</tr>
 	</table>
@@ -44,7 +44,7 @@
 				</div>	
 			</div>			
 			<table class="table" style="width:25%;margin-bottom: 1px;float: left;">
-				<tbody  id="littlePackageTrackingNos"></tbody>
+				<tbody  id="firstWaybillTrackingNos"></tbody>
 			</table>
 			
 			<div style="width:9%;height:200px;margin-left:30px; float: left;">
@@ -113,7 +113,7 @@
 	<script type="text/javascript" src="${baseUrl}/static/lhgdialog/prettify/lhgdialog.js"></script>
     
     <script  type="text/javascript" src="${baseUrl}/static/js/warehouse/webSocketReadScales.js" ></script>
-    <script  type="text/javascript" src="${baseUrl}/static/js/warehouse/transport/bigPackageWeightAndPrint.js" ></script>
+    <script  type="text/javascript" src="${baseUrl}/static/js/warehouse/transport/orderWeightAndPrint.js" ></script>
     
     
     <script type="text/javascript">
@@ -135,7 +135,7 @@
 	  		  	}
 	    		//复核小包
 				if(focus == '2'){
-					checkLittlePackage();
+					checkFirstWaybill();
 		      		return false;
 				}
 				//保存重量

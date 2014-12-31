@@ -24,7 +24,7 @@ public class OrderAdditionalSf implements Serializable {
 	 */
 	private Long id;
 
-	private Long bigPackageId;
+	private Long orderId;
 
 	/**
 	 * 顺丰指定运输方式 , 在出库订单主表也存在此字段,名称 shipwayCode
@@ -127,12 +127,12 @@ public class OrderAdditionalSf implements Serializable {
 		this.deliveryCode = deliveryCode;
 	}
 
-	public Long getBigPackageId() {
-		return bigPackageId;
+	public Long getOrderId() {
+		return orderId;
 	}
 
-	public void setBigPackageId(Long bigPackageId) {
-		this.bigPackageId = bigPackageId;
+	public void setOrderId(Long orderId) {
+		this.orderId = orderId;
 	}
 
 	public String getCustomerOrderId() {

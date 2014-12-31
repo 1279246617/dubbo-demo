@@ -131,9 +131,9 @@ public class Storage {
 		if (mapList.size() < 1) {
 			map.put(Constant.STATUS, "-1");
 			// 检查是否有转运订单
-			FirstWaybill littlePackage = new FirstWaybill();
-			littlePackage.setTrackingNo(trackingNo);
-			mapList = transportService.checkReceivedLittlePackage(littlePackage);
+			FirstWaybill firstWaybill = new FirstWaybill();
+			firstWaybill.setTrackingNo(trackingNo);
+			mapList = transportService.checkReceivedFirstWaybill(firstWaybill);
 			if (mapList.size() > 0) {
 				map.put(Constant.MESSAGE, "该单号无仓配订单,但找到" + mapList.size() + "个转运订单,请确认订单类型");
 			} else {

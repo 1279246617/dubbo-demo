@@ -43,7 +43,7 @@ public class PackageRecordItemDaoImpl implements IPackageRecordItemDao {
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public long savePackageRecordItem(final OutWarehousePackageItem item) {
-		final String sql = "insert into w_t_out_warehouse_package_item (warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,big_package_tracking_no,big_package_id) values (?,?,?,?,?,?,?,?)";
+		final String sql = "insert into w_t_out_warehouse_package_item (warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,order_tracking_no,order_id) values (?,?,?,?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
@@ -58,8 +58,8 @@ public class PackageRecordItemDaoImpl implements IPackageRecordItemDao {
 				ps.setString(4, item.getCoeTrackingNo());
 				ps.setLong(5, item.getCoeTrackingNoId());
 				ps.setLong(6, item.getCreatedTime());
-				ps.setString(7, item.getBigPackageTrackingNo());
-				ps.setLong(8, item.getBigPackageId());
+				ps.setString(7, item.getOrderTrackingNo());
+				ps.setLong(8, item.getOrderId());
 				return ps;
 			}
 		}, keyHolder);
@@ -69,7 +69,7 @@ public class PackageRecordItemDaoImpl implements IPackageRecordItemDao {
 
 	@Override
 	public OutWarehousePackageItem getPackageRecordItemById(Long packageRecordItemId) {
-		String sql = "select id,warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,big_package_tracking_no,big_package_id from w_t_out_warehouse_package_item where id =" + packageRecordItemId;
+		String sql = "select id,warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,order_tracking_no,order_id from w_t_out_warehouse_package_item where id =" + packageRecordItemId;
 		OutWarehousePackageItem item = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<OutWarehousePackageItem>(OutWarehousePackageItem.class));
 		return item;
 	}
@@ -82,7 +82,7 @@ public class PackageRecordItemDaoImpl implements IPackageRecordItemDao {
 	@Override
 	public List<OutWarehousePackageItem> findPackageRecordItem(OutWarehousePackageItem packageRecordItem, Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select id,warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,big_package_tracking_no,big_package_id from w_t_out_warehouse_package_item where 1=1 ");
+		sb.append("select id,warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,order_tracking_no,order_id from w_t_out_warehouse_package_item where 1=1 ");
 		if (packageRecordItem != null) {
 			if (packageRecordItem.getId() != null) {
 				sb.append(" and id = " + packageRecordItem.getId());
@@ -90,8 +90,8 @@ public class PackageRecordItemDaoImpl implements IPackageRecordItemDao {
 			if (packageRecordItem.getWarehouseId() != null) {
 				sb.append(" and warehouse_id = " + packageRecordItem.getWarehouseId());
 			}
-			if (packageRecordItem.getBigPackageId() != null) {
-				sb.append(" and big_package_id = " + packageRecordItem.getBigPackageId());
+			if (packageRecordItem.getOrderId() != null) {
+				sb.append(" and order_id = " + packageRecordItem.getOrderId());
 			}
 			if (packageRecordItem.getUserIdOfCustomer() != null) {
 				sb.append(" and user_id_of_customer = " + packageRecordItem.getUserIdOfCustomer());
@@ -108,8 +108,8 @@ public class PackageRecordItemDaoImpl implements IPackageRecordItemDao {
 			if (packageRecordItem.getCreatedTime() != null) {
 				sb.append(" and created_time = " + packageRecordItem.getCreatedTime());
 			}
-			if (StringUtil.isNotNull(packageRecordItem.getBigPackageTrackingNo())) {
-				sb.append(" and big_package_tracking_no = '" + packageRecordItem.getBigPackageTrackingNo() + "' ");
+			if (StringUtil.isNotNull(packageRecordItem.getOrderTrackingNo())) {
+				sb.append(" and order_tracking_no = '" + packageRecordItem.getOrderTrackingNo() + "' ");
 			}
 		}
 		if (moreParam != null) {
@@ -146,8 +146,8 @@ public class PackageRecordItemDaoImpl implements IPackageRecordItemDao {
 			if (packageRecordItem.getWarehouseId() != null) {
 				sb.append(" and warehouse_id = " + packageRecordItem.getWarehouseId());
 			}
-			if (packageRecordItem.getBigPackageId() != null) {
-				sb.append(" and big_package_id = " + packageRecordItem.getBigPackageId());
+			if (packageRecordItem.getOrderId() != null) {
+				sb.append(" and order_id = " + packageRecordItem.getOrderId());
 			}
 			if (packageRecordItem.getUserIdOfCustomer() != null) {
 				sb.append(" and user_id_of_customer = " + packageRecordItem.getUserIdOfCustomer());
@@ -164,8 +164,8 @@ public class PackageRecordItemDaoImpl implements IPackageRecordItemDao {
 			if (packageRecordItem.getCreatedTime() != null) {
 				sb.append(" and created_time = " + packageRecordItem.getCreatedTime());
 			}
-			if (StringUtil.isNotNull(packageRecordItem.getBigPackageTrackingNo())) {
-				sb.append(" and big_package_tracking_no = '" + packageRecordItem.getBigPackageTrackingNo() + "' ");
+			if (StringUtil.isNotNull(packageRecordItem.getOrderTrackingNo())) {
+				sb.append(" and order_tracking_no = '" + packageRecordItem.getOrderTrackingNo() + "' ");
 			}
 		}
 		if (moreParam != null) {
@@ -197,9 +197,9 @@ public class PackageRecordItemDaoImpl implements IPackageRecordItemDao {
 	}
 
 	@Override
-	public List<Long> getBigPackageIdsByRecordTime(String startTime, String endTime, Long userIdOfCustomer, Long warehouseId) {
+	public List<Long> getOrderIdsByRecordTime(String startTime, String endTime, Long userIdOfCustomer, Long warehouseId) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select big_package_id  from w_t_out_warehouse_package_item i inner join w_t_first_waybill r on i.coe_tracking_no_id=r.coe_tracking_no_id where 1=1 ");
+		sb.append("select order_id  from w_t_out_warehouse_package_item i inner join w_t_first_waybill r on i.coe_tracking_no_id=r.coe_tracking_no_id where 1=1 ");
 		sb.append(" and r.user_id_of_customer = " + userIdOfCustomer);
 		sb.append(" and r.warehouse_id = " + warehouseId);
 		if (startTime != null) {

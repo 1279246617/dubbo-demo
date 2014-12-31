@@ -20,7 +20,7 @@
 </head>
 <body>
 	  <div class="toolbar1">
-           <form action="${baseUrl}/warehouse/transport/getLittlePackageOnShelfData.do" id="searchform" name="searchform" method="post">
+           <form action="${baseUrl}/warehouse/transport/getFirstWaybillOnShelfData.do" id="searchform" name="searchform" method="post">
                <div class="pull-right searchContent">
                		<span class="pull-left" style="width:125px;">
                			仓库
@@ -64,7 +64,7 @@
 	
 	<script type="text/javascript" src="${baseUrl}/static/jquery/jquery.js"></script>
 	<script type="text/javascript" src="${baseUrl}/static/bootstrap/bootstrap-typeahead.js"></script>
-	<script type="text/javascript" src="${baseUrl}/static/js/warehouse/transport/listLittlePackage.js"></script>
+	<script type="text/javascript" src="${baseUrl}/static/js/warehouse/transport/listFirstWaybill.js"></script>
     <script type="text/javascript">
  		var baseUrl = "${baseUrl}";
    		$(function(){
@@ -121,7 +121,7 @@
 		                { display: '创建时间', name: 'createdTime', align: 'center', type: 'float',width:'13%'}
 	                ],  
 	                dataAction: 'server',
-	                url: baseUrl+'/warehouse/transport/getLittlePackageOnShelfData.do',
+	                url: baseUrl+'/warehouse/transport/getFirstWaybillOnShelfData.do',
 	                pageSize: 100, 
 	                pageSizeOptions:[50,100,150,200,500],
 	                usePager: 'true',

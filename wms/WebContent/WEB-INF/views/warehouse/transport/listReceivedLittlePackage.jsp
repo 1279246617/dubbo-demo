@@ -20,7 +20,7 @@
 </head>
 <body>
 	  <div class="toolbar1">
-           <form action="${baseUrl}/warehouse/transport/getLittlePackageData.do" id="searchform" name="searchform" method="post">
+           <form action="${baseUrl}/warehouse/transport/getFirstWaybillData.do" id="searchform" name="searchform" method="post">
                <div class="pull-right searchContent">
                		<span class="pull-left" style="width:125px;">
                			仓库
@@ -68,7 +68,7 @@
 	
 	<script type="text/javascript" src="${baseUrl}/static/jquery/jquery.js"></script>
 	<script type="text/javascript" src="${baseUrl}/static/bootstrap/bootstrap-typeahead.js"></script>
-	<script type="text/javascript" src="${baseUrl}/static/js/warehouse/transport/listLittlePackage.js"></script>
+	<script type="text/javascript" src="${baseUrl}/static/js/warehouse/transport/listFirstWaybill.js"></script>
     <script type="text/javascript">
  		var baseUrl = "${baseUrl}";
    		$(function(){
@@ -132,7 +132,7 @@
 	  		          	{ display: '商品预览', isSort: false, align: 'center', type: 'float',width:'12%',render: function(row) {
 		            		var skus = "";
 		            		if (!row._editing) {
-		            			skus += '<a href="javascript:listLittlePackagesItem(' + row.id + ')">'+row.items+'</a> ';
+		            			skus += '<a href="javascript:listFirstWaybillsItem(' + row.id + ')">'+row.items+'</a> ';
 		            		}
 		            		return skus;
 	  		          	}},
@@ -142,7 +142,7 @@
 		                { display: '备注', name: 'remark', align: 'center', type: 'float',width:'12%'},
 	                ],  
 	                dataAction: 'server',
-	                url: baseUrl+'/warehouse/transport/getLittlePackageData.do?isReceived=Y',
+	                url: baseUrl+'/warehouse/transport/getFirstWaybillData.do?isReceived=Y',
 	                pageSize: 100, 
 	                pageSizeOptions:[50,100,150,200,500],
 	                usePager: 'true',

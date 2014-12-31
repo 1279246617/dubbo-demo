@@ -26,8 +26,8 @@
 									<span class="pull-left" style="width:180px;">
 										<!--  利用focus和blur 判断跟踪号是否有变化, 变化则把入库订单id清空-->
 										<input type="text"  name="trackingNo"  id="trackingNo" t="1" onfocus="trackingNoFocus()"  onblur="trackingNoBlur()"  style="width:140px;"/>
-										<input type="text"  name="littlePackageId"  id="littlePackageId" t="1"  style="display: none;"/>
-										<input type="text"  name="bigPackageId"  id="bigPackageId" t="1"  style="display: none;"/>
+										<input type="text"  name="firstWaybillId"  id="firstWaybillId" t="1"  style="display: none;"/>
+										<input type="text"  name="orderId"  id="orderId" t="1"  style="display: none;"/>
 									</span>
 							</td>		
 							<td  style="width:200px;">
@@ -55,7 +55,7 @@
 						<th style="width:205px;text-align:center;">创建时间</th>
 						<th style="width:205px;text-align:center;">上架状态</th>
 				</tr>
-				<tbody id="littlePackagebody">
+				<tbody id="firstWaybillbody">
 				</tbody>
 			</table>
 		
@@ -119,15 +119,15 @@
   	 function enterTrackingNoStep(){
   		
   		//在判断跟踪号是否改变前,获取用户选择的入库订单
-  		var littlePackageRadio = $('input[name="littlePackageRadio"]').filter(':checked');
-  		if(littlePackageRadio.length){
-  			$("#littlePackageId").val(littlePackageRadio.attr("littlePackageId"));
-  			$("#bigPackageId").val(littlePackageRadio.attr("bigPackageId"));
-//   			$("#seatCode").val(littlePackageRadio.attr("seatCode"));
+  		var firstWaybillRadio = $('input[name="firstWaybillRadio"]').filter(':checked');
+  		if(firstWaybillRadio.length){
+  			$("#firstWaybillId").val(firstWaybillRadio.attr("firstWaybillId"));
+  			$("#orderId").val(firstWaybillRadio.attr("orderId"));
+//   			$("#seatCode").val(firstWaybillRadio.attr("seatCode"));
   		}
   		trackingNoBlur();
-  		var  littlePackageId = $("#littlePackageId").val();
-  		if(littlePackageId == null || littlePackageId==''){
+  		var  firstWaybillId = $("#firstWaybillId").val();
+  		if(firstWaybillId == null || firstWaybillId==''){
   			enterTrackingNoStep1();
   		}else{
   			enterTrackingNoStep2();
@@ -136,7 +136,7 @@
  	 function enterTrackingNoStep1(){
     		var trackingNoStr  = $("#trackingNo").val();
     		// 检查跟踪号是否能找到唯一的入库订单
-    		$.getJSON(baseUrl+ '/warehouse/transport/checkReceivedLittlePackage.do?trackingNo='+ trackingNoStr, function(msg) {
+    		$.getJSON(baseUrl+ '/warehouse/transport/checkReceivedFirstWaybill.do?trackingNo='+ trackingNoStr, function(msg) {
     			if (msg.status == -1) {
     				parent.$.showDialogMessage(msg.message, null, null);
     				return false;
@@ -146,13 +146,13 @@
     			$.each(msg.mapList, function(i, n) {
     				var tr = "<tr>";
     				if (msg.status == 1) {
-    					$("#littlePackageId").val(n.littlePackageId);
-    					$("#bigPackageId").val(n.bigPackageId);
+    					$("#firstWaybillId").val(n.firstWaybillId);
+    					$("#orderId").val(n.orderId);
 //     					$("#seatCode").val(n.seatCode);
     					$("#outWarehouseTrackingNo").val(n.outWarehouseTrackingNo);
-    					tr+="<td style='width:25px;text-align:center;'><input type='radio' t='1' littlePackageId='"+n.littlePackageId+"'  bigPackageId='"+n.bigPackageId+"'  seatCode='"+n.seatCode+"' name='littlePackageRadio' value='radiobutton' checked></td>";	
+    					tr+="<td style='width:25px;text-align:center;'><input type='radio' t='1' firstWaybillId='"+n.firstWaybillId+"'  orderId='"+n.orderId+"'  seatCode='"+n.seatCode+"' name='firstWaybillRadio' value='radiobutton' checked></td>";	
     				}else{
-    					tr+="<td style='width:25px;text-align:center;'><input type='radio' t='1' littlePackageId='"+n.littlePackageId+"'  bigPackageId='"+n.bigPackageId+"'  seatCode='"+n.seatCode+"'  name='littlePackageRadio' value='radiobutton'></td>";
+    					tr+="<td style='width:25px;text-align:center;'><input type='radio' t='1' firstWaybillId='"+n.firstWaybillId+"'  orderId='"+n.orderId+"'  seatCode='"+n.seatCode+"'  name='firstWaybillRadio' value='radiobutton'></td>";
     				}
     				tr+="<td style='width:155px;text-align:center;'>"+n.userLoginName+"</td>";
     				tr+="<td style='width:225px;text-align:center;'>"+n.trackingNo+"</td>";
@@ -161,7 +161,7 @@
     				tr+="<td style='width:205px;text-align:center;'>"+n.createdTime+"</td>";
     				tr+="<td style='width:205px;text-align:center;'>"+n.onShelfstatus+"</td>";
     				tr+="</tr>";
-    				$("#littlePackagebody").append(tr);
+    				$("#firstWaybillbody").append(tr);
     			});
     			if (msg.status == 1) {
     				$("#seatCode").focus();
@@ -183,13 +183,13 @@
  	
  	function saveOnShelvesItem(){
   		//在判断跟踪号是否改变前,获取用户选择的入库订单
-  		var littlePackageRadio = $('input[name="littlePackageRadio"]').filter(':checked');
-  		var littlePackageId = '';
-  		if(littlePackageRadio.length){
-  			littlePackageId = littlePackageRadio.attr("littlePackageId");
+  		var firstWaybillRadio = $('input[name="firstWaybillRadio"]').filter(':checked');
+  		var firstWaybillId = '';
+  		if(firstWaybillRadio.length){
+  			firstWaybillId = firstWaybillRadio.attr("firstWaybillId");
   		}
   		
-  		if(littlePackageId == ''){
+  		if(firstWaybillId == ''){
   			parent.$.showDialogMessage("请输入正确跟踪单号,并选择一个收货记录", null, null);
   			return false;
   		}
@@ -199,8 +199,8 @@
   			parent.$.showShortMessage({msg:"请输入货位",animate:false,left:"45%"});
   			return false;
   		}
-  		$.post(baseUrl+ '/warehouse/transport/saveLittlePackageOnShelves.do?seatCode='
-  				+ seatCode+'&littlePackageId='+littlePackageId, function(msg) {
+  		$.post(baseUrl+ '/warehouse/transport/saveFirstWaybillOnShelves.do?seatCode='
+  				+ seatCode+'&firstWaybillId='+firstWaybillId, function(msg) {
   			if(msg.status == 0){
   				//保存失败,显示提示
   				parent.$.showShortMessage({msg:msg.message,animate:false,left:"43%"});
@@ -213,10 +213,10 @@
   			if(msg.status == 1){
   				parent.$.showShortMessage({msg:"保存上架成功,请继续下一订单.",animate:false,left:"45%"});
   				// 光标移至跟踪号
-  				$("#littlePackageId").val("");
-  				$("#bigPackageId").val("");
+  				$("#firstWaybillId").val("");
+  				$("#orderId").val("");
   				$("#seatCode").val("");
-  				$("#littlePackagebody").html("");
+  				$("#firstWaybillbody").html("");
   				$("#trackingNo").val("");
   				$("#trackingNo").focus();
   				$("#trackingNo").select();
@@ -235,10 +235,10 @@
   	function trackingNoBlur(){
   		var newTrackingNo = $("#trackingNo").val();
   		if(oldTrackingNo!=newTrackingNo){
-  			$("#littlePackageId").val("");
-  			$("#bigPackageId").val("");
+  			$("#firstWaybillId").val("");
+  			$("#orderId").val("");
   			$("#seatCode").val("");
-  			$("#littlePackagebody").html("");
+  			$("#firstWaybillbody").html("");
   		}
   		oldTrackingNo = newTrackingNo;
   	}

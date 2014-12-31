@@ -1,12 +1,12 @@
 //SKU
-function listLittlePackagesItem(littlePackageId){
+function listFirstWaybillsItem(firstWaybillId){
 	var contentArr = [];
 	contentArr.push('<div style="height:340px;overflow:auto; ">');
 	contentArr.push('<table class="table table-condensed" style="width:649px">');
 	$.ajax({ 
         type : "post", 
-        url :baseUrl + '/warehouse/transport/getLittlePackageItemBylittlePackageId.do', 
-        data : "littlePackageId="+littlePackageId, 
+        url :baseUrl + '/warehouse/transport/getFirstWaybillItemByfirstWaybillId.do', 
+        data : "firstWaybillId="+firstWaybillId, 
         async : false, 
         success : function(msg){ 
         	msg = eval("(" + msg + ")");

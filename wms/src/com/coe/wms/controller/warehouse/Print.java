@@ -278,22 +278,22 @@ public class Print {
 	 * @throws IOException
 	 */
 	@RequestMapping(value = "/printTransportShipLabel", method = RequestMethod.GET)
-	public ModelAndView printTransportShipLabel(HttpServletRequest request, HttpServletResponse response, String bigPackageIds) throws IOException {
+	public ModelAndView printTransportShipLabel(HttpServletRequest request, HttpServletResponse response, String orderIds) throws IOException {
 		HttpSession session = request.getSession();
 		ModelAndView view = new ModelAndView();
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
-		if (StringUtil.isNull(bigPackageIds)) {
+		if (StringUtil.isNull(orderIds)) {
 			return view;
 		}
 		// 返回页面的list,装map 每个map 是每个订单的数据
 		List<Map<String, Object>> mapList = new ArrayList<Map<String, Object>>();
-		String orderIdArray[] = bigPackageIds.split(",");
+		String orderIdArray[] = orderIds.split(",");
 		for (int i = 0; i < orderIdArray.length; i++) {
 			if (StringUtil.isNull(orderIdArray[i])) {
 				continue;
 			}
-			Long bigPackageId = Long.valueOf(orderIdArray[i]);
-			Map<String, Object> map = printService.getPrintTransportShipLabedData(bigPackageId);
+			Long orderId = Long.valueOf(orderIdArray[i]);
+			Map<String, Object> map = printService.getPrintTransportShipLabedData(orderId);
 			if (map != null) {
 				mapList.add(map);
 			}
@@ -314,16 +314,16 @@ public class Print {
 	 * @throws IOException
 	 */
 	@RequestMapping(value = "/printTransportPackageList", method = RequestMethod.GET)
-	public ModelAndView printTransportPackageList(HttpServletRequest request, HttpServletResponse response, String bigPackageIds) throws IOException {
+	public ModelAndView printTransportPackageList(HttpServletRequest request, HttpServletResponse response, String orderIds) throws IOException {
 		HttpSession session = request.getSession();
 		ModelAndView view = new ModelAndView();
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
-		if (StringUtil.isNull(bigPackageIds)) {
+		if (StringUtil.isNull(orderIds)) {
 			return view;
 		}
 		// 返回页面的list,装map 每个map 是每个订单的数据
 		List<Map<String, Object>> mapList = new ArrayList<Map<String, Object>>();
-		String orderIdArray[] = bigPackageIds.split(",");
+		String orderIdArray[] = orderIds.split(",");
 		for (int i = 0; i < orderIdArray.length; i++) {
 			if (StringUtil.isNull(orderIdArray[i])) {
 				continue;

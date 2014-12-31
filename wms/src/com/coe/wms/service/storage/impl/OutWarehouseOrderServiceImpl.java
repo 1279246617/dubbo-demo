@@ -1087,9 +1087,9 @@ public class OutWarehouseOrderServiceImpl implements IOutWarehouseOrderService {
 	/**
 	 * 申请SF跟踪单号
 	 * 
-	 * @param bigPackage
-	 * @param bigPackageReceiver
-	 * @param bigPackageSender
+	 * @param order
+	 * @param orderReceiver
+	 * @param orderSender
 	 * @return
 	 */
 	private Map<String, String> applySFTrackingNo(OutWarehouseOrder outWarehouseOrder, OutWarehouseOrderReceiver outWarehouseOrderReceiver, OutWarehouseOrderSender outWarehouseOrderSender, List<OutWarehouseOrderItem> itemList) {

@@ -32,15 +32,15 @@ import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderStatusDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehousePackageDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseRecordDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseRecordItemDao;
-import com.coe.wms.dao.warehouse.transport.IBigPackageAdditionalSfDao;
-import com.coe.wms.dao.warehouse.transport.IBigPackageDao;
+import com.coe.wms.dao.warehouse.transport.IOrderAdditionalSfDao;
+import com.coe.wms.dao.warehouse.transport.IOrderDao;
 import com.coe.wms.dao.warehouse.transport.IBigPackageReceiverDao;
 import com.coe.wms.dao.warehouse.transport.IBigPackageSenderDao;
 import com.coe.wms.dao.warehouse.transport.IBigPackageStatusDao;
-import com.coe.wms.dao.warehouse.transport.ILittlePackageDao;
-import com.coe.wms.dao.warehouse.transport.ILittlePackageItemDao;
-import com.coe.wms.dao.warehouse.transport.ILittlePackageOnShelfDao;
-import com.coe.wms.dao.warehouse.transport.ILittlePackageStatusDao;
+import com.coe.wms.dao.warehouse.transport.IFirstWaybillDao;
+import com.coe.wms.dao.warehouse.transport.IFirstWaybillItemDao;
+import com.coe.wms.dao.warehouse.transport.IFirstWaybillOnShelfDao;
+import com.coe.wms.dao.warehouse.transport.IFirstWaybillStatusDao;
 import com.coe.wms.dao.warehouse.transport.IPackageRecordDao;
 import com.coe.wms.dao.warehouse.transport.IPackageRecordItemDao;
 import com.coe.wms.model.warehouse.Seat;
@@ -139,32 +139,32 @@ public class PrintServiceImpl implements IPrintService {
 	@Resource(name = "onShelfDao")
 	private IOnShelfDao onShelfDao;
 
-	@Resource(name = "bigPackageAdditionalSfDao")
-	private IBigPackageAdditionalSfDao bigPackageAdditionalSfDao;
+	@Resource(name = "orderAdditionalSfDao")
+	private IOrderAdditionalSfDao orderAdditionalSfDao;
 
-	@Resource(name = "bigPackageDao")
-	private IBigPackageDao bigPackageDao;
+	@Resource(name = "orderDao")
+	private IOrderDao orderDao;
 
-	@Resource(name = "bigPackageReceiverDao")
-	private IBigPackageReceiverDao bigPackageReceiverDao;
+	@Resource(name = "orderReceiverDao")
+	private IBigPackageReceiverDao orderReceiverDao;
 
-	@Resource(name = "bigPackageSenderDao")
-	private IBigPackageSenderDao bigPackageSenderDao;
+	@Resource(name = "orderSenderDao")
+	private IBigPackageSenderDao orderSenderDao;
 
-	@Resource(name = "bigPackageStatusDao")
-	private IBigPackageStatusDao bigPackageStatusDao;
+	@Resource(name = "orderStatusDao")
+	private IBigPackageStatusDao orderStatusDao;
 
-	@Resource(name = "littlePackageItemDao")
-	private ILittlePackageItemDao littlePackageItemDao;
+	@Resource(name = "firstWaybillItemDao")
+	private IFirstWaybillItemDao firstWaybillItemDao;
 
-	@Resource(name = "littlePackageDao")
-	private ILittlePackageDao littlePackageDao;
+	@Resource(name = "firstWaybillDao")
+	private IFirstWaybillDao firstWaybillDao;
 
-	@Resource(name = "littlePackageStatusDao")
-	private ILittlePackageStatusDao littlePackageStatusDao;
+	@Resource(name = "firstWaybillStatusDao")
+	private IFirstWaybillStatusDao firstWaybillStatusDao;
 
-	@Resource(name = "littlePackageOnShelfDao")
-	private ILittlePackageOnShelfDao littlePackageOnShelfDao;
+	@Resource(name = "firstWaybillOnShelfDao")
+	private IFirstWaybillOnShelfDao firstWaybillOnShelfDao;
 
 	@Resource(name = "packageRecordDao")
 	private IPackageRecordDao packageRecordDao;
@@ -412,23 +412,23 @@ public class PrintServiceImpl implements IPrintService {
 	}
 
 	@Override
-	public Map<String, Object> getPrintTransportShipLabedData(Long bigPackageId) {
+	public Map<String, Object> getPrintTransportShipLabedData(Long orderId) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put(Constant.STATUS, Constant.FAIL);
-		Order bigPackage = bigPackageDao.getBigPackageById(bigPackageId);
-		if (StringUtil.isEqual(bigPackage.getStatus(), OrderStatusCode.WWC) || StringUtil.isEqual(bigPackage.getStatus(), OrderStatusCode.WCI) || StringUtil.isEqual(bigPackage.getStatus(), OrderStatusCode.WCF)
-				|| StringUtil.isEqual(bigPackage.getStatus(), OrderStatusCode.WRG) || StringUtil.isEqual(bigPackage.getStatus(), OrderStatusCode.WRP)) {
+		Order order = orderDao.getOrderById(orderId);
+		if (StringUtil.isEqual(order.getStatus(), OrderStatusCode.WWC) || StringUtil.isEqual(order.getStatus(), OrderStatusCode.WCI) || StringUtil.isEqual(order.getStatus(), OrderStatusCode.WCF)
+				|| StringUtil.isEqual(order.getStatus(), OrderStatusCode.WRG) || StringUtil.isEqual(order.getStatus(), OrderStatusCode.WRP)) {
 			return null;
 		}
-		OrderReceiver receiver = bigPackageReceiverDao.getBigPackageReceiverByPackageId(bigPackageId);
-		OrderSender sender = bigPackageSenderDao.getBigPackageSenderByPackageId(bigPackageId);
-		FirstWaybill littlePackageParam = new FirstWaybill();
-		littlePackageParam.setBigPackageId(bigPackageId);
-		OrderAdditionalSf additionalSf = bigPackageAdditionalSfDao.getBigPackageAdditionalSfByPackageId(bigPackageId);
+		OrderReceiver receiver = orderReceiverDao.getBigPackageReceiverByPackageId(orderId);
+		OrderSender sender = orderSenderDao.getBigPackageSenderByPackageId(orderId);
+		FirstWaybill firstWaybillParam = new FirstWaybill();
+		firstWaybillParam.setOrderId(orderId);
+		OrderAdditionalSf additionalSf = orderAdditionalSfDao.getOrderAdditionalSfByOrderId(orderId);
 		map.put("additionalSf", additionalSf);
 		map.put("sender", sender);
 		// 创建条码
-		String trackingNo = bigPackage.getTrackingNo();
+		String trackingNo = order.getTrackingNo();
 		if (StringUtil.isNull(trackingNo)) {
 			return null;
 		}
@@ -442,12 +442,12 @@ public class PrintServiceImpl implements IPrintService {
 		String trackingNoBarcodeData2 = BarcodeUtil.createCode128(trackingNo, false, 14d, null);
 		map.put("trackingNoBarcodeData2", trackingNoBarcodeData2);
 		// 清单号 (出库订单主键)
-		map.put("outWarehouseOrderId", String.valueOf(bigPackage.getId()));
-		map.put("customerReferenceNo", bigPackage.getCustomerReferenceNo());
-		map.put("tradeRemark", bigPackage.getTradeRemark());
-		map.put("logisticsRemark", bigPackage.getRemark());
-		map.put("shipwayExtra1", bigPackage.getShipwayExtra1());
-		map.put("shipwayExtra2", bigPackage.getShipwayExtra2());
+		map.put("outWarehouseOrderId", String.valueOf(order.getId()));
+		map.put("customerReferenceNo", order.getCustomerReferenceNo());
+		map.put("tradeRemark", order.getTradeRemark());
+		map.put("logisticsRemark", order.getRemark());
+		map.put("shipwayExtra1", order.getShipwayExtra1());
+		map.put("shipwayExtra2", order.getShipwayExtra2());
 		map.put("receiverName", receiver.getName());
 		map.put("receiver", receiver);
 		map.put("receiverPhoneNumber", receiver.getPhoneNumber());
@@ -459,10 +459,10 @@ public class PrintServiceImpl implements IPrintService {
 		}
 		Integer totalQuantity = 0;
 		double totalPrice = 0d;
-		FirstWaybillItem littlePackageItemParam = new FirstWaybillItem();
-		littlePackageItemParam.setBigPackageId(bigPackageId);
+		FirstWaybillItem firstWaybillItemParam = new FirstWaybillItem();
+		firstWaybillItemParam.setOrderId(orderId);
 		List<Map<String, String>> etkCustoms = new ArrayList<Map<String, String>>();
-		List<FirstWaybillItem> items = littlePackageItemDao.findLittlePackageItem(littlePackageItemParam, null, null);
+		List<FirstWaybillItem> items = firstWaybillItemDao.findFirstWaybillItem(firstWaybillItemParam, null, null);
 		int i = 0;
 		for (FirstWaybillItem item : items) {
 			totalQuantity += item.getQuantity();
@@ -505,62 +505,62 @@ public class PrintServiceImpl implements IPrintService {
 		// 寄托物品数量
 		map.put("totalQuantity", totalQuantity);
 		// 总重量
-		map.put("totalWeight", bigPackage.getOutWarehouseWeight());
-		String shipwayCode = bigPackage.getShipwayCode();// 出货渠道
+		map.put("totalWeight", order.getOutWarehouseWeight());
+		String shipwayCode = order.getShipwayCode();// 出货渠道
 		map.put("shipwayCode", shipwayCode);
 		return map;
 	}
 
 	@Override
-	public Map<String, Object> getPrintTransportPackageListData(Long bigPackageId) {
+	public Map<String, Object> getPrintTransportPackageListData(Long orderId) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		Order bigPackage = bigPackageDao.getBigPackageById(bigPackageId);
+		Order order = orderDao.getOrderById(orderId);
 		// 未完成收货不能打印捡货单
-		if (StringUtil.isEqual(bigPackage.getStatus(), OrderStatusCode.WWC) || StringUtil.isEqual(bigPackage.getStatus(), OrderStatusCode.WCI) || StringUtil.isEqual(bigPackage.getStatus(), OrderStatusCode.WCF)
-				|| StringUtil.isEqual(bigPackage.getStatus(), OrderStatusCode.WRG) || StringUtil.isEqual(bigPackage.getStatus(), OrderStatusCode.WRP)) {
+		if (StringUtil.isEqual(order.getStatus(), OrderStatusCode.WWC) || StringUtil.isEqual(order.getStatus(), OrderStatusCode.WCI) || StringUtil.isEqual(order.getStatus(), OrderStatusCode.WCF)
+				|| StringUtil.isEqual(order.getStatus(), OrderStatusCode.WRG) || StringUtil.isEqual(order.getStatus(), OrderStatusCode.WRP)) {
 			return null;
 		}
 		// 修改状态到等待称重打单
-		bigPackageDao.updateBigPackageStatus(bigPackageId, OrderStatusCode.WWW);
+		orderDao.updateBigPackageStatus(orderId, OrderStatusCode.WWW);
 
-		OrderReceiver receiver = bigPackageReceiverDao.getBigPackageReceiverByPackageId(bigPackageId);
-		map.put("customerReferenceNo", bigPackage.getCustomerReferenceNo());
-		OrderAdditionalSf bigPackageAdditionalSf = bigPackageAdditionalSfDao.getBigPackageAdditionalSfByPackageId(bigPackageId);
-		if (bigPackageAdditionalSf != null) {
-			map.put("customerOrderNo", bigPackageAdditionalSf.getCustomerOrderId());
+		OrderReceiver receiver = orderReceiverDao.getBigPackageReceiverByPackageId(orderId);
+		map.put("customerReferenceNo", order.getCustomerReferenceNo());
+		OrderAdditionalSf orderAdditionalSf = orderAdditionalSfDao.getOrderAdditionalSfByOrderId(orderId);
+		if (orderAdditionalSf != null) {
+			map.put("customerOrderNo", orderAdditionalSf.getCustomerOrderId());
 		}
 		// 创建图片
-		String customerReferenceNoBarcodeData = BarcodeUtil.createCode128(bigPackage.getCustomerReferenceNo(), true, 12d, null);
+		String customerReferenceNoBarcodeData = BarcodeUtil.createCode128(order.getCustomerReferenceNo(), true, 12d, null);
 		map.put("customerReferenceNoBarcodeData", customerReferenceNoBarcodeData);
-		map.put("tradeRemark", bigPackage.getTradeRemark());
-		map.put("trackingNo", bigPackage.getTrackingNo());
-		map.put("logisticsRemark", bigPackage.getRemark());
+		map.put("tradeRemark", order.getTradeRemark());
+		map.put("trackingNo", order.getTrackingNo());
+		map.put("logisticsRemark", order.getRemark());
 		map.put("receiverName", receiver.getName());
 		map.put("receiverPhoneNumber", receiver.getPhoneNumber());
 		map.put("receiverMobileNumber", receiver.getMobileNumber());
 		map.put("receiverMobileNumber", receiver.getMobileNumber());
 
-		FirstWaybillOnShelf littlePackageOnShelfParam = new FirstWaybillOnShelf();
-		littlePackageOnShelfParam.setBigPackageId(bigPackageId);
-		List<FirstWaybillOnShelf> littlePackageOnShelfList = littlePackageOnShelfDao.findLittlePackageOnShelf(littlePackageOnShelfParam, null, null);
+		FirstWaybillOnShelf firstWaybillOnShelfParam = new FirstWaybillOnShelf();
+		firstWaybillOnShelfParam.setOrderId(orderId);
+		List<FirstWaybillOnShelf> firstWaybillOnShelfList = firstWaybillOnShelfDao.findFirstWaybillOnShelf(firstWaybillOnShelfParam, null, null);
 		// 商品总数
 		int totalQuantity = 0;
 		double totalPrice = 0d;
-		for (FirstWaybillOnShelf littlePackageOnShelf : littlePackageOnShelfList) {
-			FirstWaybillItem littlePackageItem = new FirstWaybillItem();
-			littlePackageItem.setLittlePackageId(littlePackageOnShelf.getLittlePackageId());
-			List<FirstWaybillItem> littlePackageItemList = littlePackageItemDao.findLittlePackageItem(littlePackageItem, null, null);
-			for (FirstWaybillItem item : littlePackageItemList) {
+		for (FirstWaybillOnShelf firstWaybillOnShelf : firstWaybillOnShelfList) {
+			FirstWaybillItem firstWaybillItem = new FirstWaybillItem();
+			firstWaybillItem.setFirstWaybillId(firstWaybillOnShelf.getFirstWaybillId());
+			List<FirstWaybillItem> firstWaybillItemList = firstWaybillItemDao.findFirstWaybillItem(firstWaybillItem, null, null);
+			for (FirstWaybillItem item : firstWaybillItemList) {
 				totalQuantity += item.getQuantity();
 				if (item.getSkuUnitPrice() != null) {
 					totalPrice += (item.getQuantity() * item.getSkuUnitPrice() / 100);
 				}
 			}
-			littlePackageOnShelf.setLittlePackageItemList(littlePackageItemList);
+			firstWaybillOnShelf.setFirstWaybillItemList(firstWaybillItemList);
 		}
 		map.put("totalQuantity", totalQuantity);
 		map.put("totalPrice", totalPrice);
-		map.put("littlePackageOnShelfList", littlePackageOnShelfList);
+		map.put("firstWaybillOnShelfList", firstWaybillOnShelfList);
 		return map;
 	}
 
@@ -573,14 +573,14 @@ public class PrintServiceImpl implements IPrintService {
 		for (OutWarehousePackageItem item : itemParamList) {
 			Map<String, String> map = new HashMap<String, String>();
 			map.put("ourWarehouseOrderTrackingNo", item.getBigPackageTrackingNo());
-			Long outWarehouseOrderId = item.getBigPackageId();
-			Order bigPackage = bigPackageDao.getBigPackageById(outWarehouseOrderId);
-			if (bigPackage == null) {
+			Long outWarehouseOrderId = item.getOrderId();
+			Order order = orderDao.getOrderById(outWarehouseOrderId);
+			if (order == null) {
 				continue;
 			}
-			map.put("warehouseId", bigPackage.getWarehouseId() + "");
-			map.put("customerReferenceNo", bigPackage.getCustomerReferenceNo());
-			map.put("outWarehouseWeight", bigPackage.getOutWarehouseWeight() + "");
+			map.put("warehouseId", order.getWarehouseId() + "");
+			map.put("customerReferenceNo", order.getCustomerReferenceNo());
+			map.put("outWarehouseWeight", order.getOutWarehouseWeight() + "");
 			mapList.add(map);
 		}
 		return mapList;
@@ -607,8 +607,8 @@ public class PrintServiceImpl implements IPrintService {
 		double totalWeight = 0d;
 		int quantity = 0;
 		for (OutWarehousePackageItem item : packageRecordItemList) {
-			Order bigPackage = bigPackageDao.getBigPackageById(item.getBigPackageId());
-			totalWeight += bigPackage.getOutWarehouseWeight();
+			Order order = orderDao.getOrderById(item.getOrderId());
+			totalWeight += order.getOutWarehouseWeight();
 			quantity++;
 		}
 		String trackingNoBarcodeData = BarcodeUtil.createCode128(record.getCoeTrackingNo(), false, 29d, 0.5d);
