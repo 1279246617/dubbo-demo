@@ -32,7 +32,7 @@ import com.mysql.jdbc.Statement;
  * 
  * @author Administrator
  */
-@Repository("outWarehousePackageItemDao")
+@Repository("transportPackageItemDao")
 public class OutWarehousePackageItemDaoImpl implements IOutWarehousePackageItemDao {
 
 	Logger logger = Logger.getLogger(OutWarehousePackageItemDaoImpl.class);
