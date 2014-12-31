@@ -43,7 +43,7 @@ public class PackageRecordDaoImpl implements IPackageRecordDao {
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public long savePackageRecord(final OutWarehousePackage record) {
-		final String sql = "insert into w_t_package_record (warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,remark,is_shiped) values (?,?,?,?,?,?,?,?)";
+		final String sql = "insert into w_t_out_warehouse_package (warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,remark,is_shiped) values (?,?,?,?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
@@ -69,7 +69,7 @@ public class PackageRecordDaoImpl implements IPackageRecordDao {
 
 	@Override
 	public OutWarehousePackage getPackageRecordById(Long outWarehouseRecordId) {
-		String sql = "select id,warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,remark,is_shiped,shipped_time from w_t_package_record where id =" + outWarehouseRecordId;
+		String sql = "select id,warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,remark,is_shiped,shipped_time from w_t_out_warehouse_package where id =" + outWarehouseRecordId;
 		OutWarehousePackage record = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<OutWarehousePackage>(OutWarehousePackage.class));
 		return record;
 	}
@@ -82,7 +82,7 @@ public class PackageRecordDaoImpl implements IPackageRecordDao {
 	@Override
 	public List<OutWarehousePackage> findPackageRecord(OutWarehousePackage outWarehouseRecord, Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select id,warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,remark,is_shiped,shipped_time from w_t_package_record where 1=1 ");
+		sb.append("select id,warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,remark,is_shiped,shipped_time from w_t_out_warehouse_package where 1=1 ");
 		if (outWarehouseRecord != null) {
 			if (outWarehouseRecord.getId() != null) {
 				sb.append(" and id = " + outWarehouseRecord.getId());
@@ -138,7 +138,7 @@ public class PackageRecordDaoImpl implements IPackageRecordDao {
 	@Override
 	public Long countPackageRecord(OutWarehousePackage outWarehouseRecord, Map<String, String> moreParam) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select count(id) from w_t_package_record where 1=1 ");
+		sb.append("select count(id) from w_t_out_warehouse_package where 1=1 ");
 		if (outWarehouseRecord != null) {
 			if (outWarehouseRecord.getId() != null) {
 				sb.append(" and id = " + outWarehouseRecord.getId());
@@ -188,13 +188,13 @@ public class PackageRecordDaoImpl implements IPackageRecordDao {
 
 	@Override
 	public int updatePackageRecordRemark(Long outWarehouseRecordId, String remark) {
-		String sql = "update w_t_package_record set remark ='" + remark + "' where id=" + outWarehouseRecordId;
+		String sql = "update w_t_out_warehouse_package set remark ='" + remark + "' where id=" + outWarehouseRecordId;
 		return jdbcTemplate.update(sql);
 	}
 
 	@Override
 	public int updatePackageRecordIsShiped(Long outWarehouseRecordId, String isShiped, Long shippedTime) {
-		String sql = "update w_t_package_record set is_shiped = ?,shipped_time = ? where id= ?";
+		String sql = "update w_t_out_warehouse_package set is_shiped = ?,shipped_time = ? where id= ?";
 		return jdbcTemplate.update(sql, isShiped, shippedTime, outWarehouseRecordId);
 	}
 

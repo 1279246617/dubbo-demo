@@ -38,7 +38,7 @@ public class BigPackageStatusDaoImpl implements IBigPackageStatusDao {
 	@DataSource(DataSourceCode.WMS)
 	@ReadThroughSingleCache(namespace = SsmNameSpace.TRANSPORT_BIG_PACKAGE_STATUS, expiration = 36000)
 	public OrderStatus findBigPackageStatusByCode(@ParameterValueKeyProvider String code) {
-		String sql = "select id,code,cn,en from w_t_big_package_status where code ='" + code + "'";
+		String sql = "select id,code,cn,en from w_t_order_status where code ='" + code + "'";
 		OrderStatus packageStatus = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<OrderStatus>(OrderStatus.class));
 		return packageStatus;
 	}
@@ -47,7 +47,7 @@ public class BigPackageStatusDaoImpl implements IBigPackageStatusDao {
 	@DataSource(DataSourceCode.WMS)
 	@ReadThroughAssignCache(assignedKey = "AllBigPackageStatus", namespace = SsmNameSpace.TRANSPORT_BIG_PACKAGE_STATUS, expiration = 3600)
 	public List<OrderStatus> findAllBigPackageStatus() {
-		String sql = "select id,code,cn,en from w_t_big_package_status";
+		String sql = "select id,code,cn,en from w_t_order_status";
 		List<OrderStatus> statusList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(OrderStatus.class));
 		return statusList;
 	}

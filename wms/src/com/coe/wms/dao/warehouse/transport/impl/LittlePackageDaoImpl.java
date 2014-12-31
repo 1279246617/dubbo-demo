@@ -45,7 +45,7 @@ public class LittlePackageDaoImpl implements ILittlePackageDao {
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public long saveLittlePackage(final FirstWaybill littlePackage) {
-		final String sql = "insert into w_t_little_package (warehouse_id,user_id_of_customer,user_id_of_operator,carrier_code,tracking_no,created_time,remark,callback_is_success,callback_count,big_package_id,status,received_time,po_no,transport_type) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		final String sql = "insert into w_t_first_waybill (warehouse_id,user_id_of_customer,user_id_of_operator,carrier_code,tracking_no,created_time,remark,callback_is_success,callback_count,big_package_id,status,received_time,po_no,transport_type) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
@@ -81,7 +81,7 @@ public class LittlePackageDaoImpl implements ILittlePackageDao {
 
 	@Override
 	public FirstWaybill getLittlePackageById(Long LittlePackageId) {
-		String sql = "select id,warehouse_id,user_id_of_customer,user_id_of_operator,carrier_code,tracking_no,created_time,remark,callback_is_success,callback_count,big_package_id,status,received_time,po_no,transport_type,seat_code from w_t_little_package where id= "
+		String sql = "select id,warehouse_id,user_id_of_customer,user_id_of_operator,carrier_code,tracking_no,created_time,remark,callback_is_success,callback_count,big_package_id,status,received_time,po_no,transport_type,seat_code from w_t_first_waybill where id= "
 				+ LittlePackageId;
 		FirstWaybill littlePackage = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<FirstWaybill>(FirstWaybill.class));
 		return littlePackage;
@@ -93,7 +93,7 @@ public class LittlePackageDaoImpl implements ILittlePackageDao {
 	@Override
 	public List<FirstWaybill> findLittlePackage(FirstWaybill littlePackage, Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select id,warehouse_id,user_id_of_customer,user_id_of_operator,carrier_code,tracking_no,created_time,remark,callback_is_success,callback_count,big_package_id,status,received_time,po_no,transport_type,seat_code from w_t_little_package where 1=1 ");
+		sb.append("select id,warehouse_id,user_id_of_customer,user_id_of_operator,carrier_code,tracking_no,created_time,remark,callback_is_success,callback_count,big_package_id,status,received_time,po_no,transport_type,seat_code from w_t_first_waybill where 1=1 ");
 		if (littlePackage != null) {
 			if (StringUtil.isNotNull(littlePackage.getTrackingNo())) {
 				sb.append(" and tracking_no = '" + littlePackage.getTrackingNo() + "' ");
@@ -187,7 +187,7 @@ public class LittlePackageDaoImpl implements ILittlePackageDao {
 	@Override
 	public Long countLittlePackage(FirstWaybill littlePackage, Map<String, String> moreParam) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select count(*)  from w_t_little_package where 1=1 ");
+		sb.append("select count(*)  from w_t_first_waybill where 1=1 ");
 		if (littlePackage != null) {
 			if (StringUtil.isNotNull(littlePackage.getTrackingNo())) {
 				sb.append(" and tracking_no = '" + littlePackage.getTrackingNo() + "' ");
@@ -270,7 +270,7 @@ public class LittlePackageDaoImpl implements ILittlePackageDao {
 	 */
 	@Override
 	public int updateLittlePackageCallback(FirstWaybill LittlePackage) {
-		String sql = "update w_t_little_package set callback_is_success='" + LittlePackage.getCallbackIsSuccess() + "' ,callback_count = " + LittlePackage.getCallbackCount() + " ,status = '" + LittlePackage.getStatus() + "' where id="
+		String sql = "update w_t_first_waybill set callback_is_success='" + LittlePackage.getCallbackIsSuccess() + "' ,callback_count = " + LittlePackage.getCallbackCount() + " ,status = '" + LittlePackage.getStatus() + "' where id="
 				+ LittlePackage.getId();
 		return jdbcTemplate.update(sql);
 	}
@@ -280,44 +280,44 @@ public class LittlePackageDaoImpl implements ILittlePackageDao {
 	 */
 	@Override
 	public List<Long> findCallbackUnSuccessPackageId() {
-		String sql = "select id from w_t_little_package where status ='" + FirstWaybillStatusCode.WSR + "' and (callback_is_success = 'N' or  callback_is_success is null)";
+		String sql = "select id from w_t_first_waybill where status ='" + FirstWaybillStatusCode.WSR + "' and (callback_is_success = 'N' or  callback_is_success is null)";
 		List<Long> recordIdList = jdbcTemplate.queryForList(sql, Long.class);
 		return recordIdList;
 	}
 
 	@Override
 	public int updateLittlePackageStatus(FirstWaybill LittlePackage) {
-		String sql = "update w_t_little_package set status='" + LittlePackage.getStatus() + "' where id=" + LittlePackage.getId();
+		String sql = "update w_t_first_waybill set status='" + LittlePackage.getStatus() + "' where id=" + LittlePackage.getId();
 		return jdbcTemplate.update(sql);
 	}
 
 	@Override
 	public int updateLittlePackageStatus(Long bigPackageId, String newStatus) {
-		String sql = "update w_t_little_package set status='" + newStatus + "' where big_package_id=" + bigPackageId;
+		String sql = "update w_t_first_waybill set status='" + newStatus + "' where big_package_id=" + bigPackageId;
 		return jdbcTemplate.update(sql);
 	}
 
 	@Override
 	public int deleteLittlePackageById(Long LittlePackageId) {
-		String sql = "delete from w_t_little_package where id=" + LittlePackageId;
+		String sql = "delete from w_t_first_waybill where id=" + LittlePackageId;
 		return jdbcTemplate.update(sql);
 	}
 
 	@Override
 	public int receivedLittlePackage(FirstWaybill littlePackage) {
-		String sql = "update w_t_little_package set status=? ,received_time=?,seat_code = ? where id=" + littlePackage.getId();
+		String sql = "update w_t_first_waybill set status=? ,received_time=?,seat_code = ? where id=" + littlePackage.getId();
 		return jdbcTemplate.update(sql, littlePackage.getStatus(), littlePackage.getReceivedTime(), littlePackage.getSeatCode());
 	}
 
 	@Override
 	public int updateLittlePackageSeatCode(FirstWaybill LittlePackage) {
-		String sql = "update w_t_little_package set seat_code='" + LittlePackage.getSeatCode() + "' where id=" + LittlePackage.getId();
+		String sql = "update w_t_first_waybill set seat_code='" + LittlePackage.getSeatCode() + "' where id=" + LittlePackage.getId();
 		return jdbcTemplate.update(sql);
 	}
 
 	@Override
 	public List<String> findLittlePackageTrackingNos(Long bigPackageId) {
-		String sql = "select tracking_no from w_t_little_package where big_package_id= " + bigPackageId;
+		String sql = "select tracking_no from w_t_first_waybill where big_package_id= " + bigPackageId;
 		return jdbcTemplate.queryForList(sql, String.class);
 	}
 

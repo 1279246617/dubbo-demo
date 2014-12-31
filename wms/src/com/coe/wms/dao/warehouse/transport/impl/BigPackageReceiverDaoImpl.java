@@ -44,7 +44,7 @@ public class BigPackageReceiverDaoImpl implements IBigPackageReceiverDao {
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public long saveBigPackageReceiver(final OrderReceiver receiver) {
-		final String sql = "insert into w_t_big_package_receiver (big_package_id,name,company,first_name,last_name,address_line1,state_or_province,city,county,postal_code,country_code,country_name,phone_number,email,mobile_number,address_line2) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		final String sql = "insert into w_t_order_receiver (big_package_id,name,company,first_name,last_name,address_line1,state_or_province,city,county,postal_code,country_code,country_name,phone_number,email,mobile_number,address_line2) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
@@ -78,7 +78,7 @@ public class BigPackageReceiverDaoImpl implements IBigPackageReceiverDao {
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public int saveBatchBigPackageReceiver(final List<OrderReceiver> receiverList) {
-		final String sql = "insert into w_t_big_package_receiver (big_package_id,name,company,first_name,last_name,address_line1,state_or_province,city,county,postal_code,country_code,country_name,phone_number,email,mobile_number,address_line2) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		final String sql = "insert into w_t_order_receiver (big_package_id,name,company,first_name,last_name,address_line1,state_or_province,city,county,postal_code,country_code,country_name,phone_number,email,mobile_number,address_line2) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		int[] batchUpdateSize = jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
 			@Override
 			public void setValues(PreparedStatement ps, int i) throws SQLException {
@@ -112,7 +112,7 @@ public class BigPackageReceiverDaoImpl implements IBigPackageReceiverDao {
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public int saveBatchBigPackageReceiverWithPackageId(final List<OrderReceiver> receiverList, final Long orderId) {
-		final String sql = "insert into w_t_big_package_receiver (big_package_id,name,company,first_name,last_name,address_line1,state_or_province,city,county,postal_code,country_code,country_name,phone_number,email,mobile_number,address_line2) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		final String sql = "insert into w_t_order_receiver (big_package_id,name,company,first_name,last_name,address_line1,state_or_province,city,county,postal_code,country_code,country_name,phone_number,email,mobile_number,address_line2) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		int[] batchUpdateSize = jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
 			@Override
 			public void setValues(PreparedStatement ps, int i) throws SQLException {
@@ -155,7 +155,7 @@ public class BigPackageReceiverDaoImpl implements IBigPackageReceiverDao {
 	@Override
 	public List<OrderReceiver> findBigPackageReceiver(OrderReceiver orderReceiver, Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select id,big_package_id,name,company,first_name,last_name,address_line1,state_or_province,city,county,postal_code,country_code,country_name,phone_number,email,mobile_number,address_line2 from w_t_big_package_receiver where 1=1 ");
+		sb.append("select id,big_package_id,name,company,first_name,last_name,address_line1,state_or_province,city,county,postal_code,country_code,country_name,phone_number,email,mobile_number,address_line2 from w_t_order_receiver where 1=1 ");
 		if (orderReceiver != null) {
 			if (StringUtil.isNotNull(orderReceiver.getName())) {
 				sb.append(" and name = '" + orderReceiver.getName() + "' ");
@@ -218,7 +218,7 @@ public class BigPackageReceiverDaoImpl implements IBigPackageReceiverDao {
 
 	@Override
 	public OrderReceiver getBigPackageReceiverByPackageId(Long orderId) {
-		String sql = "select id,big_package_id,name,company,first_name,last_name,address_line1,state_or_province,city,county,postal_code,country_code,country_name,phone_number,email,mobile_number,address_line2 from w_t_big_package_receiver where big_package_id = "
+		String sql = "select id,big_package_id,name,company,first_name,last_name,address_line1,state_or_province,city,county,postal_code,country_code,country_name,phone_number,email,mobile_number,address_line2 from w_t_order_receiver where big_package_id = "
 				+ orderId;
 		List<OrderReceiver> orderReceiverList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(OrderReceiver.class));
 		if (orderReceiverList != null && orderReceiverList.size() > 0) {

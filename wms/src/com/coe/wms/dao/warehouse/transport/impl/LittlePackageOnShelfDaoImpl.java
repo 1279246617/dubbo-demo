@@ -35,7 +35,7 @@ public class LittlePackageOnShelfDaoImpl implements ILittlePackageOnShelfDao {
 
 	@Override
 	public long saveLittlePackageOnShelf(final FirstWaybillOnShelf littlePackageOnShelf) {
-		final String sql = "insert into w_t_little_package_on_shelf ( warehouse_id,little_package_id,big_package_id,user_id_of_customer,user_id_of_operator,seat_code,tracking_no,created_time,last_update_time,status) values (?,?,?,?,?,?,?,?,?,?)";
+		final String sql = "insert into w_t_first_waybill_on_shelf ( warehouse_id,little_package_id,big_package_id,user_id_of_customer,user_id_of_operator,seat_code,tracking_no,created_time,last_update_time,status) values (?,?,?,?,?,?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
@@ -68,7 +68,7 @@ public class LittlePackageOnShelfDaoImpl implements ILittlePackageOnShelfDao {
 	@Override
 	public List<FirstWaybillOnShelf> findLittlePackageOnShelf(FirstWaybillOnShelf littlePackageOnShelf, Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select  id,warehouse_id,little_package_id,big_package_id,user_id_of_customer,user_id_of_operator,seat_code,tracking_no,created_time,last_update_time,status from w_t_little_package_on_shelf where 1=1");
+		sb.append("select  id,warehouse_id,little_package_id,big_package_id,user_id_of_customer,user_id_of_operator,seat_code,tracking_no,created_time,last_update_time,status from w_t_first_waybill_on_shelf where 1=1");
 		if (littlePackageOnShelf.getId() != null) {
 			sb.append(" and id = " + littlePackageOnShelf.getId());
 		}
@@ -121,7 +121,7 @@ public class LittlePackageOnShelfDaoImpl implements ILittlePackageOnShelfDao {
 	@Override
 	public Long countLittlePackageOnShelf(FirstWaybillOnShelf littlePackageOnShelf, Map<String, String> moreParam) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select  count(1) from w_t_little_package_on_shelf where 1=1");
+		sb.append("select  count(1) from w_t_first_waybill_on_shelf where 1=1");
 		if (littlePackageOnShelf.getId() != null) {
 			sb.append(" and id = " + littlePackageOnShelf.getId());
 		}
@@ -169,19 +169,19 @@ public class LittlePackageOnShelfDaoImpl implements ILittlePackageOnShelfDao {
 
 	@Override
 	public int updateLittlePackageOnShelf(Long bigPackageId, String newStatus) {
-		String sql = "update w_t_little_package_on_shelf set status= ?,last_update_time= ? where big_package_id=?";
+		String sql = "update w_t_first_waybill_on_shelf set status= ?,last_update_time= ? where big_package_id=?";
 		return jdbcTemplate.update(sql, newStatus, System.currentTimeMillis(), bigPackageId);
 	}
 
 	@Override
 	public int updateLittlePackageOnShelf(FirstWaybillOnShelf littlePackageOnShelf) {
-		String sql = "update w_t_little_package_on_shelf set status= ?,last_update_time= ? where id=" + littlePackageOnShelf.getId();
+		String sql = "update w_t_first_waybill_on_shelf set status= ?,last_update_time= ? where id=" + littlePackageOnShelf.getId();
 		return jdbcTemplate.update(sql, littlePackageOnShelf.getStatus(), littlePackageOnShelf.getLastUpdateTime());
 	}
 
 	@Override
 	public String findSeatCodeForOnShelf(String businessType) {
-		String sql = "SELECT a.seat_code FROM `w_w_seat` a LEFT JOIN w_t_little_package_on_shelf b on a.seat_code = b.seat_code  left outer join w_w_shelf c on a.shelf_code = c.shelf_code WHERE (b.`status` IS NULL or b.`status` = 'OUT' )  and c.business_type = '"
+		String sql = "SELECT a.seat_code FROM `w_w_seat` a LEFT JOIN w_t_first_waybill_on_shelf b on a.seat_code = b.seat_code  left outer join w_w_shelf c on a.shelf_code = c.shelf_code WHERE (b.`status` IS NULL or b.`status` = 'OUT' )  and c.business_type = '"
 				+ businessType + "' ";
 		Pagination page = new Pagination();
 		page.curPage = 1;
@@ -199,7 +199,7 @@ public class LittlePackageOnShelfDaoImpl implements ILittlePackageOnShelfDao {
 
 	@Override
 	public String findStatusByLittlePackageId(Long littlePackageId) {
-		String sql = "SELECT status FROM `w_t_little_package_on_shelf` where little_package_id = " + littlePackageId;
+		String sql = "SELECT status FROM `w_t_first_waybill_on_shelf` where little_package_id = " + littlePackageId;
 		Pagination page = new Pagination();
 		page.curPage = 1;
 		page.pageSize = 1;
@@ -215,7 +215,7 @@ public class LittlePackageOnShelfDaoImpl implements ILittlePackageOnShelfDao {
 
 	@Override
 	public FirstWaybillOnShelf findLittlePackageOnShelfByLittlePackageId(Long littlePackageId) {
-		String sql = "SELECT id,warehouse_id,little_package_id,big_package_id,user_id_of_customer,user_id_of_operator,seat_code,tracking_no,created_time,last_update_time,status FROM `w_t_little_package_on_shelf` where little_package_id = "
+		String sql = "SELECT id,warehouse_id,little_package_id,big_package_id,user_id_of_customer,user_id_of_operator,seat_code,tracking_no,created_time,last_update_time,status FROM `w_t_first_waybill_on_shelf` where little_package_id = "
 				+ littlePackageId;
 		Pagination page = new Pagination();
 		page.curPage = 1;

@@ -45,7 +45,7 @@ public class LittlePackageItemDaoImpl implements ILittlePackageItemDao {
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public long saveLittlePackageItem(final FirstWaybillItem item) {
-		final String sql = "insert into w_t_little_package_item (little_package_id,quantity,sku,sku_name,sku_unit_price,sku_price_currency,remark,sku_net_weight,sku_no,specification,big_package_id) values (?,?,?,?,?,?,?,?,?,?,?)";
+		final String sql = "insert into w_t_first_waybill_item (little_package_id,quantity,sku,sku_name,sku_unit_price,sku_price_currency,remark,sku_net_weight,sku_no,specification,big_package_id) values (?,?,?,?,?,?,?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
@@ -82,7 +82,7 @@ public class LittlePackageItemDaoImpl implements ILittlePackageItemDao {
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public int saveBatchLittlePackageItem(final List<FirstWaybillItem> itemList) {
-		final String sql = "insert into w_t_little_package_item (little_package_id,quantity,sku,sku_name,sku_unit_price,sku_price_currency,remark,sku_net_weight,sku_no,specification,big_package_id) values (?,?,?,?,?,?,?,?,?,?,?)";
+		final String sql = "insert into w_t_first_waybill_item (little_package_id,quantity,sku,sku_name,sku_unit_price,sku_price_currency,remark,sku_net_weight,sku_no,specification,big_package_id) values (?,?,?,?,?,?,?,?,?,?,?)";
 		int[] batchUpdateSize = jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
 			@Override
 			public void setValues(PreparedStatement ps, int i) throws SQLException {
@@ -119,7 +119,7 @@ public class LittlePackageItemDaoImpl implements ILittlePackageItemDao {
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public int saveBatchLittlePackageItemWithLittlePackageId(final List<FirstWaybillItem> itemList, final Long littlePackageId) {
-		final String sql = "insert into w_t_little_package_item (little_package_id,quantity,sku,sku_name,sku_unit_price,sku_price_currency,remark,sku_net_weight,sku_no,specification,big_package_id) values (?,?,?,?,?,?,?,?,?,?,?)";
+		final String sql = "insert into w_t_first_waybill_item (little_package_id,quantity,sku,sku_name,sku_unit_price,sku_price_currency,remark,sku_net_weight,sku_no,specification,big_package_id) values (?,?,?,?,?,?,?,?,?,?,?)";
 		int[] batchUpdateSize = jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
 			@Override
 			public void setValues(PreparedStatement ps, int i) throws SQLException {
@@ -165,7 +165,7 @@ public class LittlePackageItemDaoImpl implements ILittlePackageItemDao {
 	@Override
 	public List<FirstWaybillItem> findLittlePackageItem(FirstWaybillItem littlePackageItem, Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select id,little_package_id,quantity,sku,sku_name,sku_unit_price,sku_price_currency,remark,sku_net_weight,sku_no,specification,big_package_id from w_t_little_package_item where 1=1 ");
+		sb.append("select id,little_package_id,quantity,sku,sku_name,sku_unit_price,sku_price_currency,remark,sku_net_weight,sku_no,specification,big_package_id from w_t_first_waybill_item where 1=1 ");
 		if (littlePackageItem != null) {
 			if (StringUtil.isNotNull(littlePackageItem.getSku())) {
 				sb.append(" and sku = '" + littlePackageItem.getSku() + "' ");
