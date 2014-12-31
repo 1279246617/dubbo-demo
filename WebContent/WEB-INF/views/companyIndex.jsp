@@ -86,7 +86,7 @@
 		              		<li><a href="#${baseUrl}/warehouse/transport/listBigPackage.do" tab_id="findBigPackage"><i class="icon-list"></i><span class="hidden-tablet" style="color:#006400">转运订单</span></a></li>
 		              		<li><a href=#${baseUrl}/warehouse/transport/listWaitCheckBigPackage.do  tab_id="waitCheckBigPackage"><i class="icon-eye-open"></i><span class="hidden-tablet" style="color:#006400">待审核转运订单</span></a></li>
 		              		<li><a href=#${baseUrl}/warehouse/transport/listWaiPrintBigPackage.do  tab_id="waitCheckBigPackage2"><i class="icon-list"></i><span class="hidden-tablet" style="color:#006400">待打印捡货订单</span></a></li>
-		              		<li><a href="#${baseUrl}/warehouse/transport/listLittlePackage.do" tab_id="findLittlePackage"><i class="icon-list"></i><span class="hidden-tablet" style="color:#006400">转运订单小包</span></a></li>
+		              		<li><a href="#${baseUrl}/warehouse/transport/listFirstWaybill.do" tab_id="findFirstWaybill"><i class="icon-list"></i><span class="hidden-tablet" style="color:#006400">转运订单小包</span></a></li>
 		                </ul>
 		        </div>
 		        
@@ -115,11 +115,11 @@
 		        <div title="转运管理" class=" nav-collapse sidebar-nav">
 		              <ul class="nav nav-tabs nav-stacked ">
 		              		<li><a href="#${baseUrl}/warehouse/transport/inWarehouse.do" tab_id="doTransportInWarehouse"><i class="icon-arrow-right"></i><span class="hidden-tablet">转运收货</span></a></li>
-		              		<li><a href="#${baseUrl}/warehouse/transport/listReceivedLittlePackage.do" tab_id="findtransportInWarehouseOrderRecord"><i class="icon-list"></i><span class="hidden-tablet">转运收货记录</span></a></li>
-		              		<li><a href="#${baseUrl}/warehouse/transport/littlePackageOnShelf.do" tab_id="dotransportOutWarehouse"><i class="icon-arrow-up"></i><span class="hidden-tablet">转运上架</span></a></li>
-		              		<li><a href="#${baseUrl}/warehouse/transport/listLittlePackageOnShelf.do" tab_id="findtransportInWarehouseOrderRecord"><i class="icon-list"></i><span class="hidden-tablet">转运上架记录</span></a></li>
+		              		<li><a href="#${baseUrl}/warehouse/transport/listReceivedFirstWaybill.do" tab_id="findtransportInWarehouseOrderRecord"><i class="icon-list"></i><span class="hidden-tablet">转运收货记录</span></a></li>
+		              		<li><a href="#${baseUrl}/warehouse/transport/firstWaybillOnShelf.do" tab_id="dotransportOutWarehouse"><i class="icon-arrow-up"></i><span class="hidden-tablet">转运上架</span></a></li>
+		              		<li><a href="#${baseUrl}/warehouse/transport/listFirstWaybillOnShelf.do" tab_id="findtransportInWarehouseOrderRecord"><i class="icon-list"></i><span class="hidden-tablet">转运上架记录</span></a></li>
 		              		
-		              		<li><a href="#${baseUrl}/warehouse/transport/bigPackageWeightAndPrint.do" tab_id="dotransportOutWarehouse"><i class="icon-inbox"></i><span class="hidden-tablet">称重打单</span></a></li>
+		              		<li><a href="#${baseUrl}/warehouse/transport/orderWeightAndPrint.do" tab_id="dotransportOutWarehouse"><i class="icon-inbox"></i><span class="hidden-tablet">称重打单</span></a></li>
 		              		<li><a href="#${baseUrl}/warehouse/transport/outWarehousePackage.do" tab_id="dotransportOutWarehouse2"><i class="icon-inbox"></i><span class="hidden-tablet">扫描建包</span></a></li>
 		              		<li><a href="#${baseUrl}/warehouse/transport/outWarehouseShipping.do" tab_id="outtransportWarehouseShipping1"><i class="icon-plane"></i><span class="hidden-tablet">扫描大包发货</span></a></li>
 		              		<li><a href="#${baseUrl}/warehouse/transport/listOutWarehousePackage.do" tab_id="findtransportOutWarehousePackage2"><i class="icon-list"></i><span class="hidden-tablet">建包发货记录</span></a></li>

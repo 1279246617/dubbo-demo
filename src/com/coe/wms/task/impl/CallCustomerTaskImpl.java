@@ -23,14 +23,14 @@ import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderItemDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderReceiverDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderSenderDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderStatusDao;
-import com.coe.wms.dao.warehouse.transport.IBigPackageAdditionalSfDao;
-import com.coe.wms.dao.warehouse.transport.IBigPackageDao;
+import com.coe.wms.dao.warehouse.transport.IOrderAdditionalSfDao;
+import com.coe.wms.dao.warehouse.transport.IOrderDao;
 import com.coe.wms.dao.warehouse.transport.IBigPackageReceiverDao;
 import com.coe.wms.dao.warehouse.transport.IBigPackageSenderDao;
 import com.coe.wms.dao.warehouse.transport.IBigPackageStatusDao;
-import com.coe.wms.dao.warehouse.transport.ILittlePackageDao;
-import com.coe.wms.dao.warehouse.transport.ILittlePackageItemDao;
-import com.coe.wms.dao.warehouse.transport.ILittlePackageStatusDao;
+import com.coe.wms.dao.warehouse.transport.IFirstWaybillDao;
+import com.coe.wms.dao.warehouse.transport.IFirstWaybillItemDao;
+import com.coe.wms.dao.warehouse.transport.IFirstWaybillStatusDao;
 import com.coe.wms.model.unit.Weight;
 import com.coe.wms.model.user.User;
 import com.coe.wms.model.warehouse.Warehouse;
@@ -106,29 +106,29 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 	@Resource(name = "userDao")
 	private IUserDao userDao;
 
-	@Resource(name = "bigPackageAdditionalSfDao")
-	private IBigPackageAdditionalSfDao bigPackageAdditionalSfDao;
+	@Resource(name = "orderAdditionalSfDao")
+	private IOrderAdditionalSfDao orderAdditionalSfDao;
 
-	@Resource(name = "bigPackageDao")
-	private IBigPackageDao bigPackageDao;
+	@Resource(name = "orderDao")
+	private IOrderDao orderDao;
 
-	@Resource(name = "bigPackageReceiverDao")
-	private IBigPackageReceiverDao bigPackageReceiverDao;
+	@Resource(name = "orderReceiverDao")
+	private IBigPackageReceiverDao orderReceiverDao;
 
-	@Resource(name = "bigPackageSenderDao")
-	private IBigPackageSenderDao bigPackageSenderDao;
+	@Resource(name = "orderSenderDao")
+	private IBigPackageSenderDao orderSenderDao;
 
-	@Resource(name = "bigPackageStatusDao")
-	private IBigPackageStatusDao bigPackageStatusDao;
+	@Resource(name = "orderStatusDao")
+	private IBigPackageStatusDao orderStatusDao;
 
-	@Resource(name = "littlePackageItemDao")
-	private ILittlePackageItemDao littlePackageItemDao;
+	@Resource(name = "firstWaybillItemDao")
+	private IFirstWaybillItemDao firstWaybillItemDao;
 
-	@Resource(name = "littlePackageDao")
-	private ILittlePackageDao littlePackageDao;
+	@Resource(name = "firstWaybillDao")
+	private IFirstWaybillDao firstWaybillDao;
 
-	@Resource(name = "littlePackageStatusDao")
-	private ILittlePackageStatusDao littlePackageStatusDao;
+	@Resource(name = "firstWaybillStatusDao")
+	private IFirstWaybillStatusDao firstWaybillStatusDao;
 
 	/**
 	 * 回传入库SKU,顺丰服务名
@@ -513,22 +513,22 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 	@Scheduled(cron = "0 0/10 8-23 * * ? ")
 	@Override
 	public void sendBigPackageCheckResultToCustomer() {
-		List<Long> bigPackageIdList = bigPackageDao.findCallbackSendCheckUnSuccessBigPackageId();
-		for (int i = 0; i < bigPackageIdList.size(); i++) {
-			Long bigPackageId = bigPackageIdList.get(i);
-			Long bigPackageIdLong = Long.valueOf(bigPackageId);
+		List<Long> orderIdList = orderDao.findCallbackSendCheckUnSuccessorderId();
+		for (int i = 0; i < orderIdList.size(); i++) {
+			Long orderId = orderIdList.get(i);
+			Long orderIdLong = Long.valueOf(orderId);
 			// 查询订单的当前状态
-			String oldStatus = bigPackageDao.getBigPackageStatus(bigPackageIdLong);
+			String oldStatus = orderDao.getBigPackageStatus(orderIdLong);
 			// 如果不是审核中状态的订单,直接跳过
 			if (!StringUtil.isEqual(oldStatus, OrderStatusCode.WCI)) {
 				continue;
 			}
 			// 执行审核,并立即返回通知顺丰,如果顺丰无返回,不能审核通过
-			Order bigPackage = bigPackageDao.getBigPackageById(bigPackageIdLong);
-			Warehouse warehouse = warehouseDao.getWarehouseById(bigPackage.getWarehouseId());
-			FirstWaybill littlePackageParam = new FirstWaybill();
-			littlePackageParam.setBigPackageId(bigPackageIdLong);
-			List<FirstWaybill> LittlePackageList = littlePackageDao.findLittlePackage(littlePackageParam, null, null);
+			Order order = orderDao.getOrderById(orderIdLong);
+			Warehouse warehouse = warehouseDao.getWarehouseById(order.getWarehouseId());
+			FirstWaybill firstWaybillParam = new FirstWaybill();
+			firstWaybillParam.setOrderId(orderIdLong);
+			List<FirstWaybill> FirstWaybillList = firstWaybillDao.findFirstWaybill(firstWaybillParam, null, null);
 			LogisticsEventsRequest logisticsEventsRequest = new LogisticsEventsRequest();
 			LogisticsEvent logisticsEvent = new LogisticsEvent();
 			// 事件头
@@ -544,19 +544,19 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 			EventBody eventBody = new EventBody();
 			TradeDetail tradeDetail = new TradeDetail();
 			TradeOrder tradeOrder = new TradeOrder();
-			tradeOrder.setTradeOrderId(bigPackage.getCustomerReferenceNo());
+			tradeOrder.setTradeOrderId(order.getCustomerReferenceNo());
 			List<TradeOrder> tradeOrders = new ArrayList<TradeOrder>();
 			tradeOrders.add(tradeOrder);
 			tradeDetail.setTradeOrders(tradeOrders);
 			eventBody.setTradeDetail(tradeDetail);
 			List<LogisticsOrder> logisticsOrders = new ArrayList<LogisticsOrder>();
-			for (FirstWaybill littlePackage : LittlePackageList) {
+			for (FirstWaybill firstWaybill : FirstWaybillList) {
 				LogisticsOrder logisticsOrder = new LogisticsOrder();
-				logisticsOrder.setCarrierCode(littlePackage.getCarrierCode());
-				logisticsOrder.setMailNo(littlePackage.getTrackingNo());
-				logisticsOrder.setPoNo(littlePackage.getPoNo());
-				logisticsOrder.setLogisticsCode(bigPackage.getCheckResult());
-				logisticsOrder.setLogisticsRemark(bigPackage.getCheckResult());
+				logisticsOrder.setCarrierCode(firstWaybill.getCarrierCode());
+				logisticsOrder.setMailNo(firstWaybill.getTrackingNo());
+				logisticsOrder.setPoNo(firstWaybill.getPoNo());
+				logisticsOrder.setLogisticsCode(order.getCheckResult());
+				logisticsOrder.setLogisticsRemark(order.getCheckResult());
 				logisticsOrder.setOccurTime(DateUtil.dateConvertString(new Date(), DateUtil.yyyy_MM_ddHHmmss));
 				logisticsOrders.add(logisticsOrder);
 			}
@@ -568,7 +568,7 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 			String xml = XmlUtil.toXml(logisticsEventsRequest);
 
 			// xml内容封装完成,开始准备发送
-			User user = userDao.getUserById(bigPackage.getUserIdOfCustomer());
+			User user = userDao.getUserById(order.getUserIdOfCustomer());
 			String msgSource = user.getOppositeMsgSource();
 
 			List<BasicNameValuePair> basicNameValuePairs = new ArrayList<BasicNameValuePair>();
@@ -587,7 +587,7 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 			try {
 				String response = HttpUtil.postRequest(url, basicNameValuePairs);
 				logger.info("顺丰返回:" + response);
-				bigPackage.setCallbackSendCheckCount(bigPackage.getCallbackSendCheckCount() == null ? 1 : bigPackage.getCallbackSendCheckCount() + 1);
+				order.setCallbackSendCheckCount(order.getCallbackSendCheckCount() == null ? 1 : order.getCallbackSendCheckCount() + 1);
 				Responses responses = (Responses) XmlUtil.toObject(response, Responses.class);
 				if (responses == null) {
 					logger.error("回传转运订单审核 返回信息无法转换成Responses对象");
@@ -597,27 +597,27 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 				List<Response> responseList = responses.getResponseItems();
 				if (responseList != null && responseList.size() > 0) {
 					if (StringUtil.isEqualIgnoreCase(responseList.get(0).getSuccess(), Constant.TRUE)) {
-						bigPackage.setCallbackSendCheckIsSuccess(Constant.Y);
-						if (StringUtil.isEqual(bigPackage.getCheckResult(), "SUCCESS")) {
+						order.setCallbackSendCheckIsSuccess(Constant.Y);
+						if (StringUtil.isEqual(order.getCheckResult(), "SUCCESS")) {
 							newStatus = OrderStatusCode.WRG;
-						} else if (StringUtil.isEqual(bigPackage.getCheckResult(), "SECURITY")) {
+						} else if (StringUtil.isEqual(order.getCheckResult(), "SECURITY")) {
 							newStatus = OrderStatusCode.WCF;
-						} else if (StringUtil.isEqual(bigPackage.getCheckResult(), "OTHER_REASON")) {
+						} else if (StringUtil.isEqual(order.getCheckResult(), "OTHER_REASON")) {
 							newStatus = OrderStatusCode.WCF;
 						}
-						bigPackage.setStatus(newStatus);
+						order.setStatus(newStatus);
 						logger.debug("回传转运订单审核成功");
 					} else {
-						bigPackage.setCallbackSendCheckIsSuccess(Constant.N);
+						order.setCallbackSendCheckIsSuccess(Constant.N);
 						logger.debug("回传转运订单审核失败");
 					}
 				} else {
 					logger.error("回传转运订单审核 返回无指明成功与否");
-					bigPackage.setCallbackSendCheckIsSuccess(Constant.N);
+					order.setCallbackSendCheckIsSuccess(Constant.N);
 					continue;
 				}
 				// 更新 Callback 次数和成功状态
-				bigPackageDao.updateBigPackageCallbackSendCheck(bigPackage);
+				orderDao.updateBigPackageCallbackSendCheck(order);
 			} catch (Exception e) {
 				logger.error("回传转运订单审核时发生异常:" + e.getMessage());
 			}
@@ -629,20 +629,20 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 	 */
 	@Scheduled(cron = "0 0/10 8-23 * * ? ")
 	@Override
-	public void sendLittlePackageReceivedToCustomer() {
-		List<Long> littlePackageIdList = littlePackageDao.findCallbackUnSuccessPackageId();
-		for (int i = 0; i < littlePackageIdList.size(); i++) {
-			Long littlePackageId = littlePackageIdList.get(i);
-			Long littlePackageIdLong = Long.valueOf(littlePackageId);
+	public void sendFirstWaybillReceivedToCustomer() {
+		List<Long> firstWaybillIdList = firstWaybillDao.findCallbackUnSuccessFirstWaybillId();
+		for (int i = 0; i < firstWaybillIdList.size(); i++) {
+			Long firstWaybillId = firstWaybillIdList.get(i);
+			Long firstWaybillIdLong = Long.valueOf(firstWaybillId);
 			// 查询订单的当前状态
-			FirstWaybill littlePackage = littlePackageDao.getLittlePackageById(littlePackageIdLong);
+			FirstWaybill firstWaybill = firstWaybillDao.getFirstWaybillById(firstWaybillIdLong);
 			// 如果不是待发送收货状态的订单,直接跳过
-			if (!StringUtil.isEqual(littlePackage.getStatus(), FirstWaybillStatusCode.WSR)) {
+			if (!StringUtil.isEqual(firstWaybill.getStatus(), FirstWaybillStatusCode.WSR)) {
 				continue;
 			}
-			Warehouse warehouse = warehouseDao.getWarehouseById(littlePackage.getWarehouseId());
+			Warehouse warehouse = warehouseDao.getWarehouseById(firstWaybill.getWarehouseId());
 			// 顺丰traderOrderId
-			String traderOrderId = bigPackageDao.getCustomerReferenceNoById(littlePackage.getBigPackageId());
+			String traderOrderId = orderDao.getCustomerReferenceNoById(firstWaybill.getOrderId());
 			// 封装请求体
 			LogisticsEventsRequest logisticsEventsRequest = new LogisticsEventsRequest();
 			LogisticsEvent logisticsEvent = new LogisticsEvent();
@@ -667,9 +667,9 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 			List<LogisticsOrder> logisticsOrders = new ArrayList<LogisticsOrder>();
 			LogisticsOrder logisticsOrder = new LogisticsOrder();
 
-			logisticsOrder.setCarrierCode(littlePackage.getCarrierCode());
-			logisticsOrder.setMailNo(littlePackage.getTrackingNo());
-			logisticsOrder.setPoNo(littlePackage.getPoNo());
+			logisticsOrder.setCarrierCode(firstWaybill.getCarrierCode());
+			logisticsOrder.setMailNo(firstWaybill.getTrackingNo());
+			logisticsOrder.setPoNo(firstWaybill.getPoNo());
 			logisticsOrder.setOccurTime(DateUtil.dateConvertString(new Date(), DateUtil.yyyy_MM_ddHHmmss));
 			logisticsOrder.setLogisticsCode("SUCCESS");
 
@@ -682,7 +682,7 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 			String xml = XmlUtil.toXml(logisticsEventsRequest);
 
 			// xml内容封装完成,开始准备发送
-			User user = userDao.getUserById(littlePackage.getUserIdOfCustomer());
+			User user = userDao.getUserById(firstWaybill.getUserIdOfCustomer());
 			String msgSource = user.getOppositeMsgSource();
 
 			List<BasicNameValuePair> basicNameValuePairs = new ArrayList<BasicNameValuePair>();
@@ -701,7 +701,7 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 			try {
 				String response = HttpUtil.postRequest(url, basicNameValuePairs);
 				logger.info("顺丰返回:" + response);
-				littlePackage.setCallbackCount(littlePackage.getCallbackCount() == null ? 1 : littlePackage.getCallbackCount() + 1);
+				firstWaybill.setCallbackCount(firstWaybill.getCallbackCount() == null ? 1 : firstWaybill.getCallbackCount() + 1);
 				Responses responses = (Responses) XmlUtil.toObject(response, Responses.class);
 				if (responses == null) {
 					logger.error("回传转运订单收货 返回信息无法转换成Responses对象");
@@ -710,20 +710,20 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 				List<Response> responseList = responses.getResponseItems();
 				if (responseList != null && responseList.size() > 0) {
 					if (StringUtil.isEqualIgnoreCase(responseList.get(0).getSuccess(), Constant.TRUE)) {
-						littlePackage.setCallbackIsSuccess(Constant.Y);
-						littlePackage.setStatus(FirstWaybillStatusCode.WOS);
+						firstWaybill.setCallbackIsSuccess(Constant.Y);
+						firstWaybill.setStatus(FirstWaybillStatusCode.WOS);
 						logger.debug("回传转运订单收货成功");
 					} else {
-						littlePackage.setCallbackIsSuccess(Constant.N);
+						firstWaybill.setCallbackIsSuccess(Constant.N);
 						logger.debug("回传转运订单收货失败");
 					}
 				} else {
 					logger.error("回传转运订单收货 返回无指明成功与否");
-					littlePackage.setCallbackIsSuccess(Constant.N);
+					firstWaybill.setCallbackIsSuccess(Constant.N);
 					continue;
 				}
 				// 更新 Callback 次数和成功状态
-				littlePackageDao.updateLittlePackageCallback(littlePackage);
+				firstWaybillDao.updateFirstWaybillCallback(firstWaybill);
 			} catch (Exception e) {
 				logger.error("回传转运订单收货时发生异常:" + e.getMessage());
 			}
@@ -736,19 +736,19 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 	@Scheduled(cron = "0 0/10 8-23 * * ? ")
 	@Override
 	public void sendBigPackageWeightToCustomer() {
-		List<Long> bigPackageIdList = bigPackageDao.findCallbackSendWeightUnSuccessBigPackageId();
-		for (int i = 0; i < bigPackageIdList.size(); i++) {
-			Long bigPackageId = bigPackageIdList.get(i);
-			Long bigPackageIdLong = Long.valueOf(bigPackageId);
+		List<Long> orderIdList = orderDao.findCallbackSendWeightUnSuccessorderId();
+		for (int i = 0; i < orderIdList.size(); i++) {
+			Long orderId = orderIdList.get(i);
+			Long orderIdLong = Long.valueOf(orderId);
 			// 查询订单的当前状态
-			String oldStatus = bigPackageDao.getBigPackageStatus(bigPackageIdLong);
+			String oldStatus = orderDao.getBigPackageStatus(orderIdLong);
 			// 如果不是待发送重量状态的订单,直接跳过
 			if (!StringUtil.isEqual(oldStatus, OrderStatusCode.WSW)) {
 				continue;
 			}
 			// 执行审核,并立即返回通知顺丰,如果顺丰无返回,不能审核通过
-			Order bigPackage = bigPackageDao.getBigPackageById(bigPackageIdLong);
-			Warehouse warehouse = warehouseDao.getWarehouseById(bigPackage.getWarehouseId());
+			Order order = orderDao.getOrderById(orderIdLong);
+			Warehouse warehouse = warehouseDao.getWarehouseById(order.getWarehouseId());
 
 			LogisticsEventsRequest logisticsEventsRequest = new LogisticsEventsRequest();
 			LogisticsEvent logisticsEvent = new LogisticsEvent();
@@ -765,7 +765,7 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 			EventBody eventBody = new EventBody();
 			TradeDetail tradeDetail = new TradeDetail();
 			TradeOrder tradeOrder = new TradeOrder();
-			tradeOrder.setTradeOrderId(bigPackage.getCustomerReferenceNo());
+			tradeOrder.setTradeOrderId(order.getCustomerReferenceNo());
 			List<TradeOrder> tradeOrders = new ArrayList<TradeOrder>();
 			tradeOrders.add(tradeOrder);
 			tradeDetail.setTradeOrders(tradeOrders);
@@ -774,7 +774,7 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 			LogisticsOrder logisticsOrder = new LogisticsOrder();
 			logisticsOrder.setLogisticsRemark("单位:G");
 			logisticsOrder.setOccurTime(DateUtil.dateConvertString(new Date(), DateUtil.yyyy_MM_ddHHmmss));
-			Double weight = bigPackage.getOutWarehouseWeight();// 合包重量
+			Double weight = order.getOutWarehouseWeight();// 合包重量
 			if (weight == null) {
 				continue;
 			}
@@ -793,7 +793,7 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 			String xml = XmlUtil.toXml(logisticsEventsRequest);
 
 			// xml内容封装完成,开始准备发送
-			User user = userDao.getUserById(bigPackage.getUserIdOfCustomer());
+			User user = userDao.getUserById(order.getUserIdOfCustomer());
 			String msgSource = user.getOppositeMsgSource();
 
 			List<BasicNameValuePair> basicNameValuePairs = new ArrayList<BasicNameValuePair>();
@@ -812,7 +812,7 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 			try {
 				String response = HttpUtil.postRequest(url, basicNameValuePairs);
 				logger.info("顺丰返回:" + response);
-				bigPackage.setCallbackSendWeighCount(bigPackage.getCallbackSendWeighCount() == null ? 1 : bigPackage.getCallbackSendWeighCount() + 1);
+				order.setCallbackSendWeighCount(order.getCallbackSendWeighCount() == null ? 1 : order.getCallbackSendWeighCount() + 1);
 				Responses responses = (Responses) XmlUtil.toObject(response, Responses.class);
 				if (responses == null) {
 					logger.error("回传转运订单称重 返回信息无法转换成Responses对象");
@@ -821,20 +821,20 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 				List<Response> responseList = responses.getResponseItems();
 				if (responseList != null && responseList.size() > 0) {
 					if (StringUtil.isEqualIgnoreCase(responseList.get(0).getSuccess(), Constant.TRUE)) {
-						bigPackage.setCallbackSendWeightIsSuccess(Constant.Y);
-						bigPackage.setStatus(OrderStatusCode.WCC);// 待客户核重
+						order.setCallbackSendWeightIsSuccess(Constant.Y);
+						order.setStatus(OrderStatusCode.WCC);// 待客户核重
 						logger.debug("回传转运订单称重成功");
 					} else {
-						bigPackage.setCallbackSendWeightIsSuccess(Constant.N);
+						order.setCallbackSendWeightIsSuccess(Constant.N);
 						logger.debug("回传转运订单称重失败");
 					}
 				} else {
 					logger.error("回传转运订单称重 返回无指明成功与否");
-					bigPackage.setCallbackSendWeightIsSuccess(Constant.N);
+					order.setCallbackSendWeightIsSuccess(Constant.N);
 					continue;
 				}
 				// 更新 Callback 次数和成功状态
-				bigPackageDao.updateBigPackageCallbackSendWeight(bigPackage);
+				orderDao.updateBigPackageCallbackSendWeight(order);
 			} catch (Exception e) {
 				logger.error("回传转运订单称重时发生异常:" + e.getMessage());
 			}
@@ -847,13 +847,13 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 	@Scheduled(cron = "0 0/15 8-23 * * ? ")
 	@Override
 	public void sendBigPackageStatusToCustomer() {
-		List<Long> bigPackageIdList = bigPackageDao.findCallbackSendStatusUnSuccessBigPackageId();
-		logger.info("找到待回传转运出库状态,订单总数:" + bigPackageIdList.size());
+		List<Long> orderIdList = orderDao.findCallbackSendStatusUnSuccessorderId();
+		logger.info("找到待回传转运出库状态,订单总数:" + orderIdList.size());
 		// 根据id 获取记录
-		for (int i = 0; i < bigPackageIdList.size(); i++) {
-			Long bigPackageId = bigPackageIdList.get(i);
-			Order bigPackage = bigPackageDao.getBigPackageById(bigPackageId);
-			Warehouse warehouse = warehouseDao.getWarehouseById(bigPackage.getWarehouseId());// 仓库
+		for (int i = 0; i < orderIdList.size(); i++) {
+			Long orderId = orderIdList.get(i);
+			Order order = orderDao.getOrderById(orderId);
+			Warehouse warehouse = warehouseDao.getWarehouseById(order.getWarehouseId());// 仓库
 			// 封装XML对象
 			LogisticsEventsRequest logisticsEventsRequest = new LogisticsEventsRequest();
 			LogisticsEvent logisticsEvent = new LogisticsEvent();
@@ -872,7 +872,7 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 			TradeDetail tradeDetail = new TradeDetail();
 			List<TradeOrder> tradeOrders = new ArrayList<TradeOrder>();
 			TradeOrder tradeOrder = new TradeOrder();
-			tradeOrder.setTradeOrderId(bigPackage.getCustomerReferenceNo());
+			tradeOrder.setTradeOrderId(order.getCustomerReferenceNo());
 			tradeOrders.add(tradeOrder);
 			tradeDetail.setTradeOrders(tradeOrders);
 
@@ -885,8 +885,8 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 			logisticsOrder.setLogisticsRemark("出库,地点:" + warehouse.getCountryName() + "," + warehouse.getCity());
 			// 出库
 			logisticsOrder.setLogisticsCode("STOCKOUT");
-			logisticsOrder.setCarrierCode(bigPackage.getShipwayCode());
-			logisticsOrder.setMailNo(bigPackage.getTrackingNo());
+			logisticsOrder.setCarrierCode(order.getShipwayCode());
+			logisticsOrder.setMailNo(order.getTrackingNo());
 			logisticsOrder.setOccurTime(DateUtil.dateConvertString(new Date(), DateUtil.yyyy_MM_ddHHmmss));
 			logisticsOrders.add(logisticsOrder);
 			logisticsDetail.setLogisticsOrders(logisticsOrders);
@@ -894,7 +894,7 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 			logisticsEvent.setEventBody(eventBody);
 			logisticsEventsRequest.setLogisticsEvent(logisticsEvent);
 			String xml = XmlUtil.toXml(logisticsEventsRequest);
-			User user = userDao.getUserById(bigPackage.getUserIdOfCustomer());
+			User user = userDao.getUserById(order.getUserIdOfCustomer());
 
 			String msgSource = user.getOppositeMsgSource();
 			List<BasicNameValuePair> basicNameValuePairs = new ArrayList<BasicNameValuePair>();
@@ -913,7 +913,7 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 			try {
 				String response = HttpUtil.postRequest(url, basicNameValuePairs);
 				logger.info("顺丰返回:" + response);
-				bigPackage.setCallbackSendStatusCount(bigPackage.getCallbackSendStatusCount() == null ? 1 : bigPackage.getCallbackSendStatusCount() + 1);
+				order.setCallbackSendStatusCount(order.getCallbackSendStatusCount() == null ? 1 : order.getCallbackSendStatusCount() + 1);
 				Responses responses = (Responses) XmlUtil.toObject(response, Responses.class);
 				if (responses == null) {
 					logger.error("回传转运订单出库状态信息 返回信息无法转换成Responses对象");
@@ -922,18 +922,18 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 				List<Response> responseList = responses.getResponseItems();
 				if (responseList != null && responseList.size() > 0) {
 					if (StringUtil.isEqualIgnoreCase(responseList.get(0).getSuccess(), Constant.TRUE)) {
-						bigPackage.setCallbackSendStatusIsSuccess(Constant.Y);
+						order.setCallbackSendStatusIsSuccess(Constant.Y);
 						logger.debug("回传转运订单出库状态信息成功");
 					} else {
-						bigPackage.setCallbackSendStatusIsSuccess(Constant.N);
+						order.setCallbackSendStatusIsSuccess(Constant.N);
 						logger.debug("回传转运订单出库状态信息失败");
 					}
 				} else {
-					bigPackage.setCallbackSendStatusIsSuccess(Constant.N);
+					order.setCallbackSendStatusIsSuccess(Constant.N);
 					logger.error("回传转运订单出库状态信息,返回无指明成功与否");
 				}
 				// 更新入库记录的Callback 次数和成功状态
-				bigPackageDao.updateBigPackageCallbackSendStatus(bigPackage);
+				orderDao.updateBigPackageCallbackSendStatus(order);
 			} catch (Exception e) {
 				logger.error("回传转运订单出库状态信息时发生异常:" + e.getMessage());
 			}

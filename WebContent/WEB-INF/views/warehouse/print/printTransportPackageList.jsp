@@ -85,8 +85,8 @@
 							<%
 								int index = 0;
 							%>
-							<c:forEach var="littlePackage"  items="${map.littlePackageOnShelfList}" varStatus="status">
-									<c:forEach var="item"  items="${littlePackage.littlePackageItemList}" varStatus="status1">
+							<c:forEach var="firstWaybill"  items="${map.firstWaybillOnShelfList}" varStatus="status">
+									<c:forEach var="item"  items="${firstWaybill.firstWaybillItemList}" varStatus="status1">
 										<%index++; %>	
 										<tr style="height:7mm;">
 											<td style="width:15mm;">
@@ -95,7 +95,7 @@
 											<td style="width:40mm;font-size: 16px;"><b>${item.sku }</b></td>
 											<td style="width:60mm;">${item.skuName }</td>
 											<td style="width:24mm;">${item.specification }</td>
-											<td style="width:24mm;font-size: 18px;"><b>${littlePackage.seatCode}</b></td>
+											<td style="width:24mm;font-size: 18px;"><b>${firstWaybill.seatCode}</b></td>
 											<td style="width:14mm;">${item.quantity }</td>
 											<td style="width:auto;">${item.quantity * item.skuUnitPrice /100}  元</td>
 										</tr>

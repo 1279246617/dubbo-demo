@@ -137,7 +137,7 @@
 	  		          	{ display: '小包预览', isSort: false, align: 'center', type: 'float',width:'20%',render: function(row) {
 		            		var skus = "";
 		            		if (!row._editing) {
-		            			skus += '<a href="javascript:listLittlePackages(' + row.id + ')">'+row.littlePackages+'</a> ';
+		            			skus += '<a href="javascript:listFirstWaybills(' + row.id + ')">'+row.firstWaybills+'</a> ';
 		            		}
 		            		return skus;
 	  		          	}},

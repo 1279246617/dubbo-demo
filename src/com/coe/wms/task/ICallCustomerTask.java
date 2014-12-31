@@ -25,7 +25,7 @@ public interface ICallCustomerTask {
 	/**
 	 * 回传转运订单小包收货结果给客户
 	 */
-	public void sendLittlePackageReceivedToCustomer();
+	public void sendFirstWaybillReceivedToCustomer();
 
 	/**
 	 * 回传转运订单重量给客户

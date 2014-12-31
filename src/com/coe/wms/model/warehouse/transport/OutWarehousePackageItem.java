@@ -52,9 +52,9 @@ public class OutWarehousePackageItem implements Serializable {
 	 * 
 	 * 出库订单的跟踪号, 如果是顺丰渠道,则是顺丰单号,如果是ETK渠道则是ETK单号
 	 */
-	private String bigPackageTrackingNo;
+	private String orderTrackingNo;
 
-	private Long bigPackageId;
+	private Long orderId;
 	/**
 	 * 创建时间
 	 */
@@ -117,18 +117,18 @@ public class OutWarehousePackageItem implements Serializable {
 	}
 
 	public String getBigPackageTrackingNo() {
-		return bigPackageTrackingNo;
+		return orderTrackingNo;
 	}
 
-	public void setBigPackageTrackingNo(String bigPackageTrackingNo) {
-		this.bigPackageTrackingNo = bigPackageTrackingNo;
+	public void setBigPackageTrackingNo(String orderTrackingNo) {
+		this.orderTrackingNo = orderTrackingNo;
 	}
 
-	public Long getBigPackageId() {
-		return bigPackageId;
+	public Long getOrderId() {
+		return orderId;
 	}
 
-	public void setBigPackageId(Long bigPackageId) {
-		this.bigPackageId = bigPackageId;
+	public void setOrderId(Long orderId) {
+		this.orderId = orderId;
 	}
 }

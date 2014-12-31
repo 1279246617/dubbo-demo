@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import com.coe.wms.dao.datasource.DataSource;
 import com.coe.wms.dao.datasource.DataSourceCode;
-import com.coe.wms.dao.warehouse.transport.IBigPackageStatusDao;
+import com.coe.wms.dao.warehouse.transport.IOrderStatusDao;
 import com.coe.wms.model.warehouse.transport.OrderStatus;
 import com.coe.wms.util.SsmNameSpace;
 import com.google.code.ssm.api.ParameterValueKeyProvider;
@@ -26,18 +26,18 @@ import com.google.code.ssm.api.ReadThroughSingleCache;
  * @author Administrator
  * 
  */
-@Repository("bigPackageStatusDao")
-public class BigPackageStatusDaoImpl implements IBigPackageStatusDao {
+@Repository("orderStatusDao")
+public class OrderStatusDaoImpl implements IOrderStatusDao {
 
-	Logger logger = Logger.getLogger(BigPackageStatusDaoImpl.class);
+	Logger logger = Logger.getLogger(OrderStatusDaoImpl.class);
 
 	@Resource(name = "jdbcTemplate")
 	private JdbcTemplate jdbcTemplate;
 
 	@Override
 	@DataSource(DataSourceCode.WMS)
-	@ReadThroughSingleCache(namespace = SsmNameSpace.TRANSPORT_BIG_PACKAGE_STATUS, expiration = 36000)
-	public OrderStatus findBigPackageStatusByCode(@ParameterValueKeyProvider String code) {
+	@ReadThroughSingleCache(namespace = SsmNameSpace.TRANSPORT_ORDER_STATUS, expiration = 36000)
+	public OrderStatus findOrderStatusByCode(@ParameterValueKeyProvider String code) {
 		String sql = "select id,code,cn,en from w_t_order_status where code ='" + code + "'";
 		OrderStatus packageStatus = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<OrderStatus>(OrderStatus.class));
 		return packageStatus;
@@ -45,8 +45,8 @@ public class BigPackageStatusDaoImpl implements IBigPackageStatusDao {
 
 	@Override
 	@DataSource(DataSourceCode.WMS)
-	@ReadThroughAssignCache(assignedKey = "AllBigPackageStatus", namespace = SsmNameSpace.TRANSPORT_BIG_PACKAGE_STATUS, expiration = 3600)
-	public List<OrderStatus> findAllBigPackageStatus() {
+	@ReadThroughAssignCache(assignedKey = "AllOrderStatus", namespace = SsmNameSpace.TRANSPORT_ORDER_STATUS, expiration = 3600)
+	public List<OrderStatus> findAllOrderStatus() {
 		String sql = "select id,code,cn,en from w_t_order_status";
 		List<OrderStatus> statusList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(OrderStatus.class));
 		return statusList;

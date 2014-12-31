@@ -18,5 +18,5 @@ public interface IPackageRecordItemDao {
 
 	public int deletePackageRecordItemById(Long id);
 
-	public List<Long> getBigPackageIdsByRecordTime(String startTime, String endTime, Long userIdOfCustomer, Long warehouseId);
+	public List<Long> getOrderIdsByRecordTime(String startTime, String endTime, Long userIdOfCustomer, Long warehouseId);
 }

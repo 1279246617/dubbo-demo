@@ -50,7 +50,7 @@
                			状态
                			<select style="width:80px;" id="status" name="status">
                				<option></option>
-							<c:forEach items="${bigPackageStatusList}" var="status" >
+							<c:forEach items="${orderStatusList}" var="status" >
 				       	 		<option value="<c:out value='${status.code}'/>">
 				       	 			<c:out value="${status.cn}"/>
 				       		 	</option>
@@ -189,7 +189,7 @@
 		               	{ display: '小包预览', isSort: false, align: 'center', type: 'float',width:'20%',render: function(row) {
 		            		var skus = "";
 		            		if (!row._editing) {
-		            			skus += '<a href="javascript:listLittlePackages(' + row.id + ')">'+row.littlePackages+'</a> ';
+		            			skus += '<a href="javascript:listFirstWaybills(' + row.id + ')">'+row.firstWaybills+'</a> ';
 		            		}
 		            		return skus;
 	  		          	}},

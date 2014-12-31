@@ -1,5 +1,5 @@
 //点击保存主单
-function saveReceivedLittlePackage(){
+function saveReceivedFirstWaybill(){
 	var trackingNo = $("#trackingNo");
 	var trackingNoStr = trackingNo.val();
 	var remark = $("#orderRemark").val();
@@ -14,49 +14,49 @@ function saveReceivedLittlePackage(){
 		trackingNo.val($.trim(trackingNoStr));
 	}
 	//在判断跟踪号是否改变前,获取用户选择的入库订单
-	var littlePackageRadio = $('input[name="littlePackageRadio"]').filter(':checked');
-	if(littlePackageRadio.length){
-		$("#littlePackageId").val(littlePackageRadio.attr("littlePackageId"));
-		$("#bigPackageId").val(littlePackageRadio.attr("bigPackageId"));
-		$("#seatCode").val(littlePackageRadio.attr("seatCode"));
-		$("#shipwayCode").val(littlePackageRadio.attr("shipwayCode"));
-		$("#outWarehouseTrackingNo").val(littlePackageRadio.attr("outWarehouseTrackingNo"));
+	var firstWaybillRadio = $('input[name="firstWaybillRadio"]').filter(':checked');
+	if(firstWaybillRadio.length){
+		$("#firstWaybillId").val(firstWaybillRadio.attr("firstWaybillId"));
+		$("#orderId").val(firstWaybillRadio.attr("orderId"));
+		$("#seatCode").val(firstWaybillRadio.attr("seatCode"));
+		$("#shipwayCode").val(firstWaybillRadio.attr("shipwayCode"));
+		$("#outWarehouseTrackingNo").val(firstWaybillRadio.attr("outWarehouseTrackingNo"));
 	}
-	//跟踪号失去焦点,判断跟踪号是否改变,若改变则清除littlePackageId
+	//跟踪号失去焦点,判断跟踪号是否改变,若改变则清除firstWaybillId
 	trackingNoBlur();
 	//跟踪号不为空,入库订单id为空调用clickEnterStep1();
-	if($("#littlePackageId").val() == null || $("#littlePackageId").val() == ""){
-		saveReceivedLittlePackageStep1(trackingNoStr,remark,warehouseId);	
+	if($("#firstWaybillId").val() == null || $("#firstWaybillId").val() == ""){
+		saveReceivedFirstWaybillStep1(trackingNoStr,remark,warehouseId);	
 	}else{
 		//入库订单id 不为空,可能是查到多个入库订单,选择后,开始保存主单
-		saveReceivedLittlePackageStep2(trackingNoStr,remark,warehouseId);
+		saveReceivedFirstWaybillStep2(trackingNoStr,remark,warehouseId);
 	}
 }
 
 //保存主单1(无输入客户单号)
-function saveReceivedLittlePackageStep1(trackingNoStr,remark,warehouseId) {
-	$("#littlePackagebody").html("");
+function saveReceivedFirstWaybillStep1(trackingNoStr,remark,warehouseId) {
+	$("#firstWaybillbody").html("");
 	// 检查跟踪号是否能找到唯一的入库订单
-	$.getJSON(baseUrl+ '/warehouse/transport/checkReceivedLittlePackage.do?trackingNo='+ trackingNoStr, function(msg) {
+	$.getJSON(baseUrl+ '/warehouse/transport/checkReceivedFirstWaybill.do?trackingNo='+ trackingNoStr, function(msg) {
 		if (msg.status == -1) {
 			// 找不到订单, 请输入客户帐号
 			parent.$.showDialogMessage(msg.message, null, null);
 			return false;
 		}
-		var table = $("#littlePackagetable");
+		var table = $("#firstWaybilltable");
 		table.show();
 		$.each(msg.mapList, function(i, n) {
 			var tr = "<tr>";
 			if (msg.status == 1) {
-				$("#littlePackageId").val(n.littlePackageId);
-				$("#bigPackageId").val(n.bigPackageId);
+				$("#firstWaybillId").val(n.firstWaybillId);
+				$("#orderId").val(n.orderId);
 				$("#seatCode").val(n.seatCode);
 				$("#shipwayCode").val(n.shipwayCode);
 				$("#outWarehouseTrackingNo").val(n.outWarehouseTrackingNo);
 				
-				tr+="<td style='width:25px;text-align:center;'><input type='radio' t='1' littlePackageId='"+n.littlePackageId+"'  bigPackageId='"+n.bigPackageId+"'  seatCode='"+n.seatCode+"' shipwayCode='"+n.shipwayCode+"' outWarehouseTrackingNo='"+n.outWarehouseTrackingNo+"' name='littlePackageRadio' value='radiobutton' checked></td>";	
+				tr+="<td style='width:25px;text-align:center;'><input type='radio' t='1' firstWaybillId='"+n.firstWaybillId+"'  orderId='"+n.orderId+"'  seatCode='"+n.seatCode+"' shipwayCode='"+n.shipwayCode+"' outWarehouseTrackingNo='"+n.outWarehouseTrackingNo+"' name='firstWaybillRadio' value='radiobutton' checked></td>";	
 			}else{
-				tr+="<td style='width:25px;text-align:center;'><input type='radio' t='1' littlePackageId='"+n.littlePackageId+"'  bigPackageId='"+n.bigPackageId+"'  seatCode='"+n.seatCode+"' shipwayCode='"+n.shipwayCode+"' outWarehouseTrackingNo='"+n.outWarehouseTrackingNo+"' name='littlePackageRadio' value='radiobutton'></td>";
+				tr+="<td style='width:25px;text-align:center;'><input type='radio' t='1' firstWaybillId='"+n.firstWaybillId+"'  orderId='"+n.orderId+"'  seatCode='"+n.seatCode+"' shipwayCode='"+n.shipwayCode+"' outWarehouseTrackingNo='"+n.outWarehouseTrackingNo+"' name='firstWaybillRadio' value='radiobutton'></td>";
 			}
 			tr+="<td style='width:155px;text-align:center;'>"+n.userLoginName+"</td>";
 			tr+="<td style='width:225px;text-align:center;'>"+n.trackingNo+"</td>";
@@ -64,7 +64,7 @@ function saveReceivedLittlePackageStep1(trackingNoStr,remark,warehouseId) {
 			tr+="<td style='width:205px;text-align:center;'>"+n.status+"</td>";
 			tr+="<td style='width:205px;text-align:center;'>"+n.createdTime+"</td>";
 			tr+="</tr>";
-			$("#littlePackagebody").append(tr);
+			$("#firstWaybillbody").append(tr);
 		});
 		if (msg.status == 2) {
 			// 找到多条订
@@ -74,18 +74,18 @@ function saveReceivedLittlePackageStep1(trackingNoStr,remark,warehouseId) {
 		}
 		if (msg.status == 1) {
 			//步骤1能得到唯一订单,直接调用步骤2
-			saveReceivedLittlePackageStep2(trackingNoStr,remark,warehouseId);
+			saveReceivedFirstWaybillStep2(trackingNoStr,remark,warehouseId);
 		}
 	});
 }
 
 
 //保存主单2(已输入客户单号)
-function saveReceivedLittlePackageStep2(trackingNoStr,remark,warehouseId) {
+function saveReceivedFirstWaybillStep2(trackingNoStr,remark,warehouseId) {
 	lockTrackingNo();
-	var littlePackageId = $("#littlePackageId").val();//保存转运订单入库
+	var firstWaybillId = $("#firstWaybillId").val();//保存转运订单入库
 	$.post(baseUrl+ '/warehouse/transport/submitInWarehouse.do?trackingNo='+ trackingNoStr
-		+'&warehouseId='+warehouseId+'&littlePackageId='+littlePackageId+'&remark='+remark, function(msg) {
+		+'&warehouseId='+warehouseId+'&firstWaybillId='+firstWaybillId+'&remark='+remark, function(msg) {
 		if(msg.status == 0){
 			parent.$.showDialogMessage(msg.message, null, null);
 			unLockTrackingNo();
@@ -94,8 +94,8 @@ function saveReceivedLittlePackageStep2(trackingNoStr,remark,warehouseId) {
 		$("#tips").html(msg.message);
 		
 		$("#seatCode").val(msg.seatCode);
-		$("#bigPackageId").val(msg.bigPackageId);
-		$("#littlePackageId").val(msg.littlePackageId);
+		$("#orderId").val(msg.orderId);
+		$("#firstWaybillId").val(msg.firstWaybillId);
 		if(msg.status == 1){//集货转运
 			// 下一票
 			nextInWarehouse(msg.message);
@@ -135,9 +135,9 @@ function trackingNoFocus(){
 function trackingNoBlur(){
 	var newTrackingNo = $("#trackingNo").val();
 	if(oldTrackingNo!=newTrackingNo){
-		$("#littlePackageId").val("");
-		$("#bigPackageId").val("");
-		$("#littlePackagebody").html("");
+		$("#firstWaybillId").val("");
+		$("#orderId").val("");
+		$("#firstWaybillbody").html("");
 	}
 	oldTrackingNo = newTrackingNo;
 }
@@ -146,7 +146,7 @@ function lockTrackingNo(){
 	$("#trackingNo").attr("readonly","readonly");
 	$("#warehouseId").attr("readonly","readonly");
 	$("#orderRemark").attr("readonly","readonly");
-	 $("input[name='littlePackageRadio']").each(function(){
+	 $("input[name='firstWaybillRadio']").each(function(){
 		  $(this).attr("readonly","readonly");
 	 });
 }
@@ -155,7 +155,7 @@ function unLockTrackingNo(){
 	$("#trackingNo").removeAttr("readonly");
 	$("#warehouseId").removeAttr("readonly");
 	$("#orderRemark").removeAttr("readonly");
-	$("input[name='littlePackageRadio']").each(function(){
+	$("input[name='firstWaybillRadio']").each(function(){
 		  $(this).removeAttr("readonly");
 	 });
 }
@@ -164,9 +164,9 @@ function nextInWarehouse(message){
 	unLockTrackingNo();
 	$("#trackingNo").val("");
 	$("#orderRemark").val("");
-	$("#littlePackageId").val("");
-	$("#bigPackageId").val("");
-	$("#littlePackagebody").html("");
+	$("#firstWaybillId").val("");
+	$("#orderId").val("");
+	$("#firstWaybillbody").html("");
 	parent.$.showShortMessage({msg:message,animate:false,left:"45%"});
 	$("#tips").html("请输入新的跟踪单号并按回车!");
 	$("#trackingNo").focus();
@@ -184,8 +184,8 @@ function refresh(){
 
 function saveweight(){
 		var weight = $("#weight").val();
-		var bigPackageId = $("#bigPackageId").val();
-		if(bigPackageId ==null || bigPackageId == ''){
+		var orderId = $("#orderId").val();
+		if(orderId ==null || orderId == ''){
 			parent.$.showShortMessage({msg:"没有找到直接转运订单,刷新后重试",animate:false,left:"45%"});
 			return false;
 		}
@@ -193,7 +193,7 @@ function saveweight(){
 			parent.$.showShortMessage({msg:"请先输入装箱重量",animate:false,left:"45%"});
 			return false;
 		}
-		$.post(baseUrl+ '/warehouse/transport/bigPackageSubmitWeight.do?bigPackageId='+ bigPackageId+'&weight='+weight, function(msg) {
+		$.post(baseUrl+ '/warehouse/transport/orderSubmitWeight.do?orderId='+ orderId+'&weight='+weight, function(msg) {
 				if(msg.status == 0){
 					parent.$.showShortMessage({msg:msg.message,animate:false,left:"45%"});
 					$("#weightOk").hide();
@@ -211,23 +211,23 @@ function saveweight(){
 
  //打印出货运单标签
  function printShipLabel(){
-		var bigPackageId = $("#bigPackageId").val();
-		if(bigPackageId ==null || bigPackageId == ''){
+		var orderId = $("#orderId").val();
+		if(orderId ==null || orderId == ''){
 			parent.$.showShortMessage({msg:"没有找到直接转运订单,刷新后重试",animate:false,left:"45%"});
 			return false;
 		}
-		var url = baseUrl+'/warehouse/print/printTransportShipLabel.do?bigPackageIds='+bigPackageId;
+		var url = baseUrl+'/warehouse/print/printTransportShipLabel.do?orderIds='+orderId;
 		 window.open(url);
  }
  
  
 //打印订单
  function printOrder(){
-		var bigPackageId = $("#bigPackageId").val();
-		if(bigPackageId ==null || bigPackageId == ''){
+		var orderId = $("#orderId").val();
+		if(orderId ==null || orderId == ''){
 			parent.$.showShortMessage({msg:"没有找到直接转运订单,刷新后重试",animate:false,left:"45%"});
 			return false;
 		}
-		var url = baseUrl+'/warehouse/print/printTransportPackageList.do?bigPackageIds='+bigPackageId;
+		var url = baseUrl+'/warehouse/print/printTransportPackageList.do?orderIds='+orderId;
 		window.open(url);
  }

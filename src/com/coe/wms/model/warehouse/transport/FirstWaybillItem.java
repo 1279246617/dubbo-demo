@@ -18,9 +18,9 @@ public class FirstWaybillItem implements Serializable {
 	 */
 	private Long id;
 
-	private Long bigPackageId;
+	private Long orderId;
 
-	private Long littlePackageId;
+	private Long firstWaybillId;
 	/**
 	 * sku
 	 */
@@ -68,20 +68,20 @@ public class FirstWaybillItem implements Serializable {
 		this.id = id;
 	}
 
-	public Long getBigPackageId() {
-		return bigPackageId;
+	public Long getOrderId() {
+		return orderId;
 	}
 
-	public void setBigPackageId(Long bigPackageId) {
-		this.bigPackageId = bigPackageId;
+	public void setOrderId(Long orderId) {
+		this.orderId = orderId;
 	}
 
-	public Long getLittlePackageId() {
-		return littlePackageId;
+	public Long getFirstWaybillId() {
+		return firstWaybillId;
 	}
 
-	public void setLittlePackageId(Long littlePackageId) {
-		this.littlePackageId = littlePackageId;
+	public void setFirstWaybillId(Long firstWaybillId) {
+		this.firstWaybillId = firstWaybillId;
 	}
 
 	public Integer getQuantity() {

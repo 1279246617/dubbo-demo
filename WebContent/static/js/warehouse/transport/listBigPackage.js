@@ -53,11 +53,11 @@ function checkOrder(){
 	            }else if(parent.$("#checkFail2").attr("checked")=='checked'){
 	            	checkResult = 'OTHER_REASON';
 	            }
-                var bigPackageIds = "";
+                var orderIds = "";
             	for ( var i = 0; i < row.length; i++) {
-            		bigPackageIds += row[i].id+",";
+            		orderIds += row[i].id+",";
 				}
-        		$.post(baseUrl + '/warehouse/transport/checkBigPackage.do',{bigPackageIds:bigPackageIds,checkResult:checkResult},function(msg){
+        		$.post(baseUrl + '/warehouse/transport/checkBigPackage.do',{orderIds:orderIds,checkResult:checkResult},function(msg){
         			if(msg.status == "1"){
         				grid.loadData();	
         				parent.$.showDialogMessage(msg.message,null,null);
@@ -111,7 +111,7 @@ function checkSingleOrder(id){
 	            }else if(parent.$("#checkFail2").attr("checked")=='checked'){
 	            	checkResult = 'OTHER_REASON';
 	            }
-        		$.post(baseUrl + '/warehouse/transport/checkBigPackage.do',{bigPackageIds:id,checkResult:checkResult},function(msg){
+        		$.post(baseUrl + '/warehouse/transport/checkBigPackage.do',{orderIds:id,checkResult:checkResult},function(msg){
         			if(msg.status == "1"){
         				grid.loadData();	
         				parent.$.showDialogMessage(msg.message,null,null);
@@ -128,14 +128,14 @@ function checkSingleOrder(id){
 }
 
 //SKU
-function listLittlePackages(bigPackageId){
+function listFirstWaybills(orderId){
 	var contentArr = [];
 	contentArr.push('<div style="height:340px;overflow:auto; ">');
 	contentArr.push('<table class="table table-condensed" style="width:749px">');
 	$.ajax({ 
         type : "post", 
-        url :baseUrl + '/warehouse/transport/getLittlePackageItemByBigPackageId.do', 
-        data : "bigPackageId="+bigPackageId, 
+        url :baseUrl + '/warehouse/transport/getFirstWaybillItemByorderId.do', 
+        data : "orderId="+orderId, 
         async : false, 
         success : function(msg){ 
         	msg = eval("(" + msg + ")");
@@ -151,7 +151,7 @@ function listLittlePackages(bigPackageId){
         		contentArr.push('<td>'+e.createdTime+'</td>');
 			  	contentArr.push('</tr>');
 			  	contentArr.push('<tr  class="warning"><th>&nbsp;</th><td>商品SKU</td><td>商品名称</td><td>商品单价(元)</td><td>规格型号</td><td>净重KG</td><td>数量</td></tr>');
-			  	$.each(e.littlePackageItemList,function(j,ei){
+			  	$.each(e.firstWaybillItemList,function(j,ei){
 			  		contentArr.push('<tr>');
 			  		contentArr.push('<td>&nbsp;</td>');
 				  	contentArr.push('<td>'+ei.sku+'</td>');
@@ -188,7 +188,7 @@ function listLittlePackages(bigPackageId){
 
 //打印订单
 function printSingleOrder(id){
-	    var url = baseUrl+'/warehouse/print/printTransportPackageList.do?bigPackageIds='+id;
+	    var url = baseUrl+'/warehouse/print/printTransportPackageList.do?orderIds='+id;
 		window.open(url);
 }
 
@@ -231,7 +231,7 @@ function printOrder(){
 				}
             	if(orderIds!=""){
             		//打印捡货单,新建标签页
-    			    var url = baseUrl+'/warehouse/print/printTransportPackageList.do?bigPackageIds='+orderIds;
+    			    var url = baseUrl+'/warehouse/print/printTransportPackageList.do?orderIds='+orderIds;
       			  	window.open(url);
             	}
   			}
@@ -245,7 +245,7 @@ function printOrder(){
 
 //打印运单
 function printSingleShipLabel(id){
-	var url = baseUrl+'/warehouse/print/printTransportShipLabel.do?bigPackageIds='+id;
+	var url = baseUrl+'/warehouse/print/printTransportShipLabel.do?orderIds='+id;
 	 window.open(url);
 }
 
@@ -288,7 +288,7 @@ function printShipLabel(){
             		orderIds += row[i].id+",";
 				}
             	if(orderIds!=""){
-            		var url = baseUrl+'/warehouse/print/printTransportShipLabel.do?bigPackageIds='+orderIds;
+            		var url = baseUrl+'/warehouse/print/printTransportShipLabel.do?orderIds='+orderIds;
             		 window.open(url);
             	}
   			}

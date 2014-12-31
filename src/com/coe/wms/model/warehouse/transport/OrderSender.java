@@ -17,7 +17,7 @@ public class OrderSender implements Serializable {
 
 	private Long id;
 
-	private Long bigPackageId;
+	private Long orderId;
 
 	/**
 	 * 发件人名
@@ -120,12 +120,12 @@ public class OrderSender implements Serializable {
 		this.mobileNumber = mobileNumber;
 	}
 
-	public Long getBigPackageId() {
-		return bigPackageId;
+	public Long getOrderId() {
+		return orderId;
 	}
 
-	public void setBigPackageId(Long bigPackageId) {
-		this.bigPackageId = bigPackageId;
+	public void setOrderId(Long orderId) {
+		this.orderId = orderId;
 	}
 
 	public String getFirstName() {

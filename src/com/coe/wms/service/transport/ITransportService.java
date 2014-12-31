@@ -59,7 +59,7 @@ public interface ITransportService {
 	 * @return
 	 * @throws ServiceException
 	 */
-	public List<FirstWaybillStatus> findAllLittlePackageStatus() throws ServiceException;
+	public List<FirstWaybillStatus> findAllFirstWaybillStatus() throws ServiceException;
 
 	public List<Shipway> findAllShipway() throws ServiceException;
 
@@ -70,15 +70,15 @@ public interface ITransportService {
 	 * @param page
 	 * @return
 	 */
-	public Pagination getBigPackageData(Order bigPackage, Map<String, String> moreParam, Pagination page) throws ServiceException;
+	public Pagination getBigPackageData(Order order, Map<String, String> moreParam, Pagination page) throws ServiceException;
 
-	public Pagination getLittlePackageData(FirstWaybill littlePackage, Map<String, String> moreParam, Pagination page) throws ServiceException;
+	public Pagination getFirstWaybillData(FirstWaybill firstWaybill, Map<String, String> moreParam, Pagination page) throws ServiceException;
 
-	public Pagination getLittlePackageOnShelfData(FirstWaybillOnShelf param, Map<String, String> moreParam, Pagination page) throws ServiceException;
+	public Pagination getFirstWaybillOnShelfData(FirstWaybillOnShelf param, Map<String, String> moreParam, Pagination page) throws ServiceException;
 
-	public List<Map<String, Object>> getLittlePackageItems(Long bigPackageId) throws ServiceException;
+	public List<Map<String, Object>> getFirstWaybillItems(Long orderId) throws ServiceException;
 
-	public List<FirstWaybillItem> getLittlePackageItemsByLittlePackageId(Long littlePackageId) throws ServiceException;
+	public List<FirstWaybillItem> getFirstWaybillItemsByFirstWaybillId(Long firstWaybillId) throws ServiceException;
 
 	/**
 	 * 审核转运订单
@@ -88,7 +88,7 @@ public interface ITransportService {
 	 * @return
 	 * @throws ServiceException
 	 */
-	public Map<String, String> checkBigPackage(String bigPackageIds, String checkResult, Long userIdOfOperator) throws ServiceException;
+	public Map<String, String> checkBigPackage(String orderIds, String checkResult, Long userIdOfOperator) throws ServiceException;
 
 	/**
 	 * 收货时 输入跟踪号 后查询转运订单
@@ -96,15 +96,15 @@ public interface ITransportService {
 	 * @param inWarehouseOrder
 	 * @return
 	 */
-	public List<Map<String, String>> checkReceivedLittlePackage(FirstWaybill littlePackage);
+	public List<Map<String, String>> checkReceivedFirstWaybill(FirstWaybill firstWaybill);
 
 	public Map<String, String> submitInWarehouse(String trackingNo, String remark, Long userIdOfOperator, Long warehouseId, Long inWarehouseOrderId);
 
-	public Map<String, String> bigPackageSubmitWeight(Long userIdOfOperator, Long bigPackageId, Double weight);
+	public Map<String, String> orderSubmitWeight(Long userIdOfOperator, Long orderId, Double weight);
 
-	public Map<String, String> saveLittlePackageOnShelves(Long userIdOfOperator, Long littlePackageId, String seatCode);
+	public Map<String, String> saveFirstWaybillOnShelves(Long userIdOfOperator, Long firstWaybillId, String seatCode);
 
-	public Map<String, String> bigPackageWeightSubmitCustomerReferenceNo(String customerReferenceNo, Long userIdOfOperator);
+	public Map<String, String> orderWeightSubmitCustomerReferenceNo(String customerReferenceNo, Long userIdOfOperator);
 
 	public Map<String, Object> outWarehousePackageEnterCoeTrackingNo(String coeTrackingNo);
 
@@ -135,7 +135,7 @@ public interface ITransportService {
 	 * @return
 	 * @throws ServiceException
 	 */
-	public Map<String, String> checkLittlePackage(Long bigPackageId, String trackingNo) throws ServiceException;
+	public Map<String, String> checkFirstWaybill(Long orderId, String trackingNo) throws ServiceException;
 
 	/**
 	 * 获取建包记录

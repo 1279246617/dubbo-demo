@@ -20,9 +20,9 @@ public class SsmNameSpace {
 
 	public static final String OUT_WAREHOUSE_ORDER_STATUS = "OUT_WAREHOUSE_ORDER_STATUS";
 
-	public static final String TRANSPORT_BIG_PACKAGE_STATUS = "TRANSPORT_BIG_PACKAGE_STATUS";
+	public static final String TRANSPORT_ORDER_STATUS = "TRANSPORT_ORDER_STATUS";
 
-	public static final String TRANSPORT_LITTLE_PACKAGE_STATUS = "TRANSPORT_LITTLE_PACKAGE_STATUS";
+	public static final String TRANSPORT_FIRST_WAYBILL_STATUS = "TRANSPORT_FIRST_WAYBILL_STATUS";
 
 	public static final String CURRENCY = "CURRENCY";
 

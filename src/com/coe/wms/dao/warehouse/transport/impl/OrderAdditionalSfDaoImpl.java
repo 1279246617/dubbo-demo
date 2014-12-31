@@ -19,7 +19,7 @@ import org.springframework.stereotype.Repository;
 
 import com.coe.wms.dao.datasource.DataSource;
 import com.coe.wms.dao.datasource.DataSourceCode;
-import com.coe.wms.dao.warehouse.transport.IBigPackageAdditionalSfDao;
+import com.coe.wms.dao.warehouse.transport.IOrderAdditionalSfDao;
 import com.coe.wms.model.warehouse.transport.OrderAdditionalSf;
 import com.coe.wms.util.NumberUtil;
 import com.coe.wms.util.Pagination;
@@ -30,10 +30,10 @@ import com.mysql.jdbc.Statement;
  * 
  * @author Administrator
  */
-@Repository("bigPackageAdditionalSfDao")
-public class BigPackageAdditionalSfDaoImpl implements IBigPackageAdditionalSfDao {
+@Repository("orderAdditionalSfDao")
+public class OrderAdditionalSfDaoImpl implements IOrderAdditionalSfDao {
 
-	Logger logger = Logger.getLogger(BigPackageAdditionalSfDaoImpl.class);
+	Logger logger = Logger.getLogger(OrderAdditionalSfDaoImpl.class);
 
 	@Resource(name = "jdbcTemplate")
 	private JdbcTemplate jdbcTemplate;
@@ -42,13 +42,13 @@ public class BigPackageAdditionalSfDaoImpl implements IBigPackageAdditionalSfDao
 	 */
 	@Override
 	@DataSource(DataSourceCode.WMS)
-	public long saveBigPackageAdditionalSf(final OrderAdditionalSf additionalSf) {
-		final String sql = "insert into w_t_order_additional_sf (big_package_id,carrier_code,mail_no,sender_address,cust_id,pay_method,shipper_code,delivery_code,customer_order_id) values (?,?,?,?,?,?,?,?,?)";
+	public long saveOrderAdditionalSf(final OrderAdditionalSf additionalSf) {
+		final String sql = "insert into w_t_order_additional_sf (order_id,carrier_code,mail_no,sender_address,cust_id,pay_method,shipper_code,delivery_code,customer_order_id) values (?,?,?,?,?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
 				PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-				ps.setLong(1, additionalSf.getBigPackageId());
+				ps.setLong(1, additionalSf.getOrderId());
 				ps.setString(2, additionalSf.getCarrierCode());
 				ps.setString(3, additionalSf.getMailNo());
 				ps.setString(4, additionalSf.getSenderAddress());
@@ -68,13 +68,13 @@ public class BigPackageAdditionalSfDaoImpl implements IBigPackageAdditionalSfDao
 	 */
 	@Override
 	@DataSource(DataSourceCode.WMS)
-	public int saveBatchBigPackageAdditionalSf(final List<OrderAdditionalSf> receiverList) {
-		final String sql = "insert into w_t_order_additional_sf (big_package_id,carrier_code,mail_no,sender_address,cust_id,pay_method,shipper_code,delivery_code,customer_order_id) values (?,?,?,?,?,?,?,?,?)";
+	public int saveBatchOrderAdditionalSf(final List<OrderAdditionalSf> receiverList) {
+		final String sql = "insert into w_t_order_additional_sf (order_id,carrier_code,mail_no,sender_address,cust_id,pay_method,shipper_code,delivery_code,customer_order_id) values (?,?,?,?,?,?,?,?,?)";
 		int[] batchUpdateSize = jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
 			@Override
 			public void setValues(PreparedStatement ps, int i) throws SQLException {
 				OrderAdditionalSf additionalSf = receiverList.get(i);
-				ps.setLong(1, additionalSf.getBigPackageId());
+				ps.setLong(1, additionalSf.getOrderId());
 				ps.setString(2, additionalSf.getCarrierCode());
 				ps.setString(3, additionalSf.getMailNo());
 				ps.setString(4, additionalSf.getSenderAddress());
@@ -95,13 +95,13 @@ public class BigPackageAdditionalSfDaoImpl implements IBigPackageAdditionalSfDao
 
 	@Override
 	@DataSource(DataSourceCode.WMS)
-	public int saveBatchBigPackageAdditionalSfWithPackageId(final List<OrderAdditionalSf> receiverList, final Long bigPackageId) {
-		final String sql = "insert into w_t_order_additional_sf (big_package_id,carrier_code,mail_no,sender_address,cust_id,pay_method,shipper_code,delivery_code,customer_order_id) values (?,?,?,?,?,?,?,?,?)";
+	public int saveBatchOrderAdditionalSfWithPackageId(final List<OrderAdditionalSf> receiverList, final Long OrderId) {
+		final String sql = "insert into w_t_order_additional_sf (order_id,carrier_code,mail_no,sender_address,cust_id,pay_method,shipper_code,delivery_code,customer_order_id) values (?,?,?,?,?,?,?,?,?)";
 		int[] batchUpdateSize = jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
 			@Override
 			public void setValues(PreparedStatement ps, int i) throws SQLException {
 				OrderAdditionalSf additionalSf = receiverList.get(i);
-				ps.setLong(1, bigPackageId);
+				ps.setLong(1, OrderId);
 				ps.setString(2, additionalSf.getCarrierCode());
 				ps.setString(3, additionalSf.getMailNo());
 				ps.setString(4, additionalSf.getSenderAddress());
@@ -130,36 +130,36 @@ public class BigPackageAdditionalSfDaoImpl implements IBigPackageAdditionalSfDao
 	 * 参数一律使用实体类加Map .
 	 */
 	@Override
-	public List<OrderAdditionalSf> findBigPackageAdditionalSf(OrderAdditionalSf BigPackageAdditionalSf, Map<String, String> moreParam, Pagination page) {
+	public List<OrderAdditionalSf> findOrderAdditionalSf(OrderAdditionalSf OrderAdditionalSf, Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select id,big_package_id,carrier_code,mail_no,sender_address,cust_id,pay_method,shipper_code,delivery_code,customer_order_id from w_t_order_additional_sf where 1=1 ");
-		if (BigPackageAdditionalSf != null) {
-			if (StringUtil.isNotNull(BigPackageAdditionalSf.getCarrierCode())) {
-				sb.append(" and carrier_code = '" + BigPackageAdditionalSf.getCarrierCode() + "' ");
+		sb.append("select id,order_id,carrier_code,mail_no,sender_address,cust_id,pay_method,shipper_code,delivery_code,customer_order_id from w_t_order_additional_sf where 1=1 ");
+		if (OrderAdditionalSf != null) {
+			if (StringUtil.isNotNull(OrderAdditionalSf.getCarrierCode())) {
+				sb.append(" and carrier_code = '" + OrderAdditionalSf.getCarrierCode() + "' ");
 			}
-			if (StringUtil.isNotNull(BigPackageAdditionalSf.getMailNo())) {
-				sb.append(" and mail_no = '" + BigPackageAdditionalSf.getMailNo() + "' ");
+			if (StringUtil.isNotNull(OrderAdditionalSf.getMailNo())) {
+				sb.append(" and mail_no = '" + OrderAdditionalSf.getMailNo() + "' ");
 			}
-			if (BigPackageAdditionalSf.getId() != null) {
-				sb.append(" and id = '" + BigPackageAdditionalSf.getId() + "' ");
+			if (OrderAdditionalSf.getId() != null) {
+				sb.append(" and id = '" + OrderAdditionalSf.getId() + "' ");
 			}
-			if (BigPackageAdditionalSf.getBigPackageId() != null) {
-				sb.append(" and big_package_id = " + BigPackageAdditionalSf.getBigPackageId());
+			if (OrderAdditionalSf.getOrderId() != null) {
+				sb.append(" and order_id = " + OrderAdditionalSf.getOrderId());
 			}
 		}
 		// 分页sql
 		sb.append(page.generatePageSql());
 		String sql = sb.toString();
-		List<OrderAdditionalSf> BigPackageAdditionalSfList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(OrderAdditionalSf.class));
-		return BigPackageAdditionalSfList;
+		List<OrderAdditionalSf> OrderAdditionalSfList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(OrderAdditionalSf.class));
+		return OrderAdditionalSfList;
 	}
 
 	@Override
-	public OrderAdditionalSf getBigPackageAdditionalSfByPackageId(Long orderId) {
-		String sql = "select id,big_package_id,carrier_code,mail_no,sender_address,cust_id,pay_method,shipper_code,delivery_code,customer_order_id from w_t_order_additional_sf where big_package_id = " + orderId;
-		List<OrderAdditionalSf> BigPackageAdditionalSfList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(OrderAdditionalSf.class));
-		if (BigPackageAdditionalSfList != null && BigPackageAdditionalSfList.size() > 0) {
-			return BigPackageAdditionalSfList.get(0);
+	public OrderAdditionalSf getOrderAdditionalSfByOrderId(Long orderId) {
+		String sql = "select id,order_id,carrier_code,mail_no,sender_address,cust_id,pay_method,shipper_code,delivery_code,customer_order_id from w_t_order_additional_sf where order_id = " + orderId;
+		List<OrderAdditionalSf> OrderAdditionalSfList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(OrderAdditionalSf.class));
+		if (OrderAdditionalSfList != null && OrderAdditionalSfList.size() > 0) {
+			return OrderAdditionalSfList.get(0);
 		}
 		return null;
 	}

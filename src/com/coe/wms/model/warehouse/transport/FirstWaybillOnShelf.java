@@ -45,11 +45,11 @@ public class FirstWaybillOnShelf implements Serializable {
 	/**
 	 * 小包id
 	 */
-	private Long littlePackageId;
+	private Long firstWaybillId;
 	/**
 	 * 大包id
 	 */
-	private Long bigPackageId;
+	private Long orderId;
 	/**
 	 * 跟踪号小包的到货单号
 	 */
@@ -67,7 +67,7 @@ public class FirstWaybillOnShelf implements Serializable {
 
 	private Long createdTime;
 
-	private List<FirstWaybillItem> littlePackageItemList;
+	private List<FirstWaybillItem> firstWaybillItemList;
 
 	public Long getId() {
 		return id;
@@ -93,8 +93,8 @@ public class FirstWaybillOnShelf implements Serializable {
 		this.warehouseId = warehouseId;
 	}
 
-	public Long getLittlePackageId() {
-		return littlePackageId;
+	public Long getFirstWaybillId() {
+		return firstWaybillId;
 	}
 
 	public Long getUserIdOfOperator() {
@@ -105,16 +105,16 @@ public class FirstWaybillOnShelf implements Serializable {
 		this.userIdOfOperator = userIdOfOperator;
 	}
 
-	public void setLittlePackageId(Long littlePackageId) {
-		this.littlePackageId = littlePackageId;
+	public void setFirstWaybillId(Long firstWaybillId) {
+		this.firstWaybillId = firstWaybillId;
 	}
 
-	public Long getBigPackageId() {
-		return bigPackageId;
+	public Long getOrderId() {
+		return orderId;
 	}
 
-	public void setBigPackageId(Long bigPackageId) {
-		this.bigPackageId = bigPackageId;
+	public void setOrderId(Long orderId) {
+		this.orderId = orderId;
 	}
 
 	public String getTrackingNo() {
@@ -125,12 +125,12 @@ public class FirstWaybillOnShelf implements Serializable {
 		this.trackingNo = trackingNo;
 	}
 
-	public List<FirstWaybillItem> getLittlePackageItemList() {
-		return littlePackageItemList;
+	public List<FirstWaybillItem> getFirstWaybillItemList() {
+		return firstWaybillItemList;
 	}
 
-	public void setLittlePackageItemList(List<FirstWaybillItem> littlePackageItemList) {
-		this.littlePackageItemList = littlePackageItemList;
+	public void setFirstWaybillItemList(List<FirstWaybillItem> firstWaybillItemList) {
+		this.firstWaybillItemList = firstWaybillItemList;
 	}
 
 	public String getSeatCode() {

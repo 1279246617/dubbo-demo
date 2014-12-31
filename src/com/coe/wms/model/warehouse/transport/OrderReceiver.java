@@ -23,9 +23,9 @@ public class OrderReceiver implements Serializable {
 
 	private Long id;
 	/**
-	 * bigPackageId
+	 * orderId
 	 */
-	private Long bigPackageId;
+	private Long orderId;
 	/**
 	 * 收件人名
 	 */
@@ -112,13 +112,12 @@ public class OrderReceiver implements Serializable {
 		this.id = id;
 	}
 
-
-	public Long getBigPackageId() {
-		return bigPackageId;
+	public Long getOrderId() {
+		return orderId;
 	}
 
-	public void setBigPackageId(Long bigPackageId) {
-		this.bigPackageId = bigPackageId;
+	public void setOrderId(Long orderId) {
+		this.orderId = orderId;
 	}
 
 	public String getName() {
