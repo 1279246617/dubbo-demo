@@ -82,20 +82,20 @@ public class Transport {
 	 * @return
 	 * @throws IOException
 	 */
-	@RequestMapping(value = "/listBigPackage", method = RequestMethod.GET)
-	public ModelAndView listBigPackage(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	@RequestMapping(value = "/listOrder", method = RequestMethod.GET)
+	public ModelAndView listOrder(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		HttpSession session = request.getSession();
 		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
 		ModelAndView view = new ModelAndView();
 		view.addObject("userId", userId);
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
-		List<OrderStatus> orderStatusList = transportService.findAllBigPackageStatus();
+		List<OrderStatus> orderStatusList = transportService.findAllOrderStatus();
 		view.addObject("orderStatusList", orderStatusList);
 		List<Shipway> shipwayList = transportService.findAllShipway();
 		view.addObject("shipwayList", shipwayList);
 		User user = userService.getUserById(userId);
 		view.addObject("warehouseList", storageService.findAllWarehouse(user.getDefaultWarehouseId()));
-		view.setViewName("warehouse/transport/listBigPackage");
+		view.setViewName("warehouse/transport/listOrder");
 		return view;
 	}
 
@@ -107,18 +107,18 @@ public class Transport {
 	 * @return
 	 * @throws IOException
 	 */
-	@RequestMapping(value = "/listWaitCheckBigPackage", method = RequestMethod.GET)
-	public ModelAndView listWaitCheckBigPackage(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	@RequestMapping(value = "/listWaitCheckOrder", method = RequestMethod.GET)
+	public ModelAndView listWaitCheckOrder(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		HttpSession session = request.getSession();
 		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
 		ModelAndView view = new ModelAndView();
 		view.addObject("userId", userId);
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
 		User user = userService.getUserById(userId);
-		List<OrderStatus> orderStatusList = transportService.findAllBigPackageStatus();
+		List<OrderStatus> orderStatusList = transportService.findAllOrderStatus();
 		view.addObject("orderStatusList", orderStatusList);
 		view.addObject("warehouseList", storageService.findAllWarehouse(user.getDefaultWarehouseId()));
-		view.setViewName("warehouse/transport/listWaitCheckBigPackage");
+		view.setViewName("warehouse/transport/listWaitCheckOrder");
 		return view;
 	}
 
@@ -133,8 +133,8 @@ public class Transport {
 	 * @throws IOException
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/getBigPackageData", method = RequestMethod.POST)
-	public String getBigPackageData(HttpServletRequest request, String sortorder, String sortname, int page, int pagesize, String userLoginName, Long warehouseId, String customerReferenceNo, String createdTimeStart, String createdTimeEnd,
+	@RequestMapping(value = "/getOrderData", method = RequestMethod.POST)
+	public String getOrderData(HttpServletRequest request, String sortorder, String sortname, int page, int pagesize, String userLoginName, Long warehouseId, String customerReferenceNo, String createdTimeStart, String createdTimeEnd,
 			String status, String shipway, String nos, String noType, String trackingNoIsNull) throws IOException {
 		HttpSession session = request.getSession();
 		// 当前操作员
@@ -165,7 +165,7 @@ public class Transport {
 		moreParam.put("noType", noType);
 		moreParam.put("trackingNoIsNull", trackingNoIsNull);// 跟踪号是否为空
 
-		pagination = transportService.getBigPackageData(param, moreParam, pagination);
+		pagination = transportService.getOrderData(param, moreParam, pagination);
 		Map map = new HashMap();
 		map.put("Rows", pagination.rows);
 		map.put("Total", pagination.total);
@@ -193,13 +193,13 @@ public class Transport {
 	 * checkResult:1 审核通过 2审核不通过
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/checkBigPackage")
-	public String checkBigPackage(HttpServletRequest request, String orderIds, String checkResult) throws IOException {
+	@RequestMapping(value = "/checkOrder")
+	public String checkOrder(HttpServletRequest request, String orderIds, String checkResult) throws IOException {
 		HttpSession session = request.getSession();
 		// 当前操作员
 		Long userIdOfOperator = (Long) session.getAttribute(SessionConstant.USER_ID);
 		logger.info("审核转运订单 操作员id:" + userIdOfOperator + " checkResult:" + checkResult + " 订单:" + orderIds);
-		Map<String, String> checkResultMap = transportService.checkBigPackage(orderIds, checkResult, userIdOfOperator);
+		Map<String, String> checkResultMap = transportService.checkOrder(orderIds, checkResult, userIdOfOperator);
 		return GsonUtil.toJson(checkResultMap);
 	}
 
@@ -528,18 +528,18 @@ public class Transport {
 	 * @return
 	 * @throws IOException
 	 */
-	@RequestMapping(value = "/listWaiPrintBigPackage", method = RequestMethod.GET)
-	public ModelAndView listWaiPrintBigPackage(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	@RequestMapping(value = "/listWaiPrintOrder", method = RequestMethod.GET)
+	public ModelAndView listWaiPrintOrder(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		HttpSession session = request.getSession();
 		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
 		ModelAndView view = new ModelAndView();
 		view.addObject("userId", userId);
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
 		User user = userService.getUserById(userId);
-		List<OrderStatus> orderStatusList = transportService.findAllBigPackageStatus();
+		List<OrderStatus> orderStatusList = transportService.findAllOrderStatus();
 		view.addObject("orderStatusList", orderStatusList);
 		view.addObject("warehouseList", storageService.findAllWarehouse(user.getDefaultWarehouseId()));
-		view.setViewName("warehouse/transport/listWaiPrintBigPackage");
+		view.setViewName("warehouse/transport/listWaiPrintOrder");
 		return view;
 	}
 
@@ -745,8 +745,8 @@ public class Transport {
 	 * @throws IOException
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/getPackageRecordData")
-	public String getPackageRecordData(HttpServletRequest request, String sortorder, String sortname, int page, int pagesize, String userLoginName, Long warehouseId, String coeTrackingNo, String createdTimeStart, String createdTimeEnd)
+	@RequestMapping(value = "/getOutWarehousePackageData")
+	public String getOutWarehousePackageData(HttpServletRequest request, String sortorder, String sortname, int page, int pagesize, String userLoginName, Long warehouseId, String coeTrackingNo, String createdTimeStart, String createdTimeEnd)
 			throws IOException {
 		HttpSession session = request.getSession();
 		// 当前操作员
@@ -767,7 +767,7 @@ public class Transport {
 		Map<String, String> moreParam = new HashMap<String, String>();
 		moreParam.put("createdTimeStart", createdTimeStart);
 		moreParam.put("createdTimeEnd", createdTimeEnd);
-		pagination = transportService.getPackageRecordData(param, moreParam, pagination);
+		pagination = transportService.getOutWarehousePackageData(param, moreParam, pagination);
 		Map map = new HashMap();
 		map.put("Rows", pagination.rows);
 		map.put("Total", pagination.total);
@@ -775,9 +775,9 @@ public class Transport {
 	}
 
 	@ResponseBody
-	@RequestMapping(value = "/getPackageRecordItemByPackageRecordId", method = RequestMethod.POST)
-	public String getPackageRecordItemByPackageRecordId(Long packageRecordId) {
-		List<Map<String, String>> mapList = transportService.getPackageRecordItemByPackageRecordId(packageRecordId);
+	@RequestMapping(value = "/getOutWarehousePackageItemByOutWarehousePackageId", method = RequestMethod.POST)
+	public String getOutWarehousePackageItemByOutWarehousePackageId(Long packageRecordId) {
+		List<Map<String, String>> mapList = transportService.getOutWarehousePackageItemByOutWarehousePackageId(packageRecordId);
 		return GsonUtil.toJson(mapList);
 	}
 
@@ -788,15 +788,15 @@ public class Transport {
 	 * @return
 	 * @throws IOException
 	 */
-	@RequestMapping(value = "/editPackageRecordRemark", method = RequestMethod.GET)
-	public ModelAndView editPackageRecordRemark(HttpServletRequest request, HttpServletResponse response, Long id, String remark) throws IOException {
+	@RequestMapping(value = "/editOutWarehousePackageRemark", method = RequestMethod.GET)
+	public ModelAndView editOutWarehousePackageRemark(HttpServletRequest request, HttpServletResponse response, Long id, String remark) throws IOException {
 		ModelAndView view = new ModelAndView();
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
 		if (remark == null) {
 			remark = "";
 		}
 		view.addObject("remark", remark);
-		view.setViewName("warehouse/transport/editPackageRecordRemark");
+		view.setViewName("warehouse/transport/editOutWarehousePackageRemark");
 		return view;
 	}
 
@@ -804,9 +804,9 @@ public class Transport {
 	 * @throws IOException
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/savePackageRecordRemark")
-	public String savePackageRecordRemark(HttpServletRequest request, Long id, String remark) throws IOException {
-		Map<String, String> map = transportService.savePackageRecordRemark(remark, id);
+	@RequestMapping(value = "/saveOutWarehousePackageRemark")
+	public String saveOutWarehousePackageRemark(HttpServletRequest request, Long id, String remark) throws IOException {
+		Map<String, String> map = transportService.saveOutWarehousePackageRemark(remark, id);
 		return GsonUtil.toJson(map);
 	}
 

@@ -25,9 +25,9 @@ import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderSenderDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderStatusDao;
 import com.coe.wms.dao.warehouse.transport.IOrderAdditionalSfDao;
 import com.coe.wms.dao.warehouse.transport.IOrderDao;
-import com.coe.wms.dao.warehouse.transport.IBigPackageReceiverDao;
-import com.coe.wms.dao.warehouse.transport.IBigPackageSenderDao;
-import com.coe.wms.dao.warehouse.transport.IBigPackageStatusDao;
+import com.coe.wms.dao.warehouse.transport.IOrderReceiverDao;
+import com.coe.wms.dao.warehouse.transport.IOrderSenderDao;
+import com.coe.wms.dao.warehouse.transport.IOrderStatusDao;
 import com.coe.wms.dao.warehouse.transport.IFirstWaybillDao;
 import com.coe.wms.dao.warehouse.transport.IFirstWaybillItemDao;
 import com.coe.wms.dao.warehouse.transport.IFirstWaybillStatusDao;
@@ -113,13 +113,13 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 	private IOrderDao orderDao;
 
 	@Resource(name = "orderReceiverDao")
-	private IBigPackageReceiverDao orderReceiverDao;
+	private IOrderReceiverDao orderReceiverDao;
 
 	@Resource(name = "orderSenderDao")
-	private IBigPackageSenderDao orderSenderDao;
+	private IOrderSenderDao orderSenderDao;
 
 	@Resource(name = "orderStatusDao")
-	private IBigPackageStatusDao orderStatusDao;
+	private IOrderStatusDao orderStatusDao;
 
 	@Resource(name = "firstWaybillItemDao")
 	private IFirstWaybillItemDao firstWaybillItemDao;
@@ -512,13 +512,13 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 	 */
 	@Scheduled(cron = "0 0/10 8-23 * * ? ")
 	@Override
-	public void sendBigPackageCheckResultToCustomer() {
-		List<Long> orderIdList = orderDao.findCallbackSendCheckUnSuccessorderId();
+	public void sendOrderCheckResultToCustomer() {
+		List<Long> orderIdList = orderDao.findCallbackSendCheckUnSuccessOrderId();
 		for (int i = 0; i < orderIdList.size(); i++) {
 			Long orderId = orderIdList.get(i);
 			Long orderIdLong = Long.valueOf(orderId);
 			// 查询订单的当前状态
-			String oldStatus = orderDao.getBigPackageStatus(orderIdLong);
+			String oldStatus = orderDao.getOrderStatus(orderIdLong);
 			// 如果不是审核中状态的订单,直接跳过
 			if (!StringUtil.isEqual(oldStatus, OrderStatusCode.WCI)) {
 				continue;
@@ -617,7 +617,7 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 					continue;
 				}
 				// 更新 Callback 次数和成功状态
-				orderDao.updateBigPackageCallbackSendCheck(order);
+				orderDao.updateOrderCallbackSendCheck(order);
 			} catch (Exception e) {
 				logger.error("回传转运订单审核时发生异常:" + e.getMessage());
 			}
@@ -735,13 +735,13 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 	 */
 	@Scheduled(cron = "0 0/10 8-23 * * ? ")
 	@Override
-	public void sendBigPackageWeightToCustomer() {
-		List<Long> orderIdList = orderDao.findCallbackSendWeightUnSuccessorderId();
+	public void sendOrderWeightToCustomer() {
+		List<Long> orderIdList = orderDao.findCallbackSendWeightUnSuccessOrderId();
 		for (int i = 0; i < orderIdList.size(); i++) {
 			Long orderId = orderIdList.get(i);
 			Long orderIdLong = Long.valueOf(orderId);
 			// 查询订单的当前状态
-			String oldStatus = orderDao.getBigPackageStatus(orderIdLong);
+			String oldStatus = orderDao.getOrderStatus(orderIdLong);
 			// 如果不是待发送重量状态的订单,直接跳过
 			if (!StringUtil.isEqual(oldStatus, OrderStatusCode.WSW)) {
 				continue;
@@ -834,7 +834,7 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 					continue;
 				}
 				// 更新 Callback 次数和成功状态
-				orderDao.updateBigPackageCallbackSendWeight(order);
+				orderDao.updateOrderCallbackSendWeight(order);
 			} catch (Exception e) {
 				logger.error("回传转运订单称重时发生异常:" + e.getMessage());
 			}
@@ -846,8 +846,8 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 	 */
 	@Scheduled(cron = "0 0/15 8-23 * * ? ")
 	@Override
-	public void sendBigPackageStatusToCustomer() {
-		List<Long> orderIdList = orderDao.findCallbackSendStatusUnSuccessorderId();
+	public void sendOrderStatusToCustomer() {
+		List<Long> orderIdList = orderDao.findCallbackSendStatusUnSuccessOrderId();
 		logger.info("找到待回传转运出库状态,订单总数:" + orderIdList.size());
 		// 根据id 获取记录
 		for (int i = 0; i < orderIdList.size(); i++) {
@@ -933,7 +933,7 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 					logger.error("回传转运订单出库状态信息,返回无指明成功与否");
 				}
 				// 更新入库记录的Callback 次数和成功状态
-				orderDao.updateBigPackageCallbackSendStatus(order);
+				orderDao.updateOrderCallbackSendStatus(order);
 			} catch (Exception e) {
 				logger.error("回传转运订单出库状态信息时发生异常:" + e.getMessage());
 			}

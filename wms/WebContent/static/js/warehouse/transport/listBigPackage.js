@@ -57,7 +57,7 @@ function checkOrder(){
             	for ( var i = 0; i < row.length; i++) {
             		orderIds += row[i].id+",";
 				}
-        		$.post(baseUrl + '/warehouse/transport/checkBigPackage.do',{orderIds:orderIds,checkResult:checkResult},function(msg){
+        		$.post(baseUrl + '/warehouse/transport/checkOrder.do',{orderIds:orderIds,checkResult:checkResult},function(msg){
         			if(msg.status == "1"){
         				grid.loadData();	
         				parent.$.showDialogMessage(msg.message,null,null);
@@ -111,7 +111,7 @@ function checkSingleOrder(id){
 	            }else if(parent.$("#checkFail2").attr("checked")=='checked'){
 	            	checkResult = 'OTHER_REASON';
 	            }
-        		$.post(baseUrl + '/warehouse/transport/checkBigPackage.do',{orderIds:id,checkResult:checkResult},function(msg){
+        		$.post(baseUrl + '/warehouse/transport/checkOrder.do',{orderIds:id,checkResult:checkResult},function(msg){
         			if(msg.status == "1"){
         				grid.loadData();	
         				parent.$.showDialogMessage(msg.message,null,null);

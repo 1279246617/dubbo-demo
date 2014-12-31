@@ -27,9 +27,9 @@ import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderSenderDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderStatusDao;
 import com.coe.wms.dao.warehouse.transport.IOrderAdditionalSfDao;
 import com.coe.wms.dao.warehouse.transport.IOrderDao;
-import com.coe.wms.dao.warehouse.transport.IBigPackageReceiverDao;
-import com.coe.wms.dao.warehouse.transport.IBigPackageSenderDao;
-import com.coe.wms.dao.warehouse.transport.IBigPackageStatusDao;
+import com.coe.wms.dao.warehouse.transport.IOrderReceiverDao;
+import com.coe.wms.dao.warehouse.transport.IOrderSenderDao;
+import com.coe.wms.dao.warehouse.transport.IOrderStatusDao;
 import com.coe.wms.dao.warehouse.transport.IFirstWaybillDao;
 import com.coe.wms.dao.warehouse.transport.IFirstWaybillItemDao;
 import com.coe.wms.dao.warehouse.transport.IFirstWaybillStatusDao;
@@ -91,13 +91,13 @@ public class ApplyTrackingNoTaskImpl implements IApplyTrackingNoTask {
 	private IOrderDao orderDao;
 
 	@Resource(name = "orderReceiverDao")
-	private IBigPackageReceiverDao orderReceiverDao;
+	private IOrderReceiverDao orderReceiverDao;
 
 	@Resource(name = "orderSenderDao")
-	private IBigPackageSenderDao orderSenderDao;
+	private IOrderSenderDao orderSenderDao;
 
 	@Resource(name = "orderStatusDao")
-	private IBigPackageStatusDao orderStatusDao;
+	private IOrderStatusDao orderStatusDao;
 
 	@Resource(name = "firstWaybillItemDao")
 	private IFirstWaybillItemDao firstWaybillItemDao;
@@ -126,18 +126,18 @@ public class ApplyTrackingNoTaskImpl implements IApplyTrackingNoTask {
 	@Override
 	public void transportOrderApplyTrackingNo() {
 		// 1出单号为空,并且状态是未审核
-		List<Long> orderIds = orderDao.findUnCheckAndTackingNoIsNullorderId();
+		List<Long> orderIds = orderDao.findUnCheckAndTackingNoIsNullOrderId();
 		for (int i = 0; i < orderIds.size(); i++) {
 			Long orderId = orderIds.get(i);
 			Order order = orderDao.getOrderById(orderId);
-			OrderReceiver orderReceiver = orderReceiverDao.getBigPackageReceiverByPackageId(orderId);
-			OrderSender orderSender = orderSenderDao.getBigPackageSenderByPackageId(orderId);
+			OrderReceiver orderReceiver = orderReceiverDao.getOrderReceiverByPackageId(orderId);
+			OrderSender orderSender = orderSenderDao.getOrderSenderByPackageId(orderId);
 			// 出货渠道是ETK
 			if (StringUtil.isEqual(order.getShipwayCode(), ShipwayCode.ETK)) {
-				com.coe.etk.api.request.Order order = new com.coe.etk.api.request.Order();
-				order.setCurrency(CurrencyCode.CNY);
-				order.setCustomerNo("sam");// 测试
-				order.setReferenceId(order.getCustomerReferenceNo());// 客户参考号
+				com.coe.etk.api.request.Order apiOrder = new com.coe.etk.api.request.Order();
+				apiOrder.setCurrency(CurrencyCode.CNY);
+				apiOrder.setCustomerNo("sam");// 测试
+				apiOrder.setReferenceId(order.getCustomerReferenceNo());// 客户参考号
 				FirstWaybillItem itemParam = new FirstWaybillItem();
 				itemParam.setOrderId(orderId);
 				List<FirstWaybillItem> firstWaybillItems = firstWaybillItemDao.findFirstWaybillItem(itemParam, null, null);
@@ -158,7 +158,7 @@ public class ApplyTrackingNoTaskImpl implements IApplyTrackingNoTask {
 					item.setItemWeight(weight);
 					items.add(item);
 				}
-				order.setItems(items);
+				apiOrder.setItems(items);
 				// 收件人
 				Receiver receiver = new Receiver();
 				receiver.setReceiverAddress1(orderReceiver.getAddressLine1());
@@ -169,19 +169,19 @@ public class ApplyTrackingNoTaskImpl implements IApplyTrackingNoTask {
 				receiver.setReceiverCountry(orderReceiver.getCountryCode());
 				receiver.setReceiverPhone(orderReceiver.getPhoneNumber());
 				receiver.setReceiverProvince(orderReceiver.getStateOrProvince());
-				order.setReceiver(receiver);
+				apiOrder.setReceiver(receiver);
 				// 发件人
 				Sender sender = new Sender();
 				sender.setSenderAddress(orderSender.getAddressLine1());
 				sender.setSenderName(orderSender.getName());
 				sender.setSenderPhone(orderReceiver.getPhoneNumber());
-				order.setSender(sender);
+				apiOrder.setSender(sender);
 
 				Client client = new Client();
 				client.setToken("c587efdfcb6e4cd3");
 				client.setTokenKey("b5e3d9769218deb3");
 				client.setUrl("http://58.96.174.216:8080/coeimport/orderApi");
-				client.applyTrackingNo(order);
+				client.applyTrackingNo(apiOrder);
 			}
 		}
 	}
