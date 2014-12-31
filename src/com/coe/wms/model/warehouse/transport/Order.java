@@ -10,8 +10,13 @@ import java.io.Serializable;
  * 回传收货以小包为单位
  * 
  * 回传出库以大包为单位
+ * 
+ * TransportPackage
+ * TransportOrder
+ * TransportFirstWaybill
+ * TransportFirstWaybillItem
  */
-public class BigPackage implements Serializable {
+public class Order implements Serializable {
 	/**
 	 * 
 	 */

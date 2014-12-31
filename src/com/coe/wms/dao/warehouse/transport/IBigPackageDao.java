@@ -4,18 +4,18 @@ import java.util.List;
 import java.util.Map;
 
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrder;
-import com.coe.wms.model.warehouse.transport.BigPackage;
+import com.coe.wms.model.warehouse.transport.Order;
 import com.coe.wms.util.Pagination;
 
 public interface IBigPackageDao {
 
-	public long saveBigPackage(BigPackage bigPackage);
+	public long saveBigPackage(Order bigPackage);
 
-	public BigPackage getBigPackageById(Long bigPackageId);
+	public Order getBigPackageById(Long bigPackageId);
 
-	public List<BigPackage> findBigPackage(BigPackage bigPackage, Map<String, String> moreParam, Pagination page);
+	public List<Order> findBigPackage(Order bigPackage, Map<String, String> moreParam, Pagination page);
 
-	public Long countBigPackage(BigPackage bigPackage, Map<String, String> moreParam);
+	public Long countBigPackage(Order bigPackage, Map<String, String> moreParam);
 
 	public String getBigPackageStatus(Long bigPackageId);
 
@@ -25,7 +25,7 @@ public interface IBigPackageDao {
 
 	public int updateBigPackageCheckResult(Long bigPackageId, String checkResult);
 
-	public int updateBigPackageWeight(BigPackage bigPackage);
+	public int updateBigPackageWeight(Order bigPackage);
 
 	public List<Long> findCallbackSendCheckUnSuccessBigPackageId();
 
@@ -35,11 +35,11 @@ public interface IBigPackageDao {
 
 	public List<Long> findCallbackSendStatusUnSuccessBigPackageId();
 
-	public int updateBigPackageCallbackSendCheck(BigPackage bigPackage);
+	public int updateBigPackageCallbackSendCheck(Order bigPackage);
 
-	public int updateBigPackageCallbackSendWeight(BigPackage bigPackage);
+	public int updateBigPackageCallbackSendWeight(Order bigPackage);
 
-	public int updateBigPackageCallbackSendStatus(BigPackage bigPackage);
+	public int updateBigPackageCallbackSendStatus(Order bigPackage);
 
-	public int updateBigPackageTrackingNo(BigPackage bigPackage);
+	public int updateBigPackageTrackingNo(Order bigPackage);
 }

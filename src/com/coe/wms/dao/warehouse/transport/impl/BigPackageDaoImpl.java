@@ -23,9 +23,9 @@ import com.coe.wms.dao.datasource.DataSource;
 import com.coe.wms.dao.datasource.DataSourceCode;
 import com.coe.wms.dao.warehouse.transport.IBigPackageDao;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrder;
-import com.coe.wms.model.warehouse.transport.BigPackage;
-import com.coe.wms.model.warehouse.transport.BigPackageReceiver;
-import com.coe.wms.model.warehouse.transport.BigPackageStatus.BigPackageStatusCode;
+import com.coe.wms.model.warehouse.transport.Order;
+import com.coe.wms.model.warehouse.transport.OrderReceiver;
+import com.coe.wms.model.warehouse.transport.OrderStatus.OrderStatusCode;
 import com.coe.wms.util.Constant;
 import com.coe.wms.util.DateUtil;
 import com.coe.wms.util.Pagination;
@@ -46,8 +46,8 @@ public class BigPackageDaoImpl implements IBigPackageDao {
 
 	@Override
 	@DataSource(DataSourceCode.WMS)
-	public long saveBigPackage(final BigPackage bigPackage) {
-		final String sql = "insert into w_t_big_package (warehouse_id,user_id_of_customer,user_id_of_operator,shipway_code,created_time,status,remark,customer_reference_no,out_warehouse_weight,weight_code,trade_remark,tracking_no,transport_type) values (?,?,?,?,?,?,?,?,?,?,?,?,?)";
+	public long saveBigPackage(final Order bigPackage) {
+		final String sql = "insert into w_t_order (warehouse_id,user_id_of_customer,user_id_of_operator,shipway_code,created_time,status,remark,customer_reference_no,out_warehouse_weight,weight_code,trade_remark,tracking_no,transport_type) values (?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
@@ -82,10 +82,10 @@ public class BigPackageDaoImpl implements IBigPackageDao {
 	}
 
 	@Override
-	public BigPackage getBigPackageById(Long bigPackageId) {
-		String sql = "select id,warehouse_id,user_id_of_customer,user_id_of_operator,shipway_code,created_time,status,remark,customer_reference_no,callback_send_weight_is_success,callback_send_weigh_count,callback_send_status_is_success,callback_send_status_count,out_warehouse_weight,weight_code,trade_remark,tracking_no,callback_send_check_is_success,callback_send_check_count,check_result,transport_type,shipway_extra1,shipway_extra2 from w_t_big_package where id ="
+	public Order getBigPackageById(Long bigPackageId) {
+		String sql = "select id,warehouse_id,user_id_of_customer,user_id_of_operator,shipway_code,created_time,status,remark,customer_reference_no,callback_send_weight_is_success,callback_send_weigh_count,callback_send_status_is_success,callback_send_status_count,out_warehouse_weight,weight_code,trade_remark,tracking_no,callback_send_check_is_success,callback_send_check_count,check_result,transport_type,shipway_extra1,shipway_extra2 from w_t_order where id ="
 				+ bigPackageId;
-		List<BigPackage> bigPackageList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(BigPackage.class));
+		List<Order> bigPackageList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(Order.class));
 		if (bigPackageList != null && bigPackageList.size() > 0) {
 			return bigPackageList.get(0);
 		}
@@ -97,9 +97,9 @@ public class BigPackageDaoImpl implements IBigPackageDao {
 	 * 参数一律使用实体类加Map .
 	 */
 	@Override
-	public List<BigPackage> findBigPackage(BigPackage bigPackage, Map<String, String> moreParam, Pagination page) {
+	public List<Order> findBigPackage(Order bigPackage, Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select id,warehouse_id,user_id_of_customer,user_id_of_operator,shipway_code,created_time,status,remark,customer_reference_no,callback_send_weight_is_success,callback_send_weigh_count,callback_send_status_is_success,callback_send_status_count,out_warehouse_weight,weight_code,trade_remark,tracking_no,callback_send_check_is_success,callback_send_check_count,check_result,transport_type,shipway_extra1,shipway_extra2 from w_t_big_package where 1=1 ");
+		sb.append("select id,warehouse_id,user_id_of_customer,user_id_of_operator,shipway_code,created_time,status,remark,customer_reference_no,callback_send_weight_is_success,callback_send_weigh_count,callback_send_status_is_success,callback_send_status_count,out_warehouse_weight,weight_code,trade_remark,tracking_no,callback_send_check_is_success,callback_send_check_count,check_result,transport_type,shipway_extra1,shipway_extra2 from w_t_order where 1=1 ");
 		// 按单号 批量查询 开始---------------
 		if (moreParam != null && StringUtil.isNotNull(moreParam.get("nos"))) {
 			String noType = moreParam.get("noType");
@@ -204,14 +204,14 @@ public class BigPackageDaoImpl implements IBigPackageDao {
 			sb.append(page.generatePageSql());
 		}
 		String sql = sb.toString();
-		List<BigPackage> bigPackageList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(BigPackage.class));
+		List<Order> bigPackageList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(Order.class));
 		return bigPackageList;
 	}
 
 	@Override
-	public Long countBigPackage(BigPackage bigPackage, Map<String, String> moreParam) {
+	public Long countBigPackage(Order bigPackage, Map<String, String> moreParam) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select count(id) from w_t_big_package where 1=1");
+		sb.append("select count(id) from w_t_order where 1=1");
 		// 按单号 批量查询 开始---------------
 		if (moreParam != null && StringUtil.isNotNull(moreParam.get("nos"))) {
 			String noType = moreParam.get("noType");
@@ -321,13 +321,13 @@ public class BigPackageDaoImpl implements IBigPackageDao {
 
 	@Override
 	public int updateBigPackageStatus(Long bigPackageId, String newStatus) {
-		String sql = "update w_t_big_package set status = '" + newStatus + "' where id = " + bigPackageId;
+		String sql = "update w_t_order set status = '" + newStatus + "' where id = " + bigPackageId;
 		return jdbcTemplate.update(sql);
 	}
 
 	@Override
 	public String getBigPackageStatus(Long bigPackageId) {
-		String sql = "select status from w_t_big_package where id = " + bigPackageId;
+		String sql = "select status from w_t_order where id = " + bigPackageId;
 		return jdbcTemplate.queryForObject(sql, String.class);
 	}
 
@@ -338,7 +338,7 @@ public class BigPackageDaoImpl implements IBigPackageDao {
 	 */
 	@Override
 	public List<Long> findCallbackSendWeightUnSuccessBigPackageId() {
-		String sql = "select id from w_t_big_package where status ='" + BigPackageStatusCode.WSW + "' and (callback_send_weight_is_success = 'N' or  callback_send_weight_is_success is null)";
+		String sql = "select id from w_t_order where status ='" + OrderStatusCode.WSW + "' and (callback_send_weight_is_success = 'N' or  callback_send_weight_is_success is null)";
 		List<Long> bigPackageIdList = jdbcTemplate.queryForList(sql, Long.class);
 		return bigPackageIdList;
 	}
@@ -350,7 +350,7 @@ public class BigPackageDaoImpl implements IBigPackageDao {
 	 */
 	@Override
 	public List<Long> findCallbackSendStatusUnSuccessBigPackageId() {
-		String sql = "select id from w_t_big_package where status ='" + BigPackageStatusCode.SUCCESS + "' and (callback_send_status_is_success = 'N' or  callback_send_status_is_success is null)";
+		String sql = "select id from w_t_order where status ='" + OrderStatusCode.SUCCESS + "' and (callback_send_status_is_success = 'N' or  callback_send_status_is_success is null)";
 		List<Long> bigPackageIdList = jdbcTemplate.queryForList(sql, Long.class);
 		return bigPackageIdList;
 	}
@@ -362,8 +362,8 @@ public class BigPackageDaoImpl implements IBigPackageDao {
 	 * @return
 	 */
 	@Override
-	public int updateBigPackageCallbackSendWeight(BigPackage bigPackage) {
-		String sql = "update w_t_big_package set callback_send_weight_is_success='" + bigPackage.getCallbackSendWeightIsSuccess() + "' ,callback_send_weigh_count = " + bigPackage.getCallbackSendWeighCount() + " , status='" + bigPackage.getStatus()
+	public int updateBigPackageCallbackSendWeight(Order bigPackage) {
+		String sql = "update w_t_order set callback_send_weight_is_success='" + bigPackage.getCallbackSendWeightIsSuccess() + "' ,callback_send_weigh_count = " + bigPackage.getCallbackSendWeighCount() + " , status='" + bigPackage.getStatus()
 				+ "' where id=" + bigPackage.getId();
 		return jdbcTemplate.update(sql);
 	}
@@ -375,8 +375,8 @@ public class BigPackageDaoImpl implements IBigPackageDao {
 	 * @return
 	 */
 	@Override
-	public int updateBigPackageCallbackSendStatus(BigPackage bigPackage) {
-		String sql = "update w_t_big_package set callback_send_status_is_success='" + bigPackage.getCallbackSendStatusIsSuccess() + "' ,callback_send_status_count = " + bigPackage.getCallbackSendStatusCount() + " , status='" + bigPackage.getStatus()
+	public int updateBigPackageCallbackSendStatus(Order bigPackage) {
+		String sql = "update w_t_order set callback_send_status_is_success='" + bigPackage.getCallbackSendStatusIsSuccess() + "' ,callback_send_status_count = " + bigPackage.getCallbackSendStatusCount() + " , status='" + bigPackage.getStatus()
 				+ "' where id=" + bigPackage.getId();
 		return jdbcTemplate.update(sql);
 	}
@@ -385,47 +385,47 @@ public class BigPackageDaoImpl implements IBigPackageDao {
 	 * 
 	 */
 	@Override
-	public int updateBigPackageWeight(BigPackage bigPackage) {
-		String sql = "update w_t_big_package set out_warehouse_weight=" + bigPackage.getOutWarehouseWeight() + ",weight_code='" + bigPackage.getWeightCode() + "' , status='" + bigPackage.getStatus() + "' where id=" + bigPackage.getId();
+	public int updateBigPackageWeight(Order bigPackage) {
+		String sql = "update w_t_order set out_warehouse_weight=" + bigPackage.getOutWarehouseWeight() + ",weight_code='" + bigPackage.getWeightCode() + "' , status='" + bigPackage.getStatus() + "' where id=" + bigPackage.getId();
 		return jdbcTemplate.update(sql);
 	}
 
 	@Override
 	public List<Long> findCallbackSendCheckUnSuccessBigPackageId() {
-		String sql = "select id from w_t_big_package where status ='" + BigPackageStatusCode.WCI + "' and (callback_send_check_is_success = 'N' or  callback_send_check_is_success is null)";
+		String sql = "select id from w_t_order where status ='" + OrderStatusCode.WCI + "' and (callback_send_check_is_success = 'N' or  callback_send_check_is_success is null)";
 		List<Long> bigPackageIdList = jdbcTemplate.queryForList(sql, Long.class);
 		return bigPackageIdList;
 	}
 
 	@Override
-	public int updateBigPackageCallbackSendCheck(BigPackage bigPackage) {
-		String sql = "update w_t_big_package set callback_send_check_is_success='" + bigPackage.getCallbackSendCheckIsSuccess() + "' ,callback_send_check_count = " + bigPackage.getCallbackSendCheckCount() + " , status='" + bigPackage.getStatus()
+	public int updateBigPackageCallbackSendCheck(Order bigPackage) {
+		String sql = "update w_t_order set callback_send_check_is_success='" + bigPackage.getCallbackSendCheckIsSuccess() + "' ,callback_send_check_count = " + bigPackage.getCallbackSendCheckCount() + " , status='" + bigPackage.getStatus()
 				+ "' where id=" + bigPackage.getId();
 		return jdbcTemplate.update(sql);
 	}
 
 	@Override
 	public int updateBigPackageCheckResult(Long bigPackageId, String checkResult) {
-		String sql = "update w_t_big_package set check_result = '" + checkResult + "' where id = " + bigPackageId;
+		String sql = "update w_t_order set check_result = '" + checkResult + "' where id = " + bigPackageId;
 		return jdbcTemplate.update(sql);
 	}
 
 	@Override
 	public String getCustomerReferenceNoById(Long bigPackageId) {
-		String sql = "select customer_reference_no from w_t_big_package where id = " + bigPackageId;
+		String sql = "select customer_reference_no from w_t_order where id = " + bigPackageId;
 		return jdbcTemplate.queryForObject(sql, String.class);
 	}
 
 	@Override
 	public List<Long> findUnCheckAndTackingNoIsNullBigPackageId() {
-		String sql = "select id from w_t_big_package where status ='" + BigPackageStatusCode.WWC + "' and tracking_no  is null";
+		String sql = "select id from w_t_order where status ='" + OrderStatusCode.WWC + "' and tracking_no  is null";
 		List<Long> bigPackageIdList = jdbcTemplate.queryForList(sql, Long.class);
 		return bigPackageIdList;
 	}
 
 	@Override
-	public int updateBigPackageTrackingNo(BigPackage bigPackage) {
-		String sql = "update w_t_big_package set tracking_no= ?,shipway_extra1=?,shipway_extra2=? where id=?";
+	public int updateBigPackageTrackingNo(Order bigPackage) {
+		String sql = "update w_t_order set tracking_no= ?,shipway_extra1=?,shipway_extra2=? where id=?";
 		return jdbcTemplate.update(sql, bigPackage.getTrackingNo(), bigPackage.getShipwayExtra1(), bigPackage.getShipwayExtra2(), bigPackage.getId());
 	}
 }

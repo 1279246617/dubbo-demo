@@ -10,7 +10,7 @@ import java.util.List;
  * @author Administrator
  * 
  */
-public class LittlePackageOnShelf implements Serializable {
+public class FirstWaybillOnShelf implements Serializable {
 	/**
 	 * 预分配状态,未上架
 	 */
@@ -67,7 +67,7 @@ public class LittlePackageOnShelf implements Serializable {
 
 	private Long createdTime;
 
-	private List<LittlePackageItem> littlePackageItemList;
+	private List<FirstWaybillItem> littlePackageItemList;
 
 	public Long getId() {
 		return id;
@@ -125,11 +125,11 @@ public class LittlePackageOnShelf implements Serializable {
 		this.trackingNo = trackingNo;
 	}
 
-	public List<LittlePackageItem> getLittlePackageItemList() {
+	public List<FirstWaybillItem> getLittlePackageItemList() {
 		return littlePackageItemList;
 	}
 
-	public void setLittlePackageItemList(List<LittlePackageItem> littlePackageItemList) {
+	public void setLittlePackageItemList(List<FirstWaybillItem> littlePackageItemList) {
 		this.littlePackageItemList = littlePackageItemList;
 	}
 

@@ -22,8 +22,8 @@ import org.springframework.stereotype.Repository;
 import com.coe.wms.dao.datasource.DataSource;
 import com.coe.wms.dao.datasource.DataSourceCode;
 import com.coe.wms.dao.warehouse.transport.ILittlePackageDao;
-import com.coe.wms.model.warehouse.transport.LittlePackage;
-import com.coe.wms.model.warehouse.transport.LittlePackageStatus.LittlePackageStatusCode;
+import com.coe.wms.model.warehouse.transport.FirstWaybill;
+import com.coe.wms.model.warehouse.transport.FirstWaybillStatus.FirstWaybillStatusCode;
 import com.coe.wms.util.Constant;
 import com.coe.wms.util.DateUtil;
 import com.coe.wms.util.Pagination;
@@ -44,7 +44,7 @@ public class LittlePackageDaoImpl implements ILittlePackageDao {
 
 	@Override
 	@DataSource(DataSourceCode.WMS)
-	public long saveLittlePackage(final LittlePackage littlePackage) {
+	public long saveLittlePackage(final FirstWaybill littlePackage) {
 		final String sql = "insert into w_t_little_package (warehouse_id,user_id_of_customer,user_id_of_operator,carrier_code,tracking_no,created_time,remark,callback_is_success,callback_count,big_package_id,status,received_time,po_no,transport_type) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
@@ -80,10 +80,10 @@ public class LittlePackageDaoImpl implements ILittlePackageDao {
 	}
 
 	@Override
-	public LittlePackage getLittlePackageById(Long LittlePackageId) {
+	public FirstWaybill getLittlePackageById(Long LittlePackageId) {
 		String sql = "select id,warehouse_id,user_id_of_customer,user_id_of_operator,carrier_code,tracking_no,created_time,remark,callback_is_success,callback_count,big_package_id,status,received_time,po_no,transport_type,seat_code from w_t_little_package where id= "
 				+ LittlePackageId;
-		LittlePackage littlePackage = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<LittlePackage>(LittlePackage.class));
+		FirstWaybill littlePackage = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<FirstWaybill>(FirstWaybill.class));
 		return littlePackage;
 	}
 
@@ -91,7 +91,7 @@ public class LittlePackageDaoImpl implements ILittlePackageDao {
 	 * 查询入库记录
 	 */
 	@Override
-	public List<LittlePackage> findLittlePackage(LittlePackage littlePackage, Map<String, String> moreParam, Pagination page) {
+	public List<FirstWaybill> findLittlePackage(FirstWaybill littlePackage, Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("select id,warehouse_id,user_id_of_customer,user_id_of_operator,carrier_code,tracking_no,created_time,remark,callback_is_success,callback_count,big_package_id,status,received_time,po_no,transport_type,seat_code from w_t_little_package where 1=1 ");
 		if (littlePackage != null) {
@@ -168,7 +168,7 @@ public class LittlePackageDaoImpl implements ILittlePackageDao {
 			}
 			// isReceived = Y ,表示已收货的记录, 状态不能等于待仓库收货
 			if (StringUtil.isEqual(moreParam.get("isReceived"), Constant.Y)) {
-				sb.append(" and status != '" + LittlePackageStatusCode.WWR + "'");
+				sb.append(" and status != '" + FirstWaybillStatusCode.WWR + "'");
 			}
 		}
 		if (page != null) {
@@ -176,7 +176,7 @@ public class LittlePackageDaoImpl implements ILittlePackageDao {
 			sb.append(page.generatePageSql());
 		}
 		String sql = sb.toString();
-		List<LittlePackage> LittlePackageList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(LittlePackage.class));
+		List<FirstWaybill> LittlePackageList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(FirstWaybill.class));
 		return LittlePackageList;
 	}
 
@@ -185,7 +185,7 @@ public class LittlePackageDaoImpl implements ILittlePackageDao {
 	}
 
 	@Override
-	public Long countLittlePackage(LittlePackage littlePackage, Map<String, String> moreParam) {
+	public Long countLittlePackage(FirstWaybill littlePackage, Map<String, String> moreParam) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("select count(*)  from w_t_little_package where 1=1 ");
 		if (littlePackage != null) {
@@ -269,7 +269,7 @@ public class LittlePackageDaoImpl implements ILittlePackageDao {
 	 * 更新回调顺丰状态
 	 */
 	@Override
-	public int updateLittlePackageCallback(LittlePackage LittlePackage) {
+	public int updateLittlePackageCallback(FirstWaybill LittlePackage) {
 		String sql = "update w_t_little_package set callback_is_success='" + LittlePackage.getCallbackIsSuccess() + "' ,callback_count = " + LittlePackage.getCallbackCount() + " ,status = '" + LittlePackage.getStatus() + "' where id="
 				+ LittlePackage.getId();
 		return jdbcTemplate.update(sql);
@@ -280,13 +280,13 @@ public class LittlePackageDaoImpl implements ILittlePackageDao {
 	 */
 	@Override
 	public List<Long> findCallbackUnSuccessPackageId() {
-		String sql = "select id from w_t_little_package where status ='" + LittlePackageStatusCode.WSR + "' and (callback_is_success = 'N' or  callback_is_success is null)";
+		String sql = "select id from w_t_little_package where status ='" + FirstWaybillStatusCode.WSR + "' and (callback_is_success = 'N' or  callback_is_success is null)";
 		List<Long> recordIdList = jdbcTemplate.queryForList(sql, Long.class);
 		return recordIdList;
 	}
 
 	@Override
-	public int updateLittlePackageStatus(LittlePackage LittlePackage) {
+	public int updateLittlePackageStatus(FirstWaybill LittlePackage) {
 		String sql = "update w_t_little_package set status='" + LittlePackage.getStatus() + "' where id=" + LittlePackage.getId();
 		return jdbcTemplate.update(sql);
 	}
@@ -304,13 +304,13 @@ public class LittlePackageDaoImpl implements ILittlePackageDao {
 	}
 
 	@Override
-	public int receivedLittlePackage(LittlePackage littlePackage) {
+	public int receivedLittlePackage(FirstWaybill littlePackage) {
 		String sql = "update w_t_little_package set status=? ,received_time=?,seat_code = ? where id=" + littlePackage.getId();
 		return jdbcTemplate.update(sql, littlePackage.getStatus(), littlePackage.getReceivedTime(), littlePackage.getSeatCode());
 	}
 
 	@Override
-	public int updateLittlePackageSeatCode(LittlePackage LittlePackage) {
+	public int updateLittlePackageSeatCode(FirstWaybill LittlePackage) {
 		String sql = "update w_t_little_package set seat_code='" + LittlePackage.getSeatCode() + "' where id=" + LittlePackage.getId();
 		return jdbcTemplate.update(sql);
 	}

@@ -10,7 +10,7 @@ import java.io.Serializable;
  * @author Administrator
  * 
  */
-public class LittlePackage implements Serializable {
+public class FirstWaybill implements Serializable {
 
 	/**
 	 * 

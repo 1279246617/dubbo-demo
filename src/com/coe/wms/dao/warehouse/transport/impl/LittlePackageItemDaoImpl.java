@@ -21,7 +21,7 @@ import org.springframework.stereotype.Repository;
 import com.coe.wms.dao.datasource.DataSource;
 import com.coe.wms.dao.datasource.DataSourceCode;
 import com.coe.wms.dao.warehouse.transport.ILittlePackageItemDao;
-import com.coe.wms.model.warehouse.transport.LittlePackageItem;
+import com.coe.wms.model.warehouse.transport.FirstWaybillItem;
 import com.coe.wms.util.NumberUtil;
 import com.coe.wms.util.Pagination;
 import com.coe.wms.util.StringUtil;
@@ -44,7 +44,7 @@ public class LittlePackageItemDaoImpl implements ILittlePackageItemDao {
 	 */
 	@Override
 	@DataSource(DataSourceCode.WMS)
-	public long saveLittlePackageItem(final LittlePackageItem item) {
+	public long saveLittlePackageItem(final FirstWaybillItem item) {
 		final String sql = "insert into w_t_little_package_item (little_package_id,quantity,sku,sku_name,sku_unit_price,sku_price_currency,remark,sku_net_weight,sku_no,specification,big_package_id) values (?,?,?,?,?,?,?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
@@ -81,12 +81,12 @@ public class LittlePackageItemDaoImpl implements ILittlePackageItemDao {
 	 */
 	@Override
 	@DataSource(DataSourceCode.WMS)
-	public int saveBatchLittlePackageItem(final List<LittlePackageItem> itemList) {
+	public int saveBatchLittlePackageItem(final List<FirstWaybillItem> itemList) {
 		final String sql = "insert into w_t_little_package_item (little_package_id,quantity,sku,sku_name,sku_unit_price,sku_price_currency,remark,sku_net_weight,sku_no,specification,big_package_id) values (?,?,?,?,?,?,?,?,?,?,?)";
 		int[] batchUpdateSize = jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
 			@Override
 			public void setValues(PreparedStatement ps, int i) throws SQLException {
-				LittlePackageItem item = itemList.get(i);
+				FirstWaybillItem item = itemList.get(i);
 				ps.setLong(1, item.getLittlePackageId());
 				ps.setLong(2, item.getQuantity());
 				ps.setString(3, item.getSku());
@@ -118,12 +118,12 @@ public class LittlePackageItemDaoImpl implements ILittlePackageItemDao {
 
 	@Override
 	@DataSource(DataSourceCode.WMS)
-	public int saveBatchLittlePackageItemWithLittlePackageId(final List<LittlePackageItem> itemList, final Long littlePackageId) {
+	public int saveBatchLittlePackageItemWithLittlePackageId(final List<FirstWaybillItem> itemList, final Long littlePackageId) {
 		final String sql = "insert into w_t_little_package_item (little_package_id,quantity,sku,sku_name,sku_unit_price,sku_price_currency,remark,sku_net_weight,sku_no,specification,big_package_id) values (?,?,?,?,?,?,?,?,?,?,?)";
 		int[] batchUpdateSize = jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
 			@Override
 			public void setValues(PreparedStatement ps, int i) throws SQLException {
-				LittlePackageItem item = itemList.get(i);
+				FirstWaybillItem item = itemList.get(i);
 				ps.setLong(1, littlePackageId);
 				ps.setLong(2, item.getQuantity());
 				ps.setString(3, item.getSku());
@@ -163,7 +163,7 @@ public class LittlePackageItemDaoImpl implements ILittlePackageItemDao {
 	 * 参数一律使用实体类加Map .
 	 */
 	@Override
-	public List<LittlePackageItem> findLittlePackageItem(LittlePackageItem littlePackageItem, Map<String, String> moreParam, Pagination page) {
+	public List<FirstWaybillItem> findLittlePackageItem(FirstWaybillItem littlePackageItem, Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("select id,little_package_id,quantity,sku,sku_name,sku_unit_price,sku_price_currency,remark,sku_net_weight,sku_no,specification,big_package_id from w_t_little_package_item where 1=1 ");
 		if (littlePackageItem != null) {
@@ -209,7 +209,7 @@ public class LittlePackageItemDaoImpl implements ILittlePackageItemDao {
 			sb.append(page.generatePageSql());
 		}
 		String sql = sb.toString();
-		List<LittlePackageItem> littlePackageItemList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(LittlePackageItem.class));
+		List<FirstWaybillItem> littlePackageItemList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(FirstWaybillItem.class));
 		return littlePackageItemList;
 	}
 }

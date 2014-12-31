@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 
 import com.coe.etk.api.Client;
 import com.coe.etk.api.request.Item;
-import com.coe.etk.api.request.Order;
 import com.coe.etk.api.request.Receiver;
 import com.coe.etk.api.request.Sender;
 import com.coe.wms.dao.user.IUserDao;
@@ -36,10 +35,10 @@ import com.coe.wms.dao.warehouse.transport.ILittlePackageItemDao;
 import com.coe.wms.dao.warehouse.transport.ILittlePackageStatusDao;
 import com.coe.wms.model.unit.Currency.CurrencyCode;
 import com.coe.wms.model.warehouse.Shipway.ShipwayCode;
-import com.coe.wms.model.warehouse.transport.BigPackage;
-import com.coe.wms.model.warehouse.transport.BigPackageReceiver;
-import com.coe.wms.model.warehouse.transport.BigPackageSender;
-import com.coe.wms.model.warehouse.transport.LittlePackageItem;
+import com.coe.wms.model.warehouse.transport.Order;
+import com.coe.wms.model.warehouse.transport.OrderReceiver;
+import com.coe.wms.model.warehouse.transport.OrderSender;
+import com.coe.wms.model.warehouse.transport.FirstWaybillItem;
 import com.coe.wms.task.IApplyTrackingNoTask;
 import com.coe.wms.util.NumberUtil;
 import com.coe.wms.util.StringUtil;
@@ -130,20 +129,20 @@ public class ApplyTrackingNoTaskImpl implements IApplyTrackingNoTask {
 		List<Long> bigPackageIds = bigPackageDao.findUnCheckAndTackingNoIsNullBigPackageId();
 		for (int i = 0; i < bigPackageIds.size(); i++) {
 			Long bigPackageId = bigPackageIds.get(i);
-			BigPackage bigPackage = bigPackageDao.getBigPackageById(bigPackageId);
-			BigPackageReceiver bigPackageReceiver = bigPackageReceiverDao.getBigPackageReceiverByPackageId(bigPackageId);
-			BigPackageSender bigPackageSender = bigPackageSenderDao.getBigPackageSenderByPackageId(bigPackageId);
+			Order bigPackage = bigPackageDao.getBigPackageById(bigPackageId);
+			OrderReceiver bigPackageReceiver = bigPackageReceiverDao.getBigPackageReceiverByPackageId(bigPackageId);
+			OrderSender bigPackageSender = bigPackageSenderDao.getBigPackageSenderByPackageId(bigPackageId);
 			// 出货渠道是ETK
 			if (StringUtil.isEqual(bigPackage.getShipwayCode(), ShipwayCode.ETK)) {
-				Order order = new Order();
+				com.coe.etk.api.request.Order order = new com.coe.etk.api.request.Order();
 				order.setCurrency(CurrencyCode.CNY);
 				order.setCustomerNo("sam");// 测试
 				order.setReferenceId(bigPackage.getCustomerReferenceNo());// 客户参考号
-				LittlePackageItem itemParam = new LittlePackageItem();
+				FirstWaybillItem itemParam = new FirstWaybillItem();
 				itemParam.setBigPackageId(bigPackageId);
-				List<LittlePackageItem> littlePackageItems = littlePackageItemDao.findLittlePackageItem(itemParam, null, null);
+				List<FirstWaybillItem> littlePackageItems = littlePackageItemDao.findLittlePackageItem(itemParam, null, null);
 				List<Item> items = new ArrayList<Item>();
-				for (LittlePackageItem littlePackageItem : littlePackageItems) {
+				for (FirstWaybillItem littlePackageItem : littlePackageItems) {
 					Item item = new Item();
 					item.setItemDescription(littlePackageItem.getSkuName());// 报关描述
 					double price = 10d;// 报关价值

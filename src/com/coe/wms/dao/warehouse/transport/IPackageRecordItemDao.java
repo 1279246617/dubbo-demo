@@ -3,18 +3,18 @@ package com.coe.wms.dao.warehouse.transport;
 import java.util.List;
 import java.util.Map;
 
-import com.coe.wms.model.warehouse.transport.PackageRecordItem;
+import com.coe.wms.model.warehouse.transport.OutWarehousePackageItem;
 import com.coe.wms.util.Pagination;
 
 public interface IPackageRecordItemDao {
 
-	public long savePackageRecordItem(PackageRecordItem outWarehouseShipping);
+	public long savePackageRecordItem(OutWarehousePackageItem outWarehouseShipping);
 
-	public PackageRecordItem getPackageRecordItemById(Long outWarehouseShippingId);
+	public OutWarehousePackageItem getPackageRecordItemById(Long outWarehouseShippingId);
 
-	public List<PackageRecordItem> findPackageRecordItem(PackageRecordItem outWarehouseShipping, Map<String, String> moreParam, Pagination page);
+	public List<OutWarehousePackageItem> findPackageRecordItem(OutWarehousePackageItem outWarehouseShipping, Map<String, String> moreParam, Pagination page);
 
-	public Long countPackageRecordItem(PackageRecordItem outWarehouseShipping, Map<String, String> moreParam);
+	public Long countPackageRecordItem(OutWarehousePackageItem outWarehouseShipping, Map<String, String> moreParam);
 
 	public int deletePackageRecordItemById(Long id);
 

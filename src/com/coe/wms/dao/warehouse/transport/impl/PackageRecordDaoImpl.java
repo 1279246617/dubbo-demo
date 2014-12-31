@@ -22,7 +22,7 @@ import org.springframework.stereotype.Repository;
 import com.coe.wms.dao.datasource.DataSource;
 import com.coe.wms.dao.datasource.DataSourceCode;
 import com.coe.wms.dao.warehouse.transport.IPackageRecordDao;
-import com.coe.wms.model.warehouse.transport.PackageRecord;
+import com.coe.wms.model.warehouse.transport.OutWarehousePackage;
 import com.coe.wms.util.DateUtil;
 import com.coe.wms.util.Pagination;
 import com.coe.wms.util.StringUtil;
@@ -42,7 +42,7 @@ public class PackageRecordDaoImpl implements IPackageRecordDao {
 
 	@Override
 	@DataSource(DataSourceCode.WMS)
-	public long savePackageRecord(final PackageRecord record) {
+	public long savePackageRecord(final OutWarehousePackage record) {
 		final String sql = "insert into w_t_package_record (warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,remark,is_shiped) values (?,?,?,?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
@@ -68,9 +68,9 @@ public class PackageRecordDaoImpl implements IPackageRecordDao {
 	}
 
 	@Override
-	public PackageRecord getPackageRecordById(Long outWarehouseRecordId) {
+	public OutWarehousePackage getPackageRecordById(Long outWarehouseRecordId) {
 		String sql = "select id,warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,remark,is_shiped,shipped_time from w_t_package_record where id =" + outWarehouseRecordId;
-		PackageRecord record = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<PackageRecord>(PackageRecord.class));
+		OutWarehousePackage record = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<OutWarehousePackage>(OutWarehousePackage.class));
 		return record;
 	}
 
@@ -80,7 +80,7 @@ public class PackageRecordDaoImpl implements IPackageRecordDao {
 	 * 参数一律使用实体类加Map .
 	 */
 	@Override
-	public List<PackageRecord> findPackageRecord(PackageRecord outWarehouseRecord, Map<String, String> moreParam, Pagination page) {
+	public List<OutWarehousePackage> findPackageRecord(OutWarehousePackage outWarehouseRecord, Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("select id,warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,remark,is_shiped,shipped_time from w_t_package_record where 1=1 ");
 		if (outWarehouseRecord != null) {
@@ -131,12 +131,12 @@ public class PackageRecordDaoImpl implements IPackageRecordDao {
 			sb.append(page.generatePageSql());
 		}
 		String sql = sb.toString();
-		List<PackageRecord> outWarehouseRecordList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(PackageRecord.class));
+		List<OutWarehousePackage> outWarehouseRecordList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(OutWarehousePackage.class));
 		return outWarehouseRecordList;
 	}
 
 	@Override
-	public Long countPackageRecord(PackageRecord outWarehouseRecord, Map<String, String> moreParam) {
+	public Long countPackageRecord(OutWarehousePackage outWarehouseRecord, Map<String, String> moreParam) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("select count(id) from w_t_package_record where 1=1 ");
 		if (outWarehouseRecord != null) {

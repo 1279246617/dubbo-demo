@@ -10,9 +10,9 @@ import com.google.code.ssm.api.CacheKeyMethod;
  * @author Administrator
  * 
  */
-public class LittlePackageStatus implements Serializable {
+public class FirstWaybillStatus implements Serializable {
 
-	public class LittlePackageStatusCode {
+	public class FirstWaybillStatusCode {
 		/**
 		 * 待收货
 		 */
