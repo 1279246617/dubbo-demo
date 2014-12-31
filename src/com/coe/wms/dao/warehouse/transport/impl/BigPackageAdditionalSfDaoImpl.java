@@ -43,7 +43,7 @@ public class BigPackageAdditionalSfDaoImpl implements IBigPackageAdditionalSfDao
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public long saveBigPackageAdditionalSf(final OrderAdditionalSf additionalSf) {
-		final String sql = "insert into w_t_big_package_additional_sf (big_package_id,carrier_code,mail_no,sender_address,cust_id,pay_method,shipper_code,delivery_code,customer_order_id) values (?,?,?,?,?,?,?,?,?)";
+		final String sql = "insert into w_t_order_additional_sf (big_package_id,carrier_code,mail_no,sender_address,cust_id,pay_method,shipper_code,delivery_code,customer_order_id) values (?,?,?,?,?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
@@ -69,7 +69,7 @@ public class BigPackageAdditionalSfDaoImpl implements IBigPackageAdditionalSfDao
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public int saveBatchBigPackageAdditionalSf(final List<OrderAdditionalSf> receiverList) {
-		final String sql = "insert into w_t_big_package_additional_sf (big_package_id,carrier_code,mail_no,sender_address,cust_id,pay_method,shipper_code,delivery_code,customer_order_id) values (?,?,?,?,?,?,?,?,?)";
+		final String sql = "insert into w_t_order_additional_sf (big_package_id,carrier_code,mail_no,sender_address,cust_id,pay_method,shipper_code,delivery_code,customer_order_id) values (?,?,?,?,?,?,?,?,?)";
 		int[] batchUpdateSize = jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
 			@Override
 			public void setValues(PreparedStatement ps, int i) throws SQLException {
@@ -96,7 +96,7 @@ public class BigPackageAdditionalSfDaoImpl implements IBigPackageAdditionalSfDao
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public int saveBatchBigPackageAdditionalSfWithPackageId(final List<OrderAdditionalSf> receiverList, final Long bigPackageId) {
-		final String sql = "insert into w_t_big_package_additional_sf (big_package_id,carrier_code,mail_no,sender_address,cust_id,pay_method,shipper_code,delivery_code,customer_order_id) values (?,?,?,?,?,?,?,?,?)";
+		final String sql = "insert into w_t_order_additional_sf (big_package_id,carrier_code,mail_no,sender_address,cust_id,pay_method,shipper_code,delivery_code,customer_order_id) values (?,?,?,?,?,?,?,?,?)";
 		int[] batchUpdateSize = jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
 			@Override
 			public void setValues(PreparedStatement ps, int i) throws SQLException {
@@ -132,7 +132,7 @@ public class BigPackageAdditionalSfDaoImpl implements IBigPackageAdditionalSfDao
 	@Override
 	public List<OrderAdditionalSf> findBigPackageAdditionalSf(OrderAdditionalSf BigPackageAdditionalSf, Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select id,big_package_id,carrier_code,mail_no,sender_address,cust_id,pay_method,shipper_code,delivery_code,customer_order_id from w_t_big_package_additional_sf where 1=1 ");
+		sb.append("select id,big_package_id,carrier_code,mail_no,sender_address,cust_id,pay_method,shipper_code,delivery_code,customer_order_id from w_t_order_additional_sf where 1=1 ");
 		if (BigPackageAdditionalSf != null) {
 			if (StringUtil.isNotNull(BigPackageAdditionalSf.getCarrierCode())) {
 				sb.append(" and carrier_code = '" + BigPackageAdditionalSf.getCarrierCode() + "' ");
@@ -156,7 +156,7 @@ public class BigPackageAdditionalSfDaoImpl implements IBigPackageAdditionalSfDao
 
 	@Override
 	public OrderAdditionalSf getBigPackageAdditionalSfByPackageId(Long orderId) {
-		String sql = "select id,big_package_id,carrier_code,mail_no,sender_address,cust_id,pay_method,shipper_code,delivery_code,customer_order_id from w_t_big_package_additional_sf where big_package_id = " + orderId;
+		String sql = "select id,big_package_id,carrier_code,mail_no,sender_address,cust_id,pay_method,shipper_code,delivery_code,customer_order_id from w_t_order_additional_sf where big_package_id = " + orderId;
 		List<OrderAdditionalSf> BigPackageAdditionalSfList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(OrderAdditionalSf.class));
 		if (BigPackageAdditionalSfList != null && BigPackageAdditionalSfList.size() > 0) {
 			return BigPackageAdditionalSfList.get(0);

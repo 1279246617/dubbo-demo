@@ -8,7 +8,7 @@ import java.io.Serializable;
  * @author Administrator
  * 
  */
-public class Package implements Serializable {
+public class OrdersPackage implements Serializable {
 
 	/**
 	 * 
