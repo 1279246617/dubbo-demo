@@ -22,14 +22,14 @@ import com.coe.wms.model.user.User;
 import com.coe.wms.model.warehouse.Shipway;
 import com.coe.wms.model.warehouse.TrackingNo;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
-import com.coe.wms.model.warehouse.transport.BigPackage;
-import com.coe.wms.model.warehouse.transport.BigPackageStatus;
-import com.coe.wms.model.warehouse.transport.LittlePackage;
-import com.coe.wms.model.warehouse.transport.LittlePackageItem;
-import com.coe.wms.model.warehouse.transport.LittlePackageOnShelf;
-import com.coe.wms.model.warehouse.transport.LittlePackageStatus;
-import com.coe.wms.model.warehouse.transport.PackageRecord;
-import com.coe.wms.model.warehouse.transport.PackageRecordItem;
+import com.coe.wms.model.warehouse.transport.Order;
+import com.coe.wms.model.warehouse.transport.OrderStatus;
+import com.coe.wms.model.warehouse.transport.FirstWaybill;
+import com.coe.wms.model.warehouse.transport.FirstWaybillItem;
+import com.coe.wms.model.warehouse.transport.FirstWaybillOnShelf;
+import com.coe.wms.model.warehouse.transport.FirstWaybillStatus;
+import com.coe.wms.model.warehouse.transport.OutWarehousePackage;
+import com.coe.wms.model.warehouse.transport.OutWarehousePackageItem;
 import com.coe.wms.service.storage.IInWarehouseOrderService;
 import com.coe.wms.service.storage.IOutWarehouseOrderService;
 import com.coe.wms.service.storage.IStorageService;
@@ -89,7 +89,7 @@ public class Transport {
 		ModelAndView view = new ModelAndView();
 		view.addObject("userId", userId);
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
-		List<BigPackageStatus> bigPackageStatusList = transportService.findAllBigPackageStatus();
+		List<OrderStatus> bigPackageStatusList = transportService.findAllBigPackageStatus();
 		view.addObject("bigPackageStatusList", bigPackageStatusList);
 		List<Shipway> shipwayList = transportService.findAllShipway();
 		view.addObject("shipwayList", shipwayList);
@@ -115,7 +115,7 @@ public class Transport {
 		view.addObject("userId", userId);
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
 		User user = userService.getUserById(userId);
-		List<BigPackageStatus> bigPackageStatusList = transportService.findAllBigPackageStatus();
+		List<OrderStatus> bigPackageStatusList = transportService.findAllBigPackageStatus();
 		view.addObject("bigPackageStatusList", bigPackageStatusList);
 		view.addObject("warehouseList", storageService.findAllWarehouse(user.getDefaultWarehouseId()));
 		view.setViewName("warehouse/transport/listWaitCheckBigPackage");
@@ -145,7 +145,7 @@ public class Transport {
 		pagination.sortName = sortname;
 		pagination.sortOrder = sortorder;
 
-		BigPackage param = new BigPackage();
+		Order param = new Order();
 		param.setStatus(status);
 		param.setShipwayCode(shipway);
 		// 客户订单号
@@ -182,7 +182,7 @@ public class Transport {
 	@ResponseBody
 	@RequestMapping(value = "/getLittlePackageItemBylittlePackageId", method = RequestMethod.POST)
 	public String getLittlePackageItemBylittlePackageId(Long littlePackageId) {
-		List<LittlePackageItem> littlePackageItems = transportService.getLittlePackageItemsByLittlePackageId(littlePackageId);
+		List<FirstWaybillItem> littlePackageItems = transportService.getLittlePackageItemsByLittlePackageId(littlePackageId);
 		return GsonUtil.toJson(littlePackageItems);
 	}
 
@@ -219,7 +219,7 @@ public class Transport {
 		view.addObject("userId", userId);
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
 
-		List<LittlePackageStatus> littlePackageStatusList = transportService.findAllLittlePackageStatus();
+		List<FirstWaybillStatus> littlePackageStatusList = transportService.findAllLittlePackageStatus();
 		view.addObject("littlePackageStatusList", littlePackageStatusList);
 
 		List<Shipway> shipwayList = transportService.findAllShipway();
@@ -272,7 +272,7 @@ public class Transport {
 		pagination.pageSize = pagesize;
 		pagination.sortName = sortname;
 		pagination.sortOrder = sortorder;
-		LittlePackage param = new LittlePackage();
+		FirstWaybill param = new FirstWaybill();
 		param.setStatus(status);
 		// 客户订单号
 		param.setTrackingNo(trackingNo);
@@ -334,7 +334,7 @@ public class Transport {
 	public String checkReceivedLittlePackage(HttpServletRequest request, String trackingNo) throws IOException {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put(Constant.STATUS, Constant.FAIL);
-		LittlePackage param = new LittlePackage();
+		FirstWaybill param = new FirstWaybill();
 		param.setTrackingNo(trackingNo);
 		// 查询转运订单
 		List<Map<String, String>> mapList = transportService.checkReceivedLittlePackage(param);
@@ -477,7 +477,7 @@ public class Transport {
 		pagination.pageSize = pagesize;
 		pagination.sortName = sortname;
 		pagination.sortOrder = sortorder;
-		LittlePackageOnShelf param = new LittlePackageOnShelf();
+		FirstWaybillOnShelf param = new FirstWaybillOnShelf();
 		// 客户帐号
 		if (StringUtil.isNotNull(userLoginName)) {
 			Long userIdOfCustomer = userService.findUserIdByLoginName(userLoginName);
@@ -536,7 +536,7 @@ public class Transport {
 		view.addObject("userId", userId);
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
 		User user = userService.getUserById(userId);
-		List<BigPackageStatus> bigPackageStatusList = transportService.findAllBigPackageStatus();
+		List<OrderStatus> bigPackageStatusList = transportService.findAllBigPackageStatus();
 		view.addObject("bigPackageStatusList", bigPackageStatusList);
 		view.addObject("warehouseList", storageService.findAllWarehouse(user.getDefaultWarehouseId()));
 		view.setViewName("warehouse/transport/listWaiPrintBigPackage");
@@ -604,7 +604,7 @@ public class Transport {
 		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
 		Map<String, Object> map = new HashMap<String, Object>();
 		Map<String, Object> objectMap = transportService.outWarehousePackageEnterCoeTrackingNo(coeTrackingNo);
-		List<PackageRecordItem> packageRecordItemList = (List<PackageRecordItem>) objectMap.get("packageRecordItemList");
+		List<OutWarehousePackageItem> packageRecordItemList = (List<OutWarehousePackageItem>) objectMap.get("packageRecordItemList");
 		map.put("packageRecordItemList", packageRecordItemList);
 		map.put(Constant.STATUS, objectMap.get(Constant.STATUS));
 		map.put(Constant.MESSAGE, objectMap.get(Constant.MESSAGE));
@@ -756,7 +756,7 @@ public class Transport {
 		pagination.pageSize = pagesize;
 		pagination.sortName = sortname;
 		pagination.sortOrder = sortorder;
-		PackageRecord param = new PackageRecord();
+		OutWarehousePackage param = new OutWarehousePackage();
 		param.setCoeTrackingNo(coeTrackingNo);
 		if (StringUtil.isNotNull(userLoginName)) {
 			Long userIdOfCustomer = userService.findUserIdByLoginName(userLoginName);

@@ -3,18 +3,18 @@ package com.coe.wms.dao.warehouse.transport;
 import java.util.List;
 import java.util.Map;
 
-import com.coe.wms.model.warehouse.transport.BigPackageReceiver;
+import com.coe.wms.model.warehouse.transport.OrderReceiver;
 import com.coe.wms.util.Pagination;
 
 public interface IBigPackageReceiverDao {
 
-	public long saveBigPackageReceiver(BigPackageReceiver receiver);
+	public long saveBigPackageReceiver(OrderReceiver receiver);
 
-	public int saveBatchBigPackageReceiver(List<BigPackageReceiver> receiverList);
+	public int saveBatchBigPackageReceiver(List<OrderReceiver> receiverList);
 
-	public int saveBatchBigPackageReceiverWithPackageId(List<BigPackageReceiver> receiverList, Long orderId);
+	public int saveBatchBigPackageReceiverWithPackageId(List<OrderReceiver> receiverList, Long orderId);
 
-	public List<BigPackageReceiver> findBigPackageReceiver(BigPackageReceiver order, Map<String, String> moreParam, Pagination page);
+	public List<OrderReceiver> findBigPackageReceiver(OrderReceiver order, Map<String, String> moreParam, Pagination page);
 
-	public BigPackageReceiver getBigPackageReceiverByPackageId(Long orderId);
+	public OrderReceiver getBigPackageReceiverByPackageId(Long orderId);
 }

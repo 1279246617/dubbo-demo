@@ -12,7 +12,6 @@ import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import com.coe.etk.api.Client;
-import com.coe.etk.api.request.Order;
 import com.coe.etk.api.request.Receiver;
 import com.coe.etk.api.request.Sender;
 import com.coe.etk.api.response.ResponseItems;
@@ -48,19 +47,19 @@ import com.coe.wms.model.warehouse.TrackingNo;
 import com.coe.wms.model.warehouse.Warehouse;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderReceiver;
 import com.coe.wms.model.warehouse.storage.record.OutWarehouseRecord;
-import com.coe.wms.model.warehouse.transport.BigPackage;
-import com.coe.wms.model.warehouse.transport.BigPackageAdditionalSf;
-import com.coe.wms.model.warehouse.transport.BigPackageReceiver;
-import com.coe.wms.model.warehouse.transport.BigPackageSender;
-import com.coe.wms.model.warehouse.transport.BigPackageStatus;
-import com.coe.wms.model.warehouse.transport.BigPackageStatus.BigPackageStatusCode;
-import com.coe.wms.model.warehouse.transport.LittlePackage;
-import com.coe.wms.model.warehouse.transport.LittlePackageItem;
-import com.coe.wms.model.warehouse.transport.LittlePackageOnShelf;
-import com.coe.wms.model.warehouse.transport.LittlePackageStatus;
-import com.coe.wms.model.warehouse.transport.LittlePackageStatus.LittlePackageStatusCode;
-import com.coe.wms.model.warehouse.transport.PackageRecord;
-import com.coe.wms.model.warehouse.transport.PackageRecordItem;
+import com.coe.wms.model.warehouse.transport.FirstWaybill;
+import com.coe.wms.model.warehouse.transport.FirstWaybillItem;
+import com.coe.wms.model.warehouse.transport.FirstWaybillOnShelf;
+import com.coe.wms.model.warehouse.transport.FirstWaybillStatus;
+import com.coe.wms.model.warehouse.transport.FirstWaybillStatus.FirstWaybillStatusCode;
+import com.coe.wms.model.warehouse.transport.Order;
+import com.coe.wms.model.warehouse.transport.OrderAdditionalSf;
+import com.coe.wms.model.warehouse.transport.OrderReceiver;
+import com.coe.wms.model.warehouse.transport.OrderSender;
+import com.coe.wms.model.warehouse.transport.OrderStatus;
+import com.coe.wms.model.warehouse.transport.OrderStatus.OrderStatusCode;
+import com.coe.wms.model.warehouse.transport.OutWarehousePackage;
+import com.coe.wms.model.warehouse.transport.OutWarehousePackageItem;
 import com.coe.wms.pojo.api.warehouse.Buyer;
 import com.coe.wms.pojo.api.warehouse.ClearanceDetail;
 import com.coe.wms.pojo.api.warehouse.ErrorCode;
@@ -234,7 +233,7 @@ public class TransportServiceImpl implements ITransportService {
 		}
 		Long warehouseId = warehouse.getId();
 		// 检测大包是否重复
-		BigPackage bigPackageParam = new BigPackage();
+		com.coe.wms.model.warehouse.transport.Order bigPackageParam = new com.coe.wms.model.warehouse.transport.Order();
 		bigPackageParam.setCustomerReferenceNo(customerReferenceNo);
 		Long count = bigPackageDao.countBigPackage(bigPackageParam, null);
 		if (count > 0) {
@@ -243,11 +242,11 @@ public class TransportServiceImpl implements ITransportService {
 			return XmlUtil.toXml(responses);
 		}
 		// 创建大包
-		BigPackage bigPackage = new BigPackage();
+		Order bigPackage = new Order();
 		bigPackage.setCreatedTime(System.currentTimeMillis());
 		bigPackage.setCustomerReferenceNo(customerReferenceNo);
 		bigPackage.setTradeRemark(tradeRemark);
-		bigPackage.setStatus(BigPackageStatusCode.WWC);
+		bigPackage.setStatus(OrderStatusCode.WWC);
 		bigPackage.setUserIdOfCustomer(userIdOfCustomer);
 		bigPackage.setWarehouseId(warehouseId);
 		// 顺丰指定,出货运单号和渠道
@@ -255,14 +254,14 @@ public class TransportServiceImpl implements ITransportService {
 		bigPackage.setShipwayCode(clearanceDetail.getCarrierCode());
 		if (logisticsOrders.size() == 1) {
 			// 直接转运
-			bigPackage.setTransportType(BigPackage.TRANSPORT_TYPE_Z);
+			bigPackage.setTransportType(Order.TRANSPORT_TYPE_Z);
 		} else {
 			// 集货转运
-			bigPackage.setTransportType(BigPackage.TRANSPORT_TYPE_J);
+			bigPackage.setTransportType(Order.TRANSPORT_TYPE_J);
 		}
 		Long bigPackageId = bigPackageDao.saveBigPackage(bigPackage);// 保存大包,得到大包id
 		// // 顺丰标签附加内容
-		BigPackageAdditionalSf additionalSf = new BigPackageAdditionalSf();
+		OrderAdditionalSf additionalSf = new OrderAdditionalSf();
 		// 顺丰指定,出货运单号和渠道
 		additionalSf.setCarrierCode(clearanceDetail.getCarrierCode());
 		additionalSf.setCustId(clearanceDetail.getCustId());
@@ -275,7 +274,7 @@ public class TransportServiceImpl implements ITransportService {
 		bigPackageAdditionalSfDao.saveBigPackageAdditionalSf(additionalSf);
 
 		// 大包收件人
-		BigPackageReceiver bigPackageReceiver = new BigPackageReceiver();
+		OrderReceiver bigPackageReceiver = new OrderReceiver();
 		bigPackageReceiver.setAddressLine1(buyer.getStreetAddress());
 		bigPackageReceiver.setCity(buyer.getCity());
 		bigPackageReceiver.setCountryCode(OutWarehouseOrderReceiver.CN);
@@ -291,7 +290,7 @@ public class TransportServiceImpl implements ITransportService {
 		bigPackageReceiverDao.saveBigPackageReceiver(bigPackageReceiver); // 保存收件人
 
 		// 发件人信息
-		BigPackageSender bigPackageSender = new BigPackageSender();
+		OrderSender bigPackageSender = new OrderSender();
 		bigPackageSender.setAddressLine1(senderDetail.getStreetAddress());
 		bigPackageSender.setCity(senderDetail.getCity());
 		bigPackageSender.setCountryCode(senderDetail.getCountry());
@@ -314,13 +313,13 @@ public class TransportServiceImpl implements ITransportService {
 				continue;
 			}
 			// 小包, 到货运单
-			LittlePackage littlePackage = new LittlePackage();
+			FirstWaybill littlePackage = new FirstWaybill();
 			littlePackage.setBigPackageId(bigPackageId);
 			littlePackage.setCarrierCode(logisticsOrder.getCarrierCode());
 			littlePackage.setCreatedTime(System.currentTimeMillis());
 			littlePackage.setPoNo(logisticsOrder.getPoNo());
 			littlePackage.setTrackingNo(logisticsOrder.getMailNo());
-			littlePackage.setStatus(LittlePackageStatusCode.WWR);
+			littlePackage.setStatus(FirstWaybillStatusCode.WWR);
 			littlePackage.setUserIdOfCustomer(userIdOfCustomer);
 			littlePackage.setWarehouseId(warehouseId);
 			littlePackage.setRemark(logisticsOrder.getLogisticsRemark());
@@ -340,7 +339,7 @@ public class TransportServiceImpl implements ITransportService {
 					if (!StringUtil.isEqualIgnoreCase(itemIncluded, itemId)) {
 						continue;
 					}
-					LittlePackageItem littlePackageItem = new LittlePackageItem();
+					FirstWaybillItem littlePackageItem = new FirstWaybillItem();
 					littlePackageItem.setSku(itemId);
 					littlePackageItem.setQuantity(item.getItemQuantity() == null ? 1 : item.getItemQuantity());
 					littlePackageItem.setLittlePackageId(littlePackageId);
@@ -364,7 +363,7 @@ public class TransportServiceImpl implements ITransportService {
 	}
 
 	@Override
-	public List<BigPackageStatus> findAllBigPackageStatus() throws ServiceException {
+	public List<OrderStatus> findAllBigPackageStatus() throws ServiceException {
 		return bigPackageStatusDao.findAllBigPackageStatus();
 	}
 
@@ -372,10 +371,10 @@ public class TransportServiceImpl implements ITransportService {
 	 * 获取转运订单列表数据
 	 */
 	@Override
-	public Pagination getBigPackageData(BigPackage param, Map<String, String> moreParam, Pagination pagination) {
-		List<BigPackage> bigPackageList = bigPackageDao.findBigPackage(param, moreParam, pagination);
+	public Pagination getBigPackageData(com.coe.wms.model.warehouse.transport.Order param, Map<String, String> moreParam, Pagination pagination) {
+		List<com.coe.wms.model.warehouse.transport.Order> bigPackageList = bigPackageDao.findBigPackage(param, moreParam, pagination);
 		List<Object> list = new ArrayList<Object>();
-		for (BigPackage bigPackage : bigPackageList) {
+		for (com.coe.wms.model.warehouse.transport.Order bigPackage : bigPackageList) {
 			Map<String, Object> map = new HashMap<String, Object>();
 			Long bigPackageId = bigPackage.getId();
 			map.put("id", bigPackageId);
@@ -436,21 +435,21 @@ public class TransportServiceImpl implements ITransportService {
 					map.put("warehouse", warehouse.getWarehouseName());
 				}
 			}
-			if (StringUtil.isEqual(BigPackage.TRANSPORT_TYPE_J, bigPackage.getTransportType())) {
+			if (StringUtil.isEqual(Order.TRANSPORT_TYPE_J, bigPackage.getTransportType())) {
 				map.put("transportType", "集货转运");
 			}
-			if (StringUtil.isEqual(BigPackage.TRANSPORT_TYPE_Z, bigPackage.getTransportType())) {
+			if (StringUtil.isEqual(Order.TRANSPORT_TYPE_Z, bigPackage.getTransportType())) {
 				map.put("transportType", "直接转运");
 			}
 			map.put("remark", bigPackage.getRemark());
 			map.put("trackingNo", bigPackage.getTrackingNo());
-			BigPackageStatus bigPackageStatus = bigPackageStatusDao.findBigPackageStatusByCode(bigPackage.getStatus());
+			OrderStatus bigPackageStatus = bigPackageStatusDao.findBigPackageStatusByCode(bigPackage.getStatus());
 			if (bigPackageStatus != null) {
 				map.put("status", bigPackageStatus.getCn());
 			}
 
 			// 收件人信息
-			BigPackageReceiver bigPackageReceiver = bigPackageReceiverDao.getBigPackageReceiverByPackageId(bigPackageId);
+			OrderReceiver bigPackageReceiver = bigPackageReceiverDao.getBigPackageReceiverByPackageId(bigPackageId);
 			if (bigPackageReceiver != null) {
 				map.put("receiverAddressLine1", bigPackageReceiver.getAddressLine1());
 				map.put("receiverAddressLine2", bigPackageReceiver.getAddressLine2());
@@ -469,16 +468,16 @@ public class TransportServiceImpl implements ITransportService {
 				map.put("receiverStateOrProvince", bigPackageReceiver.getStateOrProvince());
 			}
 			// 发件人
-			BigPackageSender bigPackageSender = bigPackageSenderDao.getBigPackageSenderByPackageId(bigPackageId);
+			OrderSender bigPackageSender = bigPackageSenderDao.getBigPackageSenderByPackageId(bigPackageId);
 			if (bigPackageSender != null) {
 				map.put("senderName", bigPackageSender.getName());
 			}
 			// 物品明细(目前仅展示SKU*数量)
 			String littlePackages = "";
-			LittlePackage littlePackageParam = new LittlePackage();
+			FirstWaybill littlePackageParam = new FirstWaybill();
 			littlePackageParam.setBigPackageId(bigPackageId);
-			List<LittlePackage> littlePackageList = littlePackageDao.findLittlePackage(littlePackageParam, null, null);
-			for (LittlePackage littlePackage : littlePackageList) {
+			List<FirstWaybill> littlePackageList = littlePackageDao.findLittlePackage(littlePackageParam, null, null);
+			for (FirstWaybill littlePackage : littlePackageList) {
 				littlePackages += littlePackage.getTrackingNo() + " ; ";
 			}
 			map.put("littlePackages", littlePackages);
@@ -491,16 +490,16 @@ public class TransportServiceImpl implements ITransportService {
 
 	@Override
 	public List<Map<String, Object>> getLittlePackageItems(Long bigPackageId) throws ServiceException {
-		LittlePackage param = new LittlePackage();
+		FirstWaybill param = new FirstWaybill();
 		param.setBigPackageId(bigPackageId);
 		List<Map<String, Object>> mapList = new ArrayList<Map<String, Object>>();
-		List<LittlePackage> littlePackageList = littlePackageDao.findLittlePackage(param, null, null);
-		for (LittlePackage littlePackage : littlePackageList) {
+		List<FirstWaybill> littlePackageList = littlePackageDao.findLittlePackage(param, null, null);
+		for (FirstWaybill littlePackage : littlePackageList) {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("trackingNo", littlePackage.getTrackingNo());
 			map.put("poNo", littlePackage.getPoNo());
 			map.put("carrierCode", littlePackage.getCarrierCode());
-			LittlePackageStatus littlePackageStatus = littlePackageStatusDao.findLittlePackageStatusByCode(littlePackage.getStatus());
+			FirstWaybillStatus littlePackageStatus = littlePackageStatusDao.findLittlePackageStatusByCode(littlePackage.getStatus());
 			if (littlePackageStatus != null) {
 				map.put("status", littlePackageStatus.getCn());
 			}
@@ -524,9 +523,9 @@ public class TransportServiceImpl implements ITransportService {
 				}
 			}
 			// 获取小包内物品详情
-			LittlePackageItem littlePackageItemParam = new LittlePackageItem();
+			FirstWaybillItem littlePackageItemParam = new FirstWaybillItem();
 			littlePackageItemParam.setLittlePackageId(littlePackage.getId());
-			List<LittlePackageItem> littlePackageItemList = littlePackageItemDao.findLittlePackageItem(littlePackageItemParam, null, null);
+			List<FirstWaybillItem> littlePackageItemList = littlePackageItemDao.findLittlePackageItem(littlePackageItemParam, null, null);
 			map.put("littlePackageItemList", littlePackageItemList);
 			mapList.add(map);
 		}
@@ -556,12 +555,12 @@ public class TransportServiceImpl implements ITransportService {
 			// 查询订单的当前状态
 			String oldStatus = bigPackageDao.getBigPackageStatus(bigPackageIdLong);
 			// 如果不是等待审核状态的订单,直接跳过
-			if (!StringUtil.isEqual(oldStatus, BigPackageStatusCode.WWC)) {
+			if (!StringUtil.isEqual(oldStatus, OrderStatusCode.WWC)) {
 				noUpdateQuantity++;
 				continue;
 			}
 			// 更改状态为审核中
-			bigPackageDao.updateBigPackageStatus(bigPackageIdLong, BigPackageStatusCode.WCI);
+			bigPackageDao.updateBigPackageStatus(bigPackageIdLong, OrderStatusCode.WCI);
 			// SUCCESS SECURITY 包裹安全监测不通过 OTHER_REASON 其他异常
 			bigPackageDao.updateBigPackageCheckResult(bigPackageIdLong, checkResult);
 			updateQuantity++;
@@ -572,21 +571,21 @@ public class TransportServiceImpl implements ITransportService {
 	}
 
 	@Override
-	public List<LittlePackageStatus> findAllLittlePackageStatus() throws ServiceException {
+	public List<FirstWaybillStatus> findAllLittlePackageStatus() throws ServiceException {
 		return littlePackageStatusDao.findAllLittlePackageStatus();
 	}
 
 	@Override
-	public Pagination getLittlePackageData(LittlePackage param, Map<String, String> moreParam, Pagination page) throws ServiceException {
-		List<LittlePackage> littlePackageList = littlePackageDao.findLittlePackage(param, moreParam, page);
+	public Pagination getLittlePackageData(FirstWaybill param, Map<String, String> moreParam, Pagination page) throws ServiceException {
+		List<FirstWaybill> littlePackageList = littlePackageDao.findLittlePackage(param, moreParam, page);
 		List<Object> list = new ArrayList<Object>();
-		for (LittlePackage littlePackage : littlePackageList) {
+		for (FirstWaybill littlePackage : littlePackageList) {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("id", littlePackage.getId());
 			Long bigPackageId = littlePackage.getBigPackageId();
 			String bigPackageStatusCode = bigPackageDao.getBigPackageStatus(bigPackageId);
 			if (StringUtil.isNotNull(bigPackageStatusCode)) {
-				BigPackageStatus bigPackageStatus = bigPackageStatusDao.findBigPackageStatusByCode(bigPackageStatusCode);
+				OrderStatus bigPackageStatus = bigPackageStatusDao.findBigPackageStatusByCode(bigPackageStatusCode);
 				map.put("bigPackageStatus", bigPackageStatus.getCn());
 			}
 			map.put("bigPackageId", littlePackage.getBigPackageId());
@@ -623,23 +622,23 @@ public class TransportServiceImpl implements ITransportService {
 					map.put("warehouse", warehouse.getWarehouseName());
 				}
 			}
-			if (StringUtil.isEqual(BigPackage.TRANSPORT_TYPE_J, littlePackage.getTransportType())) {
+			if (StringUtil.isEqual(Order.TRANSPORT_TYPE_J, littlePackage.getTransportType())) {
 				map.put("transportType", "集货转运");
 			}
-			if (StringUtil.isEqual(BigPackage.TRANSPORT_TYPE_Z, littlePackage.getTransportType())) {
+			if (StringUtil.isEqual(Order.TRANSPORT_TYPE_Z, littlePackage.getTransportType())) {
 				map.put("transportType", "直接转运");
 			}
 			map.put("remark", littlePackage.getRemark());
-			LittlePackageStatus littlePackageStatus = littlePackageStatusDao.findLittlePackageStatusByCode(littlePackage.getStatus());
+			FirstWaybillStatus littlePackageStatus = littlePackageStatusDao.findLittlePackageStatusByCode(littlePackage.getStatus());
 			if (littlePackageStatus != null) {
 				map.put("status", littlePackageStatus.getCn());
 			}
 			// 物品明细(目前仅展示SKU*数量)
 			String items = "";
-			LittlePackageItem littlePackageItemParam = new LittlePackageItem();
+			FirstWaybillItem littlePackageItemParam = new FirstWaybillItem();
 			littlePackageItemParam.setLittlePackageId(littlePackage.getId());
-			List<LittlePackageItem> littlePackageItemList = littlePackageItemDao.findLittlePackageItem(littlePackageItemParam, null, null);
-			for (LittlePackageItem littlePackageItem : littlePackageItemList) {
+			List<FirstWaybillItem> littlePackageItemList = littlePackageItemDao.findLittlePackageItem(littlePackageItemParam, null, null);
+			for (FirstWaybillItem littlePackageItem : littlePackageItemList) {
 				items += littlePackageItem.getSku() + " * " + littlePackageItem.getQuantity() + " ; ";
 			}
 			map.put("items", items);
@@ -651,10 +650,10 @@ public class TransportServiceImpl implements ITransportService {
 	}
 
 	@Override
-	public List<LittlePackageItem> getLittlePackageItemsByLittlePackageId(Long littlePackageId) throws ServiceException {
-		LittlePackageItem littlePackageItemParam = new LittlePackageItem();
+	public List<FirstWaybillItem> getLittlePackageItemsByLittlePackageId(Long littlePackageId) throws ServiceException {
+		FirstWaybillItem littlePackageItemParam = new FirstWaybillItem();
 		littlePackageItemParam.setLittlePackageId(littlePackageId);
-		List<LittlePackageItem> littlePackageItemList = littlePackageItemDao.findLittlePackageItem(littlePackageItemParam, null, null);
+		List<FirstWaybillItem> littlePackageItemList = littlePackageItemDao.findLittlePackageItem(littlePackageItemParam, null, null);
 		return littlePackageItemList;
 	}
 
@@ -688,30 +687,30 @@ public class TransportServiceImpl implements ITransportService {
 			return XmlUtil.toXml(responses);
 		}
 		// 根据客户订单号 (traderOrderId)查找转运订单,修改WWO:待出库操作
-		BigPackage param = new BigPackage();
+		Order param = new Order();
 		param.setCustomerReferenceNo(customerReferenceNo);
-		List<BigPackage> bigPackageList = bigPackageDao.findBigPackage(param, null, null);
+		List<Order> bigPackageList = bigPackageDao.findBigPackage(param, null, null);
 		if (bigPackageList == null || bigPackageList.size() == 0) {
 			response.setReason(ErrorCode.S01_CODE);
 			response.setReasonDesc("TradeOrder对象获取tradeOrderId得到Null");
 			return XmlUtil.toXml(responses);
 		}
-		BigPackage bigPackage = bigPackageList.get(0);
-		if (!StringUtil.isEqual(bigPackage.getStatus(), BigPackageStatusCode.WCC)) {
+		Order bigPackage = bigPackageList.get(0);
+		if (!StringUtil.isEqual(bigPackage.getStatus(), OrderStatusCode.WCC)) {
 			response.setReason(ErrorCode.B0100_CODE);
 			response.setReasonDesc("订单当前状态非待客户核重状态");
 			return XmlUtil.toXml(responses);
 		}
-		bigPackageDao.updateBigPackageStatus(bigPackage.getId(), BigPackageStatusCode.WWO);
+		bigPackageDao.updateBigPackageStatus(bigPackage.getId(), OrderStatusCode.WWO);
 		response.setSuccess(Constant.TRUE);
 		return XmlUtil.toXml(responses);
 	}
 
 	@Override
-	public List<Map<String, String>> checkReceivedLittlePackage(LittlePackage param) {
-		List<LittlePackage> littlePackageList = littlePackageDao.findLittlePackage(param, null, null);
+	public List<Map<String, String>> checkReceivedLittlePackage(FirstWaybill param) {
+		List<FirstWaybill> littlePackageList = littlePackageDao.findLittlePackage(param, null, null);
 		List<Map<String, String>> mapList = new ArrayList<Map<String, String>>();
-		for (LittlePackage littlePackage : littlePackageList) {
+		for (FirstWaybill littlePackage : littlePackageList) {
 			Map<String, String> map = new HashMap<String, String>();
 			Long userId = littlePackage.getUserIdOfCustomer();
 			User user = userDao.getUserById(userId);
@@ -719,25 +718,25 @@ public class TransportServiceImpl implements ITransportService {
 			map.put("userLoginName", user.getLoginName());
 			map.put("trackingNo", littlePackage.getTrackingNo());
 			map.put("bigPackageId", littlePackage.getBigPackageId() + "");
-			BigPackage bigPackage = bigPackageDao.getBigPackageById(littlePackage.getBigPackageId());
+			Order bigPackage = bigPackageDao.getBigPackageById(littlePackage.getBigPackageId());
 			map.put("outWarehouseTrackingNo", bigPackage.getTrackingNo());
 			map.put("shipwayCode", bigPackage.getShipwayCode());
 			map.put("seatCode", littlePackage.getSeatCode());
 			map.put("carrierCode", littlePackage.getCarrierCode());
 			String time = DateUtil.dateConvertString(new Date(littlePackage.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss);
 			map.put("createdTime", time);
-			LittlePackageStatus status = littlePackageStatusDao.findLittlePackageStatusByCode(littlePackage.getStatus());
+			FirstWaybillStatus status = littlePackageStatusDao.findLittlePackageStatusByCode(littlePackage.getStatus());
 			if (status != null) {
 				map.put("status", status.getCn());
 			} else {
 				map.put("status", "");
 			}
 			String onShelfstatus = littlePackageOnShelfDao.findStatusByLittlePackageId(littlePackage.getId());
-			if (StringUtil.isEqual(onShelfstatus, LittlePackageOnShelf.STATUS_ON_SHELF)) {
+			if (StringUtil.isEqual(onShelfstatus, FirstWaybillOnShelf.STATUS_ON_SHELF)) {
 				map.put("onShelfstatus", "已上架");
-			} else if (StringUtil.isEqual(onShelfstatus, LittlePackageOnShelf.STATUS_OUT_SHELF)) {
+			} else if (StringUtil.isEqual(onShelfstatus, FirstWaybillOnShelf.STATUS_OUT_SHELF)) {
 				map.put("onShelfstatus", "已下架");
-			} else if (StringUtil.isEqual(onShelfstatus, LittlePackageOnShelf.STATUS_PRE_ON_SHELF)) {
+			} else if (StringUtil.isEqual(onShelfstatus, FirstWaybillOnShelf.STATUS_PRE_ON_SHELF)) {
 				map.put("onShelfstatus", "未上架");
 			} else {
 				map.put("onShelfstatus", "");
@@ -755,20 +754,20 @@ public class TransportServiceImpl implements ITransportService {
 			map.put(Constant.MESSAGE, "请输入跟踪单号.");
 			return map;
 		}
-		LittlePackage littlePackage = littlePackageDao.getLittlePackageById(littlePackageId);
-		if (!StringUtil.isEqual(littlePackage.getStatus(), LittlePackageStatusCode.WWR)) {
+		FirstWaybill littlePackage = littlePackageDao.getLittlePackageById(littlePackageId);
+		if (!StringUtil.isEqual(littlePackage.getStatus(), FirstWaybillStatusCode.WWR)) {
 			// 非待收货状态
 			map.put(Constant.MESSAGE, "该转运订单非待收货状态,请输入新的跟踪单号");
 			return map;
 		}
 		// 更新为已收货前,查找空闲的转运业务专用货位
 		// 查找其他小包是否已经上架
-		LittlePackageOnShelf onShelfParam = new LittlePackageOnShelf();
+		FirstWaybillOnShelf onShelfParam = new FirstWaybillOnShelf();
 		onShelfParam.setBigPackageId(littlePackage.getBigPackageId());
-		List<LittlePackageOnShelf> littlePackageOnShelfList = littlePackageOnShelfDao.findLittlePackageOnShelf(onShelfParam, null, null);
+		List<FirstWaybillOnShelf> littlePackageOnShelfList = littlePackageOnShelfDao.findLittlePackageOnShelf(onShelfParam, null, null);
 		String seatCode = null;
 		if (littlePackageOnShelfList != null && littlePackageOnShelfList.size() > 0) {
-			LittlePackageOnShelf littlePackageOnShelf = littlePackageOnShelfList.get(0);
+			FirstWaybillOnShelf littlePackageOnShelf = littlePackageOnShelfList.get(0);
 			seatCode = littlePackageOnShelf.getSeatCode();
 		}
 		if (StringUtil.isNull(seatCode)) {
@@ -781,32 +780,32 @@ public class TransportServiceImpl implements ITransportService {
 		}
 		littlePackage.setSeatCode(seatCode);// 收货预分配货位 真正的货位信息要在上架记录寻找
 		// 更改为已收货, 待添加操作日志
-		littlePackage.setStatus(LittlePackageStatusCode.WSR);
+		littlePackage.setStatus(FirstWaybillStatusCode.WSR);
 		littlePackage.setReceivedTime(System.currentTimeMillis());
 		// 保存货位,状态,时间
 		littlePackageDao.receivedLittlePackage(littlePackage);
 		// 判断bigPackage下的所有littlePackage是否已经全部收货
-		LittlePackage littlePackageParam = new LittlePackage();
+		FirstWaybill littlePackageParam = new FirstWaybill();
 		littlePackageParam.setBigPackageId(littlePackage.getBigPackageId());
-		List<LittlePackage> littlePackageList = littlePackageDao.findLittlePackage(littlePackageParam, null, null);
+		List<FirstWaybill> littlePackageList = littlePackageDao.findLittlePackage(littlePackageParam, null, null);
 		boolean isReceived = true;// 小包是否已经全部收货
-		for (LittlePackage temp : littlePackageList) {
-			if (StringUtil.isEqual(temp.getStatus(), LittlePackageStatusCode.WWR)) {
+		for (FirstWaybill temp : littlePackageList) {
+			if (StringUtil.isEqual(temp.getStatus(), FirstWaybillStatusCode.WWR)) {
 				isReceived = false;
 			}
 		}
 		if (isReceived) {
-			bigPackageDao.updateBigPackageStatus(littlePackage.getBigPackageId(), BigPackageStatusCode.WOS);// 收货完成
+			bigPackageDao.updateBigPackageStatus(littlePackage.getBigPackageId(), OrderStatusCode.WOS);// 收货完成
 		} else {
-			bigPackageDao.updateBigPackageStatus(littlePackage.getBigPackageId(), BigPackageStatusCode.WRP);
+			bigPackageDao.updateBigPackageStatus(littlePackage.getBigPackageId(), OrderStatusCode.WRP);
 		}
 		// 保存预分配货位上架记录
-		LittlePackageOnShelf onShelf = new LittlePackageOnShelf();
+		FirstWaybillOnShelf onShelf = new FirstWaybillOnShelf();
 		onShelf.setCreatedTime(System.currentTimeMillis());
 		onShelf.setLittlePackageId(littlePackageId);
 		onShelf.setBigPackageId(littlePackage.getBigPackageId());
 		onShelf.setSeatCode(seatCode);
-		onShelf.setStatus(LittlePackageOnShelf.STATUS_PRE_ON_SHELF);
+		onShelf.setStatus(FirstWaybillOnShelf.STATUS_PRE_ON_SHELF);
 		onShelf.setTrackingNo(trackingNo);
 		onShelf.setUserIdOfCustomer(littlePackage.getUserIdOfCustomer());
 		onShelf.setUserIdOfOperator(userIdOfOperator);
@@ -815,15 +814,15 @@ public class TransportServiceImpl implements ITransportService {
 		map.put("seatCode", seatCode);
 		map.put("bigPackageId", "" + littlePackage.getBigPackageId());
 
-		if (StringUtil.isEqual(littlePackage.getTransportType(), BigPackage.TRANSPORT_TYPE_J)) {// 集货转运
+		if (StringUtil.isEqual(littlePackage.getTransportType(), Order.TRANSPORT_TYPE_J)) {// 集货转运
 			map.put(Constant.MESSAGE, "集货转运订单收货成功,请继续收货");
 			map.put(Constant.STATUS, Constant.SUCCESS);
-		} else if (StringUtil.isEqual(littlePackage.getTransportType(), BigPackage.TRANSPORT_TYPE_Z)) {// 直接转运
+		} else if (StringUtil.isEqual(littlePackage.getTransportType(), Order.TRANSPORT_TYPE_Z)) {// 直接转运
 			// map.put(Constant.MESSAGE, "直接转运订单收货成功,请称重打单");
 			// 2014-12-23取消直接转运订单称重打单, 后台修改提示内容, 前台修改操作流程
 			map.put(Constant.MESSAGE, "直接转运订单收货成功,请继续收货");
 			map.put(Constant.STATUS, "2");
-			BigPackage bigPackage = bigPackageDao.getBigPackageById(littlePackage.getBigPackageId());
+			Order bigPackage = bigPackageDao.getBigPackageById(littlePackage.getBigPackageId());
 			map.put("shipwayCode", bigPackage.getShipwayCode());
 			map.put("trackingNo", bigPackage.getTrackingNo());
 			map.put("seatCode", seatCode);
@@ -840,35 +839,35 @@ public class TransportServiceImpl implements ITransportService {
 			return map;
 		}
 		// 查询大包是否已经称重,不可重复称重
-		BigPackage bigPackage = bigPackageDao.getBigPackageById(bigPackageId);
+		Order bigPackage = bigPackageDao.getBigPackageById(bigPackageId);
 		if (bigPackage.getOutWarehouseWeight() != null) {
 			map.put(Constant.MESSAGE, "该转运订单已经称重,不能更改重量");
 			return map;
 		}
 		// 集货转运订单,非待称重状态不可称重
 		// 直接转运订单:收货(大包:收货完成,小包:待发送入库) 称重(大包:待发送重量 ,小包:无变化) 打印捡货单:无需做上架就可以打
-		if (StringUtil.isEqual(bigPackage.getTransportType(), BigPackage.TRANSPORT_TYPE_J)) {
-			if (!StringUtil.isEqual(bigPackage.getStatus(), BigPackageStatusCode.WWW)) {
+		if (StringUtil.isEqual(bigPackage.getTransportType(), Order.TRANSPORT_TYPE_J)) {
+			if (!StringUtil.isEqual(bigPackage.getStatus(), OrderStatusCode.WWW)) {
 				map.put(Constant.MESSAGE, "该集货转运订单非待称重状态,不能更改重量");
 				return map;
 			}
 		}
-		if (StringUtil.isEqual(bigPackage.getTransportType(), BigPackage.TRANSPORT_TYPE_Z)) {
+		if (StringUtil.isEqual(bigPackage.getTransportType(), Order.TRANSPORT_TYPE_Z)) {
 			// 直接转运订单,在几个状态都可以称重
-			if (!(StringUtil.isEqual(bigPackage.getStatus(), BigPackageStatusCode.WOS) || StringUtil.isEqual(bigPackage.getStatus(), BigPackageStatusCode.WWP) || StringUtil.isEqual(bigPackage.getStatus(), BigPackageStatusCode.WWW))) {
+			if (!(StringUtil.isEqual(bigPackage.getStatus(), OrderStatusCode.WOS) || StringUtil.isEqual(bigPackage.getStatus(), OrderStatusCode.WWP) || StringUtil.isEqual(bigPackage.getStatus(), OrderStatusCode.WWW))) {
 				map.put(Constant.MESSAGE, "该直接转运订单非待称重状态,不能更改重量");
 				return map;
 			}
 		}
 		bigPackage.setOutWarehouseWeight(weight);
-		bigPackage.setStatus(BigPackageStatusCode.WSW);
+		bigPackage.setStatus(OrderStatusCode.WSW);
 		bigPackage.setWeightCode(WeightCode.KG);
 		bigPackage.setUserIdOfOperator(userIdOfOperator);
 		bigPackageDao.updateBigPackageWeight(bigPackage);
 		// 小包修改下架 :已下架合包
-		littlePackageDao.updateLittlePackageStatus(bigPackageId, LittlePackageStatusCode.SUCCESS);
+		littlePackageDao.updateLittlePackageStatus(bigPackageId, FirstWaybillStatusCode.SUCCESS);
 		// 修改上架记录为已下架
-		littlePackageOnShelfDao.updateLittlePackageOnShelf(bigPackageId, LittlePackageOnShelf.STATUS_OUT_SHELF);
+		littlePackageOnShelfDao.updateLittlePackageOnShelf(bigPackageId, FirstWaybillOnShelf.STATUS_OUT_SHELF);
 		map.put(Constant.STATUS, Constant.SUCCESS);
 		return map;
 	}
@@ -882,22 +881,22 @@ public class TransportServiceImpl implements ITransportService {
 			return map;
 		}
 		// 查询订单状态是否是待上架
-		LittlePackage littlePackage = littlePackageDao.getLittlePackageById(littlePackageId);
-		if (StringUtil.isEqual(littlePackage.getStatus(), LittlePackageStatusCode.WSR)) {
+		FirstWaybill littlePackage = littlePackageDao.getLittlePackageById(littlePackageId);
+		if (StringUtil.isEqual(littlePackage.getStatus(), FirstWaybillStatusCode.WSR)) {
 			map.put(Constant.MESSAGE, "该订单等待回传收货给客户,不能上架");
 			return map;
 		}
-		if (!StringUtil.isEqual(littlePackage.getStatus(), LittlePackageStatusCode.WOS)) {
+		if (!StringUtil.isEqual(littlePackage.getStatus(), FirstWaybillStatusCode.WOS)) {
 			map.put(Constant.MESSAGE, "该订单非待上架状态,不能上架");
 			return map;
 		}
 		// 查找小包最新上架记录
-		LittlePackageOnShelf onshelf = littlePackageOnShelfDao.findLittlePackageOnShelfByLittlePackageId(littlePackageId);
+		FirstWaybillOnShelf onshelf = littlePackageOnShelfDao.findLittlePackageOnShelfByLittlePackageId(littlePackageId);
 		if (onshelf == null) {
 			map.put(Constant.MESSAGE, "预分配货位丢失,请联系管理员");
 			return map;
 		}
-		if (StringUtil.isEqual(onshelf.getStatus(), LittlePackageOnShelf.STATUS_ON_SHELF)) {
+		if (StringUtil.isEqual(onshelf.getStatus(), FirstWaybillOnShelf.STATUS_ON_SHELF)) {
 			map.put(Constant.MESSAGE, "该订单已上架,不能重复上架");
 			return map;
 		}
@@ -905,28 +904,28 @@ public class TransportServiceImpl implements ITransportService {
 			map.put(Constant.MESSAGE, "输入的货位号与预分配货位号不相同,不能上架");
 			return map;
 		}
-		littlePackage.setStatus(LittlePackageStatusCode.W_OUT_S);
+		littlePackage.setStatus(FirstWaybillStatusCode.W_OUT_S);
 		littlePackageDao.updateLittlePackageStatus(littlePackage);
 
-		onshelf.setStatus(LittlePackageOnShelf.STATUS_ON_SHELF);
+		onshelf.setStatus(FirstWaybillOnShelf.STATUS_ON_SHELF);
 		// 否则修改为已上架
 		littlePackageOnShelfDao.updateLittlePackageOnShelf(onshelf);
 
 		// 判断bigpackage下是不是所有littlepackage都已经上架
-		LittlePackage littlePackageParam = new LittlePackage();
+		FirstWaybill littlePackageParam = new FirstWaybill();
 		littlePackageParam.setBigPackageId(littlePackage.getBigPackageId());
-		List<LittlePackage> littlePackageList = littlePackageDao.findLittlePackage(littlePackageParam, null, null);
+		List<FirstWaybill> littlePackageList = littlePackageDao.findLittlePackage(littlePackageParam, null, null);
 		boolean isReceived = true;// 小包是否已经全部收货
-		for (LittlePackage temp : littlePackageList) {
-			if (!StringUtil.isEqual(temp.getStatus(), LittlePackageStatusCode.W_OUT_S)) {
+		for (FirstWaybill temp : littlePackageList) {
+			if (!StringUtil.isEqual(temp.getStatus(), FirstWaybillStatusCode.W_OUT_S)) {
 				isReceived = false;
 			}
 		}
 		if (isReceived) {
 			// 判断大包当前状态是否是收货完成,待上架完成
 			String status = bigPackageDao.getBigPackageStatus(littlePackage.getBigPackageId());
-			if (StringUtil.isEqual(status, BigPackageStatusCode.WOS)) {
-				bigPackageDao.updateBigPackageStatus(littlePackage.getBigPackageId(), BigPackageStatusCode.WWP);// 上架完成待打印捡货
+			if (StringUtil.isEqual(status, OrderStatusCode.WOS)) {
+				bigPackageDao.updateBigPackageStatus(littlePackage.getBigPackageId(), OrderStatusCode.WWP);// 上架完成待打印捡货
 			}
 		}
 		map.put(Constant.STATUS, Constant.SUCCESS);
@@ -934,10 +933,10 @@ public class TransportServiceImpl implements ITransportService {
 	}
 
 	@Override
-	public Pagination getLittlePackageOnShelfData(LittlePackageOnShelf param, Map<String, String> moreParam, Pagination page) throws ServiceException {
-		List<LittlePackageOnShelf> littlePackageOnShelfList = littlePackageOnShelfDao.findLittlePackageOnShelf(param, moreParam, page);
+	public Pagination getLittlePackageOnShelfData(FirstWaybillOnShelf param, Map<String, String> moreParam, Pagination page) throws ServiceException {
+		List<FirstWaybillOnShelf> littlePackageOnShelfList = littlePackageOnShelfDao.findLittlePackageOnShelf(param, moreParam, page);
 		List<Object> list = new ArrayList<Object>();
-		for (LittlePackageOnShelf littlePackageOnShelf : littlePackageOnShelfList) {
+		for (FirstWaybillOnShelf littlePackageOnShelf : littlePackageOnShelfList) {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("id", littlePackageOnShelf.getId());
 			if (littlePackageOnShelf.getCreatedTime() != null) {
@@ -958,18 +957,18 @@ public class TransportServiceImpl implements ITransportService {
 					map.put("warehouse", warehouse.getWarehouseName());
 				}
 			}
-			if (StringUtil.isEqual(littlePackageOnShelf.getStatus(), LittlePackageOnShelf.STATUS_ON_SHELF)) {
+			if (StringUtil.isEqual(littlePackageOnShelf.getStatus(), FirstWaybillOnShelf.STATUS_ON_SHELF)) {
 				map.put("status", "已上架");
-			} else if (StringUtil.isEqual(littlePackageOnShelf.getStatus(), LittlePackageOnShelf.STATUS_OUT_SHELF)) {
+			} else if (StringUtil.isEqual(littlePackageOnShelf.getStatus(), FirstWaybillOnShelf.STATUS_OUT_SHELF)) {
 				map.put("status", "已下架");
-			} else if (StringUtil.isEqual(littlePackageOnShelf.getStatus(), LittlePackageOnShelf.STATUS_PRE_ON_SHELF)) {
+			} else if (StringUtil.isEqual(littlePackageOnShelf.getStatus(), FirstWaybillOnShelf.STATUS_PRE_ON_SHELF)) {
 				map.put("status", "预上架");
 			}
-			BigPackage bigPackage = bigPackageDao.getBigPackageById(littlePackageOnShelf.getBigPackageId());
+			Order bigPackage = bigPackageDao.getBigPackageById(littlePackageOnShelf.getBigPackageId());
 			String transportType = bigPackage.getTransportType();
-			if (StringUtil.isEqual(transportType, BigPackage.TRANSPORT_TYPE_J)) {
+			if (StringUtil.isEqual(transportType, Order.TRANSPORT_TYPE_J)) {
 				map.put("transportType", "集货转运");
-			} else if (StringUtil.isEqual(transportType, BigPackage.TRANSPORT_TYPE_Z)) {
+			} else if (StringUtil.isEqual(transportType, Order.TRANSPORT_TYPE_Z)) {
 				map.put("transportType", "直接转运");
 			}
 			map.put("outWarehouseTrackingNo", bigPackage.getTrackingNo());
@@ -989,17 +988,17 @@ public class TransportServiceImpl implements ITransportService {
 			map.put(Constant.MESSAGE, "请输入客户订单号(扫描捡货单右上角条码即可)");
 			return map;
 		}
-		BigPackage param = new BigPackage();
+		Order param = new Order();
 		param.setCustomerReferenceNo(customerReferenceNo);
-		List<BigPackage> bigPackageList = bigPackageDao.findBigPackage(param, null, null);
+		List<Order> bigPackageList = bigPackageDao.findBigPackage(param, null, null);
 		if (bigPackageList == null || bigPackageList.size() <= 0) {
 			map.put(Constant.MESSAGE, "根据该客户订单号找不到转运订单,请输入正确客户订单号");
 			return map;
 		}
-		BigPackage bigPackage = bigPackageList.get(0);
+		Order bigPackage = bigPackageList.get(0);
 		Long bigPackageId = bigPackage.getId();
 		map.put("bigPackageId", bigPackageId.toString());
-		LittlePackage littlePackageParam = new LittlePackage();
+		FirstWaybill littlePackageParam = new FirstWaybill();
 		littlePackageParam.setBigPackageId(bigPackageId);
 		List<String> trackingNoList = littlePackageDao.findLittlePackageTrackingNos(bigPackageId);
 		String trackingNos = "";
@@ -1010,7 +1009,7 @@ public class TransportServiceImpl implements ITransportService {
 			trackingNos = trackingNos.substring(0, trackingNos.length() - 1);
 		}
 		map.put("trackingNos", trackingNos);
-		BigPackageStatus status = bigPackageStatusDao.findBigPackageStatusByCode(bigPackage.getStatus());
+		OrderStatus status = bigPackageStatusDao.findBigPackageStatusByCode(bigPackage.getStatus());
 		map.put("bigPackageStatus", status.getCn());
 		map.put("shipwayCode", bigPackage.getShipwayCode());
 		map.put("trackingNo", bigPackage.getTrackingNo());
@@ -1022,9 +1021,9 @@ public class TransportServiceImpl implements ITransportService {
 	public Map<String, Object> outWarehousePackageEnterCoeTrackingNo(String coeTrackingNo) throws ServiceException {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put(Constant.STATUS, Constant.FAIL);
-		PackageRecordItem packageRecordItem = new PackageRecordItem();
+		OutWarehousePackageItem packageRecordItem = new OutWarehousePackageItem();
 		packageRecordItem.setCoeTrackingNo(coeTrackingNo);
-		List<PackageRecordItem> packageRecordItemList = packageRecordItemDao.findPackageRecordItem(packageRecordItem, null, null);
+		List<OutWarehousePackageItem> packageRecordItemList = packageRecordItemDao.findPackageRecordItem(packageRecordItem, null, null);
 		List<TrackingNo> trackingNos = trackingNoDao.findTrackingNo(coeTrackingNo, TrackingNo.TYPE_COE);
 		// 暂不处理,单号可能重复问题
 		if (trackingNos == null || trackingNos.size() <= 0) {
@@ -1054,9 +1053,9 @@ public class TransportServiceImpl implements ITransportService {
 			map.put(Constant.MESSAGE, "请输入出货跟踪单号");
 			return map;
 		}
-		BigPackage param = new BigPackage();
+		Order param = new Order();
 		param.setTrackingNo(trackingNo);
-		List<BigPackage> bigPackageList = bigPackageDao.findBigPackage(param, null, null);
+		List<Order> bigPackageList = bigPackageDao.findBigPackage(param, null, null);
 		if (bigPackageList == null || bigPackageList.size() == 0) {
 			map.put(Constant.MESSAGE, "查询不到转运订单,请重新输入转运订单出货跟踪单号");
 			return map;
@@ -1067,14 +1066,14 @@ public class TransportServiceImpl implements ITransportService {
 			// map.put(Constant.MESSAGE, "查询到多个出库订单,请输入客户订单号");
 			return map;
 		}
-		BigPackage bigPackage = bigPackageList.get(0);
+		Order bigPackage = bigPackageList.get(0);
 		// 只有顺丰确认出库,顺丰已确认的订单 可以出库
-		if (StringUtil.isEqual(bigPackage.getStatus(), BigPackageStatusCode.WWO)) {
+		if (StringUtil.isEqual(bigPackage.getStatus(), OrderStatusCode.WWO)) {
 			Long bigPackageId = bigPackage.getId();
 			map.put("orderId", bigPackageId + "");
 			if (StringUtil.isEqual(addOrSub, "1")) {
 				// 检查出库订单 是否已经和COE交接单号绑定
-				PackageRecordItem checkTrackingNoParam = new PackageRecordItem();
+				OutWarehousePackageItem checkTrackingNoParam = new OutWarehousePackageItem();
 				checkTrackingNoParam.setBigPackageId(bigPackageId);
 				Long countTrackingNoResult = packageRecordItemDao.countPackageRecordItem(checkTrackingNoParam, null);
 				if (countTrackingNoResult > 0) {
@@ -1084,7 +1083,7 @@ public class TransportServiceImpl implements ITransportService {
 				}
 				// 保存到OutWarehouseShipping,但不改变出库订单的状态.
 				// 只有当操作员点击完成出货总单才改变一个COE单号下面对应的所有出库订单的状态
-				PackageRecordItem packageRecordItem = new PackageRecordItem();
+				OutWarehousePackageItem packageRecordItem = new OutWarehousePackageItem();
 				packageRecordItem.setCoeTrackingNo(coeTrackingNo);
 				packageRecordItem.setCoeTrackingNoId(coeTrackingNoId);
 				packageRecordItem.setCreatedTime(System.currentTimeMillis());
@@ -1099,14 +1098,14 @@ public class TransportServiceImpl implements ITransportService {
 			} else {
 				// 1 = 添加出货运单号 ,2 是减去
 				// 根据出货运单号+coe单号查找出货记录
-				PackageRecordItem packageRecordItem = new PackageRecordItem();
+				OutWarehousePackageItem packageRecordItem = new OutWarehousePackageItem();
 				packageRecordItem.setCoeTrackingNoId(coeTrackingNoId);
 				packageRecordItem.setCoeTrackingNo(coeTrackingNo);
 				packageRecordItem.setBigPackageTrackingNo(trackingNo);
-				List<PackageRecordItem> packageRecordItemList = packageRecordItemDao.findPackageRecordItem(packageRecordItem, null, null);
+				List<OutWarehousePackageItem> packageRecordItemList = packageRecordItemDao.findPackageRecordItem(packageRecordItem, null, null);
 				String packageRecordItemIds = "";
 				int sub = 0;
-				for (PackageRecordItem item : packageRecordItemList) {
+				for (OutWarehousePackageItem item : packageRecordItemList) {
 					packageRecordItemDao.deletePackageRecordItemById(item.getId());
 					// 加#是为了 jquery可以直接$("#id1,#id2,#id3,#id4")
 					packageRecordItemIds += ("#" + item.getId() + ",");
@@ -1118,11 +1117,11 @@ public class TransportServiceImpl implements ITransportService {
 				map.put("orderIds", orderIds);
 				map.put(Constant.STATUS, "2");
 			}
-		} else if (StringUtil.isEqual(bigPackage.getStatus(), BigPackageStatusCode.SUCCESS)) {
+		} else if (StringUtil.isEqual(bigPackage.getStatus(), OrderStatusCode.SUCCESS)) {
 			map.put(Constant.MESSAGE, "转运订单当前状态已经是出库成功");
-		} else if (StringUtil.isEqual(bigPackage.getStatus(), BigPackageStatusCode.WCC)) {
+		} else if (StringUtil.isEqual(bigPackage.getStatus(), OrderStatusCode.WCC)) {
 			map.put(Constant.MESSAGE, "转运订单当前状态是等待客户确认出库,不能出库");
-		} else if (StringUtil.isEqual(bigPackage.getStatus(), BigPackageStatusCode.WSW)) {
+		} else if (StringUtil.isEqual(bigPackage.getStatus(), OrderStatusCode.WSW)) {
 			map.put(Constant.MESSAGE, "转运订单当前状态是等待发送出库重量给客户,不能出库");
 		} else {
 			map.put(Constant.MESSAGE, "转运订单当前状态不能扫描建包出库");
@@ -1164,7 +1163,7 @@ public class TransportServiceImpl implements ITransportService {
 			if (StringUtil.isNotNull(orderId)) {
 				Long orderIdLong = Long.valueOf(orderId);
 				if (userIdOfCustomer == null) {
-					BigPackage bigPackage = bigPackageDao.getBigPackageById(orderIdLong);
+					Order bigPackage = bigPackageDao.getBigPackageById(orderIdLong);
 					userIdOfCustomer = bigPackage.getUserIdOfCustomer();
 					warehouseId = bigPackage.getWarehouseId();
 				}
@@ -1174,7 +1173,7 @@ public class TransportServiceImpl implements ITransportService {
 			map.put(Constant.MESSAGE, "请输入转运订单跟踪单号再按完成出货建包!");
 			return map;
 		}
-		PackageRecord packageRecord = new PackageRecord();
+		OutWarehousePackage packageRecord = new OutWarehousePackage();
 		packageRecord.setCoeTrackingNo(coeTrackingNo);
 		packageRecord.setCoeTrackingNoId(coeTrackingNoId);
 		packageRecord.setCreatedTime(System.currentTimeMillis());
@@ -1219,28 +1218,28 @@ public class TransportServiceImpl implements ITransportService {
 		TrackingNo trackingNo = trackingNoList.get(0);
 		Long coeTrackingNoId = trackingNo.getId();
 		// 根据出库交接单号查询建包记录.
-		PackageRecord packageRecordParam = new PackageRecord();
+		OutWarehousePackage packageRecordParam = new OutWarehousePackage();
 		packageRecordParam.setCoeTrackingNoId(coeTrackingNoId);
-		List<PackageRecord> packageRecordList = packageRecordDao.findPackageRecord(packageRecordParam, null, null);
+		List<OutWarehousePackage> packageRecordList = packageRecordDao.findPackageRecord(packageRecordParam, null, null);
 		if (packageRecordList == null || packageRecordList.size() <= 0) {
 			map.put(Constant.MESSAGE, "没有找到出库建包记录,请先完成建包");
 			return map;
 		}
 		// 出库记录
-		PackageRecord packageRecord = packageRecordList.get(0);
+		OutWarehousePackage packageRecord = packageRecordList.get(0);
 		if (StringUtil.isEqual(packageRecord.getIsShiped(), Constant.Y)) {
 			map.put(Constant.MESSAGE, "该交接单号对应大包已经出库,请勿重复操作");
 			return map;
 		}
 		packageRecordDao.updatePackageRecordIsShiped(packageRecord.getId(), Constant.Y, System.currentTimeMillis());
 		// 根据coe交接单号 获取建包记录,获取每个出库订单(小包)
-		PackageRecordItem itemParam = new PackageRecordItem();
+		OutWarehousePackageItem itemParam = new OutWarehousePackageItem();
 		itemParam.setCoeTrackingNoId(coeTrackingNoId);
-		List<PackageRecordItem> outWarehouseRecordItemList = packageRecordItemDao.findPackageRecordItem(itemParam, null, null);
+		List<OutWarehousePackageItem> outWarehouseRecordItemList = packageRecordItemDao.findPackageRecordItem(itemParam, null, null);
 		// 迭代,检查跟踪号
-		for (PackageRecordItem recordItem : outWarehouseRecordItemList) {
+		for (OutWarehousePackageItem recordItem : outWarehouseRecordItemList) {
 			Long bigPackageId = recordItem.getBigPackageId();
-			bigPackageDao.updateBigPackageStatus(bigPackageId, BigPackageStatusCode.SUCCESS);
+			bigPackageDao.updateBigPackageStatus(bigPackageId, OrderStatusCode.SUCCESS);
 		}
 		map.put(Constant.STATUS, Constant.SUCCESS);
 		map.put(Constant.MESSAGE, "完成出货总单成功,请继续下一批!");
@@ -1251,10 +1250,10 @@ public class TransportServiceImpl implements ITransportService {
 	 * 获取出库建包记录
 	 */
 	@Override
-	public Pagination getPackageRecordData(PackageRecord outWarehousePackage, Map<String, String> moreParam, Pagination page) {
-		List<PackageRecord> packageRecordList = packageRecordDao.findPackageRecord(outWarehousePackage, moreParam, page);
+	public Pagination getPackageRecordData(OutWarehousePackage outWarehousePackage, Map<String, String> moreParam, Pagination page) {
+		List<OutWarehousePackage> packageRecordList = packageRecordDao.findPackageRecord(outWarehousePackage, moreParam, page);
 		List<Object> list = new ArrayList<Object>();
-		for (PackageRecord packageRecord : packageRecordList) {
+		for (OutWarehousePackage packageRecord : packageRecordList) {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("id", packageRecord.getId());
 			if (packageRecord.getCreatedTime() != null) {
@@ -1283,12 +1282,12 @@ public class TransportServiceImpl implements ITransportService {
 				map.put("warehouse", warehouse.getWarehouseName());
 			}
 			map.put("remark", packageRecord.getRemark() == null ? "" : packageRecord.getRemark());
-			PackageRecordItem param = new PackageRecordItem();
+			OutWarehousePackageItem param = new OutWarehousePackageItem();
 			param.setCoeTrackingNoId(packageRecord.getCoeTrackingNoId());
-			List<PackageRecordItem> itemList = packageRecordItemDao.findPackageRecordItem(param, null, null);
+			List<OutWarehousePackageItem> itemList = packageRecordItemDao.findPackageRecordItem(param, null, null);
 			Integer quantity = 0;
 			String orders = "";
-			for (PackageRecordItem item : itemList) {
+			for (OutWarehousePackageItem item : itemList) {
 				orders += item.getBigPackageTrackingNo() + " ; ";
 				quantity++;
 			}
@@ -1303,18 +1302,18 @@ public class TransportServiceImpl implements ITransportService {
 
 	@Override
 	public List<Map<String, String>> getPackageRecordItemByPackageRecordId(Long packageId) {
-		PackageRecord packageRecord = packageRecordDao.getPackageRecordById(packageId);
-		PackageRecordItem param = new PackageRecordItem();
+		OutWarehousePackage packageRecord = packageRecordDao.getPackageRecordById(packageId);
+		OutWarehousePackageItem param = new OutWarehousePackageItem();
 		param.setCoeTrackingNoId(packageRecord.getCoeTrackingNoId());
-		List<PackageRecordItem> packageRecordItemList = packageRecordItemDao.findPackageRecordItem(param, null, null);
+		List<OutWarehousePackageItem> packageRecordItemList = packageRecordItemDao.findPackageRecordItem(param, null, null);
 		List<Map<String, String>> mapList = new ArrayList<Map<String, String>>();
-		for (PackageRecordItem item : packageRecordItemList) {
+		for (OutWarehousePackageItem item : packageRecordItemList) {
 			Map<String, String> map = new HashMap<String, String>();
 			map.put("orderId", item.getBigPackageId() + "");
 			map.put("trackingNo", item.getBigPackageTrackingNo());
 			User user = userDao.getUserById(item.getUserIdOfCustomer());
 			map.put("customer", user.getLoginName());
-			BigPackage bigPackage = bigPackageDao.getBigPackageById(item.getBigPackageId());
+			Order bigPackage = bigPackageDao.getBigPackageById(item.getBigPackageId());
 			map.put("weight", bigPackage.getOutWarehouseWeight() + "");
 			mapList.add(map);
 		}
@@ -1344,13 +1343,13 @@ public class TransportServiceImpl implements ITransportService {
 		if (bigPackageId == null) {
 			return resultMap;
 		}
-		BigPackage bigPackage = bigPackageDao.getBigPackageById(bigPackageId);
+		Order bigPackage = bigPackageDao.getBigPackageById(bigPackageId);
 		if (StringUtil.isNotNull(bigPackage.getTrackingNo())) {
 			resultMap.put(Constant.MESSAGE, "该订单已有跟踪单号,申请失效");
 			return resultMap;
 		}
-		BigPackageReceiver bigPackageReceiver = bigPackageReceiverDao.getBigPackageReceiverByPackageId(bigPackageId);
-		BigPackageSender bigPackageSender = bigPackageSenderDao.getBigPackageSenderByPackageId(bigPackageId);
+		OrderReceiver bigPackageReceiver = bigPackageReceiverDao.getBigPackageReceiverByPackageId(bigPackageId);
+		OrderSender bigPackageSender = bigPackageSenderDao.getBigPackageSenderByPackageId(bigPackageId);
 		// 出货渠道是ETK
 		if (StringUtil.isEqual(bigPackage.getShipwayCode(), ShipwayCode.ETK)) {
 			resultMap = applyEtkTrackingNo(bigPackage, bigPackageReceiver, bigPackageSender);
@@ -1370,18 +1369,18 @@ public class TransportServiceImpl implements ITransportService {
 	 * @param bigPackageSender
 	 * @return
 	 */
-	private Map<String, String> applyEtkTrackingNo(BigPackage bigPackage, BigPackageReceiver bigPackageReceiver, BigPackageSender bigPackageSender) {
+	private Map<String, String> applyEtkTrackingNo(Order bigPackage, OrderReceiver bigPackageReceiver, OrderSender bigPackageSender) {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put(Constant.STATUS, Constant.FAIL);
-		Order etkOrder = new Order();
+		com.coe.etk.api.request.Order etkOrder = new com.coe.etk.api.request.Order();
 		etkOrder.setCurrency(CurrencyCode.CNY);
 		etkOrder.setCustomerNo("sam");// 测试
 		etkOrder.setReferenceId(bigPackage.getCustomerReferenceNo());// 客户参考号
-		LittlePackageItem itemParam = new LittlePackageItem();
+		FirstWaybillItem itemParam = new FirstWaybillItem();
 		itemParam.setBigPackageId(bigPackage.getId());
-		List<LittlePackageItem> littlePackageItems = littlePackageItemDao.findLittlePackageItem(itemParam, null, null);
+		List<FirstWaybillItem> littlePackageItems = littlePackageItemDao.findLittlePackageItem(itemParam, null, null);
 		List<com.coe.etk.api.request.Item> items = new ArrayList<com.coe.etk.api.request.Item>();
-		for (LittlePackageItem littlePackageItem : littlePackageItems) {
+		for (FirstWaybillItem littlePackageItem : littlePackageItems) {
 			com.coe.etk.api.request.Item item = new com.coe.etk.api.request.Item();
 			item.setItemDescription(littlePackageItem.getSkuName());// 报关描述
 			double price = 10d;// 报关价值
@@ -1468,7 +1467,7 @@ public class TransportServiceImpl implements ITransportService {
 	 * @param bigPackageSender
 	 * @return
 	 */
-	private Map<String, String> applySFTrackingNo(BigPackage bigPackage, BigPackageReceiver bigPackageReceiver, BigPackageSender bigPackageSender) {
+	private Map<String, String> applySFTrackingNo(Order bigPackage, OrderReceiver bigPackageReceiver, OrderSender bigPackageSender) {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put(Constant.STATUS, Constant.FAIL);
 		map.put(Constant.MESSAGE, "未支持对顺丰渠道申请单号");
@@ -1479,7 +1478,7 @@ public class TransportServiceImpl implements ITransportService {
 	public Map<String, String> checkLittlePackage(Long bigPackageId, String trackingNo) throws ServiceException {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put(Constant.STATUS, Constant.FAIL);
-		LittlePackage littlePackage = new LittlePackage();
+		FirstWaybill littlePackage = new FirstWaybill();
 		littlePackage.setBigPackageId(bigPackageId);
 		littlePackage.setTrackingNo(trackingNo);
 		Long count = littlePackageDao.countLittlePackage(littlePackage, null);

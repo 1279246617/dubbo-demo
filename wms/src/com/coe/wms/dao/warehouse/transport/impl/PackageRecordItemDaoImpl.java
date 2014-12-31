@@ -22,7 +22,7 @@ import org.springframework.stereotype.Repository;
 import com.coe.wms.dao.datasource.DataSource;
 import com.coe.wms.dao.datasource.DataSourceCode;
 import com.coe.wms.dao.warehouse.transport.IPackageRecordItemDao;
-import com.coe.wms.model.warehouse.transport.PackageRecordItem;
+import com.coe.wms.model.warehouse.transport.OutWarehousePackageItem;
 import com.coe.wms.util.DateUtil;
 import com.coe.wms.util.Pagination;
 import com.coe.wms.util.StringUtil;
@@ -42,7 +42,7 @@ public class PackageRecordItemDaoImpl implements IPackageRecordItemDao {
 
 	@Override
 	@DataSource(DataSourceCode.WMS)
-	public long savePackageRecordItem(final PackageRecordItem item) {
+	public long savePackageRecordItem(final OutWarehousePackageItem item) {
 		final String sql = "insert into w_t_package_record_item (warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,big_package_tracking_no,big_package_id) values (?,?,?,?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
@@ -68,9 +68,9 @@ public class PackageRecordItemDaoImpl implements IPackageRecordItemDao {
 	}
 
 	@Override
-	public PackageRecordItem getPackageRecordItemById(Long packageRecordItemId) {
+	public OutWarehousePackageItem getPackageRecordItemById(Long packageRecordItemId) {
 		String sql = "select id,warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,big_package_tracking_no,big_package_id from w_t_package_record_item where id =" + packageRecordItemId;
-		PackageRecordItem item = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<PackageRecordItem>(PackageRecordItem.class));
+		OutWarehousePackageItem item = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<OutWarehousePackageItem>(OutWarehousePackageItem.class));
 		return item;
 	}
 
@@ -80,7 +80,7 @@ public class PackageRecordItemDaoImpl implements IPackageRecordItemDao {
 	 * 参数一律使用实体类加Map .
 	 */
 	@Override
-	public List<PackageRecordItem> findPackageRecordItem(PackageRecordItem packageRecordItem, Map<String, String> moreParam, Pagination page) {
+	public List<OutWarehousePackageItem> findPackageRecordItem(OutWarehousePackageItem packageRecordItem, Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("select id,warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,big_package_tracking_no,big_package_id from w_t_package_record_item where 1=1 ");
 		if (packageRecordItem != null) {
@@ -131,12 +131,12 @@ public class PackageRecordItemDaoImpl implements IPackageRecordItemDao {
 			sb.append(page.generatePageSql());
 		}
 		String sql = sb.toString();
-		List<PackageRecordItem> packageRecordItemList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(PackageRecordItem.class));
+		List<OutWarehousePackageItem> packageRecordItemList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(OutWarehousePackageItem.class));
 		return packageRecordItemList;
 	}
 
 	@Override
-	public Long countPackageRecordItem(PackageRecordItem packageRecordItem, Map<String, String> moreParam) {
+	public Long countPackageRecordItem(OutWarehousePackageItem packageRecordItem, Map<String, String> moreParam) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("select count(id) from w_t_package_record_item where 1=1 ");
 		if (packageRecordItem != null) {

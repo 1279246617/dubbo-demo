@@ -19,7 +19,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import com.coe.wms.dao.warehouse.transport.ILittlePackageOnShelfDao;
-import com.coe.wms.model.warehouse.transport.LittlePackageOnShelf;
+import com.coe.wms.model.warehouse.transport.FirstWaybillOnShelf;
 import com.coe.wms.util.DateUtil;
 import com.coe.wms.util.Pagination;
 import com.coe.wms.util.StringUtil;
@@ -34,7 +34,7 @@ public class LittlePackageOnShelfDaoImpl implements ILittlePackageOnShelfDao {
 	private JdbcTemplate jdbcTemplate;
 
 	@Override
-	public long saveLittlePackageOnShelf(final LittlePackageOnShelf littlePackageOnShelf) {
+	public long saveLittlePackageOnShelf(final FirstWaybillOnShelf littlePackageOnShelf) {
 		final String sql = "insert into w_t_little_package_on_shelf ( warehouse_id,little_package_id,big_package_id,user_id_of_customer,user_id_of_operator,seat_code,tracking_no,created_time,last_update_time,status) values (?,?,?,?,?,?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
@@ -66,7 +66,7 @@ public class LittlePackageOnShelfDaoImpl implements ILittlePackageOnShelfDao {
 	}
 
 	@Override
-	public List<LittlePackageOnShelf> findLittlePackageOnShelf(LittlePackageOnShelf littlePackageOnShelf, Map<String, String> moreParam, Pagination page) {
+	public List<FirstWaybillOnShelf> findLittlePackageOnShelf(FirstWaybillOnShelf littlePackageOnShelf, Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("select  id,warehouse_id,little_package_id,big_package_id,user_id_of_customer,user_id_of_operator,seat_code,tracking_no,created_time,last_update_time,status from w_t_little_package_on_shelf where 1=1");
 		if (littlePackageOnShelf.getId() != null) {
@@ -114,12 +114,12 @@ public class LittlePackageOnShelfDaoImpl implements ILittlePackageOnShelfDao {
 			// 分页sql
 			sb.append(page.generatePageSql());
 		}
-		List<LittlePackageOnShelf> onShelfList = jdbcTemplate.query(sb.toString(), ParameterizedBeanPropertyRowMapper.newInstance(LittlePackageOnShelf.class));
+		List<FirstWaybillOnShelf> onShelfList = jdbcTemplate.query(sb.toString(), ParameterizedBeanPropertyRowMapper.newInstance(FirstWaybillOnShelf.class));
 		return onShelfList;
 	}
 
 	@Override
-	public Long countLittlePackageOnShelf(LittlePackageOnShelf littlePackageOnShelf, Map<String, String> moreParam) {
+	public Long countLittlePackageOnShelf(FirstWaybillOnShelf littlePackageOnShelf, Map<String, String> moreParam) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("select  count(1) from w_t_little_package_on_shelf where 1=1");
 		if (littlePackageOnShelf.getId() != null) {
@@ -174,7 +174,7 @@ public class LittlePackageOnShelfDaoImpl implements ILittlePackageOnShelfDao {
 	}
 
 	@Override
-	public int updateLittlePackageOnShelf(LittlePackageOnShelf littlePackageOnShelf) {
+	public int updateLittlePackageOnShelf(FirstWaybillOnShelf littlePackageOnShelf) {
 		String sql = "update w_t_little_package_on_shelf set status= ?,last_update_time= ? where id=" + littlePackageOnShelf.getId();
 		return jdbcTemplate.update(sql, littlePackageOnShelf.getStatus(), littlePackageOnShelf.getLastUpdateTime());
 	}
@@ -214,7 +214,7 @@ public class LittlePackageOnShelfDaoImpl implements ILittlePackageOnShelfDao {
 	}
 
 	@Override
-	public LittlePackageOnShelf findLittlePackageOnShelfByLittlePackageId(Long littlePackageId) {
+	public FirstWaybillOnShelf findLittlePackageOnShelfByLittlePackageId(Long littlePackageId) {
 		String sql = "SELECT id,warehouse_id,little_package_id,big_package_id,user_id_of_customer,user_id_of_operator,seat_code,tracking_no,created_time,last_update_time,status FROM `w_t_little_package_on_shelf` where little_package_id = "
 				+ littlePackageId;
 		Pagination page = new Pagination();
@@ -223,7 +223,7 @@ public class LittlePackageOnShelfDaoImpl implements ILittlePackageOnShelfDao {
 		page.sortOrder = "desc";
 		page.sortName = "created_time";
 		sql += page.generatePageSql();
-		List<LittlePackageOnShelf> onShelfList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(LittlePackageOnShelf.class));
+		List<FirstWaybillOnShelf> onShelfList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(FirstWaybillOnShelf.class));
 		if (onShelfList != null && onShelfList.size() > 0) {
 			return onShelfList.get(0);
 		}

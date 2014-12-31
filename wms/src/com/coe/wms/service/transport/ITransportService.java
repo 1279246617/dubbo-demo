@@ -7,13 +7,13 @@ import org.apache.log4j.Logger;
 
 import com.coe.wms.exception.ServiceException;
 import com.coe.wms.model.warehouse.Shipway;
-import com.coe.wms.model.warehouse.transport.BigPackage;
-import com.coe.wms.model.warehouse.transport.BigPackageStatus;
-import com.coe.wms.model.warehouse.transport.LittlePackage;
-import com.coe.wms.model.warehouse.transport.LittlePackageItem;
-import com.coe.wms.model.warehouse.transport.LittlePackageOnShelf;
-import com.coe.wms.model.warehouse.transport.LittlePackageStatus;
-import com.coe.wms.model.warehouse.transport.PackageRecord;
+import com.coe.wms.model.warehouse.transport.Order;
+import com.coe.wms.model.warehouse.transport.OrderStatus;
+import com.coe.wms.model.warehouse.transport.FirstWaybill;
+import com.coe.wms.model.warehouse.transport.FirstWaybillItem;
+import com.coe.wms.model.warehouse.transport.FirstWaybillOnShelf;
+import com.coe.wms.model.warehouse.transport.FirstWaybillStatus;
+import com.coe.wms.model.warehouse.transport.OutWarehousePackage;
 import com.coe.wms.pojo.api.warehouse.EventBody;
 import com.coe.wms.util.Pagination;
 
@@ -51,7 +51,7 @@ public interface ITransportService {
 	 * @return
 	 * @throws ServiceException
 	 */
-	public List<BigPackageStatus> findAllBigPackageStatus() throws ServiceException;
+	public List<OrderStatus> findAllBigPackageStatus() throws ServiceException;
 
 	/**
 	 * 获取所有转运订单状态
@@ -59,7 +59,7 @@ public interface ITransportService {
 	 * @return
 	 * @throws ServiceException
 	 */
-	public List<LittlePackageStatus> findAllLittlePackageStatus() throws ServiceException;
+	public List<FirstWaybillStatus> findAllLittlePackageStatus() throws ServiceException;
 
 	public List<Shipway> findAllShipway() throws ServiceException;
 
@@ -70,15 +70,15 @@ public interface ITransportService {
 	 * @param page
 	 * @return
 	 */
-	public Pagination getBigPackageData(BigPackage bigPackage, Map<String, String> moreParam, Pagination page) throws ServiceException;
+	public Pagination getBigPackageData(Order bigPackage, Map<String, String> moreParam, Pagination page) throws ServiceException;
 
-	public Pagination getLittlePackageData(LittlePackage littlePackage, Map<String, String> moreParam, Pagination page) throws ServiceException;
+	public Pagination getLittlePackageData(FirstWaybill littlePackage, Map<String, String> moreParam, Pagination page) throws ServiceException;
 
-	public Pagination getLittlePackageOnShelfData(LittlePackageOnShelf param, Map<String, String> moreParam, Pagination page) throws ServiceException;
+	public Pagination getLittlePackageOnShelfData(FirstWaybillOnShelf param, Map<String, String> moreParam, Pagination page) throws ServiceException;
 
 	public List<Map<String, Object>> getLittlePackageItems(Long bigPackageId) throws ServiceException;
 
-	public List<LittlePackageItem> getLittlePackageItemsByLittlePackageId(Long littlePackageId) throws ServiceException;
+	public List<FirstWaybillItem> getLittlePackageItemsByLittlePackageId(Long littlePackageId) throws ServiceException;
 
 	/**
 	 * 审核转运订单
@@ -96,7 +96,7 @@ public interface ITransportService {
 	 * @param inWarehouseOrder
 	 * @return
 	 */
-	public List<Map<String, String>> checkReceivedLittlePackage(LittlePackage littlePackage);
+	public List<Map<String, String>> checkReceivedLittlePackage(FirstWaybill littlePackage);
 
 	public Map<String, String> submitInWarehouse(String trackingNo, String remark, Long userIdOfOperator, Long warehouseId, Long inWarehouseOrderId);
 
@@ -144,7 +144,7 @@ public interface ITransportService {
 	 * @param page
 	 * @return
 	 */
-	public Pagination getPackageRecordData(PackageRecord outWarehousePackage, Map<String, String> moreParam, Pagination page);
+	public Pagination getPackageRecordData(OutWarehousePackage outWarehousePackage, Map<String, String> moreParam, Pagination page);
 
 	public List<Map<String, String>> getPackageRecordItemByPackageRecordId(Long packageId);
 

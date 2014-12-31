@@ -7,7 +7,7 @@ import java.io.Serializable;
  * @author yechao
  * @date 2014年11月3日
  */
-public class LittlePackageItem implements Serializable {
+public class FirstWaybillItem implements Serializable {
 	/**
 	 * 
 	 */

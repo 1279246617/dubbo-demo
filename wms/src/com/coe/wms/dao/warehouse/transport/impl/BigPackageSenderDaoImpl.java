@@ -20,7 +20,7 @@ import org.springframework.stereotype.Repository;
 import com.coe.wms.dao.datasource.DataSource;
 import com.coe.wms.dao.datasource.DataSourceCode;
 import com.coe.wms.dao.warehouse.transport.IBigPackageSenderDao;
-import com.coe.wms.model.warehouse.transport.BigPackageSender;
+import com.coe.wms.model.warehouse.transport.OrderSender;
 import com.coe.wms.util.NumberUtil;
 import com.coe.wms.util.Pagination;
 import com.coe.wms.util.StringUtil;
@@ -43,7 +43,7 @@ public class BigPackageSenderDaoImpl implements IBigPackageSenderDao {
 	 */
 	@Override
 	@DataSource(DataSourceCode.WMS)
-	public long saveBigPackageSender(final BigPackageSender sender) {
+	public long saveBigPackageSender(final OrderSender sender) {
 		final String sql = "insert into w_t_big_package_sender (big_package_id,name,company,first_name,last_name,address_line1,state_or_province,city,county,postal_code,country_code,country_name,phone_number,email,mobile_number,address_line2) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
@@ -77,12 +77,12 @@ public class BigPackageSenderDaoImpl implements IBigPackageSenderDao {
 	 * */
 	@Override
 	@DataSource(DataSourceCode.WMS)
-	public int saveBatchBigPackageSender(final List<BigPackageSender> senderList) {
+	public int saveBatchBigPackageSender(final List<OrderSender> senderList) {
 		final String sql = "insert into w_t_big_package_sender (big_package_id,name,company,first_name,last_name,address_line1,state_or_province,city,county,postal_code,country_code,country_name,phone_number,email,mobile_number,address_line2) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		int[] batchUpdateSize = jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
 			@Override
 			public void setValues(PreparedStatement ps, int i) throws SQLException {
-				BigPackageSender sender = senderList.get(i);
+				OrderSender sender = senderList.get(i);
 				ps.setLong(1, sender.getBigPackageId());
 				ps.setString(2, sender.getName());
 				ps.setString(3, sender.getCompany());
@@ -111,12 +111,12 @@ public class BigPackageSenderDaoImpl implements IBigPackageSenderDao {
 
 	@Override
 	@DataSource(DataSourceCode.WMS)
-	public int saveBatchBigPackageSenderWithPackageId(final List<BigPackageSender> senderList, final Long orderId) {
+	public int saveBatchBigPackageSenderWithPackageId(final List<OrderSender> senderList, final Long orderId) {
 		final String sql = "insert into w_t_big_package_sender (big_package_id,name,company,first_name,last_name,address_line1,state_or_province,city,county,postal_code,country_code,country_name,phone_number,email,mobile_number,address_line2) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		int[] batchUpdateSize = jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
 			@Override
 			public void setValues(PreparedStatement ps, int i) throws SQLException {
-				BigPackageSender sender = senderList.get(i);
+				OrderSender sender = senderList.get(i);
 				ps.setLong(1, sender.getBigPackageId());
 				ps.setString(2, sender.getName());
 				ps.setString(3, sender.getCompany());
@@ -153,7 +153,7 @@ public class BigPackageSenderDaoImpl implements IBigPackageSenderDao {
 	 * 参数一律使用实体类加Map .
 	 */
 	@Override
-	public List<BigPackageSender> findBigPackageSender(BigPackageSender orderSender, Map<String, String> moreParam, Pagination page) {
+	public List<OrderSender> findBigPackageSender(OrderSender orderSender, Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("select id,big_package_id,name,company,first_name,last_name,address_line1,state_or_province,city,county,postal_code,country_code,country_name,phone_number,email,mobile_number,address_line2 from w_t_big_package_sender where 1=1 ");
 		if (orderSender != null) {
@@ -212,15 +212,15 @@ public class BigPackageSenderDaoImpl implements IBigPackageSenderDao {
 		// 分页sql
 		sb.append(page.generatePageSql());
 		String sql = sb.toString();
-		List<BigPackageSender> orderSenderList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(BigPackageSender.class));
+		List<OrderSender> orderSenderList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(OrderSender.class));
 		return orderSenderList;
 	}
 
 	@Override
-	public BigPackageSender getBigPackageSenderByPackageId(Long orderId) {
+	public OrderSender getBigPackageSenderByPackageId(Long orderId) {
 		String sql = "select id,big_package_id,name,company,first_name,last_name,address_line1,state_or_province,city,county,postal_code,country_code,country_name,phone_number,email,mobile_number,address_line2 from w_t_big_package_sender  where big_package_id =  "
 				+ orderId;
-		List<BigPackageSender> orderSenderList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(BigPackageSender.class));
+		List<OrderSender> orderSenderList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(OrderSender.class));
 		if (orderSenderList != null && orderSenderList.size() > 0) {
 			return orderSenderList.get(0);
 		}

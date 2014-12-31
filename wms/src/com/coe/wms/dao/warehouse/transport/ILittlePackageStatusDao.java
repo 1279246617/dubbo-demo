@@ -2,11 +2,11 @@ package com.coe.wms.dao.warehouse.transport;
 
 import java.util.List;
 
-import com.coe.wms.model.warehouse.transport.LittlePackageStatus;
+import com.coe.wms.model.warehouse.transport.FirstWaybillStatus;
 
 public interface ILittlePackageStatusDao {
 
-	public LittlePackageStatus findLittlePackageStatusByCode(String code);
+	public FirstWaybillStatus findLittlePackageStatusByCode(String code);
 
-	public List<LittlePackageStatus> findAllLittlePackageStatus();
+	public List<FirstWaybillStatus> findAllLittlePackageStatus();
 }

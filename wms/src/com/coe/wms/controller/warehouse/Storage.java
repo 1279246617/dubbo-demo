@@ -30,7 +30,7 @@ import com.coe.wms.model.warehouse.storage.record.InWarehouseRecord;
 import com.coe.wms.model.warehouse.storage.record.OutWarehousePackage;
 import com.coe.wms.model.warehouse.storage.record.OutWarehouseRecord;
 import com.coe.wms.model.warehouse.storage.record.OutWarehouseRecordItem;
-import com.coe.wms.model.warehouse.transport.LittlePackage;
+import com.coe.wms.model.warehouse.transport.FirstWaybill;
 import com.coe.wms.service.storage.IInWarehouseOrderService;
 import com.coe.wms.service.storage.IOutWarehouseOrderService;
 import com.coe.wms.service.storage.IStorageService;
@@ -131,7 +131,7 @@ public class Storage {
 		if (mapList.size() < 1) {
 			map.put(Constant.STATUS, "-1");
 			// 检查是否有转运订单
-			LittlePackage littlePackage = new LittlePackage();
+			FirstWaybill littlePackage = new FirstWaybill();
 			littlePackage.setTrackingNo(trackingNo);
 			mapList = transportService.checkReceivedLittlePackage(littlePackage);
 			if (mapList.size() > 0) {

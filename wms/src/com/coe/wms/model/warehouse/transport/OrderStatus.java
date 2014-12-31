@@ -10,9 +10,9 @@ import com.google.code.ssm.api.CacheKeyMethod;
  * @author Administrator
  * 
  */
-public class BigPackageStatus implements Serializable {
+public class OrderStatus implements Serializable {
 
-	public class BigPackageStatusCode {
+	public class OrderStatusCode {
 		/**
 		 * 下单:LOGISTICS_TRADE_PAID 顺丰新建转运出库订单,等待COE审核 Wait Warehouse Check
 		 */

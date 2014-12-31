@@ -13,7 +13,7 @@ import java.io.Serializable;
  * @author Administrator
  * 
  */
-public class BigPackageAdditionalSf implements Serializable {
+public class OrderAdditionalSf implements Serializable {
 
 	/**
 	 * 

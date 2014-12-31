@@ -12,7 +12,7 @@ import java.io.Serializable;
  * @author Administrator
  * 
  */
-public class PackageRecord implements Serializable {
+public class OutWarehousePackage implements Serializable {
 
 	/**
 	 * 

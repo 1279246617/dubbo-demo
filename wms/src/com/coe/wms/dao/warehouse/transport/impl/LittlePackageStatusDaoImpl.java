@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
 import com.coe.wms.dao.datasource.DataSource;
 import com.coe.wms.dao.datasource.DataSourceCode;
 import com.coe.wms.dao.warehouse.transport.ILittlePackageStatusDao;
-import com.coe.wms.model.warehouse.transport.LittlePackageStatus;
+import com.coe.wms.model.warehouse.transport.FirstWaybillStatus;
 import com.coe.wms.util.SsmNameSpace;
 import com.google.code.ssm.api.ParameterValueKeyProvider;
 import com.google.code.ssm.api.ReadThroughAssignCache;
@@ -37,18 +37,18 @@ public class LittlePackageStatusDaoImpl implements ILittlePackageStatusDao {
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	@ReadThroughSingleCache(namespace = SsmNameSpace.TRANSPORT_LITTLE_PACKAGE_STATUS, expiration = 36000)
-	public LittlePackageStatus findLittlePackageStatusByCode(@ParameterValueKeyProvider String code) {
+	public FirstWaybillStatus findLittlePackageStatusByCode(@ParameterValueKeyProvider String code) {
 		String sql = "select id,code,cn,en from w_t_little_package_status where code ='" + code + "'";
-		LittlePackageStatus packageStatus = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<LittlePackageStatus>(LittlePackageStatus.class));
+		FirstWaybillStatus packageStatus = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<FirstWaybillStatus>(FirstWaybillStatus.class));
 		return packageStatus;
 	}
 
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	@ReadThroughAssignCache(assignedKey = "AllLittlePackageStatus", namespace = SsmNameSpace.TRANSPORT_LITTLE_PACKAGE_STATUS, expiration = 3600)
-	public List<LittlePackageStatus> findAllLittlePackageStatus() {
+	public List<FirstWaybillStatus> findAllLittlePackageStatus() {
 		String sql = "select id,code,cn,en from w_t_little_package_status";
-		List<LittlePackageStatus> statusList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(LittlePackageStatus.class));
+		List<FirstWaybillStatus> statusList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(FirstWaybillStatus.class));
 		return statusList;
 	}
 

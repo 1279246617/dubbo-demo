@@ -3,39 +3,46 @@ package com.coe.wms.model.warehouse.transport;
 import java.io.Serializable;
 
 /**
+ * 订单收件人信息
  * 
- * 出库发件人
- * 
- * @author Administrator
- * 
+ * @author yechao
+ * @date 2014年11月3日
  */
-public class BigPackageSender implements Serializable {
+public class OrderReceiver implements Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -4245802122495822276L;
+	private static final long serialVersionUID = 8304577723723463601L;
+	/**
+	 * 顺丰API出库指令无传目的国家(暂固定 中国)
+	 * 
+	 */
+	public static final String CN = "CN";
+
+	public static final String CN_VALUE = "中国";
 
 	private Long id;
-
-	private Long bigPackageId;
-
 	/**
-	 * 发件人名
+	 * bigPackageId
+	 */
+	private Long bigPackageId;
+	/**
+	 * 收件人名
 	 */
 	private String name;
 
 	/**
-	 * 发件人公司
+	 * 收件人公司
 	 */
 	private String company;
 
 	/**
-	 * 发件人名
+	 * 收件人名
 	 */
 	private String firstName;
 
 	/**
-	 * 发件人姓
+	 * 收件人姓
 	 */
 	private String lastName;
 
@@ -53,11 +60,6 @@ public class BigPackageSender implements Serializable {
 	 * 省/州
 	 */
 	private String stateOrProvince;
-
-	/**
-	 * 发件人手机号码
-	 */
-	private String mobileNumber;
 
 	/**
 	 * 城市
@@ -88,13 +90,36 @@ public class BigPackageSender implements Serializable {
 	private String countryName;
 
 	/**
-	 * 发件人电话号码
+	 * 收件人电话号码
 	 */
 	private String phoneNumber;
+
 	/**
-	 * 发件人邮箱
+	 * 收件人手机号码
+	 */
+	private String mobileNumber;
+
+	/**
+	 * 收件人邮箱
 	 */
 	private String email;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+
+	public Long getBigPackageId() {
+		return bigPackageId;
+	}
+
+	public void setBigPackageId(Long bigPackageId) {
+		this.bigPackageId = bigPackageId;
+	}
 
 	public String getName() {
 		return name;
@@ -110,22 +135,6 @@ public class BigPackageSender implements Serializable {
 
 	public void setCompany(String company) {
 		this.company = company;
-	}
-
-	public String getMobileNumber() {
-		return mobileNumber;
-	}
-
-	public void setMobileNumber(String mobileNumber) {
-		this.mobileNumber = mobileNumber;
-	}
-
-	public Long getBigPackageId() {
-		return bigPackageId;
-	}
-
-	public void setBigPackageId(Long bigPackageId) {
-		this.bigPackageId = bigPackageId;
 	}
 
 	public String getFirstName() {
@@ -216,19 +225,19 @@ public class BigPackageSender implements Serializable {
 		this.phoneNumber = phoneNumber;
 	}
 
+	public String getMobileNumber() {
+		return mobileNumber;
+	}
+
+	public void setMobileNumber(String mobileNumber) {
+		this.mobileNumber = mobileNumber;
+	}
+
 	public String getEmail() {
 		return email;
 	}
 
 	public void setEmail(String email) {
 		this.email = email;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
 	}
 }
