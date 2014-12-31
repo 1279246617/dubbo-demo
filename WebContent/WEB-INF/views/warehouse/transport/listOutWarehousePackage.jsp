@@ -20,7 +20,7 @@
 </head>
 <body>
 	  <div class="toolbar1">
-           <form action="${baseUrl}/warehouse/transport/getPackageRecordData.do" id="searchform" name="searchform" method="post">
+           <form action="${baseUrl}/warehouse/transport/getOutWarehousePackageData.do" id="searchform" name="searchform" method="post">
                <div class="pull-right searchContent">
                		<span class="pull-left" style="width:145px;">
                			仓库
@@ -142,7 +142,7 @@
 			           		 }
 		             ],   
 	                dataAction: 'server',
-	                url: baseUrl+'/warehouse/transport/getPackageRecordData.do',
+	                url: baseUrl+'/warehouse/transport/getOutWarehousePackageData.do',
 	                pageSize: 100, 
 	                pageSizeOptions:[50,100,150,200,500],
 	                usePager: 'true',
@@ -170,7 +170,7 @@
 	        	contentArr.push('<tr><th>转运订单Id</th><th>转运订单跟踪单号</th><th>转运订单重量KG</th><th>转运订单客户帐号</th></tr>');
 	        	$.ajax({ 
 	                type : "post", 
-	                url :baseUrl + '/warehouse/transport/getPackageRecordItemByPackageRecordId.do', 
+	                url :baseUrl + '/warehouse/transport/getOutWarehousePackageItemByOutWarehousePackageId.do', 
 	                data : "packageRecordId="+recordId, 
 	                async : false, 
 	                success : function(msg){ 
@@ -211,13 +211,13 @@
 	        	          title: '备注',
 	        	          width: '450px',
 	        	          height: '290px',
-	        	          content: 'url:' + baseUrl + '/warehouse/transport/editPackageRecordRemark.do?id='+id+"&remark="+remark,
+	        	          content: 'url:' + baseUrl + '/warehouse/transport/editOutWarehousePackageRemark.do?id='+id+"&remark="+remark,
 	        	          button: [{
 	        	            name: '确定',
 	        	            callback: function() {
 	        	              var objRemark = this.content.document.getElementById("remark");
 	        	              var remark = $(objRemark).val();
-	        	              $.post(baseUrl + '/warehouse/transport/savePackageRecordRemark.do', {
+	        	              $.post(baseUrl + '/warehouse/transport/saveOutWarehousePackageRemark.do', {
 	        	            	  remark:remark,
 	        	            	  id:id
 	        	              },

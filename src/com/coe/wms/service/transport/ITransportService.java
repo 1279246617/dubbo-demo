@@ -51,7 +51,7 @@ public interface ITransportService {
 	 * @return
 	 * @throws ServiceException
 	 */
-	public List<OrderStatus> findAllBigPackageStatus() throws ServiceException;
+	public List<OrderStatus> findAllOrderStatus() throws ServiceException;
 
 	/**
 	 * 获取所有转运订单状态
@@ -70,7 +70,7 @@ public interface ITransportService {
 	 * @param page
 	 * @return
 	 */
-	public Pagination getBigPackageData(Order order, Map<String, String> moreParam, Pagination page) throws ServiceException;
+	public Pagination getOrderData(Order order, Map<String, String> moreParam, Pagination page) throws ServiceException;
 
 	public Pagination getFirstWaybillData(FirstWaybill firstWaybill, Map<String, String> moreParam, Pagination page) throws ServiceException;
 
@@ -88,7 +88,7 @@ public interface ITransportService {
 	 * @return
 	 * @throws ServiceException
 	 */
-	public Map<String, String> checkBigPackage(String orderIds, String checkResult, Long userIdOfOperator) throws ServiceException;
+	public Map<String, String> checkOrder(String orderIds, String checkResult, Long userIdOfOperator) throws ServiceException;
 
 	/**
 	 * 收货时 输入跟踪号 后查询转运订单
@@ -144,11 +144,11 @@ public interface ITransportService {
 	 * @param page
 	 * @return
 	 */
-	public Pagination getPackageRecordData(OutWarehousePackage outWarehousePackage, Map<String, String> moreParam, Pagination page);
+	public Pagination getOutWarehousePackageData(OutWarehousePackage outWarehousePackage, Map<String, String> moreParam, Pagination page);
 
-	public List<Map<String, String>> getPackageRecordItemByPackageRecordId(Long packageId);
+	public List<Map<String, String>> getOutWarehousePackageItemByOutWarehousePackageId(Long packageId);
 
-	public Map<String, String> savePackageRecordRemark(String remark, Long id) throws ServiceException;
+	public Map<String, String> saveOutWarehousePackageRemark(String remark, Long id) throws ServiceException;
 
 	public Map<String, String> applyTrackingNo(Long orderId) throws ServiceException;
 }

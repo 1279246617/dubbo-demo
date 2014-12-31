@@ -32,17 +32,16 @@ import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderStatusDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehousePackageDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseRecordDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseRecordItemDao;
-import com.coe.wms.dao.warehouse.transport.IOrderAdditionalSfDao;
-import com.coe.wms.dao.warehouse.transport.IOrderDao;
-import com.coe.wms.dao.warehouse.transport.IBigPackageReceiverDao;
-import com.coe.wms.dao.warehouse.transport.IBigPackageSenderDao;
-import com.coe.wms.dao.warehouse.transport.IBigPackageStatusDao;
 import com.coe.wms.dao.warehouse.transport.IFirstWaybillDao;
 import com.coe.wms.dao.warehouse.transport.IFirstWaybillItemDao;
 import com.coe.wms.dao.warehouse.transport.IFirstWaybillOnShelfDao;
 import com.coe.wms.dao.warehouse.transport.IFirstWaybillStatusDao;
-import com.coe.wms.dao.warehouse.transport.IPackageRecordDao;
-import com.coe.wms.dao.warehouse.transport.IPackageRecordItemDao;
+import com.coe.wms.dao.warehouse.transport.IOrderAdditionalSfDao;
+import com.coe.wms.dao.warehouse.transport.IOrderDao;
+import com.coe.wms.dao.warehouse.transport.IOrderReceiverDao;
+import com.coe.wms.dao.warehouse.transport.IOrderSenderDao;
+import com.coe.wms.dao.warehouse.transport.IOrderStatusDao;
+import com.coe.wms.dao.warehouse.transport.IOutWarehousePackageItemDao;
 import com.coe.wms.model.warehouse.Seat;
 import com.coe.wms.model.warehouse.Shipway;
 import com.coe.wms.model.warehouse.Warehouse;
@@ -146,13 +145,13 @@ public class PrintServiceImpl implements IPrintService {
 	private IOrderDao orderDao;
 
 	@Resource(name = "orderReceiverDao")
-	private IBigPackageReceiverDao orderReceiverDao;
+	private IOrderReceiverDao orderReceiverDao;
 
 	@Resource(name = "orderSenderDao")
-	private IBigPackageSenderDao orderSenderDao;
+	private IOrderSenderDao orderSenderDao;
 
 	@Resource(name = "orderStatusDao")
-	private IBigPackageStatusDao orderStatusDao;
+	private IOrderStatusDao orderStatusDao;
 
 	@Resource(name = "firstWaybillItemDao")
 	private IFirstWaybillItemDao firstWaybillItemDao;
@@ -166,11 +165,11 @@ public class PrintServiceImpl implements IPrintService {
 	@Resource(name = "firstWaybillOnShelfDao")
 	private IFirstWaybillOnShelfDao firstWaybillOnShelfDao;
 
-	@Resource(name = "packageRecordDao")
-	private IPackageRecordDao packageRecordDao;
+	@Resource(name = "outWarehousePackageDao")
+	private com.coe.wms.dao.warehouse.transport.IOutWarehousePackageDao transportOutWarehousePackageDao;
 
 	@Resource(name = "packageRecordItemDao")
-	private IPackageRecordItemDao packageRecordItemDao;
+	private IOutWarehousePackageItemDao packageRecordItemDao;
 
 	@Override
 	public Map<String, Object> getPrintPackageListData(Long outWarehouseOrderId) {
@@ -420,8 +419,8 @@ public class PrintServiceImpl implements IPrintService {
 				|| StringUtil.isEqual(order.getStatus(), OrderStatusCode.WRG) || StringUtil.isEqual(order.getStatus(), OrderStatusCode.WRP)) {
 			return null;
 		}
-		OrderReceiver receiver = orderReceiverDao.getBigPackageReceiverByPackageId(orderId);
-		OrderSender sender = orderSenderDao.getBigPackageSenderByPackageId(orderId);
+		OrderReceiver receiver = orderReceiverDao.getOrderReceiverByPackageId(orderId);
+		OrderSender sender = orderSenderDao.getOrderSenderByPackageId(orderId);
 		FirstWaybill firstWaybillParam = new FirstWaybill();
 		firstWaybillParam.setOrderId(orderId);
 		OrderAdditionalSf additionalSf = orderAdditionalSfDao.getOrderAdditionalSfByOrderId(orderId);
@@ -521,9 +520,9 @@ public class PrintServiceImpl implements IPrintService {
 			return null;
 		}
 		// 修改状态到等待称重打单
-		orderDao.updateBigPackageStatus(orderId, OrderStatusCode.WWW);
+		orderDao.updateOrderStatus(orderId, OrderStatusCode.WWW);
 
-		OrderReceiver receiver = orderReceiverDao.getBigPackageReceiverByPackageId(orderId);
+		OrderReceiver receiver = orderReceiverDao.getOrderReceiverByPackageId(orderId);
 		map.put("customerReferenceNo", order.getCustomerReferenceNo());
 		OrderAdditionalSf orderAdditionalSf = orderAdditionalSfDao.getOrderAdditionalSfByOrderId(orderId);
 		if (orderAdditionalSf != null) {
@@ -568,11 +567,11 @@ public class PrintServiceImpl implements IPrintService {
 	public List<Map<String, String>> getPrintTransportEIRData(Long coeTrackingNoId) {
 		OutWarehousePackageItem itemParam = new OutWarehousePackageItem();
 		itemParam.setCoeTrackingNoId(coeTrackingNoId);
-		List<OutWarehousePackageItem> itemParamList = packageRecordItemDao.findPackageRecordItem(itemParam, null, null);
+		List<OutWarehousePackageItem> itemParamList = packageRecordItemDao.findOutWarehousePackageItem(itemParam, null, null);
 		List<Map<String, String>> mapList = new ArrayList<Map<String, String>>();
 		for (OutWarehousePackageItem item : itemParamList) {
 			Map<String, String> map = new HashMap<String, String>();
-			map.put("ourWarehouseOrderTrackingNo", item.getBigPackageTrackingNo());
+			map.put("ourWarehouseOrderTrackingNo", item.getOrderTrackingNo());
 			Long outWarehouseOrderId = item.getOrderId();
 			Order order = orderDao.getOrderById(outWarehouseOrderId);
 			if (order == null) {
@@ -594,7 +593,7 @@ public class PrintServiceImpl implements IPrintService {
 		Map<String, Object> map = new HashMap<String, Object>();
 		com.coe.wms.model.warehouse.transport.OutWarehousePackage recordParam = new com.coe.wms.model.warehouse.transport.OutWarehousePackage();
 		recordParam.setCoeTrackingNoId(coeTrackingNoId);
-		List<com.coe.wms.model.warehouse.transport.OutWarehousePackage> packageRecordList = packageRecordDao.findPackageRecord(recordParam, null, null);
+		List<com.coe.wms.model.warehouse.transport.OutWarehousePackage> packageRecordList = transportOutWarehousePackageDao.findOutWarehousePackage(recordParam, null, null);
 		if (packageRecordList == null || packageRecordList.size() == 0) {
 			return map;
 		}
@@ -602,7 +601,7 @@ public class PrintServiceImpl implements IPrintService {
 		// 出貨詳情
 		OutWarehousePackageItem recordItemParam = new OutWarehousePackageItem();
 		recordItemParam.setCoeTrackingNoId(coeTrackingNoId);
-		List<OutWarehousePackageItem> packageRecordItemList = packageRecordItemDao.findPackageRecordItem(recordItemParam, null, null);
+		List<OutWarehousePackageItem> packageRecordItemList = packageRecordItemDao.findOutWarehousePackageItem(recordItemParam, null, null);
 		// 總重量
 		double totalWeight = 0d;
 		int quantity = 0;

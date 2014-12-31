@@ -20,7 +20,7 @@
 </head>
 <body>
 	  <div class="toolbar1">
-           <form action="${baseUrl}/warehouse/transport/getBigPackageData.do" id="searchform" name="searchform" method="post">
+           <form action="${baseUrl}/warehouse/transport/getOrderData.do" id="searchform" name="searchform" method="post">
                <div class="pull-right searchContent">
                		<span class="pull-left" style="width:120px;">
                			仓库
@@ -130,7 +130,7 @@
 	<script type="text/javascript" src="${baseUrl}/static/jquery/jquery.js"></script>
 	<script type="text/javascript" src="${baseUrl}/static/bootstrap/bootstrap-typeahead.js"></script>
     	
-   	<script type="text/javascript" src="${baseUrl}/static/js/warehouse/transport/listBigPackage.js"></script>
+   	<script type="text/javascript" src="${baseUrl}/static/js/warehouse/transport/listOrder.js"></script>
     <script type="text/javascript">
  		var baseUrl = "${baseUrl}";
    		$(function(){
@@ -219,7 +219,7 @@
 		            }
 	                ],  
 	                dataAction: 'server',
-	                url: baseUrl+'/warehouse/transport/getBigPackageData.do',
+	                url: baseUrl+'/warehouse/transport/getOrderData.do',
 	                pageSize: 100, 
 	                pageSizeOptions:[50,100,150,200,500],
 	                usePager: 'true',
