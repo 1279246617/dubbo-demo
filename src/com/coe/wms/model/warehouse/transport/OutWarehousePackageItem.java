@@ -115,12 +115,13 @@ public class OutWarehousePackageItem implements Serializable {
 	public void setCreatedTime(Long createdTime) {
 		this.createdTime = createdTime;
 	}
+	
 
-	public String getBigPackageTrackingNo() {
+	public String getOrderTrackingNo() {
 		return orderTrackingNo;
 	}
 
-	public void setBigPackageTrackingNo(String orderTrackingNo) {
+	public void setOrderTrackingNo(String orderTrackingNo) {
 		this.orderTrackingNo = orderTrackingNo;
 	}
 

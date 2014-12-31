@@ -21,7 +21,7 @@ import org.springframework.stereotype.Repository;
 
 import com.coe.wms.dao.datasource.DataSource;
 import com.coe.wms.dao.datasource.DataSourceCode;
-import com.coe.wms.dao.warehouse.transport.IPackageRecordItemDao;
+import com.coe.wms.dao.warehouse.transport.IOutWarehousePackageItemDao;
 import com.coe.wms.model.warehouse.transport.OutWarehousePackageItem;
 import com.coe.wms.util.DateUtil;
 import com.coe.wms.util.Pagination;
@@ -32,17 +32,17 @@ import com.mysql.jdbc.Statement;
  * 
  * @author Administrator
  */
-@Repository("packageRecordItemDao")
-public class PackageRecordItemDaoImpl implements IPackageRecordItemDao {
+@Repository("outWarehousePackageItemDao")
+public class OutWarehousePackageItemDaoImpl implements IOutWarehousePackageItemDao {
 
-	Logger logger = Logger.getLogger(PackageRecordItemDaoImpl.class);
+	Logger logger = Logger.getLogger(OutWarehousePackageItemDaoImpl.class);
 
 	@Resource(name = "jdbcTemplate")
 	private JdbcTemplate jdbcTemplate;
 
 	@Override
 	@DataSource(DataSourceCode.WMS)
-	public long savePackageRecordItem(final OutWarehousePackageItem item) {
+	public long saveOutWarehousePackageItem(final OutWarehousePackageItem item) {
 		final String sql = "insert into w_t_out_warehouse_package_item (warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,order_tracking_no,order_id) values (?,?,?,?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
@@ -68,8 +68,8 @@ public class PackageRecordItemDaoImpl implements IPackageRecordItemDao {
 	}
 
 	@Override
-	public OutWarehousePackageItem getPackageRecordItemById(Long packageRecordItemId) {
-		String sql = "select id,warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,order_tracking_no,order_id from w_t_out_warehouse_package_item where id =" + packageRecordItemId;
+	public OutWarehousePackageItem getOutWarehousePackageItemById(Long OutWarehousePackageItemId) {
+		String sql = "select id,warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,order_tracking_no,order_id from w_t_out_warehouse_package_item where id =" + OutWarehousePackageItemId;
 		OutWarehousePackageItem item = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<OutWarehousePackageItem>(OutWarehousePackageItem.class));
 		return item;
 	}
@@ -80,36 +80,36 @@ public class PackageRecordItemDaoImpl implements IPackageRecordItemDao {
 	 * 参数一律使用实体类加Map .
 	 */
 	@Override
-	public List<OutWarehousePackageItem> findPackageRecordItem(OutWarehousePackageItem packageRecordItem, Map<String, String> moreParam, Pagination page) {
+	public List<OutWarehousePackageItem> findOutWarehousePackageItem(OutWarehousePackageItem OutWarehousePackageItem, Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("select id,warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,order_tracking_no,order_id from w_t_out_warehouse_package_item where 1=1 ");
-		if (packageRecordItem != null) {
-			if (packageRecordItem.getId() != null) {
-				sb.append(" and id = " + packageRecordItem.getId());
+		if (OutWarehousePackageItem != null) {
+			if (OutWarehousePackageItem.getId() != null) {
+				sb.append(" and id = " + OutWarehousePackageItem.getId());
 			}
-			if (packageRecordItem.getWarehouseId() != null) {
-				sb.append(" and warehouse_id = " + packageRecordItem.getWarehouseId());
+			if (OutWarehousePackageItem.getWarehouseId() != null) {
+				sb.append(" and warehouse_id = " + OutWarehousePackageItem.getWarehouseId());
 			}
-			if (packageRecordItem.getOrderId() != null) {
-				sb.append(" and order_id = " + packageRecordItem.getOrderId());
+			if (OutWarehousePackageItem.getOrderId() != null) {
+				sb.append(" and order_id = " + OutWarehousePackageItem.getOrderId());
 			}
-			if (packageRecordItem.getUserIdOfCustomer() != null) {
-				sb.append(" and user_id_of_customer = " + packageRecordItem.getUserIdOfCustomer());
+			if (OutWarehousePackageItem.getUserIdOfCustomer() != null) {
+				sb.append(" and user_id_of_customer = " + OutWarehousePackageItem.getUserIdOfCustomer());
 			}
-			if (packageRecordItem.getUserIdOfOperator() != null) {
-				sb.append(" and user_id_of_operator = " + packageRecordItem.getUserIdOfOperator());
+			if (OutWarehousePackageItem.getUserIdOfOperator() != null) {
+				sb.append(" and user_id_of_operator = " + OutWarehousePackageItem.getUserIdOfOperator());
 			}
-			if (StringUtil.isNotNull(packageRecordItem.getCoeTrackingNo())) {
-				sb.append(" and coe_tracking_no = '" + packageRecordItem.getCoeTrackingNo() + "' ");
+			if (StringUtil.isNotNull(OutWarehousePackageItem.getCoeTrackingNo())) {
+				sb.append(" and coe_tracking_no = '" + OutWarehousePackageItem.getCoeTrackingNo() + "' ");
 			}
-			if (packageRecordItem.getCoeTrackingNoId() != null) {
-				sb.append(" and coe_tracking_no_id = " + packageRecordItem.getCoeTrackingNoId());
+			if (OutWarehousePackageItem.getCoeTrackingNoId() != null) {
+				sb.append(" and coe_tracking_no_id = " + OutWarehousePackageItem.getCoeTrackingNoId());
 			}
-			if (packageRecordItem.getCreatedTime() != null) {
-				sb.append(" and created_time = " + packageRecordItem.getCreatedTime());
+			if (OutWarehousePackageItem.getCreatedTime() != null) {
+				sb.append(" and created_time = " + OutWarehousePackageItem.getCreatedTime());
 			}
-			if (StringUtil.isNotNull(packageRecordItem.getOrderTrackingNo())) {
-				sb.append(" and order_tracking_no = '" + packageRecordItem.getOrderTrackingNo() + "' ");
+			if (StringUtil.isNotNull(OutWarehousePackageItem.getOrderTrackingNo())) {
+				sb.append(" and order_tracking_no = '" + OutWarehousePackageItem.getOrderTrackingNo() + "' ");
 			}
 		}
 		if (moreParam != null) {
@@ -131,41 +131,41 @@ public class PackageRecordItemDaoImpl implements IPackageRecordItemDao {
 			sb.append(page.generatePageSql());
 		}
 		String sql = sb.toString();
-		List<OutWarehousePackageItem> packageRecordItemList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(OutWarehousePackageItem.class));
-		return packageRecordItemList;
+		List<OutWarehousePackageItem> OutWarehousePackageItemList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(OutWarehousePackageItem.class));
+		return OutWarehousePackageItemList;
 	}
 
 	@Override
-	public Long countPackageRecordItem(OutWarehousePackageItem packageRecordItem, Map<String, String> moreParam) {
+	public Long countOutWarehousePackageItem(OutWarehousePackageItem OutWarehousePackageItem, Map<String, String> moreParam) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("select count(id) from w_t_out_warehouse_package_item where 1=1 ");
-		if (packageRecordItem != null) {
-			if (packageRecordItem.getId() != null) {
-				sb.append(" and id = " + packageRecordItem.getId());
+		if (OutWarehousePackageItem != null) {
+			if (OutWarehousePackageItem.getId() != null) {
+				sb.append(" and id = " + OutWarehousePackageItem.getId());
 			}
-			if (packageRecordItem.getWarehouseId() != null) {
-				sb.append(" and warehouse_id = " + packageRecordItem.getWarehouseId());
+			if (OutWarehousePackageItem.getWarehouseId() != null) {
+				sb.append(" and warehouse_id = " + OutWarehousePackageItem.getWarehouseId());
 			}
-			if (packageRecordItem.getOrderId() != null) {
-				sb.append(" and order_id = " + packageRecordItem.getOrderId());
+			if (OutWarehousePackageItem.getOrderId() != null) {
+				sb.append(" and order_id = " + OutWarehousePackageItem.getOrderId());
 			}
-			if (packageRecordItem.getUserIdOfCustomer() != null) {
-				sb.append(" and user_id_of_customer = " + packageRecordItem.getUserIdOfCustomer());
+			if (OutWarehousePackageItem.getUserIdOfCustomer() != null) {
+				sb.append(" and user_id_of_customer = " + OutWarehousePackageItem.getUserIdOfCustomer());
 			}
-			if (packageRecordItem.getUserIdOfOperator() != null) {
-				sb.append(" and user_id_of_operator = " + packageRecordItem.getUserIdOfOperator());
+			if (OutWarehousePackageItem.getUserIdOfOperator() != null) {
+				sb.append(" and user_id_of_operator = " + OutWarehousePackageItem.getUserIdOfOperator());
 			}
-			if (StringUtil.isNotNull(packageRecordItem.getCoeTrackingNo())) {
-				sb.append(" and coe_tracking_no = '" + packageRecordItem.getCoeTrackingNo() + "' ");
+			if (StringUtil.isNotNull(OutWarehousePackageItem.getCoeTrackingNo())) {
+				sb.append(" and coe_tracking_no = '" + OutWarehousePackageItem.getCoeTrackingNo() + "' ");
 			}
-			if (packageRecordItem.getCoeTrackingNoId() != null) {
-				sb.append(" and coe_tracking_no_id = " + packageRecordItem.getCoeTrackingNoId());
+			if (OutWarehousePackageItem.getCoeTrackingNoId() != null) {
+				sb.append(" and coe_tracking_no_id = " + OutWarehousePackageItem.getCoeTrackingNoId());
 			}
-			if (packageRecordItem.getCreatedTime() != null) {
-				sb.append(" and created_time = " + packageRecordItem.getCreatedTime());
+			if (OutWarehousePackageItem.getCreatedTime() != null) {
+				sb.append(" and created_time = " + OutWarehousePackageItem.getCreatedTime());
 			}
-			if (StringUtil.isNotNull(packageRecordItem.getOrderTrackingNo())) {
-				sb.append(" and order_tracking_no = '" + packageRecordItem.getOrderTrackingNo() + "' ");
+			if (StringUtil.isNotNull(OutWarehousePackageItem.getOrderTrackingNo())) {
+				sb.append(" and order_tracking_no = '" + OutWarehousePackageItem.getOrderTrackingNo() + "' ");
 			}
 		}
 		if (moreParam != null) {
@@ -187,7 +187,7 @@ public class PackageRecordItemDaoImpl implements IPackageRecordItemDao {
 	}
 
 	@Override
-	public int deletePackageRecordItemById(Long id) {
+	public int deleteOutWarehousePackageItemById(Long id) {
 		String sql = "delete from w_t_out_warehouse_package_item where id =" + id;
 		return jdbcTemplate.update(sql);
 	}
@@ -214,8 +214,8 @@ public class PackageRecordItemDaoImpl implements IPackageRecordItemDao {
 				sb.append(" and r.created_time <= " + date.getTime());
 			}
 		}
-		List<Long> packageRecordItemList = jdbcTemplate.queryForList(sb.toString(), Long.class);
-		return packageRecordItemList;
+		List<Long> OutWarehousePackageItemList = jdbcTemplate.queryForList(sb.toString(), Long.class);
+		return OutWarehousePackageItemList;
 	}
 
 }
