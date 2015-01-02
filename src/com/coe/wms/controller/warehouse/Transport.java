@@ -34,6 +34,8 @@ import com.coe.wms.service.storage.IInWarehouseOrderService;
 import com.coe.wms.service.storage.IOutWarehouseOrderService;
 import com.coe.wms.service.storage.IStorageService;
 import com.coe.wms.service.storage.IWarehouseInterfaceService;
+import com.coe.wms.service.transport.IFirstWaybillService;
+import com.coe.wms.service.transport.IOrderService;
 import com.coe.wms.service.transport.ITransportService;
 import com.coe.wms.service.user.IUserService;
 import com.coe.wms.util.Constant;
@@ -61,6 +63,12 @@ public class Transport {
 
 	@Resource(name = "transportService")
 	private ITransportService transportService;
+
+	@Resource(name = "firstWaybillService")
+	private IFirstWaybillService firstWaybillService;
+
+	@Resource(name = "orderService")
+	private IOrderService orderService;
 
 	@Resource(name = "userService")
 	private IUserService userService;
@@ -134,8 +142,8 @@ public class Transport {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/getOrderData", method = RequestMethod.POST)
-	public String getOrderData(HttpServletRequest request, String sortorder, String sortname, int page, int pagesize, String userLoginName, Long warehouseId, String customerReferenceNo, String createdTimeStart, String createdTimeEnd,
-			String status, String shipway, String nos, String noType, String trackingNoIsNull) throws IOException {
+	public String getOrderData(HttpServletRequest request, String sortorder, String sortname, int page, int pagesize, String userLoginName, Long warehouseId, String customerReferenceNo, String createdTimeStart, String createdTimeEnd, String status,
+			String shipway, String nos, String noType, String trackingNoIsNull) throws IOException {
 		HttpSession session = request.getSession();
 		// 当前操作员
 		Long userIdOfOperator = (Long) session.getAttribute(SessionConstant.USER_ID);
