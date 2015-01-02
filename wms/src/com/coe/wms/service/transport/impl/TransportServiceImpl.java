@@ -21,6 +21,7 @@ import com.coe.wms.dao.warehouse.ISeatDao;
 import com.coe.wms.dao.warehouse.IShelfDao;
 import com.coe.wms.dao.warehouse.ITrackingNoDao;
 import com.coe.wms.dao.warehouse.IWarehouseDao;
+import com.coe.wms.dao.warehouse.shipway.IShipwayApiAccountDao;
 import com.coe.wms.dao.warehouse.shipway.IShipwayDao;
 import com.coe.wms.dao.warehouse.storage.IOnShelfDao;
 import com.coe.wms.dao.warehouse.storage.IOutShelfDao;
@@ -45,6 +46,7 @@ import com.coe.wms.model.warehouse.TrackingNo;
 import com.coe.wms.model.warehouse.Warehouse;
 import com.coe.wms.model.warehouse.shipway.Shipway;
 import com.coe.wms.model.warehouse.shipway.Shipway.ShipwayCode;
+import com.coe.wms.model.warehouse.shipway.ShipwayApiAccount;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderReceiver;
 import com.coe.wms.model.warehouse.storage.record.OutWarehouseRecord;
 import com.coe.wms.model.warehouse.transport.FirstWaybill;
@@ -160,6 +162,9 @@ public class TransportServiceImpl implements ITransportService {
 
 	@Resource(name = "shipwayDao")
 	private IShipwayDao shipwayDao;
+
+	@Resource(name = "shipwayApiAccountDao")
+	private IShipwayApiAccountDao shipwayApiAccountDao;
 
 	@Override
 	public String warehouseInterfaceSaveTransportOrder(EventBody eventBody, Long userIdOfCustomer, String warehouseNo) throws ServiceException {
@@ -1373,8 +1378,13 @@ public class TransportServiceImpl implements ITransportService {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put(Constant.STATUS, Constant.FAIL);
 		com.coe.etk.api.request.Order etkOrder = new com.coe.etk.api.request.Order();
+		ShipwayApiAccount shipwayApiAccount = shipwayApiAccountDao.getShipwayApiAccountByUserId(order.getUserIdOfCustomer(), order.getShipwayCode());
+		if (shipwayApiAccount == null) {
+			map.put(Constant.MESSAGE, "此订单所属用户缺少ETK API配置信息");
+			return map;
+		}
 		etkOrder.setCurrency(CurrencyCode.CNY);
-		etkOrder.setCustomerNo("sam");// 测试
+		etkOrder.setCustomerNo(shipwayApiAccount.getApiAccount());// 测试
 		etkOrder.setReferenceId(order.getCustomerReferenceNo());// 客户参考号
 		FirstWaybillItem itemParam = new FirstWaybillItem();
 		itemParam.setOrderId(order.getId());
@@ -1416,29 +1426,25 @@ public class TransportServiceImpl implements ITransportService {
 		etkOrder.setSender(sender);
 
 		Client client = new Client();
-		client.setToken("11");
-		client.setTokenKey("22");
-		client.setUrl("http://58.96.174.216:8080/coeimport/orderApi");
+		client.setToken(shipwayApiAccount.getToken());
+		client.setTokenKey(shipwayApiAccount.getTokenKey());
+		client.setUrl(shipwayApiAccount.getUrl());
 		com.coe.etk.api.response.Responses responses = client.applyTrackingNo(etkOrder);
 		if (responses == null) {
-			map.put(Constant.STATUS, Constant.FAIL);
 			map.put(Constant.MESSAGE, "对方系统返回非法XML格式");
 			return map;
 		}
 		ResponseItems responseItems = responses.getResponseItems();
 		if (responseItems == null) {
-			map.put(Constant.STATUS, Constant.FAIL);
 			map.put(Constant.MESSAGE, "对方系统返回非法XML格式");
 			return map;
 		}
 		com.coe.etk.api.response.Response response = responseItems.getResponse();
 		if (response == null) {
-			map.put(Constant.STATUS, Constant.FAIL);
 			map.put(Constant.MESSAGE, "对方系统返回非法XML格式");
 			return map;
 		}
 		if (StringUtil.isEqualIgnoreCase(response.getSuccess(), Constant.FALSE)) {
-			map.put(Constant.STATUS, Constant.FAIL);
 			map.put(Constant.MESSAGE, response.getErrorInfo());
 			return map;
 		}

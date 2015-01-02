@@ -22,6 +22,7 @@ import com.coe.wms.dao.warehouse.ISeatDao;
 import com.coe.wms.dao.warehouse.IShelfDao;
 import com.coe.wms.dao.warehouse.ITrackingNoDao;
 import com.coe.wms.dao.warehouse.IWarehouseDao;
+import com.coe.wms.dao.warehouse.shipway.IShipwayApiAccountDao;
 import com.coe.wms.dao.warehouse.shipway.IShipwayDao;
 import com.coe.wms.dao.warehouse.storage.IInWarehouseOrderDao;
 import com.coe.wms.dao.warehouse.storage.IInWarehouseOrderItemDao;
@@ -51,6 +52,7 @@ import com.coe.wms.model.unit.Weight.WeightCode;
 import com.coe.wms.model.user.User;
 import com.coe.wms.model.warehouse.TrackingNo;
 import com.coe.wms.model.warehouse.Warehouse;
+import com.coe.wms.model.warehouse.shipway.ShipwayApiAccount;
 import com.coe.wms.model.warehouse.shipway.Shipway.ShipwayCode;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrderItem;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrder;
@@ -172,6 +174,9 @@ public class OutWarehouseOrderServiceImpl implements IOutWarehouseOrderService {
 
 	@Resource(name = "shipwayDao")
 	private IShipwayDao shipwayDao;
+
+	@Resource(name = "shipwayApiAccountDao")
+	private IShipwayApiAccountDao shipwayApiAccountDao;
 
 	public List<Map<String, String>> getInWarehouseOrderItemMap(Long orderId) {
 		InWarehouseOrderItem param = new InWarehouseOrderItem();
@@ -1003,7 +1008,12 @@ public class OutWarehouseOrderServiceImpl implements IOutWarehouseOrderService {
 		map.put(Constant.STATUS, Constant.FAIL);
 		Order etkOrder = new Order();
 		etkOrder.setCurrency(CurrencyCode.CNY);
-		etkOrder.setCustomerNo("sam");// 测试
+		ShipwayApiAccount shipwayApiAccount = shipwayApiAccountDao.getShipwayApiAccountByUserId(outWarehouseOrder.getUserIdOfCustomer(), outWarehouseOrder.getShipwayCode());
+		if (shipwayApiAccount == null) {
+			map.put(Constant.MESSAGE, "此订单所属用户缺少ETK API配置信息");
+			return map;
+		}
+		etkOrder.setCustomerNo(shipwayApiAccount.getApiAccount());
 		etkOrder.setReferenceId(outWarehouseOrder.getCustomerReferenceNo());// 客户参考号
 		List<com.coe.etk.api.request.Item> items = new ArrayList<com.coe.etk.api.request.Item>();
 		for (OutWarehouseOrderItem orderItem : itemList) {
@@ -1041,9 +1051,9 @@ public class OutWarehouseOrderServiceImpl implements IOutWarehouseOrderService {
 		sender.setSenderPhone(outWarehouseOrderReceiver.getPhoneNumber());
 		etkOrder.setSender(sender);
 		Client client = new Client();
-		client.setToken("11");
-		client.setTokenKey("22");
-		client.setUrl("http://58.96.174.216:8080/coeimport/orderApi");
+		client.setToken(shipwayApiAccount.getToken());
+		client.setTokenKey(shipwayApiAccount.getTokenKey());
+		client.setUrl(shipwayApiAccount.getUrl());
 		com.coe.etk.api.response.Responses responses = client.applyTrackingNo(etkOrder);
 		if (responses == null) {
 			map.put(Constant.STATUS, Constant.FAIL);
