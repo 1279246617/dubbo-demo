@@ -4,6 +4,6 @@ import com.coe.wms.model.warehouse.shipway.ShipwayApiAccount;
 
 public interface IShipwayApiAccountDao {
 
-	public ShipwayApiAccount getShipwayApiAccountByUserId(Long userId);
+	public ShipwayApiAccount getShipwayApiAccountByUserId(Long userId,String shipwayCode);
 
 }
