@@ -45,8 +45,6 @@ import com.coe.wms.model.product.Product;
 import com.coe.wms.model.unit.Currency.CurrencyCode;
 import com.coe.wms.model.unit.Weight;
 import com.coe.wms.model.user.User;
-import com.coe.wms.model.warehouse.Shipway;
-import com.coe.wms.model.warehouse.TrackingNo;
 import com.coe.wms.model.warehouse.Warehouse;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrderItem;

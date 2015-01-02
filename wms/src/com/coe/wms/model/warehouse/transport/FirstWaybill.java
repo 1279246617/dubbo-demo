@@ -5,7 +5,9 @@ import java.io.Serializable;
 /**
  * 
  * 
- * 转运订单(到货信息.跟踪号)
+ * 头程运单
+ * 
+ * 包含到货的跟踪号
  * 
  * @author Administrator
  * 
@@ -20,9 +22,12 @@ public class FirstWaybill implements Serializable {
 	private Long id;
 
 	/**
-	 * 大包id
+	 * 转运订单id
 	 */
 	private Long orderId;
+	
+	private Long orderPackageId;
+	
 	/**
 	 * 订单所属客户id
 	 */
@@ -106,6 +111,14 @@ public class FirstWaybill implements Serializable {
 
 	public void setOrderId(Long orderId) {
 		this.orderId = orderId;
+	}
+
+	public Long getOrderPackageId() {
+		return orderPackageId;
+	}
+
+	public void setOrderPackageId(Long orderPackageId) {
+		this.orderPackageId = orderPackageId;
 	}
 
 	public String getSeatCode() {

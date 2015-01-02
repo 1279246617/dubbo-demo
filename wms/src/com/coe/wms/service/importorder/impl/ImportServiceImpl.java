@@ -27,7 +27,7 @@ import com.coe.wms.dao.warehouse.storage.IOutWarehousePackageDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseRecordDao;
 import com.coe.wms.exception.ServiceException;
 import com.coe.wms.model.unit.Currency.CurrencyCode;
-import com.coe.wms.model.warehouse.Shipway.ShipwayCode;
+import com.coe.wms.model.warehouse.shipway.Shipway.ShipwayCode;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrderItem;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrderStatus.InWarehouseOrderStatusCode;

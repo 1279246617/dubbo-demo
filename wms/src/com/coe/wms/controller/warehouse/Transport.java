@@ -19,15 +19,15 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.coe.wms.controller.Application;
 import com.coe.wms.model.user.User;
-import com.coe.wms.model.warehouse.Shipway;
 import com.coe.wms.model.warehouse.TrackingNo;
+import com.coe.wms.model.warehouse.shipway.Shipway;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
-import com.coe.wms.model.warehouse.transport.Order;
-import com.coe.wms.model.warehouse.transport.OrderStatus;
 import com.coe.wms.model.warehouse.transport.FirstWaybill;
 import com.coe.wms.model.warehouse.transport.FirstWaybillItem;
 import com.coe.wms.model.warehouse.transport.FirstWaybillOnShelf;
 import com.coe.wms.model.warehouse.transport.FirstWaybillStatus;
+import com.coe.wms.model.warehouse.transport.Order;
+import com.coe.wms.model.warehouse.transport.OrderStatus;
 import com.coe.wms.model.warehouse.transport.OutWarehousePackage;
 import com.coe.wms.model.warehouse.transport.OutWarehousePackageItem;
 import com.coe.wms.service.storage.IInWarehouseOrderService;
