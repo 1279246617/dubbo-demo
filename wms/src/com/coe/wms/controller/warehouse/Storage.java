@@ -35,6 +35,7 @@ import com.coe.wms.service.storage.IInWarehouseOrderService;
 import com.coe.wms.service.storage.IOutWarehouseOrderService;
 import com.coe.wms.service.storage.IStorageService;
 import com.coe.wms.service.storage.IWarehouseInterfaceService;
+import com.coe.wms.service.transport.IFirstWaybillService;
 import com.coe.wms.service.transport.ITransportService;
 import com.coe.wms.service.user.IUserService;
 import com.coe.wms.util.Constant;
@@ -71,6 +72,9 @@ public class Storage {
 	@Resource(name = "transportService")
 	private ITransportService transportService;
 
+	@Resource(name = "firstWaybillService")
+	private IFirstWaybillService firstWaybillService;
+
 	@Resource(name = "inWarehouseOrderService")
 	private IInWarehouseOrderService inWarehouseOrderService;
 
@@ -79,6 +83,7 @@ public class Storage {
 
 	@Resource(name = "warehouseInterfaceService")
 	private IWarehouseInterfaceService warehouseInterfaceService;
+
 	/**
 	 * 添加入库订单备注
 	 * 
@@ -133,7 +138,7 @@ public class Storage {
 			// 检查是否有转运订单
 			FirstWaybill firstWaybill = new FirstWaybill();
 			firstWaybill.setTrackingNo(trackingNo);
-			mapList = transportService.checkReceivedFirstWaybill(firstWaybill);
+			mapList = firstWaybillService.checkReceivedFirstWaybill(firstWaybill);
 			if (mapList.size() > 0) {
 				map.put(Constant.MESSAGE, "该单号无仓配订单,但找到" + mapList.size() + "个转运订单,请确认订单类型");
 			} else {

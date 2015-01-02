@@ -97,7 +97,7 @@ public class Transport {
 		ModelAndView view = new ModelAndView();
 		view.addObject("userId", userId);
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
-		List<OrderStatus> orderStatusList = transportService.findAllOrderStatus();
+		List<OrderStatus> orderStatusList = orderService.findAllOrderStatus();
 		view.addObject("orderStatusList", orderStatusList);
 		List<Shipway> shipwayList = transportService.findAllShipway();
 		view.addObject("shipwayList", shipwayList);
@@ -123,7 +123,7 @@ public class Transport {
 		view.addObject("userId", userId);
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
 		User user = userService.getUserById(userId);
-		List<OrderStatus> orderStatusList = transportService.findAllOrderStatus();
+		List<OrderStatus> orderStatusList = orderService.findAllOrderStatus();
 		view.addObject("orderStatusList", orderStatusList);
 		view.addObject("warehouseList", storageService.findAllWarehouse(user.getDefaultWarehouseId()));
 		view.setViewName("warehouse/transport/listWaitCheckOrder");
@@ -173,7 +173,7 @@ public class Transport {
 		moreParam.put("noType", noType);
 		moreParam.put("trackingNoIsNull", trackingNoIsNull);// 跟踪号是否为空
 
-		pagination = transportService.getOrderData(param, moreParam, pagination);
+		pagination = orderService.getOrderData(param, moreParam, pagination);
 		Map map = new HashMap();
 		map.put("Rows", pagination.rows);
 		map.put("Total", pagination.total);
@@ -183,14 +183,14 @@ public class Transport {
 	@ResponseBody
 	@RequestMapping(value = "/getFirstWaybillItemByorderId", method = RequestMethod.POST)
 	public String getFirstWaybillItemByorderId(Long orderId) {
-		List<Map<String, Object>> firstWaybillItems = transportService.getFirstWaybillItems(orderId);
+		List<Map<String, Object>> firstWaybillItems = firstWaybillService.getFirstWaybillItems(orderId);
 		return GsonUtil.toJson(firstWaybillItems);
 	}
 
 	@ResponseBody
 	@RequestMapping(value = "/getFirstWaybillItemByfirstWaybillId", method = RequestMethod.POST)
 	public String getFirstWaybillItemByfirstWaybillId(Long firstWaybillId) {
-		List<FirstWaybillItem> firstWaybillItems = transportService.getFirstWaybillItemsByFirstWaybillId(firstWaybillId);
+		List<FirstWaybillItem> firstWaybillItems = firstWaybillService.getFirstWaybillItemsByFirstWaybillId(firstWaybillId);
 		return GsonUtil.toJson(firstWaybillItems);
 	}
 
@@ -207,7 +207,7 @@ public class Transport {
 		// 当前操作员
 		Long userIdOfOperator = (Long) session.getAttribute(SessionConstant.USER_ID);
 		logger.info("审核转运订单 操作员id:" + userIdOfOperator + " checkResult:" + checkResult + " 订单:" + orderIds);
-		Map<String, String> checkResultMap = transportService.checkOrder(orderIds, checkResult, userIdOfOperator);
+		Map<String, String> checkResultMap = orderService.checkOrder(orderIds, checkResult, userIdOfOperator);
 		return GsonUtil.toJson(checkResultMap);
 	}
 
@@ -227,7 +227,7 @@ public class Transport {
 		view.addObject("userId", userId);
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
 
-		List<FirstWaybillStatus> firstWaybillStatusList = transportService.findAllFirstWaybillStatus();
+		List<FirstWaybillStatus> firstWaybillStatusList = firstWaybillService.findAllFirstWaybillStatus();
 		view.addObject("firstWaybillStatusList", firstWaybillStatusList);
 
 		List<Shipway> shipwayList = transportService.findAllShipway();
@@ -300,7 +300,7 @@ public class Transport {
 		moreParam.put("nos", nos);
 		moreParam.put("noType", noType);
 		moreParam.put("isReceived", isReceived);
-		pagination = transportService.getFirstWaybillData(param, moreParam, pagination);
+		pagination = firstWaybillService.getFirstWaybillData(param, moreParam, pagination);
 		Map map = new HashMap();
 		map.put("Rows", pagination.rows);
 		map.put("Total", pagination.total);
@@ -345,7 +345,7 @@ public class Transport {
 		FirstWaybill param = new FirstWaybill();
 		param.setTrackingNo(trackingNo);
 		// 查询转运订单
-		List<Map<String, String>> mapList = transportService.checkReceivedFirstWaybill(param);
+		List<Map<String, String>> mapList = firstWaybillService.checkReceivedFirstWaybill(param);
 		if (mapList.size() < 1) {
 			map.put(Constant.STATUS, "-1");
 			// 查询是否是仓配订单
@@ -384,7 +384,7 @@ public class Transport {
 	public String submitInWarehouse(HttpServletRequest request, String trackingNo, Long warehouseId, Long firstWaybillId, String remark) throws IOException {
 		// 操作员
 		Long userIdOfOperator = (Long) request.getSession().getAttribute(SessionConstant.USER_ID);
-		Map<String, String> serviceResult = transportService.submitInWarehouse(trackingNo, remark, userIdOfOperator, warehouseId, firstWaybillId);
+		Map<String, String> serviceResult = orderService.submitInWarehouse(trackingNo, remark, userIdOfOperator, warehouseId, firstWaybillId);
 		return GsonUtil.toJson(serviceResult);
 	}
 
@@ -401,7 +401,7 @@ public class Transport {
 	@RequestMapping(value = "/orderSubmitWeight")
 	public String orderSubmitWeight(HttpServletRequest request, Long orderId, Double weight) throws IOException {
 		Long userIdOfOperator = (Long) request.getSession().getAttribute(SessionConstant.USER_ID);
-		Map<String, String> serviceResult = transportService.orderSubmitWeight(userIdOfOperator, orderId, weight);
+		Map<String, String> serviceResult = orderService.orderSubmitWeight(userIdOfOperator, orderId, weight);
 		return GsonUtil.toJson(serviceResult);
 	}
 
@@ -439,7 +439,7 @@ public class Transport {
 	@RequestMapping(value = "/saveFirstWaybillOnShelves")
 	public String saveFirstWaybillOnShelves(HttpServletRequest request, Long firstWaybillId, String seatCode) throws IOException {
 		Long userIdOfOperator = (Long) request.getSession().getAttribute(SessionConstant.USER_ID);
-		Map<String, String> serviceResult = transportService.saveFirstWaybillOnShelves(userIdOfOperator, firstWaybillId, seatCode);
+		Map<String, String> serviceResult = firstWaybillService.saveFirstWaybillOnShelves(userIdOfOperator, firstWaybillId, seatCode);
 		return GsonUtil.toJson(serviceResult);
 	}
 
@@ -500,7 +500,7 @@ public class Transport {
 		Map<String, String> moreParam = new HashMap<String, String>();
 		moreParam.put("createdTimeStart", createdTimeStart);
 		moreParam.put("createdTimeEnd", createdTimeEnd);
-		pagination = transportService.getFirstWaybillOnShelfData(param, moreParam, pagination);
+		pagination = firstWaybillService.getFirstWaybillOnShelfData(param, moreParam, pagination);
 		Map map = new HashMap();
 		map.put("Rows", pagination.rows);
 		map.put("Total", pagination.total);
@@ -544,7 +544,7 @@ public class Transport {
 		view.addObject("userId", userId);
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
 		User user = userService.getUserById(userId);
-		List<OrderStatus> orderStatusList = transportService.findAllOrderStatus();
+		List<OrderStatus> orderStatusList = orderService.findAllOrderStatus();
 		view.addObject("orderStatusList", orderStatusList);
 		view.addObject("warehouseList", storageService.findAllWarehouse(user.getDefaultWarehouseId()));
 		view.setViewName("warehouse/transport/listWaiPrintOrder");
@@ -564,7 +564,7 @@ public class Transport {
 	public String orderWeightSubmitCustomerReferenceNo(HttpServletRequest request, HttpServletResponse response, String customerReferenceNo) throws IOException {
 		HttpSession session = request.getSession();
 		Long userIdOfOperator = (Long) session.getAttribute(SessionConstant.USER_ID);
-		Map<String, String> checkResultMap = transportService.orderWeightSubmitCustomerReferenceNo(customerReferenceNo, userIdOfOperator);
+		Map<String, String> checkResultMap = orderService.orderWeightSubmitCustomerReferenceNo(customerReferenceNo, userIdOfOperator);
 		return GsonUtil.toJson(checkResultMap);
 	}
 
@@ -611,7 +611,7 @@ public class Transport {
 		HttpSession session = request.getSession();
 		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
 		Map<String, Object> map = new HashMap<String, Object>();
-		Map<String, Object> objectMap = transportService.outWarehousePackageEnterCoeTrackingNo(coeTrackingNo);
+		Map<String, Object> objectMap = orderService.outWarehousePackageEnterCoeTrackingNo(coeTrackingNo);
 		List<OutWarehousePackageItem> packageRecordItemList = (List<OutWarehousePackageItem>) objectMap.get("packageRecordItemList");
 		map.put("packageRecordItemList", packageRecordItemList);
 		map.put(Constant.STATUS, objectMap.get(Constant.STATUS));
@@ -633,7 +633,7 @@ public class Transport {
 	public String checkOutWarehousePackage(HttpServletRequest request, HttpServletResponse response, String trackingNo, Long coeTrackingNoId, String coeTrackingNo, String addOrSub, String orderIds) throws IOException {
 		HttpSession session = request.getSession();
 		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
-		Map<String, String> checkResultMap = transportService.checkOutWarehousePackage(trackingNo, userId, coeTrackingNoId, coeTrackingNo, addOrSub, orderIds);
+		Map<String, String> checkResultMap = orderService.checkOutWarehousePackage(trackingNo, userId, coeTrackingNoId, coeTrackingNo, addOrSub, orderIds);
 		return GsonUtil.toJson(checkResultMap);
 	}
 
@@ -662,7 +662,7 @@ public class Transport {
 	public String outWarehousePackageConfirm(HttpServletRequest request, HttpServletResponse response, String orderIds, String coeTrackingNo, Long coeTrackingNoId) throws IOException {
 		HttpSession session = request.getSession();
 		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
-		Map<String, String> checkResultMap = transportService.outWarehousePackageConfirm(coeTrackingNo, coeTrackingNoId, orderIds, userId);
+		Map<String, String> checkResultMap = orderService.outWarehousePackageConfirm(coeTrackingNo, coeTrackingNoId, orderIds, userId);
 		return GsonUtil.toJson(checkResultMap);
 	}
 
@@ -721,7 +721,7 @@ public class Transport {
 	public synchronized String checkFirstWaybill(HttpServletRequest request, HttpServletResponse response, Long orderId, String trackingNo) throws IOException {
 		HttpSession session = request.getSession();
 		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
-		Map<String, String> checkResultMap = transportService.checkFirstWaybill(orderId, trackingNo);
+		Map<String, String> checkResultMap = firstWaybillService.checkFirstWaybill(orderId, trackingNo);
 		return GsonUtil.toJson(checkResultMap);
 	}
 
@@ -738,7 +738,7 @@ public class Transport {
 	public synchronized String outWarehouseShippingConfirm(HttpServletRequest request, HttpServletResponse response, String coeTrackingNo) throws IOException {
 		HttpSession session = request.getSession();
 		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
-		Map<String, String> checkResultMap = transportService.outWarehouseShippingConfirm(coeTrackingNo, userId);
+		Map<String, String> checkResultMap = orderService.outWarehouseShippingConfirm(coeTrackingNo, userId);
 		return GsonUtil.toJson(checkResultMap);
 	}
 
@@ -775,7 +775,7 @@ public class Transport {
 		Map<String, String> moreParam = new HashMap<String, String>();
 		moreParam.put("createdTimeStart", createdTimeStart);
 		moreParam.put("createdTimeEnd", createdTimeEnd);
-		pagination = transportService.getOutWarehousePackageData(param, moreParam, pagination);
+		pagination = orderService.getOutWarehousePackageData(param, moreParam, pagination);
 		Map map = new HashMap();
 		map.put("Rows", pagination.rows);
 		map.put("Total", pagination.total);
@@ -785,7 +785,7 @@ public class Transport {
 	@ResponseBody
 	@RequestMapping(value = "/getOutWarehousePackageItemByOutWarehousePackageId", method = RequestMethod.POST)
 	public String getOutWarehousePackageItemByOutWarehousePackageId(Long packageRecordId) {
-		List<Map<String, String>> mapList = transportService.getOutWarehousePackageItemByOutWarehousePackageId(packageRecordId);
+		List<Map<String, String>> mapList = firstWaybillService.getOutWarehousePackageItemByOutWarehousePackageId(packageRecordId);
 		return GsonUtil.toJson(mapList);
 	}
 
@@ -814,14 +814,14 @@ public class Transport {
 	@ResponseBody
 	@RequestMapping(value = "/saveOutWarehousePackageRemark")
 	public String saveOutWarehousePackageRemark(HttpServletRequest request, Long id, String remark) throws IOException {
-		Map<String, String> map = transportService.saveOutWarehousePackageRemark(remark, id);
+		Map<String, String> map = orderService.saveOutWarehousePackageRemark(remark, id);
 		return GsonUtil.toJson(map);
 	}
 
 	@ResponseBody
 	@RequestMapping(value = "/applyTrackingNo")
 	public String applyTrackingNo(Long orderId) {
-		Map<String, String> map = transportService.applyTrackingNo(orderId);
+		Map<String, String> map = orderService.applyTrackingNo(orderId);
 		return GsonUtil.toJson(map);
 	}
 }
