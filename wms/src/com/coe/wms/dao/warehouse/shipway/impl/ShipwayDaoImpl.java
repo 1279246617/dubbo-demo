@@ -1,4 +1,4 @@
-package com.coe.wms.dao.warehouse.impl;
+package com.coe.wms.dao.warehouse.shipway.impl;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import com.coe.wms.dao.datasource.DataSource;
 import com.coe.wms.dao.datasource.DataSourceCode;
-import com.coe.wms.dao.warehouse.IShipwayDao;
+import com.coe.wms.dao.warehouse.shipway.IShipwayDao;
 import com.coe.wms.model.warehouse.shipway.Shipway;
 import com.coe.wms.util.SsmNameSpace;
 import com.coe.wms.util.StringUtil;

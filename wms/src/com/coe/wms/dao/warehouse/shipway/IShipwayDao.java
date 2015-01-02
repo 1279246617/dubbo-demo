@@ -1,4 +1,4 @@
-package com.coe.wms.dao.warehouse;
+package com.coe.wms.dao.warehouse.shipway;
 
 import java.util.List;
 
