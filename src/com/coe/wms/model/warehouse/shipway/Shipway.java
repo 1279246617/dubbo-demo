@@ -1,4 +1,4 @@
-package com.coe.wms.model.warehouse;
+package com.coe.wms.model.warehouse.shipway;
 
 import java.io.Serializable;
 

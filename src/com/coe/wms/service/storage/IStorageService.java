@@ -5,9 +5,9 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import com.coe.wms.exception.ServiceException;
-import com.coe.wms.model.warehouse.Shipway;
 import com.coe.wms.model.warehouse.TrackingNo;
 import com.coe.wms.model.warehouse.Warehouse;
+import com.coe.wms.model.warehouse.shipway.Shipway;
 
 /**
  * 仓配 api service层

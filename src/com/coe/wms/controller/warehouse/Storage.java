@@ -19,8 +19,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.coe.wms.controller.Application;
 import com.coe.wms.model.user.User;
-import com.coe.wms.model.warehouse.Shipway;
 import com.coe.wms.model.warehouse.TrackingNo;
+import com.coe.wms.model.warehouse.shipway.Shipway;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrderStatus;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrder;
