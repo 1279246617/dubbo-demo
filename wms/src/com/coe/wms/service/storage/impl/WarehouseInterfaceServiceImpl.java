@@ -390,9 +390,17 @@ public class WarehouseInterfaceServiceImpl implements IWarehouseInterfaceService
 			if (sku.getSkuQty() == null || (StringUtil.isNull(sku.getSkuCode()) && StringUtil.isNull(sku.getSkuId()))) {
 				continue;
 			}
+			String skuCode = sku.getSkuCode();
+			String skuId = sku.getSkuId();
+			if (StringUtil.isNotNull(skuCode)) {
+				skuCode = skuCode.trim();
+			}
+			if (StringUtil.isNotNull(skuId)) {
+				skuId = skuId.trim();
+			}
 			InWarehouseOrderItem inwarehouseOrderItem = new InWarehouseOrderItem();
-			inwarehouseOrderItem.setSku(sku.getSkuCode());// 商品条码
-			inwarehouseOrderItem.setSkuNo(sku.getSkuId());// 商品条码
+			inwarehouseOrderItem.setSku(skuCode);// 商品条码
+			inwarehouseOrderItem.setSkuNo(skuId);// 商品SKU
 			inwarehouseOrderItem.setQuantity(sku.getSkuQty());
 			inwarehouseOrderItem.setSkuName(sku.getSkuName());
 			inwarehouseOrderItem.setSkuRemark(sku.getSkuRemark());
@@ -530,11 +538,19 @@ public class WarehouseInterfaceServiceImpl implements IWarehouseInterfaceService
 				if (sku == null) {
 					throw new ServiceException("SkuDetail对象获取Sku对象得到Null");
 				}
+				String skuCode = sku.getSkuCode();
+				String skuId = sku.getSkuId();
+				if (StringUtil.isNotNull(skuCode)) {
+					skuCode = skuCode.trim();
+				}
+				if (StringUtil.isNotNull(skuId)) {
+					skuId = skuId.trim();
+				}
 				OutWarehouseOrderItem outWarehouseOrderItem = new OutWarehouseOrderItem();
 				outWarehouseOrderItem.setQuantity(sku.getSkuQty());
 				outWarehouseOrderItem.setRemark(sku.getSkuRemark());
-				outWarehouseOrderItem.setSku(sku.getSkuCode());
-				outWarehouseOrderItem.setSkuNo(sku.getSkuId());
+				outWarehouseOrderItem.setSku(skuCode);
+				outWarehouseOrderItem.setSkuNo(skuId);
 				outWarehouseOrderItem.setSpecification(sku.getSpecification());
 				outWarehouseOrderItem.setSkuName(sku.getSkuName());
 				outWarehouseOrderItem.setSkuUnitPrice(sku.getSkuUnitPrice());

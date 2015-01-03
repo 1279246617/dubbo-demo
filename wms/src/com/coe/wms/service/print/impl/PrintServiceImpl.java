@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import com.coe.wms.dao.user.IUserDao;
 import com.coe.wms.dao.warehouse.ISeatDao;
 import com.coe.wms.dao.warehouse.IWarehouseDao;
+import com.coe.wms.dao.warehouse.shipway.IShipwayApiAccountDao;
 import com.coe.wms.dao.warehouse.storage.IInWarehouseOrderDao;
 import com.coe.wms.dao.warehouse.storage.IInWarehouseOrderItemDao;
 import com.coe.wms.dao.warehouse.storage.IInWarehouseOrderStatusDao;
@@ -45,6 +46,8 @@ import com.coe.wms.dao.warehouse.transport.IOutWarehousePackageItemDao;
 import com.coe.wms.model.warehouse.Seat;
 import com.coe.wms.model.warehouse.Warehouse;
 import com.coe.wms.model.warehouse.shipway.Shipway;
+import com.coe.wms.model.warehouse.shipway.Shipway.ShipwayCode;
+import com.coe.wms.model.warehouse.shipway.ShipwayApiAccount;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrder;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderAdditionalSf;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderItem;
@@ -170,6 +173,9 @@ public class PrintServiceImpl implements IPrintService {
 
 	@Resource(name = "transportPackageItemDao")
 	private IOutWarehousePackageItemDao transportPackageItemDao;
+
+	@Resource(name = "shipwayApiAccountDao")
+	private IShipwayApiAccountDao shipwayApiAccountDao;
 
 	@Override
 	public Map<String, Object> getPrintPackageListData(Long outWarehouseOrderId) {
@@ -338,9 +344,12 @@ public class PrintServiceImpl implements IPrintService {
 		outWarehouseOrder.getShipwayExtra1();
 		String etkTrackingNo = Shipway.getEtkTrackingNoPrintFormat(trackingNo);// ETK跟踪号打印格式
 		map.put("etkTrackingNo", etkTrackingNo);
-		// ETK客户帐号
-		map.put("customerNo", "ECMTEST");
-
+		if (StringUtil.isEqual(outWarehouseOrder.getShipwayCode(), ShipwayCode.ETK)) {
+			ShipwayApiAccount shipwayApiAccount = shipwayApiAccountDao.getShipwayApiAccountByUserId(outWarehouseOrder.getUserIdOfCustomer(), ShipwayCode.ETK);
+			if (shipwayApiAccount != null) {
+				map.put("customerNo", shipwayApiAccount.getApiAccount());// ETK客户帐号
+			}
+		}
 		String trackingNoBarcodeData = BarcodeUtil.createCode128(trackingNo, true, 13d, null);
 		map.put("trackingNoBarcodeData", trackingNoBarcodeData);
 		String trackingNoBarcodeData2 = BarcodeUtil.createCode128(trackingNo, false, 14d, null);
@@ -433,8 +442,12 @@ public class PrintServiceImpl implements IPrintService {
 		}
 		String etkTrackingNo = Shipway.getEtkTrackingNoPrintFormat(trackingNo);// ETK跟踪号打印格式
 		map.put("etkTrackingNo", etkTrackingNo);
-		// ETK客户帐号
-		map.put("customerNo", "ECMTEST");
+		if (StringUtil.isEqual(order.getShipwayCode(), ShipwayCode.ETK)) {
+			ShipwayApiAccount shipwayApiAccount = shipwayApiAccountDao.getShipwayApiAccountByUserId(order.getUserIdOfCustomer(), ShipwayCode.ETK);
+			if (shipwayApiAccount != null) {
+				map.put("customerNo", shipwayApiAccount.getApiAccount());// ETK客户帐号
+			}
+		}
 		String trackingNoBarcodeData = BarcodeUtil.createCode128(trackingNo, true, 11d, null);
 		map.put("trackingNoBarcodeData", trackingNoBarcodeData);
 
