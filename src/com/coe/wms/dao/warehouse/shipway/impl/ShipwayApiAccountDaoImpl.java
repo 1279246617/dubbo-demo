@@ -31,8 +31,8 @@ public class ShipwayApiAccountDaoImpl implements IShipwayApiAccountDao {
 	@Override
 	public ShipwayApiAccount getShipwayApiAccountByUserId(Long userId, String shipwayCode) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select id,user_id,shipway_code,api_account,token,token_key,url,extra1 from w_w_shipway_api_account where shipwayCode ='" + shipwayCode + "'");
-		if (userId != null) {
+		sb.append("select id,user_id,shipway_code,api_account,token,token_key,url,extra1 from w_w_shipway_api_account where shipway_code ='" + shipwayCode + "'");
+		if (userId == null) {
 			sb.append(" and user_id is null");
 		} else {
 			sb.append(" and user_id  = " + userId);
