@@ -221,6 +221,7 @@ public class InWarehouseOrderServiceImpl implements IInWarehouseOrderService {
 			map.put(Constant.MESSAGE, "请输入商品条码.");
 			return map;
 		}
+		itemSku = itemSku.trim();
 		if (itemQuantity == null) {
 			map.put(Constant.MESSAGE, "请输入商品数量.");
 			return map;
@@ -661,11 +662,13 @@ public class InWarehouseOrderServiceImpl implements IInWarehouseOrderService {
 	@Override
 	public Map<String, String> saveInWarehouseOrderItemSku(Long id, String sku) throws ServiceException {
 		Map<String, String> map = new HashMap<String, String>();
-		if (inWarehouseOrderItemDao.saveInWarehouseOrderItemSku(id, sku) > 0) {
+		if (StringUtil.isNotNull(sku)) {
+			sku = sku.trim();
+			inWarehouseOrderItemDao.saveInWarehouseOrderItemSku(id, sku);
 			map.put(Constant.STATUS, Constant.SUCCESS);
-		} else {
-			map.put(Constant.STATUS, Constant.FAIL);
+			return map;
 		}
+		map.put(Constant.STATUS, Constant.FAIL);
 		return map;
 	}
 

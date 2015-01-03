@@ -372,7 +372,7 @@ public class ShelfServiceImpl implements IShelfService {
 			}
 			if (subQuantity != 0) {
 				// 下架数量不准确
-				map.put(Constant.MESSAGE, "下架货位,SKU,数量和捡货单上的数量不对应,请重新下架");
+				map.put(Constant.MESSAGE, "下架货位,商品条码,数量和捡货单上的数量不对应,请重新下架");
 				return map;
 			}
 		}
