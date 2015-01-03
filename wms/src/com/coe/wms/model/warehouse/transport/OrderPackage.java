@@ -49,6 +49,14 @@ public class OrderPackage implements Serializable {
 	 * 备注
 	 */
 	private String remark;
+	/**
+	 * 到货承运商
+	 */
+	private String carrierCode;
+	/**
+	 * 跟踪号
+	 */
+	private String trackingNo;
 
 	private String status;
 
@@ -62,6 +70,22 @@ public class OrderPackage implements Serializable {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public String getCarrierCode() {
+		return carrierCode;
+	}
+
+	public void setCarrierCode(String carrierCode) {
+		this.carrierCode = carrierCode;
+	}
+
+	public String getTrackingNo() {
+		return trackingNo;
+	}
+
+	public void setTrackingNo(String trackingNo) {
+		this.trackingNo = trackingNo;
 	}
 
 	public Long getWarehouseId() {
