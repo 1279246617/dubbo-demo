@@ -15,14 +15,14 @@ public class OrderPackageStatus implements Serializable {
 	public class OrderPackageStatusCode {
 
 		/**
-		 * 发送审核通过给顺丰, 待顺丰发实际货物到仓库, 待收货 Wait Receiver Goods
+		 * 待收货 Wait Receiver Goods
 		 */
 		public static final String WRG = "WRG";
 
 		/**
-		 * 完成收货 ,待完成上架
+		 * 完成收货
 		 */
-		public static final String WOS = "WOS";
+		public static final String SUCCESS = "SUCCESS";
 	}
 
 	/**
