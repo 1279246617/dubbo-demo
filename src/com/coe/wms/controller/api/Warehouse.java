@@ -118,13 +118,16 @@ public class Warehouse {
 				responseXml = warehouseInterfaceService.warehouseInterfaceCancelOutWarehouseOrder(eventBody, userIdOfCustomer, eventTarget);
 			}
 
-			// 转运
 			if (StringUtil.isEqualIgnoreCase(EventType.LOGISTICS_TRADE_PAID, eventType)) { // 创建转运订单
-				responseXml = transportService.warehouseInterfaceSaveTransportOrder(eventBody, userIdOfCustomer, eventTarget);
+				Integer orderType = transportService.warehouseInterfaceDistinguishOrderOrPackage(eventBody);// 判断是大包(流连大包)还是小包
+				if (orderType == 1) {// 大包
+					responseXml = transportService.warehouseInterfaceSaveTransportOrderPackage(eventBody, userIdOfCustomer, eventTarget);
+				} else {// 小包
+					responseXml = transportService.warehouseInterfaceSaveTransportOrder(eventBody, userIdOfCustomer, eventTarget);
+				}
 			}
 
-			// 转运确认出库(确认重量)
-			if (StringUtil.isEqualIgnoreCase(EventType.LOGISTICS_SEND_GOODS, eventType)) { // 转运确认出库
+			if (StringUtil.isEqualIgnoreCase(EventType.LOGISTICS_SEND_GOODS, eventType)) { // 转运确认出库(确认重量)
 				responseXml = transportService.warehouseInterfaceConfirmTransportOrder(eventBody, userIdOfCustomer, eventTarget);
 			}
 			logger.warn("eventType:" + eventType + "  responseXml:" + responseXml);

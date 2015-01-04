@@ -1,20 +1,13 @@
 package com.coe.wms.service.transport.impl;
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
-import com.coe.etk.api.Client;
-import com.coe.etk.api.request.Receiver;
-import com.coe.etk.api.request.Sender;
-import com.coe.etk.api.response.ResponseItems;
 import com.coe.wms.dao.product.IProductDao;
 import com.coe.wms.dao.user.IUserDao;
 import com.coe.wms.dao.warehouse.ISeatDao;
@@ -33,6 +26,7 @@ import com.coe.wms.dao.warehouse.transport.IFirstWaybillOnShelfDao;
 import com.coe.wms.dao.warehouse.transport.IFirstWaybillStatusDao;
 import com.coe.wms.dao.warehouse.transport.IOrderAdditionalSfDao;
 import com.coe.wms.dao.warehouse.transport.IOrderDao;
+import com.coe.wms.dao.warehouse.transport.IOrderPackageDao;
 import com.coe.wms.dao.warehouse.transport.IOrderReceiverDao;
 import com.coe.wms.dao.warehouse.transport.IOrderSenderDao;
 import com.coe.wms.dao.warehouse.transport.IOrderStatusDao;
@@ -40,28 +34,19 @@ import com.coe.wms.dao.warehouse.transport.IOutWarehousePackageDao;
 import com.coe.wms.dao.warehouse.transport.IOutWarehousePackageItemDao;
 import com.coe.wms.exception.ServiceException;
 import com.coe.wms.model.unit.Currency.CurrencyCode;
-import com.coe.wms.model.unit.Weight.WeightCode;
-import com.coe.wms.model.user.User;
-import com.coe.wms.model.warehouse.TrackingNo;
 import com.coe.wms.model.warehouse.Warehouse;
 import com.coe.wms.model.warehouse.shipway.Shipway;
-import com.coe.wms.model.warehouse.shipway.Shipway.ShipwayCode;
-import com.coe.wms.model.warehouse.shipway.ShipwayApiAccount;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderReceiver;
-import com.coe.wms.model.warehouse.storage.record.OutWarehouseRecord;
 import com.coe.wms.model.warehouse.transport.FirstWaybill;
 import com.coe.wms.model.warehouse.transport.FirstWaybillItem;
-import com.coe.wms.model.warehouse.transport.FirstWaybillOnShelf;
-import com.coe.wms.model.warehouse.transport.FirstWaybillStatus;
 import com.coe.wms.model.warehouse.transport.FirstWaybillStatus.FirstWaybillStatusCode;
 import com.coe.wms.model.warehouse.transport.Order;
 import com.coe.wms.model.warehouse.transport.OrderAdditionalSf;
+import com.coe.wms.model.warehouse.transport.OrderPackage;
+import com.coe.wms.model.warehouse.transport.OrderPackageStatus.OrderPackageStatusCode;
 import com.coe.wms.model.warehouse.transport.OrderReceiver;
 import com.coe.wms.model.warehouse.transport.OrderSender;
-import com.coe.wms.model.warehouse.transport.OrderStatus;
 import com.coe.wms.model.warehouse.transport.OrderStatus.OrderStatusCode;
-import com.coe.wms.model.warehouse.transport.OutWarehousePackage;
-import com.coe.wms.model.warehouse.transport.OutWarehousePackageItem;
 import com.coe.wms.pojo.api.warehouse.Buyer;
 import com.coe.wms.pojo.api.warehouse.ClearanceDetail;
 import com.coe.wms.pojo.api.warehouse.ErrorCode;
@@ -77,9 +62,7 @@ import com.coe.wms.pojo.api.warehouse.TradeOrder;
 import com.coe.wms.service.transport.ITransportService;
 import com.coe.wms.util.Config;
 import com.coe.wms.util.Constant;
-import com.coe.wms.util.DateUtil;
 import com.coe.wms.util.NumberUtil;
-import com.coe.wms.util.Pagination;
 import com.coe.wms.util.StringUtil;
 import com.coe.wms.util.XmlUtil;
 
@@ -133,6 +116,9 @@ public class TransportServiceImpl implements ITransportService {
 	@Resource(name = "orderDao")
 	private IOrderDao orderDao;
 
+	@Resource(name = "orderPackageDao")
+	private IOrderPackageDao orderPackageDao;
+
 	@Resource(name = "orderReceiverDao")
 	private IOrderReceiverDao orderReceiverDao;
 
@@ -165,6 +151,107 @@ public class TransportServiceImpl implements ITransportService {
 
 	@Resource(name = "shipwayApiAccountDao")
 	private IShipwayApiAccountDao shipwayApiAccountDao;
+
+	/**
+	 * 区分顺丰下单是 下大包还是小包(转运订单)
+	 * 
+	 * 1:大包 需要拆包 2:小包:转运订单 0:无法判断
+	 * 
+	 * @param eventBody
+	 * @return
+	 */
+	@Override
+	public Integer warehouseInterfaceDistinguishOrderOrPackage(EventBody eventBody) throws ServiceException {
+		LogisticsDetail logisticsDetail = eventBody.getLogisticsDetail();
+		Integer type = 0;
+		if (logisticsDetail == null) {
+			return type;
+		}
+		List<LogisticsOrder> logisticsOrders = logisticsDetail.getLogisticsOrders();
+		if (logisticsOrders == null || logisticsOrders.size() == 0) {
+			return type;
+		}
+		LogisticsOrder logisticsOrderFirst = logisticsOrders.get(0);
+		if (StringUtil.isEqualIgnoreCase(logisticsOrderFirst.getNeedCheck(), Constant.Y)) { // 大包需要拆包
+			type = 1;
+		}
+		if (StringUtil.isEqualIgnoreCase(logisticsOrderFirst.getNeedCheck(), Constant.N)) {
+			type = 2;
+		}
+		return type;
+	}
+
+	@Override
+	public String warehouseInterfaceSaveTransportOrderPackage(EventBody eventBody, Long userIdOfCustomer, String warehouseNo) throws ServiceException {
+		Responses responses = new Responses();
+		List<Response> responseItems = new ArrayList<Response>();
+		Response response = new Response();
+		response.setSuccess(Constant.FALSE);
+		responseItems.add(response);
+		responses.setResponseItems(responseItems);
+		// 取 tradeDetail 中tradeOrderId 作为客户订单号
+		TradeDetail tradeDetail = eventBody.getTradeDetail();
+		if (tradeDetail == null) {
+			response.setReason(ErrorCode.S01_CODE);
+			response.setReasonDesc("EventBody对象获取TradeDetail对象得到Null");
+			return XmlUtil.toXml(responses);
+		}
+		List<TradeOrder> tradeOrderList = tradeDetail.getTradeOrders();
+		if (tradeOrderList == null || tradeOrderList.size() == 0) {
+			response.setReason(ErrorCode.S01_CODE);
+			response.setReasonDesc("TradeDetail对象获取TradeOrders对象得到Null");
+			return XmlUtil.toXml(responses);
+		}
+		TradeOrder tradeOrder = tradeOrderList.get(0);
+		// 客户订单号
+		String customerReferenceNo = tradeOrder.getTradeOrderId();
+		if (StringUtil.isNull(customerReferenceNo)) {
+			response.setReason(ErrorCode.S01_CODE);
+			response.setReasonDesc("TradeOrder对象获取tradeOrderId得到Null");
+			return XmlUtil.toXml(responses);
+		}
+		LogisticsDetail logisticsDetail = eventBody.getLogisticsDetail();
+		if (logisticsDetail == null) {
+			response.setReason(ErrorCode.S01_CODE);
+			response.setReasonDesc("EventBody对象获取LogisticsDetail对象得到Null");
+			return XmlUtil.toXml(responses);
+		}
+		List<LogisticsOrder> logisticsOrders = logisticsDetail.getLogisticsOrders();
+		if (logisticsOrders == null || logisticsOrders.size() == 0) {
+			response.setReason(ErrorCode.S01_CODE);
+			response.setReasonDesc("LogisticsDetail对象获取LogisticsOrders对象得到Null");
+			return XmlUtil.toXml(responses);
+		}
+		Warehouse warehouse = warehouseDao.getWarehouseByNo(warehouseNo);
+		if (warehouse == null) {
+			response.setReason(ErrorCode.B0003_CODE);
+			response.setReasonDesc("根据仓库编号(eventTarget)获取仓库得到Null");
+			return XmlUtil.toXml(responses);
+		}
+		Long warehouseId = warehouse.getId();
+		LogisticsOrder logisticsOrderFirst = logisticsOrders.get(0);
+		// 检测大包是否重复
+		OrderPackage orderPackageParam = new OrderPackage();
+		orderPackageParam.setCustomerReferenceNo(customerReferenceNo);
+		Long count = orderPackageDao.countOrderPackage(orderPackageParam, null);
+		if (count > 0) {
+			response.setReason(ErrorCode.B0200_CODE);
+			response.setReasonDesc("客户订单号(tradeOrderId)重复,保存失败");
+			return XmlUtil.toXml(responses);
+		}
+		// 创建大包
+		OrderPackage orderPackage = new OrderPackage();
+		orderPackage.setCreatedTime(System.currentTimeMillis());
+		orderPackage.setCustomerReferenceNo(customerReferenceNo);
+		orderPackage.setStatus(OrderPackageStatusCode.WRG);
+		orderPackage.setUserIdOfCustomer(userIdOfCustomer);
+		orderPackage.setWarehouseId(warehouseId);
+		orderPackage.setCarrierCode(logisticsOrderFirst.getCarrierCode());
+		orderPackage.setTrackingNo(logisticsOrderFirst.getMailNo());
+		orderPackageDao.saveOrderPackage(orderPackage);// 保存大包,得到大包id
+		response.setSuccess(Constant.TRUE);
+		return XmlUtil.toXml(responses);
+	}
 
 	@Override
 	public String warehouseInterfaceSaveTransportOrder(EventBody eventBody, Long userIdOfCustomer, String warehouseNo) throws ServiceException {
