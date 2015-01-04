@@ -280,6 +280,14 @@ public class FirstWaybillDaoImpl implements IFirstWaybillDao {
 					sb.append(" and received_time <= " + date.getTime());
 				}
 			}
+			// isReceived = Y ,表示已收货的记录, 状态不能等于待仓库收货
+			if (StringUtil.isEqual(moreParam.get("isReceived"), Constant.Y)) {
+				sb.append(" and status != '" + FirstWaybillStatusCode.WWR + "'");
+			}
+			// 是否不包含转运大包的头程
+			if (StringUtil.isEqual(moreParam.get("isNotOrderPackageWaybill"), Constant.Y)) {
+				sb.append(" and order_package_id is null  and order_id is not null");
+			}
 		}
 		String sql = sb.toString();
 		return jdbcTemplate.queryForObject(sql, Long.class);

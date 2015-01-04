@@ -138,8 +138,9 @@
 	                columns: [
 	                    { display: '客户帐号', name: 'userNameOfCustomer', align: 'center',type:'float',width:'9%'},
 	                    { display: '仓库', name: 'warehouse', align: 'center', type: 'float',width:'8%'},
-	                    { display: '状态', name: 'status', align: 'center', type: 'float',width:'8%'},
 	                    { display: '转运类型', name: 'transportType', align: 'center', type: 'float',width:'9%'},
+	                    { display: '头程运单状态', name: 'status', align: 'center', type: 'float',width:'8%'},
+	                    { display: '转运订单状态', name: 'orderStatus', align: 'center', type: 'float',width:'8%'},
 	                    { display: '到货承运商', name: 'carrierCode', align: 'center', type: 'float',width:'10%'},
 	  		          	{ display: '到货跟踪单号', name: 'trackingNo', align: 'center', type: 'float',width:'12%'},
 	  		          	{ display: '分配货位', name: 'seatCode', align: 'center', type: 'float',width:'11%'},

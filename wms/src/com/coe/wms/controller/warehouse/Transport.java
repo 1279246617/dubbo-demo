@@ -373,7 +373,7 @@ public class Transport {
 		moreParam.put("createdTimeEnd", createdTimeEnd);
 		moreParam.put("receivedTimeStart", receivedTimeStart);
 		moreParam.put("receivedTimeEnd", receivedTimeEnd);
-		moreParam.put("isNotOrderPackageWaybill", Constant.Y);
+//		moreParam.put("isNotOrderPackageWaybill", Constant.Y);
 		moreParam.put("nos", nos);
 		moreParam.put("noType", noType);
 		moreParam.put("isReceived", isReceived);

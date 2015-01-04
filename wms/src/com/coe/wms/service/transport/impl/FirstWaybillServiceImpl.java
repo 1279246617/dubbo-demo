@@ -203,6 +203,14 @@ public class FirstWaybillServiceImpl implements IFirstWaybillService {
 			if (firstWaybill.getReceivedTime() != null) {
 				map.put("receivedTime", DateUtil.dateConvertString(new Date(firstWaybill.getReceivedTime()), DateUtil.yyyy_MM_ddHHmmss));
 			}
+			if (firstWaybill.getOrderId() != null) {
+				String orderStatus = orderDao.getOrderStatus(firstWaybill.getOrderId());
+				map.put("orderStatus", orderStatusDao.findOrderStatusByCode(orderStatus).getCn());
+			}
+			if (firstWaybill.getOrderPackageId() != null) {
+				String orderStatus = orderPackageDao.getOrderPackageStatus(firstWaybill.getOrderPackageId());
+				map.put("orderStatus", orderStatusDao.findOrderStatusByCode(orderStatus).getCn());
+			}
 			map.put("trackingNo", firstWaybill.getTrackingNo());
 			map.put("seatCode", firstWaybill.getSeatCode());
 			map.put("carrierCode", firstWaybill.getCarrierCode());

@@ -37,6 +37,8 @@ public class FirstWaybillStatus implements Serializable {
 		 * 已下架合包 Out Warehouse Success
 		 */
 		public static final String SUCCESS = "SUCCESS";
+		
+		public static final String END = "END";
 
 		/**
 		 * 出库失败 Out Warehouse Fail
