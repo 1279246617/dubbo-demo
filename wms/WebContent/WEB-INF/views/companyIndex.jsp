@@ -86,8 +86,8 @@
 							<li><a href="#${baseUrl}/warehouse/transport/listOrderPackage.do" tab_id="findOrderPackage"><i class="icon-list"></i><span class="hidden-tablet" style="color:#006400">转运大包</span></a></li>	
 		              		<li><a href="#${baseUrl}/warehouse/transport/listOrder.do" tab_id="findOrder"><i class="icon-list"></i><span class="hidden-tablet" style="color:#006400">转运订单</span></a></li>
 		              		<li><a href=#${baseUrl}/warehouse/transport/listWaitCheckOrder.do  tab_id="waitCheckOrder"><i class="icon-eye-open"></i><span class="hidden-tablet" style="color:#006400">待审核转运订单</span></a></li>
-		              		<li><a href=#${baseUrl}/warehouse/transport/listWaiPrintOrder.do  tab_id="waitCheckOrder2"><i class="icon-list"></i><span class="hidden-tablet" style="color:#006400">待打印捡货订单</span></a></li>
-		              		<li><a href="#${baseUrl}/warehouse/transport/listFirstWaybill.do" tab_id="findFirstWaybill"><i class="icon-list"></i><span class="hidden-tablet" style="color:#006400">转运订单小包</span></a></li>
+<!-- 		              		<li><a href=#${baseUrl}/warehouse/transport/listWaiPrintOrder.do  tab_id="waitCheckOrder2"><i class="icon-list"></i><span class="hidden-tablet" style="color:#006400">待打印捡货订单</span></a></li> -->
+		              		<li><a href="#${baseUrl}/warehouse/transport/listFirstWaybill.do" tab_id="findFirstWaybill"><i class="icon-list"></i><span class="hidden-tablet" style="color:#006400">转运头程运单</span></a></li>
 		                </ul>
 		        </div>
 		        

@@ -29,6 +29,7 @@ import com.coe.wms.dao.warehouse.transport.IFirstWaybillOnShelfDao;
 import com.coe.wms.dao.warehouse.transport.IFirstWaybillStatusDao;
 import com.coe.wms.dao.warehouse.transport.IOrderAdditionalSfDao;
 import com.coe.wms.dao.warehouse.transport.IOrderDao;
+import com.coe.wms.dao.warehouse.transport.IOrderPackageDao;
 import com.coe.wms.dao.warehouse.transport.IOrderReceiverDao;
 import com.coe.wms.dao.warehouse.transport.IOrderSenderDao;
 import com.coe.wms.dao.warehouse.transport.IOrderStatusDao;
@@ -43,7 +44,6 @@ import com.coe.wms.model.warehouse.transport.FirstWaybillOnShelf;
 import com.coe.wms.model.warehouse.transport.FirstWaybillStatus;
 import com.coe.wms.model.warehouse.transport.FirstWaybillStatus.FirstWaybillStatusCode;
 import com.coe.wms.model.warehouse.transport.Order;
-import com.coe.wms.model.warehouse.transport.OrderStatus;
 import com.coe.wms.model.warehouse.transport.OrderStatus.OrderStatusCode;
 import com.coe.wms.model.warehouse.transport.OutWarehousePackage;
 import com.coe.wms.model.warehouse.transport.OutWarehousePackageItem;
@@ -104,6 +104,9 @@ public class FirstWaybillServiceImpl implements IFirstWaybillService {
 
 	@Resource(name = "orderDao")
 	private IOrderDao orderDao;
+
+	@Resource(name = "orderPackageDao")
+	private IOrderPackageDao orderPackageDao;
 
 	@Resource(name = "orderReceiverDao")
 	private IOrderReceiverDao orderReceiverDao;
@@ -194,13 +197,6 @@ public class FirstWaybillServiceImpl implements IFirstWaybillService {
 		for (FirstWaybill firstWaybill : firstWaybillList) {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("id", firstWaybill.getId());
-			Long orderId = firstWaybill.getOrderId();
-			String orderStatusCode = orderDao.getOrderStatus(orderId);
-			if (StringUtil.isNotNull(orderStatusCode)) {
-				OrderStatus orderStatus = orderStatusDao.findOrderStatusByCode(orderStatusCode);
-				map.put("orderStatus", orderStatus.getCn());
-			}
-			map.put("orderId", firstWaybill.getOrderId());
 			if (firstWaybill.getCreatedTime() != null) {
 				map.put("createdTime", DateUtil.dateConvertString(new Date(firstWaybill.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss));
 			}
@@ -239,6 +235,9 @@ public class FirstWaybillServiceImpl implements IFirstWaybillService {
 			}
 			if (StringUtil.isEqual(Order.TRANSPORT_TYPE_Z, firstWaybill.getTransportType())) {
 				map.put("transportType", "直接转运");
+			}
+			if (StringUtil.isEqual(Order.TRANSPORT_TYPE_P, firstWaybill.getTransportType())) {
+				map.put("transportType", "大包头程");
 			}
 			map.put("remark", firstWaybill.getRemark());
 			FirstWaybillStatus firstWaybillStatus = firstWaybillStatusDao.findFirstWaybillStatusByCode(firstWaybill.getStatus());
@@ -280,10 +279,21 @@ public class FirstWaybillServiceImpl implements IFirstWaybillService {
 			map.put("firstWaybillId", String.valueOf(firstWaybill.getId()));
 			map.put("userLoginName", user.getLoginName());
 			map.put("trackingNo", firstWaybill.getTrackingNo());
-			map.put("orderId", firstWaybill.getOrderId() + "");
-			Order order = orderDao.getOrderById(firstWaybill.getOrderId());
-			map.put("outWarehouseTrackingNo", order.getTrackingNo());
-			map.put("shipwayCode", order.getShipwayCode());
+			if (firstWaybill.getOrderId() != null) {
+				map.put("orderId", firstWaybill.getOrderId() + "");
+				Order order = orderDao.getOrderById(firstWaybill.getOrderId());
+				map.put("outWarehouseTrackingNo", order.getTrackingNo());
+				map.put("shipwayCode", order.getShipwayCode());
+			} else {
+				map.put("orderId", "");
+				map.put("outWarehouseTrackingNo", "");
+				map.put("shipwayCode", "");
+			}
+			if (firstWaybill.getOrderPackageId() != null) {
+				map.put("orderPackageId", firstWaybill.getOrderPackageId() + "");
+			} else {
+				map.put("orderPackageId", "");
+			}
 			map.put("seatCode", firstWaybill.getSeatCode());
 			map.put("carrierCode", firstWaybill.getCarrierCode());
 			String time = DateUtil.dateConvertString(new Date(firstWaybill.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss);

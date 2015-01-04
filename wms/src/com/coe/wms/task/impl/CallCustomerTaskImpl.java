@@ -23,14 +23,15 @@ import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderItemDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderReceiverDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderSenderDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderStatusDao;
-import com.coe.wms.dao.warehouse.transport.IOrderAdditionalSfDao;
-import com.coe.wms.dao.warehouse.transport.IOrderDao;
-import com.coe.wms.dao.warehouse.transport.IOrderReceiverDao;
-import com.coe.wms.dao.warehouse.transport.IOrderSenderDao;
-import com.coe.wms.dao.warehouse.transport.IOrderStatusDao;
 import com.coe.wms.dao.warehouse.transport.IFirstWaybillDao;
 import com.coe.wms.dao.warehouse.transport.IFirstWaybillItemDao;
 import com.coe.wms.dao.warehouse.transport.IFirstWaybillStatusDao;
+import com.coe.wms.dao.warehouse.transport.IOrderAdditionalSfDao;
+import com.coe.wms.dao.warehouse.transport.IOrderDao;
+import com.coe.wms.dao.warehouse.transport.IOrderPackageDao;
+import com.coe.wms.dao.warehouse.transport.IOrderReceiverDao;
+import com.coe.wms.dao.warehouse.transport.IOrderSenderDao;
+import com.coe.wms.dao.warehouse.transport.IOrderStatusDao;
 import com.coe.wms.model.unit.Weight;
 import com.coe.wms.model.user.User;
 import com.coe.wms.model.warehouse.Warehouse;
@@ -39,10 +40,10 @@ import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrder;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus.OutWarehouseOrderStatusCode;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecord;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecordItem;
-import com.coe.wms.model.warehouse.transport.Order;
-import com.coe.wms.model.warehouse.transport.OrderStatus.OrderStatusCode;
 import com.coe.wms.model.warehouse.transport.FirstWaybill;
 import com.coe.wms.model.warehouse.transport.FirstWaybillStatus.FirstWaybillStatusCode;
+import com.coe.wms.model.warehouse.transport.Order;
+import com.coe.wms.model.warehouse.transport.OrderStatus.OrderStatusCode;
 import com.coe.wms.pojo.api.warehouse.EventBody;
 import com.coe.wms.pojo.api.warehouse.EventHeader;
 import com.coe.wms.pojo.api.warehouse.EventType;
@@ -111,6 +112,9 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 
 	@Resource(name = "orderDao")
 	private IOrderDao orderDao;
+
+	@Resource(name = "orderPackageDao")
+	private IOrderPackageDao orderPackageDao;
 
 	@Resource(name = "orderReceiverDao")
 	private IOrderReceiverDao orderReceiverDao;
@@ -641,8 +645,18 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 				continue;
 			}
 			Warehouse warehouse = warehouseDao.getWarehouseById(firstWaybill.getWarehouseId());
-			// 顺丰traderOrderId
-			String traderOrderId = orderDao.getCustomerReferenceNoById(firstWaybill.getOrderId());
+			String traderOrderId = null;
+			boolean isOrderPackage = false;
+			if (firstWaybill.getOrderId() != null) {
+				// 顺丰traderOrderId
+				traderOrderId = orderDao.getCustomerReferenceNoById(firstWaybill.getOrderId());
+			} else if (firstWaybill.getOrderPackageId() != null) {
+				// 顺丰traderOrderId
+				traderOrderId = orderPackageDao.getCustomerReferenceNoById(firstWaybill.getOrderPackageId());
+				isOrderPackage = true;
+			} else {
+				continue;
+			}
 			// 封装请求体
 			LogisticsEventsRequest logisticsEventsRequest = new LogisticsEventsRequest();
 			LogisticsEvent logisticsEvent = new LogisticsEvent();
@@ -711,7 +725,11 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 				if (responseList != null && responseList.size() > 0) {
 					if (StringUtil.isEqualIgnoreCase(responseList.get(0).getSuccess(), Constant.TRUE)) {
 						firstWaybill.setCallbackIsSuccess(Constant.Y);
-						firstWaybill.setStatus(FirstWaybillStatusCode.WOS);
+						if (isOrderPackage) {// 如果是转运大包的头程, 发送收货成功后,直接修改为SUCCESS
+							firstWaybill.setStatus(FirstWaybillStatusCode.SUCCESS);
+						} else {
+							firstWaybill.setStatus(FirstWaybillStatusCode.WOS);
+						}
 						logger.debug("回传转运订单收货成功");
 					} else {
 						firstWaybill.setCallbackIsSuccess(Constant.N);
