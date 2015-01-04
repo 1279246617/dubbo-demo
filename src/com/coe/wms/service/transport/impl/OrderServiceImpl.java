@@ -33,6 +33,7 @@ import com.coe.wms.dao.warehouse.transport.IFirstWaybillOnShelfDao;
 import com.coe.wms.dao.warehouse.transport.IFirstWaybillStatusDao;
 import com.coe.wms.dao.warehouse.transport.IOrderAdditionalSfDao;
 import com.coe.wms.dao.warehouse.transport.IOrderDao;
+import com.coe.wms.dao.warehouse.transport.IOrderPackageDao;
 import com.coe.wms.dao.warehouse.transport.IOrderReceiverDao;
 import com.coe.wms.dao.warehouse.transport.IOrderSenderDao;
 import com.coe.wms.dao.warehouse.transport.IOrderStatusDao;
@@ -52,6 +53,8 @@ import com.coe.wms.model.warehouse.transport.FirstWaybillItem;
 import com.coe.wms.model.warehouse.transport.FirstWaybillOnShelf;
 import com.coe.wms.model.warehouse.transport.FirstWaybillStatus.FirstWaybillStatusCode;
 import com.coe.wms.model.warehouse.transport.Order;
+import com.coe.wms.model.warehouse.transport.OrderPackage;
+import com.coe.wms.model.warehouse.transport.OrderPackageStatus.OrderPackageStatusCode;
 import com.coe.wms.model.warehouse.transport.OrderReceiver;
 import com.coe.wms.model.warehouse.transport.OrderSender;
 import com.coe.wms.model.warehouse.transport.OrderStatus;
@@ -115,6 +118,9 @@ public class OrderServiceImpl implements IOrderService {
 
 	@Resource(name = "orderDao")
 	private IOrderDao orderDao;
+
+	@Resource(name = "orderPackageDao")
+	private IOrderPackageDao orderPackageDao;
 
 	@Resource(name = "orderReceiverDao")
 	private IOrderReceiverDao orderReceiverDao;
@@ -324,6 +330,22 @@ public class OrderServiceImpl implements IOrderService {
 			return map;
 		}
 		FirstWaybill firstWaybill = firstWaybillDao.getFirstWaybillById(firstWaybillId);
+		// 转运大包处理
+		if (firstWaybill.getOrderPackageId() != null && firstWaybill.getOrderId() == null) {
+			if (!StringUtil.isEqual(firstWaybill.getStatus(), FirstWaybillStatusCode.WWR)) {
+				// 非待收货状态
+				map.put(Constant.MESSAGE, "该转运大包非待收货状态,请输入新的跟踪单号");
+				return map;
+			}
+			firstWaybill.setStatus(FirstWaybillStatusCode.WSR);
+			firstWaybill.setReceivedTime(System.currentTimeMillis());
+			// 保存货位,状态,时间
+			firstWaybillDao.receivedFirstWaybill(firstWaybill);
+			orderPackageDao.updateOrderPackageStatus(firstWaybill.getOrderPackageId(), OrderPackageStatusCode.SUCCESS);
+			map.put(Constant.STATUS, "3");
+			map.put(Constant.MESSAGE, "该转运大包收货成功,请注意需要拆包");
+			return map;
+		}
 		if (!StringUtil.isEqual(firstWaybill.getStatus(), FirstWaybillStatusCode.WWR)) {
 			// 非待收货状态
 			map.put(Constant.MESSAGE, "该转运订单非待收货状态,请输入新的跟踪单号");

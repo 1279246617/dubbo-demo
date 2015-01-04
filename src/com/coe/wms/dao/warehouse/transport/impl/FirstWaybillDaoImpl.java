@@ -183,6 +183,10 @@ public class FirstWaybillDaoImpl implements IFirstWaybillDao {
 			if (StringUtil.isEqual(moreParam.get("isReceived"), Constant.Y)) {
 				sb.append(" and status != '" + FirstWaybillStatusCode.WWR + "'");
 			}
+			// 是否不包含转运大包的头程
+			if (StringUtil.isEqual(moreParam.get("isNotOrderPackageWaybill"), Constant.Y)) {
+				sb.append(" and order_package_id is null  and order_id is not null");
+			}
 		}
 		if (page != null) {
 			// 分页sql
@@ -322,7 +326,7 @@ public class FirstWaybillDaoImpl implements IFirstWaybillDao {
 	@Override
 	public int receivedFirstWaybill(FirstWaybill firstWaybill) {
 		String sql = "update w_t_first_waybill set status=? ,received_time=?,seat_code = ? where id=" + firstWaybill.getId();
-		return jdbcTemplate.update(sql, firstWaybill.getStatus(), firstWaybill.getReceivedTime(), firstWaybill.getSeatCode());
+		return jdbcTemplate.update(sql, firstWaybill.getStatus(), firstWaybill.getReceivedTime(), firstWaybill.getSeatCode() == null ? "" : firstWaybill.getSeatCode());
 	}
 
 	@Override

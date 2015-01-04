@@ -91,6 +91,13 @@ function saveReceivedFirstWaybillStep2(trackingNoStr,remark,warehouseId) {
 			unLockTrackingNo();
 			return;
 		}
+		if(msg.status ==3){
+			parent.$.showDialogMessage(msg.message, null, null);
+			$("#tips").html(msg.message);
+			unLockTrackingNo();
+			return;
+		}
+		
 		$("#tips").html(msg.message);
 		
 		$("#seatCode").val(msg.seatCode);

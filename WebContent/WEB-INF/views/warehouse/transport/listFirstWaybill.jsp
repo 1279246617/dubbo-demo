@@ -139,15 +139,14 @@
 	                    { display: '客户帐号', name: 'userNameOfCustomer', align: 'center',type:'float',width:'9%'},
 	                    { display: '仓库', name: 'warehouse', align: 'center', type: 'float',width:'8%'},
 	                    { display: '状态', name: 'status', align: 'center', type: 'float',width:'8%'},
-// 	                    { display: '转运订单Id', name: 'orderId', align: 'center', type: 'float',width:'8%'},
 	                    { display: '转运类型', name: 'transportType', align: 'center', type: 'float',width:'9%'},
+	                    { display: '到货承运商', name: 'carrierCode', align: 'center', type: 'float',width:'10%'},
 	  		          	{ display: '到货跟踪单号', name: 'trackingNo', align: 'center', type: 'float',width:'12%'},
-	  		          	{ display: '承运商', name: 'carrierCode', align: 'center', type: 'float',width:'10%'},
 	  		          	{ display: '分配货位', name: 'seatCode', align: 'center', type: 'float',width:'11%'},
 	  		          	{ display: '销售编号', name: 'poNo', align: 'center', type: 'float',width:'12%'},
-	  		          	{ display: '商品预览', isSort: false, align: 'center', type: 'float',width:'18%',render: function(row) {
+	  		          	{ display: '商品预览', isSort: false, align: 'center', type: 'float',width:'15%',render: function(row) {
 		            		var skus = "";
-		            		if (!row._editing) {
+		            		if (row.items !='') {
 		            			skus += '<a href="javascript:listFirstWaybillsItem(' + row.id + ')">'+row.items+'</a> ';
 		            		}
 		            		return skus;
