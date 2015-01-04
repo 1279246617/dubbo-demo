@@ -45,7 +45,7 @@ public class FirstWaybillDaoImpl implements IFirstWaybillDao {
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public long saveFirstWaybill(final FirstWaybill firstWaybill) {
-		final String sql = "insert into w_t_first_waybill (warehouse_id,user_id_of_customer,user_id_of_operator,carrier_code,tracking_no,created_time,remark,callback_is_success,callback_count,order_id,status,received_time,po_no,transport_type) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		final String sql = "insert into w_t_first_waybill (warehouse_id,user_id_of_customer,user_id_of_operator,carrier_code,tracking_no,created_time,remark,callback_is_success,callback_count,order_id,status,received_time,po_no,transport_type,order_package_id) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
@@ -63,7 +63,11 @@ public class FirstWaybillDaoImpl implements IFirstWaybillDao {
 				ps.setString(7, firstWaybill.getRemark());
 				ps.setString(8, firstWaybill.getCallbackIsSuccess());
 				ps.setInt(9, firstWaybill.getCallbackCount() != null ? firstWaybill.getCallbackCount() : 0);
-				ps.setLong(10, firstWaybill.getOrderId());
+				if (firstWaybill.getOrderId() == null) {
+					ps.setNull(10, Types.BIGINT);
+				} else {
+					ps.setLong(10, firstWaybill.getOrderId());
+				}
 				ps.setString(11, firstWaybill.getStatus());
 				if (firstWaybill.getReceivedTime() == null) {
 					ps.setNull(12, Types.BIGINT);
@@ -72,6 +76,12 @@ public class FirstWaybillDaoImpl implements IFirstWaybillDao {
 				}
 				ps.setString(13, firstWaybill.getPoNo());
 				ps.setString(14, firstWaybill.getTransportType());
+
+				if (firstWaybill.getOrderPackageId() == null) {
+					ps.setNull(15, Types.BIGINT);
+				} else {
+					ps.setLong(15, firstWaybill.getOrderPackageId());
+				}
 				return ps;
 			}
 		}, keyHolder);
@@ -81,7 +91,7 @@ public class FirstWaybillDaoImpl implements IFirstWaybillDao {
 
 	@Override
 	public FirstWaybill getFirstWaybillById(Long FirstWaybillId) {
-		String sql = "select id,warehouse_id,user_id_of_customer,user_id_of_operator,carrier_code,tracking_no,created_time,remark,callback_is_success,callback_count,order_id,status,received_time,po_no,transport_type,seat_code from w_t_first_waybill where id= "
+		String sql = "select id,warehouse_id,user_id_of_customer,user_id_of_operator,carrier_code,tracking_no,created_time,remark,callback_is_success,callback_count,order_id,status,received_time,po_no,transport_type,seat_code,order_package_id from w_t_first_waybill where id= "
 				+ FirstWaybillId;
 		FirstWaybill firstWaybill = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<FirstWaybill>(FirstWaybill.class));
 		return firstWaybill;
@@ -93,7 +103,7 @@ public class FirstWaybillDaoImpl implements IFirstWaybillDao {
 	@Override
 	public List<FirstWaybill> findFirstWaybill(FirstWaybill firstWaybill, Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select id,warehouse_id,user_id_of_customer,user_id_of_operator,carrier_code,tracking_no,created_time,remark,callback_is_success,callback_count,order_id,status,received_time,po_no,transport_type,seat_code from w_t_first_waybill where 1=1 ");
+		sb.append("select id,warehouse_id,user_id_of_customer,user_id_of_operator,carrier_code,tracking_no,created_time,remark,callback_is_success,callback_count,order_id,status,received_time,po_no,transport_type,seat_code,order_package_id from w_t_first_waybill where 1=1 ");
 		if (firstWaybill != null) {
 			if (StringUtil.isNotNull(firstWaybill.getTrackingNo())) {
 				sb.append(" and tracking_no = '" + firstWaybill.getTrackingNo() + "' ");
@@ -127,6 +137,9 @@ public class FirstWaybillDaoImpl implements IFirstWaybillDao {
 			}
 			if (firstWaybill.getOrderId() != null) {
 				sb.append(" and order_id = " + firstWaybill.getOrderId());
+			}
+			if (firstWaybill.getOrderPackageId() != null) {
+				sb.append(" and order_package_id = " + firstWaybill.getOrderPackageId());
 			}
 			if (StringUtil.isNotNull(firstWaybill.getStatus())) {
 				sb.append(" and status = '" + firstWaybill.getStatus() + "' ");
@@ -221,6 +234,9 @@ public class FirstWaybillDaoImpl implements IFirstWaybillDao {
 			}
 			if (firstWaybill.getOrderId() != null) {
 				sb.append(" and order_id = " + firstWaybill.getOrderId());
+			}
+			if (firstWaybill.getOrderPackageId() != null) {
+				sb.append(" and order_package_id = " + firstWaybill.getOrderPackageId());
 			}
 			if (StringUtil.isNotNull(firstWaybill.getStatus())) {
 				sb.append(" and status = '" + firstWaybill.getStatus() + "' ");

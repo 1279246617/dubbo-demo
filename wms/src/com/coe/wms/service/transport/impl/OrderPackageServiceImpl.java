@@ -14,11 +14,14 @@ import org.springframework.stereotype.Service;
 import com.coe.wms.dao.user.IUserDao;
 import com.coe.wms.dao.warehouse.IWarehouseDao;
 import com.coe.wms.dao.warehouse.shipway.IShipwayDao;
+import com.coe.wms.dao.warehouse.transport.IFirstWaybillDao;
 import com.coe.wms.dao.warehouse.transport.IOrderPackageDao;
 import com.coe.wms.dao.warehouse.transport.IOrderPackageStatusDao;
+import com.coe.wms.dao.warehouse.transport.impl.FirstWaybillDaoImpl;
 import com.coe.wms.exception.ServiceException;
 import com.coe.wms.model.user.User;
 import com.coe.wms.model.warehouse.Warehouse;
+import com.coe.wms.model.warehouse.transport.FirstWaybill;
 import com.coe.wms.model.warehouse.transport.OrderPackageStatus;
 import com.coe.wms.service.transport.IOrderPackageService;
 import com.coe.wms.util.Config;
@@ -54,6 +57,9 @@ public class OrderPackageServiceImpl implements IOrderPackageService {
 	@Resource(name = "orderPackageDao")
 	private IOrderPackageDao orderPackageDao;
 
+	@Resource(name = "firstWaybillDao")
+	private IFirstWaybillDao firstWaybillDao;
+
 	@Resource(name = "shipwayDao")
 	private IShipwayDao shipwayDao;
 
@@ -70,24 +76,30 @@ public class OrderPackageServiceImpl implements IOrderPackageService {
 		List<com.coe.wms.model.warehouse.transport.OrderPackage> orderList = orderPackageDao.findOrderPackage(param, moreParam, pagination);
 		List<Object> list = new ArrayList<Object>();
 		for (com.coe.wms.model.warehouse.transport.OrderPackage order : orderList) {
+			FirstWaybill firstWaybillParam = new FirstWaybill();
+			firstWaybillParam.setOrderPackageId(order.getId());
+			List<FirstWaybill> firstWaybillList = firstWaybillDao.findFirstWaybill(firstWaybillParam, null, null);
 			Map<String, Object> map = new HashMap<String, Object>();
 			Long orderId = order.getId();
 			map.put("id", orderId);
 			if (order.getCreatedTime() != null) {
 				map.put("createdTime", DateUtil.dateConvertString(new Date(order.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss));
 			}
-			if (order.getReceivedTime() != null) {
-				map.put("receivedTime", DateUtil.dateConvertString(new Date(order.getReceivedTime()), DateUtil.yyyy_MM_ddHHmmss));
-			}
-			map.put("carrierCode", order.getCarrierCode());
-			// 回传收货
-			if (StringUtil.isEqual(order.getCallbackSendStatusIsSuccess(), Constant.Y)) {
-				map.put("callbackSendStatusIsSuccess", "成功");
-			} else {
-				if (order.getCallbackSendStatusCount() != null && order.getCallbackSendStatusCount() > 0) {
-					map.put("callbackSendStatusCount", "失败次数:" + order.getCallbackSendStatusCount());
+			if (firstWaybillList != null && firstWaybillList.size() >= 1) {
+				FirstWaybill firstWaybill = firstWaybillList.get(0);
+				if (firstWaybill.getReceivedTime() != null) {
+					map.put("receivedTime", DateUtil.dateConvertString(new Date(firstWaybill.getReceivedTime()), DateUtil.yyyy_MM_ddHHmmss));
+				}
+				map.put("carrierCode", firstWaybill.getCarrierCode());
+				// 回传收货
+				if (StringUtil.isEqual(firstWaybill.getCallbackIsSuccess(), Constant.Y)) {
+					map.put("callbackSendStatusIsSuccess", "成功");
 				} else {
-					map.put("callbackSendStatusCount", "未回传");
+					if (firstWaybill.getCallbackCount() != null && firstWaybill.getCallbackCount() > 0) {
+						map.put("callbackSendStatusCount", "失败次数:" + firstWaybill.getCallbackCount());
+					} else {
+						map.put("callbackSendStatusCount", "未回传");
+					}
 				}
 			}
 			// 查询用户名

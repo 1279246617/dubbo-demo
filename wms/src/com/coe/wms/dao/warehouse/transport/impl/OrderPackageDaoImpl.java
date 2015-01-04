@@ -44,7 +44,7 @@ public class OrderPackageDaoImpl implements IOrderPackageDao {
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public long saveOrderPackage(final OrderPackage orderPackage) {
-		final String sql = "insert into w_t_order_package (warehouse_id,user_id_of_customer,user_id_of_operator,created_time,status,carrier_code,tracking_no,customer_reference_no,remark) values (?,?,?,?,?,?,?,?,?)";
+		final String sql = "insert into w_t_order_package (warehouse_id,user_id_of_customer,user_id_of_operator,created_time,status,customer_reference_no,remark,tracking_no) values (?,?,?,?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
@@ -58,10 +58,9 @@ public class OrderPackageDaoImpl implements IOrderPackageDao {
 				}
 				ps.setLong(4, orderPackage.getCreatedTime());
 				ps.setString(5, orderPackage.getStatus());
-				ps.setString(6, orderPackage.getCarrierCode());
-				ps.setString(7, orderPackage.getTrackingNo());
-				ps.setString(8, orderPackage.getCustomerReferenceNo());
-				ps.setString(9, orderPackage.getRemark());
+				ps.setString(6, orderPackage.getCustomerReferenceNo());
+				ps.setString(7, orderPackage.getRemark());
+				ps.setString(8, orderPackage.getTrackingNo());
 				return ps;
 			}
 		}, keyHolder);
@@ -71,8 +70,7 @@ public class OrderPackageDaoImpl implements IOrderPackageDao {
 
 	@Override
 	public OrderPackage getOrderPackageById(Long orderPackageId) {
-		String sql = "select id,warehouse_id,user_id_of_customer,user_id_of_operator,created_time,status,carrier_code,tracking_no,customer_reference_no,remark,received_time,callback_send_status_is_success,callback_send_status_count from w_t_order_package where id ="
-				+ orderPackageId;
+		String sql = "select id,warehouse_id,user_id_of_customer,user_id_of_operator,created_time,status,customer_reference_no,remark,tracking_no from w_t_order_package where id =" + orderPackageId;
 		List<OrderPackage> OrderPackageList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(OrderPackage.class));
 		if (OrderPackageList != null && OrderPackageList.size() > 0) {
 			return OrderPackageList.get(0);
@@ -87,7 +85,7 @@ public class OrderPackageDaoImpl implements IOrderPackageDao {
 	@Override
 	public List<OrderPackage> findOrderPackage(OrderPackage orderPackage, Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select id,warehouse_id,user_id_of_customer,user_id_of_operator,created_time,status,carrier_code,tracking_no,customer_reference_no,remark,received_time,callback_send_status_is_success,callback_send_status_count from w_t_order_package where 1=1 ");
+		sb.append("select id,tracking_no,warehouse_id,user_id_of_customer,user_id_of_operator,created_time,status,customer_reference_no,remark,tracking_no from w_t_order_package where 1=1 ");
 		if (orderPackage != null) {
 			if (orderPackage.getId() != null) {
 				sb.append(" and id = " + orderPackage.getId());
@@ -104,23 +102,14 @@ public class OrderPackageDaoImpl implements IOrderPackageDao {
 			if (StringUtil.isNotNull(orderPackage.getStatus())) {
 				sb.append(" and status = '" + orderPackage.getStatus() + "' ");
 			}
-			if (StringUtil.isNotNull(orderPackage.getCarrierCode())) {
-				sb.append(" and carrier_code = '" + orderPackage.getCarrierCode() + "' ");
+			if (StringUtil.isNotNull(orderPackage.getCustomerReferenceNo())) {
+				sb.append(" and customer_reference_no = '" + orderPackage.getCustomerReferenceNo() + "' ");
 			}
 			if (StringUtil.isNotNull(orderPackage.getTrackingNo())) {
 				sb.append(" and tracking_no = '" + orderPackage.getTrackingNo() + "' ");
 			}
-			if (StringUtil.isNotNull(orderPackage.getCustomerReferenceNo())) {
-				sb.append(" and customer_reference_no = '" + orderPackage.getCustomerReferenceNo() + "' ");
-			}
 			if (StringUtil.isNotNull(orderPackage.getRemark())) {
 				sb.append(" and remark = '" + orderPackage.getRemark() + "' ");
-			}
-			if (StringUtil.isNotNull(orderPackage.getCallbackSendStatusIsSuccess())) {
-				sb.append(" and callback_send_status_is_success = '" + orderPackage.getCallbackSendStatusIsSuccess() + "' ");
-			}
-			if (orderPackage.getCallbackSendStatusCount() != null) {
-				sb.append(" and callback_send_status_count = " + orderPackage.getCallbackSendStatusCount());
 			}
 		}
 		if (moreParam != null) {
@@ -166,23 +155,14 @@ public class OrderPackageDaoImpl implements IOrderPackageDao {
 			if (StringUtil.isNotNull(orderPackage.getStatus())) {
 				sb.append(" and status = '" + orderPackage.getStatus() + "' ");
 			}
-			if (StringUtil.isNotNull(orderPackage.getCarrierCode())) {
-				sb.append(" and carrier_code = '" + orderPackage.getCarrierCode() + "' ");
+			if (StringUtil.isNotNull(orderPackage.getCustomerReferenceNo())) {
+				sb.append(" and customer_reference_no = '" + orderPackage.getCustomerReferenceNo() + "' ");
 			}
 			if (StringUtil.isNotNull(orderPackage.getTrackingNo())) {
 				sb.append(" and tracking_no = '" + orderPackage.getTrackingNo() + "' ");
 			}
-			if (StringUtil.isNotNull(orderPackage.getCustomerReferenceNo())) {
-				sb.append(" and customer_reference_no = '" + orderPackage.getCustomerReferenceNo() + "' ");
-			}
 			if (StringUtil.isNotNull(orderPackage.getRemark())) {
 				sb.append(" and remark = '" + orderPackage.getRemark() + "' ");
-			}
-			if (StringUtil.isNotNull(orderPackage.getCallbackSendStatusIsSuccess())) {
-				sb.append(" and callback_send_status_is_success = '" + orderPackage.getCallbackSendStatusIsSuccess() + "' ");
-			}
-			if (orderPackage.getCallbackSendStatusCount() != null) {
-				sb.append(" and callback_send_status_count = " + orderPackage.getCallbackSendStatusCount());
 			}
 		}
 		if (moreParam != null) {
@@ -217,31 +197,6 @@ public class OrderPackageDaoImpl implements IOrderPackageDao {
 	public String getOrderPackageStatus(Long orderPackageId) {
 		String sql = "select status from w_t_order_package where id = " + orderPackageId;
 		return jdbcTemplate.queryForObject(sql, String.class);
-	}
-
-	/**
-	 * 获取回调未成功的记录id
-	 * 
-	 * 1,必须有客户id, 2,必须有重量, 3回调未成功 或未回调
-	 */
-	@Override
-	public List<Long> findCallbackSendStatusUnSuccessOrderPackageId() {
-		String sql = "select id from w_t_order_package where status ='" + OrderPackageStatusCode.SUCCESS + "' and (callback_send_status_is_success = 'N' or  callback_send_status_is_success is null)";
-		List<Long> OrderPackageIdList = jdbcTemplate.queryForList(sql, Long.class);
-		return OrderPackageIdList;
-	}
-
-	/**
-	 * 更新回调顺丰状态
-	 * 
-	 * @param OrderPackage
-	 * @return
-	 */
-	@Override
-	public int updateOrderPackageCallbackSendStatus(OrderPackage orderPackage) {
-		String sql = "update w_t_order_package set callback_send_status_is_success='" + orderPackage.getCallbackSendStatusIsSuccess() + "' ,callback_send_status_count = " + orderPackage.getCallbackSendStatusCount() + " , status='"
-				+ orderPackage.getStatus() + "' where id=" + orderPackage.getId();
-		return jdbcTemplate.update(sql);
 	}
 
 	@Override

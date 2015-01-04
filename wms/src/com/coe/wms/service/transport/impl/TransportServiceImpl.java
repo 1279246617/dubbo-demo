@@ -7,6 +7,7 @@ import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
+import org.springframework.web.socket.sockjs.transport.TransportType;
 
 import com.coe.wms.dao.product.IProductDao;
 import com.coe.wms.dao.user.IUserDao;
@@ -39,6 +40,7 @@ import com.coe.wms.model.warehouse.shipway.Shipway;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderReceiver;
 import com.coe.wms.model.warehouse.transport.FirstWaybill;
 import com.coe.wms.model.warehouse.transport.FirstWaybillItem;
+import com.coe.wms.model.warehouse.transport.FirstWaybillStatus;
 import com.coe.wms.model.warehouse.transport.FirstWaybillStatus.FirstWaybillStatusCode;
 import com.coe.wms.model.warehouse.transport.Order;
 import com.coe.wms.model.warehouse.transport.OrderAdditionalSf;
@@ -247,10 +249,21 @@ public class TransportServiceImpl implements ITransportService {
 		orderPackage.setStatus(OrderPackageStatusCode.WRG);
 		orderPackage.setUserIdOfCustomer(userIdOfCustomer);
 		orderPackage.setWarehouseId(warehouseId);
-		orderPackage.setCarrierCode(logisticsOrderFirst.getCarrierCode());
-		orderPackage.setTrackingNo(logisticsOrderFirst.getMailNo());
 		orderPackage.setRemark(tradeRemark);
-		orderPackageDao.saveOrderPackage(orderPackage);// 保存大包,得到大包id
+		Long orderPackageId = orderPackageDao.saveOrderPackage(orderPackage);// 保存大包,得到大包id
+		// 头程运单
+		FirstWaybill firstWaybill = new FirstWaybill();
+		firstWaybill.setOrderPackageId(orderPackageId);
+		firstWaybill.setCarrierCode(logisticsOrderFirst.getCarrierCode());
+		firstWaybill.setCreatedTime(System.currentTimeMillis());
+		firstWaybill.setPoNo(logisticsOrderFirst.getPoNo());
+		firstWaybill.setStatus(FirstWaybillStatusCode.WWR);
+		firstWaybill.setTrackingNo(logisticsOrderFirst.getMailNo());
+		firstWaybill.setUserIdOfCustomer(userIdOfCustomer);
+		firstWaybill.setWarehouseId(warehouseId);
+		firstWaybill.setTransportType(Order.TRANSPORT_TYPE_P);
+		firstWaybillDao.saveFirstWaybill(firstWaybill);
+
 		response.setSuccess(Constant.TRUE);
 		return XmlUtil.toXml(responses);
 	}

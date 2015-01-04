@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 import com.coe.wms.exception.ServiceException;
+import com.coe.wms.model.warehouse.transport.FirstWaybill;
 import com.coe.wms.model.warehouse.transport.OrderPackage;
 import com.coe.wms.model.warehouse.transport.OrderPackageStatus;
 import com.coe.wms.util.Pagination;
@@ -27,7 +28,7 @@ public interface IOrderPackageService {
 	 * @throws ServiceException
 	 */
 	public List<OrderPackageStatus> findAllOrderPackageStatus() throws ServiceException;
-
+ 
 	/**
 	 * 获取转运订单
 	 * 
