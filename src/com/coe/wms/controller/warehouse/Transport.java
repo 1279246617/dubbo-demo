@@ -27,6 +27,7 @@ import com.coe.wms.model.warehouse.transport.FirstWaybillItem;
 import com.coe.wms.model.warehouse.transport.FirstWaybillOnShelf;
 import com.coe.wms.model.warehouse.transport.FirstWaybillStatus;
 import com.coe.wms.model.warehouse.transport.Order;
+import com.coe.wms.model.warehouse.transport.OrderPackage;
 import com.coe.wms.model.warehouse.transport.OrderPackageStatus;
 import com.coe.wms.model.warehouse.transport.OrderStatus;
 import com.coe.wms.model.warehouse.transport.OutWarehousePackage;
@@ -110,6 +111,52 @@ public class Transport {
 		view.addObject("warehouseList", storageService.findAllWarehouse(user.getDefaultWarehouseId()));
 		view.setViewName("warehouse/transport/listOrderPackage");
 		return view;
+	}
+
+	/**
+	 * 获取转运订单
+	 * 
+	 * @param request
+	 * @param response
+	 * @param userLoginName
+	 *            客户登录名,仅当根据跟踪号无法找到订单时,要求输入
+	 * @return
+	 * @throws IOException
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/getOrderPackageData", method = RequestMethod.POST)
+	public String getOrderPackageData(HttpServletRequest request, String sortorder, String sortname, int page, int pagesize, String userLoginName, Long warehouseId, String customerReferenceNo, String createdTimeStart, String createdTimeEnd,
+			String status, String carrierCode) throws IOException {
+		HttpSession session = request.getSession();
+		// 当前操作员
+		Long userIdOfOperator = (Long) session.getAttribute(SessionConstant.USER_ID);
+		Pagination pagination = new Pagination();
+		pagination.curPage = page;
+		pagination.pageSize = pagesize;
+		pagination.sortName = sortname;
+		pagination.sortOrder = sortorder;
+
+		OrderPackage param = new OrderPackage();
+		param.setStatus(status);
+		param.setCarrierCode(carrierCode);
+		// 客户订单号
+		param.setCustomerReferenceNo(customerReferenceNo);
+		// 客户帐号
+		if (StringUtil.isNotNull(userLoginName)) {
+			Long userIdOfCustomer = userService.findUserIdByLoginName(userLoginName);
+			param.setUserIdOfCustomer(userIdOfCustomer);
+		}
+		// 仓库
+		param.setWarehouseId(warehouseId);
+		// 更多参数
+		Map<String, String> moreParam = new HashMap<String, String>();
+		moreParam.put("createdTimeStart", createdTimeStart);
+		moreParam.put("createdTimeEnd", createdTimeEnd);
+		pagination = orderPackageService.getOrderPackageData(param, moreParam, pagination);
+		Map map = new HashMap();
+		map.put("Rows", pagination.rows);
+		map.put("Total", pagination.total);
+		return GsonUtil.toJson(map);
 	}
 
 	/**

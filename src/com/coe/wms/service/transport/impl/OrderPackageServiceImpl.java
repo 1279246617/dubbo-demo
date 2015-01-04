@@ -34,7 +34,7 @@ import com.coe.wms.util.StringUtil;
  * @author Administrator
  * 
  */
-@Service("orderService")
+@Service("orderPackageService")
 public class OrderPackageServiceImpl implements IOrderPackageService {
 
 	private static final Logger logger = Logger.getLogger(OrderPackageServiceImpl.class);
@@ -75,6 +75,9 @@ public class OrderPackageServiceImpl implements IOrderPackageService {
 			map.put("id", orderId);
 			if (order.getCreatedTime() != null) {
 				map.put("createdTime", DateUtil.dateConvertString(new Date(order.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss));
+			}
+			if (order.getReceivedTime() != null) {
+				map.put("receivedTime", DateUtil.dateConvertString(new Date(order.getReceivedTime()), DateUtil.yyyy_MM_ddHHmmss));
 			}
 			map.put("carrierCode", order.getCarrierCode());
 			// 回传收货

@@ -39,6 +39,10 @@ public class OrderPackage implements Serializable {
 	 */
 	private Long createdTime;
 	/**
+	 * 收货时间
+	 */
+	private Long receivedTime;
+	/**
 	 * 客户订单号, 用于客户对该出库指令进行修改,确认等
 	 * 
 	 * 对应 顺丰 tradeOrderId
@@ -82,6 +86,14 @@ public class OrderPackage implements Serializable {
 
 	public String getTrackingNo() {
 		return trackingNo;
+	}
+
+	public Long getReceivedTime() {
+		return receivedTime;
+	}
+
+	public void setReceivedTime(Long receivedTime) {
+		this.receivedTime = receivedTime;
 	}
 
 	public void setTrackingNo(String trackingNo) {
