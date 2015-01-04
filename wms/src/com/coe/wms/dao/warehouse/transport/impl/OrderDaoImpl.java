@@ -44,7 +44,7 @@ public class OrderDaoImpl implements IOrderDao {
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public long saveOrder(final Order order) {
-		final String sql = "insert into w_t_order (warehouse_id,user_id_of_customer,user_id_of_operator,shipway_code,created_time,status,remark,customer_reference_no,out_warehouse_weight,weight_code,trade_remark,tracking_no,transport_type) values (?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		final String sql = "insert into w_t_order (warehouse_id,user_id_of_customer,user_id_of_operator,shipway_code,created_time,status,remark,customer_reference_no,out_warehouse_weight,weight_code,trade_remark,tracking_no,transport_type,trade_type) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
@@ -71,6 +71,7 @@ public class OrderDaoImpl implements IOrderDao {
 				ps.setString(11, order.getTradeRemark());
 				ps.setString(12, order.getTrackingNo());
 				ps.setString(13, order.getTransportType());
+				ps.setString(14, order.getTradeType());
 				return ps;
 			}
 		}, keyHolder);
@@ -80,7 +81,7 @@ public class OrderDaoImpl implements IOrderDao {
 
 	@Override
 	public Order getOrderById(Long orderId) {
-		String sql = "select id,warehouse_id,user_id_of_customer,user_id_of_operator,shipway_code,created_time,status,remark,customer_reference_no,callback_send_weight_is_success,callback_send_weigh_count,callback_send_status_is_success,callback_send_status_count,out_warehouse_weight,weight_code,trade_remark,tracking_no,callback_send_check_is_success,callback_send_check_count,check_result,transport_type,shipway_extra1,shipway_extra2 from w_t_order where id ="
+		String sql = "select id,warehouse_id,user_id_of_customer,user_id_of_operator,shipway_code,created_time,status,remark,customer_reference_no,callback_send_weight_is_success,callback_send_weigh_count,callback_send_status_is_success,callback_send_status_count,out_warehouse_weight,weight_code,trade_remark,tracking_no,callback_send_check_is_success,callback_send_check_count,check_result,transport_type,shipway_extra1,shipway_extra2,trade_type from w_t_order where id ="
 				+ orderId;
 		List<Order> OrderList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(Order.class));
 		if (OrderList != null && OrderList.size() > 0) {
@@ -96,7 +97,7 @@ public class OrderDaoImpl implements IOrderDao {
 	@Override
 	public List<Order> findOrder(Order order, Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select id,warehouse_id,user_id_of_customer,user_id_of_operator,shipway_code,created_time,status,remark,customer_reference_no,callback_send_weight_is_success,callback_send_weigh_count,callback_send_status_is_success,callback_send_status_count,out_warehouse_weight,weight_code,trade_remark,tracking_no,callback_send_check_is_success,callback_send_check_count,check_result,transport_type,shipway_extra1,shipway_extra2 from w_t_order where 1=1 ");
+		sb.append("select id,warehouse_id,user_id_of_customer,user_id_of_operator,shipway_code,created_time,status,remark,customer_reference_no,callback_send_weight_is_success,callback_send_weigh_count,callback_send_status_is_success,callback_send_status_count,out_warehouse_weight,weight_code,trade_remark,tracking_no,callback_send_check_is_success,callback_send_check_count,check_result,transport_type,shipway_extra1,shipway_extra2,trade_type from w_t_order where 1=1 ");
 		// 按单号 批量查询 开始---------------
 		if (moreParam != null && StringUtil.isNotNull(moreParam.get("nos"))) {
 			String noType = moreParam.get("noType");
@@ -179,6 +180,9 @@ public class OrderDaoImpl implements IOrderDao {
 				}
 				if (StringUtil.isNotNull(order.getTransportType())) {
 					sb.append(" and transport_type = '" + order.getTransportType() + "' ");
+				}
+				if (StringUtil.isNotNull(order.getTradeType())) {
+					sb.append(" and trade_type = '" + order.getTradeType() + "' ");
 				}
 			}
 			if (moreParam != null) {
@@ -291,6 +295,9 @@ public class OrderDaoImpl implements IOrderDao {
 				}
 				if (StringUtil.isNotNull(order.getTransportType())) {
 					sb.append(" and transport_type = '" + order.getTransportType() + "' ");
+				}
+				if (StringUtil.isNotNull(order.getTradeType())) {
+					sb.append(" and trade_type = '" + order.getTradeType() + "' ");
 				}
 			}
 			if (moreParam != null) {

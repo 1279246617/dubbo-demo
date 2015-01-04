@@ -11,9 +11,7 @@ import java.io.Serializable;
  * 
  * 回传出库以大包为单位
  * 
- * TransportPackage
- * TransportOrder
- * TransportFirstWaybill
+ * TransportPackage TransportOrder TransportFirstWaybill
  * TransportFirstWaybillItem
  */
 public class Order implements Serializable {
@@ -110,6 +108,12 @@ public class Order implements Serializable {
 	 * 转运类型:Z: 直接转运, J:集货转运
 	 */
 	private String transportType;
+	/**
+	 * 交易类型 顺丰专用; 用于区分:海淘;流连
+	 * 
+	 * LiuLian 流连 HaiTao 海淘 HeiKe 嘿客
+	 */
+	private String tradeType;
 
 	public String getCheckResult() {
 		return checkResult;
@@ -194,6 +198,14 @@ public class Order implements Serializable {
 
 	public void setShipwayExtra1(String shipwayExtra1) {
 		this.shipwayExtra1 = shipwayExtra1;
+	}
+
+	public String getTradeType() {
+		return tradeType;
+	}
+
+	public void setTradeType(String tradeType) {
+		this.tradeType = tradeType;
 	}
 
 	public String getShipwayExtra2() {

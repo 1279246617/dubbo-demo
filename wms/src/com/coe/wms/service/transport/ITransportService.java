@@ -26,7 +26,7 @@ import com.coe.wms.util.Pagination;
 public interface ITransportService {
 
 	static final Logger logger = Logger.getLogger(ITransportService.class);
-
+	
 	/**
 	 * 创建转运订单
 	 * 
@@ -35,7 +35,7 @@ public interface ITransportService {
 	 * @return
 	 */
 	public String warehouseInterfaceSaveTransportOrder(EventBody eventBody, Long userIdOfCustomer, String warehouseNo) throws ServiceException;
-
+ 
 	/**
 	 * 转运订单确认出库
 	 * 
