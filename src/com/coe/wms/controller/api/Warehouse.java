@@ -127,7 +127,6 @@ public class Warehouse {
 			if (StringUtil.isEqualIgnoreCase(EventType.LOGISTICS_SEND_GOODS, eventType)) { // 转运确认出库
 				responseXml = transportService.warehouseInterfaceConfirmTransportOrder(eventBody, userIdOfCustomer, eventTarget);
 			}
-
 			logger.warn("eventType:" + eventType + "  responseXml:" + responseXml);
 			return responseXml;
 		} catch (Exception e) {

@@ -182,6 +182,7 @@ public class TransportServiceImpl implements ITransportService {
 			return XmlUtil.toXml(responses);
 		}
 		List<TradeOrder> tradeOrderList = tradeDetail.getTradeOrders();
+		String tradeType = tradeDetail.getTradeType();// 交易类型. 用于区分流连还是海淘
 		if (tradeOrderList == null || tradeOrderList.size() == 0) {
 			response.setReason(ErrorCode.S01_CODE);
 			response.setReasonDesc("TradeDetail对象获取TradeOrders对象得到Null");
@@ -248,6 +249,7 @@ public class TransportServiceImpl implements ITransportService {
 		}
 		// 创建大包
 		Order order = new Order();
+		order.setTradeType(tradeType);
 		order.setCreatedTime(System.currentTimeMillis());
 		order.setCustomerReferenceNo(customerReferenceNo);
 		order.setTradeRemark(tradeRemark);

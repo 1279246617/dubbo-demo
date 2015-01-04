@@ -45,6 +45,8 @@ public class LogisticsOrder implements Serializable {
 
 	private String logisticsRemark;
 
+	private String needCheck;
+	
 	private String logisticsCode;
 
 	private SenderDetail senderDetail;
@@ -87,6 +89,14 @@ public class LogisticsOrder implements Serializable {
 
 	public String getLogisticsRemark() {
 		return logisticsRemark;
+	}
+
+	public String getNeedCheck() {
+		return needCheck;
+	}
+
+	public void setNeedCheck(String needCheck) {
+		this.needCheck = needCheck;
 	}
 
 	public String getItemsIncluded() {
