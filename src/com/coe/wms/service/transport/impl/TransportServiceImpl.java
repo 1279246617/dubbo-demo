@@ -205,6 +205,7 @@ public class TransportServiceImpl implements ITransportService {
 		TradeOrder tradeOrder = tradeOrderList.get(0);
 		// 客户订单号
 		String customerReferenceNo = tradeOrder.getTradeOrderId();
+		String tradeRemark = tradeOrder.getTradeRemark();
 		if (StringUtil.isNull(customerReferenceNo)) {
 			response.setReason(ErrorCode.S01_CODE);
 			response.setReasonDesc("TradeOrder对象获取tradeOrderId得到Null");
@@ -248,6 +249,7 @@ public class TransportServiceImpl implements ITransportService {
 		orderPackage.setWarehouseId(warehouseId);
 		orderPackage.setCarrierCode(logisticsOrderFirst.getCarrierCode());
 		orderPackage.setTrackingNo(logisticsOrderFirst.getMailNo());
+		orderPackage.setRemark(tradeRemark);
 		orderPackageDao.saveOrderPackage(orderPackage);// 保存大包,得到大包id
 		response.setSuccess(Constant.TRUE);
 		return XmlUtil.toXml(responses);

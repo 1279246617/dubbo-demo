@@ -33,12 +33,6 @@
 				       		</c:forEach>
 						</select>
                		</span>
-               		
-               		<span class="pull-left" style="width:145px;">
-               			承运商
-               			<input type="text" name="carrierCode"   id="carrierCode" style="width:85px;" title="请输入到货承运商" />
-               		</span>
-               		
                		<span class="pull-left" style="width:120px;">
                			状态
                			<select style="width:80px;" id="status" name="status">
@@ -58,6 +52,10 @@
 						客户订单号
 						<input type="text"  name="customerReferenceNo"  id="customerReferenceNo"   style="width:90px;"/>
 					</span>
+               		<span class="pull-left" style="width:155px;">
+               			跟踪单号
+               			<input type="text" name="trackingNo"   id="trackingNo" style="width:90px;" title="请输入到货跟踪单号" />
+               		</span>
                		<span class="pull-left" style="width:175px;">
                			创建时间
 	               		<input type="text"   style="width:120px;" name="createdTimeStart" id="createdTimeStart" title="起始创建时间">
@@ -143,7 +141,7 @@
 	                sortOrder: 'desc',
 	                width: '100%',
 	                height: '99%',
-	                checkbox: true,
+	                checkbox: false,
 	                rownumbers:true,
 	                alternatingRow:true,
 	                minColToggle:20,
