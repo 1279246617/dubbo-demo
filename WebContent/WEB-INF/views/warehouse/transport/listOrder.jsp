@@ -180,7 +180,8 @@
 	    	 grid = $("#maingrid").ligerGrid({
 	                columns: [
 	                    { display: '客户帐号', name: 'userNameOfCustomer', align: 'center',type:'float',width:'9%'},
-	  		          	{ display: '客户订单号', name: 'customerReferenceNo', align: 'center', type: 'float',width:'14%'},
+	  		          	{ display: '客户订单号', name: 'customerReferenceNo', align: 'center', type: 'float',width:'12%'},
+	  		          	{ display: '客户订单类型', name: 'tradeType', align: 'center', type: 'float',width:'10%'},
 		                { display: '仓库', name: 'warehouse', align: 'center', type: 'float',width:'8%'},
 		                { display: '状态', name: 'status', align: 'center', type: 'float',width:'8%'},
 		                { display: '转运类型', name: 'transportType', align: 'center', type: 'float',width:'8%'},

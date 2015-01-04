@@ -215,6 +215,7 @@ public class OrderServiceImpl implements IOrderService {
 			// 查询用户名
 			User user = userDao.getUserById(order.getUserIdOfCustomer());
 			map.put("userNameOfCustomer", user.getLoginName());
+
 			map.put("customerReferenceNo", order.getCustomerReferenceNo());
 			if (NumberUtil.greaterThanZero(order.getWarehouseId())) {
 				Warehouse warehouse = warehouseDao.getWarehouseById(order.getWarehouseId());
@@ -230,6 +231,7 @@ public class OrderServiceImpl implements IOrderService {
 			}
 			map.put("remark", order.getRemark());
 			map.put("trackingNo", order.getTrackingNo());
+			map.put("tradeType", order.getTradeType());
 			OrderStatus orderStatus = orderStatusDao.findOrderStatusByCode(order.getStatus());
 			if (orderStatus != null) {
 				map.put("status", orderStatus.getCn());

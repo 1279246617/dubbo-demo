@@ -62,7 +62,7 @@ public class OrderPackage implements Serializable {
 
 	private String callbackSendStatusIsSuccess;
 
-	private String callbackSendStatusCount;
+	private Integer callbackSendStatusCount;
 
 	public Long getId() {
 		return id;
@@ -132,11 +132,11 @@ public class OrderPackage implements Serializable {
 		this.callbackSendStatusIsSuccess = callbackSendStatusIsSuccess;
 	}
 
-	public String getCallbackSendStatusCount() {
+	public Integer getCallbackSendStatusCount() {
 		return callbackSendStatusCount;
 	}
 
-	public void setCallbackSendStatusCount(String callbackSendStatusCount) {
+	public void setCallbackSendStatusCount(Integer callbackSendStatusCount) {
 		this.callbackSendStatusCount = callbackSendStatusCount;
 	}
 
