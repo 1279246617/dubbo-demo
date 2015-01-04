@@ -28,6 +28,12 @@ public class Order implements Serializable {
 	 * 集货转运
 	 */
 	public static final String TRANSPORT_TYPE_J = "J";
+
+	/**
+	 * 流连大包套小包
+	 */
+	public static final String TRANSPORT_TYPE_P = "P";
+
 	/**
 	 * 主键
 	 */

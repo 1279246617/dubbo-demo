@@ -21,8 +21,4 @@ public interface IOrderPackageDao {
 	public String getCustomerReferenceNoById(Long orderPackageId);
 
 	public int updateOrderPackageStatus(Long orderPackageId, String newStatus);
-
-	public List<Long> findCallbackSendStatusUnSuccessOrderPackageId();
-
-	public int updateOrderPackageCallbackSendStatus(OrderPackage orderPackage);
 }

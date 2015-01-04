@@ -435,6 +435,7 @@ public class Transport {
 			}
 			return GsonUtil.toJson(map);
 		}
+
 		map.put("mapList", mapList);
 		if (mapList.size() > 1) {
 			// 找到多个入库订单,返回跟踪号,承运商,参考号,客户等信息供操作员选择
