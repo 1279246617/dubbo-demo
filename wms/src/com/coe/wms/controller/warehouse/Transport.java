@@ -126,7 +126,7 @@ public class Transport {
 	@ResponseBody
 	@RequestMapping(value = "/getOrderPackageData", method = RequestMethod.POST)
 	public String getOrderPackageData(HttpServletRequest request, String sortorder, String sortname, int page, int pagesize, String userLoginName, Long warehouseId, String customerReferenceNo, String createdTimeStart, String createdTimeEnd,
-			String status, String carrierCode) throws IOException {
+			String status, String trackingNo) throws IOException {
 		HttpSession session = request.getSession();
 		// 当前操作员
 		Long userIdOfOperator = (Long) session.getAttribute(SessionConstant.USER_ID);
@@ -135,10 +135,9 @@ public class Transport {
 		pagination.pageSize = pagesize;
 		pagination.sortName = sortname;
 		pagination.sortOrder = sortorder;
-
 		OrderPackage param = new OrderPackage();
 		param.setStatus(status);
-		param.setCarrierCode(carrierCode);
+		param.setTrackingNo(trackingNo);
 		// 客户订单号
 		param.setCustomerReferenceNo(customerReferenceNo);
 		// 客户帐号
