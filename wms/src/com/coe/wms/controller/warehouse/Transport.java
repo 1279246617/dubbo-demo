@@ -27,6 +27,7 @@ import com.coe.wms.model.warehouse.transport.FirstWaybillItem;
 import com.coe.wms.model.warehouse.transport.FirstWaybillOnShelf;
 import com.coe.wms.model.warehouse.transport.FirstWaybillStatus;
 import com.coe.wms.model.warehouse.transport.Order;
+import com.coe.wms.model.warehouse.transport.OrderPackageStatus;
 import com.coe.wms.model.warehouse.transport.OrderStatus;
 import com.coe.wms.model.warehouse.transport.OutWarehousePackage;
 import com.coe.wms.model.warehouse.transport.OutWarehousePackageItem;
@@ -35,6 +36,7 @@ import com.coe.wms.service.storage.IOutWarehouseOrderService;
 import com.coe.wms.service.storage.IStorageService;
 import com.coe.wms.service.storage.IWarehouseInterfaceService;
 import com.coe.wms.service.transport.IFirstWaybillService;
+import com.coe.wms.service.transport.IOrderPackageService;
 import com.coe.wms.service.transport.IOrderService;
 import com.coe.wms.service.transport.ITransportService;
 import com.coe.wms.service.user.IUserService;
@@ -70,6 +72,9 @@ public class Transport {
 	@Resource(name = "orderService")
 	private IOrderService orderService;
 
+	@Resource(name = "orderPackageService")
+	private IOrderPackageService orderPackageService;
+
 	@Resource(name = "userService")
 	private IUserService userService;
 
@@ -81,6 +86,31 @@ public class Transport {
 
 	@Resource(name = "warehouseInterfaceService")
 	private IWarehouseInterfaceService warehouseInterfaceService;
+
+	/**
+	 * 转运大包 查询
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/listOrderPackage", method = RequestMethod.GET)
+	public ModelAndView listOrderPackage(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		HttpSession session = request.getSession();
+		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
+		ModelAndView view = new ModelAndView();
+		view.addObject("userId", userId);
+		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
+		List<OrderPackageStatus> orderPackageStatusList = orderPackageService.findAllOrderPackageStatus();
+		view.addObject("orderPackageStatusList", orderPackageStatusList);
+		List<Shipway> shipwayList = transportService.findAllShipway();
+		view.addObject("shipwayList", shipwayList);
+		User user = userService.getUserById(userId);
+		view.addObject("warehouseList", storageService.findAllWarehouse(user.getDefaultWarehouseId()));
+		view.setViewName("warehouse/transport/listOrderPackage");
+		return view;
+	}
 
 	/**
 	 * 转运订单 查询
