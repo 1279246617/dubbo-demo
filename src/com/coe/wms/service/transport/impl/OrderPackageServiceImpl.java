@@ -96,9 +96,9 @@ public class OrderPackageServiceImpl implements IOrderPackageService {
 					map.put("callbackSendStatusIsSuccess", "成功");
 				} else {
 					if (firstWaybill.getCallbackCount() != null && firstWaybill.getCallbackCount() > 0) {
-						map.put("callbackSendStatusCount", "失败次数:" + firstWaybill.getCallbackCount());
+						map.put("callbackSendStatusIsSuccess", "失败次数:" + firstWaybill.getCallbackCount());
 					} else {
-						map.put("callbackSendStatusCount", "未回传");
+						map.put("callbackSendStatusIsSuccess", "未回传");
 					}
 				}
 			}

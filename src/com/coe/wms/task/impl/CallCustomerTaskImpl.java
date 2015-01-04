@@ -725,8 +725,8 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 				if (responseList != null && responseList.size() > 0) {
 					if (StringUtil.isEqualIgnoreCase(responseList.get(0).getSuccess(), Constant.TRUE)) {
 						firstWaybill.setCallbackIsSuccess(Constant.Y);
-						if (isOrderPackage) {// 如果是转运大包的头程, 发送收货成功后,直接修改为SUCCESS
-							firstWaybill.setStatus(FirstWaybillStatusCode.SUCCESS);
+						if (isOrderPackage) {// 如果是转运大包的头程, 发送收货成功后,直接修改为END
+							firstWaybill.setStatus(FirstWaybillStatusCode.END);
 						} else {
 							firstWaybill.setStatus(FirstWaybillStatusCode.WOS);
 						}
