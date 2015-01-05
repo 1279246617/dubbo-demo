@@ -999,11 +999,33 @@ public class Storage {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/saveInWarehouseRecordItem", method = RequestMethod.POST)
-	public String saveInWarehouseRecordItem(HttpServletRequest request, String itemSku, Integer itemQuantity, String itemRemark, Long warehouseId, String shelvesNo, String seatNo, Long inWarehouseRecordId, String isConfirm) throws IOException {
+	public String saveInWarehouseRecordItem(HttpServletRequest request, String itemSku, Integer itemQuantity, String itemRemark, Long warehouseId, Long inWarehouseRecordId, String isConfirm) throws IOException {
 		// 操作员
 		Long userIdOfOperator = (Long) request.getSession().getAttribute(SessionConstant.USER_ID);
 		// 校验和保存
 		Map<String, String> serviceResult = inWarehouseOrderService.saveInWarehouseRecordItem(itemSku, itemQuantity, itemRemark, warehouseId, inWarehouseRecordId, userIdOfOperator, isConfirm);
+		return GsonUtil.toJson(serviceResult);
+	}
+
+	/**
+	 * 检查收货数量和未收货数量是否一致
+	 * 
+	 * @param request
+	 * @param itemSku
+	 * @param itemQuantity
+	 * @param itemRemark
+	 * @param warehouseId
+	 * @param inWarehouseRecordId
+	 * @return
+	 * @throws IOException
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/checkInWarehouseRecordItem", method = RequestMethod.POST)
+	public String checkInWarehouseRecordItem(HttpServletRequest request, String itemSku, Integer itemQuantity, Long warehouseId, Long inWarehouseRecordId) throws IOException {
+		// 操作员
+		Long userIdOfOperator = (Long) request.getSession().getAttribute(SessionConstant.USER_ID);
+		// 校验和保存
+		Map<String, String> serviceResult = inWarehouseOrderService.checkInWarehouseRecordItem(itemSku, itemQuantity, warehouseId, inWarehouseRecordId, userIdOfOperator);
 		return GsonUtil.toJson(serviceResult);
 	}
 

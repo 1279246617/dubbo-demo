@@ -20,8 +20,10 @@ public interface IInWarehouseOrderItemDao {
 
 	public Long countInWarehouseOrderItem(InWarehouseOrderItem inWarehouseOrderItem, Map<String, String> moreParam);
 
+	public int countInWarehouseOrderItemSkuQuantityByOrderId(Long inWarehouseOrderId, String sku);
+
 	public String getSkuNameByCustomerIdAndSku(String sku, Long userIdOfCustomer);
 
 	public Map<String, Object> findInWarehouseOrderItem(Long itemId);
-	
+
 }

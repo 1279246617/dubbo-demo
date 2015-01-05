@@ -210,6 +210,40 @@ public class InWarehouseOrderServiceImpl implements IInWarehouseOrderService {
 		return mapList;
 	}
 
+	@Override
+	public Map<String, String> checkInWarehouseRecordItem(String itemSku, Integer itemQuantity, Long warehouseId, Long inWarehouseRecordId, Long userIdOfOperator) {
+		Map<String, String> map = new HashMap<String, String>();
+		map.put(Constant.STATUS, Constant.FAIL);
+		if (StringUtil.isNull(itemSku)) {
+			map.put(Constant.MESSAGE, "请输入商品条码.");
+			return map;
+		}
+		itemSku = itemSku.trim();
+		if (itemQuantity == null) {
+			map.put(Constant.MESSAGE, "请输入商品数量.");
+			return map;
+		}
+		Long orderId = inWarehouseRecordDao.getInWarehouseOrderIdByRecordId(inWarehouseRecordId);
+		if (orderId == null) {
+			map.put(Constant.MESSAGE, "找不到入库订单Id.");
+			return map;
+		}
+		// 总数量
+		int totalQuantity = inWarehouseOrderItemDao.countInWarehouseOrderItemSkuQuantityByOrderId(orderId, itemSku);
+		// 该订单的该条码的总已经收货数量
+		int totalReceivedQuantity = inWarehouseRecordItemDao.countInWarehouseItemSkuQuantityByOrderId(orderId, itemSku);
+		// 未收货数量
+		int unReceivedquantity = totalQuantity - totalReceivedQuantity;
+		// 如果本次收货数量大于未收货数量,返回校验失败
+		if (itemQuantity > unReceivedquantity) {
+			map.put(Constant.STATUS, "2");
+			map.put(Constant.MESSAGE, "此条码对应商品未收货数量是:" + unReceivedquantity + ",您确认此次收货数量:" + itemQuantity + "吗?");
+			return map;
+		}
+		map.put(Constant.STATUS, Constant.SUCCESS);
+		return map;
+	}
+
 	/**
 	 * 保存入库明细
 	 */

@@ -243,4 +243,14 @@ public class InWarehouseOrderItemDaoImpl implements IInWarehouseOrderItemDao {
 		this.jdbcTemplate = jdbcTemplate;
 	}
 
+	@Override
+	public int countInWarehouseOrderItemSkuQuantityByOrderId(Long inWarehouseOrderId, String sku) {
+		String sql = "select sum(quantity) from w_s_in_warehouse_order_item where sku = ?  and  order_id = " + inWarehouseOrderId;
+		Long count = jdbcTemplate.queryForObject(sql, Long.class, sku);
+		if (count == null) {
+			return 0;
+		}
+		return count.intValue();
+	}
+
 }
