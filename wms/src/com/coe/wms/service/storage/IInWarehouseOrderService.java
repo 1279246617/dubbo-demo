@@ -45,6 +45,19 @@ public interface IInWarehouseOrderService {
 	public Map<String, String> saveInWarehouseRecordItem(String itemSku, Integer itemQuantity, String itemRemark, Long warehouseId, Long inWarehouseRecordId, Long userIdOfOperator, String isConfirm);
 
 	/**
+	 * 检查收货数量
+	 * @param itemSku
+	 * @param itemQuantity
+	 * @param itemRemark
+	 * @param warehouseId
+	 * @param inWarehouseRecordId
+	 * @param userIdOfOperator
+	 * @return
+	 */
+	public Map<String, String> checkInWarehouseRecordItem(String itemSku, Integer itemQuantity, Long warehouseId, Long inWarehouseRecordId, Long userIdOfOperator);
+	
+	
+	/**
 	 * 获取入库记录物品
 	 * 
 	 * @param inWarehouseRecordId

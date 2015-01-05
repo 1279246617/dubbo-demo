@@ -122,13 +122,43 @@ function saveInWarehouseRecordItem(isConfirm) {
 		$("#itemQuantity").focus();
 		return;
 	}
-	
-	if(itemQuantity >1000 || itemQuantity<-1000){
+	if(itemQuantity >1500 || itemQuantity<-100){
 		var mymes = confirm("你确定输入数量:"+itemQuantity+"吗?");
 		if(mymes != true){
 			return;
 		}
 	}
+	$.ajaxSettings.async = false; 
+	var isReturn = 'N';
+	//检验收货数量和预报数量是否一致,不一致要求确认后才提交 ------------------------------------
+	$.post(baseUrl+ '/warehouse/storage/checkInWarehouseRecordItem.do',{
+		itemSku:itemSku,
+		itemQuantity:itemQuantity,
+		warehouseId:warehouseId,
+		inWarehouseRecordId:inWarehouseRecordId
+	},function(msg) {
+		if(msg.status == 0){	//保存失败,显示提示
+			parent.$.showDialogMessage(msg.message, null, null);
+			$("#itemSku").focus();// 光标移至商品条码
+			focus = "2";
+			return;
+		}
+		if(msg.status == 2){//数量和预报数量不一致显示提示
+			var mymes = confirm(msg.message);
+			if(mymes != true){//取消提交,清空数量
+				$("#itemQuantity").val("");
+				$("#itemQuantity").focus();
+				isReturn = 'Y';
+				return;
+			}
+		}
+	},"json");
+	
+	if(isReturn =='Y'){
+		return;
+	}
+	//检验收货数量和预报数量是否一致,不一致要求确认后才提交 ------------------------------------
+	
 	$.post(baseUrl+ '/warehouse/storage/saveInWarehouseRecordItem.do',{
 		itemSku:itemSku,
 		itemQuantity:itemQuantity,
@@ -164,7 +194,6 @@ function saveInWarehouseRecordItem(isConfirm) {
 			}
 		}
 	},"json");
-     
 }
 
 var oldTrackingNo = "";
