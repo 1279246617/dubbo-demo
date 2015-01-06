@@ -176,8 +176,13 @@
    			}
    		});
    	  }
-	  	  
+	  	
+  	 var isSubmitIng = 'N';
   	  function saveOnShelvesItem(){
+  		  	if(isSubmitIng == 'Y'){
+  		  		return false;
+  		  	}
+  			isSubmitIng = 'Y';
 	  		//在判断跟踪号是否改变前,获取用户选择的入库订单
 	  		var inWarehouseOrderRadio = $('input[name="inWarehouseOrderRadio"]').filter(':checked');
 	  		var recordId = '';
@@ -186,26 +191,31 @@
 	  		}
 	  		if(recordId == ''){
 	  			parent.$.showDialogMessage("请输入正确跟踪单号,并选择一个收货记录", null, null);
+	  			isSubmitIng = 'N';
 	  			return false;
 	  		}
 	  		var itemSku = $("#itemSku").val();
 	  		if(itemSku == null || itemSku ==''){
 	  			parent.$.showShortMessage({msg:"请输入商品条码",animate:false,left:"43%"});
+	  			isSubmitIng = 'N';
 	  			return false;
 	  		}
 	  		var itemQuantity = $("#itemQuantity").val();
 	  		if(itemQuantity == null || itemQuantity ==''){
 	  			parent.$.showShortMessage({msg:"请输入商品数量",animate:false,left:"43%"});
+	  			isSubmitIng = 'N';
 	  			return false;
 	  		}
 	  		var seatCode = $("#seatCode").val();
 	  		if(seatCode == null || seatCode ==''){
 	  			parent.$.showShortMessage({msg:"请输入货位",animate:false,left:"45%"});
+	  			isSubmitIng = 'N';
 	  			return false;
 	  		}
 	  		
 	  		$.post(baseUrl+ '/warehouse/shelves/saveOnShelvesItem.do?itemSku='
 	  				+ itemSku+'&itemQuantity='+itemQuantity+'&seatCode='+seatCode+"&inWarehouseRecordId="+recordId, function(msg) {
+	  			isSubmitIng = 'N';
 	  			if(msg.status == 0){
 	  				//保存失败,显示提示
 	  				parent.$.showShortMessage({msg:msg.message,animate:false,left:"45%"});
