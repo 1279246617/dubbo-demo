@@ -189,12 +189,11 @@ public class Shelves {
 
 	@ResponseBody
 	@RequestMapping(value = "/saveOnShelvesItem", method = RequestMethod.POST)
-	public String saveOnShelvesItem(HttpServletRequest request, String itemSku, Integer itemQuantity, String seatCode, Long inWarehouseRecordId) throws IOException {
+	public synchronized String saveOnShelvesItem(HttpServletRequest request, String itemSku, Integer itemQuantity, String seatCode, Long inWarehouseRecordId) throws IOException {
 		// 操作员
 		Long userIdOfOperator = (Long) request.getSession().getAttribute(SessionConstant.USER_ID);
 		Map<String, String> map = new HashMap<String, String>();
 		map.put(Constant.STATUS, Constant.FAIL);
-		// 校验和保存
 		Map<String, String> serviceResult = shelfService.saveOnShelvesItem(itemSku, itemQuantity, seatCode, inWarehouseRecordId, userIdOfOperator);
 		// 失败
 		if (!StringUtil.isEqual(serviceResult.get(Constant.STATUS), Constant.SUCCESS)) {
@@ -269,7 +268,7 @@ public class Shelves {
 
 	@ResponseBody
 	@RequestMapping(value = "/submitOutShelfItems")
-	public String submitOutShelfItems(HttpServletRequest request, String customerReferenceNo, String outShelfItems) throws IOException {
+	public synchronized String submitOutShelfItems(HttpServletRequest request, String customerReferenceNo, String outShelfItems) throws IOException {
 		logger.info("提交下架:customerReferenceNo:" + customerReferenceNo + " outShelfItems:" + outShelfItems);
 		HttpSession session = request.getSession();
 		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);

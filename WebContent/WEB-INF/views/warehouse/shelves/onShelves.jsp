@@ -197,18 +197,27 @@
 	  		var itemSku = $("#itemSku").val();
 	  		if(itemSku == null || itemSku ==''){
 	  			parent.$.showShortMessage({msg:"请输入商品条码",animate:false,left:"43%"});
+	  			$("#itemSku").focus();
+  				$("#itemSku").select();
+  				focus = "3";
 	  			isSubmitIng = 'N';
 	  			return false;
 	  		}
 	  		var itemQuantity = $("#itemQuantity").val();
 	  		if(itemQuantity == null || itemQuantity ==''){
 	  			parent.$.showShortMessage({msg:"请输入商品数量",animate:false,left:"43%"});
+	  			$("#itemQuantity").focus();
+  				$("#itemQuantity").select();
+  				focus = "4";
 	  			isSubmitIng = 'N';
 	  			return false;
 	  		}
 	  		var seatCode = $("#seatCode").val();
 	  		if(seatCode == null || seatCode ==''){
 	  			parent.$.showShortMessage({msg:"请输入货位",animate:false,left:"45%"});
+	  			$("#seatCode").focus();
+  				$("#seatCode").select();
+  				focus = "2";
 	  			isSubmitIng = 'N';
 	  			return false;
 	  		}

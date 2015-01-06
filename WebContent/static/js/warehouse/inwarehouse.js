@@ -101,7 +101,14 @@ function saveInWarehouseRecordStep2(trackingNoStr,remark,warehouseId) {
 }
 
 //回车事件3 , 保存明细  isConfirm = 是否确认薄库存
+var isSubmitIng = 'N';
 function saveInWarehouseRecordItem(isConfirm) {
+	if(isSubmitIng == 'Y'){
+		alert("您的手太快了,请勿重复点击保存");
+	  	return false;
+	}
+	isSubmitIng = 'Y';
+	
 	//物品明细
 	var itemSku = $("#itemSku").val();
 	var itemQuantity = $("#itemQuantity").val();
@@ -111,26 +118,30 @@ function saveInWarehouseRecordItem(isConfirm) {
 	var inWarehouseRecordId = $("#inWarehouseRecordId").val();
 	if(inWarehouseRecordId==''){
 		parent.$.showDialogMessage("请先输入正确在跟踪单号,按回车,再保存明细",null,null);
+		isSubmitIng = 'N';
 		return;
 	}
 	if(itemSku == ''){
 		parent.$.showShortMessage({msg:"请输入商品条码",animate:false,left:"45%"});
 		$("#itemSku").focus();
+		isSubmitIng = 'N';
 		return;
 	}
 	if(itemQuantity==''){
 		$("#itemQuantity").focus();
+		isSubmitIng = 'N';
 		return;
 	}
 	if(itemQuantity >1500 || itemQuantity<-100){
 		var mymes = confirm("你确定输入数量:"+itemQuantity+"吗?");
 		if(mymes != true){
+			isSubmitIng = 'N';
 			return;
 		}
 	}
 	$.ajaxSettings.async = false; 
 	var isReturn = 'N';
-	//检验收货数量和预报数量是否一致,不一致要求确认后才提交 ------------------------------------
+	//检验收货数量和预报数量是否一致,不一致要求确认后才提交 ------------------------------------开始
 	$.post(baseUrl+ '/warehouse/storage/checkInWarehouseRecordItem.do',{
 		itemSku:itemSku,
 		itemQuantity:itemQuantity,
@@ -155,9 +166,10 @@ function saveInWarehouseRecordItem(isConfirm) {
 	},"json");
 	
 	if(isReturn =='Y'){
+		isSubmitIng = 'N';
 		return;
 	}
-	//检验收货数量和预报数量是否一致,不一致要求确认后才提交 ------------------------------------
+	//检验收货数量和预报数量是否一致,不一致要求确认后才提交 ------------------------------------结束
 	
 	$.post(baseUrl+ '/warehouse/storage/saveInWarehouseRecordItem.do',{
 		itemSku:itemSku,
@@ -167,6 +179,7 @@ function saveInWarehouseRecordItem(isConfirm) {
 		inWarehouseRecordId:inWarehouseRecordId,
 		isConfirm:isConfirm
 	},function(msg) {
+		isSubmitIng = 'N';
 		if(msg.status == 0){
 			//保存失败,显示提示
 			parent.$.showDialogMessage(msg.message, null, null);

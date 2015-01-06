@@ -387,7 +387,7 @@ public class OutWarehouseOrderServiceImpl implements IOutWarehouseOrderService {
 			}
 			// ==========================================================================================================================================================================
 		}
-		map.put(Constant.MESSAGE, "审核通过:" + updateQuantity + "个订单,  审核不通过:" + noUpdateQuantity + "个非待审核状态订单," + notEnougnQuantity + "个库存不足订单");
+		map.put(Constant.MESSAGE, "审核通过:" + updateQuantity + "个订单,  审核不通过:(" + noUpdateQuantity + "个非待审核状态订单," + notEnougnQuantity + "个库存不足订单)");
 		map.put(Constant.STATUS, Constant.SUCCESS);
 		return map;
 	}
