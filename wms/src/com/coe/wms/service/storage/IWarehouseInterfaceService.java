@@ -14,8 +14,6 @@ import com.coe.wms.pojo.api.warehouse.EventBody;
  */
 public interface IWarehouseInterfaceService {
 
-	static final Logger logger = Logger.getLogger(IWarehouseInterfaceService.class);
-
 	/**
 	 * 
 	 * 
