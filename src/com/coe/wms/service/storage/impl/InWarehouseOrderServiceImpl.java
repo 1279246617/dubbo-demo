@@ -286,7 +286,7 @@ public class InWarehouseOrderServiceImpl implements IInWarehouseOrderService {
 				long updateCount = inWarehouseOrderItemDao.saveInWarehouseOrderItemSku(orderItems.get(0).getId(), itemSku);
 				inWarehouseOrderItemList = inWarehouseOrderItemDao.findInWarehouseOrderItem(inWarehouseOrderItemParam, null, null);
 			} else {
-				map.put(Constant.MESSAGE, "该商品条码在此订单中无预报,且不符合薄库存情况,请在下面列表补齐商品条码");
+				map.put(Constant.MESSAGE, "该商品条码在此订单中无预报,且不符合薄库存情况,请补齐商品条码");
 				return map;
 			}
 		}
@@ -295,12 +295,13 @@ public class InWarehouseOrderServiceImpl implements IInWarehouseOrderService {
 		// 查询入库主单信息,用于更新库存
 		InWarehouseRecord inWarehouseRecord = inWarehouseRecordDao.getInWarehouseRecordById(inWarehouseRecordId);
 		Long userIdOfCustomer = inWarehouseRecord.getUserIdOfCustomer();
+
 		// 检查该SKU是否已经存在,已经存在则直接改变数量(同一个入库主单,同一个SKU只允许一个收货明细)
 		InWarehouseRecordItem param = new InWarehouseRecordItem();
 		param.setInWarehouseRecordId(inWarehouseRecordId);
 		param.setSku(itemSku);
 		List<InWarehouseRecordItem> inWarehouseRecordItemList = inWarehouseRecordItemDao.findInWarehouseRecordItem(param, null, null);
-		if (inWarehouseRecordItemList.size() > 0) {
+		if (inWarehouseRecordItemList.size() > 0) {// (同一个入库主单,同一个SKU只允许一个收货明细),更新入库明细数量
 			// 返回入库主单的id
 			Long recordItemId = inWarehouseRecordItemList.get(0).getId();
 			map.put("id", "" + recordItemId);
@@ -653,6 +654,11 @@ public class InWarehouseOrderServiceImpl implements IInWarehouseOrderService {
 			Long warehouseId = (Long) recordItem.get("warehouse_id");
 			Long userIdOfOperator = (Long) recordItem.get("user_id_of_operator");
 			Long userIdOfCustomer = (Long) recordItem.get("user_id_of_customer");
+			Long createdTime = (Long) recordItem.get("created_time");
+			if (createdTime != null) {
+				String time = DateUtil.dateConvertString(new Date(createdTime), DateUtil.yyyy_MM_ddHHmmss);
+				recordItem.put("createdTime", time);
+			}
 			// 查询用户名
 			User userOfOperator = userDao.getUserById(Long.valueOf(userIdOfOperator));
 			recordItem.put("userLoginNameOfOperator", userOfOperator.getLoginName());
@@ -663,7 +669,6 @@ public class InWarehouseOrderServiceImpl implements IInWarehouseOrderService {
 			if (warehouse != null) {
 				recordItem.put("warehouse", warehouse.getWarehouseName());
 			}
-
 			list.add(recordItem);
 		}
 		pagination.total = inWarehouseRecordItemDao.countInWarehouseRecordItemList(moreParam);
