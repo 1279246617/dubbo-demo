@@ -175,16 +175,22 @@
 	  		var sku = $("#sku").val();
 	  		if(sku == null || sku ==''){
 	  			parent.$.showShortMessage({msg:"请输入商品条码",animate:false,left:"43%"});
+	  			$("#sku").focus();
+	  			focus = '3';
 	  			return false;
 	  		}
 	  		var quantity = $("#quantity").val();
 	  		if(quantity == null || quantity ==''){
 	  			parent.$.showShortMessage({msg:"请输入商品数量",animate:false,left:"43%"});
+	  			$("#quantity").focus();
+	  			focus = '4';
 	  			return false;
 	  		}
 	  		var seatCode = $("#seatCode").val();
 	  		if(seatCode == null || seatCode ==''){
 	  			parent.$.showShortMessage({msg:"请输入货位",animate:false,left:"45%"});
+	  			$("#seatCode").focus();
+	  			focus = '2';
 	  			return false;
 	  		}
 	  		var tr = "<tr>";
@@ -197,15 +203,15 @@
 	  		//保存一个sku下架, 重置焦点,进入扫描货位
 	  		$("#seatCode").focus();
   	  }
-		
- 	 var isSubmitIng = 'N';
+  	  
+	  //提交下架	
+ 	  var isSubmitIng = 'N';
   	  function submitOutShelf(){
   	 	if(isSubmitIng == 'Y'){
 		  	return false;
 		}
 		isSubmitIng = 'Y';
-			
-  		var customerReferenceNo  = $("#customerReferenceNo").val();
+  	    var customerReferenceNo  = $("#customerReferenceNo").val();
 		if(customerReferenceNo == null || customerReferenceNo ==''){
 			parent.$.showDialogMessage("请先输入客户订单号", null, null);
 			isSubmitIng = 'N';

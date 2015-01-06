@@ -999,7 +999,7 @@ public class Storage {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/saveInWarehouseRecordItem", method = RequestMethod.POST)
-	public String saveInWarehouseRecordItem(HttpServletRequest request, String itemSku, Integer itemQuantity, String itemRemark, Long warehouseId, Long inWarehouseRecordId, String isConfirm) throws IOException {
+	public synchronized String saveInWarehouseRecordItem(HttpServletRequest request, String itemSku, Integer itemQuantity, String itemRemark, Long warehouseId, Long inWarehouseRecordId, String isConfirm) throws IOException {
 		// 操作员
 		Long userIdOfOperator = (Long) request.getSession().getAttribute(SessionConstant.USER_ID);
 		// 校验和保存
