@@ -50,13 +50,13 @@
            <div class="toolbar1">    
                 <div class="pull-right searchContent">
                		<span class="pull-left" style="width:175px;">
-               			创建时间
-	               		<input type="text"   style="width:120px;" name="createdTimeStart" id="createdTimeStart" title="起始创建时间">
+               			收货时间
+	               		<input type="text"   style="width:120px;" name="createdTimeStart" id="createdTimeStart" title="起始收货时间">
                		</span>
                		
                		<span class="pull-left" style="width:200px;">
                			至	
-               			<input type="text"   style="width:120px;" name="createdTimeEnd"  id="createdTimeEnd"  title="终止创建时间">
+               			<input type="text"   style="width:120px;" name="createdTimeEnd"  id="createdTimeEnd"  title="终止收货时间">
                		</span>
                		
                		<span class="pull-left" style="width:55px;">
@@ -120,17 +120,16 @@
 	     function initGrid() {
 	    	 grid = $("#maingrid").ligerGrid({
 	                columns: [
-							{ display: '客户帐号', name: 'userLoginNameOfCustomer',type:'float',width:'8%'},
-							{ display: '仓库', name: 'warehouse', type: 'float',width:'9%'},
-							{ display: '入库批次号', name: 'batch_no', type: 'int', width:'12%'},
+							{ display: '客户帐号', name: 'userLoginNameOfCustomer',type:'float',width:'7%'},
+							{ display: '仓库', name: 'warehouse', type: 'float',width:'8%'},
+							{ display: '入库批次号', name: 'batch_no', type: 'int', width:'10%'},
 	  	                    { display: '跟踪单号', name: 'tracking_no',type:'float',width:'13%'},
 	  	                  	{ display: '商品条码', name: 'sku',type:'float',width:'13%'},
-	  	                  	{ display: '商品SKU', name: 'sku_no',type:'float',width:'13%'},
-	  	                  	{ display: '入库订单Id', name: 'in_warehouse_order_id',type:'float',width:'8%'},
-	  	                  	{ display: '入库主单Id', name: 'in_warehouse_record_id',type:'float',width:'8%'},
-		  		          	{ display: '本次收货数量', name: 'quantity', type: 'float',width:'8%'},
-			                { display: '入库明细备注', name: 'remark', width:'12%'},
-			                { display: '操作员', name: 'userLoginNameOfOperator',type:'float',width:'9%'}
+	  	                  	{ display: '商品SKU', name: 'sku_no',type:'float',width:'10%'},
+	  	                  	{ display: '操作员', name: 'userLoginNameOfOperator',type:'float',width:'8%'},
+		  		          	{ display: '本次收货数量', name: 'quantity', type: 'float',width:'7%'},
+		  		          	{ display: '收货时间', name: 'createdTime',width:'12%'},
+			            	{ display: '入库明细备注', name: 'remark', width:'12%'}
 		             ],   
 	                dataAction: 'server',
 	                url: baseUrl+'/warehouse/storage/getInWarehouseRecordItemListData.do',
@@ -152,7 +151,6 @@
 	            });
 	        };		
    	</script>
-   	
 	<script type="text/javascript" src="${baseUrl}/static/jquery/jquery.showMessage.js"></script>
 	<script type="text/javascript" src="${baseUrl}/static/ligerui/ligerUI/js/core/base.js"></script>
 	<script type="text/javascript" src="${baseUrl}/static/ligerui/ligerUI/js/plugins/ligeruiPatch.js"></script>
