@@ -197,16 +197,24 @@
 	  		//保存一个sku下架, 重置焦点,进入扫描货位
 	  		$("#seatCode").focus();
   	  }
-	
+		
+ 	 var isSubmitIng = 'N';
   	  function submitOutShelf(){
+  	 	if(isSubmitIng == 'Y'){
+		  	return false;
+		}
+		isSubmitIng = 'Y';
+			
   		var customerReferenceNo  = $("#customerReferenceNo").val();
 		if(customerReferenceNo == null || customerReferenceNo ==''){
 			parent.$.showDialogMessage("请先输入客户订单号", null, null);
+			isSubmitIng = 'N';
  			return false;
 		}
   		$.post(baseUrl+ '/warehouse/shelves/submitOutShelfItems.do?customerReferenceNo='+customerReferenceNo, {
   			outShelfItems:outShelfItems
 		}, function(map) {
+			isSubmitIng = 'N';
 			if(map.status == 0){
 				parent.$.showDialogMessage(map.message, null, null);
 				sound();
