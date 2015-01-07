@@ -14,6 +14,7 @@ public interface IOutWarehouseOrderItemShelfDao {
 
 	public int saveBatchOutWarehouseOrderItemShelfWithOrderId(List<OutWarehouseOrderItemShelf> itemList, Long orderId);
 
-	public List<OutWarehouseOrderItemShelf> findOutWarehouseOrderItemShelf(OutWarehouseOrderItemShelf outWarehouseOrderItem,
-			Map<String, String> moreParam, Pagination page);
+	public List<OutWarehouseOrderItemShelf> findOutWarehouseOrderItemShelf(OutWarehouseOrderItemShelf outWarehouseOrderItem, Map<String, String> moreParam, Pagination page);
+
+	public Long countOutWarehouseOrderItemShelf(OutWarehouseOrderItemShelf outWarehouseOrderItem, Map<String, String> moreParam);
 }
