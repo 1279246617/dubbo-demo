@@ -22,6 +22,8 @@ public interface IOutWarehouseOrderDao {
 
 	public String getOutWarehouseOrderStatus(Long orderId);
 
+	public String getOutWarehouseOrderTrackingNo(Long orderId);
+
 	public List<Long> findCallbackSendWeightUnSuccessOrderId();
 
 	public List<Long> findCallbackSendStatusUnSuccessOrderId();
