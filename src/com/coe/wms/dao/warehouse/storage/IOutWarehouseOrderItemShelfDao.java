@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderItemShelf;
+import com.coe.wms.model.warehouse.storage.record.InWarehouseRecord;
 import com.coe.wms.util.Pagination;
 
 public interface IOutWarehouseOrderItemShelfDao {
@@ -15,6 +16,8 @@ public interface IOutWarehouseOrderItemShelfDao {
 	public int saveBatchOutWarehouseOrderItemShelfWithOrderId(List<OutWarehouseOrderItemShelf> itemList, Long orderId);
 
 	public List<OutWarehouseOrderItemShelf> findOutWarehouseOrderItemShelf(OutWarehouseOrderItemShelf outWarehouseOrderItem, Map<String, String> moreParam, Pagination page);
+
+	public int updateOutWarehouseOrderItemShelfStatus(Long id, String newStatus);
 
 	public Long countOutWarehouseOrderItemShelf(OutWarehouseOrderItemShelf outWarehouseOrderItem, Map<String, String> moreParam);
 }

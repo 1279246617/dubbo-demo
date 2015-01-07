@@ -41,11 +41,14 @@ import com.coe.wms.dao.warehouse.storage.IOutWarehouseRecordDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseRecordItemDao;
 import com.coe.wms.dao.warehouse.storage.IReportDao;
 import com.coe.wms.dao.warehouse.storage.IReportTypeDao;
+import com.coe.wms.exception.ServiceException;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrder;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderItemShelf;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus.OutWarehouseOrderStatusCode;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecord;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecordItem;
+import com.coe.wms.model.warehouse.storage.record.ItemShelfInventory;
+import com.coe.wms.model.warehouse.storage.record.OutShelf;
 import com.coe.wms.service.inventory.IShelfService;
 import com.coe.wms.service.storage.IScannerService;
 import com.coe.wms.util.Config;
@@ -320,15 +323,64 @@ public class ScannerServiceImpl implements IScannerService {
 			return response;
 		}
 		List<OutWarehouseOrderItemShelf> outWarehouseOrderItemShelfList = outWarehouseOrderItemShelfDao.findOutWarehouseOrderItemShelf(outWarehouseOrderItemShelfParam, null, null);
-		OutWarehouseOrderItemShelf outWarehouseOrderItemShelf = outWarehouseOrderItemShelfList.get(0);
-		if (outWarehouseOrderItemShelf.getQuantity() != Integer.valueOf(quantity)) {
+		OutWarehouseOrderItemShelf oItemShelf = outWarehouseOrderItemShelfList.get(0);
+		if (StringUtil.isEqual(oItemShelf.getIsDone(), Constant.Y)) {
+			response.setMessage("此订单的此商品已下架,请勿重复下架");
+			response.setReason(ErrorCode.B00_CODE);
+			return response;
+		}
+
+		if (oItemShelf.getQuantity() != Integer.valueOf(quantity)) {
 			response.setMessage("商品数量错误,,请查看捡货单的商品数量");
 			response.setReason(ErrorCode.B00_CODE);
 			return response;
 		}
-		
-//		outWarehouseOrderItemShelf
-		
-		return null;
+
+		// 更改预分配货物状态
+		outWarehouseOrderItemShelfDao.updateOutWarehouseOrderItemShelfStatus(oItemShelf.getId(), Constant.Y);
+		// 添加下架记录
+		OutShelf outShelf = new OutShelf();
+		outShelf.setBatchNo(oItemShelf.getBatchNo());
+		outShelf.setCreatedTime(System.currentTimeMillis());
+		outShelf.setCustomerReferenceNo(orderId);
+		outShelf.setOutWarehouseOrderId(outWarehouseOrder.getId());
+		outShelf.setQuantity(Integer.valueOf(oItemShelf.getQuantity()));
+		outShelf.setSeatCode(oItemShelf.getSeatCode());
+		outShelf.setSku(oItemShelf.getSku());
+		outShelf.setUserIdOfCustomer(outWarehouseOrder.getUserIdOfCustomer());
+		outShelf.setUserIdOfOperator(userIdOfOperator);
+		outShelf.setWarehouseId(outWarehouseOrder.getWarehouseId());
+		outShelfDao.saveOutShelf(outShelf);
+
+		// 改变库位库存(ItemShelfInventory) ,不改变仓库sku库存(出货时改变ItemInventory)
+		ItemShelfInventory itemShelfInventoryParam = new ItemShelfInventory();
+		itemShelfInventoryParam.setBatchNo(oItemShelf.getBatchNo());
+		itemShelfInventoryParam.setSeatCode(oItemShelf.getSeatCode());
+		itemShelfInventoryParam.setSku(oItemShelf.getSku());
+		itemShelfInventoryParam.setWarehouseId(outWarehouseOrder.getWarehouseId());
+		itemShelfInventoryParam.setUserIdOfCustomer(outWarehouseOrder.getUserIdOfCustomer());
+		List<ItemShelfInventory> itemShelfInventoryList = itemShelfInventoryDao.findItemShelfInventory(itemShelfInventoryParam, null, null);
+		if (itemShelfInventoryList == null || itemShelfInventoryList.size() <= 0) {
+			throw new ServiceException("找不到库位库存记录,条码:" + oItemShelf.getSku() + " 货位:" + oItemShelf.getSeatCode());
+		}
+		ItemShelfInventory itemShelfInventory = itemShelfInventoryList.get(0);
+		int outQuantity = outShelf.getQuantity();// 更新货位库存数量
+		itemShelfInventoryDao.updateItemShelfInventoryQuantity(itemShelfInventory.getId(), itemShelfInventory.getQuantity() - outQuantity);
+		// 查找订单的预下架记录是否都已完成
+		OutWarehouseOrderItemShelf oIshelfParam = new OutWarehouseOrderItemShelf();
+		oIshelfParam.setOutWarehouseOrderId(outWarehouseOrder.getId());
+		List<OutWarehouseOrderItemShelf> oIshelfList = outWarehouseOrderItemShelfDao.findOutWarehouseOrderItemShelf(oIshelfParam, null, null);
+		boolean isDone = true;
+		for (OutWarehouseOrderItemShelf temp : oIshelfList) {
+			if (StringUtil.isEqual(temp.getIsDone(), Constant.N)) {
+				isDone = false;
+				break;
+			}
+		}
+		if (isDone) { // 更新订单状态为称重
+			outWarehouseOrderDao.updateOutWarehouseOrderStatus(outWarehouseOrder.getId(), OutWarehouseOrderStatusCode.WWW);
+		}
+		response.setSuccess(true);
+		return response;
 	}
 }

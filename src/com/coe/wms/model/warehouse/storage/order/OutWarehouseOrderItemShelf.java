@@ -1,8 +1,10 @@
 package com.coe.wms.model.warehouse.storage.order;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import com.coe.wms.util.Constant;
+import com.coe.wms.util.DateUtil;
 
 /**
  * 出库详情单,打印捡货单时生成的货位信息

@@ -38,6 +38,7 @@ import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderSenderDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderStatusDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseRecordDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseRecordItemDao;
+import com.coe.wms.exception.ServiceException;
 import com.coe.wms.model.product.Product;
 import com.coe.wms.model.user.User;
 import com.coe.wms.model.warehouse.Seat;
@@ -368,8 +369,12 @@ public class ShelfServiceImpl implements IShelfService {
 			int subQuantity = -1;
 			for (OutWarehouseOrderItemShelf oItemShelf : outWarehouseOrderItemShelfList) {
 				if (StringUtil.isEqualIgnoreCase(seatCode, oItemShelf.getSeatCode()) && StringUtil.isEqualIgnoreCase(sku, oItemShelf.getSku())) {
-					// 库位号和sku相同,数量相减,最后outWarehouseOrderItemShelfList的内容数量都等于0
-					subQuantity = oItemShelf.getQuantity() - Integer.valueOf(quantity);
+					if (StringUtil.isEqual(oItemShelf.getIsDone(), Constant.Y)) {// 如果该商品已下架
+						map.put(Constant.MESSAGE, "此订单的商品条码:" + sku + "货位:" + seatCode + "已经下架,请勿重复下架");
+						return map;
+					} else {
+						subQuantity = oItemShelf.getQuantity() - Integer.valueOf(quantity);// 库位号和sku相同,数量相减
+					}
 					break;
 				}
 			}
@@ -379,8 +384,12 @@ public class ShelfServiceImpl implements IShelfService {
 				return map;
 			}
 		}
+
 		// 下架准确,开始执行下架
 		for (OutWarehouseOrderItemShelf oItemShelf : outWarehouseOrderItemShelfList) {
+			if (StringUtil.isEqual(oItemShelf.getIsDone(), Constant.Y)) {
+				continue;
+			}
 			OutShelf outShelf = new OutShelf();
 			outShelf.setBatchNo(oItemShelf.getBatchNo());
 			outShelf.setCreatedTime(System.currentTimeMillis());
@@ -393,8 +402,9 @@ public class ShelfServiceImpl implements IShelfService {
 			outShelf.setUserIdOfOperator(userIdOfOperator);
 			outShelf.setWarehouseId(outWarehouseOrder.getWarehouseId());
 			outShelfDao.saveOutShelf(outShelf);
+			// 更改预分配货物状态
+			outWarehouseOrderItemShelfDao.updateOutWarehouseOrderItemShelfStatus(oItemShelf.getId(), Constant.Y);
 			// 改变库位库存(ItemShelfInventory) ,不改变仓库sku库存(出货时改变ItemInventory)
-
 			ItemShelfInventory itemShelfInventoryParam = new ItemShelfInventory();
 			itemShelfInventoryParam.setBatchNo(oItemShelf.getBatchNo());
 			itemShelfInventoryParam.setSeatCode(oItemShelf.getSeatCode());
@@ -402,21 +412,15 @@ public class ShelfServiceImpl implements IShelfService {
 			itemShelfInventoryParam.setWarehouseId(outWarehouseOrder.getWarehouseId());
 			itemShelfInventoryParam.setUserIdOfCustomer(outWarehouseOrder.getUserIdOfCustomer());
 			List<ItemShelfInventory> itemShelfInventoryList = itemShelfInventoryDao.findItemShelfInventory(itemShelfInventoryParam, null, null);
-			if (itemShelfInventoryList != null && itemShelfInventoryList.size() > 0) {
-				ItemShelfInventory itemShelfInventory = itemShelfInventoryList.get(0);
-				int outQuantity = outShelf.getQuantity();
-				itemShelfInventoryDao.updateItemShelfInventoryQuantity(itemShelfInventory.getId(), itemShelfInventory.getQuantity() - outQuantity);
-				int updateCount = outWarehouseOrderDao.updateOutWarehouseOrderStatus(outWarehouseOrder.getId(), OutWarehouseOrderStatusCode.WWW);
-				if (updateCount > 0) {
-					map.put(Constant.STATUS, Constant.SUCCESS);
-				} else {
-					map.put(Constant.MESSAGE, "执行数据库更新失败,请重试保存");// 待添加事务回滚
-				}
-			} else {
-				map.put(Constant.MESSAGE, "找不到库位库存记录,出库订单Id:" + outWarehouseOrder.getId());// 待添加事务回滚
-				// ServiceException("找不到库位库存记录,出库订单Id:"+outWarehouseOrder.getId());
+			if (itemShelfInventoryList == null || itemShelfInventoryList.size() <= 0) {
+				throw new ServiceException("找不到库位库存记录,条码:" + oItemShelf.getSku() + " 货位:" + oItemShelf.getSeatCode());
 			}
+			ItemShelfInventory itemShelfInventory = itemShelfInventoryList.get(0);
+			int outQuantity = outShelf.getQuantity();
+			itemShelfInventoryDao.updateItemShelfInventoryQuantity(itemShelfInventory.getId(), itemShelfInventory.getQuantity() - outQuantity);
 		}
+		outWarehouseOrderDao.updateOutWarehouseOrderStatus(outWarehouseOrder.getId(), OutWarehouseOrderStatusCode.WWW);
+		map.put(Constant.STATUS, Constant.SUCCESS);
 		return map;
 	}
 
