@@ -1,5 +1,8 @@
 package com.coe.wms.service.storage.impl;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -38,6 +41,8 @@ import com.coe.wms.dao.warehouse.storage.IOutWarehouseRecordDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseRecordItemDao;
 import com.coe.wms.dao.warehouse.storage.IReportDao;
 import com.coe.wms.dao.warehouse.storage.IReportTypeDao;
+import com.coe.wms.model.warehouse.storage.record.InWarehouseRecord;
+import com.coe.wms.service.inventory.IShelfService;
 import com.coe.wms.service.storage.IScannerService;
 import com.coe.wms.util.Config;
 import com.coe.wms.util.GsonUtil;
@@ -143,6 +148,9 @@ public class ScannerServiceImpl implements IScannerService {
 	@Resource(name = "shipwayDao")
 	private IShipwayDao shipwayDao;
 
+	@Resource(name = "shelfService")
+	private IShelfService shelfService;
+
 	@Override
 	public Response getOrderId(String content, Long userIdOfOperator) {
 		Response response = new Response();
@@ -154,8 +162,28 @@ public class ScannerServiceImpl implements IScannerService {
 			response.setReason(ErrorCode.B00_CODE);
 			return response;
 		}
-		
-		return null;
+		// 上架,根据跟踪单号查询收货记录
+		InWarehouseRecord param = new InWarehouseRecord();
+		param.setTrackingNo(trackingNo);
+		List<Map<String, String>> mapList = shelfService.checkInWarehouseRecord(param);
+		if (mapList.size() < 1) {
+			response.setMessage("该单号无收货记录,请先进行入库订单收货");
+			response.setReason(ErrorCode.B00_CODE);
+			return response;
+		}
+		List<Map<String, String>> mapList2 = new ArrayList<Map<String, String>>();
+		for (Map<String, String> map1 : mapList) {
+			Map<String, String> map2 = new HashMap<String, String>();
+			map2.put("trackingNo", trackingNo);
+			map2.put("orderId", map1.get("recordId"));// 收货记录id
+			String description = "收货时间:" + map1.get("createdTime") + "  状态:" + map1.get("status");
+			map2.put("description", description);
+			mapList2.add(map2);
+		}
+		String message = GsonUtil.toJson(mapList2);
+		response.setMessage(message);
+		response.setSuccess(true);
+		return response;
 	}
 
 	@Override
