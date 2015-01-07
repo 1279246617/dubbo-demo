@@ -40,7 +40,6 @@ import com.coe.wms.dao.warehouse.storage.IReportDao;
 import com.coe.wms.dao.warehouse.storage.IReportTypeDao;
 import com.coe.wms.service.storage.IScannerService;
 import com.coe.wms.util.Config;
-import com.coe.wms.util.Constant;
 import com.coe.wms.util.GsonUtil;
 import com.coe.wms.util.StringUtil;
 
@@ -151,11 +150,11 @@ public class ScannerServiceImpl implements IScannerService {
 		Map<String, String> map = (Map<String, String>) GsonUtil.toObject(content, Map.class);
 		String trackingNo = map.get("trackingNo");// 跟踪单号
 		if (StringUtil.isNull(trackingNo)) {
-			response.setMessage(loginResult.get(Constant.MESSAGE));
-			response.setReason(ErrorCode.S06_CODE);
+			response.setMessage("跟踪单号不能为空");
+			response.setReason(ErrorCode.B00_CODE);
 			return response;
 		}
-
+		
 		return null;
 	}
 
