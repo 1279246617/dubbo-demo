@@ -16,6 +16,8 @@ public interface IInWarehouseRecordItemDao {
 
 	public List<InWarehouseRecordItem> findInWarehouseRecordItem(InWarehouseRecordItem inWarehouseRecord, Map<String, String> moreParam, Pagination page);
 
+	public List<String> findInWarehouseBatchNo(InWarehouseRecordItem inWarehouseRecordItem);
+
 	public Long countInWarehouseRecordItem(InWarehouseRecordItem inWarehouseRecordItem, Map<String, String> moreParam);
 
 	public int countInWarehouseItemSkuQuantityByRecordId(Long inWarehouseRecordId, String sku);

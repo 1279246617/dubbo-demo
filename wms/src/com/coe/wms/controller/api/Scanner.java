@@ -5,6 +5,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -13,6 +14,7 @@ import com.coe.scanner.pojo.ErrorCode;
 import com.coe.scanner.pojo.MessageType;
 import com.coe.scanner.pojo.Response;
 import com.coe.wms.service.storage.IScannerService;
+import com.coe.wms.service.storage.impl.ScannerServiceImpl;
 import com.coe.wms.service.user.IUserService;
 import com.coe.wms.util.Constant;
 import com.coe.wms.util.GsonUtil;
@@ -29,6 +31,8 @@ public class Scanner {
 	@Resource(name = "userService")
 	private IUserService userService;
 
+	private static final Logger logger = Logger.getLogger(Scanner.class);
+
 	@ResponseBody
 	@RequestMapping(value = "/interface")
 	public String scanner(HttpServletRequest request) {
@@ -43,7 +47,7 @@ public class Scanner {
 			String messageType = request.getParameter("messageType");
 			// 数字签名
 			// String sign = request.getParameter("sign");
-
+			logger.info("request:" + content + "  :" + messageType);
 			Response response = new Response();
 			response.setSuccess(false);
 			// 验证帐号密码
@@ -77,8 +81,11 @@ public class Scanner {
 			if (StringUtil.isEqualIgnoreCase(messageType, MessageType.OUT_SHELF)) {
 				response = scannerService.outShelf(content, userIdOfOperator);
 			}
-			return GsonUtil.toJson(response);
+			String json = GsonUtil.toJson(response);
+			logger.info("response:" + json);
+			return json;
 		} catch (Exception e) {
+			e.printStackTrace();
 			Response response = new Response();
 			response.setMessage(ErrorCode.S04);
 			response.setReason(ErrorCode.S04_CODE);
