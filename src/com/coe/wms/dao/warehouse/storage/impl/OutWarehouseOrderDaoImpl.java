@@ -404,4 +404,10 @@ public class OutWarehouseOrderDaoImpl implements IOutWarehouseOrderDao {
 		String sql = "update w_s_out_warehouse_order set tracking_no= ?,shipway_extra1=?,shipway_extra2=? where id=?";
 		return jdbcTemplate.update(sql, outWarehouseOrder.getTrackingNo(), outWarehouseOrder.getShipwayExtra1(), outWarehouseOrder.getShipwayExtra2(), outWarehouseOrder.getId());
 	}
+
+	@Override
+	public String getOutWarehouseOrderTrackingNo(Long orderId) {
+		String sql = "select tracking_no from w_s_out_warehouse_order where id = " + orderId;
+		return jdbcTemplate.queryForObject(sql, String.class);
+	}
 }

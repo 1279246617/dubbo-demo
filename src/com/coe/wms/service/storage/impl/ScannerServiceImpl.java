@@ -331,7 +331,7 @@ public class ScannerServiceImpl implements IScannerService {
 		}
 
 		if (oItemShelf.getQuantity() != Integer.valueOf(quantity)) {
-			response.setMessage("商品数量错误,,请查看捡货单的商品数量");
+			response.setMessage("商品数量错误,请查看捡货单的商品数量");
 			response.setReason(ErrorCode.B00_CODE);
 			return response;
 		}
