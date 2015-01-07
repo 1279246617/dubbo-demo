@@ -179,8 +179,8 @@ public class ScannerServiceImpl implements IScannerService {
 			Map<String, String> map2 = new HashMap<String, String>();
 			map2.put("trackingNo", trackingNo);
 			map2.put("orderId", map1.get("recordId"));// 收货记录id
-			String time = DateUtil.dateConvertString(DateUtil.stringConvertDate(map1.get("createdTime"), DateUtil.yyyy_MM_ddHHmmss), "dd日HH:mm");
-			String description = "收货:" + time + "  状态:" + map1.get("status");
+			String time = DateUtil.dateConvertString(DateUtil.stringConvertDate(map1.get("createdTime"), DateUtil.yyyy_MM_ddHHmmss), "dd-HH:mm");
+			String description = "收货时间:" + time + "  状态:" + map1.get("status");
 			map2.put("description", description);
 			mapList2.add(map2);
 		}
@@ -229,19 +229,27 @@ public class ScannerServiceImpl implements IScannerService {
 		response.setSuccess(false);
 		Map<String, String> map = (Map<String, String>) GsonUtil.toObject(content, Map.class);
 		String barcode = map.get("barcode");// 条码
-		
+		String orderId = map.get("orderId");// 收货记录
 		String seatCode = map.get("seatCode");// 货位
-		Integer quantity = Integer.valueOf(map.get("quantity"));// 货位
-		Long orderId = Long.valueOf(map.get("orderId"));// 收货记录
+		String quantity = map.get("quantity");// 货位
 		String batchNo = map.get("batchNo");// 批次
-
-		Map<String, String> serviceResult = shelfService.saveOnShelvesItem(barcode, quantity, seatCode, orderId, userIdOfOperator);
+		if (StringUtil.isNull(orderId)) {
+			response.setMessage("收货记录不能为空");
+			response.setReason(ErrorCode.B00_CODE);
+			return response;
+		}
+		if (StringUtil.isNull(quantity)) {
+			response.setMessage("收货数量不能为空");
+			response.setReason(ErrorCode.B00_CODE);
+			return response;
+		}
+		Map<String, String> serviceResult = shelfService.saveOnShelvesItem(barcode, Integer.valueOf(quantity), seatCode, Long.valueOf(orderId), userIdOfOperator);
 		// 失败
 		if (!StringUtil.isEqual(serviceResult.get(Constant.STATUS), Constant.SUCCESS)) {
 			response.setMessage(serviceResult.get(Constant.MESSAGE));
+			response.setReason(ErrorCode.B00_CODE);
 			return response;
 		}
-
 		response.setSuccess(true);
 		return response;
 	}
