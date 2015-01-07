@@ -2,6 +2,8 @@ package com.coe.wms.model.warehouse.storage.order;
 
 import java.io.Serializable;
 
+import com.coe.wms.util.Constant;
+
 /**
  * 出库详情单,打印捡货单时生成的货位信息
  * 
@@ -68,6 +70,11 @@ public class OutWarehouseOrderItemShelf implements Serializable {
 	 * 货位
 	 */
 	private String seatCode;
+
+	/**
+	 * 是否已下架
+	 */
+	private String isDone;
 
 	public Long getId() {
 		return id;
@@ -157,6 +164,14 @@ public class OutWarehouseOrderItemShelf implements Serializable {
 		this.seatCode = seatCode;
 	}
 
+	public String getIsDone() {
+		return isDone;
+	}
+
+	public void setIsDone(String isDone) {
+		this.isDone = isDone;
+	}
+
 	public static OutWarehouseOrderItemShelf createOutWarehouseOrderItemShelf(Long outWarehouseOrderId, int quantity, String seatCode, String sku, String skuName, Double skuNetWeight, String skuPriceCurrency, Double skuUnitPrice, String batchNo,
 			String specification) {
 		OutWarehouseOrderItemShelf itemShelf = new OutWarehouseOrderItemShelf();
@@ -170,6 +185,7 @@ public class OutWarehouseOrderItemShelf implements Serializable {
 		itemShelf.setSkuUnitPrice(skuUnitPrice);
 		itemShelf.setBatchNo(batchNo);
 		itemShelf.setSpecification(specification);
+		itemShelf.setIsDone(Constant.N);
 		return itemShelf;
 	}
 }

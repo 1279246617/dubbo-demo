@@ -340,13 +340,16 @@ public class ShelfServiceImpl implements IShelfService {
 		}
 		OutWarehouseOrder param = new OutWarehouseOrder();
 		param.setCustomerReferenceNo(customerReferenceNo);
-		param.setStatus(OutWarehouseOrderStatusCode.WOS);
 		List<OutWarehouseOrder> outWarehouseOrderList = outWarehouseOrderDao.findOutWarehouseOrder(param, null, null);
 		if (outWarehouseOrderList == null || outWarehouseOrderList.size() < 0) {
-			map.put(Constant.MESSAGE, "根据该客户订单号找不到待捡货下架的出库订单");
+			map.put(Constant.MESSAGE, "该客户订单号找不到出库订单");
 			return map;
 		}
 		OutWarehouseOrder outWarehouseOrder = outWarehouseOrderList.get(0);
+		if (!StringUtil.isEqual(OutWarehouseOrderStatusCode.WOS, outWarehouseOrder.getStatus())) {
+			map.put(Constant.MESSAGE, "该客户订单号对应订单非待捡货下架状态");
+			return map;
+		}
 		// 查找预分配的货位,对比下架是否准确
 		OutWarehouseOrderItemShelf outWarehouseOrderItemShelfParam = new OutWarehouseOrderItemShelf();
 		outWarehouseOrderItemShelfParam.setOutWarehouseOrderId(outWarehouseOrder.getId());

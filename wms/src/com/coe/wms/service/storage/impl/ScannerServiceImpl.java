@@ -41,6 +41,9 @@ import com.coe.wms.dao.warehouse.storage.IOutWarehouseRecordDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseRecordItemDao;
 import com.coe.wms.dao.warehouse.storage.IReportDao;
 import com.coe.wms.dao.warehouse.storage.IReportTypeDao;
+import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrder;
+import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderItemShelf;
+import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus.OutWarehouseOrderStatusCode;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecord;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecordItem;
 import com.coe.wms.service.inventory.IShelfService;
@@ -256,8 +259,76 @@ public class ScannerServiceImpl implements IScannerService {
 
 	@Override
 	public Response outShelf(String content, Long userIdOfOperator) {
-		// TODO Auto-generated method stub
+		Response response = new Response();
+		response.setSuccess(false);
+		Map<String, String> map = (Map<String, String>) GsonUtil.toObject(content, Map.class);
+		String barcode = map.get("barcode");// 条码
+		String orderId = map.get("orderId");// 出库订单客户参考号
+		String seatCode = map.get("seatCode");// 货位
+		String quantity = map.get("quantity");// 数量
+		if (StringUtil.isNull(orderId)) {
+			response.setMessage("订单号不能为空");
+			response.setReason(ErrorCode.B00_CODE);
+			return response;
+		}
+		if (StringUtil.isNull(barcode)) {
+			response.setMessage("商品条码不能为空");
+			response.setReason(ErrorCode.B00_CODE);
+			return response;
+		}
+		if (StringUtil.isNull(seatCode)) {
+			response.setMessage("货位不能为空");
+			response.setReason(ErrorCode.B00_CODE);
+			return response;
+		}
+		if (StringUtil.isNull(quantity)) {
+			response.setMessage("数量不能为空");
+			response.setReason(ErrorCode.B00_CODE);
+			return response;
+		}
+		OutWarehouseOrder param = new OutWarehouseOrder();
+		param.setCustomerReferenceNo(orderId);
+		List<OutWarehouseOrder> outWarehouseOrderList = outWarehouseOrderDao.findOutWarehouseOrder(param, null, null);
+		if (outWarehouseOrderList == null || outWarehouseOrderList.size() < 0) {
+			response.setMessage("该订单号找不到出库订单");
+			response.setReason(ErrorCode.B00_CODE);
+			return response;
+		}
+		OutWarehouseOrder outWarehouseOrder = outWarehouseOrderList.get(0);
+		if (!StringUtil.isEqual(OutWarehouseOrderStatusCode.WOS, outWarehouseOrder.getStatus())) {
+			response.setMessage("该订单号对应订单非待捡货下架状态");
+			response.setReason(ErrorCode.B00_CODE);
+			return response;
+		}
+		// 查找预分配货位
+		OutWarehouseOrderItemShelf outWarehouseOrderItemShelfParam = new OutWarehouseOrderItemShelf();
+		outWarehouseOrderItemShelfParam.setOutWarehouseOrderId(outWarehouseOrder.getId());
+		outWarehouseOrderItemShelfParam.setSeatCode(seatCode);
+		// 货位和出库订单id查找预下架记录
+		Long count = outWarehouseOrderItemShelfDao.countOutWarehouseOrderItemShelf(outWarehouseOrderItemShelfParam, null);
+		if (count == 0) {
+			response.setMessage("货位号错误,请查看捡货单的货位号");
+			response.setReason(ErrorCode.B00_CODE);
+			return response;
+		}
+		outWarehouseOrderItemShelfParam.setSku(barcode);
+		// 加上条码条件查询预下架记录
+		count = outWarehouseOrderItemShelfDao.countOutWarehouseOrderItemShelf(outWarehouseOrderItemShelfParam, null);
+		if (count == 0) {
+			response.setMessage("商品条码错误,请查看捡货单的商品条码");
+			response.setReason(ErrorCode.B00_CODE);
+			return response;
+		}
+		List<OutWarehouseOrderItemShelf> outWarehouseOrderItemShelfList = outWarehouseOrderItemShelfDao.findOutWarehouseOrderItemShelf(outWarehouseOrderItemShelfParam, null, null);
+		OutWarehouseOrderItemShelf outWarehouseOrderItemShelf = outWarehouseOrderItemShelfList.get(0);
+		if (outWarehouseOrderItemShelf.getQuantity() != Integer.valueOf(quantity)) {
+			response.setMessage("商品数量错误,,请查看捡货单的商品数量");
+			response.setReason(ErrorCode.B00_CODE);
+			return response;
+		}
+		
+//		outWarehouseOrderItemShelf
+		
 		return null;
 	}
-
 }

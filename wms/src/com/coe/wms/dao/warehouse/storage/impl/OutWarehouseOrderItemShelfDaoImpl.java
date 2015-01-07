@@ -208,4 +208,51 @@ public class OutWarehouseOrderItemShelfDaoImpl implements IOutWarehouseOrderItem
 		List<OutWarehouseOrderItemShelf> outWarehouseOrderItemShelfList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(OutWarehouseOrderItemShelf.class));
 		return outWarehouseOrderItemShelfList;
 	}
+
+	@Override
+	public Long countOutWarehouseOrderItemShelf(OutWarehouseOrderItemShelf outWarehouseOrderItemShelf, Map<String, String> moreParam) {
+		StringBuffer sb = new StringBuffer();
+		sb.append("select count(*) from w_s_out_warehouse_order_item_shelf where 1=1 ");
+		if (outWarehouseOrderItemShelf != null) {
+			if (StringUtil.isNotNull(outWarehouseOrderItemShelf.getSku())) {
+				sb.append(" and sku = '" + outWarehouseOrderItemShelf.getSku() + "' ");
+			}
+			if (StringUtil.isNotNull(outWarehouseOrderItemShelf.getSkuName())) {
+				sb.append(" and sku_name = '" + outWarehouseOrderItemShelf.getSkuName() + "' ");
+			}
+			if (StringUtil.isNotNull(outWarehouseOrderItemShelf.getSkuPriceCurrency())) {
+				sb.append(" and sku_price_currency = '" + outWarehouseOrderItemShelf.getSkuPriceCurrency() + "' ");
+			}
+			if (outWarehouseOrderItemShelf.getSkuUnitPrice() != null) {
+				sb.append(" and sku_price_currency = '" + outWarehouseOrderItemShelf.getSkuUnitPrice() + "' ");
+			}
+			if (StringUtil.isNotNull(outWarehouseOrderItemShelf.getSeatCode())) {
+				sb.append(" and seat_code = '" + outWarehouseOrderItemShelf.getSeatCode() + "' ");
+			}
+			if (StringUtil.isNotNull(outWarehouseOrderItemShelf.getBatchNo())) {
+				sb.append(" and batch_no = '" + outWarehouseOrderItemShelf.getBatchNo() + "' ");
+			}
+			if (StringUtil.isNotNull(outWarehouseOrderItemShelf.getSpecification())) {
+				sb.append(" and specification = '" + outWarehouseOrderItemShelf.getSpecification() + "' ");
+			}
+			if (outWarehouseOrderItemShelf.getOutWarehouseOrderId() != null) {
+				sb.append(" and out_warehouse_order_id = " + outWarehouseOrderItemShelf.getOutWarehouseOrderId());
+			}
+			if (outWarehouseOrderItemShelf.getId() != null) {
+				sb.append(" and id = '" + outWarehouseOrderItemShelf.getId() + "' ");
+			}
+			if (outWarehouseOrderItemShelf.getQuantity() != null) {
+				sb.append(" and quantity = " + outWarehouseOrderItemShelf.getQuantity());
+			}
+			if (outWarehouseOrderItemShelf.getSkuNetWeight() != null) {
+				sb.append(" and sku_net_weight = " + outWarehouseOrderItemShelf.getSkuNetWeight());
+			}
+		}
+		String sql = sb.toString();
+		Long count = jdbcTemplate.queryForObject(sql, Long.class);
+		if (count == null) {
+			return 0L;
+		}
+		return count;
+	}
 }
