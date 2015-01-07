@@ -408,6 +408,10 @@ public class OutWarehouseOrderDaoImpl implements IOutWarehouseOrderDao {
 	@Override
 	public String getOutWarehouseOrderTrackingNo(Long orderId) {
 		String sql = "select tracking_no from w_s_out_warehouse_order where id = " + orderId;
-		return jdbcTemplate.queryForObject(sql, String.class);
+		List<String> trackingNoList = jdbcTemplate.queryForList(sql, String.class);
+		if (trackingNoList.size() >= 1) {
+			return trackingNoList.get(0);
+		}
+		return null;
 	}
 }

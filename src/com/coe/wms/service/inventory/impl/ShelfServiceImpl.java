@@ -173,7 +173,8 @@ public class ShelfServiceImpl implements IShelfService {
 			String sku = productDao.findProductSkuByBarcode(user.getId(), barcode);
 			map.put("skuNo", sku);
 			map.put("quantity", outShelfTemp.getQuantity());
-			map.put("trackingNo", outWarehouseOrderDao.getOutWarehouseOrderTrackingNo(outShelfTemp.getOutWarehouseOrderId()));
+			String trackingNo = outWarehouseOrderDao.getOutWarehouseOrderTrackingNo(outShelfTemp.getOutWarehouseOrderId());
+			map.put("trackingNo", trackingNo == null ? "" : trackingNo);
 			// 查询用户名
 			User userOfOperator = userDao.getUserById(outShelfTemp.getUserIdOfOperator());
 			map.put("userLoginNameOfOperator", userOfOperator.getLoginName());
