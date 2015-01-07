@@ -42,9 +42,12 @@ import com.coe.wms.dao.warehouse.storage.IOutWarehouseRecordItemDao;
 import com.coe.wms.dao.warehouse.storage.IReportDao;
 import com.coe.wms.dao.warehouse.storage.IReportTypeDao;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecord;
+import com.coe.wms.model.warehouse.storage.record.InWarehouseRecordItem;
 import com.coe.wms.service.inventory.IShelfService;
 import com.coe.wms.service.storage.IScannerService;
 import com.coe.wms.util.Config;
+import com.coe.wms.util.Constant;
+import com.coe.wms.util.DateUtil;
 import com.coe.wms.util.GsonUtil;
 import com.coe.wms.util.StringUtil;
 
@@ -167,7 +170,7 @@ public class ScannerServiceImpl implements IScannerService {
 		param.setTrackingNo(trackingNo);
 		List<Map<String, String>> mapList = shelfService.checkInWarehouseRecord(param);
 		if (mapList.size() < 1) {
-			response.setMessage("该单号无收货记录,请先进行入库订单收货");
+			response.setMessage("该单号无收货记录");
 			response.setReason(ErrorCode.B00_CODE);
 			return response;
 		}
@@ -176,7 +179,8 @@ public class ScannerServiceImpl implements IScannerService {
 			Map<String, String> map2 = new HashMap<String, String>();
 			map2.put("trackingNo", trackingNo);
 			map2.put("orderId", map1.get("recordId"));// 收货记录id
-			String description = "收货时间:" + map1.get("createdTime") + "  状态:" + map1.get("status");
+			String time = DateUtil.dateConvertString(DateUtil.stringConvertDate(map1.get("createdTime"), DateUtil.yyyy_MM_ddHHmmss), "dd日HH:mm");
+			String description = "收货:" + time + "  状态:" + map1.get("status");
 			map2.put("description", description);
 			mapList2.add(map2);
 		}
@@ -188,14 +192,58 @@ public class ScannerServiceImpl implements IScannerService {
 
 	@Override
 	public Response getBatchNo(String content, Long userIdOfOperator) {
-		// TODO Auto-generated method stub
-		return null;
+		Response response = new Response();
+		response.setSuccess(false);
+		Map<String, String> map = (Map<String, String>) GsonUtil.toObject(content, Map.class);
+		String barcode = map.get("barcode");// 跟踪单号
+		String orderId = map.get("orderId");// 收货记录
+		if (StringUtil.isNull(barcode)) {
+			response.setMessage("商品条码不能为空");
+			response.setReason(ErrorCode.B00_CODE);
+			return response;
+		}
+		if (StringUtil.isNull(orderId)) {
+			response.setMessage("收货记录不能为空");
+			response.setReason(ErrorCode.B00_CODE);
+			return response;
+		}
+		InWarehouseRecordItem inWarehouseRecordItem = new InWarehouseRecordItem();
+		inWarehouseRecordItem.setInWarehouseRecordId(Long.valueOf(orderId));
+		inWarehouseRecordItem.setSku(barcode);
+		List<String> list = inWarehouseRecordItemDao.findInWarehouseBatchNo(inWarehouseRecordItem);
+		List<Map<String, String>> mapList = new ArrayList<Map<String, String>>();
+		for (String temp : list) {
+			Map<String, String> map1 = new HashMap<String, String>();
+			map1.put("batchNo", temp);
+			mapList.add(map1);
+		}
+		String message = GsonUtil.toJson(mapList);
+		response.setMessage(message);
+		response.setSuccess(true);
+		return response;
 	}
 
 	@Override
 	public Response onShelf(String content, Long userIdOfOperator) {
-		// TODO Auto-generated method stub
-		return null;
+		Response response = new Response();
+		response.setSuccess(false);
+		Map<String, String> map = (Map<String, String>) GsonUtil.toObject(content, Map.class);
+		String barcode = map.get("barcode");// 条码
+		
+		String seatCode = map.get("seatCode");// 货位
+		Integer quantity = Integer.valueOf(map.get("quantity"));// 货位
+		Long orderId = Long.valueOf(map.get("orderId"));// 收货记录
+		String batchNo = map.get("batchNo");// 批次
+
+		Map<String, String> serviceResult = shelfService.saveOnShelvesItem(barcode, quantity, seatCode, orderId, userIdOfOperator);
+		// 失败
+		if (!StringUtil.isEqual(serviceResult.get(Constant.STATUS), Constant.SUCCESS)) {
+			response.setMessage(serviceResult.get(Constant.MESSAGE));
+			return response;
+		}
+
+		response.setSuccess(true);
+		return response;
 	}
 
 	@Override

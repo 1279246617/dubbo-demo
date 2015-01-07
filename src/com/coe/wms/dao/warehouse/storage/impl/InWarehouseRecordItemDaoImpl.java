@@ -375,4 +375,17 @@ public class InWarehouseRecordItemDaoImpl implements IInWarehouseRecordItemDao {
 		}
 		return count;
 	}
+
+	/**
+	 * 查找批次号
+	 */
+	@Override
+	public List<String> findInWarehouseBatchNo(InWarehouseRecordItem inWarehouseRecordItem) {
+		StringBuffer sb = new StringBuffer();
+		sb.append("select r.batch_no from w_s_in_warehouse_record_item i inner join w_s_in_warehouse_record r on i.in_warehouse_record_id=r.id where 1=1 ");
+		sb.append(" and i.sku = '" + inWarehouseRecordItem.getSku() + "'");// 条码
+		sb.append(" and r.id =" + inWarehouseRecordItem.getInWarehouseRecordId());
+		List<String> list = jdbcTemplate.queryForList(sb.toString(), String.class);
+		return list;
+	}
 }
