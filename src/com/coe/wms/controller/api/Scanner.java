@@ -1,5 +1,7 @@
 package com.coe.wms.controller.api;
 
+import java.util.Map;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
@@ -11,7 +13,10 @@ import com.coe.scanner.pojo.ErrorCode;
 import com.coe.scanner.pojo.MessageType;
 import com.coe.scanner.pojo.Response;
 import com.coe.wms.service.storage.IScannerService;
+import com.coe.wms.service.user.IUserService;
+import com.coe.wms.util.Constant;
 import com.coe.wms.util.GsonUtil;
+import com.coe.wms.util.SessionConstant;
 import com.coe.wms.util.StringUtil;
 
 @Controller
@@ -20,6 +25,9 @@ public class Scanner {
 
 	@Resource(name = "scannerService")
 	private IScannerService scannerService;
+
+	@Resource(name = "userService")
+	private IUserService userService;
 
 	@ResponseBody
 	@RequestMapping(value = "/interface")
@@ -34,28 +42,40 @@ public class Scanner {
 			// 消息类型
 			String messageType = request.getParameter("messageType");
 			// 数字签名
-			String sign = request.getParameter("sign");
+			// String sign = request.getParameter("sign");
+
 			Response response = new Response();
 			response.setSuccess(false);
+			// 验证帐号密码
+			Map<String, String> loginResult = userService.checkAdminLogin(loginName, password);
+			if (StringUtil.isEqual(loginResult.get(Constant.STATUS), Constant.FAIL)) {
+				response.setMessage(loginResult.get(Constant.MESSAGE));
+				response.setReason(ErrorCode.S06_CODE);
+				return GsonUtil.toJson(response);
+			}
 			// 登录
 			if (StringUtil.isEqualIgnoreCase(messageType, MessageType.LOGIN)) {
-				response = scannerService.login(loginName, password);
+				response.setSuccess(true);
+				return GsonUtil.toJson(response);
 			}
+			// 获取用户id
+			Long userIdOfOperator = Long.valueOf(loginResult.get(SessionConstant.USER_ID));
+
 			// 跟踪单号查询订单id
 			if (StringUtil.isEqualIgnoreCase(messageType, MessageType.GET_ORDER_ID)) {
-				response = scannerService.getOrderId(content, loginName, password);
+				response = scannerService.getOrderId(content, userIdOfOperator);
 			}
 			// 获取订单商品条码批次
 			if (StringUtil.isEqualIgnoreCase(messageType, MessageType.GET_BATCH_NO)) {
-				response = scannerService.getBatchNo(content, loginName, password);
+				response = scannerService.getBatchNo(content, userIdOfOperator);
 			}
 			// 上架
 			if (StringUtil.isEqualIgnoreCase(messageType, MessageType.ON_SHELF)) {
-				response = scannerService.onShelf(content, loginName, password);
+				response = scannerService.onShelf(content, userIdOfOperator);
 			}
 			// 下架
 			if (StringUtil.isEqualIgnoreCase(messageType, MessageType.OUT_SHELF)) {
-				response = scannerService.outShelf(content, loginName, password);
+				response = scannerService.outShelf(content, userIdOfOperator);
 			}
 			return GsonUtil.toJson(response);
 		} catch (Exception e) {
