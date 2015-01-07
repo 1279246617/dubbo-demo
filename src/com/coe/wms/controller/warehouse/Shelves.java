@@ -123,7 +123,7 @@ public class Shelves {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/getOutShelvesData")
-	public String getOutShelvesData(HttpServletRequest request, String sortorder, String sortname, int page, int pagesize, String userLoginName, Long warehouseId, String customerReferenceNo, String batchNo, String createdTimeStart,
+	public String getOutShelvesData(HttpServletRequest request, String sortorder, String sortname, int page, int pagesize, String userLoginName, Long warehouseId, String customerReferenceNo, String sku, String createdTimeStart,
 			String createdTimeEnd) throws IOException {
 		HttpSession session = request.getSession();
 		// 当前操作员
@@ -142,7 +142,7 @@ public class Shelves {
 			param.setUserIdOfCustomer(userIdOfCustomer);
 		}
 		param.setWarehouseId(warehouseId);
-		param.setBatchNo(batchNo);
+		param.setSku(sku);
 		// 更多参数
 		Map<String, String> moreParam = new HashMap<String, String>();
 		moreParam.put("createdTimeStart", createdTimeStart);

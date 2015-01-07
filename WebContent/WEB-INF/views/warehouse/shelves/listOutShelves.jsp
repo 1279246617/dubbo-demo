@@ -32,19 +32,18 @@
 						       			</c:forEach>
 						</select>
                		</span>
-               		
                		<span class="pull-left" style="width:175px;">
                			客户帐号
                			<input type="text" name="userLoginName" data-provide="typeahead"  id="userLoginName" style="width:100px;" title="请输入客户登录名" />
                		</span>
-               		<span class="pull-left" style="width:185px;">
-               			入库批次号
-               			 <input type="text"   style="width:100px;" name="batchNo" title="可输入入库批次号">
-               		</span>
-					<span class="pull-left" style="width:195px;">
+               		<span class="pull-left" style="width:195px;">
 						客户订单号
 						<input type="text"  name="customerReferenceNo"  id="customerReferenceNo"   style="width:120px;"/>
 					</span>
+               		<span class="pull-left" style="width:185px;">
+               			商品条码
+               			 <input type="text"   style="width:100px;" name="sku" title="商品条码">
+               		</span>
                		<span class="pull-left" style="width:175px;">
                			创建时间
 	               		<input type="text"   style="width:120px;" name="createdTimeStart" id="createdTimeStart"  title="起始创建时间">
@@ -117,14 +116,14 @@
 	                columns: [
 							{ display: '客户帐号', name: 'userLoginNameOfCustomer',type:'float',width:'9%'},
 							{ display: '仓库', name: 'warehouse', type: 'float',width:'8%'},
-							{ display: '批次号', name: 'batchNo', type: 'int', width:'10%'},
 							{ display: '客户订单号', name: 'customerReferenceNo',type:'float',width:'9%'},
 			                { display: '跟踪单号', name: 'trackingNo',type:'float',width:'10%'},
 							{ display: '货位', name: 'seatCode', type: 'int', width:'9%'},
 	  	                  	{ display: '商品条码', name: 'sku', type: 'float',width:'15%'},
+	  	                  	{ display: '本次下架数量', name: 'quantity', type: 'float',width:'10%'},
 	  	                  	{ display: '商品SKU', name: 'skuNo', type: 'float',width:'10%'},
-		  	                { display: '本次下架数量', name: 'quantity', type: 'float',width:'10%'},
-			                { display: '下架操作员', name: 'userLoginNameOfOperator',type:'float',width:'11%'}
+	  	                  	{ display: '批次号', name: 'batchNo', type: 'int', width:'10%'},
+			                { display: '下架操作员', name: 'userLoginNameOfOperator',type:'float',width:'9%'}
 		             ],   
 	                dataAction: 'server',
 	                url: baseUrl+'/warehouse/shelves/getOutShelvesData.do',
