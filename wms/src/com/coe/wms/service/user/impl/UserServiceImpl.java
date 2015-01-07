@@ -24,6 +24,48 @@ public class UserServiceImpl implements IUserService {
 	private IUserDao userDao;
 
 	@Override
+	public Map<String, String> checkAdminLogin(String loginName, String password) {
+		Map<String, String> map = new HashMap<String, String>();
+		map.put(Constant.STATUS, Constant.FAIL);
+		if (StringUtil.isNull(loginName)) {
+			map.put(Constant.MESSAGE, "请输入帐号");
+			return map;
+		}
+		if (StringUtil.isNull(password)) {
+			map.put(Constant.MESSAGE, "请输入密码");
+			return map;
+		}
+		loginName = loginName.trim();
+		User user = userDao.findUserByLoginName(loginName);
+		if (user == null) {
+			// 帐号不存在
+			map.put(Constant.MESSAGE, "帐号或密码不正确");
+			return map;
+		}
+		if (!StringUtil.isEqual(password, user.getPassword())) {
+			map.put(Constant.MESSAGE, "帐号或密码不正确");
+			return map;
+		}
+		if (user.getStatus() == User.STATUS_DELETE) {
+			map.put(Constant.MESSAGE, "帐号已删除");
+			return map;
+		}
+		if (user.getStatus() == User.STATUS_FREEZE) {
+			map.put(Constant.MESSAGE, "帐号已冻结");
+			return map;
+		}
+		if (!StringUtil.isEqual(User.USER_TYPE_ADMIN, user.getUserType())) {
+			map.put(Constant.MESSAGE, "此帐号非管理员");
+			return map;
+		}
+		// 成功,返回userId userName
+		map.put(SessionConstant.USER_ID, String.valueOf(user.getId()));
+		map.put(SessionConstant.USER_NAME, user.getUserName());
+		map.put(Constant.STATUS, Constant.SUCCESS);
+		return map;
+	}
+
+	@Override
 	public Map<String, String> checkUserLogin(String loginName, String password) {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put(Constant.STATUS, Constant.FAIL);
@@ -126,5 +168,4 @@ public class UserServiceImpl implements IUserService {
 	public void setUserDao(IUserDao userDao) {
 		this.userDao = userDao;
 	}
-
 }

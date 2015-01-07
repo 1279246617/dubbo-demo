@@ -11,7 +11,17 @@ import com.coe.wms.model.user.User;
 public interface IUserService {
 
 	static final Logger logger = Logger.getLogger(IUserService.class);
+	
+	/**
+	 * 检查用户登录
+	 * 
+	 * @param loginName
+	 * @param password
+	 * @return
+	 */
+	public Map<String, String> checkAdminLogin(String loginName, String password);
 
+	
 	/**
 	 * 检查用户登录
 	 * 

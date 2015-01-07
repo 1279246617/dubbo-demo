@@ -38,12 +38,10 @@ import com.coe.wms.dao.warehouse.storage.IOutWarehouseRecordDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseRecordItemDao;
 import com.coe.wms.dao.warehouse.storage.IReportDao;
 import com.coe.wms.dao.warehouse.storage.IReportTypeDao;
-import com.coe.wms.model.user.User;
 import com.coe.wms.service.storage.IScannerService;
-import com.coe.wms.service.user.IUserService;
 import com.coe.wms.util.Config;
 import com.coe.wms.util.Constant;
-import com.coe.wms.util.SessionConstant;
+import com.coe.wms.util.GsonUtil;
 import com.coe.wms.util.StringUtil;
 
 /**
@@ -146,49 +144,35 @@ public class ScannerServiceImpl implements IScannerService {
 	@Resource(name = "shipwayDao")
 	private IShipwayDao shipwayDao;
 
-	@Resource(name = "userService")
-	private IUserService userService;
-
 	@Override
-	public Response login(String loginName, String password) {
+	public Response getOrderId(String content, Long userIdOfOperator) {
 		Response response = new Response();
-		Map<String, String> map = userService.checkUserLogin(loginName, password);
-		if (StringUtil.isEqual(map.get(Constant.STATUS), Constant.SUCCESS)) {
-			if (StringUtil.isEqual(User.USER_TYPE_ADMIN, map.get(SessionConstant.USER_TYPE))) {
-				response.setSuccess(true);
-				return response;
-			} else {
-				response.setMessage("用户类型必须是操作员");
-				response.setReason(ErrorCode.S06_CODE);
-				return response;
-			}
+		response.setSuccess(false);
+		Map<String, String> map = (Map<String, String>) GsonUtil.toObject(content, Map.class);
+		String trackingNo = map.get("trackingNo");// 跟踪单号
+		if (StringUtil.isNull(trackingNo)) {
+			response.setMessage(loginResult.get(Constant.MESSAGE));
+			response.setReason(ErrorCode.S06_CODE);
+			return response;
 		}
-		response.setMessage(map.get(Constant.MESSAGE));
-		response.setReason(ErrorCode.S06_CODE);
-		return response;
-	}
 
-	@Override
-	public Response getOrderId(String content, String loginName, String password) {
-		
-		
 		return null;
 	}
 
 	@Override
-	public Response getBatchNo(String content, String loginName, String password) {
+	public Response getBatchNo(String content, Long userIdOfOperator) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Response onShelf(String content, String loginName, String password) {
+	public Response onShelf(String content, Long userIdOfOperator) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Response outShelf(String content, String loginName, String password) {
+	public Response outShelf(String content, Long userIdOfOperator) {
 		// TODO Auto-generated method stub
 		return null;
 	}
