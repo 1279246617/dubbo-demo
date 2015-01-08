@@ -117,14 +117,12 @@
 							{ display: '入库批次号', name: 'batchNo', type: 'int', width:'10%'},
 							{ display: '货位', name: 'seatCode', type: 'int', width:'10%'},
 	  	                  	{ display: '商品条码', name: 'sku', type: 'float',width:'12%'},
-	  	                  	{ display: '商品SKU', name: 'skuNo', type: 'float',width:'12%'},
+	  	                  	{ display: '商品SKU', name: 'skuNo', type: 'float',width:'10%'},
 		  	                { display: '本次上架数量', name: 'quantity', type: 'float',width:'8%'},
 		  		            { display: '收货商品数量', name: 'receivedQuantity', type: 'float',width:'8%'},
-			                { display: '上架操作员', name: 'userLoginNameOfOperator',type:'float',width:'9%'},
-// 			                { display: '客户订单号', name: 'customerReferenceNo', align: 'center', type: 'float',width:'12%'},
 			                { display: '跟踪单号', name: 'trackingNo',type:'float',width:'11%'},
 			                { display: '上架时间', name: 'createdTime', align: 'center', type: 'float',width:'12%'},
-			                { display: '收货记录Id', name: 'inWarehouseRecordId',type:'float',width:'6%'}
+			                { display: '上架操作员', name: 'userLoginNameOfOperator',type:'float',width:'9%'}
 		             ],   
 	                dataAction: 'server',
 	                url: baseUrl+'/warehouse/shelves/getOnShelvesData.do',

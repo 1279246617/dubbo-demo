@@ -120,9 +120,10 @@
 			                { display: '跟踪单号', name: 'trackingNo',type:'float',width:'10%'},
 							{ display: '货位', name: 'seatCode', type: 'int', width:'9%'},
 	  	                  	{ display: '商品条码', name: 'sku', type: 'float',width:'15%'},
-	  	                  	{ display: '本次下架数量', name: 'quantity', type: 'float',width:'10%'},
-	  	                  	{ display: '商品SKU', name: 'skuNo', type: 'float',width:'10%'},
-	  	                  	{ display: '批次号', name: 'batchNo', type: 'int', width:'10%'},
+	  	                  	{ display: '本次下架数量', name: 'quantity', type: 'float',width:'9%'},
+	  	                  	{ display: '商品SKU', name: 'skuNo', type: 'float',width:'9%'},
+	  	                  	{ display: '批次号', name: 'batchNo', type: 'int', width:'9%'},
+	  	                  	{ display: '下架时间', name: 'createdTime', align: 'center', type: 'float',width:'12%'},
 			                { display: '下架操作员', name: 'userLoginNameOfOperator',type:'float',width:'9%'}
 		             ],   
 	                dataAction: 'server',
