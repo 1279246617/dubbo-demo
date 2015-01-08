@@ -268,7 +268,7 @@ public class InWarehouseRecordItemDaoImpl implements IInWarehouseRecordItemDao {
 		String sku = moreParam.get("sku");
 		String warehouseId = moreParam.get("warehouseId");
 		StringBuffer sb = new StringBuffer();
-		sb.append("select r.warehouse_id,r.in_warehouse_order_id,r.user_id_of_customer,r.batch_no,r.tracking_no,i.sku,i.sku_no,i.quantity,i.remark,i.created_time,i.user_id_of_operator,i.in_warehouse_record_id from w_s_in_warehouse_record_item i inner join w_s_in_warehouse_record r on i.in_warehouse_record_id=r.id where 1=1 ");
+		sb.append("select distinct r.warehouse_id,r.in_warehouse_order_id,r.user_id_of_customer,r.batch_no,r.tracking_no,i.sku,i.sku_no,i.quantity,i.remark,i.created_time,i.user_id_of_operator,i.in_warehouse_record_id from w_s_in_warehouse_record_item i inner join w_s_in_warehouse_record r on i.in_warehouse_record_id=r.id where 1=1 ");
 		if (StringUtil.isNotNull(userIdOfCustomer)) {
 			sb.append(" and r.user_id_of_customer = " + userIdOfCustomer);
 		}
