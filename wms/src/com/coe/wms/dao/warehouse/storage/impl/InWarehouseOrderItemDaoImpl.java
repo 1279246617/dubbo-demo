@@ -212,7 +212,7 @@ public class InWarehouseOrderItemDaoImpl implements IInWarehouseOrderItemDao {
 	@Override
 	public String getSkuNameByCustomerIdAndSku(String sku, Long userIdOfCustomer) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select sku_name  from w_s_in_warehouse_order_item i inner join w_s_in_warehouse_order r on i.order_id=r.id where 1=1 ");
+		sb.append("select distinct sku_name  from w_s_in_warehouse_order_item i inner join w_s_in_warehouse_order r on i.order_id=r.id where 1=1 ");
 		sb.append(" and r.user_id_of_customer = " + userIdOfCustomer);
 		sb.append(" and i.sku = '" + sku + "'");
 		Pagination page = new Pagination();
@@ -231,7 +231,7 @@ public class InWarehouseOrderItemDaoImpl implements IInWarehouseOrderItemDao {
 
 	@Override
 	public Map<String, Object> findInWarehouseOrderItem(Long itemId) {
-		String sql = "select i.sku,i.sku_no as skuNo,o.user_id_of_customer as userIdOfCustomer from w_s_in_warehouse_order_item i INNER JOIN w_s_in_warehouse_order o  ON i.order_id = o.id where i.id = " + itemId;
+		String sql = "select distinct i.sku,i.sku_no as skuNo,o.user_id_of_customer as userIdOfCustomer from w_s_in_warehouse_order_item i INNER JOIN w_s_in_warehouse_order o  ON i.order_id = o.id where i.id = " + itemId;
 		Pagination page = new Pagination();
 		page.curPage = 1;
 		page.pageSize = 1;

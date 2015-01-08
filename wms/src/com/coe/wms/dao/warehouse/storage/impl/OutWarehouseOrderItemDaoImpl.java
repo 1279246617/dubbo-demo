@@ -211,7 +211,7 @@ public class OutWarehouseOrderItemDaoImpl implements IOutWarehouseOrderItemDao {
 	@Override
 	public String getSkuNameByCustomerIdAndSku(String sku, Long userIdOfCustomer) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select sku_name  from w_s_out_warehouse_order_item i inner join w_s_out_warehouse_order r on i.out_warehouse_order_id=r.id where 1=1 ");
+		sb.append("select distinct sku_name  from w_s_out_warehouse_order_item i inner join w_s_out_warehouse_order r on i.out_warehouse_order_id=r.id where 1=1 ");
 		sb.append(" and r.user_id_of_customer = " + userIdOfCustomer);
 		sb.append(" and i.sku = " + sku);
 		Pagination page = new Pagination();
