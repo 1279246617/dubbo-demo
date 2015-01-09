@@ -170,14 +170,17 @@ public class Warehouse {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/interface2")
-	public String warehouse2(HttpServletRequest request, HttpServletResponse response) {
+	public String warehouseInterface2(HttpServletRequest request, HttpServletResponse response) {
 		try {
 			// 消息内容
 			String content = request.getParameter("content");
 			String token = request.getParameter("token");
 			String apptype = request.getParameter("apptype");
 			String sign = request.getParameter("sign");
-
+			
+			
+			
+			
 			return null;
 		} catch (Exception e) {
 			e.printStackTrace();
