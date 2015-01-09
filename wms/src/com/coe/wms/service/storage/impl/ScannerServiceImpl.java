@@ -292,7 +292,7 @@ public class ScannerServiceImpl implements IScannerService {
 		OutWarehouseOrder param = new OutWarehouseOrder();
 		param.setCustomerReferenceNo(orderId);
 		List<OutWarehouseOrder> outWarehouseOrderList = outWarehouseOrderDao.findOutWarehouseOrder(param, null, null);
-		if (outWarehouseOrderList == null || outWarehouseOrderList.size() < 0) {
+		if (outWarehouseOrderList == null || outWarehouseOrderList.size() <= 0) {
 			response.setMessage("该订单号找不到出库订单");
 			response.setReason(ErrorCode.B00_CODE);
 			return response;
