@@ -65,9 +65,17 @@ public class Scanner {
 			// 获取用户id
 			Long userIdOfOperator = Long.valueOf(loginResult.get(SessionConstant.USER_ID));
 
-			// 跟踪单号查询订单id
+			// 跟踪单号查询订单id(收货记录id)
 			if (StringUtil.isEqualIgnoreCase(messageType, MessageType.GET_ORDER_ID)) {
 				response = scannerService.getOrderId(content, userIdOfOperator);
+			}
+			// 查询入库信息(根据收货记录id查询已上架的商品条码,商品数量)
+			if (StringUtil.isEqualIgnoreCase(messageType, MessageType.GET_ON_SHELF_INFO)) {
+				response = scannerService.getOnShelfInfo(content, userIdOfOperator);
+			}
+			// 查询出库信息(根据收货记录id查询已上架的商品条码,商品数量)
+			if (StringUtil.isEqualIgnoreCase(messageType, MessageType.GET_OUT_SHELF_INFO)) {
+				response = scannerService.getOutShelfInfo(content, userIdOfOperator);
 			}
 			// 获取订单商品条码批次
 			if (StringUtil.isEqualIgnoreCase(messageType, MessageType.GET_BATCH_NO)) {
