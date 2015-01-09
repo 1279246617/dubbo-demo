@@ -24,6 +24,7 @@ import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderStatusDao;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrderItem;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrderStatus.InWarehouseOrderStatusCode;
 import com.coe.wms.task.IInWarehouseTask;
+import com.coe.wms.util.StringUtil;
 
 @Component
 public class InWarehouseTaskImpl implements IInWarehouseTask {
@@ -93,7 +94,7 @@ public class InWarehouseTaskImpl implements IInWarehouseTask {
 				} else {
 					isComplete = false;
 					// 只要任何一个sku 不是全部收货, 后续的sku就只需区分,部分收货和全未收货
-					if (receivedQuantity > 0) {
+					if (receivedQuantity > 0 || StringUtil.isEqual(status, InWarehouseOrderStatusCode.COMPLETE)) {
 						status = InWarehouseOrderStatusCode.PART;
 						// 如果已经有收货,也无需再区分部分收货和全未收货
 						break;
