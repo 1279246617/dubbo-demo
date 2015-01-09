@@ -22,11 +22,11 @@ public class FirstWaybillItem implements Serializable {
 
 	private Long firstWaybillId;
 	/**
-	 * sku
+	 * sku(等于顺丰文档的itemId ,也就是顺丰的sku)
 	 */
 	private String sku;
 	/**
-	 * sku编号 等于顺丰的商品条码
+	 * skuNo 该字段未使用(2015-01-09)
 	 */
 	private String skuNo;
 	/**

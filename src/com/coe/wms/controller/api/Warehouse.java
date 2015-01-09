@@ -54,9 +54,16 @@ public class Warehouse {
 	@Resource(name = "warehouseInterfaceService")
 	private IWarehouseInterfaceService warehouseInterfaceService;
 
+	/**
+	 * 接口(目前是顺丰专用)
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 */
 	@ResponseBody
 	@RequestMapping(value = "/interface")
-	public String warehouse(HttpServletRequest request, HttpServletResponse response) {
+	public String warehouseInterface(HttpServletRequest request, HttpServletResponse response) {
 		try {
 			// 消息内容
 			String logisticsInterface = request.getParameter("logistics_interface");
@@ -149,4 +156,26 @@ public class Warehouse {
 			return responseXml;
 		}
 	}
+
+	/**
+	 * 接口2 (非顺丰客户使用)
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/interface2")
+	public String warehouse2(HttpServletRequest request, HttpServletResponse response) {
+		try {
+			// 消息内容
+			String logisticsInterface = request.getParameter("logistics_interface");
+			
+			return null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
 }
