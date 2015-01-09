@@ -383,4 +383,92 @@ public class ScannerServiceImpl implements IScannerService {
 		response.setSuccess(true);
 		return response;
 	}
+
+	@Override
+	public Response getOnShelfInfo(String content, Long userIdOfOperator) {
+		Response response = new Response();
+		response.setSuccess(false);
+		Map<String, String> map = (Map<String, String>) GsonUtil.toObject(content, Map.class);
+		String orderId = map.get("orderId");// 收货记录
+		if (StringUtil.isNull(orderId)) {
+			response.setMessage("收货记录不能为空");
+			response.setReason(ErrorCode.B00_CODE);
+			return response;
+		}
+		Long inWarehouseRecordId = Long.valueOf(orderId);
+		int totalProductQuantity = 0;
+		int onShelfProductQuantity = 0;
+		int onShelfBarcodeQuantity = 0;
+		// 收货明细
+		InWarehouseRecordItem param = new InWarehouseRecordItem();
+		param.setInWarehouseRecordId(inWarehouseRecordId);
+		List<InWarehouseRecordItem> inWarehouseRecordItemList = inWarehouseRecordItemDao.findInWarehouseRecordItem(param, null, null);
+		for (InWarehouseRecordItem item : inWarehouseRecordItemList) {
+			totalProductQuantity += item.getQuantity();// 商品个数
+			int onShelfQuantity = onShelfDao.countOnShelfSkuQuantity(inWarehouseRecordId, item.getSku());
+			if (onShelfQuantity > 0) {
+				onShelfBarcodeQuantity++;// 已上架条码数量
+				onShelfProductQuantity += onShelfQuantity;// 已上架商品数量
+			}
+		}
+		Map<String, String> resultMap = new HashMap<String, String>();
+		resultMap.put("totalBarcodeQuantity", inWarehouseRecordItemList.size() + "");// 条码个数
+		resultMap.put("totalProductQuantity", totalProductQuantity + "");// 商品个数
+		resultMap.put("onShelfProductQuantity", onShelfProductQuantity + "");// 已上架商品数量
+		resultMap.put("onShelfBarcodeQuantity", onShelfBarcodeQuantity + "");// 已上架条码数量
+		String message = GsonUtil.toJson(resultMap);
+		response.setMessage(message);
+		response.setSuccess(true);
+		return response;
+	}
+
+	@Override
+	public Response getOutShelfInfo(String content, Long userIdOfOperator) {
+		Response response = new Response();
+		response.setSuccess(false);
+		Map<String, String> map = (Map<String, String>) GsonUtil.toObject(content, Map.class);
+		String orderId = map.get("orderId");// 收货记录
+		if (StringUtil.isNull(orderId)) {
+			response.setMessage("订单号不能为空");
+			response.setReason(ErrorCode.B00_CODE);
+			return response;
+		}
+		OutWarehouseOrder param = new OutWarehouseOrder();
+		param.setCustomerReferenceNo(orderId);
+		List<OutWarehouseOrder> outWarehouseOrderList = outWarehouseOrderDao.findOutWarehouseOrder(param, null, null);
+		if (outWarehouseOrderList == null || outWarehouseOrderList.size() <= 0) {
+			response.setMessage("该订单号找不到出库订单");
+			response.setReason(ErrorCode.B00_CODE);
+			return response;
+		}
+		OutWarehouseOrder outWarehouseOrder = outWarehouseOrderList.get(0);
+		if (!StringUtil.isEqual(OutWarehouseOrderStatusCode.WOS, outWarehouseOrder.getStatus())) {
+			response.setMessage("该订单号对应订单非待捡货下架状态");
+			response.setReason(ErrorCode.B00_CODE);
+			return response;
+		}
+		int totalProductQuantity = 0;
+		int outShelfProductQuantity = 0;
+		int outShelfBarcodeQuantity = 0;
+		OutWarehouseOrderItemShelf shelfParam = new OutWarehouseOrderItemShelf();
+		shelfParam.setOutWarehouseOrderId(outWarehouseOrder.getId());
+		List<OutWarehouseOrderItemShelf> outWarehouseOrderItemShelfList = outWarehouseOrderItemShelfDao.findOutWarehouseOrderItemShelf(shelfParam, null, null);
+		for (OutWarehouseOrderItemShelf itemShelf : outWarehouseOrderItemShelfList) {
+			totalProductQuantity += itemShelf.getQuantity();// 商品个数
+			if (StringUtil.isEqual(itemShelf.getIsDone(), Constant.Y)) {
+				outShelfBarcodeQuantity++;// 已下架条码数量
+				outShelfProductQuantity += itemShelf.getQuantity();// 已下架商品数量
+			}
+		}
+		Map<String, String> resultMap = new HashMap<String, String>();
+		resultMap.put("totalBarcodeQuantity", outWarehouseOrderItemShelfList.size() + "");// 条码个数
+		resultMap.put("totalProductQuantity", totalProductQuantity + "");// 商品个数
+		resultMap.put("outShelfProductQuantity", outShelfProductQuantity + "");// 已下架商品数量
+		resultMap.put("outShelfBarcodeQuantity", outShelfBarcodeQuantity + "");// 已下架条码数量
+
+		String message = GsonUtil.toJson(resultMap);
+		response.setMessage(message);
+		response.setSuccess(true);
+		return response;
+	}
 }
