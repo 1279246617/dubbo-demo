@@ -12,7 +12,7 @@ import com.coe.wms.pojo.api.warehouse.EventBody;
  * @author Administrator
  * 
  */
-public interface IWarehouseInterfaceService {
+public interface IStorageInterfaceService {
 
 	/**
 	 * 

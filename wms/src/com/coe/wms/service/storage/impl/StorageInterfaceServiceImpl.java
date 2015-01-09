@@ -68,7 +68,7 @@ import com.coe.wms.pojo.api.warehouse.Sku;
 import com.coe.wms.pojo.api.warehouse.SkuDetail;
 import com.coe.wms.pojo.api.warehouse.TradeDetail;
 import com.coe.wms.pojo.api.warehouse.TradeOrder;
-import com.coe.wms.service.storage.IWarehouseInterfaceService;
+import com.coe.wms.service.storage.IStorageInterfaceService;
 import com.coe.wms.util.Config;
 import com.coe.wms.util.Constant;
 import com.coe.wms.util.NumberUtil;
@@ -81,10 +81,10 @@ import com.coe.wms.util.XmlUtil;
  * @author Administrator
  * 
  */
-@Service("warehouseInterfaceService")
-public class WarehouseInterfaceServiceImpl implements IWarehouseInterfaceService {
+@Service("storageInterfaceService")
+public class StorageInterfaceServiceImpl implements IStorageInterfaceService {
 
-	private static final Logger logger = Logger.getLogger(WarehouseInterfaceServiceImpl.class);
+	private static final Logger logger = Logger.getLogger(StorageInterfaceServiceImpl.class);
 
 	@Resource(name = "warehouseDao")
 	private IWarehouseDao warehouseDao;

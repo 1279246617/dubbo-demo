@@ -35,7 +35,7 @@ import com.coe.wms.model.warehouse.transport.OutWarehousePackageItem;
 import com.coe.wms.service.storage.IInWarehouseOrderService;
 import com.coe.wms.service.storage.IOutWarehouseOrderService;
 import com.coe.wms.service.storage.IStorageService;
-import com.coe.wms.service.storage.IWarehouseInterfaceService;
+import com.coe.wms.service.storage.IStorageInterfaceService;
 import com.coe.wms.service.transport.IFirstWaybillService;
 import com.coe.wms.service.transport.IOrderPackageService;
 import com.coe.wms.service.transport.IOrderService;
@@ -86,7 +86,7 @@ public class Transport {
 	private IOutWarehouseOrderService outWarehouseOrderService;
 
 	@Resource(name = "warehouseInterfaceService")
-	private IWarehouseInterfaceService warehouseInterfaceService;
+	private IStorageInterfaceService warehouseInterfaceService;
 
 	/**
 	 * 转运大包 查询

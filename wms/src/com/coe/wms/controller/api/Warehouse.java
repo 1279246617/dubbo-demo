@@ -21,7 +21,8 @@ import com.coe.wms.pojo.api.warehouse.Responses;
 import com.coe.wms.service.storage.IInWarehouseOrderService;
 import com.coe.wms.service.storage.IOutWarehouseOrderService;
 import com.coe.wms.service.storage.IStorageService;
-import com.coe.wms.service.storage.IWarehouseInterfaceService;
+import com.coe.wms.service.storage.IStorageInterfaceService;
+import com.coe.wms.service.transport.ITransportInterfaceService;
 import com.coe.wms.service.transport.ITransportService;
 import com.coe.wms.util.Constant;
 import com.coe.wms.util.StringUtil;
@@ -51,8 +52,11 @@ public class Warehouse {
 	@Resource(name = "outWarehouseOrderService")
 	private IOutWarehouseOrderService outWarehouseOrderService;
 
-	@Resource(name = "warehouseInterfaceService")
-	private IWarehouseInterfaceService warehouseInterfaceService;
+	@Resource(name = "storageInterfaceService")
+	private IStorageInterfaceService storageInterfaceService;
+
+	@Resource(name = "transportInterfaceService")
+	private ITransportInterfaceService transportInterfaceService;
 
 	/**
 	 * 接口(目前是顺丰专用)
@@ -82,7 +86,7 @@ public class Warehouse {
 
 			String responseXml = null;
 			// 验证参数
-			Map<String, String> validateResultMap = warehouseInterfaceService.warehouseInterfaceValidate(logisticsInterface, msgSource, dataDigest, msgType, msgId, version);
+			Map<String, String> validateResultMap = storageInterfaceService.warehouseInterfaceValidate(logisticsInterface, msgSource, dataDigest, msgType, msgId, version);
 			if (StringUtil.isEqual(validateResultMap.get(Constant.STATUS), Constant.FAIL)) {
 				responseXml = validateResultMap.get(Constant.MESSAGE);
 
@@ -93,7 +97,7 @@ public class Warehouse {
 			Long userIdOfCustomer = Long.valueOf(validateResultMap.get(Constant.USER_ID_OF_CUSTOMER));
 
 			// 获取事件类型
-			Map<String, Object> eventTypeMap = warehouseInterfaceService.warehouseInterfaceEventType(logisticsInterface, userIdOfCustomer, dataDigest, msgType, msgId, version);
+			Map<String, Object> eventTypeMap = storageInterfaceService.warehouseInterfaceEventType(logisticsInterface, userIdOfCustomer, dataDigest, msgType, msgId, version);
 			// 根据事件类型(eventType)分到不同方法处理
 			if (!StringUtil.isEqual((String) eventTypeMap.get(Constant.STATUS), Constant.SUCCESS)) {
 				responseXml = (String) eventTypeMap.get(Constant.MESSAGE);
@@ -110,32 +114,32 @@ public class Warehouse {
 
 			// 仓配
 			if (StringUtil.isEqualIgnoreCase(EventType.LOGISTICS_SKU_STOCKIN_INFO, eventType)) {// 创建入库订单
-				responseXml = warehouseInterfaceService.warehouseInterfaceSaveInWarehouseOrder(eventBody, userIdOfCustomer, eventTarget);
+				responseXml = storageInterfaceService.warehouseInterfaceSaveInWarehouseOrder(eventBody, userIdOfCustomer, eventTarget);
 			}
 
 			if (StringUtil.isEqualIgnoreCase(EventType.LOGISTICS_SKU_PAID, eventType)) {// 创建出库订单
-				responseXml = warehouseInterfaceService.warehouseInterfaceSaveOutWarehouseOrder(eventBody, userIdOfCustomer, eventTarget);
+				responseXml = storageInterfaceService.warehouseInterfaceSaveOutWarehouseOrder(eventBody, userIdOfCustomer, eventTarget);
 			}
 
 			if (StringUtil.isEqualIgnoreCase(EventType.LOGISTICS_SEND_SKU, eventType)) { // 确认出库订单
-				responseXml = warehouseInterfaceService.warehouseInterfaceConfirmOutWarehouseOrder(eventBody, userIdOfCustomer, eventTarget);
+				responseXml = storageInterfaceService.warehouseInterfaceConfirmOutWarehouseOrder(eventBody, userIdOfCustomer, eventTarget);
 			}
 
 			if (StringUtil.isEqualIgnoreCase(EventType.LOGISTICS_CANCEL, eventType)) { // 取消出库订单
-				responseXml = warehouseInterfaceService.warehouseInterfaceCancelOutWarehouseOrder(eventBody, userIdOfCustomer, eventTarget);
+				responseXml = storageInterfaceService.warehouseInterfaceCancelOutWarehouseOrder(eventBody, userIdOfCustomer, eventTarget);
 			}
 
 			if (StringUtil.isEqualIgnoreCase(EventType.LOGISTICS_TRADE_PAID, eventType)) { // 创建转运订单
-				Integer orderType = transportService.warehouseInterfaceDistinguishOrderOrPackage(eventBody);// 判断是大包(流连大包)还是小包
+				Integer orderType = transportInterfaceService.warehouseInterfaceDistinguishOrderOrPackage(eventBody);// 判断是大包(流连大包)还是小包
 				if (orderType == 1) {// 大包
-					responseXml = transportService.warehouseInterfaceSaveTransportOrderPackage(eventBody, userIdOfCustomer, eventTarget);
+					responseXml = transportInterfaceService.warehouseInterfaceSaveTransportOrderPackage(eventBody, userIdOfCustomer, eventTarget);
 				} else {// 小包
-					responseXml = transportService.warehouseInterfaceSaveTransportOrder(eventBody, userIdOfCustomer, eventTarget);
+					responseXml = transportInterfaceService.warehouseInterfaceSaveTransportOrder(eventBody, userIdOfCustomer, eventTarget);
 				}
 			}
 
 			if (StringUtil.isEqualIgnoreCase(EventType.LOGISTICS_SEND_GOODS, eventType)) { // 转运确认出库(确认重量)
-				responseXml = transportService.warehouseInterfaceConfirmTransportOrder(eventBody, userIdOfCustomer, eventTarget);
+				responseXml = transportInterfaceService.warehouseInterfaceConfirmTransportOrder(eventBody, userIdOfCustomer, eventTarget);
 			}
 			logger.warn("eventType:" + eventType + "  responseXml:" + responseXml);
 			return responseXml;
@@ -169,8 +173,11 @@ public class Warehouse {
 	public String warehouse2(HttpServletRequest request, HttpServletResponse response) {
 		try {
 			// 消息内容
-			String logisticsInterface = request.getParameter("logistics_interface");
-			
+			String content = request.getParameter("content");
+			String token = request.getParameter("token");
+			String apptype = request.getParameter("apptype");
+			String sign = request.getParameter("sign");
+
 			return null;
 		} catch (Exception e) {
 			e.printStackTrace();
