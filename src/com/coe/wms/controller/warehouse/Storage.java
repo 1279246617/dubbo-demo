@@ -81,8 +81,8 @@ public class Storage {
 	@Resource(name = "outWarehouseOrderService")
 	private IOutWarehouseOrderService outWarehouseOrderService;
 
-	@Resource(name = "warehouseInterfaceService")
-	private IStorageInterfaceService warehouseInterfaceService;
+	@Resource(name = "storageInterfaceService")
+	private IStorageInterfaceService storageInterfaceService;
 
 	/**
 	 * 添加入库订单备注

@@ -84,10 +84,6 @@ public class Transport {
 
 	@Resource(name = "outWarehouseOrderService")
 	private IOutWarehouseOrderService outWarehouseOrderService;
-
-	@Resource(name = "warehouseInterfaceService")
-	private IStorageInterfaceService warehouseInterfaceService;
-
 	/**
 	 * 转运大包 查询
 	 * 
