@@ -42,7 +42,7 @@ import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderReceiverDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderSenderDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderStatusDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehousePackageDao;
-import com.coe.wms.dao.warehouse.storage.IOutWarehouseRecordItemDao;
+import com.coe.wms.dao.warehouse.storage.IOutWarehousePackageItemDao;
 import com.coe.wms.dao.warehouse.storage.IReportDao;
 import com.coe.wms.dao.warehouse.storage.IReportTypeDao;
 import com.coe.wms.exception.ServiceException;
@@ -146,8 +146,8 @@ public class OutWarehouseOrderServiceImpl implements IOutWarehouseOrderService {
 	@Resource(name = "inWarehouseRecordItemDao")
 	private IInWarehouseRecordItemDao inWarehouseRecordItemDao;
 
-	@Resource(name = "outWarehouseRecordItemDao")
-	private IOutWarehouseRecordItemDao outWarehouseRecordItemDao;
+	@Resource(name = "outWarehousePackageItemDao")
+	private IOutWarehousePackageItemDao outWarehousePackageItemDao;
 
 	@Resource(name = "userDao")
 	private IUserDao userDao;
@@ -441,7 +441,7 @@ public class OutWarehouseOrderServiceImpl implements IOutWarehouseOrderService {
 				// 检查出库订单 是否已经和COE交接单号绑定
 				OutWarehousePackageItem checkTrackingNoParam = new OutWarehousePackageItem();
 				checkTrackingNoParam.setOutWarehouseOrderId(outWarehouseOrderId);
-				Long countTrackingNoResult = outWarehouseRecordItemDao.countOutWarehouseRecordItem(checkTrackingNoParam, null);
+				Long countTrackingNoResult = outWarehousePackageItemDao.countOutWarehousePackageItem(checkTrackingNoParam, null);
 				if (countTrackingNoResult > 0) {
 					// 说明该出库订单已经和其他COE交接单号绑定了,不能再绑定此单号
 					map.put(Constant.MESSAGE, "该出库订单已经绑定的了其他COE交接单号");
@@ -458,7 +458,7 @@ public class OutWarehouseOrderServiceImpl implements IOutWarehouseOrderService {
 				outWarehouseRecordItem.setUserIdOfCustomer(outWarehouseOrder.getUserIdOfCustomer());
 				outWarehouseRecordItem.setUserIdOfOperator(userIdOfOperator);
 				outWarehouseRecordItem.setWarehouseId(outWarehouseOrder.getWarehouseId());
-				long outShippingId = outWarehouseRecordItemDao.saveOutWarehouseRecordItem(outWarehouseRecordItem);
+				long outShippingId = outWarehousePackageItemDao.saveOutWarehousePackageItem(outWarehouseRecordItem);
 				map.put("outWarehouseShippingId", outShippingId + "");
 				map.put(Constant.STATUS, Constant.SUCCESS);
 			} else {
@@ -468,11 +468,11 @@ public class OutWarehouseOrderServiceImpl implements IOutWarehouseOrderService {
 				shippingParam.setCoeTrackingNoId(coeTrackingNoId);
 				shippingParam.setCoeTrackingNo(coeTrackingNo);
 				shippingParam.setOutWarehouseOrderTrackingNo(trackingNo);
-				List<OutWarehousePackageItem> outWarehouseShippingList = outWarehouseRecordItemDao.findOutWarehouseRecordItem(shippingParam, null, null);
+				List<OutWarehousePackageItem> outWarehouseShippingList = outWarehousePackageItemDao.findOutWarehousePackageItem(shippingParam, null, null);
 				String deleteShippingIds = "";
 				int sub = 0;
 				for (OutWarehousePackageItem shipping : outWarehouseShippingList) {
-					outWarehouseRecordItemDao.deleteOutWarehouseRecordItemById(shipping.getId());
+					outWarehousePackageItemDao.deleteOutWarehousePackageItemById(shipping.getId());
 					// 加#是为了 jquery可以直接$("#id1,#id2,#id3,#id4")
 					deleteShippingIds += ("#" + shipping.getId() + ",");
 					orderIds = orderIds.replaceAll(shipping.getOutWarehouseOrderId() + "\\|\\|", "");
@@ -531,7 +531,7 @@ public class OutWarehouseOrderServiceImpl implements IOutWarehouseOrderService {
 		// 根据coe交接单号 获取建包记录,获取每个出库订单(小包)
 		OutWarehousePackageItem itemParam = new OutWarehousePackageItem();
 		itemParam.setCoeTrackingNoId(coeTrackingNoId);
-		List<OutWarehousePackageItem> outWarehouseRecordItemList = outWarehouseRecordItemDao.findOutWarehouseRecordItem(itemParam, null, null);
+		List<OutWarehousePackageItem> outWarehouseRecordItemList = outWarehousePackageItemDao.findOutWarehousePackageItem(itemParam, null, null);
 		// 迭代,检查跟踪号
 		for (OutWarehousePackageItem recordItem : outWarehouseRecordItemList) {
 			// 改变状态 ,发送到哲盟
@@ -745,7 +745,7 @@ public class OutWarehouseOrderServiceImpl implements IOutWarehouseOrderService {
 		map.put(Constant.STATUS, Constant.FAIL);
 		OutWarehousePackageItem outWarehouseShipping = new OutWarehousePackageItem();
 		outWarehouseShipping.setCoeTrackingNo(coeTrackingNo);
-		List<OutWarehousePackageItem> outWarehouseShippingList = outWarehouseRecordItemDao.findOutWarehouseRecordItem(outWarehouseShipping, null, null);
+		List<OutWarehousePackageItem> outWarehouseShippingList = outWarehousePackageItemDao.findOutWarehousePackageItem(outWarehouseShipping, null, null);
 		List<TrackingNo> trackingNos = trackingNoDao.findTrackingNo(coeTrackingNo, TrackingNo.TYPE_COE);
 		// 暂不处理,单号可能重复问题
 		if (trackingNos == null || trackingNos.size() <= 0) {
@@ -801,7 +801,7 @@ public class OutWarehouseOrderServiceImpl implements IOutWarehouseOrderService {
 			map.put("remark", oPackage.getRemark() == null ? "" : oPackage.getRemark());
 			OutWarehousePackageItem param = new OutWarehousePackageItem();
 			param.setCoeTrackingNoId(oPackage.getCoeTrackingNoId());
-			List<OutWarehousePackageItem> outWarehouseShippingList = outWarehouseRecordItemDao.findOutWarehouseRecordItem(param, null, null);
+			List<OutWarehousePackageItem> outWarehouseShippingList = outWarehousePackageItemDao.findOutWarehousePackageItem(param, null, null);
 			Integer quantity = 0;
 			String orders = "";
 			for (OutWarehousePackageItem item : outWarehouseShippingList) {
@@ -822,7 +822,7 @@ public class OutWarehouseOrderServiceImpl implements IOutWarehouseOrderService {
 		OutWarehousePackage outWarehouseRecord = outWarehousePackageDao.getOutWarehousePackageById(recordId);
 		OutWarehousePackageItem param = new OutWarehousePackageItem();
 		param.setCoeTrackingNoId(outWarehouseRecord.getCoeTrackingNoId());
-		List<OutWarehousePackageItem> outWarehouseShippingList = outWarehouseRecordItemDao.findOutWarehouseRecordItem(param, null, null);
+		List<OutWarehousePackageItem> outWarehouseShippingList = outWarehousePackageItemDao.findOutWarehousePackageItem(param, null, null);
 		List<Map<String, String>> mapList = new ArrayList<Map<String, String>>();
 		for (OutWarehousePackageItem item : outWarehouseShippingList) {
 			Map<String, String> map = new HashMap<String, String>();
@@ -842,7 +842,7 @@ public class OutWarehouseOrderServiceImpl implements IOutWarehouseOrderService {
 		OutWarehousePackage outWarehousePackage = outWarehousePackageDao.getOutWarehousePackageById(packageId);
 		OutWarehousePackageItem param = new OutWarehousePackageItem();
 		param.setCoeTrackingNoId(outWarehousePackage.getCoeTrackingNoId());
-		List<OutWarehousePackageItem> outWarehouseShippingList = outWarehouseRecordItemDao.findOutWarehouseRecordItem(param, null, null);
+		List<OutWarehousePackageItem> outWarehouseShippingList = outWarehousePackageItemDao.findOutWarehousePackageItem(param, null, null);
 		List<Map<String, String>> mapList = new ArrayList<Map<String, String>>();
 		for (OutWarehousePackageItem item : outWarehouseShippingList) {
 			Map<String, String> map = new HashMap<String, String>();

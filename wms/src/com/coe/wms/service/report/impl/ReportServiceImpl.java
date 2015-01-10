@@ -35,7 +35,7 @@ import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderReceiverDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderSenderDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderStatusDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehousePackageDao;
-import com.coe.wms.dao.warehouse.storage.IOutWarehouseRecordItemDao;
+import com.coe.wms.dao.warehouse.storage.IOutWarehousePackageItemDao;
 import com.coe.wms.dao.warehouse.storage.IReportDao;
 import com.coe.wms.dao.warehouse.storage.IReportTypeDao;
 import com.coe.wms.exception.ServiceException;
@@ -146,8 +146,8 @@ public class ReportServiceImpl implements IReportService {
 	@Resource(name = "inWarehouseRecordItemDao")
 	private IInWarehouseRecordItemDao inWarehouseRecordItemDao;
 
-	@Resource(name = "outWarehouseRecordItemDao")
-	private IOutWarehouseRecordItemDao outWarehouseRecordItemDao;
+	@Resource(name = "outWarehousePackageItemDao")
+	private IOutWarehousePackageItemDao outWarehousePackageItemDao;
 
 	@Resource(name = "userDao")
 	private IUserDao userDao;
@@ -356,7 +356,7 @@ public class ReportServiceImpl implements IReportService {
 				OutWarehousePackageItem itemParam = new OutWarehousePackageItem();
 				// 出货主单和出货明细记录通过coe交接单号id关联
 				itemParam.setCoeTrackingNoId(coeTrackingNoId);
-				List<OutWarehousePackageItem> recordItemList = outWarehouseRecordItemDao.findOutWarehouseRecordItem(itemParam, null, null);
+				List<OutWarehousePackageItem> recordItemList = outWarehousePackageItemDao.findOutWarehousePackageItem(itemParam, null, null);
 				for (OutWarehousePackageItem recordItem : recordItemList) {
 					Long outWarehouseOrderId = recordItem.getOutWarehouseOrderId();
 					// 出库订单
