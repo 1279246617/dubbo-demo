@@ -64,7 +64,7 @@ import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus.OutWare
 import com.coe.wms.model.warehouse.storage.record.ItemInventory;
 import com.coe.wms.model.warehouse.storage.record.ItemShelfInventory;
 import com.coe.wms.model.warehouse.storage.record.OutWarehousePackage;
-import com.coe.wms.model.warehouse.storage.record.OutWarehouseRecordItem;
+import com.coe.wms.model.warehouse.storage.record.OutWarehousePackageItem;
 import com.coe.wms.service.storage.IOutWarehouseOrderService;
 import com.coe.wms.util.Config;
 import com.coe.wms.util.Constant;
@@ -439,7 +439,7 @@ public class OutWarehouseOrderServiceImpl implements IOutWarehouseOrderService {
 			map.put("orderId", outWarehouseOrderId + "");
 			if (StringUtil.isEqual(addOrSub, "1")) {
 				// 检查出库订单 是否已经和COE交接单号绑定
-				OutWarehouseRecordItem checkTrackingNoParam = new OutWarehouseRecordItem();
+				OutWarehousePackageItem checkTrackingNoParam = new OutWarehousePackageItem();
 				checkTrackingNoParam.setOutWarehouseOrderId(outWarehouseOrderId);
 				Long countTrackingNoResult = outWarehouseRecordItemDao.countOutWarehouseRecordItem(checkTrackingNoParam, null);
 				if (countTrackingNoResult > 0) {
@@ -449,7 +449,7 @@ public class OutWarehouseOrderServiceImpl implements IOutWarehouseOrderService {
 				}
 				// 保存到OutWarehouseShipping,但不改变出库订单的状态.
 				// 只有当操作员点击完成出货总单才改变一个COE单号下面对应的所有出库订单的状态
-				OutWarehouseRecordItem outWarehouseRecordItem = new OutWarehouseRecordItem();
+				OutWarehousePackageItem outWarehouseRecordItem = new OutWarehousePackageItem();
 				outWarehouseRecordItem.setCoeTrackingNo(coeTrackingNo);
 				outWarehouseRecordItem.setCoeTrackingNoId(coeTrackingNoId);
 				outWarehouseRecordItem.setCreatedTime(System.currentTimeMillis());
@@ -464,14 +464,14 @@ public class OutWarehouseOrderServiceImpl implements IOutWarehouseOrderService {
 			} else {
 				// 1 = 添加出货运单号 ,2 是减去
 				// 根据出货运单号+coe单号查找出货记录
-				OutWarehouseRecordItem shippingParam = new OutWarehouseRecordItem();
+				OutWarehousePackageItem shippingParam = new OutWarehousePackageItem();
 				shippingParam.setCoeTrackingNoId(coeTrackingNoId);
 				shippingParam.setCoeTrackingNo(coeTrackingNo);
 				shippingParam.setOutWarehouseOrderTrackingNo(trackingNo);
-				List<OutWarehouseRecordItem> outWarehouseShippingList = outWarehouseRecordItemDao.findOutWarehouseRecordItem(shippingParam, null, null);
+				List<OutWarehousePackageItem> outWarehouseShippingList = outWarehouseRecordItemDao.findOutWarehouseRecordItem(shippingParam, null, null);
 				String deleteShippingIds = "";
 				int sub = 0;
-				for (OutWarehouseRecordItem shipping : outWarehouseShippingList) {
+				for (OutWarehousePackageItem shipping : outWarehouseShippingList) {
 					outWarehouseRecordItemDao.deleteOutWarehouseRecordItemById(shipping.getId());
 					// 加#是为了 jquery可以直接$("#id1,#id2,#id3,#id4")
 					deleteShippingIds += ("#" + shipping.getId() + ",");
@@ -529,11 +529,11 @@ public class OutWarehouseOrderServiceImpl implements IOutWarehouseOrderService {
 		Long userIdOfCustomer = null;
 		Long warehouseId = null;
 		// 根据coe交接单号 获取建包记录,获取每个出库订单(小包)
-		OutWarehouseRecordItem itemParam = new OutWarehouseRecordItem();
+		OutWarehousePackageItem itemParam = new OutWarehousePackageItem();
 		itemParam.setCoeTrackingNoId(coeTrackingNoId);
-		List<OutWarehouseRecordItem> outWarehouseRecordItemList = outWarehouseRecordItemDao.findOutWarehouseRecordItem(itemParam, null, null);
+		List<OutWarehousePackageItem> outWarehouseRecordItemList = outWarehouseRecordItemDao.findOutWarehouseRecordItem(itemParam, null, null);
 		// 迭代,检查跟踪号
-		for (OutWarehouseRecordItem recordItem : outWarehouseRecordItemList) {
+		for (OutWarehousePackageItem recordItem : outWarehouseRecordItemList) {
 			// 改变状态 ,发送到哲盟
 			Long orderId = recordItem.getOutWarehouseOrderId();
 			// logger.info("出货,待发送到哲盟新系统的出库订单id: = " + orderId);
@@ -743,9 +743,9 @@ public class OutWarehouseOrderServiceImpl implements IOutWarehouseOrderService {
 	public Map<String, Object> outWarehouseShippingEnterCoeTrackingNo(String coeTrackingNo) throws ServiceException {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put(Constant.STATUS, Constant.FAIL);
-		OutWarehouseRecordItem outWarehouseShipping = new OutWarehouseRecordItem();
+		OutWarehousePackageItem outWarehouseShipping = new OutWarehousePackageItem();
 		outWarehouseShipping.setCoeTrackingNo(coeTrackingNo);
-		List<OutWarehouseRecordItem> outWarehouseShippingList = outWarehouseRecordItemDao.findOutWarehouseRecordItem(outWarehouseShipping, null, null);
+		List<OutWarehousePackageItem> outWarehouseShippingList = outWarehouseRecordItemDao.findOutWarehouseRecordItem(outWarehouseShipping, null, null);
 		List<TrackingNo> trackingNos = trackingNoDao.findTrackingNo(coeTrackingNo, TrackingNo.TYPE_COE);
 		// 暂不处理,单号可能重复问题
 		if (trackingNos == null || trackingNos.size() <= 0) {
@@ -799,12 +799,12 @@ public class OutWarehouseOrderServiceImpl implements IOutWarehouseOrderService {
 				map.put("warehouse", warehouse.getWarehouseName());
 			}
 			map.put("remark", oPackage.getRemark() == null ? "" : oPackage.getRemark());
-			OutWarehouseRecordItem param = new OutWarehouseRecordItem();
+			OutWarehousePackageItem param = new OutWarehousePackageItem();
 			param.setCoeTrackingNoId(oPackage.getCoeTrackingNoId());
-			List<OutWarehouseRecordItem> outWarehouseShippingList = outWarehouseRecordItemDao.findOutWarehouseRecordItem(param, null, null);
+			List<OutWarehousePackageItem> outWarehouseShippingList = outWarehouseRecordItemDao.findOutWarehouseRecordItem(param, null, null);
 			Integer quantity = 0;
 			String orders = "";
-			for (OutWarehouseRecordItem item : outWarehouseShippingList) {
+			for (OutWarehousePackageItem item : outWarehouseShippingList) {
 				orders += item.getOutWarehouseOrderTrackingNo() + " ; ";
 				quantity++;
 			}
@@ -820,11 +820,11 @@ public class OutWarehouseOrderServiceImpl implements IOutWarehouseOrderService {
 	@Override
 	public List<Map<String, String>> getOutWarehouseRecordItemMapByRecordId(Long recordId) {
 		OutWarehousePackage outWarehouseRecord = outWarehousePackageDao.getOutWarehousePackageById(recordId);
-		OutWarehouseRecordItem param = new OutWarehouseRecordItem();
+		OutWarehousePackageItem param = new OutWarehousePackageItem();
 		param.setCoeTrackingNoId(outWarehouseRecord.getCoeTrackingNoId());
-		List<OutWarehouseRecordItem> outWarehouseShippingList = outWarehouseRecordItemDao.findOutWarehouseRecordItem(param, null, null);
+		List<OutWarehousePackageItem> outWarehouseShippingList = outWarehouseRecordItemDao.findOutWarehouseRecordItem(param, null, null);
 		List<Map<String, String>> mapList = new ArrayList<Map<String, String>>();
-		for (OutWarehouseRecordItem item : outWarehouseShippingList) {
+		for (OutWarehousePackageItem item : outWarehouseShippingList) {
 			Map<String, String> map = new HashMap<String, String>();
 			map.put("orderId", item.getOutWarehouseOrderId() + "");
 			map.put("trackingNo", item.getOutWarehouseOrderTrackingNo());
@@ -840,11 +840,11 @@ public class OutWarehouseOrderServiceImpl implements IOutWarehouseOrderService {
 	@Override
 	public List<Map<String, String>> getOutWarehouseRecordItemByPackageId(Long packageId) {
 		OutWarehousePackage outWarehousePackage = outWarehousePackageDao.getOutWarehousePackageById(packageId);
-		OutWarehouseRecordItem param = new OutWarehouseRecordItem();
+		OutWarehousePackageItem param = new OutWarehousePackageItem();
 		param.setCoeTrackingNoId(outWarehousePackage.getCoeTrackingNoId());
-		List<OutWarehouseRecordItem> outWarehouseShippingList = outWarehouseRecordItemDao.findOutWarehouseRecordItem(param, null, null);
+		List<OutWarehousePackageItem> outWarehouseShippingList = outWarehouseRecordItemDao.findOutWarehouseRecordItem(param, null, null);
 		List<Map<String, String>> mapList = new ArrayList<Map<String, String>>();
-		for (OutWarehouseRecordItem item : outWarehouseShippingList) {
+		for (OutWarehousePackageItem item : outWarehouseShippingList) {
 			Map<String, String> map = new HashMap<String, String>();
 			map.put("orderId", item.getOutWarehouseOrderId() + "");
 			map.put("trackingNo", item.getOutWarehouseOrderTrackingNo());

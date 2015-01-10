@@ -47,7 +47,7 @@ import com.coe.wms.model.warehouse.storage.record.InWarehouseRecordItem;
 import com.coe.wms.model.warehouse.storage.record.ItemDailyInventory;
 import com.coe.wms.model.warehouse.storage.record.ItemInventory;
 import com.coe.wms.model.warehouse.storage.record.OutWarehousePackage;
-import com.coe.wms.model.warehouse.storage.record.OutWarehouseRecordItem;
+import com.coe.wms.model.warehouse.storage.record.OutWarehousePackageItem;
 import com.coe.wms.task.IGenerateReportTask;
 import com.coe.wms.util.Config;
 import com.coe.wms.util.Constant;
@@ -308,11 +308,11 @@ public class GenerateReportTaskImpl implements IGenerateReportTask {
 					List<String[]> rows = new ArrayList<String[]>();
 					for (OutWarehousePackage outPackage : outWarehousePackageList) {// 迭代出货记录
 						Long coeTrackingNoId = outPackage.getCoeTrackingNoId();
-						OutWarehouseRecordItem itemParam = new OutWarehouseRecordItem();
+						OutWarehousePackageItem itemParam = new OutWarehousePackageItem();
 						// 出货主单和出货明细记录通过coe交接单号id关联
 						itemParam.setCoeTrackingNoId(coeTrackingNoId);
-						List<OutWarehouseRecordItem> recordItemList = outWarehouseRecordItemDao.findOutWarehouseRecordItem(itemParam, null, null);
-						for (OutWarehouseRecordItem recordItem : recordItemList) {
+						List<OutWarehousePackageItem> recordItemList = outWarehouseRecordItemDao.findOutWarehouseRecordItem(itemParam, null, null);
+						for (OutWarehousePackageItem recordItem : recordItemList) {
 							Long outWarehouseOrderId = recordItem.getOutWarehouseOrderId();
 							// 出库订单
 							OutWarehouseOrder order = outWarehouseOrderDao.getOutWarehouseOrderById(outWarehouseOrderId);
