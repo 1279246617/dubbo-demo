@@ -42,7 +42,6 @@ import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderReceiverDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderSenderDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderStatusDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehousePackageDao;
-import com.coe.wms.dao.warehouse.storage.IOutWarehouseRecordDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseRecordItemDao;
 import com.coe.wms.dao.warehouse.storage.IReportDao;
 import com.coe.wms.dao.warehouse.storage.IReportTypeDao;
@@ -52,8 +51,8 @@ import com.coe.wms.model.unit.Weight.WeightCode;
 import com.coe.wms.model.user.User;
 import com.coe.wms.model.warehouse.TrackingNo;
 import com.coe.wms.model.warehouse.Warehouse;
-import com.coe.wms.model.warehouse.shipway.ShipwayApiAccount;
 import com.coe.wms.model.warehouse.shipway.Shipway.ShipwayCode;
+import com.coe.wms.model.warehouse.shipway.ShipwayApiAccount;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrderItem;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrder;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderItem;
@@ -65,7 +64,6 @@ import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus.OutWare
 import com.coe.wms.model.warehouse.storage.record.ItemInventory;
 import com.coe.wms.model.warehouse.storage.record.ItemShelfInventory;
 import com.coe.wms.model.warehouse.storage.record.OutWarehousePackage;
-import com.coe.wms.model.warehouse.storage.record.OutWarehouseRecord;
 import com.coe.wms.model.warehouse.storage.record.OutWarehouseRecordItem;
 import com.coe.wms.service.storage.IOutWarehouseOrderService;
 import com.coe.wms.util.Config;
@@ -126,9 +124,6 @@ public class OutWarehouseOrderServiceImpl implements IOutWarehouseOrderService {
 
 	@Resource(name = "outWarehouseOrderDao")
 	private IOutWarehouseOrderDao outWarehouseOrderDao;
-
-	@Resource(name = "outWarehouseRecordDao")
-	private IOutWarehouseRecordDao outWarehouseRecordDao;
 
 	@Resource(name = "outWarehousePackageDao")
 	private IOutWarehousePackageDao outWarehousePackageDao;
@@ -500,6 +495,9 @@ public class OutWarehouseOrderServiceImpl implements IOutWarehouseOrderService {
 		return map;
 	}
 
+	/**
+	 * 扫描发货
+	 */
 	@Override
 	public Map<String, String> outWarehouseShippingConfirm(String coeTrackingNo, Long userIdOfOperator) throws ServiceException {
 		Map<String, String> map = new HashMap<String, String>();
@@ -509,29 +507,25 @@ public class OutWarehouseOrderServiceImpl implements IOutWarehouseOrderService {
 			return map;
 		}
 		List<TrackingNo> trackingNoList = trackingNoDao.findTrackingNo(coeTrackingNo, TrackingNo.TYPE_COE);
-		if (trackingNoList == null || trackingNoList.size() < 1) {
+		if (trackingNoList == null || trackingNoList.size() <= 0) {
 			map.put(Constant.MESSAGE, "该COE交接单号无效,请输入新单号");
 			return map;
 		}
 		TrackingNo trackingNo = trackingNoList.get(0);
 		Long coeTrackingNoId = trackingNo.getId();
 		// 根据出库交接单号查询建包记录.
-		OutWarehousePackage outWarehousePackage = new OutWarehousePackage();
-		outWarehousePackage.setCoeTrackingNoId(coeTrackingNoId);
-		Long countOutWarehousePackage = outWarehousePackageDao.countOutWarehousePackage(outWarehousePackage, null);
-		if (countOutWarehousePackage <= 0) {
+		OutWarehousePackage param = new OutWarehousePackage();
+		param.setCoeTrackingNoId(coeTrackingNoId);
+		List<OutWarehousePackage> outWarehousePackageList = outWarehousePackageDao.findOutWarehousePackage(param, null, null);
+		if (outWarehousePackageList == null || outWarehousePackageList.size() <= 0) {
 			map.put(Constant.MESSAGE, "没有找到出库建包记录,请先完成建包");
 			return map;
 		}
-		// 出库记录
-		OutWarehouseRecord outWarehouseRecord = new OutWarehouseRecord();
-		outWarehouseRecord.setCoeTrackingNoId(coeTrackingNoId);
-		Long countOutWarehouseRecord = outWarehouseRecordDao.countOutWarehouseRecord(outWarehouseRecord, null);
-		if (countOutWarehouseRecord >= 1) {
+		OutWarehousePackage outWarehousePackage = outWarehousePackageList.get(0);
+		if (StringUtil.isEqual(outWarehousePackage.getIsShiped(), Constant.Y)) {
 			map.put(Constant.MESSAGE, "该交接单号对应大包已经出库,请勿重复操作");
 			return map;
 		}
-
 		Long userIdOfCustomer = null;
 		Long warehouseId = null;
 		// 根据coe交接单号 获取建包记录,获取每个出库订单(小包)
@@ -576,13 +570,8 @@ public class OutWarehouseOrderServiceImpl implements IOutWarehouseOrderService {
 			}
 			// 更新库存结束----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 		}
-		// 保存出库记录
-		outWarehouseRecord.setCoeTrackingNo(coeTrackingNo);
-		outWarehouseRecord.setCreatedTime(System.currentTimeMillis());
-		outWarehouseRecord.setUserIdOfCustomer(userIdOfCustomer);
-		outWarehouseRecord.setUserIdOfOperator(userIdOfOperator);
-		outWarehouseRecord.setWarehouseId(warehouseId);
-		outWarehouseRecordDao.saveOutWarehouseRecord(outWarehouseRecord);
+		outWarehousePackage.setIsShiped(Constant.Y);
+		outWarehousePackage.setShippedTime(System.currentTimeMillis());
 		map.put(Constant.STATUS, Constant.SUCCESS);
 		map.put(Constant.MESSAGE, "完成出货总单成功,请继续下一批!");
 		return map;
@@ -632,7 +621,6 @@ public class OutWarehouseOrderServiceImpl implements IOutWarehouseOrderService {
 			map.put(Constant.MESSAGE, "请输入出货跟踪单号再按完成出货建包!");
 			return map;
 		}
-
 		// 保存出库建包记录
 		OutWarehousePackage outWarehousePackage = new OutWarehousePackage();
 		outWarehousePackage.setCoeTrackingNo(coeTrackingNo);
@@ -641,6 +629,7 @@ public class OutWarehouseOrderServiceImpl implements IOutWarehouseOrderService {
 		outWarehousePackage.setUserIdOfCustomer(userIdOfCustomer);
 		outWarehousePackage.setUserIdOfOperator(userIdOfOperator);
 		outWarehousePackage.setWarehouseId(warehouseId);
+		outWarehousePackage.setIsShiped(Constant.N);
 		outWarehousePackageDao.saveOutWarehousePackage(outWarehousePackage);
 		// 标记coe单号已经使用
 		trackingNoDao.usedTrackingNo(coeTrackingNoId);
@@ -740,17 +729,6 @@ public class OutWarehouseOrderServiceImpl implements IOutWarehouseOrderService {
 	}
 
 	@Override
-	public Map<String, String> saveOutWarehouseRecordRemark(String remark, Long id) throws ServiceException {
-		Map<String, String> map = new HashMap<String, String>();
-		if (outWarehouseRecordDao.updateOutWarehouseRecordRemark(id, remark) > 0) {
-			map.put(Constant.STATUS, Constant.SUCCESS);
-		} else {
-			map.put(Constant.STATUS, Constant.FAIL);
-		}
-		return map;
-	}
-
-	@Override
 	public Map<String, String> saveOutWarehousePackageRemark(String remark, Long id) throws ServiceException {
 		Map<String, String> map = new HashMap<String, String>();
 		if (outWarehousePackageDao.updateOutWarehousePackageRemark(id, remark) > 0) {
@@ -786,52 +764,6 @@ public class OutWarehouseOrderServiceImpl implements IOutWarehouseOrderService {
 	}
 
 	/**
-	 * 获取出库记录
-	 */
-	@Override
-	public Pagination getOutWarehouseRecordData(OutWarehouseRecord outWarehouseRecord, Map<String, String> moreParam, Pagination page) {
-		List<OutWarehouseRecord> outWarehouseRecordList = outWarehouseRecordDao.findOutWarehouseRecord(outWarehouseRecord, moreParam, page);
-		List<Object> list = new ArrayList<Object>();
-		for (OutWarehouseRecord record : outWarehouseRecordList) {
-			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("id", record.getId());
-			if (record.getCreatedTime() != null) {
-				map.put("createdTime", DateUtil.dateConvertString(new Date(record.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss));
-			}
-			// 查询用户名
-			User user = userDao.getUserById(record.getUserIdOfCustomer());
-			map.put("userLoginNameOfCustomer", user.getLoginName());
-			// 查询操作员
-			if (NumberUtil.greaterThanZero(record.getUserIdOfOperator())) {
-				User userOfOperator = userDao.getUserById(record.getUserIdOfOperator());
-				map.put("userLoginNameOfOperator", userOfOperator.getLoginName());
-			}
-			map.put("coeTrackingNo", record.getCoeTrackingNo());
-			map.put("coeTrackingNoId", record.getCoeTrackingNoId());
-			if (NumberUtil.greaterThanZero(record.getWarehouseId())) {
-				Warehouse warehouse = warehouseDao.getWarehouseById(record.getWarehouseId());
-				map.put("warehouse", warehouse.getWarehouseName());
-			}
-			map.put("remark", record.getRemark() == null ? "" : record.getRemark());
-			OutWarehouseRecordItem param = new OutWarehouseRecordItem();
-			param.setCoeTrackingNoId(record.getCoeTrackingNoId());
-			List<OutWarehouseRecordItem> outWarehouseShippingList = outWarehouseRecordItemDao.findOutWarehouseRecordItem(param, null, null);
-			Integer quantity = 0;
-			String orders = "";
-			for (OutWarehouseRecordItem item : outWarehouseShippingList) {
-				orders += item.getOutWarehouseOrderTrackingNo() + " ; ";
-				quantity++;
-			}
-			map.put("orders", orders);
-			map.put("quantity", quantity);
-			list.add(map);
-		}
-		page.total = outWarehouseRecordDao.countOutWarehouseRecord(outWarehouseRecord, moreParam);
-		page.rows = list;
-		return page;
-	}
-
-	/**
 	 * 获取出库建包记录
 	 */
 	@Override
@@ -844,14 +776,10 @@ public class OutWarehouseOrderServiceImpl implements IOutWarehouseOrderService {
 			if (oPackage.getCreatedTime() != null) {
 				map.put("packageTime", DateUtil.dateConvertString(new Date(oPackage.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss));
 			}
-			OutWarehouseRecord recordParam = new OutWarehouseRecord();
-			recordParam.setCoeTrackingNoId(oPackage.getCoeTrackingNoId());
-			List<OutWarehouseRecord> recordList = outWarehouseRecordDao.findOutWarehouseRecord(recordParam, null, null);
-			if (recordList != null && recordList.size() >= 1) {
+			if (StringUtil.isEqual(oPackage.getIsShiped(), Constant.Y)) {
 				map.put("isShipped", "已发货");
-				OutWarehouseRecord record = recordList.get(0);
-				if (record.getCreatedTime() != null) {
-					map.put("shippedTime", DateUtil.dateConvertString(new Date(record.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss));
+				if (oPackage.getShippedTime() != null) {
+					map.put("shippedTime", DateUtil.dateConvertString(new Date(oPackage.getShippedTime()), DateUtil.yyyy_MM_ddHHmmss));
 				}
 			} else {
 				map.put("isShipped", "未发货");
@@ -891,7 +819,7 @@ public class OutWarehouseOrderServiceImpl implements IOutWarehouseOrderService {
 
 	@Override
 	public List<Map<String, String>> getOutWarehouseRecordItemMapByRecordId(Long recordId) {
-		OutWarehouseRecord outWarehouseRecord = outWarehouseRecordDao.getOutWarehouseRecordById(recordId);
+		OutWarehousePackage outWarehouseRecord = outWarehousePackageDao.getOutWarehousePackageById(recordId);
 		OutWarehouseRecordItem param = new OutWarehouseRecordItem();
 		param.setCoeTrackingNoId(outWarehouseRecord.getCoeTrackingNoId());
 		List<OutWarehouseRecordItem> outWarehouseShippingList = outWarehouseRecordItemDao.findOutWarehouseRecordItem(param, null, null);

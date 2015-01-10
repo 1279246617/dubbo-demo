@@ -56,6 +56,17 @@ public class OutWarehousePackage implements Serializable {
 	 */
 	private Long createdTime;
 
+	/**
+	 * 创建时间
+	 */
+	private Long shippedTime;
+
+	/**
+	 * 是否已经扫描出货
+	 */
+	private String isShiped;
+	
+	
 	private String remark;
 
 	public Long getId() {
@@ -90,6 +101,14 @@ public class OutWarehousePackage implements Serializable {
 		this.userIdOfCustomer = userIdOfCustomer;
 	}
 
+	public Long getShippedTime() {
+		return shippedTime;
+	}
+
+	public void setShippedTime(Long shippedTime) {
+		this.shippedTime = shippedTime;
+	}
+
 	public String getCoeTrackingNo() {
 		return coeTrackingNo;
 	}
@@ -104,6 +123,14 @@ public class OutWarehousePackage implements Serializable {
 
 	public String getRemark() {
 		return remark;
+	}
+
+	public String getIsShiped() {
+		return isShiped;
+	}
+
+	public void setIsShiped(String isShiped) {
+		this.isShiped = isShiped;
 	}
 
 	public void setRemark(String remark) {

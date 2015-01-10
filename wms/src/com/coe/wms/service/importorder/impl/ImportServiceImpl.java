@@ -24,7 +24,6 @@ import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderReceiverDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderSenderDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderStatusDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehousePackageDao;
-import com.coe.wms.dao.warehouse.storage.IOutWarehouseRecordDao;
 import com.coe.wms.exception.ServiceException;
 import com.coe.wms.model.unit.Currency.CurrencyCode;
 import com.coe.wms.model.warehouse.shipway.Shipway.ShipwayCode;
@@ -70,9 +69,6 @@ public class ImportServiceImpl implements IImportService {
 
 	@Resource(name = "outWarehouseOrderDao")
 	private IOutWarehouseOrderDao outWarehouseOrderDao;
-
-	@Resource(name = "outWarehouseRecordDao")
-	private IOutWarehouseRecordDao outWarehouseRecordDao;
 
 	@Resource(name = "outWarehousePackageDao")
 	private IOutWarehousePackageDao outWarehousePackageDao;

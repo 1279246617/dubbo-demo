@@ -17,4 +17,6 @@ public interface IOutWarehousePackageDao {
 	public Long countOutWarehousePackage(OutWarehousePackage outWarehousePackage, Map<String, String> moreParam);
 
 	public int updateOutWarehousePackageRemark(Long outWarehousePackageId, String remark);
+
+	public int updateOutWarehousePackageIsShiped(Long outWarehouseRecordId, String isShiped, Long shippedTime);
 }
