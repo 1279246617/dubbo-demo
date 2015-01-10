@@ -214,6 +214,7 @@
 		            		}
 		            		return skus;
 	  		          	}},
+	  		         	{ display: '创建时间', name: 'createdTime', align: 'center', type: 'float',width:'12%'},
 		                { display: '收件人名', name: 'receiverName', align: 'center', type: 'float',width:'8%'},
 		                { display: '收件人街道1', name: 'receiverAddressLine1', align: 'center', type: 'float',width:'12%'},
 		                { display: '收件人街道2', name: 'receiverAddressLine2', align: 'center', type: 'float',width:'8%'},
@@ -229,7 +230,6 @@
 		                { display: '打印次数', name: 'printedCount', align: 'center', type: 'float',width:'8%'},
 		                { display: '回传称重状态', name: 'callbackSendWeightIsSuccess', align: 'center', type: 'float',width:'8%'},
 		                { display: '回传出库状态', name: 'callbackSendStatusIsSuccess', align: 'center', type: 'float',width:'8%'},
-		                { display: '创建时间', name: 'createdTime', align: 'center', type: 'float',width:'12%'},
 		                {display: '操作',isSort: false,width: '9%',render: function(row) {
 		            		var  h = '<a href="javascript:checkSingleOrder(' + row.id + ')">审核</a> ';
 // 		            				h += '<a href="javascript:deleteOutWarehouseOrder(' + row.id + ')">删除</a>';
