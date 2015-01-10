@@ -570,8 +570,7 @@ public class OutWarehouseOrderServiceImpl implements IOutWarehouseOrderService {
 			}
 			// 更新库存结束----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 		}
-		outWarehousePackage.setIsShiped(Constant.Y);
-		outWarehousePackage.setShippedTime(System.currentTimeMillis());
+		outWarehousePackageDao.updateOutWarehousePackageIsShiped(outWarehousePackage.getId(), Constant.Y, System.currentTimeMillis());
 		map.put(Constant.STATUS, Constant.SUCCESS);
 		map.put(Constant.MESSAGE, "完成出货总单成功,请继续下一批!");
 		return map;
