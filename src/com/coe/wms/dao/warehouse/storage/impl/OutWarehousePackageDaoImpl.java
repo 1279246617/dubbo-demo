@@ -69,7 +69,7 @@ public class OutWarehousePackageDaoImpl implements IOutWarehousePackageDao {
 
 	@Override
 	public OutWarehousePackage getOutWarehousePackageById(Long outWarehousePackageId) {
-		String sql = "select id,warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,remark,is_shiped from w_s_out_warehouse_package where id =" + outWarehousePackageId;
+		String sql = "select id,warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,remark,is_shiped,shipped_time from w_s_out_warehouse_package where id =" + outWarehousePackageId;
 		OutWarehousePackage Package = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<OutWarehousePackage>(OutWarehousePackage.class));
 		return Package;
 	}
@@ -82,7 +82,7 @@ public class OutWarehousePackageDaoImpl implements IOutWarehousePackageDao {
 	@Override
 	public List<OutWarehousePackage> findOutWarehousePackage(OutWarehousePackage outWarehousePackage, Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select id,warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,remark,is_shiped from w_s_out_warehouse_package where 1=1 ");
+		sb.append("select id,warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,remark,is_shiped,shipped_time from w_s_out_warehouse_package where 1=1 ");
 		if (outWarehousePackage != null) {
 			if (outWarehousePackage.getId() != null) {
 				sb.append(" and id = " + outWarehousePackage.getId());
