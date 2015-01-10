@@ -37,7 +37,6 @@ import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderReceiverDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderSenderDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderStatusDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehousePackageDao;
-import com.coe.wms.dao.warehouse.storage.IOutWarehouseRecordDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseRecordItemDao;
 import com.coe.wms.dao.warehouse.storage.IReportDao;
 import com.coe.wms.dao.warehouse.storage.IReportTypeDao;
@@ -109,8 +108,6 @@ public class ScannerServiceImpl implements IScannerService {
 	@Resource(name = "outWarehouseOrderDao")
 	private IOutWarehouseOrderDao outWarehouseOrderDao;
 
-	@Resource(name = "outWarehouseRecordDao")
-	private IOutWarehouseRecordDao outWarehouseRecordDao;
 
 	@Resource(name = "outWarehousePackageDao")
 	private IOutWarehousePackageDao outWarehousePackageDao;
@@ -442,8 +439,13 @@ public class ScannerServiceImpl implements IScannerService {
 			return response;
 		}
 		OutWarehouseOrder outWarehouseOrder = outWarehouseOrderList.get(0);
-		if (!StringUtil.isEqual(OutWarehouseOrderStatusCode.WOS, outWarehouseOrder.getStatus())) {
-			response.setMessage("该订单号对应订单非待捡货下架状态");
+		if (StringUtil.isEqual(OutWarehouseOrderStatusCode.WWC, outWarehouseOrder.getStatus())) {
+			response.setMessage("该订单号对应订单为待仓库审核状态");
+			response.setReason(ErrorCode.B00_CODE);
+			return response;
+		}
+		if (StringUtil.isEqual(OutWarehouseOrderStatusCode.WPP, outWarehouseOrder.getStatus())) {
+			response.setMessage("该订单号对应订单为待打印捡货单状态");
 			response.setReason(ErrorCode.B00_CODE);
 			return response;
 		}

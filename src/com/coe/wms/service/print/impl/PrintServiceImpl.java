@@ -31,7 +31,6 @@ import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderReceiverDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderSenderDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderStatusDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehousePackageDao;
-import com.coe.wms.dao.warehouse.storage.IOutWarehouseRecordDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseRecordItemDao;
 import com.coe.wms.dao.warehouse.transport.IFirstWaybillDao;
 import com.coe.wms.dao.warehouse.transport.IFirstWaybillItemDao;
@@ -83,9 +82,6 @@ public class PrintServiceImpl implements IPrintService {
 
 	@Resource(name = "outWarehouseRecordItemDao")
 	private IOutWarehouseRecordItemDao outWarehouseRecordItemDao;
-
-	@Resource(name = "outWarehouseRecordDao")
-	private IOutWarehouseRecordDao outWarehouseRecordDao;
 
 	@Resource(name = "seatDao")
 	private ISeatDao seatDao;

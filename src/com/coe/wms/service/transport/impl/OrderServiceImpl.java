@@ -47,13 +47,11 @@ import com.coe.wms.model.warehouse.TrackingNo;
 import com.coe.wms.model.warehouse.Warehouse;
 import com.coe.wms.model.warehouse.shipway.Shipway.ShipwayCode;
 import com.coe.wms.model.warehouse.shipway.ShipwayApiAccount;
-import com.coe.wms.model.warehouse.storage.record.OutWarehouseRecord;
 import com.coe.wms.model.warehouse.transport.FirstWaybill;
 import com.coe.wms.model.warehouse.transport.FirstWaybillItem;
 import com.coe.wms.model.warehouse.transport.FirstWaybillOnShelf;
 import com.coe.wms.model.warehouse.transport.FirstWaybillStatus.FirstWaybillStatusCode;
 import com.coe.wms.model.warehouse.transport.Order;
-import com.coe.wms.model.warehouse.transport.OrderPackage;
 import com.coe.wms.model.warehouse.transport.OrderPackageStatus.OrderPackageStatusCode;
 import com.coe.wms.model.warehouse.transport.OrderReceiver;
 import com.coe.wms.model.warehouse.transport.OrderSender;
@@ -742,8 +740,6 @@ public class OrderServiceImpl implements IOrderService {
 			if (packageRecord.getCreatedTime() != null) {
 				map.put("packageTime", DateUtil.dateConvertString(new Date(packageRecord.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss));
 			}
-			OutWarehouseRecord recordParam = new OutWarehouseRecord();
-			recordParam.setCoeTrackingNoId(packageRecord.getCoeTrackingNoId());
 			if (StringUtil.isEqual(packageRecord.getIsShiped(), Constant.Y)) {
 				map.put("isShipped", "已发货");
 				map.put("shippedTime", DateUtil.dateConvertString(new Date(packageRecord.getShippedTime()), DateUtil.yyyy_MM_ddHHmmss));

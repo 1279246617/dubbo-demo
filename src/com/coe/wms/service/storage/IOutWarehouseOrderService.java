@@ -11,7 +11,6 @@ import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrder;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderItem;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus;
 import com.coe.wms.model.warehouse.storage.record.OutWarehousePackage;
-import com.coe.wms.model.warehouse.storage.record.OutWarehouseRecord;
 import com.coe.wms.util.Pagination;
 
 /**
@@ -22,16 +21,7 @@ import com.coe.wms.util.Pagination;
 public interface IOutWarehouseOrderService {
 
 	static final Logger logger = Logger.getLogger(IOutWarehouseOrderService.class);
-
-	/**
-	 * 获取出库记录
-	 * 
-	 * @param inWarehouseRecordId
-	 * @param page
-	 * @return
-	 */
-	public Pagination getOutWarehouseRecordData(OutWarehouseRecord outWarehouseRecord, Map<String, String> moreParam, Pagination page);
-
+	 
 	/**
 	 * 获取建包记录
 	 * 
@@ -133,8 +123,6 @@ public interface IOutWarehouseOrderService {
 	public Map<String, Object> outWarehouseSubmitCustomerReferenceNo(String customerReferenceNo, Long userIdOfOperator) throws ServiceException;
 
 	public Map<String, Object> outWarehouseSubmitWeight(String customerReferenceNo, Double weight, Long userIdOfOperator) throws ServiceException;
-
-	public Map<String, String> saveOutWarehouseRecordRemark(String remark, Long id) throws ServiceException;
 
 	public Map<String, String> saveOutWarehousePackageRemark(String remark, Long id) throws ServiceException;
 

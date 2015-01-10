@@ -30,7 +30,7 @@ import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderItemDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderReceiverDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderSenderDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderStatusDao;
-import com.coe.wms.dao.warehouse.storage.IOutWarehouseRecordDao;
+import com.coe.wms.dao.warehouse.storage.IOutWarehousePackageDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseRecordItemDao;
 import com.coe.wms.dao.warehouse.storage.IReportDao;
 import com.coe.wms.model.user.User;
@@ -46,10 +46,11 @@ import com.coe.wms.model.warehouse.storage.record.InWarehouseRecord;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecordItem;
 import com.coe.wms.model.warehouse.storage.record.ItemDailyInventory;
 import com.coe.wms.model.warehouse.storage.record.ItemInventory;
-import com.coe.wms.model.warehouse.storage.record.OutWarehouseRecord;
+import com.coe.wms.model.warehouse.storage.record.OutWarehousePackage;
 import com.coe.wms.model.warehouse.storage.record.OutWarehouseRecordItem;
 import com.coe.wms.task.IGenerateReportTask;
 import com.coe.wms.util.Config;
+import com.coe.wms.util.Constant;
 import com.coe.wms.util.DateUtil;
 import com.coe.wms.util.FileUtil;
 import com.coe.wms.util.NumberUtil;
@@ -93,8 +94,8 @@ public class GenerateReportTaskImpl implements IGenerateReportTask {
 	@Resource(name = "inWarehouseRecordItemDao")
 	private IInWarehouseRecordItemDao inWarehouseRecordItemDao;
 
-	@Resource(name = "outWarehouseRecordDao")
-	private IOutWarehouseRecordDao outWarehouseRecordDao;
+	@Resource(name = "outWarehousePackageDao")
+	private IOutWarehousePackageDao outWarehousePackageDao;
 
 	@Resource(name = "outWarehouseRecordItemDao")
 	private IOutWarehouseRecordItemDao outWarehouseRecordItemDao;
@@ -291,11 +292,12 @@ public class GenerateReportTaskImpl implements IGenerateReportTask {
 			for (User user : userList) {
 				try {
 					Long userIdOfCustomer = user.getId();
-					OutWarehouseRecord recordParam = new OutWarehouseRecord();
-					recordParam.setWarehouseId(warehouseId);
-					recordParam.setUserIdOfCustomer(userIdOfCustomer);// 查找指定客户,仓库的出库记录
-					List<OutWarehouseRecord> outWarehouseRecordList = outWarehouseRecordDao.findOutWarehouseRecord(recordParam, moreParam, null);
-					if (outWarehouseRecordList == null || outWarehouseRecordList.size() <= 0) {
+					OutWarehousePackage packageParam = new OutWarehousePackage();
+					packageParam.setWarehouseId(warehouseId);
+					packageParam.setUserIdOfCustomer(userIdOfCustomer);// 查找指定客户,仓库的出库记录
+					packageParam.setIsShiped(Constant.Y);
+					List<OutWarehousePackage> outWarehousePackageList = outWarehousePackageDao.findOutWarehousePackage(packageParam, moreParam, null);
+					if (outWarehousePackageList == null || outWarehousePackageList.size() <= 0) {
 						continue;
 					}
 					String filePath = config.getRuntimeFilePath() + "/report/";
@@ -304,8 +306,8 @@ public class GenerateReportTaskImpl implements IGenerateReportTask {
 					String filePathAndName = filePath + user.getLoginName() + "-" + OUT_WAREHOUSE_REPORT_SHEET_TITLE + "-" + date + "-" + warehouseId + ".xls";
 					int index = 0;
 					List<String[]> rows = new ArrayList<String[]>();
-					for (OutWarehouseRecord record : outWarehouseRecordList) {// 迭代出货记录
-						Long coeTrackingNoId = record.getCoeTrackingNoId();
+					for (OutWarehousePackage outPackage : outWarehousePackageList) {// 迭代出货记录
+						Long coeTrackingNoId = outPackage.getCoeTrackingNoId();
 						OutWarehouseRecordItem itemParam = new OutWarehouseRecordItem();
 						// 出货主单和出货明细记录通过coe交接单号id关联
 						itemParam.setCoeTrackingNoId(coeTrackingNoId);
@@ -324,7 +326,7 @@ public class GenerateReportTaskImpl implements IGenerateReportTask {
 								index++;
 								String[] row = new String[27];
 								row[0] = index + "";// 序号
-								row[1] = DateUtil.dateConvertString(new Date(record.getCreatedTime()), DateUtil.yyyy_MM_dd);// 出库时间
+								row[1] = DateUtil.dateConvertString(new Date(outPackage.getCreatedTime()), DateUtil.yyyy_MM_dd);// 出库时间
 								row[2] = warehouse.getWarehouseNo();// 仓库编号
 								row[3] = user.getLoginName();// 客户编号
 								row[4] = "销售出库单";// 单据类型 待完善

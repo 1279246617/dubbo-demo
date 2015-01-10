@@ -43,7 +43,7 @@ public class OutWarehousePackageDaoImpl implements IOutWarehousePackageDao {
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public long saveOutWarehousePackage(final OutWarehousePackage Package) {
-		final String sql = "insert into w_s_out_warehouse_package (warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,remark) values (?,?,?,?,?,?,?)";
+		final String sql = "insert into w_s_out_warehouse_package (warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,remark,is_shiped) values (?,?,?,?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
@@ -59,6 +59,7 @@ public class OutWarehousePackageDaoImpl implements IOutWarehousePackageDao {
 				ps.setLong(5, Package.getCoeTrackingNoId());
 				ps.setLong(6, Package.getCreatedTime());
 				ps.setString(7, Package.getRemark());
+				ps.setString(8, Package.getIsShiped());
 				return ps;
 			}
 		}, keyHolder);
@@ -68,7 +69,7 @@ public class OutWarehousePackageDaoImpl implements IOutWarehousePackageDao {
 
 	@Override
 	public OutWarehousePackage getOutWarehousePackageById(Long outWarehousePackageId) {
-		String sql = "select id,warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,remark from w_s_out_warehouse_package where id =" + outWarehousePackageId;
+		String sql = "select id,warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,remark,is_shiped from w_s_out_warehouse_package where id =" + outWarehousePackageId;
 		OutWarehousePackage Package = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<OutWarehousePackage>(OutWarehousePackage.class));
 		return Package;
 	}
@@ -76,12 +77,12 @@ public class OutWarehousePackageDaoImpl implements IOutWarehousePackageDao {
 	/**
 	 * 查询入库订单
 	 * 
-	 * 参数一律使用实体类加Map . 
+	 * 参数一律使用实体类加Map .
 	 */
 	@Override
 	public List<OutWarehousePackage> findOutWarehousePackage(OutWarehousePackage outWarehousePackage, Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select id,warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,remark from w_s_out_warehouse_package where 1=1 ");
+		sb.append("select id,warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,remark,is_shiped from w_s_out_warehouse_package where 1=1 ");
 		if (outWarehousePackage != null) {
 			if (outWarehousePackage.getId() != null) {
 				sb.append(" and id = " + outWarehousePackage.getId());
@@ -103,6 +104,9 @@ public class OutWarehousePackageDaoImpl implements IOutWarehousePackageDao {
 			}
 			if (StringUtil.isNotNull(outWarehousePackage.getRemark())) {
 				sb.append(" and remark = '" + outWarehousePackage.getRemark() + "' ");
+			}
+			if (StringUtil.isNotNull(outWarehousePackage.getIsShiped())) {
+				sb.append(" and is_shiped = '" + outWarehousePackage.getIsShiped() + "' ");
 			}
 		}
 		if (moreParam != null) {
@@ -155,6 +159,9 @@ public class OutWarehousePackageDaoImpl implements IOutWarehousePackageDao {
 			if (StringUtil.isNotNull(outWarehousePackage.getRemark())) {
 				sb.append(" and remark = '" + outWarehousePackage.getRemark() + "' ");
 			}
+			if (StringUtil.isNotNull(outWarehousePackage.getIsShiped())) {
+				sb.append(" and is_shiped = '" + outWarehousePackage.getIsShiped() + "' ");
+			}
 		}
 		if (moreParam != null) {
 			if (moreParam.get("createdTimeStart") != null) {
@@ -174,13 +181,19 @@ public class OutWarehousePackageDaoImpl implements IOutWarehousePackageDao {
 		logger.debug("统计出库记录sql:" + sql);
 		return jdbcTemplate.queryForObject(sql, Long.class);
 	}
-	
+
 	@Override
 	public int updateOutWarehousePackageRemark(Long outWarehousePackageId, String remark) {
 		String sql = "update w_s_out_warehouse_package set remark ='" + remark + "' where id=" + outWarehousePackageId;
 		return jdbcTemplate.update(sql);
 	}
-	
+
+	@Override
+	public int updateOutWarehousePackageIsShiped(Long outWarehouseRecordId, String isShiped, Long shippedTime) {
+		String sql = "update w_s_out_warehouse_package set is_shiped = ?,shipped_time = ? where id= ?";
+		return jdbcTemplate.update(sql, isShiped, shippedTime, outWarehouseRecordId);
+	}
+
 	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
 	}

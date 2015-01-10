@@ -34,7 +34,7 @@ import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderItemShelfDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderReceiverDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderSenderDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderStatusDao;
-import com.coe.wms.dao.warehouse.storage.IOutWarehouseRecordDao;
+import com.coe.wms.dao.warehouse.storage.IOutWarehousePackageDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseRecordItemDao;
 import com.coe.wms.dao.warehouse.storage.IReportDao;
 import com.coe.wms.dao.warehouse.storage.IReportTypeDao;
@@ -51,7 +51,7 @@ import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderItem;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderReceiver;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecord;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecordItem;
-import com.coe.wms.model.warehouse.storage.record.OutWarehouseRecord;
+import com.coe.wms.model.warehouse.storage.record.OutWarehousePackage;
 import com.coe.wms.model.warehouse.storage.record.OutWarehouseRecordItem;
 import com.coe.wms.service.report.IReportService;
 import com.coe.wms.util.Config;
@@ -127,8 +127,6 @@ public class ReportServiceImpl implements IReportService {
 
 	@Resource(name = "outWarehouseOrderDao")
 	private IOutWarehouseOrderDao outWarehouseOrderDao;
-	@Resource(name = "outWarehouseRecordDao")
-	private IOutWarehouseRecordDao outWarehouseRecordDao;
 
 	@Resource(name = "outWarehouseOrderStatusDao")
 	private IOutWarehouseOrderStatusDao outWarehouseOrderStatusDao;
@@ -165,6 +163,9 @@ public class ReportServiceImpl implements IReportService {
 
 	@Resource(name = "config")
 	private Config config;
+
+	@Resource(name = "outWarehousePackageDao")
+	private IOutWarehousePackageDao outWarehousePackageDao;
 
 	@Override
 	public List<ReportType> findAllReportType() throws ServiceException {
@@ -335,22 +336,22 @@ public class ReportServiceImpl implements IReportService {
 		Long current = System.currentTimeMillis();
 		User user = userDao.getUserById(userIdOfCustomer);
 		Warehouse warehouse = warehouseDao.getWarehouseById(warehouseId);
-
 		try {
 			Map<String, String> moreParam = new HashMap<String, String>();
 			moreParam.put("createdTimeStart", outWarehouseTimeStart);
 			moreParam.put("createdTimeEnd", outWarehouseTimeEnd);
-			OutWarehouseRecord recordParam = new OutWarehouseRecord();
-			recordParam.setWarehouseId(warehouseId);
-			recordParam.setUserIdOfCustomer(userIdOfCustomer);// 查找指定客户,仓库的出库记录
-			List<OutWarehouseRecord> outWarehouseRecordList = outWarehouseRecordDao.findOutWarehouseRecord(recordParam, moreParam, null);
+			OutWarehousePackage packageParam = new OutWarehousePackage();
+			packageParam.setWarehouseId(warehouseId);
+			packageParam.setUserIdOfCustomer(userIdOfCustomer);// 查找指定客户,仓库的出库记录
+			packageParam.setIsShiped(Constant.Y);
+			List<OutWarehousePackage> outWarehousePackageList = outWarehousePackageDao.findOutWarehousePackage(packageParam, moreParam, null);
 			String filePath = config.getRuntimeFilePath() + "/report/";
 			FileUtil.mkdirs(filePath);
 			// 文件保存地址
 			String filePathAndName = filePath + user.getLoginName() + "-" + OUT_WAREHOUSE_REPORT_SHEET_TITLE + "-" + current + "-" + warehouseId + ".xls";
 			int index = 0;
 			List<String[]> rows = new ArrayList<String[]>();
-			for (OutWarehouseRecord record : outWarehouseRecordList) {// 迭代出货记录
+			for (OutWarehousePackage record : outWarehousePackageList) {// 迭代出货记录
 				Long coeTrackingNoId = record.getCoeTrackingNoId();
 				OutWarehouseRecordItem itemParam = new OutWarehouseRecordItem();
 				// 出货主单和出货明细记录通过coe交接单号id关联

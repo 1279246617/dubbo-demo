@@ -28,13 +28,12 @@ import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderItem;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecord;
 import com.coe.wms.model.warehouse.storage.record.OutWarehousePackage;
-import com.coe.wms.model.warehouse.storage.record.OutWarehouseRecord;
 import com.coe.wms.model.warehouse.storage.record.OutWarehouseRecordItem;
 import com.coe.wms.model.warehouse.transport.FirstWaybill;
 import com.coe.wms.service.storage.IInWarehouseOrderService;
 import com.coe.wms.service.storage.IOutWarehouseOrderService;
-import com.coe.wms.service.storage.IStorageService;
 import com.coe.wms.service.storage.IStorageInterfaceService;
+import com.coe.wms.service.storage.IStorageService;
 import com.coe.wms.service.transport.IFirstWaybillService;
 import com.coe.wms.service.transport.ITransportService;
 import com.coe.wms.service.user.IUserService;
@@ -342,46 +341,6 @@ public class Storage {
 		moreParam.put("createdTimeStart", createdTimeStart);
 		moreParam.put("createdTimeEnd", createdTimeEnd);
 		pagination = inWarehouseOrderService.getInWarehouseRecordData(param, moreParam, pagination);
-		Map map = new HashMap();
-		map.put("Rows", pagination.rows);
-		map.put("Total", pagination.total);
-		return GsonUtil.toJson(map);
-	}
-
-	/**
-	 * 获取出库记录
-	 * 
-	 * @param request
-	 * @param response
-	 * @param userLoginName
-	 *            客户登录名,仅当根据跟踪号无法找到订单时,要求输入
-	 * @return
-	 * @throws IOException
-	 */
-	@ResponseBody
-	@RequestMapping(value = "/getOutWarehouseRecordData")
-	public String getOutWarehouseRecordData(HttpServletRequest request, String sortorder, String sortname, int page, int pagesize, String userLoginName, Long warehouseId, String coeTrackingNo, String createdTimeStart, String createdTimeEnd)
-			throws IOException {
-		HttpSession session = request.getSession();
-		// 当前操作员
-		Long userIdOfOperator = (Long) session.getAttribute(SessionConstant.USER_ID);
-		Pagination pagination = new Pagination();
-		pagination.curPage = page;
-		pagination.pageSize = pagesize;
-		pagination.sortName = sortname;
-		pagination.sortOrder = sortorder;
-		OutWarehouseRecord param = new OutWarehouseRecord();
-		param.setCoeTrackingNo(coeTrackingNo);
-		if (StringUtil.isNotNull(userLoginName)) {
-			Long userIdOfCustomer = userService.findUserIdByLoginName(userLoginName);
-			param.setUserIdOfCustomer(userIdOfCustomer);
-		}
-		param.setWarehouseId(warehouseId);
-		// 更多参数
-		Map<String, String> moreParam = new HashMap<String, String>();
-		moreParam.put("createdTimeStart", createdTimeStart);
-		moreParam.put("createdTimeEnd", createdTimeEnd);
-		pagination = outWarehouseOrderService.getOutWarehouseRecordData(param, moreParam, pagination);
 		Map map = new HashMap();
 		map.put("Rows", pagination.rows);
 		map.put("Total", pagination.total);
@@ -1100,16 +1059,6 @@ public class Storage {
 		view.addObject("remark", remark);
 		view.setViewName("warehouse/storage/editOutWarehousePackageRemark");
 		return view;
-	}
-
-	/**
-	 * @throws IOException
-	 */
-	@ResponseBody
-	@RequestMapping(value = "/saveOutWarehouseRecordRemark")
-	public String saveOutWarehouseRecordRemark(HttpServletRequest request, Long id, String remark) throws IOException {
-		Map<String, String> map = outWarehouseOrderService.saveOutWarehouseRecordRemark(remark, id);
-		return GsonUtil.toJson(map);
 	}
 
 	/**
