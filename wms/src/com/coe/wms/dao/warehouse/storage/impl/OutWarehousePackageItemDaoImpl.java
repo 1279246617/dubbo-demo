@@ -22,8 +22,8 @@ import org.springframework.stereotype.Repository;
 
 import com.coe.wms.dao.datasource.DataSource;
 import com.coe.wms.dao.datasource.DataSourceCode;
-import com.coe.wms.dao.warehouse.storage.IOutWarehouseRecordItemDao;
-import com.coe.wms.model.warehouse.storage.record.OutWarehouseRecordItem;
+import com.coe.wms.dao.warehouse.storage.IOutWarehousePackageItemDao;
+import com.coe.wms.model.warehouse.storage.record.OutWarehousePackageItem;
 import com.coe.wms.util.DateUtil;
 import com.coe.wms.util.Pagination;
 import com.coe.wms.util.StringUtil;
@@ -33,18 +33,18 @@ import com.mysql.jdbc.Statement;
  * 
  * @author Administrator
  */
-@Repository("outWarehouseRecordItemDao")
-public class OutWarehouseRecordItemDaoImpl implements IOutWarehouseRecordItemDao {
+@Repository("outWarehousePackageItemDao")
+public class OutWarehousePackageItemDaoImpl implements IOutWarehousePackageItemDao {
 
-	Logger logger = Logger.getLogger(OutWarehouseRecordItemDaoImpl.class);
+	Logger logger = Logger.getLogger(OutWarehousePackageItemDaoImpl.class);
 
 	@Resource(name = "jdbcTemplate")
 	private JdbcTemplate jdbcTemplate;
 
 	@Override
 	@DataSource(DataSourceCode.WMS)
-	public long saveOutWarehouseRecordItem(final OutWarehouseRecordItem shipping) {
-		final String sql = "insert into w_s_out_warehouse_record_item (warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,out_warehouse_order_tracking_no,out_warehouse_order_id) values (?,?,?,?,?,?,?,?)";
+	public long saveOutWarehousePackageItem(final OutWarehousePackageItem shipping) {
+		final String sql = "insert into w_s_out_warehouse_package_item (warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,out_warehouse_order_tracking_no,out_warehouse_order_id) values (?,?,?,?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
@@ -69,10 +69,10 @@ public class OutWarehouseRecordItemDaoImpl implements IOutWarehouseRecordItemDao
 	}
 
 	@Override
-	public OutWarehouseRecordItem getOutWarehouseRecordItemById(Long outWarehouseShippingId) {
-		String sql = "select id,warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,out_warehouse_order_tracking_no,out_warehouse_order_id from w_s_out_warehouse_record_item where id ="
+	public OutWarehousePackageItem getOutWarehousePackageItemById(Long outWarehouseShippingId) {
+		String sql = "select id,warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,out_warehouse_order_tracking_no,out_warehouse_order_id from w_s_out_warehouse_package_item where id ="
 				+ outWarehouseShippingId;
-		OutWarehouseRecordItem shipping = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<OutWarehouseRecordItem>(OutWarehouseRecordItem.class));
+		OutWarehousePackageItem shipping = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<OutWarehousePackageItem>(OutWarehousePackageItem.class));
 		return shipping;
 	}
 
@@ -82,9 +82,9 @@ public class OutWarehouseRecordItemDaoImpl implements IOutWarehouseRecordItemDao
 	 * 参数一律使用实体类加Map .
 	 */
 	@Override
-	public List<OutWarehouseRecordItem> findOutWarehouseRecordItem(OutWarehouseRecordItem outWarehouseShipping, Map<String, String> moreParam, Pagination page) {
+	public List<OutWarehousePackageItem> findOutWarehousePackageItem(OutWarehousePackageItem outWarehouseShipping, Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select id,warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,out_warehouse_order_tracking_no,out_warehouse_order_id from w_s_out_warehouse_record_item where 1=1 ");
+		sb.append("select id,warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,out_warehouse_order_tracking_no,out_warehouse_order_id from w_s_out_warehouse_package_item where 1=1 ");
 		if (outWarehouseShipping != null) {
 			if (outWarehouseShipping.getId() != null) {
 				sb.append(" and id = " + outWarehouseShipping.getId());
@@ -133,14 +133,14 @@ public class OutWarehouseRecordItemDaoImpl implements IOutWarehouseRecordItemDao
 			sb.append(page.generatePageSql());
 		}
 		String sql = sb.toString();
-		List<OutWarehouseRecordItem> outWarehouseShippingList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(OutWarehouseRecordItem.class));
+		List<OutWarehousePackageItem> outWarehouseShippingList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(OutWarehousePackageItem.class));
 		return outWarehouseShippingList;
 	}
 
 	@Override
-	public Long countOutWarehouseRecordItem(OutWarehouseRecordItem outWarehouseShipping, Map<String, String> moreParam) {
+	public Long countOutWarehousePackageItem(OutWarehousePackageItem outWarehouseShipping, Map<String, String> moreParam) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select count(id) from w_s_out_warehouse_record_item where 1=1 ");
+		sb.append("select count(id) from w_s_out_warehouse_package_item where 1=1 ");
 		if (outWarehouseShipping != null) {
 			if (outWarehouseShipping.getId() != null) {
 				sb.append(" and id = " + outWarehouseShipping.getId());
@@ -189,8 +189,8 @@ public class OutWarehouseRecordItemDaoImpl implements IOutWarehouseRecordItemDao
 	}
 
 	@Override
-	public int deleteOutWarehouseRecordItemById(Long id) {
-		String sql = "delete from w_s_out_warehouse_record_item where id =" + id;
+	public int deleteOutWarehousePackageItemById(Long id) {
+		String sql = "delete from w_s_out_warehouse_package_item where id =" + id;
 		return jdbcTemplate.update(sql);
 	}
 
@@ -201,7 +201,7 @@ public class OutWarehouseRecordItemDaoImpl implements IOutWarehouseRecordItemDao
 	@Override
 	public List<Long> getOutWarehouseOrderIdsByRecordTime(String startTime, String endTime, Long userIdOfCustomer, Long warehouseId) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select  out_warehouse_order_id  from w_s_out_warehouse_record_item i inner join w_s_out_warehouse_record r on i.coe_tracking_no_id=r.coe_tracking_no_id where 1=1 ");
+		sb.append("select  out_warehouse_order_id  from w_s_out_warehouse_package_item i inner join w_s_out_warehouse_record r on i.coe_tracking_no_id=r.coe_tracking_no_id where 1=1 ");
 		sb.append(" and r.user_id_of_customer = " + userIdOfCustomer);
 		sb.append(" and r.warehouse_id = " + warehouseId);
 		if (startTime != null) {
