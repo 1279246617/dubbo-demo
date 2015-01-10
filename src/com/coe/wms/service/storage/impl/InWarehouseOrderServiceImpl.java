@@ -36,7 +36,6 @@ import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderReceiverDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderSenderDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderStatusDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehousePackageDao;
-import com.coe.wms.dao.warehouse.storage.IOutWarehouseRecordItemDao;
 import com.coe.wms.dao.warehouse.storage.IReportDao;
 import com.coe.wms.dao.warehouse.storage.IReportTypeDao;
 import com.coe.wms.exception.ServiceException;
@@ -132,9 +131,6 @@ public class InWarehouseOrderServiceImpl implements IInWarehouseOrderService {
 
 	@Resource(name = "inWarehouseRecordItemDao")
 	private IInWarehouseRecordItemDao inWarehouseRecordItemDao;
-
-	@Resource(name = "outWarehouseRecordItemDao")
-	private IOutWarehouseRecordItemDao outWarehouseRecordItemDao;
 
 	@Resource(name = "userDao")
 	private IUserDao userDao;

@@ -18,5 +18,5 @@ public interface IOutWarehousePackageItemDao {
 
 	public int deleteOutWarehousePackageItemById(Long id);
 
-	public List<Long> getOutWarehouseOrderIdsByRecordTime(String startTime, String endTime, Long userIdOfCustomer, Long warehouseId);
+	public List<Long> getOutWarehouseOrderIdsByShipedTime(String startTime, String endTime, Long userIdOfCustomer, Long warehouseId);
 }

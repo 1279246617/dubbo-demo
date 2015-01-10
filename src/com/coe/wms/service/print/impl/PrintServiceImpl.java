@@ -31,7 +31,7 @@ import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderReceiverDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderSenderDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehouseOrderStatusDao;
 import com.coe.wms.dao.warehouse.storage.IOutWarehousePackageDao;
-import com.coe.wms.dao.warehouse.storage.IOutWarehouseRecordItemDao;
+import com.coe.wms.dao.warehouse.storage.IOutWarehousePackageItemDao;
 import com.coe.wms.dao.warehouse.transport.IFirstWaybillDao;
 import com.coe.wms.dao.warehouse.transport.IFirstWaybillItemDao;
 import com.coe.wms.dao.warehouse.transport.IFirstWaybillOnShelfDao;
@@ -41,7 +41,6 @@ import com.coe.wms.dao.warehouse.transport.IOrderDao;
 import com.coe.wms.dao.warehouse.transport.IOrderReceiverDao;
 import com.coe.wms.dao.warehouse.transport.IOrderSenderDao;
 import com.coe.wms.dao.warehouse.transport.IOrderStatusDao;
-import com.coe.wms.dao.warehouse.transport.IOutWarehousePackageItemDao;
 import com.coe.wms.model.warehouse.Seat;
 import com.coe.wms.model.warehouse.Warehouse;
 import com.coe.wms.model.warehouse.shipway.Shipway;
@@ -79,8 +78,8 @@ public class PrintServiceImpl implements IPrintService {
 	@Resource(name = "warehouseDao")
 	private IWarehouseDao warehouseDao;
 
-	@Resource(name = "outWarehouseRecordItemDao")
-	private IOutWarehouseRecordItemDao outWarehouseRecordItemDao;
+	@Resource(name = "outWarehousePackageItemDao")
+	private IOutWarehousePackageItemDao outWarehousePackageItemDao;
 
 	@Resource(name = "seatDao")
 	private ISeatDao seatDao;
@@ -167,7 +166,7 @@ public class PrintServiceImpl implements IPrintService {
 	private com.coe.wms.dao.warehouse.transport.IOutWarehousePackageDao transportPackageDao;
 
 	@Resource(name = "transportPackageItemDao")
-	private IOutWarehousePackageItemDao transportPackageItemDao;
+	private com.coe.wms.dao.warehouse.transport.IOutWarehousePackageItemDao transportPackageItemDao;
 
 	@Resource(name = "shipwayApiAccountDao")
 	private IShipwayApiAccountDao shipwayApiAccountDao;
@@ -251,7 +250,7 @@ public class PrintServiceImpl implements IPrintService {
 	public List<Map<String, String>> getOutWarehouseShippings(Long coeTrackingNoId) {
 		OutWarehousePackageItem outWarehouseShippingParam = new OutWarehousePackageItem();
 		outWarehouseShippingParam.setCoeTrackingNoId(coeTrackingNoId);
-		List<OutWarehousePackageItem> outWarehouseShippingList = outWarehouseRecordItemDao.findOutWarehouseRecordItem(outWarehouseShippingParam, null, null);
+		List<OutWarehousePackageItem> outWarehouseShippingList = outWarehousePackageItemDao.findOutWarehousePackageItem(outWarehouseShippingParam, null, null);
 		List<Map<String, String>> mapList = new ArrayList<Map<String, String>>();
 		for (OutWarehousePackageItem outWarehouseShipping : outWarehouseShippingList) {
 			Map<String, String> map = new HashMap<String, String>();
@@ -285,7 +284,7 @@ public class PrintServiceImpl implements IPrintService {
 		// 出貨詳情
 		OutWarehousePackageItem outWarehouseShippingParam = new OutWarehousePackageItem();
 		outWarehouseShippingParam.setCoeTrackingNoId(coeTrackingNoId);
-		List<OutWarehousePackageItem> outWarehouseShippingList = outWarehouseRecordItemDao.findOutWarehouseRecordItem(outWarehouseShippingParam, null, null);
+		List<OutWarehousePackageItem> outWarehouseShippingList = outWarehousePackageItemDao.findOutWarehousePackageItem(outWarehouseShippingParam, null, null);
 		// 總重量
 		double totalWeight = 0d;
 		int quantity = 0;

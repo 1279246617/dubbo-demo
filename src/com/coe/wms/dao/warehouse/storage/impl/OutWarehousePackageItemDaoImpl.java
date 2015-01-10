@@ -199,21 +199,22 @@ public class OutWarehousePackageItemDaoImpl implements IOutWarehousePackageItemD
 	}
 
 	@Override
-	public List<Long> getOutWarehouseOrderIdsByRecordTime(String startTime, String endTime, Long userIdOfCustomer, Long warehouseId) {
+	public List<Long> getOutWarehouseOrderIdsByShipedTime(String startTime, String endTime, Long userIdOfCustomer, Long warehouseId) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select  out_warehouse_order_id  from w_s_out_warehouse_package_item i inner join w_s_out_warehouse_record r on i.coe_tracking_no_id=r.coe_tracking_no_id where 1=1 ");
+		sb.append("select  out_warehouse_order_id  from w_s_out_warehouse_package_item i inner join w_s_out_warehouse_package r on i.coe_tracking_no_id=r.coe_tracking_no_id where 1=1 ");
 		sb.append(" and r.user_id_of_customer = " + userIdOfCustomer);
 		sb.append(" and r.warehouse_id = " + warehouseId);
+		sb.append(" and r.is_shiped = 'Y' ");
 		if (startTime != null) {
 			Date date = DateUtil.stringConvertDate(startTime, DateUtil.yyyy_MM_ddHHmmss);
 			if (date != null) {
-				sb.append(" and r.created_time >= " + date.getTime());
+				sb.append(" and r.shipped_time >= " + date.getTime());
 			}
 		}
 		if (endTime != null) {
 			Date date = DateUtil.stringConvertDate(endTime, DateUtil.yyyy_MM_ddHHmmss);
 			if (date != null) {
-				sb.append(" and r.created_time <= " + date.getTime());
+				sb.append(" and r.shipped_time <= " + date.getTime());
 			}
 		}
 		List<Long> outWarehouseShippingList = jdbcTemplate.queryForList(sb.toString(), Long.class);
