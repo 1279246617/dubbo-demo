@@ -289,15 +289,20 @@ function exportOrder(status){
 	$.dialog({
         lock: true,
         title: '导出单品订单',
-        width: '450px',
-        height: '300px',
+        width: '550px',
+        height: '250px',
         content: 'url:' + baseUrl + '/warehouse/exportOrder/exportOutWarehouseOrder.do?status='+status,
         button: [{
           name: '确认',
           callback: function() {
-        	  	
-        	  
-        	  
+        	  var warehouseId = this.content.$("#warehouseId").val();
+        	  var status = this.content.$("#status").val();
+        	  var userLoginName = this.content.$("#userLoginName").val();
+        	  var createdTimeStart = this.content.$("#createdTimeStart").val();
+        	  var createdTimeEnd = this.content.$("#createdTimeEnd").val();
+        	  var url = baseUrl+'/warehouse/exportOrder/executeExportOrder.do?warehouseId='+warehouseId+'&status='+status
+        	  +'&userLoginName='+userLoginName+'&createdTimeStart='+createdTimeStart+'&createdTimeEnd='+createdTimeEnd;
+     		  window.open(url);
           }
         },
   		{
