@@ -78,14 +78,14 @@ public class ReportServiceImpl implements IReportService {
 	/**
 	 * 入库记录日报表 EXCEL头
 	 */
-	private static final String[] IN_WAREHOUSE_REPORT_HEAD = { "序号", "入库时间", "仓库编号", "客户编号", "单据类型", "入库单号", "客户订单号", "SKU编码", "SKU条码", "商品名称", "批次号", "订单数量", "入库数量", "包装单位", "SKU体积", "SKU重量", "备注" };
+	private static final String[] IN_WAREHOUSE_REPORT_HEAD = { "序号", "入库时间", "仓库编号", "客户编号", "单据类型", "入库单号", "客户订单号", "商品SKU", "商品条码", "商品名称", "批次号", "订单数量", "入库数量", "包装单位", "SKU体积", "SKU重量", "备注" };
 
 	private static final String OUT_WAREHOUSE_REPORT_SHEET_TITLE = "出库报表";
 	/**
 	 * 出库记录日报表 EXCEL头
 	 */
-	private static final String[] OUT_WAREHOUSE_REPORT_HEAD = { "序号", "出库时间", "仓库编号", "客户编号", "单据类型", "订单来源", "出库订单号", "客户订单号", "运单编号", "快递公司", "商品单价", "总金额(不含运费)", "运费", "重量", "体积重量", "收货人姓名", "收货省", "收货市", "收货区", "收货人地址", "收货人电话", "SKU编码", "商品名称",
-			"SKU数量", "SKU条码", "批次号", "备注" };
+	private static final String[] OUT_WAREHOUSE_REPORT_HEAD = { "序号", "出库时间", "仓库编号", "客户编号", "单据类型", "订单来源", "出库订单号", "客户订单号", "运单编号", "快递公司", "商品单价", "总金额(不含运费)", "运费", "重量", "体积重量", "收货人姓名", "收货省", "收货市", "收货区", "收货人地址", "收货人电话", "商品SKU", "商品名称",
+			"商品数量", "商品条码", "批次号", "备注" };
 
 	@Resource(name = "warehouseDao")
 	private IWarehouseDao warehouseDao;
