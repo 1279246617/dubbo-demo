@@ -23,20 +23,6 @@
            <form action="${baseUrl}/warehouse/storage/getOutWarehouseOrderData.do" id="searchform" name="searchform" method="post">
           	<input type="text"  name="nos"  id="nos"   style="display:none;"/>
 			<input type="text"  name="noType"  id="noType"   style="display:none;"/>
-           		<div class="pull-left">
-           			<span class="pull-left" style="width:55px;">
-			       		<a class="btn btn-primary btn-small" onclick="checkOrder()" title="审核出库订单">
-			           		 <i class="icon-eye-open"></i>审核
-			       	 	</a>
-			       	 	<input style=" visibility:hidden;">
-		       	 	</span>
-		    	</div> 
-		    	<span class="pull-left" style="width:105px;">
-			       		<a class="btn btn-primary btn-small" onclick="exportOrder('WWC')" title="导出单品订单">
-			           		 <i class="icon-file"></i>导出单品订单
-			       	 	</a>
-			       	 	<input style=" visibility:hidden;">
-		       	 </span>   
                 <div class="pull-right searchContent">
                		<span class="pull-left" style="width:140px;">
                			仓库
@@ -89,6 +75,20 @@
                			<input style=" visibility:hidden;">
                		</span>
                </div>
+               <div class="pull-left">
+           			<span class="pull-left" style="width:55px;">
+			       		<a class="btn btn-primary btn-small" onclick="checkOrder()" title="审核出库订单">
+			           		 <i class="icon-eye-open"></i>审核
+			       	 	</a>
+			       	 	<input style=" visibility:hidden;">
+		       	 	</span>
+		       	 	<span class="pull-left" style="width:105px;">
+			       		<a class="btn btn-primary btn-small" onclick="exportOrder('WWC')" title="导出单品订单">
+			           		 <i class="icon-file"></i>导出单品订单
+			       	 	</a>
+			       	 	<input style=" visibility:hidden;">
+		       	 </span>   
+		    	</div> 
            </form>
 	</div>
 	<div id="maingrid" class="pull-left" style="width:100%;"></div>
