@@ -414,4 +414,29 @@ public class OutWarehouseOrderDaoImpl implements IOutWarehouseOrderDao {
 		}
 		return null;
 	}
+
+	@Override
+	public List<Map<String, Object>> findSingleBarcodeOutWarehouseOrder(Long warehouseId, String status, Long userIdOfCustomer, String createdTimeStart, String createdTimeEnd) {
+		StringBuffer sb = new StringBuffer();
+		sb.append(" SELECT a.out_warehouse_order_id as outWarehouseOrderId ,b.user_id_of_customer as userIdOfCustomer");
+		sb.append(" ,b.warehouse_id as warehouseId,b.customer_reference_no as customerReferenceNo");
+		sb.append(" ,b.tracking_no as trackingNo,a.sku as barcode,a.sku_no as sku,a.quantity as quantity");
+		sb.append(" ,a.sku_name as productName,b.created_time as createdTime,b.`status` as `status`");
+		sb.append(" FROM `w_s_out_warehouse_order_item` a LEFT JOIN w_s_out_warehouse_order b  on a.out_warehouse_order_id = b.id");
+		sb.append(" where 1=1 ");
+		if (warehouseId != null) {
+			sb.append(" and b.warehouse_id =  " + warehouseId);
+		}
+		if (StringUtil.isNotNull(status)) {
+			sb.append(" and b.status =  '" + status + "'");
+		}
+		if (userIdOfCustomer != null) {
+			sb.append(" and b.user_id_of_customer =  " + userIdOfCustomer);
+		}
+		sb.append(" GROUP BY outWarehouseOrderId ");
+
+		sb.append(" HAVING count(*)=1 and quantity=1");
+		List<Map<String, Object>> mapList = jdbcTemplate.queryForList(sb.toString());
+		return mapList;
+	}
 }

@@ -1,5 +1,11 @@
 package com.coe.wms.service.exportorder.impl;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
@@ -32,8 +38,15 @@ import com.coe.wms.dao.warehouse.storage.IOutWarehousePackageItemDao;
 import com.coe.wms.dao.warehouse.storage.IReportDao;
 import com.coe.wms.dao.warehouse.storage.IReportTypeDao;
 import com.coe.wms.exception.ServiceException;
+import com.coe.wms.model.user.User;
+import com.coe.wms.model.warehouse.Warehouse;
+import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus;
 import com.coe.wms.service.exportorder.IExportService;
 import com.coe.wms.util.Config;
+import com.coe.wms.util.DateUtil;
+import com.coe.wms.util.FileUtil;
+import com.coe.wms.util.POIExcelUtil;
+import com.coe.wms.util.StringUtil;
 
 /**
  * 仓配服务
@@ -47,8 +60,8 @@ public class ExportServiceImpl implements IExportService {
 	private static final Logger logger = Logger.getLogger(ExportServiceImpl.class);
 
 	private static final String OUT_WAREHOUSE_EXPORT_SHEET_TITLE = "单品出库订单";
-	
-	private static final String[] OUT_WAREHOUSE_EXPORT_HEAD = { "仓库编号", "客户帐号", "客户订单号", "跟踪单号", "商品条码", "商品SKU", "商品数量", "商品名称", "创建时间" };
+
+	private static final String[] OUT_WAREHOUSE_EXPORT_HEAD = { "仓库编号", "客户帐号", "客户订单号", "跟踪单号", "商品条码", "商品SKU", "商品数量", "商品名称", "订单状态", "创建时间" };
 
 	@Resource(name = "warehouseDao")
 	private IWarehouseDao warehouseDao;
@@ -132,7 +145,49 @@ public class ExportServiceImpl implements IExportService {
 
 	@Override
 	public String executeExportOutWarehouseOrder(Long warehouseId, String status, String userLoginName, String createdTimeStart, String createdTimeEnd) throws ServiceException {
-		// TODO Auto-generated method stub
+		Long userIdOfCustomer = null;
+		if (StringUtil.isNotNull(userLoginName)) {
+			userIdOfCustomer = userDao.findUserIdByLoginName(userLoginName);
+		}
+		List<Map<String, Object>> singleBarcodeOutWarehouseOrderList = outWarehouseOrderDao.findSingleBarcodeOutWarehouseOrder(warehouseId, status, userIdOfCustomer, createdTimeStart, createdTimeEnd);
+		List<String[]> rows = new ArrayList<String[]>();
+		try {
+			for (Map<String, Object> map : singleBarcodeOutWarehouseOrderList) {
+				String[] row = new String[10];
+				Long resultWarehouseId = (Long) map.get("warehouseId");
+				if (resultWarehouseId != null) {
+					Warehouse warehouse = warehouseDao.getWarehouseById(resultWarehouseId);
+					row[0] = warehouse.getWarehouseNo();// 仓库编号
+				}
+				Long resultUserIdOfCustomer = (Long) map.get("userIdOfCustomer");
+				if (resultUserIdOfCustomer != null) {
+					User user = userDao.getUserById(resultUserIdOfCustomer);
+					row[1] = user.getLoginName();
+				}
+				row[2] = (String) map.get("customerReferenceNo");
+				row[3] = (String) map.get("trackingNo");
+				row[4] = (String) map.get("barcode");
+				row[5] = (String) map.get("sku");
+				row[6] = (Integer) map.get("quantity") + "";
+				row[7] = (String) map.get("productName");
+				String resultStatus = (String) map.get("status");
+				if (StringUtil.isNotNull(resultStatus)) {
+					OutWarehouseOrderStatus outWarehouseOrderStatus = outWarehouseOrderStatusDao.findOutWarehouseOrderStatusByCode(resultStatus);
+					row[8] = outWarehouseOrderStatus.getCn();
+				}
+				row[9] = DateUtil.dateConvertString(new Date((Long) map.get("createdTime")), DateUtil.yyyy_MM_dd);
+				rows.add(row);
+			}
+			String filePath = config.getRuntimeFilePath() + "/export/";
+			FileUtil.mkdirs(filePath);
+			// 文件保存地址
+			String filePathAndName = filePath + "-" + OUT_WAREHOUSE_EXPORT_SHEET_TITLE + "-" + System.currentTimeMillis() + ".xls";
+			POIExcelUtil.createExcel(OUT_WAREHOUSE_EXPORT_SHEET_TITLE, OUT_WAREHOUSE_EXPORT_HEAD, rows, filePathAndName);
+			return filePathAndName;
+		} catch (IOException e) {
+			e.printStackTrace();
+			logger.error("导出单票出库订单IO异常:" + e, e);
+		}
 		return null;
 	}
 }
