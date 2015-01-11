@@ -285,6 +285,27 @@ function inportOrder(){
 	        });
  }
 
+function exportOrder(status){
+	$.dialog({
+        lock: true,
+        title: '导出单品订单',
+        width: '450px',
+        height: '300px',
+        content: 'url:' + baseUrl + '/warehouse/exportOrder/exportOutWarehouseOrder.do?status='+status,
+        button: [{
+          name: '确认',
+          callback: function() {
+        	  	
+        	  
+        	  
+          }
+        },
+  		{
+  			name: '取消'
+  		}]
+      });
+}
+
 function clickTrackingNoCheckBox(){
 	 var trackingNoCheckBox = $("#trackingNoCheckBox").attr("checked");
 	 if(trackingNoCheckBox){

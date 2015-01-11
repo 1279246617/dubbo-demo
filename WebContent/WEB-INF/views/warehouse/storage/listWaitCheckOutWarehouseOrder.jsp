@@ -30,7 +30,13 @@
 			       	 	</a>
 			       	 	<input style=" visibility:hidden;">
 		       	 	</span>
-		    	</div>    
+		    	</div> 
+		    	<span class="pull-left" style="width:105px;">
+			       		<a class="btn btn-primary btn-small" onclick="exportOrder('WWC')" title="导出单品订单">
+			           		 <i class="icon-file"></i>导出单品订单
+			       	 	</a>
+			       	 	<input style=" visibility:hidden;">
+		       	 </span>   
                 <div class="pull-right searchContent">
                		<span class="pull-left" style="width:140px;">
                			仓库

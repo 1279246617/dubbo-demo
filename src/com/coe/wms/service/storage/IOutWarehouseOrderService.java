@@ -21,7 +21,7 @@ import com.coe.wms.util.Pagination;
 public interface IOutWarehouseOrderService {
 
 	static final Logger logger = Logger.getLogger(IOutWarehouseOrderService.class);
-	 
+
 	/**
 	 * 获取建包记录
 	 * 
@@ -69,6 +69,8 @@ public interface IOutWarehouseOrderService {
 	 * @throws ServiceException
 	 */
 	public List<OutWarehouseOrderStatus> findAllOutWarehouseOrderStatus() throws ServiceException;
+
+	public OutWarehouseOrderStatus getOutWarehouseOrderStatusByCode(String stataus) throws ServiceException;
 
 	/**
 	 * 获取coe跟踪单号供出库发货界面使用
