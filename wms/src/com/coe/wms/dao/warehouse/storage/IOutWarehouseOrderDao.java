@@ -14,6 +14,8 @@ public interface IOutWarehouseOrderDao {
 
 	public List<OutWarehouseOrder> findOutWarehouseOrder(OutWarehouseOrder outWarehouseOrder, Map<String, String> moreParam, Pagination page);
 
+	public List<Map<String, Object>> findSingleBarcodeOutWarehouseOrder(Long warehouseId, String status, Long userIdOfCustomer, String createdTimeStart, String createdTimeEnd);
+
 	public Long countOutWarehouseOrder(OutWarehouseOrder outWarehouseOrder, Map<String, String> moreParam);
 
 	public int updateOutWarehouseOrderStatus(Long orderId, String newStatus);
