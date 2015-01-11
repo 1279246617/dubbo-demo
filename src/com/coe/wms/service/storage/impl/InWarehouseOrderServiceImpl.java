@@ -722,4 +722,32 @@ public class InWarehouseOrderServiceImpl implements IInWarehouseOrderService {
 		return map;
 	}
 
+	/**
+	 * 获取入库记录
+	 */
+	@Override
+	public Pagination getInWarehouseRecordOnShelfData(Long userIdOfCustomer, Long warehouseId, String trackingNo, String batchNo, String receivedTimeStart, String receivedTimeEnd, Pagination page) {
+		List<Map<String, Object>> inWarehouseRecordList = inWarehouseRecordDao.findInWarehouseRecordOnShelf(userIdOfCustomer, warehouseId, trackingNo, batchNo, receivedTimeStart, receivedTimeStart, page);
+		List<Object> list = new ArrayList<Object>();
+		for (Map<String, Object> map : inWarehouseRecordList) {
+			if (map.get("receivedTime") != null) {
+				map.put("receivedTime", DateUtil.dateConvertString(new Date((Long) map.get("receivedTime")), DateUtil.yyyy_MM_ddHHmmss));
+			}
+			if (map.get("onShelfTime") != null) {
+				map.put("onShelfTime", DateUtil.dateConvertString(new Date((Long) map.get("onShelfTime")), DateUtil.yyyy_MM_ddHHmmss));
+			}
+			if (map.get("userIdOfCustomer") != null) {
+				User user = userDao.getUserById((Long) map.get("userIdOfCustomer"));
+				map.put("userLoginNameOfCustomer", user.getLoginName());
+			}
+			if (map.get("userIdOfOperator") != null) {
+				User user = userDao.getUserById((Long) map.get("userIdOfOperator"));
+				map.put("userLoginNameOfOperator", user.getLoginName());
+			}
+			list.add(map);
+		}
+		page.total = inWarehouseRecordDao.countInWarehouseRecordOnShelf(userIdOfCustomer, warehouseId, trackingNo, batchNo, receivedTimeStart, receivedTimeStart);
+		page.rows = list;
+		return page;
+	}
 }

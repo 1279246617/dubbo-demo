@@ -3,6 +3,7 @@ package com.coe.wms.dao.warehouse.storage.impl;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -21,7 +22,6 @@ import org.springframework.stereotype.Repository;
 import com.coe.wms.dao.datasource.DataSource;
 import com.coe.wms.dao.datasource.DataSourceCode;
 import com.coe.wms.dao.warehouse.storage.IInWarehouseRecordDao;
-import com.coe.wms.model.warehouse.storage.order.InWarehouseOrderStatus.InWarehouseOrderStatusCode;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecord;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecordStatus.InWarehouseRecordStatusCode;
 import com.coe.wms.util.DateUtil;
@@ -258,4 +258,22 @@ public class InWarehouseRecordDaoImpl implements IInWarehouseRecordDao {
 		String sql = "update w_s_in_warehouse_record set remark ='" + remark + "' where id=" + inWarehouseRecordId;
 		return jdbcTemplate.update(sql);
 	}
+
+	@Override
+	public List<Map<String, Object>> findInWarehouseRecordOnShelf(Long userIdOfCustomer, Long warehouseId, String trackingNo, String batchNo, String receivedTimeStart, String receivedTimeEnd, Pagination page) {
+		StringBuffer sb = new StringBuffer();
+		
+		
+		
+		
+		List<Map<String, Object>> list = jdbcTemplate.queryForList(sb.toString());
+		return list;
+	}
+
+	@Override
+	public Long countInWarehouseRecordOnShelf(Long userIdOfCustomer, Long warehouseId, String trackingNo, String batchNo, String receivedTimeStart, String receivedTimeEnd) {
+
+		return null;
+	}
+
 }
