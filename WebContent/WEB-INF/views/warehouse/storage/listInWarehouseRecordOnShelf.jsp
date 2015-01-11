@@ -117,16 +117,16 @@
 	                columns: [
 							{ display: '客户帐号', name: 'userLoginNameOfCustomer',type:'float',width:'8%'},
 							{ display: '仓库', name: 'warehouse', type: 'float',width:'7%'},
+							{ display: '入库单号', name: 'inWarehouseRecordId',type:'float',width:'8%'},
 			                { display: '跟踪单号', name: 'trackingNo',type:'float',width:'11%'},
-			                { display: '入库单号', name: 'inWarehouseRecordId',type:'float',width:'8%'},
 	  	                  	{ display: '商品条码', name: 'sku', type: 'float',width:'12%'},
 	  	                  	{ display: '商品SKU', name: 'skuNo', type: 'float',width:'9%'},
 	  	                  	{ display: '入库数量', name: 'receivedQuantity', type: 'float',width:'7%'},
-		  	                { display: '上架数量', name: 'onShelfQuantity', type: 'float',width:'7%'},
-		  	              	{ display: '差异数量', name: 'difQuantity', type: 'float',width:'7%'},
+		  	                { display: '已上架数量', name: 'onShelfQuantity', type: 'float',width:'7%'},
+		  	              	{ display: '未上架数量', name: 'difQuantity', type: 'float',width:'7%'},
 		  	              	{ display: '入库时间', name: 'receivedTime', align: 'center', type: 'float',width:'12%'},
 			                { display: '上架时间', name: 'onShelfTime', align: 'center', type: 'float',width:'12%'},
-			                { display: '上架操作员', name: 'userLoginNameOfOperator',type:'float',width:'8%'}
+			                { display: '上架操作员', name: 'onShelfOperator',type:'float',width:'8%'}
 		             ],   
 	                dataAction: 'server',
 	                url: baseUrl+'/warehouse/storage/getInWarehouseRecordOnShelfData.do',

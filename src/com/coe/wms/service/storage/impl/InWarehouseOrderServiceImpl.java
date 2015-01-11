@@ -51,6 +51,7 @@ import com.coe.wms.model.warehouse.storage.record.InWarehouseRecord;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecordItem;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecordStatus;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecordStatus.InWarehouseRecordStatusCode;
+import com.coe.wms.model.warehouse.storage.record.OnShelf;
 import com.coe.wms.service.storage.IInWarehouseOrderService;
 import com.coe.wms.util.Config;
 import com.coe.wms.util.Constant;
@@ -733,20 +734,41 @@ public class InWarehouseOrderServiceImpl implements IInWarehouseOrderService {
 			if (map.get("receivedTime") != null) {
 				map.put("receivedTime", DateUtil.dateConvertString(new Date((Long) map.get("receivedTime")), DateUtil.yyyy_MM_ddHHmmss));
 			}
-			if (map.get("onShelfTime") != null) {
-				map.put("onShelfTime", DateUtil.dateConvertString(new Date((Long) map.get("onShelfTime")), DateUtil.yyyy_MM_ddHHmmss));
-			}
 			if (map.get("userIdOfCustomer") != null) {
 				User user = userDao.getUserById((Long) map.get("userIdOfCustomer"));
 				map.put("userLoginNameOfCustomer", user.getLoginName());
 			}
-			if (map.get("userIdOfOperator") != null) {
-				User user = userDao.getUserById((Long) map.get("userIdOfOperator"));
-				map.put("userLoginNameOfOperator", user.getLoginName());
-			}
 			Warehouse warehouse = warehouseDao.getWarehouseById((Long) map.get("warehouseId"));
 			if (warehouse != null) {
 				map.put("warehouse", warehouse.getWarehouseName());
+			}
+			int receivedQuantity = (Integer) map.get("receivedQuantity");
+			Long inWarehouseRecordId = (Long) map.get("inWarehouseRecordId");// 入库id
+			String barcode = (String) map.get("sku");// 商品条码
+			OnShelf onShelfParam = new OnShelf();
+			onShelfParam.setSku(barcode);
+			onShelfParam.setInWarehouseRecordId(inWarehouseRecordId);
+			List<OnShelf> onShelfList = onShelfDao.findOnShelf(onShelfParam, null, null);
+			int onShelfQuantity = 0;
+			Long onShelfTime = null;
+			Long onShelfOperatorId = null;
+			for (OnShelf onShelf : onShelfList) {
+				onShelfQuantity += onShelf.getQuantity();
+				if (onShelfTime == null) {
+					onShelfTime = onShelf.getCreatedTime();
+				}
+				if (onShelfOperatorId == null) {
+					onShelfOperatorId = onShelf.getUserIdOfOperator();
+				}
+			}
+			map.put("onShelfQuantity", onShelfQuantity);// 上架数量
+			map.put("difQuantity", receivedQuantity - onShelfQuantity);// 差异数
+			if (onShelfTime != null) {
+				map.put("onShelfTime", DateUtil.dateConvertString(new Date(onShelfTime), DateUtil.yyyy_MM_ddHHmmss));// 上架时间
+			}
+			if (onShelfOperatorId != null) {
+				User user = userDao.getUserById(onShelfOperatorId);
+				map.put("onShelfOperator", user.getLoginName());// 上架操作员
 			}
 			list.add(map);
 		}
