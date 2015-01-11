@@ -744,6 +744,10 @@ public class InWarehouseOrderServiceImpl implements IInWarehouseOrderService {
 				User user = userDao.getUserById((Long) map.get("userIdOfOperator"));
 				map.put("userLoginNameOfOperator", user.getLoginName());
 			}
+			Warehouse warehouse = warehouseDao.getWarehouseById((Long) map.get("warehouseId"));
+			if (warehouse != null) {
+				map.put("warehouse", warehouse.getWarehouseName());
+			}
 			list.add(map);
 		}
 		page.total = inWarehouseRecordDao.countInWarehouseRecordOnShelf(userIdOfCustomer, warehouseId, trackingNo, batchNo, sku, receivedTimeStart, receivedTimeStart);
