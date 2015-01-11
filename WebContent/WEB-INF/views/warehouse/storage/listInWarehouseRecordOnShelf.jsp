@@ -41,6 +41,10 @@
                			商品条码
                			 <input type="text"   style="width:100px;" name="sku" title="商品条码">
                		</span>
+<!--                		<span class="pull-left" style="width:185px;"> -->
+<!--                			入库批次 -->
+<!--                			 <input type="text"   style="width:100px;" name="batchNo" title="入库批次"> -->
+<!--                		</span> -->
                		<span class="pull-left" style="width:175px;">
                			收货时间
 	               		<input type="text"   style="width:120px;" name="receivedTimeStart" id="receivedTimeStart" title="起始创建时间">

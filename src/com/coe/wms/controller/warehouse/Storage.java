@@ -702,7 +702,7 @@ public class Storage {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/getInWarehouseRecordOnShelfData")
-	public String getInWarehouseRecordOnShelfData(HttpServletRequest request, String sortorder, String sortname, int page, int pagesize, String userLoginName, Long warehouseId, String trackingNo, String batchNo, String receivedTimeStart,
+	public String getInWarehouseRecordOnShelfData(HttpServletRequest request, String sortorder, String sortname, int page, int pagesize, String userLoginName, Long warehouseId, String trackingNo, String batchNo, String sku, String receivedTimeStart,
 			String receivedTimeEnd) throws IOException {
 		HttpSession session = request.getSession();
 		// 当前操作员
@@ -716,7 +716,7 @@ public class Storage {
 		if (StringUtil.isNotNull(userLoginName)) {
 			userIdOfCustomer = userService.findUserIdByLoginName(userLoginName);
 		}
-		pagination = inWarehouseOrderService.getInWarehouseRecordOnShelfData(userIdOfCustomer, warehouseId, trackingNo, batchNo, receivedTimeStart, receivedTimeEnd, pagination);
+		pagination = inWarehouseOrderService.getInWarehouseRecordOnShelfData(userIdOfCustomer, warehouseId, trackingNo, batchNo, sku, receivedTimeStart, receivedTimeEnd, pagination);
 		Map map = new HashMap();
 		map.put("Rows", pagination.rows);
 		map.put("Total", pagination.total);
