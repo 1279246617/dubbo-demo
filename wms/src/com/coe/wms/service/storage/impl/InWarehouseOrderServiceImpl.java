@@ -726,8 +726,8 @@ public class InWarehouseOrderServiceImpl implements IInWarehouseOrderService {
 	 * 获取入库记录
 	 */
 	@Override
-	public Pagination getInWarehouseRecordOnShelfData(Long userIdOfCustomer, Long warehouseId, String trackingNo, String batchNo, String receivedTimeStart, String receivedTimeEnd, Pagination page) {
-		List<Map<String, Object>> inWarehouseRecordList = inWarehouseRecordDao.findInWarehouseRecordOnShelf(userIdOfCustomer, warehouseId, trackingNo, batchNo, receivedTimeStart, receivedTimeStart, page);
+	public Pagination getInWarehouseRecordOnShelfData(Long userIdOfCustomer, Long warehouseId, String trackingNo, String batchNo, String sku, String receivedTimeStart, String receivedTimeEnd, Pagination page) {
+		List<Map<String, Object>> inWarehouseRecordList = inWarehouseRecordDao.findInWarehouseRecordOnShelf(userIdOfCustomer, warehouseId, trackingNo, batchNo, sku, receivedTimeStart, receivedTimeStart, page);
 		List<Object> list = new ArrayList<Object>();
 		for (Map<String, Object> map : inWarehouseRecordList) {
 			if (map.get("receivedTime") != null) {
@@ -746,7 +746,7 @@ public class InWarehouseOrderServiceImpl implements IInWarehouseOrderService {
 			}
 			list.add(map);
 		}
-		page.total = inWarehouseRecordDao.countInWarehouseRecordOnShelf(userIdOfCustomer, warehouseId, trackingNo, batchNo, receivedTimeStart, receivedTimeStart);
+		page.total = inWarehouseRecordDao.countInWarehouseRecordOnShelf(userIdOfCustomer, warehouseId, trackingNo, batchNo, sku, receivedTimeStart, receivedTimeStart);
 		page.rows = list;
 		return page;
 	}

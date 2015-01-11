@@ -109,7 +109,7 @@ public interface IInWarehouseOrderService {
 	 * @param page
 	 * @return
 	 */
-	public Pagination getInWarehouseRecordOnShelfData(Long userIdOfCustomer, Long warehouseId, String trackingNo, String batchNo, String receivedTimeStart, String receivedTimeEnd, Pagination page);
+	public Pagination getInWarehouseRecordOnShelfData(Long userIdOfCustomer, Long warehouseId, String trackingNo, String batchNo, String sku, String receivedTimeStart, String receivedTimeEnd, Pagination page);
 
 	/**
 	 * 获取入库明细记录
