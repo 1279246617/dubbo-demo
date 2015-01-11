@@ -24,7 +24,7 @@
 							仓库
 					</th>
 					<td>
-		               	<select style="width:125px;" id="warehouseId" name="warehouseId">
+		               	<select style="width:122px;" id="warehouseId" name="warehouseId">
                				<c:forEach items="${warehouseList}" var="w" >
 				       	 		<option value="<c:out value='${w.id}'/>">
 				       	 			<c:out value="${w.id}-${w.warehouseName}"/>
@@ -38,7 +38,7 @@
 							状态
 					</th>
 					<td>
-		               		<select style="width:125px;" id="status" name="status">
+		               		<select style="width:122px;" id="status" name="status">
 									<c:forEach items="${outWarehouseOrderStatusList}" var="status" >
 						       	 		<option value="<c:out value='${status.code}'/>">
 						       	 			<c:out value="${status.cn}"/>
@@ -57,6 +57,16 @@
 				</tr>
 				<tr>
 					<th>
+							商品数量
+					</th>
+					<td>
+							<input type="text" name="isQuantityOnly1"   id="isQuantityOnly1" value ='N' style="display: none;"/>
+							<input type="checkbox"  style="margin-bottom: 0px;margin-top: 0px;"onclick="clickQuantityCheckBox()" id="quantityCheckBox" name="quantityCheckBox">
+							&nbsp;&nbsp;只有一个商品数量
+					</td>
+				</tr>
+				<tr>
+					<th>
 						创建时间
 					</th>
 					<td>
@@ -68,11 +78,20 @@
 	               		</span>
 					</td>
 				</tr>
+				
 			</table>
 </body>
 <script type="text/javascript" src="${baseUrl}/static/jquery/jquery.js"></script>
 <script type="text/javascript" src="${baseUrl}/static/bootstrap/bootstrap-typeahead.js"></script>
  <script type="text/javascript">
+		 function clickQuantityCheckBox(){
+			 var quantityCheckBox = $("#quantityCheckBox").attr("checked");
+			 if(quantityCheckBox){
+				 $("#isQuantityOnly1").val("Y");
+			 }else{
+				 $("#isQuantityOnly1").val("N");
+			 }
+		}
  		var baseUrl = "${baseUrl}";
    		$(function(){
    			//客户帐号自动完成

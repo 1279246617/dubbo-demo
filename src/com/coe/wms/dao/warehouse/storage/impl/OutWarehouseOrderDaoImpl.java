@@ -416,7 +416,7 @@ public class OutWarehouseOrderDaoImpl implements IOutWarehouseOrderDao {
 	}
 
 	@Override
-	public List<Map<String, Object>> findSingleBarcodeOutWarehouseOrder(Long warehouseId, String status, Long userIdOfCustomer, String createdTimeStart, String createdTimeEnd) {
+	public List<Map<String, Object>> findSingleBarcodeOutWarehouseOrder(Long warehouseId, String status, Long userIdOfCustomer, String createdTimeStart, String createdTimeEnd, String isQuantityOnly1) {
 		StringBuffer sb = new StringBuffer();
 		sb.append(" SELECT a.out_warehouse_order_id as outWarehouseOrderId ,b.user_id_of_customer as userIdOfCustomer");
 		sb.append(" ,b.warehouse_id as warehouseId,b.customer_reference_no as customerReferenceNo");
@@ -433,9 +433,11 @@ public class OutWarehouseOrderDaoImpl implements IOutWarehouseOrderDao {
 		if (userIdOfCustomer != null) {
 			sb.append(" and b.user_id_of_customer =  " + userIdOfCustomer);
 		}
-		sb.append(" GROUP BY outWarehouseOrderId ");
-
-		sb.append(" HAVING count(*)=1 and quantity=1");
+		sb.append(" GROUP BY outWarehouseOrderId HAVING count(*)=1 ");
+		if (StringUtil.isEqual(Constant.Y, isQuantityOnly1)) {
+			sb.append(" and quantity=1  ");
+		}
+		sb.append(" ORDER BY barcode,quantity asc");
 		List<Map<String, Object>> mapList = jdbcTemplate.queryForList(sb.toString());
 		return mapList;
 	}

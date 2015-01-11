@@ -9,6 +9,6 @@ import com.coe.wms.exception.ServiceException;
  */
 public interface IExportService {
 
-	public String executeExportOutWarehouseOrder(Long warehouseId, String status, String userLoginName, String createdTimeStart, String createdTimeEnd) throws ServiceException;
+	public String executeExportOutWarehouseOrder(Long warehouseId, String status, String userLoginName, String createdTimeStart, String createdTimeEnd, String isQuantityOnly1) throws ServiceException;
 
 }

@@ -144,12 +144,12 @@ public class ExportServiceImpl implements IExportService {
 	private IOutWarehousePackageDao outWarehousePackageDao;
 
 	@Override
-	public String executeExportOutWarehouseOrder(Long warehouseId, String status, String userLoginName, String createdTimeStart, String createdTimeEnd) throws ServiceException {
+	public String executeExportOutWarehouseOrder(Long warehouseId, String status, String userLoginName, String createdTimeStart, String createdTimeEnd, String isQuantityOnly1) throws ServiceException {
 		Long userIdOfCustomer = null;
 		if (StringUtil.isNotNull(userLoginName)) {
 			userIdOfCustomer = userDao.findUserIdByLoginName(userLoginName);
 		}
-		List<Map<String, Object>> singleBarcodeOutWarehouseOrderList = outWarehouseOrderDao.findSingleBarcodeOutWarehouseOrder(warehouseId, status, userIdOfCustomer, createdTimeStart, createdTimeEnd);
+		List<Map<String, Object>> singleBarcodeOutWarehouseOrderList = outWarehouseOrderDao.findSingleBarcodeOutWarehouseOrder(warehouseId, status, userIdOfCustomer, createdTimeStart, createdTimeEnd,isQuantityOnly1);
 		List<String[]> rows = new ArrayList<String[]>();
 		try {
 			for (Map<String, Object> map : singleBarcodeOutWarehouseOrderList) {
