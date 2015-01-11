@@ -392,6 +392,11 @@ public class OutWarehouseOrderServiceImpl implements IOutWarehouseOrderService {
 		return outWarehouseOrderStatusDao.findAllOutWarehouseOrderStatus();
 	}
 
+	@Override
+	public OutWarehouseOrderStatus getOutWarehouseOrderStatusByCode(String stataus) throws ServiceException {
+		return outWarehouseOrderStatusDao.findOutWarehouseOrderStatusByCode(stataus);
+	}
+
 	/**
 	 * 根据入库订单id, 查找入库物品明细
 	 * 

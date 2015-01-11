@@ -89,6 +89,12 @@
                
                <div class="pull-left">
                		<span class="pull-left" style="width:105px;">
+			       		<a class="btn btn-primary btn-small" onclick="exportOrder('')" title="导出单品订单">
+			           		 <i class="icon-file"></i>导出单品订单
+			       	 	</a>
+			       	 	<input style=" visibility:hidden;">
+		       	 	</span>
+               		<span class="pull-left" style="width:105px;">
 			       		<a class="btn btn-primary btn-small" onclick="inportOrder()" title="导入出库订单">
 			           		 <i class="icon-file"></i>导入出库订单
 			       	 	</a>
