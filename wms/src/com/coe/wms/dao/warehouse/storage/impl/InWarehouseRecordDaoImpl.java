@@ -262,16 +262,12 @@ public class InWarehouseRecordDaoImpl implements IInWarehouseRecordDao {
 	@Override
 	public List<Map<String, Object>> findInWarehouseRecordOnShelf(Long userIdOfCustomer, Long warehouseId, String trackingNo, String batchNo, String sku, String receivedTimeStart, String receivedTimeEnd, Pagination page) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select distinct r.warehouse_id as warehouseId,r.in_warehouse_order_id,r.user_id_of_customer as userIdOfCustomer ");
-		sb.append(",r.batch_no,r.tracking_no as trackingNo,i.sku,i.sku_no as skuNo,i.quantity as receivedQuantity,i.remark,i.created_time as receivedTime ");
-		sb.append(",s.user_id_of_operator as userIdOfOperator ,s.created_time as onShelfTime");
-		sb.append(",i.in_warehouse_record_id as inWarehouseRecordId");
-
-		sb.append("from w_s_in_warehouse_record_item i inner join w_s_in_warehouse_record r on i.in_warehouse_record_id=r.id ");
-		sb.append("LEFT JOIN w_s_on_shelf s on s.in_warehouse_record_id  = r.id ");
-
-		sb.append(" where 1=1");
-
+		sb.append(" select distinct r.warehouse_id as warehouseId,r.in_warehouse_order_id,r.user_id_of_customer as userIdOfCustomer ");
+		sb.append(" ,r.batch_no,r.tracking_no as trackingNo,i.sku,i.sku_no as skuNo,i.quantity as receivedQuantity,i.remark,i.created_time as receivedTime ");
+		sb.append(" ,i.user_id_of_operator as userIdOfOperator");
+		sb.append(" ,i.in_warehouse_record_id as inWarehouseRecordId");
+		sb.append(" from w_s_in_warehouse_record_item i left join w_s_in_warehouse_record r on i.in_warehouse_record_id=r.id ");
+		sb.append("  where 1=1");
 		if (userIdOfCustomer != null) {
 			sb.append(" and r.user_id_of_customer = " + userIdOfCustomer);
 		}
@@ -309,7 +305,9 @@ public class InWarehouseRecordDaoImpl implements IInWarehouseRecordDao {
 	@Override
 	public Long countInWarehouseRecordOnShelf(Long userIdOfCustomer, Long warehouseId, String trackingNo, String batchNo, String sku, String receivedTimeStart, String receivedTimeEnd) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select count(1) from w_s_in_warehouse_record_item i inner join w_s_in_warehouse_record r on i.in_warehouse_record_id=r.id where 1=1 ");
+		sb.append(" select count(*) ");
+		sb.append(" from w_s_in_warehouse_record_item i left join w_s_in_warehouse_record r on i.in_warehouse_record_id=r.id ");
+		sb.append(" where 1=1");
 		if (userIdOfCustomer != null) {
 			sb.append(" and r.user_id_of_customer = " + userIdOfCustomer);
 		}
