@@ -92,10 +92,10 @@ public class ExportOrder {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "executeExportOrder", method = RequestMethod.GET)
-	public void executeExportOrder(HttpServletResponse response, Long warehouseId, String status, String userLoginName, String createdTimeStart, String createdTimeEnd) throws IOException {
+	public void executeExportOrder(HttpServletResponse response, Long warehouseId, String status, String userLoginName, String createdTimeStart, String createdTimeEnd, String isQuantityOnly1) throws IOException {
 		OutputStream os = response.getOutputStream();
 		try {
-			String filePathAndName = exportService.executeExportOutWarehouseOrder(warehouseId, status, userLoginName, createdTimeStart, createdTimeEnd);
+			String filePathAndName = exportService.executeExportOutWarehouseOrder(warehouseId, status, userLoginName, createdTimeStart, createdTimeEnd,isQuantityOnly1);
 			int a = filePathAndName.lastIndexOf("\\");
 			int b = filePathAndName.lastIndexOf("/");
 			String fileName = filePathAndName.substring((a > b ? a : b) + 1, filePathAndName.length());

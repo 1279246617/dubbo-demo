@@ -290,7 +290,7 @@ function exportOrder(status){
         lock: true,
         title: '导出单品订单',
         width: '550px',
-        height: '250px',
+        height: '270px',
         content: 'url:' + baseUrl + '/warehouse/exportOrder/exportOutWarehouseOrder.do?status='+status,
         button: [{
           name: '确认',
@@ -300,8 +300,9 @@ function exportOrder(status){
         	  var userLoginName = this.content.$("#userLoginName").val();
         	  var createdTimeStart = this.content.$("#createdTimeStart").val();
         	  var createdTimeEnd = this.content.$("#createdTimeEnd").val();
+        	  var isQuantityOnly1 =  this.content.$("#isQuantityOnly1").val();
         	  var url = baseUrl+'/warehouse/exportOrder/executeExportOrder.do?warehouseId='+warehouseId+'&status='+status
-        	  +'&userLoginName='+userLoginName+'&createdTimeStart='+createdTimeStart+'&createdTimeEnd='+createdTimeEnd;
+        	  +'&userLoginName='+userLoginName+'&createdTimeStart='+createdTimeStart+'&createdTimeEnd='+createdTimeEnd+'&isQuantityOnly1='+isQuantityOnly1;
      		  window.open(url);
           }
         },
