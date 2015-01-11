@@ -100,6 +100,8 @@
 		              		<li><a href="#${baseUrl}/warehouse/storage/listInWarehouseRecordItem.do"tab_id="findInWarehouseItemRecordItem"><i class="icon-list"></i><span class="hidden-tablet">入库收货明细记录</span></a></li>
 		              		<li><a href="#${baseUrl}/warehouse/shelves/onShelves.do" tab_id="doOnShelves"><i class="icon-arrow-up"></i><span class="hidden-tablet">入库订单上架</span></a></li>
 		              		<li><a href="#${baseUrl}/warehouse/shelves/listOnShelves.do" tab_id="listOnShelves"><i class="icon-list"></i><span class="hidden-tablet">入库订单上架记录</span></a></li>
+		              		<li><a href="#${baseUrl}/warehouse/storage/listInWarehouseRecordOnShelf.do" tab_id="listInWarehouseOnShelves"><i class="icon-list"></i><span class="hidden-tablet">入库与上架对照表</span></a></li>
+		              		
 			              	<li><a href="#${baseUrl}/warehouse/shelves/outShelves.do" tab_id="doOutShelves"><i class="icon-arrow-down"></i><span class="hidden-tablet">出库订单下架</span></a></li>
 		              		<li><a href="#${baseUrl}/warehouse/shelves/listOutShelves.do" tab_id="listOutShelves"><i class="icon-list"></i><span class="hidden-tablet">出库订单下架记录</span></a></li>
 			              	<!-- (扫SKU和数量 是否和出库订单一样) -->	

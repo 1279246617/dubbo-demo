@@ -46,6 +46,7 @@ public interface IInWarehouseOrderService {
 
 	/**
 	 * 检查收货数量
+	 * 
 	 * @param itemSku
 	 * @param itemQuantity
 	 * @param itemRemark
@@ -55,8 +56,7 @@ public interface IInWarehouseOrderService {
 	 * @return
 	 */
 	public Map<String, String> checkInWarehouseRecordItem(String itemSku, Integer itemQuantity, Long warehouseId, Long inWarehouseRecordId, Long userIdOfOperator);
-	
-	
+
 	/**
 	 * 获取入库记录物品
 	 * 
@@ -101,6 +101,15 @@ public interface IInWarehouseOrderService {
 	 * @return
 	 */
 	public Pagination getInWarehouseRecordData(InWarehouseRecord inWarehouseRecord, Map<String, String> moreParam, Pagination page);
+
+	/**
+	 * 获取入库记录
+	 * 
+	 * @param inWarehouseRecordId
+	 * @param page
+	 * @return
+	 */
+	public Pagination getInWarehouseRecordOnShelfData(Long userIdOfCustomer, Long warehouseId, String trackingNo, String batchNo, String receivedTimeStart, String receivedTimeEnd, Pagination page);
 
 	/**
 	 * 获取入库明细记录

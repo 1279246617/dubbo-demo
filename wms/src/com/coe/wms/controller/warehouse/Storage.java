@@ -27,6 +27,7 @@ import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrder;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderItem;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecord;
+import com.coe.wms.model.warehouse.storage.record.InWarehouseRecordItem;
 import com.coe.wms.model.warehouse.storage.record.OutWarehousePackage;
 import com.coe.wms.model.warehouse.storage.record.OutWarehousePackageItem;
 import com.coe.wms.model.warehouse.transport.FirstWaybill;
@@ -669,6 +670,60 @@ public class Storage {
 	}
 
 	/**
+	 * 入库和是上架对比
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/listInWarehouseRecordOnShelf", method = RequestMethod.GET)
+	public ModelAndView listInWarehouseRecordAndOnShelf(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		HttpSession session = request.getSession();
+		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
+		ModelAndView view = new ModelAndView();
+		view.addObject("userId", userId);
+		User user = userService.getUserById(userId);
+		view.addObject("warehouseList", storageService.findAllWarehouse(user.getDefaultWarehouseId()));
+		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
+		view.setViewName("warehouse/storage/listInWarehouseRecordOnShelf");
+		return view;
+	}
+
+	/**
+	 * 获取入库上架差异表
+	 * 
+	 * @param request
+	 * @param response
+	 * @param userLoginName
+	 *            客户登录名,仅当根据跟踪号无法找到订单时,要求输入
+	 * @return
+	 * @throws IOException
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/getInWarehouseRecordOnShelfData")
+	public String getInWarehouseRecordOnShelfData(HttpServletRequest request, String sortorder, String sortname, int page, int pagesize, String userLoginName, Long warehouseId, String trackingNo, String batchNo, String receivedTimeStart,
+			String receivedTimeEnd) throws IOException {
+		HttpSession session = request.getSession();
+		// 当前操作员
+		Long userIdOfOperator = (Long) session.getAttribute(SessionConstant.USER_ID);
+		Pagination pagination = new Pagination();
+		pagination.curPage = page;
+		pagination.pageSize = pagesize;
+		pagination.sortName = sortname;
+		pagination.sortOrder = sortorder;
+		Long userIdOfCustomer = null;
+		if (StringUtil.isNotNull(userLoginName)) {
+			userIdOfCustomer = userService.findUserIdByLoginName(userLoginName);
+		}
+		pagination = inWarehouseOrderService.getInWarehouseRecordOnShelfData(userIdOfCustomer, warehouseId, trackingNo, batchNo, receivedTimeStart, receivedTimeEnd, pagination);
+		Map map = new HashMap();
+		map.put("Rows", pagination.rows);
+		map.put("Total", pagination.total);
+		return GsonUtil.toJson(map);
+	}
+
+	/**
 	 * 出库订单 查询
 	 * 
 	 * @param request
@@ -1103,4 +1158,5 @@ public class Storage {
 		Map<String, String> map = outWarehouseOrderService.applyTrackingNo(orderId);
 		return GsonUtil.toJson(map);
 	}
+
 }
