@@ -8,7 +8,7 @@ import com.coe.wms.pojo.api.warehouse.EventBody;
  * @author Administrator
  * 
  */
-public interface ITransportInterfaceService {
+public interface ITransportInterfaceService2 {
 
 	/**
 	 * 创建转运订单
