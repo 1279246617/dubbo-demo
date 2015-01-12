@@ -1,30 +1,35 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" id="printPage">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<link href="${baseUrl}/static/css/print/common.css" rel="stylesheet" type="text/css" />
-
-<body class="print-page-label">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link href="${baseUrl}/static/css/print/common.css" rel="stylesheet" type="text/css" />
+	<!-- 在页面中嵌入Lodop -->
+	<script language="javascript" src="${baseUrl}/static/js/print/LodopFuncs.js"></script>
+	<object  id="LODOP_OB" classid="clsid:2105C259-1E0C-4534-8141-A753534CB4CA" width=0 height=0> 
+	       <embed id="LODOP_EM" type="application/x-print-lodop" width=0 height=0></embed>
+	</object>
+</head>
+<body class="print-page-label" >
 		<!-- 循环订单,生成DIV -->
 		<c:forEach var="map"  items="${mapList}">  
 			<c:if test="${map.shipwayCode == 'SF'}">
 				<!-- 顺丰渠道标签 -------------------------------------------------------------------------------------------------------------开始 -->
-				<div class="label-100-150 change-page mt_1mm">
+				<div class="label-100-150 change-page mt_1mm" >
 					<div style="height:11mm;width:100%; border-bottom:1px solid  #000;" >
-							<div style="width:54mm;float: left;margin-top: 2mm;margin-left: 2mm;">
-							<%-- <img src="${baseUrl}/static/img/print/sflogo.png" style="height:7mm;width: 19mm;float: left;"> --%>
+							<div style="width:52mm;float: left;margin-top: 2mm;margin-left: 2mm;">
+<%-- 								<img src="${baseUrl}/static/img/print/sflogo.png" style="height:7mm;width: 19mm;float: left;"> --%>
 							</div>
 							<div style="width: 8mm;float: left;margin-top: -1.5mm;font-size: 10mm;;">
 								E
 							</div>
 							<div style="width: 32mm;float: right;margin-top: 3mm;">
 								<div style="height:2mm;line-height: 2mm;">
-									<!--0800 088 830 -->
+<!-- 									0800 088 830 -->
 								</div>
 								<div style="height:2mm;line-height: 2mm;">
-										<!--www.sf-express.com -->
+<!-- 										www.sf-express.com -->
 								</div>
 							</div>
 					</div>
@@ -48,7 +53,7 @@
 							</div>
 					</div>
 					
-					<div style="height:12.5mm;width:100%; border-bottom:1mm solid  #000;">
+					<div style="height:12.5mm;width:100%; border-bottom:2px solid  #000;">
 							<div style="height:12.5mm;width:57mm; border-right:1px solid  #000;line-height:3.5mm; overflow: hidden;font-size: 12px;" class="pull-left">
 									收方:	<c:out value="${map.receiver.countryName}"/>
 									<c:out value="${map.receiver.stateOrProvince}"/>
@@ -72,41 +77,42 @@
 							</div>
 					</div>	
 						
-					<div style="height:22mm;width:100%; border-bottom:1mm solid  #000;">
+					<div style="height:22mm;width:100%; border-bottom:1px solid  #000;">
 							<div style="height:22mm;width:57mm;text-align: center; border-right:1px solid  #000;" class="pull-left">
 										<img  style="margin-top:3mm;margin-left: 2mm;width:80%" src="data:image/png;base64,<c:out value="${map.trackingNoBarcodeData}"/>">
 							</div>
 							
-							<div style="height:12mm;width:38mm;" class="pull-left">
-								<table rules="all"style="width:100%;">
-									<tr><td style="text-align: center;"><font style="font-weight: bold;font-size: 5mm;">全球顺</font></td></tr>
-									<tr><td>收件员</td></tr>
-									<tr><td>寄件日期</td></tr>
-									<tr><td>派件员</td></tr>
+							<div style="height:22mm;width:38mm;" class="pull-left">
+								<table  style="width:100%;height:22mm;"  border="0" cellpadding="0" cellspacing="0">
+									<tr><td style="text-align: center;line-height:7mm;border-bottom:1px solid #000;"><font style="font-weight: bold;font-size: 4.5mm;">全球顺</font></td></tr>
+									<tr style="font-size: 12px;"><td style="height:3mm;width:38mm;border-bottom:1px solid #000;">收件员</td></tr>
+									<tr style="font-size: 12px;"><td style="height:3mm;border-bottom:1px solid #000;">寄件日期</td></tr>
+									<tr style="font-size: 12px;"><td style="height:3mm;">派件员</td></tr>
 								</table>
 							</div>
 					</div>	
 					
 					<div style="height:10mm;width:100%; border-bottom:1px solid  #000;">
-						<table rules="all"style="width:100%;height:10mm;border-color: #000;">
-							<tr>
-								<th style="width:22mm;">寄托物品数量</th>
-								<th style="width:18mm;">实际重量</th>
-								<th style="width:18mm;">计费重量</th>
-								<th style="width:15mm;">运费</th>
-								<th>费用合计</th>
+						<table  style="width:100%;height:10mm; font-size: 11px;" border="0" cellpadding="0" cellspacing="0">
+							<tr >
+								<th style="width:20mm;border-bottom:1px solid #000;border-right:1px solid #000;">寄托物品数量</th>
+								<th style="width:18mm;border-bottom:1px solid #000;border-right:1px solid #000;">实际重量</th>
+								<th style="width:18mm;border-bottom:1px solid #000;border-right:1px solid #000;">计费重量</th>
+								<th style="width:15mm;border-bottom:1px solid #000;border-right:1px solid #000;">运费</th>
+								<th style="border-bottom:1px solid #000;">费用合计</th>
 							</tr>
 							<tr>
-								<td style="text-align: center;"><c:out value="${map.totalQuantity}"/></td>
-								<td style="text-align: center;"><c:out value="${map.totalWeight}"/></td>
-								<td style="text-align: center;"><c:out value="${map.totalWeight}"/></td>
-								<td style="text-align: center;"></td>
+								<td style="text-align: center;border-right:1px solid #000;"><c:out value="${map.totalQuantity}"/></td>
+								<td style="text-align: center;border-right:1px solid #000;"><c:out value="${map.totalWeight}"/></td>
+								<td style="text-align: center;border-right:1px solid #000;"><c:out value="${map.totalWeight}"/></td>
+								<td style="text-align: center;border-right:1px solid #000;"></td>
 								<td style="text-align: center;"></td>
 							</tr>
 						</table>
 					</div>	
+					
 					<div style="height:20mm;width:100%; border-bottom:1px dashed  #000;">
-						<table  rules="none" style="line-height: 4mm;border-color: #000;">
+						<table style="line-height: 4mm;height:20mm;width:100%;font-size: 11px;" border="0" cellpadding="0" cellspacing="0">
 							<tr>
 								<td style="width:31mm;">付款方式:<c:out value="${map.additionalSf.payMethod}"/></td>
 								<td style="width:34mm;">月结帐号:<c:out value="${map.additionalSf.custId}"/></td>
@@ -135,19 +141,19 @@
 					</div>	
 					
 					<div style="height:34mm;width:100%; border-bottom:1px solid  #000;">
-						<table  rules="all" style="line-height: 4mm;width:100%;height:31mm;border-color: #000;">
+						<table style="line-height: 4mm;width:100%;height:32mm;margin-top:1mm;border-color: #000;font-size: 11px;"  border="0" cellpadding="0" cellspacing="0">
 							<tr>
-								<td rowspan="1" style="width:57mm;height:14mm;text-align: center;">
+								<td rowspan="1" style="width:57mm;height:14mm;text-align: center;border-right:1px solid #000;border-bottom:1px solid #000;">
 									<img  style="margin-left: 1mm;width:80%" src="data:image/png;base64,<c:out value="${map.trackingNoBarcodeData}"/>">
 								</td>
-								<td rowspan="1" style="width:39mm;height:14mm;text-align: left;line-height:3mm; overflow: hidden;">
+								<td rowspan="1" style="width:39mm;height:14mm;text-align: left;line-height:3mm; overflow: hidden;border-bottom:1px solid #000;">
 										寄方:<c:out value="${map.sender.name}"/><br>	
 										<c:out value="${map.sender.phoneNumber}"/>&nbsp;	
 										<c:out value="${map.sender.addressLine1}"/>			
 								</td>
 							</tr>
 							<tr>
-								<td rowspan="2" style="width:58mm;height:15.5mm;">
+								<td rowspan="2" style="width:58mm;height:15.5mm;border-right:1px solid #000;">
 									收件:
 									<c:out value="${map.receiver.countryName}"/>
 									<c:out value="${map.receiver.stateOrProvince}"/>
@@ -169,7 +175,7 @@
 							
 						</table>
 					</div>	
-					<div style="height:auto;width:100%; border-bottom:0px solid  #000;">
+					<div style="height:21mm;width:100%; border-bottom:0px solid  #000;">
 							<div style="line-height: 3.2mm;width:100%;">
 								<c:forEach var="item"  items="${map.items}">
 										<c:if test="${item.skuName != ''}">
@@ -357,4 +363,13 @@
 			</c:if>	
 		</c:forEach>
 </body>
+<script type="text/javascript">
+	var baseUrl = "${baseUrl}";
+// 	var LODOP=getLodop();
+// 	LODOP.PRINT_INIT("出货运单");
+// 	LODOP.ADD_PRINT_HTM(0,0,1500,1000,document.getElementById("printPage").innerHTML);
+// 	LODOP.PRINT();    
+// 	window.close();
+	
+</script>
 </html>
