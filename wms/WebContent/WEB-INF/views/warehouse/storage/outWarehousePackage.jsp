@@ -209,7 +209,11 @@
   	 		isSubmintIng ="Y";
   	 		$("#submitAll").attr("disabled","disabled");
   	 		 if(trackingNos == null || trackingNos ==''){
-  	 			parent.$.showShortMessage({msg:"请输入出货跟踪单号再按完成出货建包!",animate:false,left:"43%"});
+  	 			if($("#trackingNo").val()!=""){
+  	 				parent.$.showShortMessage({msg:"请输入出货跟踪单号再按完成出货建包!",animate:false,left:"43%"});	
+  	 			}else{
+  	 				parent.$.showShortMessage({msg:"您需要按回车提交出库跟踪单号或缺少有效的出库跟踪单号!",animate:false,left:"43%"});  	 				
+  	 			}
   	 			isSubmintIng = 'N';
   	 			$("#submitAll").removeAttr("disabled");
   	 			return false;
