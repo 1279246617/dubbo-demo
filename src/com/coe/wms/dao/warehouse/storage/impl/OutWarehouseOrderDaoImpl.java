@@ -433,6 +433,18 @@ public class OutWarehouseOrderDaoImpl implements IOutWarehouseOrderDao {
 		if (userIdOfCustomer != null) {
 			sb.append(" and b.user_id_of_customer =  " + userIdOfCustomer);
 		}
+		if (StringUtil.isNotNull(createdTimeStart)) {
+			Date date = DateUtil.stringConvertDate(createdTimeStart, DateUtil.yyyy_MM_ddHHmmss);
+			if (date != null) {
+				sb.append(" and b.created_time >= " + date.getTime());
+			}
+		}
+		if (StringUtil.isNotNull(createdTimeEnd)) {
+			Date date = DateUtil.stringConvertDate(createdTimeEnd, DateUtil.yyyy_MM_ddHHmmss);
+			if (date != null) {
+				sb.append(" and b.created_time <= " + date.getTime());
+			}
+		}
 		sb.append(" GROUP BY outWarehouseOrderId HAVING count(*)=1 ");
 		if (StringUtil.isEqual(Constant.Y, isQuantityOnly1)) {
 			sb.append(" and quantity=1  ");
