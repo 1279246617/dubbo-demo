@@ -175,7 +175,7 @@ public class ExportServiceImpl implements IExportService {
 					OutWarehouseOrderStatus outWarehouseOrderStatus = outWarehouseOrderStatusDao.findOutWarehouseOrderStatusByCode(resultStatus);
 					row[8] = outWarehouseOrderStatus.getCn();
 				}
-				row[9] = DateUtil.dateConvertString(new Date((Long) map.get("createdTime")), DateUtil.yyyy_MM_dd);
+				row[9] = DateUtil.dateConvertString(new Date((Long) map.get("createdTime")), DateUtil.yyyy_MM_ddHHmmss);
 				rows.add(row);
 			}
 			String filePath = config.getRuntimeFilePath() + "/export/";
