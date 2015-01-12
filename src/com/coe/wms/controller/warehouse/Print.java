@@ -92,7 +92,7 @@ public class Print {
 	 * @return
 	 * @throws IOException
 	 */
-	@RequestMapping(value = "/printShipLabel", method = RequestMethod.GET)
+	@RequestMapping(value = "/printShipLabel")
 	public ModelAndView printShipLabel(HttpServletRequest request, HttpServletResponse response, String orderIds) throws IOException {
 		HttpSession session = request.getSession();
 		ModelAndView view = new ModelAndView();

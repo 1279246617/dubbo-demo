@@ -449,7 +449,7 @@ public class OutWarehouseOrderServiceImpl implements IOutWarehouseOrderService {
 				Long countTrackingNoResult = outWarehousePackageItemDao.countOutWarehousePackageItem(checkTrackingNoParam, null);
 				if (countTrackingNoResult > 0) {
 					// 说明该出库订单已经和其他COE交接单号绑定了,不能再绑定此单号
-					map.put(Constant.MESSAGE, "该出库订单已经绑定的了COE交接单号");
+					map.put(Constant.MESSAGE, "失败!该出库订单已经绑定的了COE交接单号");
 					return map;
 				}
 				// 保存到OutWarehouseShipping,但不改变出库订单的状态.
