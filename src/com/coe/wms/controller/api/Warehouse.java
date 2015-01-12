@@ -20,9 +20,10 @@ import com.coe.wms.pojo.api.warehouse.Response;
 import com.coe.wms.pojo.api.warehouse.Responses;
 import com.coe.wms.service.storage.IInWarehouseOrderService;
 import com.coe.wms.service.storage.IOutWarehouseOrderService;
-import com.coe.wms.service.storage.IStorageService;
 import com.coe.wms.service.storage.IStorageInterfaceService;
-import com.coe.wms.service.transport.ITransportInterfaceService;
+import com.coe.wms.service.storage.IStorageService;
+import com.coe.wms.service.transport.ITransportInterfaceService1;
+import com.coe.wms.service.transport.ITransportInterfaceService2;
 import com.coe.wms.service.transport.ITransportService;
 import com.coe.wms.util.Constant;
 import com.coe.wms.util.StringUtil;
@@ -55,8 +56,11 @@ public class Warehouse {
 	@Resource(name = "storageInterfaceService")
 	private IStorageInterfaceService storageInterfaceService;
 
-	@Resource(name = "transportInterfaceService")
-	private ITransportInterfaceService transportInterfaceService;
+	@Resource(name = "transportInterfaceService1")
+	private ITransportInterfaceService1 transportInterfaceService1;
+
+	@Resource(name = "transportInterfaceService2")
+	private ITransportInterfaceService2 transportInterfaceService2;
 
 	/**
 	 * 接口(目前是顺丰专用)
@@ -130,16 +134,16 @@ public class Warehouse {
 			}
 
 			if (StringUtil.isEqualIgnoreCase(EventType.LOGISTICS_TRADE_PAID, eventType)) { // 创建转运订单
-				Integer orderType = transportInterfaceService.warehouseInterfaceDistinguishOrderOrPackage(eventBody);// 判断是大包(流连大包)还是小包
+				Integer orderType = transportInterfaceService1.warehouseInterfaceDistinguishOrderOrPackage(eventBody);// 判断是大包(流连大包)还是小包
 				if (orderType == 1) {// 大包
-					responseXml = transportInterfaceService.warehouseInterfaceSaveTransportOrderPackage(eventBody, userIdOfCustomer, eventTarget);
+					responseXml = transportInterfaceService1.warehouseInterfaceSaveTransportOrderPackage(eventBody, userIdOfCustomer, eventTarget);
 				} else {// 小包
-					responseXml = transportInterfaceService.warehouseInterfaceSaveTransportOrder(eventBody, userIdOfCustomer, eventTarget);
+					responseXml = transportInterfaceService1.warehouseInterfaceSaveTransportOrder(eventBody, userIdOfCustomer, eventTarget);
 				}
 			}
 
 			if (StringUtil.isEqualIgnoreCase(EventType.LOGISTICS_SEND_GOODS, eventType)) { // 转运确认出库(确认重量)
-				responseXml = transportInterfaceService.warehouseInterfaceConfirmTransportOrder(eventBody, userIdOfCustomer, eventTarget);
+				responseXml = transportInterfaceService1.warehouseInterfaceConfirmTransportOrder(eventBody, userIdOfCustomer, eventTarget);
 			}
 			logger.warn("eventType:" + eventType + "  responseXml:" + responseXml);
 			return responseXml;
@@ -177,10 +181,8 @@ public class Warehouse {
 			String token = request.getParameter("token");
 			String apptype = request.getParameter("apptype");
 			String sign = request.getParameter("sign");
-			
-			
-			
-			
+
+//			transportInterfaceService2
 			return null;
 		} catch (Exception e) {
 			e.printStackTrace();
