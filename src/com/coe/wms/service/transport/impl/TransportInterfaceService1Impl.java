@@ -71,7 +71,7 @@ import com.coe.wms.util.XmlUtil;
  * @author Administrator
  * 
  */
-@Service("transportInterfaceService")
+@Service("transportInterfaceService1")
 public class TransportInterfaceService1Impl implements ITransportInterfaceService1 {
 
 	private static final Logger logger = Logger.getLogger(TransportInterfaceService1Impl.class);

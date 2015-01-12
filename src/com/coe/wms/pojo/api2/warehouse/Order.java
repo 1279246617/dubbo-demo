@@ -3,6 +3,9 @@ package com.coe.wms.pojo.api2.warehouse;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+
 public class Order implements Serializable {
 
 	/**
@@ -82,6 +85,8 @@ public class Order implements Serializable {
 		this.receiver = receiver;
 	}
 
+	@XmlElementWrapper(name = "firstWaybills")
+	@XmlElement(name = "firstWaybill")
 	public List<FirstWaybill> getFirstWaybills() {
 		return firstWaybills;
 	}
