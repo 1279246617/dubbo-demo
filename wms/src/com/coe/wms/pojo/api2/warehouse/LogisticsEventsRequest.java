@@ -17,6 +17,7 @@ public class LogisticsEventsRequest implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = -4731883715949095086L;
+	
 	private LogisticsEvent logisticsEvent;
 
 	public LogisticsEvent getLogisticsEvent() {

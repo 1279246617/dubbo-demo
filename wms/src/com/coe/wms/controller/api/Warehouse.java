@@ -181,7 +181,7 @@ public class Warehouse {
 			String token = request.getParameter("token");
 			String apptype = request.getParameter("apptype");
 			String sign = request.getParameter("sign");
-
+			
 //			transportInterfaceService2
 			return null;
 		} catch (Exception e) {
