@@ -804,6 +804,17 @@ public class Storage {
 	}
 
 	/**
+	 * 
+	 * 检查是否i可以打印运单
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/checkOutWarehouseOrderPrintShipLabel")
+	public String checkOutWarehouseOrderPrintShipLabel(HttpServletRequest request, Long outWarehouseOrderId) throws IOException {
+		Map<String, String> map = outWarehouseOrderService.checkOutWarehouseOrderPrintShipLabel(outWarehouseOrderId);
+		return GsonUtil.toJson(map);
+	}
+
+	/**
 	 * 出库扫描运单建包界面
 	 * 
 	 * @param request

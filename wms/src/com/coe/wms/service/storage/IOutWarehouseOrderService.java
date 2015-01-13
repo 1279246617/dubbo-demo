@@ -80,6 +80,8 @@ public interface IOutWarehouseOrderService {
 	 */
 	public TrackingNo getCoeTrackingNoforOutWarehouseShipping() throws ServiceException;
 
+	public Map<String, String> checkOutWarehouseOrderPrintShipLabel(Long outWarehouseOrderId) throws ServiceException;
+
 	/**
 	 * 出库确认
 	 * 

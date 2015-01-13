@@ -446,40 +446,35 @@ public class OutWarehouseOrderServiceImpl implements IOutWarehouseOrderService {
 			return map;
 		}
 		OutWarehouseOrder outWarehouseOrder = outWarehouseOrderList.get(0);
-		if (StringUtil.isEqual(outWarehouseOrder.getStatus(), OutWarehouseOrderStatusCode.WWO)) { // 只有顺丰确认出库才可以建包
-			OutWarehousePackageItem param2 = new OutWarehousePackageItem();
-			param2.setOutWarehouseOrderId(outWarehouseOrder.getId());
-			List<OutWarehousePackageItem> outWarehousePackageItemList = outWarehousePackageItemDao.findOutWarehousePackageItem(param2, null, null);
-			if (outWarehousePackageItemList != null && outWarehousePackageItemList.size() >= 1) {
-				OutWarehousePackageItem outWarehousePackageItem = outWarehousePackageItemList.get(0);
-				if (coeTrackingNoId.longValue() != outWarehousePackageItem.getCoeTrackingNoId().longValue()) {
-					map.put(Constant.MESSAGE, "该出库订单绑定了其他交接单号:" + outWarehousePackageItem.getCoeTrackingNo());
-				} else {
-					map.put(Constant.MESSAGE, "该出库订单已经绑定COE交接单号:" + outWarehousePackageItem.getCoeTrackingNo());
-				}
-				return map;
+		OutWarehousePackageItem param2 = new OutWarehousePackageItem();
+		param2.setOutWarehouseOrderId(outWarehouseOrder.getId());
+		List<OutWarehousePackageItem> outWarehousePackageItemList = outWarehousePackageItemDao.findOutWarehousePackageItem(param2, null, null);
+		if (outWarehousePackageItemList != null && outWarehousePackageItemList.size() >= 1) {
+			OutWarehousePackageItem outWarehousePackageItem = outWarehousePackageItemList.get(0);
+			if (coeTrackingNoId.longValue() != outWarehousePackageItem.getCoeTrackingNoId().longValue()) {
+				map.put(Constant.MESSAGE, "该出库订单绑定了其他交接单号:" + outWarehousePackageItem.getCoeTrackingNo());
+			} else {
+				map.put(Constant.MESSAGE, "该出库订单已经绑定COE交接单号:" + outWarehousePackageItem.getCoeTrackingNo());
 			}
-			// 保存建包记录
-			OutWarehousePackageItem outWarehouseRecordItem = new OutWarehousePackageItem();
-			outWarehouseRecordItem.setCoeTrackingNo(coeTrackingNo);
-			outWarehouseRecordItem.setCoeTrackingNoId(coeTrackingNoId);
-			outWarehouseRecordItem.setCreatedTime(System.currentTimeMillis());
-			outWarehouseRecordItem.setOutWarehouseOrderTrackingNo(trackingNo);
-			outWarehouseRecordItem.setOutWarehouseOrderId(outWarehouseOrder.getId());
-			outWarehouseRecordItem.setUserIdOfCustomer(outWarehouseOrder.getUserIdOfCustomer());
-			outWarehouseRecordItem.setUserIdOfOperator(userIdOfOperator);
-			outWarehouseRecordItem.setWarehouseId(outWarehouseOrder.getWarehouseId());
-			outWarehousePackageItemDao.saveOutWarehousePackageItem(outWarehouseRecordItem);
-			map.put(Constant.STATUS, Constant.SUCCESS);
-		} else if (StringUtil.isEqual(outWarehouseOrder.getStatus(), OutWarehouseOrderStatusCode.SUCCESS)) {
-			map.put(Constant.MESSAGE, "出库订单当前状态已经是出库成功");
-		} else if (StringUtil.isEqual(outWarehouseOrder.getStatus(), OutWarehouseOrderStatusCode.WCC)) {
-			map.put(Constant.MESSAGE, "出库订单当前状态是等待客户确认出库,不能出库");
-		} else if (StringUtil.isEqual(outWarehouseOrder.getStatus(), OutWarehouseOrderStatusCode.WSW)) {
-			map.put(Constant.MESSAGE, "出库订单当前状态是等待发送出库重量给客户,不能出库");
-		} else {
-			map.put(Constant.MESSAGE, "出库订单当前状态不能出库");
+			return map;
 		}
+		if (!StringUtil.isEqual(outWarehouseOrder.getStatus(), OutWarehouseOrderStatusCode.WWO)) {
+			OutWarehouseOrderStatus status = outWarehouseOrderStatusDao.findOutWarehouseOrderStatusByCode(outWarehouseOrder.getStatus());
+			map.put(Constant.MESSAGE, "该出库订单状态是:" + status.getCn() + ", 不能建包出库");
+			return map;
+		}
+		// 保存建包记录
+		OutWarehousePackageItem outWarehouseRecordItem = new OutWarehousePackageItem();
+		outWarehouseRecordItem.setCoeTrackingNo(coeTrackingNo);
+		outWarehouseRecordItem.setCoeTrackingNoId(coeTrackingNoId);
+		outWarehouseRecordItem.setCreatedTime(System.currentTimeMillis());
+		outWarehouseRecordItem.setOutWarehouseOrderTrackingNo(trackingNo);
+		outWarehouseRecordItem.setOutWarehouseOrderId(outWarehouseOrder.getId());
+		outWarehouseRecordItem.setUserIdOfCustomer(outWarehouseOrder.getUserIdOfCustomer());
+		outWarehouseRecordItem.setUserIdOfOperator(userIdOfOperator);
+		outWarehouseRecordItem.setWarehouseId(outWarehouseOrder.getWarehouseId());
+		outWarehousePackageItemDao.saveOutWarehousePackageItem(outWarehouseRecordItem);
+		map.put(Constant.STATUS, Constant.SUCCESS);
 		return map;
 	}
 
@@ -1065,6 +1060,31 @@ public class OutWarehouseOrderServiceImpl implements IOutWarehouseOrderService {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put(Constant.STATUS, Constant.FAIL);
 		map.put(Constant.MESSAGE, "未支持对顺丰渠道申请单号");
+		return map;
+	}
+
+	@Override
+	public Map<String, String> checkOutWarehouseOrderPrintShipLabel(Long outWarehouseOrderId) throws ServiceException {
+		Map<String, String> map = new HashMap<String, String>();
+		map.put(Constant.STATUS, Constant.FAIL);
+		String outWarehouseOrderStatus = outWarehouseOrderDao.getOutWarehouseOrderStatus(outWarehouseOrderId);
+		if (StringUtil.isEqual(OutWarehouseOrderStatusCode.WWC, outWarehouseOrderStatus)) {
+			map.put(Constant.MESSAGE, "不能打印!! 该出库订单待仓库审核。");
+
+		} else if (StringUtil.isEqual(OutWarehouseOrderStatusCode.WPP, outWarehouseOrderStatus)) {
+			map.put(Constant.MESSAGE, "不能打印!! 该出库订单待打印捡货。");
+
+		} else if (StringUtil.isEqual(OutWarehouseOrderStatusCode.WOS, outWarehouseOrderStatus)) {
+			map.put(Constant.MESSAGE, "不能打印!! 该出库订单待捡货下架。");
+
+		} else if (StringUtil.isEqual(OutWarehouseOrderStatusCode.WWW, outWarehouseOrderStatus)) {
+			map.put(Constant.MESSAGE, "不能打印!! 该出库订单待仓库称重。");
+
+		} else if (StringUtil.isEqual(OutWarehouseOrderStatusCode.FAIL, outWarehouseOrderStatus)) {
+			map.put(Constant.MESSAGE, "不能打印!! 该出库订单失败并结束。");
+		} else {
+			map.put(Constant.STATUS, Constant.SUCCESS);
+		}
 		return map;
 	}
 }
