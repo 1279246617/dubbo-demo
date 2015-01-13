@@ -22,7 +22,7 @@ function enterCoeTrackingNo(){
 				var tr = "<tr style='height:25px;' id='success_"+e.outWarehouseOrderTrackingNo+"'>";
 		  		tr += "<td style='text-align: center'>"+e.outWarehouseOrderTrackingNo+"</td>";
 		  		tr += "</tr>";
-	  			$("#trackingNos").append(tr);
+	  			$("#trackingNos").prepend(tr);
 	  			$("#total").html( parseInt($("#total").html()) + 1);
 			});
   	  		focus = '2';
@@ -70,6 +70,7 @@ function next(){
 			}
 		});
 	}
+	$("#trackingNo").val("");
 }
 
 //绑定
@@ -83,7 +84,7 @@ function binding(trackingNo,coeTrackingNoId,coeTrackingNo){
   			var tr = "<tr style='height:22px;' id='fail_"+trackingNo+"'>";
 	  		tr += "<td style='text-align: left'>&nbsp;"+trackingNo+":绑定失败,"+msg.message+"</td>";
 	  		tr += "</tr>";
-  			$("#results").append(tr);
+  			$("#results").prepend(tr);
   			$("#totalFail").html( parseInt($("#totalFail").html()) + 1);
   		}
   		
@@ -91,7 +92,7 @@ function binding(trackingNo,coeTrackingNoId,coeTrackingNo){
   			var tr = "<tr style='height:25px;' id='success_"+trackingNo+"'>";
 	  		tr += "<td style='text-align: center'>"+trackingNo+"</td>";
 	  		tr += "</tr>";
-  			$("#trackingNos").append(tr);
+  			$("#trackingNos").prepend(tr);
   			$("#total").html( parseInt($("#total").html()) + 1);
   		}
   	},"json");
@@ -108,11 +109,12 @@ function unBinding(trackingNo,coeTrackingNoId,coeTrackingNo){
   			var tr = "<tr style='height:22px;' id='fail_"+trackingNo+"'>";
 	  		tr += "<td style='text-align: left;color:red;'>&nbsp;"+trackingNo+":解除失败,"+msg.message+"</td>";
 	  		tr += "</tr>";
-  			$("#results").append(tr);
+  			$("#results").prepend(tr);
   			$("#totalFail").html( parseInt($("#totalFail").html()) + 1);
   		}
   		
   		if(msg.status == 1){//解除成功
+  			$("#success_"+trackingNo).hide();
   			$("#success_"+trackingNo).html("");
   			$("#total").html( parseInt($("#total").html()) - 1);
   		}
