@@ -75,7 +75,7 @@ public class OnShelvesTaskImpl implements IOnShelvesTask {
 	/**
 	 * 定时更新入库上架状态 部分上架,全未上架,上架完成
 	 */
-	@Scheduled(cron = "0 0/20 * * * ? ")
+	@Scheduled(cron = "0 0/15 * * * ? ")
 	@Override
 	public void updateInWarehouseRecordOnShelvesStatus() {
 		List<Long> recordIdList = inWarehouseRecordDao.findUnCompleteInWarehouseRecordId();
