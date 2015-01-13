@@ -27,7 +27,6 @@ import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrder;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderItem;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecord;
-import com.coe.wms.model.warehouse.storage.record.InWarehouseRecordItem;
 import com.coe.wms.model.warehouse.storage.record.OutWarehousePackage;
 import com.coe.wms.model.warehouse.storage.record.OutWarehousePackageItem;
 import com.coe.wms.model.warehouse.transport.FirstWaybill;
@@ -175,9 +174,20 @@ public class Storage {
 	}
 
 	/**
-	 * 扫运单动作, 检查每个运单
 	 * 
-	 * 检查通过,保存至出货单
+	 * 绑定
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/bindingOutWarehouseOrder")
+	public String bindingOutWarehouseOrder(HttpServletRequest request, HttpServletResponse response, String trackingNo, Long coeTrackingNoId, String coeTrackingNo) throws IOException {
+		HttpSession session = request.getSession();
+		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
+		Map<String, String> checkResultMap = outWarehouseOrderService.bindingOutWarehouseOrder(trackingNo, userId, coeTrackingNoId, coeTrackingNo);
+		return GsonUtil.toJson(checkResultMap);
+	}
+
+	/**
+	 * 解除绑定
 	 * 
 	 * @param request
 	 * @param response
@@ -185,11 +195,11 @@ public class Storage {
 	 * @throws IOException
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/checkOutWarehouseShipping")
-	public String checkOutWarehouseShipping(HttpServletRequest request, HttpServletResponse response, String trackingNo, Long coeTrackingNoId, String coeTrackingNo, String addOrSub, String orderIds) throws IOException {
+	@RequestMapping(value = "/unBindingOutWarehouseOrder")
+	public String unBindingOutWarehouseOrder(HttpServletRequest request, HttpServletResponse response, String trackingNo, Long coeTrackingNoId, String coeTrackingNo) throws IOException {
 		HttpSession session = request.getSession();
 		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
-		Map<String, String> checkResultMap = outWarehouseOrderService.checkOutWarehouseShipping(trackingNo, userId, coeTrackingNoId, coeTrackingNo, addOrSub, orderIds);
+		Map<String, String> checkResultMap = outWarehouseOrderService.unBindingOutWarehouseOrder(trackingNo, userId, coeTrackingNoId, coeTrackingNo);
 		return GsonUtil.toJson(checkResultMap);
 	}
 
@@ -851,10 +861,10 @@ public class Storage {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/outWarehousePackageConfirm")
-	public synchronized String outWarehousePackageConfirm(HttpServletRequest request, HttpServletResponse response, String orderIds, String coeTrackingNo, Long coeTrackingNoId) throws IOException {
+	public synchronized String outWarehousePackageConfirm(HttpServletRequest request, HttpServletResponse response, String coeTrackingNo, Long coeTrackingNoId) throws IOException {
 		HttpSession session = request.getSession();
 		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
-		Map<String, String> checkResultMap = outWarehouseOrderService.outWarehousePackageConfirm(coeTrackingNo, coeTrackingNoId, orderIds, userId);
+		Map<String, String> checkResultMap = outWarehouseOrderService.outWarehousePackageConfirm(coeTrackingNo, coeTrackingNoId, userId);
 		return GsonUtil.toJson(checkResultMap);
 	}
 
@@ -885,14 +895,14 @@ public class Storage {
 	 * @throws IOException
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/outWarehouseShippingEnterCoeTrackingNo")
-	public String outWarehouseShippingEnterCoeTrackingNo(HttpServletRequest request, HttpServletResponse response, String coeTrackingNo) throws IOException {
+	@RequestMapping(value = "/outWarehousePackageEnterCoeTrackingNo")
+	public String outWarehousePackageEnterCoeTrackingNo(HttpServletRequest request, HttpServletResponse response, String coeTrackingNo) throws IOException {
 		HttpSession session = request.getSession();
 		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
 		Map<String, Object> map = new HashMap<String, Object>();
 		Map<String, Object> objectMap = outWarehouseOrderService.outWarehouseShippingEnterCoeTrackingNo(coeTrackingNo);
-		List<OutWarehousePackageItem> outWarehouseShippingList = (List<OutWarehousePackageItem>) objectMap.get("outWarehouseShippingList");
-		map.put("outWarehouseShippingList", outWarehouseShippingList);
+		List<OutWarehousePackageItem> packageItemList = (List<OutWarehousePackageItem>) objectMap.get("packageItemList");
+		map.put("packageItemList", packageItemList);
 		map.put(Constant.STATUS, objectMap.get(Constant.STATUS));
 		map.put(Constant.MESSAGE, objectMap.get(Constant.MESSAGE));
 		map.put("coeTrackingNo", objectMap.get("coeTrackingNo"));

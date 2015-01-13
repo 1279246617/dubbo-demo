@@ -17,8 +17,8 @@
 <title>COE</title>
 </head>
 <body style="font-size: 16px;">
-	<div class="pull-left" style="width:50%;height:80px; margin-top: 1px;" >
-			<table class="table table-striped" style="width:100%;">
+	<div class="pull-left" style="width:50%;height:100%; margin-top: 1px;" >
+			<table class="table table-striped" style="width:100%;height:150px;">
 					<tr>
 						<td colspan="2" style="height:28px;">
 								<span style="width:100px;" class="pull-left">COE交接单号</span>
@@ -49,16 +49,31 @@
 						</td>
 					</tr>
 			</table>
-			
+		<div class="pull-left" style="width:100%;margin-top: 3px;height:60px;;overflow: hidden;" >
+			<table class="table table-striped" style="width:100%;">
+					<tr><th colspan="1" style="height:28px;text-align: left">操作(绑定和解除绑定)失败的出货跟踪单号记录, 数量:<span id="totalFail" style="margin-left: 5px;">0</span></th></tr>
+			</table>
+		</div>
+		
+		<div class="pull-left" style="width:100%;margin-top: 1px;overflow: auto" id="resultDiv" >
+			<table class="table table-striped" style="width:100%;text-align: left">
+					<tbody id="results">
+						
+					</tbody>
+			</table>
+		</div>
 			
 	</div>
 	
-	<div class="pull-right" style="width:50%;margin-top: 1px;" >
+	<div class="pull-right" style="width:50%;margin-top: 1px;height:60px;;overflow: hidden;" >
+		<table class="table table-striped" style="width:100%;">
+				<tr><th colspan="1" style="height:28px;text-align: center">绑定成功的出货跟踪单号记录, 数量:<span id="total" style="margin-left: 5px;">0</span></th></tr>
+		</table>
+	</div>
+	<div class="pull-right" style="width:50%;margin-top: 1px;overflow: auto" id="trackingNosDiv" >
 			<table class="table table-striped" style="width:100%;">
-					<tr>
-							<td colspan="1" style="height:28px;text-align: center">已扫描的出货跟踪单号记录, 数量:<span id="total" style="margin-left: 5px;">0</span></td>
-					</tr>
 					<tbody id="trackingNos">
+						
 					</tbody>
 			</table>
 	</div>
@@ -79,7 +94,6 @@
 	
     <script type="text/javascript">
 	   var baseUrl = "${baseUrl}";
-	   var orderIds = "";
 	   //进入页面,焦点跟踪单号
 	   $("#trackingNo").focus();
 	   var focus ="2";
@@ -88,6 +102,9 @@
 		  			//当前获取焦点的文本框是 主单还是明细
 		  			focus = $(this).attr("t");
 		  		});
+		  		var wh = $(window).height();
+		  		$("#trackingNosDiv").css("height", wh - 80);
+		  		$("#resultDiv").css("height", wh - 240);
 	   	});
 	    $(window).keydown(function(event){
 	    	if((event.keyCode   ==   13) &&   (event.ctrlKey)) {

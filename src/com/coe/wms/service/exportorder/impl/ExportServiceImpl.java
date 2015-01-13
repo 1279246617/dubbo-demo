@@ -153,13 +153,7 @@ public class ExportServiceImpl implements IExportService {
 		List<String[]> rows = new ArrayList<String[]>();
 		try {
 			int index = 0;
-			String lastBarcode = null;
 			for (Map<String, Object> map : singleBarcodeOutWarehouseOrderList) {
-				String barcode = (String) map.get("barcode");
-				if (StringUtil.isNotNull(lastBarcode) && !StringUtil.isEqual(lastBarcode, barcode)) {
-					rows.add(new String[11]);// 添加空白行
-				}
-				lastBarcode = barcode;
 				String[] row = new String[11];
 				index++;
 				row[0] = index + "";
@@ -175,7 +169,7 @@ public class ExportServiceImpl implements IExportService {
 				}
 				row[3] = (String) map.get("customerReferenceNo");
 				row[4] = (String) map.get("trackingNo");
-				row[5] = barcode;
+				row[5] = (String) map.get("barcode");
 				row[6] = (String) map.get("sku");
 				row[7] = (Integer) map.get("quantity") + "";
 				row[8] = (String) map.get("productName");
