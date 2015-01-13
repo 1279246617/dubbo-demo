@@ -106,8 +106,13 @@ function countSku(){
 			}
  		 },"json");
  		if(isCanPrint){
- 			var url = baseUrl+'/warehouse/print/printShipLabel.do?orderIds='+outWarehouseOrderId;
-			 window.open(url); 	
+// 			var url = baseUrl+'/warehouse/directPrint/storageShipLabel.do?orderId='+outWarehouseOrderId;
+//			window.open(url);
+ 			
+ 			$.post(baseUrl+ '/warehouse/directPrint/storageShipLabel.do?orderId='+ outWarehouseOrderId, function(html) {
+ 				
+ 				 
+ 	 		 },"text");
  		}
  }
  

@@ -22,8 +22,6 @@ public class Shipway implements Serializable {
 
 		public static final String ETK = "ETK";
 
-		public static final String B2C = "B2C";
-
 		public static final String SF = "SF";
 	}
 

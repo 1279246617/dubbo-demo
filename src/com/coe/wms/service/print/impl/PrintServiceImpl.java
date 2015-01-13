@@ -333,6 +333,7 @@ public class PrintServiceImpl implements IPrintService {
 		if (sender != null) {
 			map.put("sender", sender);
 		}
+		map.put("shipwayCode", outWarehouseOrder.getShipwayCode());
 		// 创建条码
 		String trackingNo = outWarehouseOrder.getTrackingNo();
 		outWarehouseOrder.getShipwayExtra1();
