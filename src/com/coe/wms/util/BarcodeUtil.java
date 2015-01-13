@@ -1,38 +1,26 @@
 package com.coe.wms.util;
 
-import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.Iterator;
-
-import javax.imageio.ImageIO;
-import javax.imageio.ImageReadParam;
-import javax.imageio.ImageReader;
-import javax.imageio.stream.ImageInputStream;
 
 import org.apache.log4j.Logger;
 import org.jbarcode.JBarcode;
 import org.jbarcode.encode.Code128Encoder;
 import org.jbarcode.encode.Code39Encoder;
 import org.jbarcode.encode.EAN13Encoder;
-import org.jbarcode.encode.EAN8Encoder;
 import org.jbarcode.paint.BaseLineTextPainter;
 import org.jbarcode.paint.EAN13TextPainter;
-import org.jbarcode.paint.EAN8TextPainter;
 import org.jbarcode.paint.WidthCodedPainter;
 import org.jbarcode.util.ImageUtil;
+
+import sun.misc.BASE64Encoder;
 
 import com.bokai.barcodes.Barcode;
 import com.bokai.barcodes.BarcodeExtraTextPosition;
 import com.bokai.barcodes.BarcodeOrientation;
 import com.bokai.barcodes.BarcodeTextPosition;
 import com.bokai.barcodes.CheckCharShowMode;
-
-import sun.misc.BASE64Encoder;
 
 public class BarcodeUtil {
 
@@ -174,7 +162,7 @@ public class BarcodeUtil {
 			barcode.setExtraTextPosition(BarcodeExtraTextPosition.above);
 			barcode.setCheckCharShowMode(CheckCharShowMode.hide);
 			barcode.setOrientation(BarcodeOrientation.bottomFacing);
-//			 _barcode.setBarTypeWidth(1, 3);
+			// _barcode.setBarTypeWidth(1, 3);
 			int width = barcode.getModuleCount();
 			int barcodeHeight = height.intValue();
 			int scale = 1;
