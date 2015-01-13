@@ -96,16 +96,25 @@ public interface IOutWarehouseOrderService {
 	 * @return
 	 * @throws ServiceException
 	 */
-	public Map<String, String> outWarehousePackageConfirm(String coeTrackingNo, Long coeTrackingNoId, String orderIds, Long userIdOfOperator) throws ServiceException;
+	public Map<String, String> outWarehousePackageConfirm(String coeTrackingNo, Long coeTrackingNoId, Long userIdOfOperator) throws ServiceException;
 
 	/**
-	 * 检查出库时扫描每单
+	 * 绑定
 	 * 
 	 * @param TrackingNo
 	 * @return
 	 * @throws ServiceException
 	 */
-	public Map<String, String> checkOutWarehouseShipping(String trackingNo, Long userIdOfOperator, Long coeTrackingNoId, String coeTrackingNo, String addOrSub, String orderIds) throws ServiceException;
+	public Map<String, String> bindingOutWarehouseOrder(String trackingNo, Long userIdOfOperator, Long coeTrackingNoId, String coeTrackingNo) throws ServiceException;
+
+	/**
+	 * 解除绑定
+	 * 
+	 * @param TrackingNo
+	 * @return
+	 * @throws ServiceException
+	 */
+	public Map<String, String> unBindingOutWarehouseOrder(String trackingNo, Long userIdOfOperator, Long coeTrackingNoId, String coeTrackingNo) throws ServiceException;
 
 	/**
 	 * 出货重新输入coe交接单号
