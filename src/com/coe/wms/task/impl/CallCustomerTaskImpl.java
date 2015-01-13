@@ -161,7 +161,7 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 	/**
 	 * 发送仓配入库订单信息给客户
 	 */
-	@Scheduled(cron = "0 0/10 8-23 * * ? ")
+	@Scheduled(cron = "0 0/10 * * * ? ")
 	@Override
 	public void sendInWarehouseInfoToCustomer() {
 		List<Long> recordIdList = inWarehouseRecordDao.findCallbackUnSuccessRecordId();
@@ -259,12 +259,12 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 			basicNameValuePairs.add(new BasicNameValuePair("data_digest", dataDigest));
 			basicNameValuePairs.add(new BasicNameValuePair("version", "1.0"));
 
-			logger.debug("回传SKU入库信息: url=" + url);
-			logger.debug("回传SKU入库信息: logistics_interface=" + xml);
-			logger.debug("回传SKU入库信息: data_digest=" + dataDigest + " msg_source=" + msgSource + " msg_type=" + serviceNameSkuStockin + " logistics_provider_id=" + warehouse.getWarehouseNo());
+			logger.info("回传SKU入库信息: url=" + url);
+			logger.info("回传SKU入库信息: logistics_interface=" + xml);
+			logger.info("回传SKU入库信息: data_digest=" + dataDigest + " msg_source=" + msgSource + " msg_type=" + serviceNameSkuStockin + " logistics_provider_id=" + warehouse.getWarehouseNo());
 			try {
 				String response = HttpUtil.postRequest(url, basicNameValuePairs);
-				logger.debug("顺丰返回:" + response);
+				logger.info("顺丰返回:" + response);
 				inWarehouseRecord.setCallbackCount(inWarehouseRecord.getCallbackCount() == null ? 1 : inWarehouseRecord.getCallbackCount() + 1);
 				Responses responses = (Responses) XmlUtil.toObject(response, Responses.class);
 				if (responses == null) {
@@ -275,14 +275,14 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 				if (responseList != null && responseList.size() > 0) {
 					if (StringUtil.isEqualIgnoreCase(responseList.get(0).getSuccess(), Constant.TRUE)) {
 						inWarehouseRecord.setCallbackIsSuccess(Constant.Y);
-						logger.debug("回传SKU入库信息成功");
+						logger.info("回传SKU入库信息成功");
 					} else {
 						inWarehouseRecord.setCallbackIsSuccess(Constant.N);
-						logger.debug("回传SKU入库信息失败");
+						logger.info("回传SKU入库信息失败");
 					}
 				} else {
 					inWarehouseRecord.setCallbackIsSuccess(Constant.N);
-					logger.error("回传SKU入库信息 返回无指明成功与否");
+					logger.info("回传SKU入库信息 返回无指明成功与否");
 				}
 				// 更新入库记录的Callback 次数和成功状态
 				inWarehouseRecordDao.updateInWarehouseRecordCallback(inWarehouseRecord);
@@ -295,7 +295,7 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 	/**
 	 * 回传出库称重给客户
 	 */
-	@Scheduled(cron = "0 0/10 8-23 * * ? ")
+	@Scheduled(cron = "0 0/10 * * * ? ")
 	@Override
 	public void sendOutWarehouseWeightToCustomer() {
 		List<Long> orderIdList = outWarehouseOrderDao.findCallbackSendWeightUnSuccessOrderId();
@@ -368,16 +368,16 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 			String dataDigest = StringUtil.encoderByMd5(xml + user.getOppositeToken());
 			basicNameValuePairs.add(new BasicNameValuePair("data_digest", dataDigest));
 			basicNameValuePairs.add(new BasicNameValuePair("version", "1.0"));
-			logger.debug("回传SKU出库称重信息: url=" + url);
-			logger.debug("回传SKU出库称重信息: logistics_interface=" + xml);
-			logger.debug("回传SKU出库称重信息: data_digest=" + dataDigest + " msg_source=" + msgSource + " msg_type=" + serviceNameSendWeight + " logistics_provider_id=" + warehouse.getWarehouseNo());
+			logger.info("回传SKU出库称重信息: url=" + url);
+			logger.info("回传SKU出库称重信息: logistics_interface=" + xml);
+			logger.info("回传SKU出库称重信息: data_digest=" + dataDigest + " msg_source=" + msgSource + " msg_type=" + serviceNameSendWeight + " logistics_provider_id=" + warehouse.getWarehouseNo());
 			try {
 				String response = HttpUtil.postRequest(url, basicNameValuePairs);
-				logger.debug("顺丰返回:" + response);
+				logger.info("顺丰返回:" + response);
 				outWarehouseOrder.setCallbackSendWeighCount(outWarehouseOrder.getCallbackSendWeighCount() == null ? 1 : outWarehouseOrder.getCallbackSendWeighCount() + 1);
 				Responses responses = (Responses) XmlUtil.toObject(response, Responses.class);
 				if (responses == null) {
-					logger.error("回传SKU出库称重信息 返回信息无法转换成Responses对象");
+					logger.info("回传SKU出库称重信息 返回信息无法转换成Responses对象");
 					continue;
 				}
 				List<Response> responseList = responses.getResponseItems();
@@ -385,10 +385,10 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 					if (StringUtil.isEqualIgnoreCase(responseList.get(0).getSuccess(), Constant.TRUE)) {
 						outWarehouseOrder.setCallbackSendWeightIsSuccess(Constant.Y);
 						outWarehouseOrder.setStatus(OutWarehouseOrderStatusCode.WCC);
-						logger.debug("回传SKU出库称重信息成功");
+						logger.info("回传SKU出库称重信息成功");
 					} else {
 						outWarehouseOrder.setCallbackSendWeightIsSuccess(Constant.N);
-						logger.debug("回传SKU出库称重信息失败");
+						logger.info("回传SKU出库称重信息失败");
 					}
 				} else {
 					outWarehouseOrder.setCallbackSendWeightIsSuccess(Constant.N);
@@ -405,7 +405,7 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 	/**
 	 * 回传出库状态给客户(出库的最后步骤)
 	 */
-	@Scheduled(cron = "0 0/15 8-23 * * ? ")
+	@Scheduled(cron = "0 0/15 * * * ? ")
 	@Override
 	public void sendOutWarehouseStatusToCustomer() {
 		List<Long> orderIdList = outWarehouseOrderDao.findCallbackSendStatusUnSuccessOrderId();
@@ -478,12 +478,12 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 			basicNameValuePairs.add(new BasicNameValuePair("data_digest", dataDigest));
 			basicNameValuePairs.add(new BasicNameValuePair("version", "1.0"));
 
-			logger.debug("回传SKU出库状态信息: url=" + url);
-			logger.debug("回传SKU出库状态信息: logistics_interface=" + xml);
-			logger.debug("回传SKU出库状态信息: data_digest=" + dataDigest + " msg_source=" + msgSource + " msg_type=" + serviceNameSendStatus + " logistics_provider_id=" + warehouse.getWarehouseNo());
+			logger.info("回传SKU出库状态信息: url=" + url);
+			logger.info("回传SKU出库状态信息: logistics_interface=" + xml);
+			logger.info("回传SKU出库状态信息: data_digest=" + dataDigest + " msg_source=" + msgSource + " msg_type=" + serviceNameSendStatus + " logistics_provider_id=" + warehouse.getWarehouseNo());
 			try {
 				String response = HttpUtil.postRequest(url, basicNameValuePairs);
-				logger.debug("顺丰返回:" + response);
+				logger.info("顺丰返回:" + response);
 				outWarehouseOrder.setCallbackSendStatusCount(outWarehouseOrder.getCallbackSendStatusCount() == null ? 1 : outWarehouseOrder.getCallbackSendStatusCount() + 1);
 				Responses responses = (Responses) XmlUtil.toObject(response, Responses.class);
 				if (responses == null) {
@@ -494,10 +494,10 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 				if (responseList != null && responseList.size() > 0) {
 					if (StringUtil.isEqualIgnoreCase(responseList.get(0).getSuccess(), Constant.TRUE)) {
 						outWarehouseOrder.setCallbackSendStatusIsSuccess(Constant.Y);
-						logger.debug("回传SKU出库状态信息成功");
+						logger.info("回传SKU出库状态信息成功");
 					} else {
 						outWarehouseOrder.setCallbackSendStatusIsSuccess(Constant.N);
-						logger.debug("回传SKU出库状态信息失败");
+						logger.info("回传SKU出库状态信息失败");
 					}
 				} else {
 					outWarehouseOrder.setCallbackSendStatusIsSuccess(Constant.N);
@@ -514,7 +514,7 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 	/**
 	 * 回传转运订单审核状态给客户
 	 */
-	@Scheduled(cron = "0 0/10 8-23 * * ? ")
+	@Scheduled(cron = "0 0/10 * * * ? ")
 	@Override
 	public void sendOrderCheckResultToCustomer() {
 		List<Long> orderIdList = orderDao.findCallbackSendCheckUnSuccessOrderId();
@@ -631,7 +631,7 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 	/**
 	 * 回传转运小包收货给客户
 	 */
-	@Scheduled(cron = "0 0/10 8-23 * * ? ")
+	@Scheduled(cron = "0 0/10 * * * ? ")
 	@Override
 	public void sendFirstWaybillReceivedToCustomer() {
 		List<Long> firstWaybillIdList = firstWaybillDao.findCallbackUnSuccessFirstWaybillId();
@@ -751,7 +751,7 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 	/**
 	 * 回传转运合包重量给客户
 	 */
-	@Scheduled(cron = "0 0/10 8-23 * * ? ")
+	@Scheduled(cron = "0 0/10 * * * ? ")
 	@Override
 	public void sendOrderWeightToCustomer() {
 		List<Long> orderIdList = orderDao.findCallbackSendWeightUnSuccessOrderId();
@@ -862,7 +862,7 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 	/**
 	 * 回传转运出库给客户
 	 */
-	@Scheduled(cron = "0 0/15 8-23 * * ? ")
+	@Scheduled(cron = "0 0/15 * * * ? ")
 	@Override
 	public void sendOrderStatusToCustomer() {
 		List<Long> orderIdList = orderDao.findCallbackSendStatusUnSuccessOrderId();

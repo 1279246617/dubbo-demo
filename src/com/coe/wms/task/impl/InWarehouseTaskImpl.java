@@ -70,7 +70,7 @@ public class InWarehouseTaskImpl implements IInWarehouseTask {
 	/**
 	 * 定时更新入库订单状态 部分入库,全未入库,入库完成
 	 */
-	@Scheduled(cron = "0 0/20 8-23 * * ? ")
+	@Scheduled(cron = "0 0/15 * * * ? ")
 	@Transactional
 	@Override
 	public void updateInWarehouseOrderStatus() {
