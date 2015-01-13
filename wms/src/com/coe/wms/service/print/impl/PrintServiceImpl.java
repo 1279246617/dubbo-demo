@@ -312,7 +312,7 @@ public class PrintServiceImpl implements IPrintService {
 	}
 
 	@Override
-	public Map<String, Object> getPrintShipLabelData(Long outWarehouseOrderId) {
+	public Map<String, Object> getPrintShipLabelData(Long outWarehouseOrderId, Double height) {
 		OutWarehouseOrder outWarehouseOrder = outWarehouseOrderDao.getOutWarehouseOrderById(outWarehouseOrderId);
 		// 等待仓库审核的订单 不能打印捡货单
 		if (StringUtil.isEqual(outWarehouseOrder.getStatus(), OutWarehouseOrderStatusCode.WWC)) {
@@ -345,7 +345,7 @@ public class PrintServiceImpl implements IPrintService {
 				map.put("customerNo", shipwayApiAccount.getApiAccount());// ETK客户帐号
 			}
 		}
-		String trackingNoBarcodeData = BarcodeUtil.createCode128(trackingNo, true, 13d, null);
+		String trackingNoBarcodeData = BarcodeUtil.createCode128(trackingNo, true, height, null);
 		map.put("trackingNoBarcodeData", trackingNoBarcodeData);
 		String trackingNoBarcodeData2 = BarcodeUtil.createCode128(trackingNo, false, 14d, null);
 		map.put("trackingNoBarcodeData2", trackingNoBarcodeData2);
