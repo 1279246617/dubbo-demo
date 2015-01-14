@@ -39,7 +39,7 @@ public class BarcodeUtil {
 			if (xd != null) {
 				jbcode.setXDimension(xd);
 			}
-//			 jbcode.setWideRatio(3d);
+			// jbcode.setWideRatio(3d);
 			BufferedImage img = jbcode.createBarcode(barcodeText.toUpperCase());
 			bos = new ByteArrayOutputStream();
 			ImageUtil.encodeAndWrite(img, ImageUtil.PNG, bos, 96, 96);
@@ -62,7 +62,7 @@ public class BarcodeUtil {
 		return null;
 	}
 
-	public static String createCode128(String barcodeText, boolean isShowBarcodeText, Double height, Double xd, Double wideRatio) {
+	public static String createCode128(String barcodeText, boolean isShowBarcodeText, Double height, Double xd, Double wideRatio, Double barcodeScale) {
 		JBarcode jbcode = new JBarcode(EAN13Encoder.getInstance(), WidthCodedPainter.getInstance(), EAN13TextPainter.getInstance());
 		jbcode.setEncoder(Code128Encoder.getInstance());
 		jbcode.setTextPainter(BaseLineTextPainter.getInstance());
@@ -80,6 +80,9 @@ public class BarcodeUtil {
 				jbcode.setXDimension(xd);
 			}
 			BufferedImage img = jbcode.createBarcode(barcodeText.toUpperCase());
+			if (barcodeScale != null) {// 放大图片
+				img = ImageUtils.zoomInImage(img, barcodeScale);
+			}
 			bos = new ByteArrayOutputStream();
 			ImageUtil.encodeAndWrite(img, ImageUtil.PNG, bos, 96, 96);
 			// 内存 图片

@@ -187,7 +187,7 @@ public class PrintServiceImpl implements IPrintService {
 			map.put("customerOrderNo", outWarehouseOrderAdditionalSf.getOrderId());
 		}
 		// 创建图片
-		String customerReferenceNoBarcodeData = BarcodeUtil.createCode128(outWarehouseOrder.getCustomerReferenceNo(), true, 12d, null, null);
+		String customerReferenceNoBarcodeData = BarcodeUtil.createCode128(outWarehouseOrder.getCustomerReferenceNo(), true, 12d, null, null, null);
 		map.put("customerReferenceNoBarcodeData", customerReferenceNoBarcodeData);
 		map.put("tradeRemark", outWarehouseOrder.getTradeRemark());
 		map.put("trackingNo", outWarehouseOrder.getTrackingNo());
@@ -235,7 +235,7 @@ public class PrintServiceImpl implements IPrintService {
 			Seat seat = seatList.get(0);
 			map.put("seatCode", seat.getSeatCode());
 			// 创建图片
-			String seatCodeBarcodeData = BarcodeUtil.createCode128(seat.getSeatCode(), false, 16d, 0.5d, null);
+			String seatCodeBarcodeData = BarcodeUtil.createCode128(seat.getSeatCode(), false, 16d, 0.5d, null, null);
 			map.put("seatCodeBarcodeData", seatCodeBarcodeData);
 			// 仓库
 			Warehouse warehouse = warehouseDao.getWarehouseById(seat.getWarehouseId());
@@ -293,7 +293,7 @@ public class PrintServiceImpl implements IPrintService {
 			totalWeight += outWarehouseOrder.getOutWarehouseWeight();
 			quantity++;
 		}
-		String trackingNoBarcodeData = BarcodeUtil.createCode128(outWarehousePackage.getCoeTrackingNo(), false, 29d, 0.5d, null);
+		String trackingNoBarcodeData = BarcodeUtil.createCode128(outWarehousePackage.getCoeTrackingNo(), false, 29d, 0.5d, null, null);
 		map.put("coeTrackingNoBarcodeData", trackingNoBarcodeData);
 		map.put("totalWeight", NumberUtil.getNumPrecision(totalWeight, 3));
 		map.put("quantity", quantity);
@@ -305,14 +305,14 @@ public class PrintServiceImpl implements IPrintService {
 	@Override
 	public Map<String, Object> getPrintSkuBarcodeData(String sku) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		String skuBarcodeData = BarcodeUtil.createCode128(sku, false, 9d, null, null);
+		String skuBarcodeData = BarcodeUtil.createCode128(sku, false, 9d, null, null, null);
 		map.put("skuBarcodeData", skuBarcodeData);
 		map.put("sku", sku);
 		return map;
 	}
 
 	@Override
-	public Map<String, Object> getPrintShipLabelData(Long outWarehouseOrderId, Double height) {
+	public Map<String, Object> getPrintShipLabelData(Long outWarehouseOrderId, Double height, Double barcodeScale) {
 		OutWarehouseOrder outWarehouseOrder = outWarehouseOrderDao.getOutWarehouseOrderById(outWarehouseOrderId);
 		// 等待仓库审核的订单 不能打印捡货单
 		if (StringUtil.isEqual(outWarehouseOrder.getStatus(), OutWarehouseOrderStatusCode.WWC)) {
@@ -345,9 +345,11 @@ public class PrintServiceImpl implements IPrintService {
 				map.put("customerNo", shipwayApiAccount.getApiAccount());// ETK客户帐号
 			}
 		}
-		String trackingNoBarcodeData = BarcodeUtil.createCode128(trackingNo, true, height, 0.3, null);
+		//顺丰标签使用
+		String trackingNoBarcodeData = BarcodeUtil.createCode128(trackingNo, true, height, null, null, barcodeScale);
 		map.put("trackingNoBarcodeData", trackingNoBarcodeData);
-		String trackingNoBarcodeData2 = BarcodeUtil.createCode128(trackingNo, false, 14d, null, null);
+		//etk标签使用
+		String trackingNoBarcodeData2 = BarcodeUtil.createCode128(trackingNo, false, 14d, null, null, barcodeScale);
 		map.put("trackingNoBarcodeData2", trackingNoBarcodeData2);
 		map.put("shipwayExtra1", outWarehouseOrder.getShipwayExtra1());
 		map.put("shipwayExtra2", outWarehouseOrder.getShipwayExtra2());
@@ -443,10 +445,10 @@ public class PrintServiceImpl implements IPrintService {
 				map.put("customerNo", shipwayApiAccount.getApiAccount());// ETK客户帐号
 			}
 		}
-		String trackingNoBarcodeData = BarcodeUtil.createCode128(trackingNo, true, 11d, null, null);
+		String trackingNoBarcodeData = BarcodeUtil.createCode128(trackingNo, true, 11d, null, null, null);
 		map.put("trackingNoBarcodeData", trackingNoBarcodeData);
 
-		String trackingNoBarcodeData2 = BarcodeUtil.createCode128(trackingNo, false, 14d, null, null);
+		String trackingNoBarcodeData2 = BarcodeUtil.createCode128(trackingNo, false, 14d, null, null, null);
 		map.put("trackingNoBarcodeData2", trackingNoBarcodeData2);
 		// 清单号 (出库订单主键)
 		map.put("outWarehouseOrderId", String.valueOf(order.getId()));
@@ -537,7 +539,7 @@ public class PrintServiceImpl implements IPrintService {
 			map.put("customerOrderNo", orderAdditionalSf.getCustomerOrderId());
 		}
 		// 创建图片
-		String customerReferenceNoBarcodeData = BarcodeUtil.createCode128(order.getCustomerReferenceNo(), true, 12d, null, null);
+		String customerReferenceNoBarcodeData = BarcodeUtil.createCode128(order.getCustomerReferenceNo(), true, 12d, null, null, null);
 		map.put("customerReferenceNoBarcodeData", customerReferenceNoBarcodeData);
 		map.put("tradeRemark", order.getTradeRemark());
 		map.put("trackingNo", order.getTrackingNo());
@@ -618,7 +620,7 @@ public class PrintServiceImpl implements IPrintService {
 			totalWeight += order.getOutWarehouseWeight();
 			quantity++;
 		}
-		String trackingNoBarcodeData = BarcodeUtil.createCode128(record.getCoeTrackingNo(), false, 29d, 0.5d, null);
+		String trackingNoBarcodeData = BarcodeUtil.createCode128(record.getCoeTrackingNo(), false, 29d, null, null, null);
 		map.put("coeTrackingNoBarcodeData", trackingNoBarcodeData);
 		map.put("totalWeight", NumberUtil.getNumPrecision(totalWeight, 3));
 		map.put("quantity", quantity);
