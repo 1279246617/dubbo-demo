@@ -1,11 +1,18 @@
 package com.coe.wms.util;
 
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Iterator;
 
 import javax.imageio.ImageIO;
+import javax.imageio.ImageReadParam;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.ImageInputStream;
 
 public class ImageUtils {
 
@@ -66,9 +73,7 @@ public class ImageUtils {
 			if (of.canRead()) {
 
 				bufferedImage = ImageIO.read(of);
-
 			}
-
 		} catch (IOException e) {
 
 			// TODO: 打印日志
@@ -189,4 +194,20 @@ public class ImageUtils {
 		return true;
 	}
 
+	  /* 
+     * 图片裁剪通用接口 
+     */  
+    public static void cutImage(String src,String dest,int x,int y,int w,int h) throws IOException{   
+           Iterator iterator = ImageIO.getImageReadersByFormatName("png");   
+           ImageReader reader = (ImageReader)iterator.next();   
+           InputStream in=new FileInputStream(src);  
+           ImageInputStream iis = ImageIO.createImageInputStream(in);   
+           reader.setInput(iis, true);   
+           ImageReadParam param = reader.getDefaultReadParam();   
+           Rectangle rect = new Rectangle(x, y, w,h);    
+           param.setSourceRegion(rect);   
+           BufferedImage bi = reader.read(0,param);     
+           ImageIO.write(bi, "png", new File(dest));             
+  
+    }  
 }

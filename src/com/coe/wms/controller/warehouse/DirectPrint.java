@@ -18,7 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.coe.wms.controller.Application;
 import com.coe.wms.model.warehouse.shipway.Shipway.ShipwayCode;
-import com.coe.wms.service.print.IPrintService;
+import com.coe.wms.service.directprint.IDirectPrintService;
 import com.coe.wms.service.product.IProductService;
 import com.coe.wms.service.storage.IStorageService;
 import com.coe.wms.service.user.IUserService;
@@ -36,8 +36,8 @@ public class DirectPrint {
 	@Resource(name = "userService")
 	private IUserService userService;
 
-	@Resource(name = "printService")
-	private IPrintService printService;
+	@Resource(name = "directPrintService")
+	private IDirectPrintService directPrintService;
 
 	@Resource(name = "productService")
 	private IProductService productService;
@@ -60,7 +60,7 @@ public class DirectPrint {
 	public ModelAndView storageShipLabel(HttpServletRequest request, HttpServletResponse response, Long orderId) throws IOException {
 		ModelAndView view = new ModelAndView();
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
-		Map<String, Object> map = printService.getPrintShipLabelData(orderId, 13d, 1.3d);
+		Map<String, Object> map = directPrintService.getStorageSfShipLabelData(orderId, 17d, null);
 		view.addObject("map", map);
 		String shipwayCode = (String) map.get("shipwayCode");
 		if (StringUtil.isEqual(shipwayCode, ShipwayCode.SF)) {

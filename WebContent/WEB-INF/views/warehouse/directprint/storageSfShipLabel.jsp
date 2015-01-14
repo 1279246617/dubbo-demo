@@ -10,28 +10,22 @@
 	</object>
 	
 	<div style="height:11mm; width:98mm;border-bottom:1px solid  #000;" >
-			<div style="width:52mm;float: left;margin-top: 2mm;margin-left: 2mm;">
+			<div style="width:42mm;float: left;margin-top: 2mm;margin-left: 2mm;">
 			</div>
 			<div style="width: 8mm;float: left;margin-top: -1.5mm;font-size: 10mm;;">
 				E
 			</div>
-			<div style="width: 32mm;float: right;margin-top: 3mm;">
-				<div style="height:2mm;line-height: 2mm;">
-				</div>
-				<div style="height:2mm;line-height: 2mm;">
-				</div>
-			</div>
 	</div>
 	
 	<div style="height:12.5mm;width:98mm; border-bottom:1px solid  #000;">
-			<div style="height:12.5mm;width:57mm; border-right:1px solid  #000;line-height:3mm; font-size:11px; overflow: hidden;" class="pull-left">
+			<div style="height:12.5mm;width:60mm; border-right:1px solid  #000;line-height:3mm; font-size:11px; overflow: hidden;" class="pull-left">
 				<span style="margin-top:0mm;margin-left: 0mm;"  class="pull-left">
 					寄方:<c:out value="${map.sender.name}"/>	
 						<c:out value="${map.sender.phoneNumber}"/>	<br>
 						<c:out value="${map.sender.addressLine1}"/>	
 				</span>
 			</div>
-			<div style="height:12.5mm;width:40mm;line-height:3mm;font-size: 13px;" class="pull-right">
+			<div style="height:12.5mm;width:37mm;line-height:3mm;font-size: 13px;" class="pull-right">
 				<span style="margin-top:2mm; width: 16mm;"  class="pull-left">
 					原寄地
 				</span>
@@ -42,7 +36,7 @@
 	</div>
 	
 	<div style="height:12.5mm;width: 98mm; border-bottom:2px solid  #000;">
-			<div style="height:12.5mm;width:57mm; border-right:1px solid  #000;line-height:3.5mm; overflow: hidden;font-size: 12px;" class="pull-left">
+			<div style="height:12.5mm;width:60mm; border-right:1px solid  #000;line-height:3.5mm; overflow: hidden;font-size: 12px;" class="pull-left">
 					收方:	<c:out value="${map.receiver.countryName}"/>
 					<c:out value="${map.receiver.stateOrProvince}"/>
 					<c:out value="${map.receiver.city}"/>
@@ -55,7 +49,7 @@
 					&nbsp;
 					<c:out value="${map.receiver.phoneNumber}"/>
 			</div>
-			<div style="height:12.5mm;width:38mm;" class="pull-left">
+			<div style="height:12.5mm;width:37mm;" class="pull-left">
 				<div style="margin-top:3mm; width: 16mm;"  class="pull-left">
 					目的地
 				</div>
@@ -65,13 +59,14 @@
 			</div>
 	</div>	
 		
-	<div style="height:22mm;width: 98mm; border-bottom:1px solid  #000;">
-			<div style="height:22mm;width:57mm;text-align: center; border-right:1px solid  #000;" class="pull-left">
-						<img  style="margin-top:1.5mm;margin-left: 2mm;" src="data:image/png;base64,<c:out value="${map.trackingNoBarcodeData}"/>">
+	<div style="height:20mm;width: 98mm; border-bottom:1px solid  #000;">
+			<div style="height:20mm;width:60mm;text-align: center; border-right:1px solid  #000;" class="pull-left">
+						<img  style="margin-top:1mm;margin-left: 0mm;" src="data:image/png;base64,<c:out value="${map.trackingNoBarcodeData}"/>">
+						<span style="font-size: 12px; margin-left: 1mm">${map.trackingNo}</span>
 			</div>
 			
-			<div style="height:22mm;width:40mm;" class="pull-left">
-				<table  style="width:100%;height:22mm;"  border="0" cellpadding="0" cellspacing="0">
+			<div style="height:20mm;width:37mm;" class="pull-left">
+				<table  style="width:100%;height:20mm;"  border="0" cellpadding="0" cellspacing="0">
 					<tr><td style="text-align: center;line-height:7mm;border-bottom:1px solid #000;"><font style="font-weight: bold;font-size: 5.5mm;">全球顺</font></td></tr>
 					<tr style="font-size: 12px;"><td style="height:3mm;width:38mm;border-bottom:1px solid #000;">收件员</td></tr>
 					<tr style="font-size: 12px;"><td style="height:3mm;border-bottom:1px solid #000;">寄件日期</td></tr>
@@ -84,8 +79,8 @@
 		<table  style="width: 98mm;height:10mm; font-size: 11px;" border="0" cellpadding="0" cellspacing="0">
 			<tr>
 				<th style="width:20mm;border-bottom:1px solid #000;border-right:1px solid #000;">寄托物品数量</th>
-				<th style="width:18mm;border-bottom:1px solid #000;border-right:1px solid #000;">实际重量</th>
-				<th style="width:18mm;border-bottom:1px solid #000;border-right:1px solid #000;">计费重量</th>
+				<th style="width:20mm;border-bottom:1px solid #000;border-right:1px solid #000;">实际重量</th>
+				<th style="width:19mm;border-bottom:1px solid #000;border-right:1px solid #000;">计费重量</th>
 				<th style="width:15mm;border-bottom:1px solid #000;border-right:1px solid #000;">运费</th>
 				<th style="border-bottom:1px solid #000;">费用合计</th>
 			</tr>
@@ -128,20 +123,23 @@
 		</table>
 	</div>	
 	
-	<div style="height:37mm;width: 98mm;">
-		<table style="width: 98mm; ;margin-top:1mm;border-color: #000;font-size: 11px;"  border="0" cellpadding="0" cellspacing="0">
-			<tr style="height:16mm;">
-				<td rowspan="1" style="width:57mm;text-align: center;border-right:1px solid #000;border-bottom:1px solid #000;">
-					<img  style="margin-left: 1mm;" src="data:image/png;base64,<c:out value="${map.trackingNoBarcodeData}"/>">
+	<div style="height:39mm;width: 98mm;">
+		<table style="width: 98mm; ;margin-top:0mm;border-color: #000;font-size: 11px;"  border="0" cellpadding="0" cellspacing="0">
+			<tr style="height:22mm;">
+				<td rowspan="1" style="width:60mm;text-align: center;border-right:1px solid #000;border-bottom:1px solid #000;">
+					<img  style="margin-left: 0mm;" src="data:image/png;base64,<c:out value="${map.trackingNoBarcodeData}"/>">
+					<span style="font-size: 12px; margin-left: 1mm">${map.trackingNo}</span>
 				</td>
-				<td rowspan="1" style="width:40mm;height:16mm;text-align: left;line-height:3.5mm; overflow: hidden;border-bottom:1px solid #000;">
+				<td rowspan="1" style="width:37mm;height:16mm; text-align: left;line-height:3.5mm; overflow: hidden;border-bottom:1px solid #000;">
+						<div style="height:1mm;line-height: 2mm;">
+						</div>
 						寄方:<c:out value="${map.sender.name}"/><br>	
 						<c:out value="${map.sender.phoneNumber}"/>&nbsp;	
 						<c:out value="${map.sender.addressLine1}"/>			
 				</td>
 			</tr>
 			<tr>
-				<td rowspan="2" style="width:57mm;height:17mm;border-right:1px solid #000;border-bottom:1px solid #000; ">
+				<td rowspan="2" style="width:60mm;height:17mm;border-right:1px solid #000;border-bottom:1px solid #000; ">
 					收件:
 					<c:out value="${map.receiver.countryName}"/>
 					<c:out value="${map.receiver.stateOrProvince}"/>
@@ -186,10 +184,9 @@
 		var baseUrl = "${baseUrl}";
 		var LODOP=getLodop();
 	 	LODOP.PRINT_INIT("出货运单");
-	 	
 	 	LODOP.SET_PRINT_PAGESIZE(0,1000,1500,"Lab");
 	 	LODOP.ADD_PRINT_HTM(0,0,960,1460,document.getElementById("printDiv").innerHTML);
-	 	LODOP.PREVIEW();
-// 	 	LODOP.PRINT();    
-// 	 	window.close();
+// 	 	LODOP.PREVIEW();
+	 	LODOP.PRINT();    
+	 	window.close();
 </script>

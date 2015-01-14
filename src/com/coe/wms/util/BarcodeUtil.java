@@ -1,8 +1,11 @@
 package com.coe.wms.util;
 
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+
+import javax.imageio.ImageIO;
 
 import org.apache.log4j.Logger;
 import org.jbarcode.JBarcode;
@@ -184,6 +187,66 @@ public class BarcodeUtil {
 			if (bos != null) {
 				try {
 					bos.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * 
+	 * @param barcodeText
+	 * @param isShowBarcodeText
+	 * @param height
+	 * @return
+	 */
+	public static String createCode128Auto(String barcodeText, boolean isShowBarcodeText, Double height, Double barcodeScale) {
+		ByteArrayOutputStream oldBos = new ByteArrayOutputStream();
+		ByteArrayOutputStream newBos = new ByteArrayOutputStream();
+		try {
+			Barcode barcode = new Barcode(Barcode.BCT_CODE128AUTO);
+			barcode.setData(barcodeText);
+			if (isShowBarcodeText) {
+				barcode.setTextAlign(BarcodeTextPosition.below);
+			} else {
+				barcode.setTextAlign(BarcodeTextPosition.notShown);
+			}
+			barcode.setExtraTextPosition(BarcodeExtraTextPosition.above);
+			barcode.setCheckCharShowMode(CheckCharShowMode.show);
+			barcode.setOrientation(BarcodeOrientation.bottomFacing);
+			int width = barcode.getModuleCount();
+			int barcodeHeight = height.intValue();
+			int scale = 1;
+
+			barcode.makeSimpleImage(Barcode.BARCODE_PNG, width, barcodeHeight, false, scale, null, oldBos);
+			byte[] data = oldBos.toByteArray();
+			ByteArrayInputStream is = new ByteArrayInputStream(data);
+			BufferedImage oldImg = ImageIO.read(is);
+			is.close();
+
+			// 放大图片
+			BufferedImage newImg = ImageUtils.zoomInImage(oldImg, barcodeScale);
+			ImageUtil.encodeAndWrite(newImg, ImageUtil.PNG, newBos, 96, 96);
+			data = newBos.toByteArray();
+
+			// 转字符
+			BASE64Encoder encoder = new BASE64Encoder();
+			return encoder.encode(data);
+		} catch (Exception e) {
+			logger.error("生成条码 barcodeText:" + barcodeText + "出现异常:" + e, e);
+		} finally {
+			if (oldBos != null) {
+				try {
+					oldBos.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			if (newBos != null) {
+				try {
+					newBos.close();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
