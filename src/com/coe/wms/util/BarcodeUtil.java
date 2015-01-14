@@ -39,7 +39,7 @@ public class BarcodeUtil {
 			if (xd != null) {
 				jbcode.setXDimension(xd);
 			}
-			// jbcode.setWideRatio(1d);
+//			 jbcode.setWideRatio(3d);
 			BufferedImage img = jbcode.createBarcode(barcodeText.toUpperCase());
 			bos = new ByteArrayOutputStream();
 			ImageUtil.encodeAndWrite(img, ImageUtil.PNG, bos, 96, 96);
@@ -62,7 +62,7 @@ public class BarcodeUtil {
 		return null;
 	}
 
-	public static String createCode128(String barcodeText, boolean isShowBarcodeText, Double height, Double xd) {
+	public static String createCode128(String barcodeText, boolean isShowBarcodeText, Double height, Double xd, Double wideRatio) {
 		JBarcode jbcode = new JBarcode(EAN13Encoder.getInstance(), WidthCodedPainter.getInstance(), EAN13TextPainter.getInstance());
 		jbcode.setEncoder(Code128Encoder.getInstance());
 		jbcode.setTextPainter(BaseLineTextPainter.getInstance());
@@ -72,7 +72,10 @@ public class BarcodeUtil {
 		jbcode.setBarHeight(height);
 		ByteArrayOutputStream bos = null;
 		try {
-			jbcode.setWideRatio(3d);
+			if (wideRatio == null) {
+				wideRatio = 3d;
+			}
+			jbcode.setWideRatio(wideRatio);
 			if (xd != null) {
 				jbcode.setXDimension(xd);
 			}

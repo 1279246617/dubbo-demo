@@ -189,7 +189,7 @@
 	 	
 	 	LODOP.SET_PRINT_PAGESIZE(0,1000,1500,"Lab");
 	 	LODOP.ADD_PRINT_HTM(0,0,960,1460,document.getElementById("printDiv").innerHTML);
-// 	 	LODOP.PREVIEW();
-	 	LODOP.PRINT();    
-	 	window.close();
+	 	LODOP.PREVIEW();
+// 	 	LODOP.PRINT();    
+// 	 	window.close();
 </script>
