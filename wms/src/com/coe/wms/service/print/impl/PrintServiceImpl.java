@@ -345,11 +345,11 @@ public class PrintServiceImpl implements IPrintService {
 				map.put("customerNo", shipwayApiAccount.getApiAccount());// ETK客户帐号
 			}
 		}
-		//顺丰标签使用
+		// 顺丰标签使用
 		String trackingNoBarcodeData = BarcodeUtil.createCode128(trackingNo, true, height, null, null, barcodeScale);
 		map.put("trackingNoBarcodeData", trackingNoBarcodeData);
-		//etk标签使用
-		String trackingNoBarcodeData2 = BarcodeUtil.createCode128(trackingNo, false, 14d, null, null, barcodeScale);
+		// etk标签使用
+		String trackingNoBarcodeData2 = BarcodeUtil.createCode128(trackingNo, false, 14d, null, null, null);
 		map.put("trackingNoBarcodeData2", trackingNoBarcodeData2);
 		map.put("shipwayExtra1", outWarehouseOrder.getShipwayExtra1());
 		map.put("shipwayExtra2", outWarehouseOrder.getShipwayExtra2());
@@ -632,5 +632,4 @@ public class PrintServiceImpl implements IPrintService {
 		}
 		return map;
 	}
-
 }
