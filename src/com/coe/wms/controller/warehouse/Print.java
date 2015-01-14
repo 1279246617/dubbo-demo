@@ -108,7 +108,7 @@ public class Print {
 				continue;
 			}
 			Long orderId = Long.valueOf(orderIdArray[i]);
-			Map<String, Object> map = printService.getPrintShipLabelData(orderId,13d);
+			Map<String, Object> map = printService.getPrintShipLabelData(orderId, 13d, null);
 			if (map != null) {
 				mapList.add(map);
 			}

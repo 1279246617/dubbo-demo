@@ -60,7 +60,7 @@ public class DirectPrint {
 	public ModelAndView storageShipLabel(HttpServletRequest request, HttpServletResponse response, Long orderId) throws IOException {
 		ModelAndView view = new ModelAndView();
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
-		Map<String, Object> map = printService.getPrintShipLabelData(orderId, 16d);
+		Map<String, Object> map = printService.getPrintShipLabelData(orderId, 13d, 1.3d);
 		view.addObject("map", map);
 		String shipwayCode = (String) map.get("shipwayCode");
 		if (StringUtil.isEqual(shipwayCode, ShipwayCode.SF)) {

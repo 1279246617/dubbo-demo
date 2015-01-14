@@ -30,7 +30,8 @@
 .a4-for-packagelist{border:0px solid  #000;width: 206mm;margin-top: 1mm;}
 
 /*通用样式*/
-body{font-family:"Arial",sans-serif;margin: 0;padding: 0; -webkit-text-size-adjust:none;} /* "微软雅黑", "宋体", Arial, sans-serif;*/
+ /* "微软雅黑", "宋体", Arial, sans-serif;*/
+body{font-family:"Arial",sans-serif;margin: 0;padding: 0; -webkit-text-size-adjust:none;}
 .pull-left{float: left;}
 .pull-right{float: right;}
 .va-middle{vertical-align: middle;}

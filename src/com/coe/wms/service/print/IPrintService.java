@@ -15,7 +15,7 @@ public interface IPrintService {
 	 */
 	public Map<String, Object> getPrintPackageListData(Long outWarehouseOrderId);
 
-	public Map<String, Object> getPrintShipLabelData(Long outWarehouseOrderId,Double height);
+	public Map<String, Object> getPrintShipLabelData(Long outWarehouseOrderId, Double height, Double barcodeScale);
 
 	public Map<String, Object> getPrintCoeLabelData(Long coeTrackingNoId);
 

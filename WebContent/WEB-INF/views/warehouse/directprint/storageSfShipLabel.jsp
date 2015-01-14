@@ -67,7 +67,7 @@
 		
 	<div style="height:22mm;width: 98mm; border-bottom:1px solid  #000;">
 			<div style="height:22mm;width:57mm;text-align: center; border-right:1px solid  #000;" class="pull-left">
-						<img  style="margin-top:3mm;margin-left: 2mm;" src="data:image/png;base64,<c:out value="${map.trackingNoBarcodeData}"/>">
+						<img  style="margin-top:1.5mm;margin-left: 2mm;" src="data:image/png;base64,<c:out value="${map.trackingNoBarcodeData}"/>">
 			</div>
 			
 			<div style="height:22mm;width:40mm;" class="pull-left">
