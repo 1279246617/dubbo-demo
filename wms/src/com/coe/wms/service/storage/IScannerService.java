@@ -15,4 +15,10 @@ public interface IScannerService {
 	public Response onShelf(String content, Long userIdOfOperator);
 
 	public Response outShelf(String content, Long userIdOfOperator);
+
+	public Response getCoeTrackingNo(String content, Long userIdOfOperator);
+
+	public Response bindingOrder(String content, Long userIdOfOperator);
+
+	public Response unBindingOrder(String content, Long userIdOfOperator);
 }

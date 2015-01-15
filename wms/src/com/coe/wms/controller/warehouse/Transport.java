@@ -659,7 +659,7 @@ public class Transport {
 		User user = userService.getUserById(userId);
 		view.addObject("warehouseList", storageService.findAllWarehouse(user.getDefaultWarehouseId()));
 		// 进入界面 分配coe单号,并锁定coe单号,下次不能再使用
-		TrackingNo trackingNo = outWarehouseOrderService.getCoeTrackingNoforOutWarehouseShipping();
+		TrackingNo trackingNo = outWarehouseOrderService.getCoeTrackingNoforOutWarehousePackage();
 
 		if (trackingNo != null) {
 			view.addObject("coeTrackingNo", trackingNo.getTrackingNo());

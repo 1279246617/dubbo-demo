@@ -78,7 +78,7 @@ public interface IOutWarehouseOrderService {
 	 * @return
 	 * @throws ServiceException
 	 */
-	public TrackingNo getCoeTrackingNoforOutWarehouseShipping() throws ServiceException;
+	public TrackingNo getCoeTrackingNoforOutWarehousePackage() throws ServiceException;
 
 	public Map<String, String> checkOutWarehouseOrderPrintShipLabel(Long outWarehouseOrderId) throws ServiceException;
 

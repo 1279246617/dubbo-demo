@@ -761,7 +761,7 @@ public class OutWarehouseOrderServiceImpl implements IOutWarehouseOrderService {
 	}
 
 	@Override
-	public TrackingNo getCoeTrackingNoforOutWarehouseShipping() throws ServiceException {
+	public TrackingNo getCoeTrackingNoforOutWarehousePackage() throws ServiceException {
 		TrackingNo trackingNo = trackingNoDao.getAvailableTrackingNoByType(TrackingNo.TYPE_COE);
 		if (trackingNo == null) {
 			return null;
