@@ -40,6 +40,7 @@ import com.coe.wms.dao.warehouse.storage.IOutWarehousePackageDao;
 import com.coe.wms.dao.warehouse.storage.IReportDao;
 import com.coe.wms.dao.warehouse.storage.IReportTypeDao;
 import com.coe.wms.exception.ServiceException;
+import com.coe.wms.model.warehouse.TrackingNo;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrder;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderItemShelf;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus.OutWarehouseOrderStatusCode;
@@ -48,6 +49,7 @@ import com.coe.wms.model.warehouse.storage.record.InWarehouseRecordItem;
 import com.coe.wms.model.warehouse.storage.record.ItemShelfInventory;
 import com.coe.wms.model.warehouse.storage.record.OutShelf;
 import com.coe.wms.service.inventory.IShelfService;
+import com.coe.wms.service.storage.IOutWarehouseOrderService;
 import com.coe.wms.service.storage.IScannerService;
 import com.coe.wms.util.Config;
 import com.coe.wms.util.Constant;
@@ -107,7 +109,6 @@ public class ScannerServiceImpl implements IScannerService {
 	@Resource(name = "outWarehouseOrderDao")
 	private IOutWarehouseOrderDao outWarehouseOrderDao;
 
-
 	@Resource(name = "outWarehousePackageDao")
 	private IOutWarehousePackageDao outWarehousePackageDao;
 
@@ -152,6 +153,9 @@ public class ScannerServiceImpl implements IScannerService {
 
 	@Resource(name = "shelfService")
 	private IShelfService shelfService;
+
+	@Resource(name = "outWarehouseOrderService")
+	private IOutWarehouseOrderService outWarehouseOrderService;
 
 	@Override
 	public Response getOrderId(String content, Long userIdOfOperator) {
@@ -468,5 +472,52 @@ public class ScannerServiceImpl implements IScannerService {
 		response.setMessage(message);
 		response.setSuccess(true);
 		return response;
+	}
+
+	@Override
+	public Response getCoeTrackingNo(String content, Long userIdOfOperator) {
+		Response response = new Response();
+		response.setSuccess(false);
+		TrackingNo trackingNo = trackingNoDao.getAvailableTrackingNoByType(TrackingNo.TYPE_COE);
+		if (trackingNo == null) {
+			response.setMessage("COE交接单号不足");
+			response.setReason(ErrorCode.B00_CODE);
+			return response;
+		}
+		response.setMessage(trackingNo.getTrackingNo());
+		response.setSuccess(true);
+		return response;
+	}
+
+	@Override
+	public Response bindingOrder(String content, Long userIdOfOperator) {
+		Response response = new Response();
+		response.setSuccess(false);
+		Map<String, String> map = (Map<String, String>) GsonUtil.toObject(content, Map.class);
+		String coeTrackingNo = map.get("coeTrackingNo");// 交接单号
+		if (StringUtil.isNull(coeTrackingNo)) {
+			response.setMessage("COE 交接单号不能为空");
+			response.setReason(ErrorCode.B00_CODE);
+			return response;
+		}
+		String orderTrackingNo = map.get("orderTrackingNo");// 出库单号
+		if (StringUtil.isNull(coeTrackingNo)) {
+			response.setMessage("出库跟踪单号不能为空");
+			response.setReason(ErrorCode.B00_CODE);
+			return response;
+		}
+		trackingNoDao.findTrackingNo(coeTrackingNo, TrackingNo.TYPE_COE);
+		Long coeTrackingNoId = null;
+		Map<String, String> resultMap = outWarehouseOrderService.bindingOutWarehouseOrder(orderTrackingNo, userIdOfOperator, coeTrackingNoId, coeTrackingNo);
+
+		response.setSuccess(true);
+		return response;
+
+	}
+
+	@Override
+	public Response unBindingOrder(String content, Long userIdOfOperator) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

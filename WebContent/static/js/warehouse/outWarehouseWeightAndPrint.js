@@ -104,7 +104,7 @@ function countSku(){
 				return;
 			}
 			if(msg.status == 1){
-				parent.$.showShortMessage({msg:"保存出库订单重量成功",animate:false,left:"45%"});
+//				parent.$.showShortMessage({msg:"保存出库订单重量成功",animate:false,left:"45%"});
 				if(continueWeight == 'N'){//清空重量
 					$("#weight").val("");
 				}
@@ -125,9 +125,9 @@ function countSku(){
  function printShipLabel(outWarehouseOrderId){
 	 var url = baseUrl+'/warehouse/directPrint/storageShipLabel.do?orderId='+outWarehouseOrderId;
 	window.open(url);
-	setTimeout(function(){ //IE6、7不会提示关闭
+	setTimeout(function(){
 		$("#customerReferenceNo").focus();
-	}, 1000);
+	}, 1500);
  }
  
  	 	 

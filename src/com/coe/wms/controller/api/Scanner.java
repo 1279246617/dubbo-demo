@@ -89,6 +89,18 @@ public class Scanner {
 			if (StringUtil.isEqualIgnoreCase(messageType, MessageType.OUT_SHELF)) {
 				response = scannerService.outShelf(content, userIdOfOperator);
 			}
+			// 获取COE交接单号
+			if (StringUtil.isEqualIgnoreCase(messageType, MessageType.GET_COE_TRACKING_NO)) {
+				response = scannerService.getCoeTrackingNo(content, userIdOfOperator);
+			}
+			// 绑定
+			if (StringUtil.isEqualIgnoreCase(messageType, MessageType.BINDING_ORDER)) {
+				response = scannerService.bindingOrder(content, userIdOfOperator);
+			}
+			// 解开绑定
+			if (StringUtil.isEqualIgnoreCase(messageType, MessageType.UN_BINDING_ORDER)) {
+				response = scannerService.unBindingOrder(content, userIdOfOperator);
+			}
 			String json = GsonUtil.toJson(response);
 			logger.info("response:" + json);
 			return json;
