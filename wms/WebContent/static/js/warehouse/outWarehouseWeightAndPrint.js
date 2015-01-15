@@ -21,7 +21,7 @@ function submitCustomerReferenceNo(){
 	$("#status").val("");
 	$.post(baseUrl+ '/warehouse/storage/outWarehouseSubmitCustomerReferenceNo.do?customerReferenceNo='+ customerReferenceNo, function(msg) {
 			if(msg.status == 0){
-				parent.$.showShortMessage({msg:msg.message,animate:false,left:"45%"});
+				parent.$.showDialogMessage("<font style='font-size: 18px;font-weight: bold;color: red;'>"+msg.message+"</b>", null, null);
 				return;
 			}
 			if(msg.status == 1){
@@ -89,7 +89,7 @@ function countSku(){
  		var customerReferenceNo  = $("#customerReferenceNo").val();
  		var outWarehouseOrderId  = $("#outWarehouseOrderId").val();
  		if(customerReferenceNo=='' || outWarehouseOrderId ==''){
- 			parent.$.showDialogMessage("请先输入正确客户订单号", null, null);
+ 			parent.$.showDialogMessage("客户订单号不正确或该订单不允许打印", null, null);
 			return;
  		}
  		$.ajaxSetup({
