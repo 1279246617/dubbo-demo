@@ -690,6 +690,23 @@ public class OutWarehouseOrderServiceImpl implements IOutWarehouseOrderService {
 			return map;
 		}
 		OutWarehouseOrder outWarehouseOrder = outWarehouseOrderList.get(0);
+		String statusCode = outWarehouseOrder.getStatus();
+		if (StringUtil.isEqual(OutWarehouseOrderStatusCode.WWC, statusCode)) {
+			map.put(Constant.MESSAGE, "不能称重!! 该出库订单待仓库审核。");
+			return map;
+		} else if (StringUtil.isEqual(OutWarehouseOrderStatusCode.WPP, statusCode)) {
+			map.put(Constant.MESSAGE, "不能称重!! 该出库订单待打印捡货。");
+			return map;
+		} else if (StringUtil.isEqual(OutWarehouseOrderStatusCode.WOS, statusCode)) {
+			map.put(Constant.MESSAGE, "不能称重!! 该出库订单待捡货下架。");
+			return map;
+		} else if (StringUtil.isEqual(OutWarehouseOrderStatusCode.SUCCESS, statusCode)) {
+			map.put(Constant.MESSAGE, "不能称重!! 该出库订单成功并结束。");
+			return map;
+		} else if (!(StringUtil.isEqual(OutWarehouseOrderStatusCode.WWW, statusCode) || StringUtil.isEqual(OutWarehouseOrderStatusCode.WSW, statusCode))) {
+			map.put(Constant.MESSAGE, "不能称重!! 该出库订单非待仓库称重。");
+			return map;
+		}
 		map.put("shipwayCode", outWarehouseOrder.getShipwayCode());
 		map.put("trackingNo", outWarehouseOrder.getTrackingNo());
 		map.put("outWarehouseOrderId", outWarehouseOrder.getId());
@@ -1068,6 +1085,7 @@ public class OutWarehouseOrderServiceImpl implements IOutWarehouseOrderService {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put(Constant.STATUS, Constant.FAIL);
 		String outWarehouseOrderStatus = outWarehouseOrderDao.getOutWarehouseOrderStatus(outWarehouseOrderId);
+
 		if (StringUtil.isEqual(OutWarehouseOrderStatusCode.WWC, outWarehouseOrderStatus)) {
 			map.put(Constant.MESSAGE, "不能打印!! 该出库订单待仓库审核。");
 
@@ -1079,9 +1097,9 @@ public class OutWarehouseOrderServiceImpl implements IOutWarehouseOrderService {
 
 		} else if (StringUtil.isEqual(OutWarehouseOrderStatusCode.WWW, outWarehouseOrderStatus)) {
 			map.put(Constant.MESSAGE, "不能打印!! 该出库订单待仓库称重。");
-
-		} else if (StringUtil.isEqual(OutWarehouseOrderStatusCode.FAIL, outWarehouseOrderStatus)) {
-			map.put(Constant.MESSAGE, "不能打印!! 该出库订单失败并结束。");
+		} else if (StringUtil.isEqual(OutWarehouseOrderStatusCode.SUCCESS, outWarehouseOrderStatus)) {
+			map.put(Constant.MESSAGE, "不能打印!! 该出库订单成功并结束。"); // 出库成功也补允许在称重打单界面
+																// 打运单. 防止重复发货
 		} else {
 			map.put(Constant.STATUS, Constant.SUCCESS);
 		}
