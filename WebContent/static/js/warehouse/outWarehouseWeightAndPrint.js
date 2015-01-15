@@ -13,14 +13,22 @@ function clickEnter(){
  
 function submitCustomerReferenceNo(){
 	var customerReferenceNo  = $("#customerReferenceNo").val();
+	if(customerReferenceNo==''){
+		parent.$.showDialogMessage("请先输入客户订单号");
+		$("#customerReferenceNo").removeAttr("readonly");
+		$("#customerReferenceNo").focus();
+		return false;
+	}
 	$("#shipwayCode").val("");
 	$("#trackingNo").val("");
 	$("#skusTbody").html("");
 	$("#weightOk").hide();
 	$("#outWarehouseOrderId").val("");
 	$("#status").val("");
+	$("#customerReferenceNo").attr("readonly","readonly");
 	$.post(baseUrl+ '/warehouse/storage/outWarehouseSubmitCustomerReferenceNo.do?customerReferenceNo='+ customerReferenceNo, function(msg) {
 			if(msg.status == 0){
+				$("#customerReferenceNo").removeAttr("readonly");
 				parent.$.showDialogMessage("<font style='font-size: 18px;font-weight: bold;color: red;'>"+msg.message+"</b>", null, null);
 				return;
 			}
@@ -32,83 +40,86 @@ function submitCustomerReferenceNo(){
 			var skus = msg.outWarehouseOrderItemList;
 			$.each(skus, function(i, n) {
 				var tr = "<tr>";
-				tr+="<td style='width:205px;text-align:left;'>"+n.sku+"</td>";
-				tr+="<td style='width:205px;text-align:left;'>"+n.quantity+"</td>";
-				tr+="<td style='width:205px;text-align:left;'><input readonly='readonly' type='text'  id='sku_"+n.sku+"' value='0'></td>";
+				tr+="<td style='text-align:left;'>"+n.sku+"</td>";
+				tr+="<td style='text-align:left;'>"+n.quantity+"</td>";
+				tr+="<td style='text-align:left;color:red;'><span  id='sku_"+n.sku+"'>"+n.quantity+"</span>";
 				tr+="</tr>";
 				$("#skusTbody").append(tr);
 			});
-			
 			//切换焦点
 			$("#weight").focus();
-			focus = "3";
-			return;
+				focus = "3";
+				return;
 			}
 		},"json");
-	
  }
 
 //复核SKU
 function countSku(){
 	var sku = $("#sku").val();
-	var quantity = $("#quantity").val();
-	var oldQuantity = $("#sku_"+sku).val();
-	
+	var oldQuantity = $("#sku_"+sku).html();
 	if(oldQuantity!=undefined){
-		$("#sku_"+sku).val(parseInt(oldQuantity) + parseInt(quantity));	
+		var newQuantity  = parseInt(oldQuantity) - 1;
+		if(newQuantity<0){
+			parent.$.showDialogMessage("注意!!此商品待扫描数量已经是0,捡货数量可能已经大于应出货数量", null, null);
+		}else{
+			$("#sku_"+sku).html(newQuantity);	
+		}
 	}
+	 $("#sku").val("");
 }
  
  //保存重量
  function saveweight(){
 	var weight = $("#weight").val();
 	var customerReferenceNo  = $("#customerReferenceNo").val();
-	if(customerReferenceNo == null||customerReferenceNo==''){
-		parent.$.showShortMessage({msg:"请先输入客户订单号",animate:false,left:"45%"});
+	var outWarehouseOrderId  = $("#outWarehouseOrderId").val();
+	if(customerReferenceNo==''){
+		parent.$.showDialogMessage("请先输入客户订单号");
+		$("#customerReferenceNo").removeAttr("readonly");
+		$("#customerReferenceNo").focus();
+		return false;
+	}
+	if(outWarehouseOrderId ==''){
+		parent.$.showDialogMessage("请先输入正确的客户订单号");
+		$("#customerReferenceNo").removeAttr("readonly");
+		$("#customerReferenceNo").focus();
 		return false;
 	}
 	if(weight ==null || weight == ''){
 		parent.$.showShortMessage({msg:"请先输入出库订单总重量",animate:false,left:"45%"});
+		$("#weight").focus();
 		return false;
 	}
+	
 	$.post(baseUrl+ '/warehouse/storage/outWarehouseSubmitWeight.do?customerReferenceNo='+ customerReferenceNo+'&outWarehouseOrderWeight='+weight, function(msg) {
 			if(msg.status == 0){
-				parent.$.showShortMessage({msg:msg.message,animate:false,left:"45%"});
-				$("#weightOk").hide();
+				parent.$.showDialogMessage(msg.message);
+				$("#weight").focus();
 				return;
 			}
 			if(msg.status == 1){
-				parent.$.showShortMessage({msg:"保存出库订单总重量成功",animate:false,left:"45%"});
-				$("#weightOk").show();
+				parent.$.showShortMessage({msg:"保存出库订单重量成功",animate:false,left:"45%"});
+				if(continueWeight == 'N'){//清空重量
+					$("#weight").val("");
+				}
+				$("#customerReferenceNo").val("");
+				$("#customerReferenceNo").removeAttr("readonly");
+				$("#customerReferenceNo").focus();
+				 focus= "1";
 			}
 	},"json");
+	
+	//是否同时打印运单
+	if($("#andPrint").attr("checked")=="checked"){
+		printShipLabel(outWarehouseOrderId);
+	}
  }
  	
  //打印出货运单标签
- function printShipLabel(){
- 		var customerReferenceNo  = $("#customerReferenceNo").val();
- 		var outWarehouseOrderId  = $("#outWarehouseOrderId").val();
- 		if(customerReferenceNo=='' || outWarehouseOrderId ==''){
- 			parent.$.showDialogMessage("客户订单号不正确或该订单不允许打印", null, null);
-			return;
- 		}
- 		$.ajaxSetup({
- 			async : false
- 		});
- 		var isCanPrint = false;
- 		$.post(baseUrl+ '/warehouse/storage/checkOutWarehouseOrderPrintShipLabel.do?outWarehouseOrderId='+ outWarehouseOrderId, function(msg) {
-			if(msg.status == 0){
-				parent.$.showDialogMessage("<font style='font-size: 18px;font-weight: bold;color: red;'>"+msg.message+"</b>", null, null);
-				return;
-			}
-			if(msg.status == 1){
-				isCanPrint = true;
-			}
- 		 },"json");
- 		if(isCanPrint){
- 			var url = baseUrl+'/warehouse/directPrint/storageShipLabel.do?orderId='+outWarehouseOrderId;
-			window.open(url);
- 		}
+ function printShipLabel(outWarehouseOrderId){
+	 var url = baseUrl+'/warehouse/directPrint/storageShipLabel.do?orderId='+outWarehouseOrderId;
+	window.open(url);
  }
  
  	 	 
