@@ -61,7 +61,7 @@ function countSku(){
 	if(oldQuantity!=undefined){
 		var newQuantity  = parseInt(oldQuantity) - 1;
 		if(newQuantity<0){
-			parent.$.showDialogMessage("注意!!此商品待扫描数量已经是0,捡货数量可能已经大于应出货数量", null, null);
+			parent.$.showDialogMessage("注意!!此商品已经复核完成", null, null);
 		}else{
 			$("#sku_"+sku).html(newQuantity);	
 		}
@@ -87,7 +87,12 @@ function countSku(){
 		return false;
 	}
 	if(weight ==null || weight == ''){
-		parent.$.showShortMessage({msg:"请先输入出库订单总重量",animate:false,left:"45%"});
+		parent.$.showShortMessage({msg:"请先输入出库订单重量",animate:false,left:"45%"});
+		$("#weight").focus();
+		return false;
+	}
+	if(weight>1000){
+		parent.$.showDialogMessage("出库订单重量不可以大于1000KG");
 		$("#weight").focus();
 		return false;
 	}
@@ -120,6 +125,9 @@ function countSku(){
  function printShipLabel(outWarehouseOrderId){
 	 var url = baseUrl+'/warehouse/directPrint/storageShipLabel.do?orderId='+outWarehouseOrderId;
 	window.open(url);
+	setTimeout(function(){ //IE6、7不会提示关闭
+		$("#customerReferenceNo").focus();
+	}, 1000);
  }
  
  	 	 
