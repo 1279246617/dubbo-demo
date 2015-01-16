@@ -99,10 +99,14 @@
 			<span style="width:280px;height:30px;font-size: 5mm;" class="pull-left" >
 					<a class="btn  btn-primary"  onclick="saveweight();"  style="cursor:pointer;"><i class="icon-ok icon-white"></i><b>完成装箱</b></a>
 			</span>
-			<span style="width:250px;height:30px; font-size: 4mm;" class="pull-left" >
+			<span style="width:90px;height:30px; font-size: 4mm;" class="pull-left" >
 					<input class="pull-left" name="andPrint" style="vertical-align: middle;" type="checkbox" checked="checked" id="andPrint">
-					完成装箱同时打印运单
-			</span>	
+					打印运单
+			</span>
+			<span style="width:90px;height:30px; font-size: 4mm;" class="pull-left" >
+					<input class="pull-left" name="printWithPreview" style="vertical-align: middle;" type="checkbox"  id="printWithPreview">
+					预览打印
+			</span>
 		</div>
 </div>
 <div class="pull-right" style="width:45%;height:95%; ">

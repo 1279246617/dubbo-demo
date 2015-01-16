@@ -597,13 +597,66 @@ public class ScannerServiceImpl implements IScannerService {
 			return response;
 		}
 		Long coeTrackingNoId = coeTrackingNoObj.getId();
-		Map<String, String> resultMap = outWarehouseOrderService.outWarehousePackageConfirm(coeTrackingNo, coeTrackingNoId, userIdOfOperator,false);
+		Map<String, String> resultMap = outWarehouseOrderService.outWarehousePackageConfirm(coeTrackingNo, coeTrackingNoId, userIdOfOperator, false);
 		if (StringUtil.isEqual(resultMap.get(Constant.STATUS), Constant.FAIL)) {
 			response.setMessage(resultMap.get(Constant.MESSAGE));
 			response.setReason(ErrorCode.B00_CODE);
 			return response;
 		}
 		response.setMessage("完成建包成功");
+		response.setSuccess(true);
+		return response;
+	}
+
+	/**
+	 * 获取下架情况
+	 */
+	@Override
+	public Response getOutShelfDetail(String content, Long userIdOfOperator) {
+		Response response = new Response();
+		response.setSuccess(false);
+		Map<String, String> map = (Map<String, String>) GsonUtil.toObject(content, Map.class);
+		String orderId = map.get("orderId");// 收货记录
+		if (StringUtil.isNull(orderId)) {
+			response.setMessage("订单号不能为空");
+			response.setReason(ErrorCode.B00_CODE);
+			return response;
+		}
+		OutWarehouseOrder param = new OutWarehouseOrder();
+		param.setCustomerReferenceNo(orderId);
+		List<OutWarehouseOrder> outWarehouseOrderList = outWarehouseOrderDao.findOutWarehouseOrder(param, null, null);
+		if (outWarehouseOrderList == null || outWarehouseOrderList.size() <= 0) {
+			response.setMessage("该订单号找不到出库订单");
+			response.setReason(ErrorCode.B00_CODE);
+			return response;
+		}
+		OutWarehouseOrder outWarehouseOrder = outWarehouseOrderList.get(0);
+		if (StringUtil.isEqual(OutWarehouseOrderStatusCode.WWC, outWarehouseOrder.getStatus())) {
+			response.setMessage("该订单号对应订单为待仓库审核状态");
+			response.setReason(ErrorCode.B00_CODE);
+			return response;
+		}
+		if (StringUtil.isEqual(OutWarehouseOrderStatusCode.WPP, outWarehouseOrder.getStatus())) {
+			response.setMessage("该订单号对应订单为待打印捡货单状态");
+			response.setReason(ErrorCode.B00_CODE);
+			return response;
+		}
+		List<Map<String, String>> resultMapList = new ArrayList<Map<String, String>>();
+		OutWarehouseOrderItemShelf shelfParam = new OutWarehouseOrderItemShelf();
+		shelfParam.setOutWarehouseOrderId(outWarehouseOrder.getId());
+		List<OutWarehouseOrderItemShelf> outWarehouseOrderItemShelfList = outWarehouseOrderItemShelfDao.findOutWarehouseOrderItemShelf(shelfParam, null, null);
+		for (OutWarehouseOrderItemShelf itemShelf : outWarehouseOrderItemShelfList) {
+			if (StringUtil.isEqual(itemShelf.getIsDone(), Constant.Y)) {
+				continue;
+			}
+			Map<String, String> resultMap = new HashMap<String, String>();
+			resultMap.put("seatCode", itemShelf.getSeatCode());
+			resultMap.put("barcode", itemShelf.getSku());
+			resultMap.put("quantity", itemShelf.getQuantity() + "");
+			resultMapList.add(resultMap);
+		}
+		String message = GsonUtil.toJson(resultMapList);
+		response.setMessage(message);
 		response.setSuccess(true);
 		return response;
 	}
