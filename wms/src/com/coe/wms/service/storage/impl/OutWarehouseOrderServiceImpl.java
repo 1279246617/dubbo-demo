@@ -614,7 +614,7 @@ public class OutWarehouseOrderServiceImpl implements IOutWarehouseOrderService {
 	}
 
 	@Override
-	public Map<String, String> outWarehousePackageConfirm(String coeTrackingNo, Long coeTrackingNoId, Long userIdOfOperator) throws ServiceException {
+	public Map<String, String> outWarehousePackageConfirm(String coeTrackingNo, Long coeTrackingNoId, Long userIdOfOperator, boolean isReturnNewCoeNo) throws ServiceException {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put(Constant.STATUS, Constant.FAIL);
 		if (StringUtil.isNull(coeTrackingNo)) {
@@ -659,18 +659,21 @@ public class OutWarehouseOrderServiceImpl implements IOutWarehouseOrderService {
 		outWarehousePackage.setIsShiped(Constant.N);
 		outWarehousePackageDao.saveOutWarehousePackage(outWarehousePackage);
 		trackingNoDao.usedTrackingNo(coeTrackingNoId);// 标记coe单号已经使用
-		// 返回新COE单号,供下一批出库
-		TrackingNo nextTrackingNo = trackingNoDao.getAvailableTrackingNoByType(TrackingNo.TYPE_COE);
-		if (nextTrackingNo == null) {
-			map.put(Constant.MESSAGE, "本次出货建包已完成,但COE单号不足,不能继续操作建包!");
-			map.put(Constant.STATUS, "2");
-			map.put("coeTrackingNo", "");
-			map.put("coeTrackingNoId", "");
-			return map;
+		//是否返回新的coe单号
+		if (isReturnNewCoeNo) {
+			// 返回新COE单号,供下一批出库
+			TrackingNo nextTrackingNo = trackingNoDao.getAvailableTrackingNoByType(TrackingNo.TYPE_COE);
+			if (nextTrackingNo == null) {
+				map.put(Constant.MESSAGE, "本次出货建包已完成,但COE单号不足,不能继续操作建包!");
+				map.put(Constant.STATUS, "2");
+				map.put("coeTrackingNo", "");
+				map.put("coeTrackingNoId", "");
+				return map;
+			}
+			trackingNoDao.lockTrackingNo(nextTrackingNo.getId());
+			map.put("coeTrackingNo", nextTrackingNo.getTrackingNo());
+			map.put("coeTrackingNoId", nextTrackingNo.getId().toString());
 		}
-		trackingNoDao.lockTrackingNo(nextTrackingNo.getId());
-		map.put("coeTrackingNo", nextTrackingNo.getTrackingNo());
-		map.put("coeTrackingNoId", nextTrackingNo.getId().toString());
 		map.put(Constant.STATUS, Constant.SUCCESS);
 		map.put(Constant.MESSAGE, "完成出货建包成功,请继续下一批!");
 		return map;

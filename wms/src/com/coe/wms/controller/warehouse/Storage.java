@@ -875,7 +875,7 @@ public class Storage {
 	public synchronized String outWarehousePackageConfirm(HttpServletRequest request, HttpServletResponse response, String coeTrackingNo, Long coeTrackingNoId) throws IOException {
 		HttpSession session = request.getSession();
 		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
-		Map<String, String> checkResultMap = outWarehouseOrderService.outWarehousePackageConfirm(coeTrackingNo, coeTrackingNoId, userId);
+		Map<String, String> checkResultMap = outWarehouseOrderService.outWarehousePackageConfirm(coeTrackingNo, coeTrackingNoId, userId,true);
 		return GsonUtil.toJson(checkResultMap);
 	}
 

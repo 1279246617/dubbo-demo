@@ -526,6 +526,7 @@ public class ScannerServiceImpl implements IScannerService {
 			response.setReason(ErrorCode.B00_CODE);
 			return response;
 		}
+		response.setMessage("绑定成功");
 		response.setSuccess(true);
 		return response;
 	}
@@ -567,6 +568,42 @@ public class ScannerServiceImpl implements IScannerService {
 			response.setReason(ErrorCode.B00_CODE);
 			return response;
 		}
+		response.setMessage("解除绑定成功");
+		response.setSuccess(true);
+		return response;
+	}
+
+	@Override
+	public Response bindingOrderFinsh(String content, Long userIdOfOperator) {
+		Response response = new Response();
+		response.setSuccess(false);
+		Map<String, String> map = (Map<String, String>) GsonUtil.toObject(content, Map.class);
+		String coeTrackingNo = map.get("coeTrackingNo");// 交接单号
+		if (StringUtil.isNull(coeTrackingNo)) {
+			response.setMessage("COE 交接单号不能为空");
+			response.setReason(ErrorCode.B00_CODE);
+			return response;
+		}
+		List<TrackingNo> trackingNoList = trackingNoDao.findTrackingNo(coeTrackingNo, TrackingNo.TYPE_COE);
+		if (trackingNoList == null || trackingNoList.size() == 0) {
+			response.setMessage("COE交接单号不正确");
+			response.setReason(ErrorCode.B00_CODE);
+			return response;
+		}
+		TrackingNo coeTrackingNoObj = trackingNoList.get(0);
+		if (StringUtil.isEqual(coeTrackingNoObj.getStatus(), String.valueOf(TrackingNo.STATUS_USED))) {
+			response.setMessage("COE交接单号已经完成建包");
+			response.setReason(ErrorCode.B00_CODE);
+			return response;
+		}
+		Long coeTrackingNoId = coeTrackingNoObj.getId();
+		Map<String, String> resultMap = outWarehouseOrderService.outWarehousePackageConfirm(coeTrackingNo, coeTrackingNoId, userIdOfOperator,false);
+		if (StringUtil.isEqual(resultMap.get(Constant.STATUS), Constant.FAIL)) {
+			response.setMessage(resultMap.get(Constant.MESSAGE));
+			response.setReason(ErrorCode.B00_CODE);
+			return response;
+		}
+		response.setMessage("完成建包成功");
 		response.setSuccess(true);
 		return response;
 	}
