@@ -25,4 +25,6 @@ public interface IScannerService {
 	public Response bindingOrderFinsh(String content, Long userIdOfOperator);
 
 	public Response getOutShelfDetail(String content, Long userIdOfOperator);
+
+	public Response getOnShelfDetail(String content, Long userIdOfOperator);
 }

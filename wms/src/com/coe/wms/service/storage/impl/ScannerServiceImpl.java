@@ -660,4 +660,38 @@ public class ScannerServiceImpl implements IScannerService {
 		response.setSuccess(true);
 		return response;
 	}
+
+	@Override
+	public Response getOnShelfDetail(String content, Long userIdOfOperator) {
+		Response response = new Response();
+		response.setSuccess(false);
+		Map<String, String> map = (Map<String, String>) GsonUtil.toObject(content, Map.class);
+		String orderId = map.get("orderId");// 收货记录
+		if (StringUtil.isNull(orderId)) {
+			response.setMessage("收货记录不能为空");
+			response.setReason(ErrorCode.B00_CODE);
+			return response;
+		}
+		Long inWarehouseRecordId = Long.valueOf(orderId);
+		List<Map<String, String>> resultMapList = new ArrayList<Map<String, String>>();
+		// 收货明细
+		InWarehouseRecordItem param = new InWarehouseRecordItem();
+		param.setInWarehouseRecordId(inWarehouseRecordId);
+		List<InWarehouseRecordItem> inWarehouseRecordItemList = inWarehouseRecordItemDao.findInWarehouseRecordItem(param, null, null);
+		for (InWarehouseRecordItem item : inWarehouseRecordItemList) {
+			Map<String, String> resultMap = new HashMap<String, String>();
+			resultMap.put("barcode", item.getSku());
+			int quantity = item.getQuantity();
+			int onShelfQuantity = onShelfDao.countOnShelfSkuQuantity(inWarehouseRecordId, item.getSku());
+			if (onShelfQuantity > 0) {
+				quantity = quantity - onShelfQuantity;
+			}
+			resultMap.put("quantity", quantity + "");
+			resultMapList.add(resultMap);
+		}
+		String message = GsonUtil.toJson(resultMapList);
+		response.setMessage(message);
+		response.setSuccess(true);
+		return response;
+	}
 }
