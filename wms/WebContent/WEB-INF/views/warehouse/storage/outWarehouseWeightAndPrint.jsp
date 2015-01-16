@@ -142,17 +142,16 @@
  		  		$("input").focus(function(){
  		  			focus = $(this).attr("t");
  		  		});
- 		  		
- 		  		$('#weight').bind('input propertychange', function() {
- 		  		    $('#weight2').html($(this).val());
- 		  		});
+ 		  		window.setInterval(function(){ 
+ 		  			$("#weight2").html($('#weight').val());
+				}, 100);
  		  		
  		  		//加载页面时,启动读取电子秤
  		  		toggleConnection(ports[0]);
  		  		//启动读取电子秤
  		  		autoWeight = window.setInterval(function(){ 
  		  			ws.send("getweig");		 
-				}, 300);
+				}, 200);
 				//自动读取 		  	
  		  		$("#auto").click(function(){
  		  			if($("#auto").attr("checked")=="checked"){
