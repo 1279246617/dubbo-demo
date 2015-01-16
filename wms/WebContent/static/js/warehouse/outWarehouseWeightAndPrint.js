@@ -104,7 +104,6 @@ function countSku(){
 				return;
 			}
 			if(msg.status == 1){
-//				parent.$.showShortMessage({msg:"保存出库订单重量成功",animate:false,left:"45%"});
 				if(continueWeight == 'N'){//清空重量
 					$("#weight").val("");
 				}
@@ -123,7 +122,12 @@ function countSku(){
  	
  //打印出货运单标签
  function printShipLabel(outWarehouseOrderId){
-	 var url = baseUrl+'/warehouse/directPrint/storageShipLabel.do?orderId='+outWarehouseOrderId;
+	//无预览打印
+	var url = baseUrl+'/warehouse/directPrint/storageShipLabel.do?orderId='+outWarehouseOrderId;
+	 //有预览打印
+	if($("#printWithPreview").attr("checked")=="checked"){
+		url = baseUrl+'/warehouse/print/printShipLabel.do?orderIds='+outWarehouseOrderId;
+	}
 	window.open(url);
 	setTimeout(function(){
 		$("#customerReferenceNo").focus();
