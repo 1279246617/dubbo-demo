@@ -109,6 +109,10 @@ public class Scanner {
 			if (StringUtil.isEqualIgnoreCase(messageType, MessageType.GET_OUT_SHELF_DETAIL)) {
 				response = scannerService.getOutShelfDetail(content, userIdOfOperator);
 			}
+			// 获取上架详情
+			if (StringUtil.isEqualIgnoreCase(messageType, MessageType.GET_ON_SHELF_DETAIL)) {
+				response = scannerService.getOnShelfDetail(content, userIdOfOperator);
+			}
 			String json = GsonUtil.toJson(response);
 			logger.info("response:" + json);
 			return json;
