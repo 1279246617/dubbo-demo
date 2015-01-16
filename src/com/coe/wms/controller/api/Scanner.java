@@ -101,6 +101,10 @@ public class Scanner {
 			if (StringUtil.isEqualIgnoreCase(messageType, MessageType.UN_BINDING_ORDER)) {
 				response = scannerService.unBindingOrder(content, userIdOfOperator);
 			}
+			// 绑定完成
+			if (StringUtil.isEqualIgnoreCase(messageType, MessageType.BINDING_ORDER_FINSH)) {
+				response = scannerService.bindingOrderFinsh(content, userIdOfOperator);
+			}
 			String json = GsonUtil.toJson(response);
 			logger.info("response:" + json);
 			return json;

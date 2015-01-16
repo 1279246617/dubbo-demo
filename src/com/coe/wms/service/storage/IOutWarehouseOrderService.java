@@ -98,7 +98,7 @@ public interface IOutWarehouseOrderService {
 	 * @return
 	 * @throws ServiceException
 	 */
-	public Map<String, String> outWarehousePackageConfirm(String coeTrackingNo, Long coeTrackingNoId, Long userIdOfOperator) throws ServiceException;
+	public Map<String, String> outWarehousePackageConfirm(String coeTrackingNo, Long coeTrackingNoId, Long userIdOfOperator,boolean isReturnNewCoeNo) throws ServiceException;
 
 	/**
 	 * 绑定
