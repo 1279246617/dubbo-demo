@@ -12,10 +12,6 @@ function toggleConnection(port) {
 				var message = event.data;
 				var weight = message.match(/([0-9\.]+)/ig);
 				$("#weight").val(weight);
-				
-				if($("#weight2").length>0){
-					$("#weight2").html(weight);
-				}
 			};
 			ws.onclose = function(event){
 				parent.$.showShortMessage({msg:'电子秤自动读取功能已经关闭',animate:false,left:"42%"});
