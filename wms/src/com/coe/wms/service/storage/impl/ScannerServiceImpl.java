@@ -506,18 +506,68 @@ public class ScannerServiceImpl implements IScannerService {
 			response.setReason(ErrorCode.B00_CODE);
 			return response;
 		}
-		trackingNoDao.findTrackingNo(coeTrackingNo, TrackingNo.TYPE_COE);
-		Long coeTrackingNoId = null;
-		Map<String, String> resultMap = outWarehouseOrderService.bindingOutWarehouseOrder(orderTrackingNo, userIdOfOperator, coeTrackingNoId, coeTrackingNo);
+		List<TrackingNo> trackingNoList = trackingNoDao.findTrackingNo(coeTrackingNo, TrackingNo.TYPE_COE);
+		if (trackingNoList == null || trackingNoList.size() == 0) {
+			response.setMessage("COE交接单号不正确");
+			response.setReason(ErrorCode.B00_CODE);
+			return response;
+		}
+		TrackingNo coeTrackingNoObj = trackingNoList.get(0);
+		if (StringUtil.isEqual(coeTrackingNoObj.getStatus(), String.valueOf(TrackingNo.STATUS_USED))) {
+			response.setMessage("COE交接单号已经完成建包");
+			response.setReason(ErrorCode.B00_CODE);
+			return response;
+		}
+		Long coeTrackingNoId = coeTrackingNoObj.getId();
 
+		Map<String, String> resultMap = outWarehouseOrderService.bindingOutWarehouseOrder(orderTrackingNo, userIdOfOperator, coeTrackingNoId, coeTrackingNo);
+		if (StringUtil.isEqual(resultMap.get(Constant.STATUS), Constant.FAIL)) {
+			response.setMessage(resultMap.get(Constant.MESSAGE));
+			response.setReason(ErrorCode.B00_CODE);
+			return response;
+		}
 		response.setSuccess(true);
 		return response;
-
 	}
 
 	@Override
 	public Response unBindingOrder(String content, Long userIdOfOperator) {
-		// TODO Auto-generated method stub
-		return null;
+		Response response = new Response();
+		response.setSuccess(false);
+		Map<String, String> map = (Map<String, String>) GsonUtil.toObject(content, Map.class);
+		String coeTrackingNo = map.get("coeTrackingNo");// 交接单号
+		if (StringUtil.isNull(coeTrackingNo)) {
+			response.setMessage("COE 交接单号不能为空");
+			response.setReason(ErrorCode.B00_CODE);
+			return response;
+		}
+		String orderTrackingNo = map.get("orderTrackingNo");// 出库单号
+		if (StringUtil.isNull(coeTrackingNo)) {
+			response.setMessage("出库跟踪单号不能为空");
+			response.setReason(ErrorCode.B00_CODE);
+			return response;
+		}
+		List<TrackingNo> trackingNoList = trackingNoDao.findTrackingNo(coeTrackingNo, TrackingNo.TYPE_COE);
+		if (trackingNoList == null || trackingNoList.size() == 0) {
+			response.setMessage("COE交接单号不正确");
+			response.setReason(ErrorCode.B00_CODE);
+			return response;
+		}
+		TrackingNo coeTrackingNoObj = trackingNoList.get(0);
+		if (StringUtil.isEqual(coeTrackingNoObj.getStatus(), String.valueOf(TrackingNo.STATUS_USED))) {
+			response.setMessage("COE交接单号已经完成建包");
+			response.setReason(ErrorCode.B00_CODE);
+			return response;
+		}
+		Long coeTrackingNoId = coeTrackingNoObj.getId();
+
+		Map<String, String> resultMap = outWarehouseOrderService.unBindingOutWarehouseOrder(orderTrackingNo, userIdOfOperator, coeTrackingNoId, coeTrackingNo);
+		if (StringUtil.isEqual(resultMap.get(Constant.STATUS), Constant.FAIL)) {
+			response.setMessage(resultMap.get(Constant.MESSAGE));
+			response.setReason(ErrorCode.B00_CODE);
+			return response;
+		}
+		response.setSuccess(true);
+		return response;
 	}
 }
