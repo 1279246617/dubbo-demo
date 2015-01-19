@@ -148,7 +148,6 @@ public class Warehouse {
 			logger.warn("eventType:" + eventType + "  responseXml:" + responseXml);
 			return responseXml;
 		} catch (Exception e) {
-			e.printStackTrace();
 			Responses responses = new Responses();
 			List<Response> responseItems = new ArrayList<Response>();
 
@@ -179,15 +178,48 @@ public class Warehouse {
 			// 消息内容
 			String content = request.getParameter("content");
 			String token = request.getParameter("token");
-			String apptype = request.getParameter("apptype");
 			String sign = request.getParameter("sign");
-			
-//			transportInterfaceService2
-			return null;
+			String responseXml = null;
+			// 校验
+			Map<String, String> validateResultMap = transportInterfaceService2.warehouseInterfaceValidate(content, token, sign);
+			if (StringUtil.isEqual(validateResultMap.get(Constant.STATUS), Constant.FAIL)) {
+				responseXml = validateResultMap.get(Constant.MESSAGE);
+				logger.warn("responseXml:" + responseXml);
+				return responseXml;
+			}
+
+			// 客户
+			Long userIdOfCustomer = Long.valueOf(validateResultMap.get(Constant.USER_ID_OF_CUSTOMER));
+			Map<String, Object> eventTypeMap = transportInterfaceService2.warehouseInterfaceEventType(content);
+			// 根据事件类型(eventType)分到不同方法处理
+			if (!StringUtil.isEqual((String) eventTypeMap.get(Constant.STATUS), Constant.SUCCESS)) {
+				responseXml = (String) eventTypeMap.get(Constant.MESSAGE);
+				logger.warn("responseXml:" + responseXml);
+				return responseXml;
+			}
+
+			String eventType = (String) eventTypeMap.get("eventType");
+			EventBody eventBody = (EventBody) eventTypeMap.get("eventBody");
+
+			if (StringUtil.isEqualIgnoreCase(com.coe.wms.pojo.api2.warehouse.EventType.CREATE_TRANSPORT_ORDER, eventType)) { // 订单
+				responseXml = transportInterfaceService2.warehouseInterfaceSaveTransportOrder(eventBody, userIdOfCustomer);
+			}
+			if (StringUtil.isEqualIgnoreCase(com.coe.wms.pojo.api2.warehouse.EventType.CREATE_TRANSPORT_ORDER_PACKAGE, eventType)) { // 大包
+				responseXml = transportInterfaceService2.warehouseInterfaceSaveTransportOrderPackage(eventBody, userIdOfCustomer);
+			}
+			return responseXml;
 		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
+			com.coe.wms.pojo.api2.warehouse.Responses responses = new com.coe.wms.pojo.api2.warehouse.Responses();
+			List<com.coe.wms.pojo.api2.warehouse.Response> responseItems = new ArrayList<com.coe.wms.pojo.api2.warehouse.Response>();
+			com.coe.wms.pojo.api2.warehouse.Response serviceResponse = new com.coe.wms.pojo.api2.warehouse.Response();
+			serviceResponse.setSuccess(Constant.FALSE);
+			serviceResponse.setReason(ErrorCode.S13_CODE);
+			serviceResponse.setErrorInfo(e.getMessage());
+			responseItems.add(serviceResponse);
+			responses.setResponseItems(responseItems);
+			String responseXml = XmlUtil.toXml(responses);
+			logger.warn("API异常:" + "  responseXml:" + responseXml);
+			return responseXml;
 		}
 	}
-
 }

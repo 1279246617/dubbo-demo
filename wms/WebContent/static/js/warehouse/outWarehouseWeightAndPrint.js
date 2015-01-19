@@ -22,7 +22,6 @@ function submitCustomerReferenceNo(){
 	$("#shipwayCode").val("");
 	$("#trackingNo").val("");
 	$("#skusTbody").html("");
-	$("#weightOk").hide();
 	$("#outWarehouseOrderId").val("");
 	$("#status").val("");
 	$("#customerReferenceNo").attr("readonly","readonly");
@@ -107,6 +106,11 @@ function countSku(){
 				if(continueWeight == 'N'){//清空重量
 					$("#weight").val("");
 				}
+				$("#shipwayCode").val("");
+				$("#trackingNo").val("");
+				$("#skusTbody").html("");
+				$("#outWarehouseOrderId").val("");
+				$("#status").val("");
 				$("#customerReferenceNo").val("");
 				$("#customerReferenceNo").removeAttr("readonly");
 				$("#customerReferenceNo").focus();
