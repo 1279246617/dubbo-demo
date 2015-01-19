@@ -238,7 +238,7 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 
 			String xml = XmlUtil.toXml(logisticsEventsRequest);
 			User user = userDao.getUserById(inWarehouseRecord.getUserIdOfCustomer());
-			String msgSource = user.getOppositeMsgSource();
+			String msgSource = user.getOppositeToken();
 			String url = user.getOppositeServiceUrl();
 
 			if (StringUtil.isNull(msgSource) || StringUtil.isNull(url)) {
@@ -255,7 +255,7 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 			basicNameValuePairs.add(new BasicNameValuePair("logistics_provider_id", warehouse.getWarehouseNo()));
 			basicNameValuePairs.add(new BasicNameValuePair("msg_type", serviceNameSkuStockin));
 			basicNameValuePairs.add(new BasicNameValuePair("msg_source", msgSource));
-			String dataDigest = StringUtil.encoderByMd5(xml + user.getOppositeToken());
+			String dataDigest = StringUtil.encoderByMd5(xml + user.getOppositeSecretKey());
 			basicNameValuePairs.add(new BasicNameValuePair("data_digest", dataDigest));
 			basicNameValuePairs.add(new BasicNameValuePair("version", "1.0"));
 
@@ -347,7 +347,7 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 			logisticsEventsRequest.setLogisticsEvent(logisticsEvent);
 			String xml = XmlUtil.toXml(logisticsEventsRequest);
 			User user = userDao.getUserById(outWarehouseOrder.getUserIdOfCustomer());
-			String msgSource = user.getOppositeMsgSource();
+			String msgSource = user.getOppositeToken();
 			String url = user.getOppositeServiceUrl();
 
 			if (StringUtil.isNull(msgSource) || StringUtil.isNull(url)) {
@@ -365,7 +365,7 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 			basicNameValuePairs.add(new BasicNameValuePair("logistics_provider_id", warehouse.getWarehouseNo()));
 			basicNameValuePairs.add(new BasicNameValuePair("msg_type", serviceNameSendWeight));
 			basicNameValuePairs.add(new BasicNameValuePair("msg_source", msgSource));
-			String dataDigest = StringUtil.encoderByMd5(xml + user.getOppositeToken());
+			String dataDigest = StringUtil.encoderByMd5(xml + user.getOppositeSecretKey());
 			basicNameValuePairs.add(new BasicNameValuePair("data_digest", dataDigest));
 			basicNameValuePairs.add(new BasicNameValuePair("version", "1.0"));
 			logger.info("回传SKU出库称重信息: url=" + url);
@@ -458,7 +458,7 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 			String xml = XmlUtil.toXml(logisticsEventsRequest);
 			User user = userDao.getUserById(outWarehouseOrder.getUserIdOfCustomer());
 			String url = user.getOppositeServiceUrl();
-			String msgSource = user.getOppositeMsgSource();
+			String msgSource = user.getOppositeToken();
 
 			if (StringUtil.isNull(msgSource) || StringUtil.isNull(url)) {
 				// 订单所属用户无回调地址,直接设置为成功
@@ -474,7 +474,7 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 			basicNameValuePairs.add(new BasicNameValuePair("logistics_provider_id", warehouse.getWarehouseNo()));
 			basicNameValuePairs.add(new BasicNameValuePair("msg_type", serviceNameSendStatus));
 			basicNameValuePairs.add(new BasicNameValuePair("msg_source", msgSource));
-			String dataDigest = StringUtil.encoderByMd5(xml + user.getOppositeToken());
+			String dataDigest = StringUtil.encoderByMd5(xml + user.getOppositeSecretKey());
 			basicNameValuePairs.add(new BasicNameValuePair("data_digest", dataDigest));
 			basicNameValuePairs.add(new BasicNameValuePair("version", "1.0"));
 
@@ -573,7 +573,7 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 
 			// xml内容封装完成,开始准备发送
 			User user = userDao.getUserById(order.getUserIdOfCustomer());
-			String msgSource = user.getOppositeMsgSource();
+			String msgSource = user.getOppositeToken();
 
 			List<BasicNameValuePair> basicNameValuePairs = new ArrayList<BasicNameValuePair>();
 			basicNameValuePairs.add(new BasicNameValuePair("logistics_interface", xml));
@@ -581,7 +581,7 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 			basicNameValuePairs.add(new BasicNameValuePair("logistics_provider_id", warehouse.getWarehouseNo()));
 			basicNameValuePairs.add(new BasicNameValuePair("msg_type", serviceNameSendCheckOrder));
 			basicNameValuePairs.add(new BasicNameValuePair("msg_source", msgSource));
-			String dataDigest = StringUtil.encoderByMd5(xml + user.getOppositeToken());
+			String dataDigest = StringUtil.encoderByMd5(xml + user.getOppositeSecretKey());
 			basicNameValuePairs.add(new BasicNameValuePair("data_digest", dataDigest));
 			basicNameValuePairs.add(new BasicNameValuePair("version", "1.0"));
 			String url = user.getOppositeServiceUrl();
@@ -697,7 +697,7 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 
 			// xml内容封装完成,开始准备发送
 			User user = userDao.getUserById(firstWaybill.getUserIdOfCustomer());
-			String msgSource = user.getOppositeMsgSource();
+			String msgSource = user.getOppositeToken();
 
 			List<BasicNameValuePair> basicNameValuePairs = new ArrayList<BasicNameValuePair>();
 			basicNameValuePairs.add(new BasicNameValuePair("logistics_interface", xml));
@@ -705,7 +705,7 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 			basicNameValuePairs.add(new BasicNameValuePair("logistics_provider_id", warehouse.getWarehouseNo()));
 			basicNameValuePairs.add(new BasicNameValuePair("msg_type", serviceNameStockin));
 			basicNameValuePairs.add(new BasicNameValuePair("msg_source", msgSource));
-			String dataDigest = StringUtil.encoderByMd5(xml + user.getOppositeToken());
+			String dataDigest = StringUtil.encoderByMd5(xml + user.getOppositeSecretKey());
 			basicNameValuePairs.add(new BasicNameValuePair("data_digest", dataDigest));
 			basicNameValuePairs.add(new BasicNameValuePair("version", "1.0"));
 			String url = user.getOppositeServiceUrl();
@@ -812,7 +812,7 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 
 			// xml内容封装完成,开始准备发送
 			User user = userDao.getUserById(order.getUserIdOfCustomer());
-			String msgSource = user.getOppositeMsgSource();
+			String msgSource = user.getOppositeToken();
 
 			List<BasicNameValuePair> basicNameValuePairs = new ArrayList<BasicNameValuePair>();
 			basicNameValuePairs.add(new BasicNameValuePair("logistics_interface", xml));
@@ -820,7 +820,7 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 			basicNameValuePairs.add(new BasicNameValuePair("logistics_provider_id", warehouse.getWarehouseNo()));
 			basicNameValuePairs.add(new BasicNameValuePair("msg_type", serviceNameSendWeight));
 			basicNameValuePairs.add(new BasicNameValuePair("msg_source", msgSource));
-			String dataDigest = StringUtil.encoderByMd5(xml + user.getOppositeToken());
+			String dataDigest = StringUtil.encoderByMd5(xml + user.getOppositeSecretKey());
 			basicNameValuePairs.add(new BasicNameValuePair("data_digest", dataDigest));
 			basicNameValuePairs.add(new BasicNameValuePair("version", "1.0"));
 			String url = user.getOppositeServiceUrl();
@@ -914,14 +914,14 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 			String xml = XmlUtil.toXml(logisticsEventsRequest);
 			User user = userDao.getUserById(order.getUserIdOfCustomer());
 
-			String msgSource = user.getOppositeMsgSource();
+			String msgSource = user.getOppositeToken();
 			List<BasicNameValuePair> basicNameValuePairs = new ArrayList<BasicNameValuePair>();
 			basicNameValuePairs.add(new BasicNameValuePair("logistics_interface", xml));
 			// 仓库编号
 			basicNameValuePairs.add(new BasicNameValuePair("logistics_provider_id", warehouse.getWarehouseNo()));
 			basicNameValuePairs.add(new BasicNameValuePair("msg_type", serviceNameSendStatus));
 			basicNameValuePairs.add(new BasicNameValuePair("msg_source", msgSource));
-			String dataDigest = StringUtil.encoderByMd5(xml + user.getOppositeToken());
+			String dataDigest = StringUtil.encoderByMd5(xml + user.getOppositeSecretKey());
 			basicNameValuePairs.add(new BasicNameValuePair("data_digest", dataDigest));
 			basicNameValuePairs.add(new BasicNameValuePair("version", "1.0"));
 			String url = user.getOppositeServiceUrl();

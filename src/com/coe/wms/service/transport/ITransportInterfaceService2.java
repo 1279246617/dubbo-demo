@@ -3,7 +3,7 @@ package com.coe.wms.service.transport;
 import java.util.Map;
 
 import com.coe.wms.exception.ServiceException;
-import com.coe.wms.pojo.api.warehouse.EventBody;
+import com.coe.wms.pojo.api2.warehouse.EventBody;
 
 /**
  * 

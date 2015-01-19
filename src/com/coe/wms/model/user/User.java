@@ -72,29 +72,30 @@ public class User implements Serializable {
 	private String userType;
 
 	/**
-	 * 客户调用系统API令牌(密钥)
+	 * 客户调用我方系统API令牌(密钥)
+	 */
+	private String secretKey;
+
+	/**
+	 * 客户调用我方系统API 标识消息来源字段
 	 */
 	private String token;
-	/**
-	 * 客户调用系统API 标识消息来源字段
-	 */
-	private String msgSource;
 
 	/**
 	 * 我方调用对方(客户)系统(sf) 密钥
 	 */
-	private String oppositeToken;
+	private String oppositeSecretKey;
 
 	/**
 	 * 我方调用对方(客户)系统(sf) 标识消息来源字段
 	 */
-	private String oppositeMsgSource;
-
+	private String oppositeToken;
+	
 	/**
 	 * 我方调用对方(客户)系统(sf) url
 	 */
 	private String oppositeServiceUrl;
-	
+
 	/**
 	 * 电话
 	 */
@@ -108,14 +109,14 @@ public class User implements Serializable {
 	 * 1正常 -1删除 2冻结
 	 */
 	private Integer status;
-	
+
 	/**
 	 * 用户默认仓库id
 	 * 
 	 * 在界面上,有选择仓库的,优先显示默认仓库
 	 */
 	private Long defaultWarehouseId;
-	
+
 	@CacheKeyMethod
 	public Long getId() {
 		return id;
@@ -169,14 +170,6 @@ public class User implements Serializable {
 		return phone;
 	}
 
-	public String getToken() {
-		return token;
-	}
-
-	public void setToken(String token) {
-		this.token = token;
-	}
-
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
@@ -217,12 +210,20 @@ public class User implements Serializable {
 		return userType;
 	}
 
-	public String getMsgSource() {
-		return msgSource;
+	public String getToken() {
+		return token;
 	}
 
-	public void setMsgSource(String msgSource) {
-		this.msgSource = msgSource;
+	public void setToken(String token) {
+		this.token = token;
+	}
+
+	public String getOppositeSecretKey() {
+		return oppositeSecretKey;
+	}
+
+	public void setOppositeSecretKey(String oppositeSecretKey) {
+		this.oppositeSecretKey = oppositeSecretKey;
 	}
 
 	public String getOppositeToken() {
@@ -233,12 +234,12 @@ public class User implements Serializable {
 		this.oppositeToken = oppositeToken;
 	}
 
-	public String getOppositeMsgSource() {
-		return oppositeMsgSource;
+	public String getSecretKey() {
+		return secretKey;
 	}
 
-	public void setOppositeMsgSource(String oppositeMsgSource) {
-		this.oppositeMsgSource = oppositeMsgSource;
+	public void setSecretKey(String secretKey) {
+		this.secretKey = secretKey;
 	}
 
 	public void setUserType(String userType) {

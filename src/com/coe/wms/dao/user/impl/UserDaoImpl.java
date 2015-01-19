@@ -47,7 +47,7 @@ public class UserDaoImpl implements IUserDao {
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public long saveUser(final User user) {
-		final String sql = "insert into u_user (parent_id,login_name,password,user_name,user_type,phone,email,created_time,status,token,msg_source,opposite_token,opposite_msg_source,opposite_service_url,default_warehouse_id) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		final String sql = "insert into u_user (parent_id,login_name,password,user_name,user_type,phone,email,created_time,status,secret_key,token,opposite_secret_key,opposite_token,opposite_service_url,default_warehouse_id) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
@@ -61,10 +61,10 @@ public class UserDaoImpl implements IUserDao {
 				ps.setString(7, user.getEmail());
 				ps.setLong(8, user.getCreatedTime());
 				ps.setInt(9, user.getStatus());
-				ps.setString(10, user.getToken());
-				ps.setString(11, user.getMsgSource());
-				ps.setString(12, user.getOppositeToken());
-				ps.setString(13, user.getOppositeMsgSource());
+				ps.setString(10, user.getSecretKey());
+				ps.setString(11, user.getToken());
+				ps.setString(12, user.getOppositeSecretKey());
+				ps.setString(13, user.getOppositeToken());
 				ps.setString(14, user.getOppositeServiceUrl());
 				ps.setLong(15, user.getDefaultWarehouseId());
 				return ps;
@@ -92,7 +92,7 @@ public class UserDaoImpl implements IUserDao {
 	@DataSource(DataSourceCode.WMS)
 	@ReadThroughSingleCache(namespace = SsmNameSpace.USER, expiration = 3600)
 	public User getUserById(@ParameterValueKeyProvider Long userId) {
-		String sql = "select id,parent_id,login_name,password,user_name,user_type,phone,email,created_time,status,token,msg_source,opposite_token,opposite_msg_source,opposite_service_url,default_warehouse_id from u_user where id=" + userId;
+		String sql = "select id,parent_id,login_name,password,user_name,user_type,phone,email,created_time,status,secret_key,token,opposite_secret_key,opposite_token,opposite_service_url,default_warehouse_id from u_user where id=" + userId;
 		User user = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<User>(User.class));
 		logger.debug("从数据库查询用户:" + sql + " 参数:主键:" + userId);
 		return user;
@@ -101,7 +101,7 @@ public class UserDaoImpl implements IUserDao {
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public User findUserByLoginName(String loginName) {
-		String sql = "select id,parent_id,login_name,password,user_name,user_type,status,token,default_warehouse_id from u_user where login_name=?";
+		String sql = "select id,parent_id,login_name,password,user_name,user_type,status,secret_key,default_warehouse_id from u_user where login_name=?";
 		List<User> userList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(User.class), loginName);
 		if (userList.size() > 0) {
 			return userList.get(0);
@@ -118,9 +118,9 @@ public class UserDaoImpl implements IUserDao {
 	}
 
 	@Override
-	public User findUserByMsgSource(String msgSource) {
-		String sql = "select id,parent_id,login_name,user_name,token,msg_source,opposite_token,opposite_msg_source,opposite_service_url,default_warehouse_id from u_user where msg_source = ?";
-		List<User> userList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(User.class), msgSource);
+	public User findUserByToken(String token) {
+		String sql = "select id,parent_id,login_name,user_name,secret_key,token,opposite_secret_key,opposite_token,opposite_service_url,default_warehouse_id from u_user where token = ?";
+		List<User> userList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(User.class), token);
 		if (userList.size() > 0) {
 			return userList.get(0);
 		}
@@ -131,7 +131,7 @@ public class UserDaoImpl implements IUserDao {
 	@DataSource(DataSourceCode.WMS)
 	@ReadThroughAssignCache(assignedKey = "AllUser", namespace = SsmNameSpace.USER, expiration = 3600)
 	public List<User> findAllUser() {
-		String sql = "select id,parent_id,login_name,password,user_name,user_type,phone,email,created_time,status,token,msg_source,opposite_token,opposite_msg_source,opposite_service_url,default_warehouse_id from u_user ";
+		String sql = "select id,parent_id,login_name,password,user_name,user_type,phone,email,created_time,status,secret_key,token,opposite_secret_key,opposite_token,opposite_service_url,default_warehouse_id from u_user ";
 		List<User> userList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(User.class));
 		return userList;
 	}
@@ -143,8 +143,8 @@ public class UserDaoImpl implements IUserDao {
 	@UpdateSingleCache(namespace = SsmNameSpace.USER, expiration = 3600)
 	@DataSource(DataSourceCode.WMS)
 	public int updateUser(@ParameterValueKeyProvider @ParameterDataUpdateContent User user) {
-		String sql = "update u_user set password =?,user_uame=?,phone=?,email=?,status=?,user_type=?,token=?,msg_source=?,opposite_token=?,opposite_msg_source=?,opposite_service_url=?,default_warehouse_id=? where id=? ";
-		int count = jdbcTemplate.update(sql, user.getParentId(), user.getUserName(), user.getPhone(), user.getEmail(), user.getStatus(), user.getUserType(), user.getToken(), user.getMsgSource(), user.getOppositeToken(), user.getOppositeMsgSource(),
+		String sql = "update u_user set password =?,user_uame=?,phone=?,email=?,status=?,user_type=?,secret_key=?,token=?,opposite_secret_key=?,opposite_token=?,opposite_service_url=?,default_warehouse_id=? where id=? ";
+		int count = jdbcTemplate.update(sql, user.getParentId(), user.getUserName(), user.getPhone(), user.getEmail(), user.getStatus(), user.getUserType(), user.getSecretKey(), user.getToken(), user.getOppositeSecretKey(), user.getOppositeToken(),
 				user.getId(), user.getOppositeServiceUrl(), user.getDefaultWarehouseId());
 		logger.debug("更新用户:" + sql + " 影响行数:" + count);
 		return count;

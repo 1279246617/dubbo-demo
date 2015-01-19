@@ -273,7 +273,7 @@ public class StorageInterfaceServiceImpl implements IStorageInterfaceService {
 		}
 
 		// 根据msgSource 找到客户(token),找到密钥
-		User user = userDao.findUserByMsgSource(msgSource);
+		User user = userDao.findUserByToken(msgSource);
 		if (user == null) {
 			response.setReason(ErrorCode.B0008_CODE);
 			response.setReasonDesc("根据msg_source 找不到客户");
@@ -282,7 +282,7 @@ public class StorageInterfaceServiceImpl implements IStorageInterfaceService {
 		}
 
 		// 验证内容和签名字符串
-		String md5dataDigest = StringUtil.encoderByMd5(logisticsInterface + user.getToken());
+		String md5dataDigest = StringUtil.encoderByMd5(logisticsInterface + user.getSecretKey());
 		if (!StringUtil.isEqual(md5dataDigest, dataDigest)) {
 			// 签名错误
 			response.setReason(ErrorCode.S02_CODE);
