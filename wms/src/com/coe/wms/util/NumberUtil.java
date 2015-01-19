@@ -46,6 +46,26 @@ public class NumberUtil {
 	 * @param int2
 	 * @return
 	 */
+	public static boolean isEqualLong(Long a, Long b) {
+		if (a == null && b == null) {
+			return true;
+		}
+		if (a == null && b != null) {
+			return false;
+		}
+		if (a != null && b == null) {
+			return false;
+		}
+		return a.equals(b);
+	}
+
+	/**
+	 * 对比2个整形数 是否相同
+	 * 
+	 * @param int1
+	 * @param int2
+	 * @return
+	 */
 	public static boolean isEqualInt(int int1, int int2) {
 		boolean isEqual = int1 == int2 ? true : false;
 		return isEqual;

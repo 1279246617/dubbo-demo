@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.print.attribute.standard.NumberUp;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
@@ -55,6 +56,7 @@ import com.coe.wms.util.Config;
 import com.coe.wms.util.Constant;
 import com.coe.wms.util.DateUtil;
 import com.coe.wms.util.GsonUtil;
+import com.coe.wms.util.NumberUtil;
 import com.coe.wms.util.StringUtil;
 
 /**
