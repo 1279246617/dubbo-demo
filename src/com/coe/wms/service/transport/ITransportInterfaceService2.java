@@ -1,5 +1,7 @@
 package com.coe.wms.service.transport;
 
+import java.util.Map;
+
 import com.coe.wms.exception.ServiceException;
 import com.coe.wms.pojo.api.warehouse.EventBody;
 
@@ -9,6 +11,15 @@ import com.coe.wms.pojo.api.warehouse.EventBody;
  * 
  */
 public interface ITransportInterfaceService2 {
+	/**
+	 * 校验
+	 * 
+	 * @param content
+	 * @param token
+	 * @param sign
+	 * @return
+	 */
+	public Map<String, String> warehouseInterfaceValidate(String content, String token, String sign);
 
 	/**
 	 * 创建转运订单
@@ -17,7 +28,7 @@ public interface ITransportInterfaceService2 {
 	 * @param userIdOfCustomer
 	 * @return
 	 */
-	public String warehouseInterfaceSaveTransportOrder(EventBody eventBody, Long userIdOfCustomer, String warehouseNo) throws ServiceException;
+	public String warehouseInterfaceSaveTransportOrder(EventBody eventBody, Long userIdOfCustomer) throws ServiceException;
 
 	/**
 	 * 创建转运订单大包
@@ -26,24 +37,12 @@ public interface ITransportInterfaceService2 {
 	 * @param userIdOfCustomer
 	 * @return
 	 */
-	public String warehouseInterfaceSaveTransportOrderPackage(EventBody eventBody, Long userIdOfCustomer, String warehouseNo) throws ServiceException;
+	public String warehouseInterfaceSaveTransportOrderPackage(EventBody eventBody, Long userIdOfCustomer) throws ServiceException;
 
 	/**
-	 * 区分顺丰下单是 下大包还是小包(转运订单)
+	 * 获取事件类型
 	 * 
-	 * @param eventBody
-	 * @param userIdOfCustomer
 	 * @return
 	 */
-	public Integer warehouseInterfaceDistinguishOrderOrPackage(EventBody eventBody) throws ServiceException;
-
-	/**
-	 * 转运订单确认出库
-	 * 
-	 * @param eventBody
-	 * @param userIdOfCustomer
-	 * @return
-	 */
-	public String warehouseInterfaceConfirmTransportOrder(EventBody eventBody, Long userIdOfCustomer, String warehouseNo) throws ServiceException;
-
+	public Map<String, Object> warehouseInterfaceEventType(String content);
 }
