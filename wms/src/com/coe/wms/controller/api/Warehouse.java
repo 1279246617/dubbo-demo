@@ -187,7 +187,6 @@ public class Warehouse {
 				logger.warn("responseXml:" + responseXml);
 				return responseXml;
 			}
-
 			// 客户
 			Long userIdOfCustomer = Long.valueOf(validateResultMap.get(Constant.USER_ID_OF_CUSTOMER));
 			Map<String, Object> eventTypeMap = transportInterfaceService2.warehouseInterfaceEventType(content);
@@ -197,9 +196,8 @@ public class Warehouse {
 				logger.warn("responseXml:" + responseXml);
 				return responseXml;
 			}
-
 			String eventType = (String) eventTypeMap.get("eventType");
-			EventBody eventBody = (EventBody) eventTypeMap.get("eventBody");
+			com.coe.wms.pojo.api2.warehouse.EventBody eventBody = (com.coe.wms.pojo.api2.warehouse.EventBody) eventTypeMap.get("eventBody");
 
 			if (StringUtil.isEqualIgnoreCase(com.coe.wms.pojo.api2.warehouse.EventType.CREATE_TRANSPORT_ORDER, eventType)) { // 订单
 				responseXml = transportInterfaceService2.warehouseInterfaceSaveTransportOrder(eventBody, userIdOfCustomer);

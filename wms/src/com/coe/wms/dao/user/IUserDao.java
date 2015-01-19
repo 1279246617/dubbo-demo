@@ -24,10 +24,10 @@ public interface IUserDao {
 	 * 
 	 * 用于API接口
 	 * 
-	 * @param msgSource
+	 * @param token
 	 * @return
 	 */
-	public User findUserByMsgSource(String msgSource);
+	public User findUserByToken(String token);
 
 	/**
 	 * 根据登录名找id
