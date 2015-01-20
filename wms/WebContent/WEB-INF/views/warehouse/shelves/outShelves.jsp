@@ -30,7 +30,7 @@
 							</td>		
 							<td>
 								<span class="pull-left" style="width:75px;" ><b>操作提示:</b></span>
-								<span class="pull-left" style="width:352px;color:red;" id="tips">请输入捡货单上右上角的订单号并按回车!</span>
+								<span class="pull-left" style="width:352px;color:red;" id="tips">请输入捡货单上的客户订单号并按回车!</span>
 							</td>
 					</tr>
 			</table>

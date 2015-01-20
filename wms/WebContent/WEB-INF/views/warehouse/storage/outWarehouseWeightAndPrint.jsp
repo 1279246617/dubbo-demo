@@ -27,7 +27,7 @@
 					客户单号
 				</span>
 				<span style="width:200px;" class="pull-left" >
-					<input class="pull-left"  type="text"  name="customerReferenceNo"   t="1" id="customerReferenceNo"  style="width:150px;" title="请输入客户订单号(在捡货单的右上角)"/>
+					<input class="pull-left"  type="text"  name="customerReferenceNo"   t="1" id="customerReferenceNo"  style="width:150px;" title="请输入捡货单上的客户订单号"/>
 					<input  type="text" name="outWarehouseOrderId" id="outWarehouseOrderId" style="display:none;">
 				</span>
 				<span class="pull-left"  style="width:80px;">订单状态</span>

@@ -213,7 +213,8 @@
 		                { display: '状态', name: 'status', align: 'center', type: 'float',width:'8%'},
 		                { display: '发货渠道', name: 'shipwayCode', align: 'center', type: 'float',width:'8%'},
 		                { display: '跟踪单号', name: 'trackingNo', align: 'center', type: 'float',width:'12%'},
-		                { display: 'SKU预览', isSort: false, align: 'center', type: 'float',width:'20%',render: function(row) {
+		                { display: '条码数/商品数', name: 'bpQuantity', align: 'center', type: 'float',width:'9%'},
+		                { display: '商品预览', isSort: false, align: 'center', type: 'float',width:'15%',render: function(row) {
 		            		var skus = "";
 		            		if (!row._editing) {
 		            			skus += '<a href="javascript:listOutWarehouseOrderItem(' + row.id + ')">'+row.items+'</a> ';

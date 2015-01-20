@@ -269,15 +269,20 @@ public class OutWarehouseOrderServiceImpl implements IOutWarehouseOrderService {
 			if (outWarehouseOrderSender != null) {
 				map.put("senderName", outWarehouseOrderSender.getName());
 			}
-			// 物品明细(目前仅展示SKU*数量)
-			String itemStr = "";
 			OutWarehouseOrderItem outWarehouseOrderItemParam = new OutWarehouseOrderItem();
 			outWarehouseOrderItemParam.setOutWarehouseOrderId(outWarehouseOrderId);
 			List<OutWarehouseOrderItem> outWarehouseOrderItemList = outWarehouseOrderItemDao.findOutWarehouseOrderItem(outWarehouseOrderItemParam, null, null);
+			int barcodeQuantity = 0;
+			int productQuantity = 0;
+			String itemStr = "";
 			for (OutWarehouseOrderItem outWarehouseOrderItem : outWarehouseOrderItemList) {
-				itemStr += outWarehouseOrderItem.getSku() + "*" + outWarehouseOrderItem.getQuantity() + " ";
+				productQuantity += outWarehouseOrderItem.getQuantity();
+				barcodeQuantity++;
+				itemStr += outWarehouseOrderItem.getSku() + "*" + outWarehouseOrderItem.getQuantity() + "   ";
 			}
 			map.put("items", itemStr);
+			String bpQuantity = barcodeQuantity + " / " + productQuantity;
+			map.put("bpQuantity", bpQuantity);
 			list.add(map);
 		}
 		pagination.total = outWarehouseOrderDao.countOutWarehouseOrder(outWarehouseOrder, moreParam);
@@ -659,7 +664,7 @@ public class OutWarehouseOrderServiceImpl implements IOutWarehouseOrderService {
 		outWarehousePackage.setIsShiped(Constant.N);
 		outWarehousePackageDao.saveOutWarehousePackage(outWarehousePackage);
 		trackingNoDao.usedTrackingNo(coeTrackingNoId);// 标记coe单号已经使用
-		//是否返回新的coe单号
+		// 是否返回新的coe单号
 		if (isReturnNewCoeNo) {
 			// 返回新COE单号,供下一批出库
 			TrackingNo nextTrackingNo = trackingNoDao.getAvailableTrackingNoByType(TrackingNo.TYPE_COE);

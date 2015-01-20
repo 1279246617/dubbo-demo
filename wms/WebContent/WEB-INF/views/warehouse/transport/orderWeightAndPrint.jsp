@@ -21,7 +21,7 @@
 	<table class="table" style="width:100%;background-color:#f5f5f5;margin-bottom: 1px;">
 			<tr>
 				<td colspan="3" style="height:40px;">
-					客户订单号(捡货单的右上角)&nbsp;&nbsp;
+					客户订单号&nbsp;&nbsp;
 					<input type="text"  name="customerReferenceNo"   t="1" id="customerReferenceNo"  style="width:160px;"/>
 					&nbsp;&nbsp;
 					订单状态<input type="text"  name="status"   t="1" id="status"  style="width:120px;" readonly="readonly"/>
