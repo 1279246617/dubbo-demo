@@ -152,7 +152,10 @@
 	                    { display: '客户帐号', name: 'userNameOfCustomer', align: 'center',type:'float',width:'9%'},
 	  		          	{ display: '客户订单号', name: 'customerReferenceNo', align: 'center', type: 'float',width:'14%'},
 		                { display: '仓库', name: 'warehouse', align: 'center', type: 'float',width:'8%'},
-		              	{ display: 'SKU预览', isSort: false, align: 'center', type: 'float',width:'20%',render: function(row) {
+		                { display: '发货渠道', name: 'shipwayCode', align: 'center', type: 'float',width:'8%'},
+	  		          	{ display: '跟踪单号', name: 'trackingNo', align: 'center', type: 'float',width:'12%'},
+		                { display: '条码数/商品数', name: 'bpQuantity', align: 'center', type: 'float',width:'9%'},
+		                { display: '商品预览', isSort: false, align: 'center', type: 'float',width:'15%',render: function(row) {
 		            		var skus = "";
 		            		if (!row._editing) {
 		            			skus += '<a href="javascript:listOutWarehouseOrderItem(' + row.id + ')">'+row.items+'</a> ';
@@ -160,8 +163,6 @@
 		            		return skus;
 	  		          	}},
 	  		          	{ display: '状态', name: 'status', align: 'center', type: 'float',width:'8%'},
-	  		          	{ display: '发货渠道', name: 'shipwayCode', align: 'center', type: 'float',width:'8%'},
-	  		          	{ display: '跟踪单号', name: 'trackingNo', align: 'center', type: 'float',width:'12%'},
 		                { display: '收件人名', name: 'receiverName', align: 'center', type: 'float',width:'8%'},
 		                { display: '收件人街道1', name: 'receiverAddressLine1', align: 'center', type: 'float',width:'12%'},
 		                { display: '收件人街道2', name: 'receiverAddressLine2', align: 'center', type: 'float',width:'8%'},

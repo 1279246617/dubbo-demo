@@ -466,7 +466,7 @@ public class OrderServiceImpl implements IOrderService {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put(Constant.STATUS, Constant.FAIL);
 		if (StringUtil.isNull(customerReferenceNo)) {
-			map.put(Constant.MESSAGE, "请输入客户订单号(扫描捡货单右上角条码即可)");
+			map.put(Constant.MESSAGE, "请输入客户订单号(扫描捡货单上的客户订单号条码即可)");
 			return map;
 		}
 		Order param = new Order();
