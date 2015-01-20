@@ -181,8 +181,9 @@ public class ProductServiceImpl implements IProductService {
 		Product productParam = new Product();
 		productParam.setBarcode(product.getBarcode());
 		productParam.setUserIdOfCustomer(product.getUserIdOfCustomer());
+		productParam.setSku(product.getSku());
 		if (productDao.countProduct(productParam, null) >= 1) {
-			map.put(Constant.MESSAGE, "添加失败,该商品条码已存在");
+			map.put(Constant.MESSAGE, "添加失败,商品条码和商品SKU不能同时重复");
 			return map;
 		}
 		long count = productDao.addProduct(product);

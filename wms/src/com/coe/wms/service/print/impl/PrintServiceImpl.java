@@ -179,6 +179,8 @@ public class PrintServiceImpl implements IPrintService {
 		if (StringUtil.isEqual(outWarehouseOrder.getStatus(), OutWarehouseOrderStatusCode.WWC)) {
 			return null;
 		}
+		String createdTime = DateUtil.dateConvertString(new Date(outWarehouseOrder.getCreatedTime()), DateUtil.yyyy_MM_dd);
+		map.put("createdTime", createdTime);
 		OutWarehouseOrderReceiver receiver = outWarehouseOrderReceiverDao.getOutWarehouseOrderReceiverByOrderId(outWarehouseOrderId);
 		map.put("outWarehouseOrderId", String.valueOf(outWarehouseOrder.getId()));
 		map.put("customerReferenceNo", outWarehouseOrder.getCustomerReferenceNo());
