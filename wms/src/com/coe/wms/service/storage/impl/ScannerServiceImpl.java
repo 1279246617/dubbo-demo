@@ -173,6 +173,7 @@ public class ScannerServiceImpl implements IScannerService {
 		// 上架,根据跟踪单号查询收货记录
 		InWarehouseRecord param = new InWarehouseRecord();
 		param.setTrackingNo(trackingNo);
+		param.setStatus("NONE_OR_PART");
 		List<Map<String, String>> mapList = shelfService.checkInWarehouseRecord(param);
 		if (mapList.size() < 1) {
 			response.setMessage("该单号无收货记录");
