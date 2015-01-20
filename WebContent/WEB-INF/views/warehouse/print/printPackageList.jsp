@@ -13,10 +13,10 @@
 			<div class='a4-for-packagelist change-page'>
 					<!-- 第一行 -->
 					<div style="height:15mm;weight:100%;">
-						<div style="width:40mm;height:13mm;" class="pull-left">
+						<div style="width:45mm;height:13mm;" class="pull-left">
 							<img src="${baseUrl}/static/img/print/sflogo.png" style="height:13mm;margin-left: 1mm;">	
 						</div>
-						<div style="width:50mm;height:13mm;" class="pull-left">
+						<div style="width:55mm;height:13mm;" class="pull-left">
 							<img src="${baseUrl}/static/img/print/htlogo.png" style="height:13mm;margin-left: 1mm;">	
 						</div>
 						<div class="pull-left" style="width:100mm;height:10mm;font-size: 5mm;margin-top: 4mm;">
@@ -89,12 +89,15 @@
 									<td style="width:24mm;text-align: center;">${item.specification }</td>
 									<td style="width:24mm;font-size: 18px;text-align: center;"><b>${item.seatCode}</b></td>
 									<td style="width:14mm;text-align: center;">${item.quantity }</td>
-<%-- 									${item.skuPriceCurrency}  --%>
-									<td style="width:auto;text-align: center;">${item.quantity * item.skuUnitPrice /100}  元</td>
+									<td style="width:auto;text-align: right;">
+										<span style="margin-right: 5mm;">
+											${item.quantity * item.skuUnitPrice /100}  元
+										</span>
+									</td>
 								</tr>
 								<tr>
 									<td colspan="7" style="height:8mm;text-align: right;">
-										<span style="margin-right: 2mm;">
+										<span style="margin-right: 5mm;">
 											总计:${map.totalPrice}元
 										</span>
 									</td>
@@ -104,33 +107,24 @@
 					</div>
 					<!-- 第七行 -->
 					<div style="height:8mm;width:100%;margin-top: 3mm;" >
-						<span style="float:left;margin-left: 2mm; width:110mm;">
-							商品数量：${map.totalQuantity}
-						</span>
-						<span style="float:left;margin-right: 1mm; width:50mm;">
-							货款合计(元) : ${map.totalPrice}
-						</span>
-						<span style="float:left;margin-right: 1mm; width:40mm;">
-							实际收取(元) : ${map.totalPrice}
-						</span>
+						<table style="width:204mm;height:auto;margin-left: 2mm;" rules="none" border="0">
+								<tr>
+									<td>配送费(元) : 0.00</td>
+									<td>促销折扣(元) : 0.00</td>
+									<td>货款合计(元) : ${map.totalPrice}</td>
+									<td style="text-align: right;">
+										<span style="margin-right: 5mm;">
+											实际收取(元) : ${map.totalPrice}
+										 </span>
+									</td>
+								</tr>
+						</table>
 					</div>		
-					
-					<!-- 第八行 -->
-					<div style="height:9mm;weight:100%;" >
-						<span style="float:left;margin-left: 2mm;">
-								发货日期:	${timeNow}
-						</span>
-					</div>
-					
 					<!-- 第九行 -->
-					<div  style="height:18mm;weight:100%;margin-left: 2mm;">
-						<div>温馨提示：</div>
-						<div>如发现商品破损或与描述不符等任何问题，请及时联系我们。</div>	
-						<div>欢迎对我们的工作进行监督，我们将不断改进，直至符合您高品质的要求！</div>
-						<br>
-						<div>顺丰海淘祝您生活愉快!</div>
-						<br>
-						<div>高品质生活，就在顺丰海淘！</div>
+					<div  style="height:18mm;weight:100%;margin-left: 2mm;font-size: 4mm;">
+						<div style="height:8mm;">非常感谢您在顺丰海淘网站(www.sfht.com)购物 , 我们期待您的再次光临!</div>	
+						<div style="height:8mm;">如发现商品破损或与描述不符等任何问题 , 请及时联系顺丰海淘客服中心 021-69763622</div>
+						<div style="height:8mm;">顺丰海淘祝您生活愉快!</div>
 					</div>
 			</div>
 		</c:forEach>

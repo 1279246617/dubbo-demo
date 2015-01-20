@@ -116,8 +116,13 @@ public class InWarehouseRecordDaoImpl implements IInWarehouseRecordDao {
 			if (InWarehouseRecord.getInWarehouseOrderId() != null) {
 				sb.append(" and in_warehouse_order_id = " + InWarehouseRecord.getInWarehouseOrderId());
 			}
+
 			if (StringUtil.isNotNull(InWarehouseRecord.getStatus())) {
-				sb.append(" and status = '" + InWarehouseRecord.getStatus() + "' ");
+				if (StringUtil.isEqual(InWarehouseRecord.getStatus(), "NONE_OR_PART")) {
+					sb.append(" and (status = 'NONE' or status = 'PART') ");
+				} else {
+					sb.append(" and status = '" + InWarehouseRecord.getStatus() + "' ");
+				}
 			}
 		}
 		if (moreParam != null) {
