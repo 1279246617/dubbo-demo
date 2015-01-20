@@ -52,6 +52,7 @@ import com.coe.wms.model.warehouse.storage.record.InWarehouseRecordItem;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecordStatus;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecordStatus.InWarehouseRecordStatusCode;
 import com.coe.wms.model.warehouse.storage.record.OnShelf;
+import com.coe.wms.service.product.IProductService;
 import com.coe.wms.service.storage.IInWarehouseOrderService;
 import com.coe.wms.util.Config;
 import com.coe.wms.util.Constant;
@@ -153,6 +154,9 @@ public class InWarehouseOrderServiceImpl implements IInWarehouseOrderService {
 
 	@Resource(name = "shipwayDao")
 	private IShipwayDao shipwayDao;
+
+	@Resource(name = "productService")
+	private IProductService productService;
 
 	/**
 	 * 根据入库订单id, 查找入库物品明细
@@ -321,15 +325,7 @@ public class InWarehouseOrderServiceImpl implements IInWarehouseOrderService {
 		if (id > 0) {
 			itemInventoryDao.addItemInventory(warehouseId, userIdOfCustomer, inWarehouseRecord.getBatchNo(), itemSku, itemQuantity);
 		}
-		// 入库订单物品加入商品库 --------------开始
-		Product productParam = new Product();
-		productParam.setBarcode(itemSku);// 根据商品条码查询产品库, 同一个客户下的商品条码不能重复
-		productParam.setUserIdOfCustomer(userIdOfCustomer);
-		Long countProduct = productDao.countProduct(productParam, null);
-		if (countProduct > 0) {
-			return map;
-		}
-		// sku未存在,新增
+		// 新增产品
 		Product product = new Product();
 		product.setCreatedTime(System.currentTimeMillis());
 		product.setCurrency(CurrencyCode.CNY);
@@ -340,8 +336,7 @@ public class InWarehouseOrderServiceImpl implements IInWarehouseOrderService {
 		product.setSku(orderItem.getSkuNo());
 		product.setBarcode(itemSku);
 		product.setUserIdOfCustomer(userIdOfCustomer);
-		productDao.addProduct(product);
-		// 入库订单物品加入商品库 --------------结束
+		productService.addProduct(product);
 		return map;
 	}
 

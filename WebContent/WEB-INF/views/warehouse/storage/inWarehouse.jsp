@@ -218,7 +218,7 @@
 	                sortName: 'sku',
 	                width: '100%',
 	                height: '99%',
-	                title:"当前收货入库订单SKU预报和实际收货详情",
+	                title:"当前入库订单SKU预报和实际收货详情",
 	                checkbox: false,
 	                rownumbers:true,
 	                enabledEdit: true,

@@ -12,38 +12,35 @@
 		<c:forEach var="map"  items="${mapList}">  
 			<div class='a4-for-packagelist change-page'>
 					<!-- 第一行 -->
-					<div style="height:17mm;weight:100%;">
-						<div style="width:38%;height:15mm;" class="pull-left">
+					<div style="height:15mm;weight:100%;">
+						<div style="width:40mm;height:13mm;" class="pull-left">
 							<img src="${baseUrl}/static/img/print/sflogo.png" style="height:13mm;margin-left: 1mm;">	
 						</div>
-						<div class="pull-left" style="width:62%;height:14mm;font-size: 7mm;font-weight: bold;margin-top: 1mm;">
-							顺丰海淘购物清单	
+						<div style="width:50mm;height:13mm;" class="pull-left">
+							<img src="${baseUrl}/static/img/print/htlogo.png" style="height:13mm;margin-left: 1mm;">	
+						</div>
+						<div class="pull-left" style="width:100mm;height:10mm;font-size: 5mm;margin-top: 4mm;">
+							顺丰海淘(www.sfht.com)购物清单	
 						</div>					
 					</div>
+					
 					<!-- 第二行 -->
-					<div style="height:13mm;width:100%;">
+					<div style="height:13mm;width:90%;">
 						<table style="width:100%;">
 							<tr>
 								<td style=" height:12mm;">
-										<span class="pull-left" style="margin-left: 2mm;">
-								 				<b>清单号:</b><c:out value="${map.trackingNo}"/>
+										<span class="pull-left" style="margin-left: 2mm;font-size: 4mm;">
+								 				清单号:<c:out value="${map.trackingNo}"/>
 										</span>	
 								</td>
 								<td>
-									<span class="pull-left" style="margin-left: 3mm;">
-											<b>海淘订单号:</b>
+									<span class="pull-left" style="margin-left: 3mm;font-size: 4mm;">
+											海淘订单号:
 											<c:out value="${map.customerOrderNo}"/>
 									</span>	
 								</td>
-								<td style="height:12mm;">
-										<table style="" class="pull-right">
-											<tr>
-												<td><b>客户订单号:</b></td>
-												<td>
-														<img  src="data:image/png;base64,<c:out value="${map.customerReferenceNoBarcodeData}"/>">
-												</td>
-											</tr>
-										</table>
+								<td style="height:12mm;font-size: 4mm;">
+									订购日期:<c:out value="${map.createdTime}"/>
 								</td>
 							</tr>
 						</table>
@@ -51,16 +48,16 @@
 					
 					<!-- 第三行 -->
 					<div style="height:7mm;weight:100%;">
-						<span style="float:left;margin-left: 2mm;">
-							卖家备注:<c:out value="${map.logisticsRemark}"/>										
-						</span>
+							<table style="margin-left: 2mm;" class="pull-left">
+									<tr>
+										<td style="font-size: 4.5mm;">客户订单号:</td>
+										<td>
+												<img  src="data:image/png;base64,<c:out value="${map.customerReferenceNoBarcodeData}"/>">
+										</td>
+									</tr>
+							</table>
 					</div>
-					<!-- 第四行 -->
-					<div style="height:7mm;weight:100%;">
-						<span style="float:left;margin-left: 2mm;">
-								买家备注:<c:out value="${map.tradeRemark}"/>
-						</span>
-					</div>					
+							
 					<!-- 第六行  商品列表 不指定高度,不管有多少item 都必须显示-->
 					<div style="weight:100%;" >
 							<table style="width:204mm;height:auto;margin-left: 2mm;" rules="all" border="1">
@@ -73,29 +70,34 @@
 										<span style="float: left;width:100mm;">${map.receiverMobileNumber}  ${map.receiverPhoneNumber}</span>
 								</td>
 							</tr>	
-							<tr style="height:5mm;">
-								<th style="text-align:left">序号</th>
-								<th style="text-align:left">商品编号</th>
-								<th style="text-align:left">商品名称</th>
-								<th style="text-align:left">型号规格</th>
-								<th style="text-align:left">货位信息</th>
-								<th style="text-align:left">数量</th>
-								<th style="text-align:left">金额</th>
+							<tr style="height:6mm;">
+								<th style="text-align: center;">序号</th>
+								<th style="text-align:center">商品编号</th>
+								<th style="text-align:center">商品名称</th>
+								<th style="text-align:center">型号规格</th>
+								<th style="text-align:center">货位信息</th>
+								<th style="text-align:center">数量</th>
+								<th style="text-align:center">金额</th>
 							</tr>
 							<c:forEach var="item"  items="${map.items}" varStatus="status">  
-								<tr style="height:7mm;">
-									<td style="width:15mm;">
+								<tr style="height:8mm;">
+									<td style="width:15mm;height:8mm; text-align: center;">
 											${ status.index + 1}
 									</td>
-									<td style="width:40mm;font-size: 16px;"><b>${item.sku }</b></td>
-									<td style="width:60mm;">${item.skuName }</td>
-									<td style="width:24mm;">${item.specification }</td>
-									<td style="width:24mm;font-size: 18px;"><b>${item.seatCode}</b></td>
-									<td style="width:14mm;">${item.quantity }</td>
-									
+									<td style="width:40mm;font-size: 16px;text-align: center;"><b>${item.sku }</b></td>
+									<td style="width:60mm;text-align: center;">${item.skuName }</td>
+									<td style="width:24mm;text-align: center;">${item.specification }</td>
+									<td style="width:24mm;font-size: 18px;text-align: center;"><b>${item.seatCode}</b></td>
+									<td style="width:14mm;text-align: center;">${item.quantity }</td>
 <%-- 									${item.skuPriceCurrency}  --%>
-									<td style="width:auto;">${item.quantity * item.skuUnitPrice /100}  元</td>
-									
+									<td style="width:auto;text-align: center;">${item.quantity * item.skuUnitPrice /100}  元</td>
+								</tr>
+								<tr>
+									<td colspan="7" style="height:8mm;text-align: right;">
+										<span style="margin-right: 2mm;">
+											总计:${map.totalPrice}元
+										</span>
+									</td>
 								</tr>
 							</c:forEach>
 						</table>
