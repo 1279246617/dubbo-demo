@@ -25,6 +25,8 @@ import com.coe.wms.model.warehouse.storage.order.InWarehouseOrder;
 import com.coe.wms.model.warehouse.storage.order.InWarehouseOrderStatus;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrder;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderItem;
+import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderReceiver;
+import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderSender;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus;
 import com.coe.wms.model.warehouse.storage.record.InWarehouseRecord;
 import com.coe.wms.model.warehouse.storage.record.OutWarehousePackage;
@@ -551,6 +553,20 @@ public class Storage {
 		return GsonUtil.toJson(outWarehouseOrderItemList);
 	}
 
+	@ResponseBody
+	@RequestMapping(value = "/getOutWarehouseOrderReceiverByOrderId", method = RequestMethod.POST)
+	public String getOutWarehouseOrderReceiverByOrderId(Long orderId) {
+		OutWarehouseOrderReceiver outWarehouseOrderReceiver = outWarehouseOrderService.getOutWarehouseOrderReceiverByOrderId(orderId);
+		return GsonUtil.toJson(outWarehouseOrderReceiver);
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/getOutWarehouseOrderSenderByOrderId", method = RequestMethod.POST)
+	public String getOutWarehouseOrderSenderByOrderId(Long orderId) {
+		OutWarehouseOrderSender outWarehouseOrderSender = outWarehouseOrderService.getOutWarehouseOrderSenderByOrderId(orderId);
+		return GsonUtil.toJson(outWarehouseOrderSender);
+	}
+
 	/**
 	 * 入库订单收货
 	 * 
@@ -875,7 +891,7 @@ public class Storage {
 	public synchronized String outWarehousePackageConfirm(HttpServletRequest request, HttpServletResponse response, String coeTrackingNo, Long coeTrackingNoId) throws IOException {
 		HttpSession session = request.getSession();
 		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
-		Map<String, String> checkResultMap = outWarehouseOrderService.outWarehousePackageConfirm(coeTrackingNo, coeTrackingNoId, userId,true);
+		Map<String, String> checkResultMap = outWarehouseOrderService.outWarehousePackageConfirm(coeTrackingNo, coeTrackingNoId, userId, true);
 		return GsonUtil.toJson(checkResultMap);
 	}
 
