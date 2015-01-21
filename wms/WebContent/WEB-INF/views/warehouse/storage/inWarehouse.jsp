@@ -204,7 +204,7 @@
 	                    	var h = "<span style='color:red;'>"+row.unReceivedquantity+"</span>";
 	                    	return h;
 	  		          	}},
-		                { display: '仓库', name: 'warehouse', align: 'center', type: 'float',width:'10%'},
+		                { display: '收货仓库', name: 'warehouse', align: 'center', type: 'float',width:'10%'},
 		                { display: '收货时间', name: 'createdTime', type: 'int', width:'13%'},
 		                { display: '操作员', name: 'userLoginNameOfOperator',width:'10%'},
 		                { display: '入库明细备注', name: 'remark', align: 'center', type: 'float',width:'11%'}
@@ -218,7 +218,7 @@
 	                sortName: 'sku',
 	                width: '100%',
 	                height: '99%',
-	                title:"当前入库订单SKU预报和实际收货详情",
+	                title:"当前订单商品预报和实际收货详情",
 	                checkbox: false,
 	                rownumbers:true,
 	                enabledEdit: true,

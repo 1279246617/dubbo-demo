@@ -141,15 +141,16 @@
 	  		          	{ display: '跟踪单号', name: 'trackingNo', align: 'center', type: 'float',width:'14%'},
 		                { display: '仓库', name: 'warehouse', align: 'center', type: 'float',width:'8%'},
 		                { display: '状态', name: 'status', align: 'center', type: 'float',width:'8%'},
-		            	{ display: 'SKU预览', isSort: false, align: 'center', type: 'float',width:'20%',render: function(row) {
+		                { display: '条码数/商品数', name: 'bpQuantity', align: 'center', type: 'float',width:'9%'},
+		            	{ display: '商品预览', isSort: false, align: 'center', type: 'float',width:'15%',render: function(row) {
 		            		var skus = "";
 		            		if (!row._editing) {
 		            			skus += '<a href="javascript:listInWarehouseOrderItem(' + row.id + ')">'+row.skus+'</a> ';
 		            		}
 		            		return skus;
 	  		          	}},
-		                { display: '备注', name: 'remark', align: 'center', type: 'float',width:'13%'},
 		                { display: '创建时间', name: 'createdTime', align: 'center', type: 'float',width:'12%'},
+		                { display: '备注', name: 'remark', align: 'center', type: 'float',width:'13%'},
 		                {display: '操作',isSort: false,width: '10%',render: function(row) {
 		            		if (!row._editing) {
 		            			return "<a href=javascript:addRemark(" + row.id + ",'"+row.remark+"')>备注</a>";

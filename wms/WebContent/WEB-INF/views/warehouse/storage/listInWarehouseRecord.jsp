@@ -117,10 +117,9 @@
 							{ display: '入库批次号', name: 'batchNo', type: 'int', width:'12%'},
 							{ display: '客户订单号', name: 'customerReferenceNo',type:'float',width:'13%'},
 	  	                    { display: '跟踪单号', name: 'trackingNo',type:'float',width:'13%'},
-	  	                  	{ display: '入库订单Id', name: 'inWarehouseOrderId',type:'float',width:'13%'},
 		  		            { display: '预报商品数量', name: 'quantity', type: 'float',width:'9%'},
 		  		          	{ display: '本次收货数量', name: 'receivedQuantity', type: 'float',width:'9%'},
-		  		        	{ display: 'SKU预览', isSort: false, align: 'center', type: 'float',width:'16%',render: function(row) {
+		  		        	{ display: '商品预览', isSort: false, align: 'center', type: 'float',width:'15%',render: function(row) {
 			            		var skus = "";
 			            		if (!row._editing) {
 			            			skus += '<a href="javascript:listInWarehouseRecordItem(' + row.id + ')">'+row.skus+'</a> ';
@@ -128,11 +127,10 @@
 			            		return skus;
 		  		          	}},
 		  		          	{ display: '上架状态', name: 'status', width:'12%'},
-			                { display: '入库备注', name: 'remark', width:'12%'},
 			                { display: '操作员', name: 'userLoginNameOfOperator',type:'float',width:'9%'},
-			                
 			                { display: '回传入库状态', name: 'callbackIsSuccess',type:'float',width:'8%'},
 			                { display: '创建时间', name: 'createdTime', align: 'center', type: 'float',width:'12%'},
+			                { display: '入库备注', name: 'remark', width:'12%'},
 			                {display: '操作',isSort: false,width: '8%',render: function(row) {
 			            		if (!row._editing) {
 			            			return "<a href=javascript:addRemark(" + row.id + ",'"+row.remark+"')>备注</a>";
