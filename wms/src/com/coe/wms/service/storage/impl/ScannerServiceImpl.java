@@ -715,4 +715,10 @@ public class ScannerServiceImpl implements IScannerService {
 		response.setSuccess(true);
 		return response;
 	}
+
+	@Override
+	public String download(String appFileName) {
+		String filePath = config.getRuntimeFilePath() + "/download/" + appFileName;
+		return filePath;
+	}
 }
