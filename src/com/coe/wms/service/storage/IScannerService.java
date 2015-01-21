@@ -4,6 +4,8 @@ import com.coe.scanner.pojo.Response;
 
 public interface IScannerService {
 
+	public Response getScannerVersion(String content, Long userIdOfOperator);
+
 	public Response getOrderId(String content, Long userIdOfOperator);
 
 	public Response getOnShelfInfo(String content, Long userIdOfOperator);

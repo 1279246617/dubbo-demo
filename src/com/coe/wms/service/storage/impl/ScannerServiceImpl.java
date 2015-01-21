@@ -6,13 +6,13 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
-import javax.print.attribute.standard.NumberUp;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import com.coe.scanner.pojo.ErrorCode;
 import com.coe.scanner.pojo.Response;
+import com.coe.wms.dao.api.IScannerVersionDao;
 import com.coe.wms.dao.product.IProductDao;
 import com.coe.wms.dao.user.IUserDao;
 import com.coe.wms.dao.warehouse.ISeatDao;
@@ -41,6 +41,7 @@ import com.coe.wms.dao.warehouse.storage.IOutWarehousePackageDao;
 import com.coe.wms.dao.warehouse.storage.IReportDao;
 import com.coe.wms.dao.warehouse.storage.IReportTypeDao;
 import com.coe.wms.exception.ServiceException;
+import com.coe.wms.model.api.ScannerVersion;
 import com.coe.wms.model.warehouse.TrackingNo;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrder;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderItemShelf;
@@ -56,7 +57,6 @@ import com.coe.wms.util.Config;
 import com.coe.wms.util.Constant;
 import com.coe.wms.util.DateUtil;
 import com.coe.wms.util.GsonUtil;
-import com.coe.wms.util.NumberUtil;
 import com.coe.wms.util.StringUtil;
 
 /**
@@ -134,6 +134,9 @@ public class ScannerServiceImpl implements IScannerService {
 
 	@Resource(name = "userDao")
 	private IUserDao userDao;
+
+	@Resource(name = "scannerVersionDao")
+	private IScannerVersionDao scannerVersionDao;
 
 	@Resource(name = "itemInventoryDao")
 	private IItemInventoryDao itemInventoryDao;
@@ -694,6 +697,21 @@ public class ScannerServiceImpl implements IScannerService {
 		}
 		String message = GsonUtil.toJson(resultMapList);
 		response.setMessage(message);
+		response.setSuccess(true);
+		return response;
+	}
+
+	@Override
+	public Response getScannerVersion(String content, Long userIdOfOperator) {
+		ScannerVersion scannerVersion = scannerVersionDao.getLatestScannerVersion();
+		Response response = new Response();
+		response.setSuccess(false);
+		if (scannerVersion == null) {
+			response.setMessage("未查询到任何版本信息");
+			response.setReason(ErrorCode.B00_CODE);
+			return response;
+		}
+		response.setMessage(GsonUtil.toJson(scannerVersion));
 		response.setSuccess(true);
 		return response;
 	}

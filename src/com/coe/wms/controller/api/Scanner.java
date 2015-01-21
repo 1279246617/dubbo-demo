@@ -113,6 +113,10 @@ public class Scanner {
 			if (StringUtil.isEqualIgnoreCase(messageType, MessageType.GET_ON_SHELF_DETAIL)) {
 				response = scannerService.getOnShelfDetail(content, userIdOfOperator);
 			}
+			// 扫描枪版本
+			if (StringUtil.isEqualIgnoreCase(messageType, MessageType.GET_APP_LATEST_VERSION)) {
+				response = scannerService.getScannerVersion(content, userIdOfOperator);
+			}
 			String json = GsonUtil.toJson(response);
 			logger.info("response:" + json);
 			return json;
