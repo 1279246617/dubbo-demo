@@ -1,13 +1,19 @@
 package com.coe.wms.controller.api;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.coe.scanner.pojo.ErrorCode;
@@ -127,6 +133,28 @@ public class Scanner {
 			response.setReason(ErrorCode.S04_CODE);
 			response.setSuccess(false);
 			return GsonUtil.toJson(response);
+		}
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "download", method = RequestMethod.GET)
+	public void download(HttpServletResponse response, String appFileName) throws IOException {
+		OutputStream os = response.getOutputStream();
+		try {
+			String filePathAndName = scannerService.download(appFileName);
+			int a = filePathAndName.lastIndexOf("\\");
+			int b = filePathAndName.lastIndexOf("/");
+			String fileName = filePathAndName.substring((a > b ? a : b) + 1, filePathAndName.length());
+			response.reset();
+			response.setHeader("Content-Disposition", "attachment; filename=" + java.net.URLEncoder.encode(fileName, "UTF-8"));
+			response.setContentType("application/octet-stream; charset=utf-8");
+			File file = new File(filePathAndName);
+			os.write(FileUtils.readFileToByteArray(file));
+			os.flush();
+		} finally {
+			if (os != null) {
+				os.close();
+			}
 		}
 	}
 }

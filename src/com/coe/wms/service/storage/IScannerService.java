@@ -29,4 +29,6 @@ public interface IScannerService {
 	public Response getOutShelfDetail(String content, Long userIdOfOperator);
 
 	public Response getOnShelfDetail(String content, Long userIdOfOperator);
+
+	public String download(String appFileName);
 }

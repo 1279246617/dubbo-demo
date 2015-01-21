@@ -16,6 +16,8 @@ public class ScannerVersion implements Serializable {
 
 	private String isMustUpdate;
 
+	private String url;
+	
 	public Long getId() {
 		return id;
 	}
@@ -34,6 +36,14 @@ public class ScannerVersion implements Serializable {
 
 	public String getIsMustUpdate() {
 		return isMustUpdate;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
 	}
 
 	public void setIsMustUpdate(String isMustUpdate) {
