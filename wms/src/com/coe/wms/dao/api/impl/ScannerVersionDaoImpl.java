@@ -28,7 +28,7 @@ public class ScannerVersionDaoImpl implements IScannerVersionDao {
 
 	@Override
 	public ScannerVersion getLatestScannerVersion() {
-		String sql = "select id,version,is_must_update from api_scanner_version ";
+		String sql = "select id,version,is_must_update,url from api_scanner_version ";
 		List<ScannerVersion> scannerVersionList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(ScannerVersion.class));
 		if (scannerVersionList != null && scannerVersionList.size() > 0) {
 			return scannerVersionList.get(0);

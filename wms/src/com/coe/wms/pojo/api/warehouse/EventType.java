@@ -57,4 +57,9 @@ public class EventType {
 	 */
 	public static final String LOGISTICS_SEND_GOODS = "LOGISTICS_SEND_GOODS";
 
+	/**
+	 * 仓库通过E特快进行清关，若产生关税, 仓库回传关税收取结果
+	 */
+	public static final String WMS_ORDER_TAXd = "WMS_ORDER_TAX";
+
 }
