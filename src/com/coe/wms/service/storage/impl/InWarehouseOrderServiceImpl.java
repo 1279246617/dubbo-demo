@@ -496,10 +496,16 @@ public class InWarehouseOrderServiceImpl implements IInWarehouseOrderService {
 			InWarehouseOrderItem param = new InWarehouseOrderItem();
 			param.setOrderId(order.getId());
 			List<InWarehouseOrderItem> inWarehouseOrderItemList = inWarehouseOrderItemDao.findInWarehouseOrderItem(param, null, null);
+			int barcodeQuantity = 0;
+			int productQuantity = 0;
 			String skus = "";
 			for (InWarehouseOrderItem item : inWarehouseOrderItemList) {
 				skus += item.getSku() + "*" + item.getQuantity() + " ";
+				barcodeQuantity++;
+				productQuantity += item.getQuantity();
 			}
+			String bpQuantity = barcodeQuantity + " / " + productQuantity;
+			map.put("bpQuantity", bpQuantity);
 			map.put("skus", skus);
 			list.add(map);
 		}

@@ -126,8 +126,8 @@
 	  	                    { display: '跟踪单号', name: 'tracking_no',type:'float',width:'13%'},
 	  	                  	{ display: '商品条码', name: 'sku',type:'float',width:'13%'},
 	  	                  	{ display: '商品SKU', name: 'sku_no',type:'float',width:'10%'},
-	  	                  	{ display: '操作员', name: 'userLoginNameOfOperator',type:'float',width:'8%'},
 		  		          	{ display: '本次收货数量', name: 'quantity', type: 'float',width:'7%'},
+		  		      		{ display: '操作员', name: 'userLoginNameOfOperator',type:'float',width:'8%'},	
 		  		          	{ display: '收货时间', name: 'createdTime',width:'12%'},
 			            	{ display: '入库明细备注', name: 'remark', width:'12%'}
 		             ],   
