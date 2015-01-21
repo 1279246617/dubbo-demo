@@ -9,6 +9,8 @@ import com.coe.wms.exception.ServiceException;
 import com.coe.wms.model.warehouse.TrackingNo;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrder;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderItem;
+import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderReceiver;
+import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderSender;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus;
 import com.coe.wms.model.warehouse.storage.record.OutWarehousePackage;
 import com.coe.wms.util.Pagination;
@@ -51,6 +53,10 @@ public interface IOutWarehouseOrderService {
 	 * @return
 	 */
 	public List<OutWarehouseOrderItem> getOutWarehouseOrderItem(Long orderId);
+	
+	public OutWarehouseOrderReceiver getOutWarehouseOrderReceiverByOrderId(Long orderId);
+
+	public OutWarehouseOrderSender getOutWarehouseOrderSenderByOrderId(Long orderId);
 
 	/**
 	 * 审核出库订单
@@ -98,7 +104,7 @@ public interface IOutWarehouseOrderService {
 	 * @return
 	 * @throws ServiceException
 	 */
-	public Map<String, String> outWarehousePackageConfirm(String coeTrackingNo, Long coeTrackingNoId, Long userIdOfOperator,boolean isReturnNewCoeNo) throws ServiceException;
+	public Map<String, String> outWarehousePackageConfirm(String coeTrackingNo, Long coeTrackingNoId, Long userIdOfOperator, boolean isReturnNewCoeNo) throws ServiceException;
 
 	/**
 	 * 绑定

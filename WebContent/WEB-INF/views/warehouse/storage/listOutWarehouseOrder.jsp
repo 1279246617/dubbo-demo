@@ -208,35 +208,31 @@
 	    	 grid = $("#maingrid").ligerGrid({
 	                columns: [
 	                    { display: '客户帐号', name: 'userNameOfCustomer', align: 'center',type:'float',width:'9%'},
-	  		          	{ display: '客户订单号', name: 'customerReferenceNo', align: 'center', type: 'float',width:'14%'},
+	  		          	{ display: '客户订单号', name: 'customerReferenceNo', align: 'center', type: 'float',width:'12%'},
 		                { display: '仓库', name: 'warehouse', align: 'center', type: 'float',width:'8%'},
 		                { display: '状态', name: 'status', align: 'center', type: 'float',width:'8%'},
 		                { display: '发货渠道', name: 'shipwayCode', align: 'center', type: 'float',width:'8%'},
 		                { display: '跟踪单号', name: 'trackingNo', align: 'center', type: 'float',width:'12%'},
 		                { display: '条码数/商品数', name: 'bpQuantity', align: 'center', type: 'float',width:'9%'},
-		                { display: '商品预览', isSort: false, align: 'center', type: 'float',width:'15%',render: function(row) {
+		                { display: '商品预览', isSort: false, align: 'center', type: 'float',width:'14%',render: function(row) {
 		            		var skus = "";
 		            		if (!row._editing) {
 		            			skus += '<a href="javascript:listOutWarehouseOrderItem(' + row.id + ')">'+row.items+'</a> ';
 		            		}
 		            		return skus;
 	  		          	}},
-	  		         	{ display: '创建时间', name: 'createdTime', align: 'center', type: 'float',width:'12%'},
-		                { display: '收件人名', name: 'receiverName', align: 'center', type: 'float',width:'8%'},
-		                { display: '收件人街道1', name: 'receiverAddressLine1', align: 'center', type: 'float',width:'12%'},
-		                { display: '收件人街道2', name: 'receiverAddressLine2', align: 'center', type: 'float',width:'8%'},
-		                { display: '收件人县区', name: 'receiverCounty', align: 'center', type: 'float',width:'8%'},
-		                { display: '收件人城市', name: 'receiverCity', align: 'center', type: 'float',width:'8%'},
-		                { display: '收件人州省', name: 'receiverStateOrProvince', align: 'center', type: 'float',width:'8%'},
-		                { display: '收件人国家', name: 'receiverCountryName', align: 'center', type: 'float',width:'8%'},
-		                { display: '收件人邮编', name: 'receiverPostalCode', align: 'center', type: 'float',width:'8%'},
-		                { display: '收件人手机', name: 'receiverPhoneNumber', align: 'center', type: 'float',width:'8%'},
-		                { display: '收件人电话', name: 'receiverMobileNumber', align: 'center', type: 'float',width:'8%'},
-		                { display: '发件人名', name: 'senderName', align: 'center', type: 'float',width:'8%'},
-		                { display: '备注', name: 'remark', align: 'center', type: 'float',width:'15%'},
-		                { display: '打印次数', name: 'printedCount', align: 'center', type: 'float',width:'8%'},
+	  		            { display: '创建时间', name: 'createdTime', align: 'center', type: 'float',width:'12%'},
+	  		          	{ display: '收件人名', isSort: false, align: 'center', type: 'float',width:'10%',render: function(row) {
+	  		          		return '<a href="javascript:listOutWarehouseOrderReceiver(' + row.id + ')">'+row.receiverName+'</a> ';
+	  		          	}},
+	  		          	{ display: '发件人名', isSort: false, align: 'center', type: 'float',width:'10%',render: function(row) {
+	  		          		return '<a href="javascript:listOutWarehouseOrderSender(' + row.id + ')">'+row.senderName+'</a> ';
+	  		          	}},
+		                { display: '出库重量', name: 'weight', align: 'center', type: 'float',width:'8%'},
+		                { display: '出库称重时间', name: 'weightTime', align: 'center', type: 'float',width:'12%'},
 		                { display: '回传称重状态', name: 'callbackSendWeightIsSuccess', align: 'center', type: 'float',width:'8%'},
 		                { display: '回传出库状态', name: 'callbackSendStatusIsSuccess', align: 'center', type: 'float',width:'8%'},
+		                { display: '备注', name: 'remark', align: 'center', type: 'float',width:'10%'},
 		                {display: '操作',isSort: false,width: '9%',render: function(row) {
 		            		var  h = '<a href="javascript:checkSingleOrder(' + row.id + ')">审核</a> ';
 // 		            				h += '<a href="javascript:deleteOutWarehouseOrder(' + row.id + ')">删除</a>';

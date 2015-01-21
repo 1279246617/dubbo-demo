@@ -1113,4 +1113,14 @@ public class OutWarehouseOrderServiceImpl implements IOutWarehouseOrderService {
 		}
 		return map;
 	}
+
+	@Override
+	public OutWarehouseOrderReceiver getOutWarehouseOrderReceiverByOrderId(Long orderId) {
+		return outWarehouseOrderReceiverDao.getOutWarehouseOrderReceiverByOrderId(orderId);
+	}
+	
+	@Override
+	public OutWarehouseOrderSender getOutWarehouseOrderSenderByOrderId(Long orderId) {
+		return outWarehouseOrderSenderDao.getOutWarehouseOrderSenderByOrderId(orderId);
+	}
 }
