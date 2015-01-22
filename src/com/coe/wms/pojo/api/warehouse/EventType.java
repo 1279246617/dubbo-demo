@@ -60,6 +60,6 @@ public class EventType {
 	/**
 	 * 仓库通过E特快进行清关，若产生关税, 仓库回传关税收取结果
 	 */
-	public static final String WMS_ORDER_TAXd = "WMS_ORDER_TAX";
+	public static final String WMS_ORDER_TAX = "WMS_ORDER_TAX";
 
 }
