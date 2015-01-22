@@ -13,33 +13,35 @@
 			<div class='a4-for-packagelist change-page'>
 					<!-- 第一行 -->
 					<div style="height:15mm;weight:100%;">
-						<div style="width:45mm;height:13mm;" class="pull-left">
-							<img src="${baseUrl}/static/img/print/sflogo.png" style="height:13mm;margin-left: 1mm;">	
+						<div style="width:33mm;height:13mm;" class="pull-left">
+							<img src="${baseUrl}/static/img/print/sflogo.png" style="height:11mm;margin-left: 0mm;">	
 						</div>
-						<div style="width:55mm;height:13mm;" class="pull-left">
-							<img src="${baseUrl}/static/img/print/htlogo.png" style="height:13mm;margin-left: 1mm;">	
+						<div style="width:31mm;height:13mm;" class="pull-left">
+							<img src="${baseUrl}/static/img/print/htlogo.png" style="height:11mm;margin-left: 0mm;">	
 						</div>
-						<div class="pull-left" style="width:100mm;height:10mm;font-size: 5mm;margin-top: 4mm;">
-							顺丰海淘(www.sfht.com)购物清单	
+						<div class="pull-left" style="width:80mm;height:12mm;font-size: 5mm;margin-top: 0mm;text-align: center;">
+							<span class="pull-left"  style="font-size: 7mm;font-weight: bold;width:80mm;">顺丰海淘购物清单</span>
+							<span class="pull-left" style="font-size: 4mm;width:80mm;">www.sfht.com</span>
 						</div>					
 					</div>
 					
 					<!-- 第二行 -->
-					<div style="height:13mm;width:90%;">
+					<div style="height:13mm;width:100%;">
 						<table style="width:100%;">
 							<tr>
-								<td style=" height:12mm;">
-										<span class="pull-left" style="margin-left: 2mm;font-size: 4mm;">
+								<td style=" height:12mm;text-align: left;width:35%;">
+										<span class="pull-left" style="margin-left: 0mm;font-size: 4mm;">
 								 				清单号:<c:out value="${map.trackingNo}"/>
 										</span>	
 								</td>
-								<td>
-									<span class="pull-left" style="margin-left: 3mm;font-size: 4mm;">
+								<td style="text-align: center;width:35%;">
+									<span class="pull-left" style="margin-left: 10mm;font-size: 4mm;">
 											海淘订单号:
 											<c:out value="${map.customerOrderNo}"/>
 									</span>	
 								</td>
-								<td style="height:12mm;font-size: 4mm;">
+								
+								<td style="height:12mm;font-size: 4mm;text-align: right;width:30%;">
 									订购日期:<c:out value="${map.createdTime}"/>
 								</td>
 							</tr>
@@ -47,8 +49,8 @@
 					</div>
 					
 					<!-- 第三行 -->
-					<div style="height:7mm;weight:100%;">
-							<table style="margin-left: 2mm;" class="pull-left">
+					<div style="height:7mm;width:100%;">
+							<table style="margin-left: 0mm;" class="pull-left">
 									<tr>
 										<td style="font-size: 4.5mm;">客户订单号:</td>
 										<td>
@@ -60,7 +62,7 @@
 							
 					<!-- 第六行  商品列表 不指定高度,不管有多少item 都必须显示-->
 					<div style="weight:100%;" >
-							<table style="width:204mm;height:auto;margin-left: 2mm;" rules="all" border="1">
+							<table style="width:205.5mm;height:auto;margin-left: 0.5mm;" rules="all" border="1">
 							<tr>
 								<td colspan="7">
 										<span style="float: left;width:15mm;">收货人:</span>
@@ -107,7 +109,7 @@
 					</div>
 					<!-- 第七行 -->
 					<div style="height:8mm;width:100%;margin-top: 3mm;" >
-						<table style="width:204mm;height:auto;margin-left: 2mm;" rules="none" border="0">
+						<table style="width:206mm;height:auto;margin-left:0mm;" rules="none" border="0">
 								<tr>
 									<td>配送费(元) : 0.00</td>
 									<td>促销折扣(元) : 0.00</td>
@@ -121,10 +123,11 @@
 						</table>
 					</div>		
 					<!-- 第九行 -->
-					<div  style="height:18mm;weight:100%;margin-left: 2mm;font-size: 4mm;">
+					<div  style="height:18mm;weight:100%;margin-top: 5mm;font-size: 4mm;">
 						<div style="height:8mm;">非常感谢您在顺丰海淘网站(www.sfht.com)购物 , 我们期待您的再次光临!</div>	
 						<div style="height:8mm;">如发现商品破损或与描述不符等任何问题 , 请及时联系顺丰海淘客服中心 021-69763622</div>
-						<div style="height:8mm;">顺丰海淘祝您生活愉快!</div>
+						<div style="height:8mm;margin-top: 3mm;">顺丰海淘祝您生活愉快!</div>
+						<div style="height:8mm;margin-top: 3mm;">高品质生活,就在顺丰海淘!</div>
 					</div>
 			</div>
 		</c:forEach>
