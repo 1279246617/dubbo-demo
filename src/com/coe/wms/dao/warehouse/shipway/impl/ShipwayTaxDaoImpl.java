@@ -33,10 +33,6 @@ public class ShipwayTaxDaoImpl implements IShipwayTaxDao {
 	@Resource(name = "jdbcTemplate")
 	private JdbcTemplate jdbcTemplate;
 
-	public void setJdbcTemplatek(JdbcTemplate jdbcTemplate) {
-		this.jdbcTemplate = jdbcTemplate;
-	}
-
 	/**
 	 * 查询商品
 	 */

@@ -227,6 +227,10 @@ public class InWarehouseOrderServiceImpl implements IInWarehouseOrderService {
 		}
 		// 总数量
 		int totalQuantity = inWarehouseOrderItemDao.countInWarehouseOrderItemSkuQuantityByOrderId(orderId, itemSku);
+		if (totalQuantity <= 0) {
+			map.put(Constant.MESSAGE, "该商品条码在此订单中无预报,请输入正确商品条码");
+			return map;
+		}
 		// 该订单的该条码的总已经收货数量
 		int totalReceivedQuantity = inWarehouseRecordItemDao.countInWarehouseItemSkuQuantityByOrderId(orderId, itemSku);
 		// 未收货数量
@@ -283,7 +287,7 @@ public class InWarehouseOrderServiceImpl implements IInWarehouseOrderService {
 				long updateCount = inWarehouseOrderItemDao.saveInWarehouseOrderItemSku(orderItems.get(0).getId(), itemSku);
 				inWarehouseOrderItemList = inWarehouseOrderItemDao.findInWarehouseOrderItem(inWarehouseOrderItemParam, null, null);
 			} else {
-				map.put(Constant.MESSAGE, "该商品条码在此订单中无预报,且不符合薄库存情况,请补齐商品条码");
+				map.put(Constant.MESSAGE, "该商品条码在此订单中无预报,请输入正确商品条码");
 				return map;
 			}
 		}

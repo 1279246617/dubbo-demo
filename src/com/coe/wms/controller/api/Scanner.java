@@ -149,6 +149,7 @@ public class Scanner {
 			response.setHeader("Content-Disposition", "attachment; filename=" + java.net.URLEncoder.encode(fileName, "UTF-8"));
 			response.setContentType("application/octet-stream; charset=utf-8");
 			File file = new File(filePathAndName);
+			response.setContentLength(Long.valueOf(file.length()).intValue());
 			os.write(FileUtils.readFileToByteArray(file));
 			os.flush();
 		} finally {
