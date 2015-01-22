@@ -19,7 +19,7 @@ public class ShipwayTax implements Serializable {
 	/**
 	 * 订单id
 	 */
-	private String orderId;
+	private Long orderId;
 	/**
 	 * 订单类型
 	 */
@@ -35,7 +35,7 @@ public class ShipwayTax implements Serializable {
 	/**
 	 * 币种
 	 */
-	private Double taxCurrency;
+	private String taxCurrency;
 	/**
 	 * 收税时间
 	 */
@@ -77,11 +77,11 @@ public class ShipwayTax implements Serializable {
 		this.customerReferenceNo = customerReferenceNo;
 	}
 
-	public String getOrderId() {
+	public Long getOrderId() {
 		return orderId;
 	}
 
-	public void setOrderId(String orderId) {
+	public void setOrderId(Long orderId) {
 		this.orderId = orderId;
 	}
 
@@ -133,11 +133,11 @@ public class ShipwayTax implements Serializable {
 		this.taxValue = taxValue;
 	}
 
-	public Double getTaxCurrency() {
+	public String getTaxCurrency() {
 		return taxCurrency;
 	}
 
-	public void setTaxCurrency(Double taxCurrency) {
+	public void setTaxCurrency(String taxCurrency) {
 		this.taxCurrency = taxCurrency;
 	}
 

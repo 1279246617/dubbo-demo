@@ -14,8 +14,6 @@ public interface IShipwayTaxDao {
 
 	public ShipwayTax getShipwayTaxById(Long id);
 
-	public ShipwayTax findShipwayTaxByReferenceNo(Long customerId, String barcode);
-
 	public long addShipwayTax(ShipwayTax shipwayTax);
 
 	public int deleteShipwayTaxById(Long id);
