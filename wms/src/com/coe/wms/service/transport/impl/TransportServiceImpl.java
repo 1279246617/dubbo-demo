@@ -1,13 +1,11 @@
 package com.coe.wms.service.transport.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
-import org.springframework.web.socket.sockjs.transport.TransportType;
 
 import com.coe.wms.dao.product.IProductDao;
 import com.coe.wms.dao.user.IUserDao;
@@ -34,39 +32,9 @@ import com.coe.wms.dao.warehouse.transport.IOrderStatusDao;
 import com.coe.wms.dao.warehouse.transport.IOutWarehousePackageDao;
 import com.coe.wms.dao.warehouse.transport.IOutWarehousePackageItemDao;
 import com.coe.wms.exception.ServiceException;
-import com.coe.wms.model.unit.Currency.CurrencyCode;
-import com.coe.wms.model.warehouse.Warehouse;
 import com.coe.wms.model.warehouse.shipway.Shipway;
-import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderReceiver;
-import com.coe.wms.model.warehouse.transport.FirstWaybill;
-import com.coe.wms.model.warehouse.transport.FirstWaybillItem;
-import com.coe.wms.model.warehouse.transport.FirstWaybillStatus;
-import com.coe.wms.model.warehouse.transport.FirstWaybillStatus.FirstWaybillStatusCode;
-import com.coe.wms.model.warehouse.transport.Order;
-import com.coe.wms.model.warehouse.transport.OrderAdditionalSf;
-import com.coe.wms.model.warehouse.transport.OrderPackage;
-import com.coe.wms.model.warehouse.transport.OrderPackageStatus.OrderPackageStatusCode;
-import com.coe.wms.model.warehouse.transport.OrderReceiver;
-import com.coe.wms.model.warehouse.transport.OrderSender;
-import com.coe.wms.model.warehouse.transport.OrderStatus.OrderStatusCode;
-import com.coe.wms.pojo.api.warehouse.Buyer;
-import com.coe.wms.pojo.api.warehouse.ClearanceDetail;
-import com.coe.wms.pojo.api.warehouse.ErrorCode;
-import com.coe.wms.pojo.api.warehouse.EventBody;
-import com.coe.wms.pojo.api.warehouse.Item;
-import com.coe.wms.pojo.api.warehouse.LogisticsDetail;
-import com.coe.wms.pojo.api.warehouse.LogisticsOrder;
-import com.coe.wms.pojo.api.warehouse.Response;
-import com.coe.wms.pojo.api.warehouse.Responses;
-import com.coe.wms.pojo.api.warehouse.SenderDetail;
-import com.coe.wms.pojo.api.warehouse.TradeDetail;
-import com.coe.wms.pojo.api.warehouse.TradeOrder;
 import com.coe.wms.service.transport.ITransportService;
 import com.coe.wms.util.Config;
-import com.coe.wms.util.Constant;
-import com.coe.wms.util.NumberUtil;
-import com.coe.wms.util.StringUtil;
-import com.coe.wms.util.XmlUtil;
 
 /**
  * 仓配服务
