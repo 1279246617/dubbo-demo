@@ -1,9 +1,9 @@
-package com.coe.wms.dao.warehouse.shipway;
+package com.coe.wms.dao.fee;
 
 import java.util.List;
 import java.util.Map;
 
-import com.coe.wms.model.warehouse.shipway.ShipwayTax;
+import com.coe.wms.model.fee.ShipwayTax;
 import com.coe.wms.util.Pagination;
 
 public interface IShipwayTaxDao {

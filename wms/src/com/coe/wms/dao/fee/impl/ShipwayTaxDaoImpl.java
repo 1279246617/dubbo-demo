@@ -1,4 +1,4 @@
-package com.coe.wms.dao.warehouse.shipway.impl;
+package com.coe.wms.dao.fee.impl;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -18,8 +18,8 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import com.coe.wms.dao.warehouse.shipway.IShipwayTaxDao;
-import com.coe.wms.model.warehouse.shipway.ShipwayTax;
+import com.coe.wms.dao.fee.IShipwayTaxDao;
+import com.coe.wms.model.fee.ShipwayTax;
 import com.coe.wms.util.DateUtil;
 import com.coe.wms.util.Pagination;
 import com.coe.wms.util.StringUtil;
