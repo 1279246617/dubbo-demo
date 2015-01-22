@@ -9,6 +9,9 @@ public class ShipwayTax implements Serializable {
 	 */
 	private static final long serialVersionUID = 299542286334796384L;
 	private Long id;
+
+	private Long userIdOfCustomer;
+
 	/**
 	 * 客户订单号
 	 */
@@ -49,6 +52,14 @@ public class ShipwayTax implements Serializable {
 	 * 此记录创建时间
 	 */
 	private Long createdTime;
+	/**
+	 * 回调是否成功 Y 成功 N或者空失败
+	 */
+	private String sendIsSuccess;
+	/**
+	 * 回调次数
+	 */
+	private Integer sendCount;
 
 	public Long getId() {
 		return id;
@@ -84,6 +95,30 @@ public class ShipwayTax implements Serializable {
 
 	public String getShipwayCode() {
 		return shipwayCode;
+	}
+
+	public Long getUserIdOfCustomer() {
+		return userIdOfCustomer;
+	}
+
+	public void setUserIdOfCustomer(Long userIdOfCustomer) {
+		this.userIdOfCustomer = userIdOfCustomer;
+	}
+
+	public String getSendIsSuccess() {
+		return sendIsSuccess;
+	}
+
+	public void setSendIsSuccess(String sendIsSuccess) {
+		this.sendIsSuccess = sendIsSuccess;
+	}
+
+	public Integer getSendCount() {
+		return sendCount;
+	}
+
+	public void setSendCount(Integer sendCount) {
+		this.sendCount = sendCount;
 	}
 
 	public void setShipwayCode(String shipwayCode) {
