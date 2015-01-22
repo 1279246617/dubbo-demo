@@ -208,9 +208,10 @@
 	    	 grid = $("#maingrid").ligerGrid({
 	                columns: [
 	                    { display: '客户帐号', name: 'userNameOfCustomer', align: 'center',type:'float',width:'9%'},
-	  		          	{ display: '客户订单号', name: 'customerReferenceNo', align: 'center', type: 'float',width:'12%'},
+	  		          	{ display: '客户订单号', name: 'customerReferenceNo', align: 'center', type: 'float',width:'11%'},
 		                { display: '仓库', name: 'warehouse', align: 'center', type: 'float',width:'8%'},
-		                { display: '状态', name: 'status', align: 'center', type: 'float',width:'8%'},
+		                { display: '出库类型', name: 'orderType', align: 'center', type: 'float',width:'7%'},
+		                { display: '状态', name: 'status', align: 'center', type: 'float',width:'7%'},
 		                { display: '发货渠道', name: 'shipwayCode', align: 'center', type: 'float',width:'8%'},
 		                { display: '跟踪单号', name: 'trackingNo', align: 'center', type: 'float',width:'12%'},
 		                { display: '条码数/商品数', name: 'bpQuantity', align: 'center', type: 'float',width:'9%'},
@@ -228,8 +229,7 @@
 	  		          	{ display: '发件人名', isSort: false, align: 'center', type: 'float',width:'10%',render: function(row) {
 	  		          		return '<a href="javascript:listOutWarehouseOrderSender(' + row.id + ')">'+row.senderName+'</a> ';
 	  		          	}},
-		                { display: '出库重量', name: 'weight', align: 'center', type: 'float',width:'8%'},
-		                { display: '出库称重时间', name: 'weightTime', align: 'center', type: 'float',width:'12%'},
+		                { display: '出库重量(KG)', name: 'weight', align: 'center', type: 'float',width:'8%'},
 		                { display: '回传称重状态', name: 'callbackSendWeightIsSuccess', align: 'center', type: 'float',width:'8%'},
 		                { display: '回传出库状态', name: 'callbackSendStatusIsSuccess', align: 'center', type: 'float',width:'8%'},
 		                { display: '备注', name: 'remark', align: 'center', type: 'float',width:'10%'},

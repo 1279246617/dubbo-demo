@@ -672,8 +672,8 @@ public class ImportServiceImpl implements IImportService {
 				if (StringUtil.isNotNull(map.get("shipway"))) {
 					outWarehouseOrder.setShipwayCode(map.get("shipway"));
 				}
-				if (StringUtil.isNotNull(map.get("outWarehouseType"))) {
-					// 出库类型
+				if (StringUtil.isNotNull(map.get("outWarehouseType"))) {// 出库类型
+					outWarehouseOrder.setOrderType(map.get("outWarehouseType"));
 				}
 				if (StringUtil.isNotNull(map.get("receiverName"))) {
 					receiver.setName(map.get("receiverName"));

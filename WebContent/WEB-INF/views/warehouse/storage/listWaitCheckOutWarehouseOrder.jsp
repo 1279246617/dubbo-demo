@@ -162,6 +162,7 @@
 		            		}
 		            		return skus;
 	  		          	}},
+	  		          	{ display: '出库类型', name: 'orderType', align: 'center', type: 'float',width:'7%'},
 	  		          	{ display: '状态', name: 'status', align: 'center', type: 'float',width:'8%'},
 		                { display: '收件人名', name: 'receiverName', align: 'center', type: 'float',width:'8%'},
 		                { display: '收件人街道1', name: 'receiverAddressLine1', align: 'center', type: 'float',width:'12%'},
