@@ -197,4 +197,14 @@ public class OutWarehousePackageDaoImpl implements IOutWarehousePackageDao {
 	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
 	}
+
+	@Override
+	public OutWarehousePackage getOutWarehousePackageByCoeTrackingNoId(Long coeTrackingNoId) {
+		String sql = "select id,warehouse_id,user_id_of_customer,user_id_of_operator,coe_tracking_no,coe_tracking_no_id,created_time,remark,is_shiped,shipped_time from w_s_out_warehouse_package where coe_tracking_no_id =" + coeTrackingNoId;
+		List<OutWarehousePackage> outWarehousePackageList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(OutWarehousePackage.class));
+		if (outWarehousePackageList != null && outWarehousePackageList.size() > 0) {
+			return outWarehousePackageList.get(0);
+		}
+		return null;
+	}
 }

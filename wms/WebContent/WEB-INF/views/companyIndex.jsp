@@ -108,8 +108,8 @@
 		              		<li><a href="#${baseUrl}/warehouse/storage/outWarehouseWeightAndPrint.do" tab_id="doOutWarehouse"><i class="icon-inbox"></i><span class="hidden-tablet">装箱称重打单</span></a></li>
 		              		<li><a href="#${baseUrl}/warehouse/storage/outWarehousePackage.do" tab_id="outWarehousePackage"><i class="icon-th"></i><span class="hidden-tablet">扫描建包</span></a></li>
 		              		<li><a href="#${baseUrl}/warehouse/storage/outWarehouseShipping.do" tab_id="outWarehouseShipping"><i class="icon-plane"></i><span class="hidden-tablet">扫描发货</span></a></li>
-		              		<li><a href="#${baseUrl}/warehouse/storage/listOutWarehousePackage.do" tab_id="findOutWarehousePackage"><i class="icon-list"></i><span class="hidden-tablet">出库建包记录</span></a></li>
-<!-- 		              		<li><a href="#${baseUrl}/warehouse/storage/listOutWarehouseRecord.do" tab_id="findOutWarehouseRecord"><i class="icon-list"></i><span class="hidden-tablet">发货记录</span></a></li> -->
+		    	          	<li><a href="#${baseUrl}/warehouse/storage/listOutWarehousePackage.do" tab_id="findOutWarehousePackage"><i class="icon-list"></i><span class="hidden-tablet">出库建包记录</span></a></li>
+		              		<li><a href="#${baseUrl}/warehouse/storage/listOutWarehousePackageItem.do" tab_id="findOutWarehousePackageItem"><i class="icon-list"></i><span class="hidden-tablet">出库建包记录明细</span></a></li>
 		              		<li><a href="#${baseUrl}/warehouse/inventory/listInventory.do" tab_id="findItemInventory"><i class="icon-zoom-out"></i><span class="hidden-tablet">商品批次库存</span></a></li>
 		              		<li><a href="#${baseUrl}/warehouse/inventory/listItemShelfInventory.do" tab_id="findItemShelfInventory"><i class="icon-zoom-out"></i><span class="hidden-tablet">商品货位库存</span></a></li>
 		                </ul>

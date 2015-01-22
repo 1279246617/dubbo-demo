@@ -13,6 +13,7 @@ import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderReceiver;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderSender;
 import com.coe.wms.model.warehouse.storage.order.OutWarehouseOrderStatus;
 import com.coe.wms.model.warehouse.storage.record.OutWarehousePackage;
+import com.coe.wms.model.warehouse.storage.record.OutWarehousePackageItem;
 import com.coe.wms.util.Pagination;
 
 /**
@@ -33,8 +34,11 @@ public interface IOutWarehouseOrderService {
 	 */
 	public Pagination getOutWarehousePackageData(OutWarehousePackage outWarehousePackage, Map<String, String> moreParam, Pagination page);
 
+	public Pagination getOutWarehousePackageItemData(OutWarehousePackageItem outWarehousePackageItem, Map<String, String> moreParam, Pagination page);
+
 	/**
 	 * 获取出库订单
+	 * 
 	 * 
 	 * @param inWarehouseRecordId
 	 * @param page
@@ -53,7 +57,7 @@ public interface IOutWarehouseOrderService {
 	 * @return
 	 */
 	public List<OutWarehouseOrderItem> getOutWarehouseOrderItem(Long orderId);
-	
+
 	public OutWarehouseOrderReceiver getOutWarehouseOrderReceiverByOrderId(Long orderId);
 
 	public OutWarehouseOrderSender getOutWarehouseOrderSenderByOrderId(Long orderId);

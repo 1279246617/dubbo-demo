@@ -12,6 +12,8 @@ public interface IOutWarehousePackageDao {
 
 	public OutWarehousePackage getOutWarehousePackageById(Long outWarehousePackageId);
 
+	public OutWarehousePackage getOutWarehousePackageByCoeTrackingNoId(Long coeTrackingNoId);
+
 	public List<OutWarehousePackage> findOutWarehousePackage(OutWarehousePackage outWarehousePackage, Map<String, String> moreParam, Pagination page);
 
 	public Long countOutWarehousePackage(OutWarehousePackage outWarehousePackage, Map<String, String> moreParam);

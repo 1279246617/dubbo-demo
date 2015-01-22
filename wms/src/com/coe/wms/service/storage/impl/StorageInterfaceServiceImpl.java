@@ -504,6 +504,7 @@ public class StorageInterfaceServiceImpl implements IStorageInterfaceService {
 			}
 			// 主单
 			OutWarehouseOrder outWarehouseOrder = new OutWarehouseOrder();
+			outWarehouseOrder.setOrderType(OutWarehouseOrder.ORDER_TYPE_SALE);
 			outWarehouseOrder.setCreatedTime(System.currentTimeMillis());
 			outWarehouseOrder.setLogisticsRemark(logisticsOrder.getLogisticsRemark());
 			outWarehouseOrder.setStatus(OutWarehouseOrderStatusCode.WWC);

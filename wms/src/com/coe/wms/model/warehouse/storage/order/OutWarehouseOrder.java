@@ -15,6 +15,25 @@ public class OutWarehouseOrder implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = -1475638002960975692L;
+	/**
+	 * 销售出库单
+	 */
+	public static final String ORDER_TYPE_SALE = "1";
+
+	public static final String ORDER_TYPE_SALE_CN = "销售出库";
+
+	/**
+	 * 盘点出库单
+	 */
+	public static final String ORDER_TYPE_CHECK = "2";
+
+	public static final String ORDER_TYPE_CHECK_CN = "盘点出库";
+	/**
+	 * 调拨出库单
+	 */
+	public static final String ORDER_TYPE_ALLOCATION = "3";
+
+	public static final String ORDER_TYPE_ALLOCATION_CN = "调拨出库";
 
 	/**
 	 * 主键
@@ -123,6 +142,10 @@ public class OutWarehouseOrder implements Serializable {
 	 * 重量代码 KG/G
 	 */
 	private String weightCode;
+	/**
+	 * 订单类型:调拨,销售,盘点
+	 */
+	private String orderType;
 
 	public Long getId() {
 		return id;
@@ -130,6 +153,14 @@ public class OutWarehouseOrder implements Serializable {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public String getOrderType() {
+		return orderType;
+	}
+
+	public void setOrderType(String orderType) {
+		this.orderType = orderType;
 	}
 
 	public Long getWarehouseId() {

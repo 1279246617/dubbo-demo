@@ -206,6 +206,7 @@ public class OutWarehouseOrderServiceImpl implements IOutWarehouseOrderService {
 				map.put("createdTime", DateUtil.dateConvertString(new Date(order.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss));
 			}
 			map.put("shipwayCode", order.getShipwayCode());
+			map.put("weight", order.getOutWarehouseWeight());
 			map.put("trackingNo", order.getTrackingNo());
 			// 回传称重
 			if (StringUtil.isEqual(order.getCallbackSendWeightIsSuccess(), Constant.Y)) {
@@ -240,6 +241,16 @@ public class OutWarehouseOrderServiceImpl implements IOutWarehouseOrderService {
 				}
 			}
 			map.put("remark", order.getRemark());
+			// 订单类型
+			if (StringUtil.isEqual(order.getOrderType(), OutWarehouseOrder.ORDER_TYPE_ALLOCATION)) {
+				map.put("orderType", OutWarehouseOrder.ORDER_TYPE_ALLOCATION_CN);
+			}
+			if (StringUtil.isEqual(order.getOrderType(), OutWarehouseOrder.ORDER_TYPE_CHECK)) {
+				map.put("orderType", OutWarehouseOrder.ORDER_TYPE_CHECK_CN);
+			}
+			if (StringUtil.isEqual(order.getOrderType(), OutWarehouseOrder.ORDER_TYPE_SALE)) {
+				map.put("orderType", OutWarehouseOrder.ORDER_TYPE_SALE_CN);
+			}
 			map.put("printedCount", order.getPrintedCount());
 			OutWarehouseOrderStatus outWarehouseOrderStatus = outWarehouseOrderStatusDao.findOutWarehouseOrderStatusByCode(order.getStatus());
 			if (outWarehouseOrderStatus != null) {
@@ -818,6 +829,56 @@ public class OutWarehouseOrderServiceImpl implements IOutWarehouseOrderService {
 	 * 获取出库建包记录
 	 */
 	@Override
+	public Pagination getOutWarehousePackageItemData(OutWarehousePackageItem outWarehousePackageItem, Map<String, String> moreParam, Pagination page) {
+		List<OutWarehousePackageItem> outWarehousePackageItemList = outWarehousePackageItemDao.findOutWarehousePackageItem(outWarehousePackageItem, moreParam, page);
+		List<Object> list = new ArrayList<Object>();
+		for (OutWarehousePackageItem oPackageItem : outWarehousePackageItemList) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("id", oPackageItem.getId());
+			if (oPackageItem.getCreatedTime() != null) {
+				map.put("packageTime", DateUtil.dateConvertString(new Date(oPackageItem.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss));
+			}
+			OutWarehousePackage outWarehousePackage = outWarehousePackageDao.getOutWarehousePackageByCoeTrackingNoId(oPackageItem.getCoeTrackingNoId());
+			if (outWarehousePackage == null) {
+				map.put("packageConfirm", "未完成");
+			}
+			if (outWarehousePackage != null) {
+				map.put("packageConfirm", "已完成");
+				if (StringUtil.isEqual(outWarehousePackage.getIsShiped(), Constant.Y)) {
+					map.put("isShipped", "已发货");
+					if (outWarehousePackage.getShippedTime() != null) {
+						map.put("shippedTime", DateUtil.dateConvertString(new Date(outWarehousePackage.getShippedTime()), DateUtil.yyyy_MM_ddHHmmss));
+					}
+				} else {
+					map.put("isShipped", "未发货");
+				}
+			}
+			// 查询用户名
+			User user = userDao.getUserById(oPackageItem.getUserIdOfCustomer());
+			map.put("userLoginNameOfCustomer", user.getLoginName());
+			// 查询操作员
+			if (NumberUtil.greaterThanZero(oPackageItem.getUserIdOfOperator())) {
+				User userOfOperator = userDao.getUserById(oPackageItem.getUserIdOfOperator());
+				map.put("userLoginNameOfOperator", userOfOperator.getLoginName());
+			}
+			map.put("coeTrackingNo", oPackageItem.getCoeTrackingNo());
+			map.put("trackingNo", oPackageItem.getOutWarehouseOrderTrackingNo());
+			map.put("coeTrackingNoId", oPackageItem.getCoeTrackingNoId());
+			if (NumberUtil.greaterThanZero(oPackageItem.getWarehouseId())) {
+				Warehouse warehouse = warehouseDao.getWarehouseById(oPackageItem.getWarehouseId());
+				map.put("warehouse", warehouse.getWarehouseName());
+			}
+			list.add(map);
+		}
+		page.total = outWarehousePackageItemDao.countOutWarehousePackageItem(outWarehousePackageItem, moreParam);
+		page.rows = list;
+		return page;
+	}
+
+	/**
+	 * 获取出库建包记录
+	 */
+	@Override
 	public Pagination getOutWarehousePackageData(OutWarehousePackage outWarehousePackage, Map<String, String> moreParam, Pagination page) {
 		List<OutWarehousePackage> outWarehousePackageList = outWarehousePackageDao.findOutWarehousePackage(outWarehousePackage, moreParam, page);
 		List<Object> list = new ArrayList<Object>();
@@ -1118,7 +1179,7 @@ public class OutWarehouseOrderServiceImpl implements IOutWarehouseOrderService {
 	public OutWarehouseOrderReceiver getOutWarehouseOrderReceiverByOrderId(Long orderId) {
 		return outWarehouseOrderReceiverDao.getOutWarehouseOrderReceiverByOrderId(orderId);
 	}
-	
+
 	@Override
 	public OutWarehouseOrderSender getOutWarehouseOrderSenderByOrderId(Long orderId) {
 		return outWarehouseOrderSenderDao.getOutWarehouseOrderSenderByOrderId(orderId);
