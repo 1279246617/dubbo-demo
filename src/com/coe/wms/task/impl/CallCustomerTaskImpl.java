@@ -196,15 +196,13 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 			List<LogisticsOrder> logisticsOrders = new ArrayList<LogisticsOrder>();
 			LogisticsOrder logisticsOrder = new LogisticsOrder();
 			// 对应入库订单
-			InWarehouseOrder inWarehouseOrderParam = new InWarehouseOrder();
-			inWarehouseOrderParam.setTrackingNo(trackingNo);
-			List<InWarehouseOrder> inWarehouseOrderList = inWarehouseOrderDao.findInWarehouseOrder(inWarehouseOrderParam, null, null);
-			if (inWarehouseOrderList.size() > 0) {
-				InWarehouseOrder inWarehouseOrder = inWarehouseOrderList.get(0);
-				logisticsOrder.setLogisticsType(inWarehouseOrder.getLogisticsType());
-				logisticsOrder.setCarrierCode(inWarehouseOrder.getCarrierCode());
-				logisticsOrder.setSkuStockInId(inWarehouseOrder.getCustomerReferenceNo());
+			InWarehouseOrder inWarehouseOrder = inWarehouseOrderDao.getInWarehouseOrderById(inWarehouseRecord.getInWarehouseOrderId());
+			if (inWarehouseOrder == null) {
+				continue;
 			}
+			logisticsOrder.setLogisticsType(inWarehouseOrder.getLogisticsType());
+			logisticsOrder.setCarrierCode(inWarehouseOrder.getCarrierCode());
+			logisticsOrder.setSkuStockInId(inWarehouseOrder.getCustomerReferenceNo());
 			logisticsOrder.setMailNo(trackingNo);
 			// sku 详情
 			SkuDetail skuDetail = new SkuDetail();
@@ -228,7 +226,6 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 			}
 			skuDetail.setSkus(skuList);
 			logisticsOrder.setSkuDetail(skuDetail);
-
 			logisticsOrders.add(logisticsOrder);
 			logisticsDetail.setLogisticsOrders(logisticsOrders);
 			eventBody.setLogisticsDetail(logisticsDetail);
