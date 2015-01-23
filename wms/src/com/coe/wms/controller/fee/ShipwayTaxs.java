@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.coe.wms.model.fee.ShipwayTax;
+import com.coe.wms.model.unit.Currency.CurrencyCode;
+import com.coe.wms.model.warehouse.shipway.Shipway.ShipwayCode;
 import com.coe.wms.service.fee.IShipwayTaxService;
 import com.coe.wms.service.product.IProductService;
 import com.coe.wms.service.product.IProductTypeService;
@@ -54,7 +56,17 @@ public class ShipwayTaxs {
 	@RequestMapping(value = "/sendShipwayTax")
 	public String sendShipwayTax(HttpServletRequest request, Long id) {
 		ShipwayTax shipwayTax = new ShipwayTax();
-		
+		shipwayTax.setCreatedTime(System.currentTimeMillis());
+		shipwayTax.setCustomerReferenceNo("30017");
+		shipwayTax.setOrderId(18l);
+		shipwayTax.setOrderType(ShipwayTax.ORDER_TYPE_STORAGE);
+		shipwayTax.setOrderValue(10000d);
+		shipwayTax.setOrderValueCurrency(CurrencyCode.CNF);
+		shipwayTax.setShipwayCode(ShipwayCode.ETK);
+		shipwayTax.setTaxCurrency(CurrencyCode.CNF);
+		shipwayTax.setTaxValue(1000d);
+		shipwayTax.setTaxTime(System.currentTimeMillis());
+		shipwayTax.setUserIdOfCustomer(3l);
 		Map<String, String> map = shipwayTaxService.sendShipwayTax(shipwayTax);
 		return GsonUtil.toJson(map);
 	}
