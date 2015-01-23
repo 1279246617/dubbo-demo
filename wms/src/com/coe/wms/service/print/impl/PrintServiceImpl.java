@@ -439,6 +439,14 @@ public class PrintServiceImpl implements IPrintService {
 		if (StringUtil.isNull(trackingNo)) {
 			return null;
 		}
+		// 交易类型, 只有流连和嘿客 需要打印tradeType
+		String tradeType = order.getTradeType();
+		if (StringUtil.isEqual(tradeType, Order.TRADE_TYPE_LIULIAN)) {
+			map.put("tradeType", Order.TRADE_TYPE_LIULIAN_CN);
+		}
+		if (StringUtil.isEqual(tradeType, Order.TRADE_TYPE_HEIKE)) {
+			map.put("tradeType", Order.TRADE_TYPE_HEIKE_CN);
+		}
 		String etkTrackingNo = Shipway.getEtkTrackingNoPrintFormat(trackingNo);// ETK跟踪号打印格式
 		map.put("etkTrackingNo", etkTrackingNo);
 		if (StringUtil.isEqual(order.getShipwayCode(), ShipwayCode.ETK)) {
