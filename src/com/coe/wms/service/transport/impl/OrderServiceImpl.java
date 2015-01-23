@@ -216,6 +216,7 @@ public class OrderServiceImpl implements IOrderService {
 					map.put("callbackSendStatusIsSuccess", "未回传");
 				}
 			}
+
 			// 查询用户名
 			User user = userDao.getUserById(order.getUserIdOfCustomer());
 			map.put("userNameOfCustomer", user.getLoginName());
@@ -233,14 +234,20 @@ public class OrderServiceImpl implements IOrderService {
 			if (StringUtil.isEqual(Order.TRANSPORT_TYPE_Z, order.getTransportType())) {
 				map.put("transportType", "直接转运");
 			}
+			String tradeType = order.getTradeType();
+			if (StringUtil.isEqual(tradeType, Order.TRADE_TYPE_LIULIAN)) {
+				map.put("tradeType", Order.TRADE_TYPE_LIULIAN_CN);
+			} else if (StringUtil.isEqual(tradeType, Order.TRADE_TYPE_HEIKE)) {
+				map.put("tradeType", Order.TRADE_TYPE_HEIKE_CN);
+			} else if (StringUtil.isEqual(tradeType, Order.TRADE_TYPE_HAITAO)) {
+				map.put("tradeType", Order.TRADE_TYPE_HAITAO_CN);
+			}
 			map.put("remark", order.getRemark());
 			map.put("trackingNo", order.getTrackingNo());
-			map.put("tradeType", order.getTradeType());
 			OrderStatus orderStatus = orderStatusDao.findOrderStatusByCode(order.getStatus());
 			if (orderStatus != null) {
 				map.put("status", orderStatus.getCn());
 			}
-
 			// 收件人信息
 			OrderReceiver orderReceiver = orderReceiverDao.getOrderReceiverByPackageId(orderId);
 			if (orderReceiver != null) {
