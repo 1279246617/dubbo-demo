@@ -10,6 +10,7 @@ import javax.annotation.Resource;
 
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.log4j.Logger;
+import org.springframework.stereotype.Service;
 
 import com.coe.wms.dao.fee.IShipwayTaxDao;
 import com.coe.wms.dao.user.IUserDao;
@@ -38,6 +39,7 @@ import com.coe.wms.util.HttpUtil;
 import com.coe.wms.util.StringUtil;
 import com.coe.wms.util.XmlUtil;
 
+@Service("shipwayTaxService")
 public class ShipwayTaxServiceImpl implements IShipwayTaxService {
 	private static final Logger logger = Logger.getLogger(ShipwayTaxServiceImpl.class);
 

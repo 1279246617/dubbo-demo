@@ -3,7 +3,14 @@ package com.coe.wms.model.fee;
 import java.io.Serializable;
 
 public class ShipwayTax implements Serializable {
-
+	/**
+	 * 仓配订单
+	 */
+	public static final String ORDER_TYPE_STORAGE = "S";
+	/**
+	 * 转运订单
+	 */
+	public static final String ORDER_TYPE_TRANSPORT = "T";
 	/**
 	 * 
 	 */

@@ -171,7 +171,7 @@ public class ShipwayTaxDaoImpl implements IShipwayTaxDao {
 
 	@Override
 	public int updateShipwayTax(ShipwayTax shipwayTax) {
-		String sql = "update w_w_shipway_tax tax_value = ?,tax_currency = ?,tax_time = ?,order_value = ?,order_value_currency = ?,send_is_success = ?,send_count = ? where id=?";
+		String sql = "update w_w_shipway_tax set  tax_value = ?,tax_currency = ?,tax_time = ?,order_value = ?,order_value_currency = ?,send_is_success = ?,send_count = ? where id=?";
 		int count = jdbcTemplate.update(sql, shipwayTax.getTaxValue(), shipwayTax.getTaxCurrency(), shipwayTax.getTaxTime(), shipwayTax.getOrderValue(), shipwayTax.getOrderValueCurrency(), shipwayTax.getSendIsSuccess(), shipwayTax.getSendCount(),
 				shipwayTax.getId());
 		return count;
