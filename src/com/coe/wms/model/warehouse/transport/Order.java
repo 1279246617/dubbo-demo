@@ -35,6 +35,26 @@ public class Order implements Serializable {
 	public static final String TRANSPORT_TYPE_P = "P";
 
 	/**
+	 * 流连
+	 */
+	public static final String TRADE_TYPE_LIULIAN = "LiuLian";
+	/**
+	 * 流连CN
+	 */
+	public static final String TRADE_TYPE_LIULIAN_CN = "流连";
+
+	/**
+	 * 海淘
+	 */
+	public static final String TRADE_TYPE_HAITAO = "HaiTao";
+	public static final String TRADE_TYPE_HAITAO_CN = "海涛";
+	/**
+	 * 嘿客
+	 */
+	public static final String TRADE_TYPE_HEIKE = "HeiKe";
+	public static final String TRADE_TYPE_HEIKE_CN = "嘿客";
+
+	/**
 	 * 主键
 	 */
 	private Long id;
