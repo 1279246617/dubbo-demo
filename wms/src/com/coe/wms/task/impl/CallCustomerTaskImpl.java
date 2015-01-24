@@ -511,7 +511,8 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 	/**
 	 * 回传转运订单审核状态给客户
 	 */
-	@Scheduled(cron = "0 0/10 * * * ? ")
+//	@Scheduled(cron = "0 0/10 * * * ? ")
+	@Scheduled(cron = "0 0/1 * * * ? ")
 	@Override
 	public void sendOrderCheckResultToCustomer() {
 		List<Long> orderIdList = orderDao.findCallbackSendCheckUnSuccessOrderId();
@@ -628,7 +629,8 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 	/**
 	 * 回传转运小包收货给客户
 	 */
-	@Scheduled(cron = "0 0/10 * * * ? ")
+//	@Scheduled(cron = "0 0/10 * * * ? ")
+	@Scheduled(cron = "0 0/1 * * * ? ")
 	@Override
 	public void sendFirstWaybillReceivedToCustomer() {
 		List<Long> firstWaybillIdList = firstWaybillDao.findCallbackUnSuccessFirstWaybillId();
@@ -748,7 +750,8 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 	/**
 	 * 回传转运合包重量给客户
 	 */
-	@Scheduled(cron = "0 0/10 * * * ? ")
+//	@Scheduled(cron = "0 0/10 * * * ? ")
+	@Scheduled(cron = "0 0/1 * * * ? ")
 	@Override
 	public void sendOrderWeightToCustomer() {
 		List<Long> orderIdList = orderDao.findCallbackSendWeightUnSuccessOrderId();
@@ -859,7 +862,8 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 	/**
 	 * 回传转运出库给客户
 	 */
-	@Scheduled(cron = "0 0/15 * * * ? ")
+//	@Scheduled(cron = "0 0/15 * * * ? ")
+	@Scheduled(cron = "0 0/1 * * * ? ")
 	@Override
 	public void sendOrderStatusToCustomer() {
 		List<Long> orderIdList = orderDao.findCallbackSendStatusUnSuccessOrderId();

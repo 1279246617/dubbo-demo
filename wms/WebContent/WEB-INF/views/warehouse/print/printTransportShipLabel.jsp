@@ -13,10 +13,10 @@
 			<!-- 顺丰渠道标签,shipwayCode:SF   --------------------------------------------------------------开始------------------------------------------------------------>
 			<div class="label-100-150 change-page mt_1mm" id="SF">
 				<div style="height:11mm;width:100%; border-bottom:1px solid  #000;" >
-						<div style="width:44mm;float: left;margin-top: 2mm;margin-left: 2mm;">
+						<div style="width:34mm;float: left;margin-top: 2mm;margin-left: 2mm;">
 						<%-- <img src="${baseUrl}/static/img/print/sflogo.png" style="height:7mm;width: 19mm;float: left;"> --%>
 						</div>
-						<div style="width: 8mm;float: left;margin-top: -1.5mm;font-size: 10mm;;">
+						<div style="width: 18mm;float: left;margin-top: 0mm;font-size: 7mm;;">
 							${map.tradeType}
 						</div>
 						<div style="width: 8mm;float: left;margin-top: -1.5mm;font-size: 10mm;;">
