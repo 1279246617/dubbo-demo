@@ -7,7 +7,7 @@ import com.coe.wms.util.Pagination;
 
 public interface ISeatDao {
 
-	public Seat getSeatByCode(Long code);
+	public Seat getSeatByCode(String code);
 
 	public List<Seat> findSeat(Seat seat, Pagination page);
 

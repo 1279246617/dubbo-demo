@@ -231,8 +231,19 @@ public class ShelfServiceImpl implements IShelfService {
 			map.put(Constant.MESSAGE, "请输入商品数量.");
 			return map;
 		}
-		InWarehouseRecord inWarehouseRecord = inWarehouseRecordDao.getInWarehouseRecordById(inWarehouseRecordId);
+		if (seatCode == null) {
+			map.put(Constant.MESSAGE, "请输入货位号码.");
+			return map;
+		}
+		seatCode = seatCode.trim();
+		// 校验货位是否正确
+		Seat seat = seatDao.getSeatByCode(seatCode);
+		if (seat == null) {
+			map.put(Constant.MESSAGE, "货位号码不存在");
+			return map;
+		}
 		// 检查该SKU是否存在入库订单收货中
+		InWarehouseRecord inWarehouseRecord = inWarehouseRecordDao.getInWarehouseRecordById(inWarehouseRecordId);
 		int countInWarehouseItemSkuQuantityByRecordId = inWarehouseRecordItemDao.countInWarehouseItemSkuQuantityByRecordId(inWarehouseRecordId, itemSku);
 		if (countInWarehouseItemSkuQuantityByRecordId <= 0) {
 			map.put(Constant.MESSAGE, "该商品条码在此收货记录未找到.");
@@ -249,6 +260,24 @@ public class ShelfServiceImpl implements IShelfService {
 		if (allQuantity > countInWarehouseItemSkuQuantityByRecordId) {
 			map.put(Constant.MESSAGE, "上架数量不能大于收货数量.");
 			return map;
+		}
+		// 同一个货位必须是同一个商品条码,同一个批次
+		ItemShelfInventory itemShelfInventoryParam = new ItemShelfInventory();
+		itemShelfInventoryParam.setSeatCode(seat.getSeatCode());
+		Map<String, String> seatMoreParam = new HashMap<String, String>();
+		seatMoreParam.put("minQuantity", "1");// 商品数量大于0
+		List<ItemShelfInventory> itemShelfInventoryList = itemShelfInventoryDao.findItemShelfInventory(itemShelfInventoryParam, seatMoreParam, null);
+		if (itemShelfInventoryList != null && itemShelfInventoryList.size() >= 1) {
+			for (ItemShelfInventory itemShelfInventory : itemShelfInventoryList) {
+				if (!StringUtil.isEqual(itemSku, itemShelfInventory.getSku())) {
+					map.put(Constant.MESSAGE, "当前货位已经存在其他商品条码:" + itemShelfInventory.getSku());
+					return map;
+				}
+				if (!StringUtil.isEqual(inWarehouseRecord.getBatchNo(), itemShelfInventory.getBatchNo())) {
+					map.put(Constant.MESSAGE, "当前货位已经存在其他批次的商品.");
+					return map;
+				}
+			}
 		}
 		// 保存新的上架记录
 		OnShelf onShelf = new OnShelf();
