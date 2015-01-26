@@ -1,6 +1,13 @@
 package com.coe.wms.model.warehouse.transport;
 
-public class OrderEventType {
+import java.io.Serializable;
+
+public class OrderEventType implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 791116897324569735L;
 
 	public class OrderEventTypeCode {
 		/**
