@@ -25,11 +25,14 @@ import com.coe.wms.dao.warehouse.transport.IFirstWaybillItemDao;
 import com.coe.wms.dao.warehouse.transport.IFirstWaybillOnShelfDao;
 import com.coe.wms.dao.warehouse.transport.IFirstWaybillStatusDao;
 import com.coe.wms.dao.warehouse.transport.IOrderAdditionalSfDao;
+import com.coe.wms.dao.warehouse.transport.IOrderCirculationsDao;
 import com.coe.wms.dao.warehouse.transport.IOrderDao;
+import com.coe.wms.dao.warehouse.transport.IOrderEventTypeDao;
 import com.coe.wms.dao.warehouse.transport.IOrderPackageDao;
 import com.coe.wms.dao.warehouse.transport.IOrderReceiverDao;
 import com.coe.wms.dao.warehouse.transport.IOrderSenderDao;
 import com.coe.wms.dao.warehouse.transport.IOrderStatusDao;
+import com.coe.wms.dao.warehouse.transport.IOrderTracesDao;
 import com.coe.wms.dao.warehouse.transport.IOutWarehousePackageDao;
 import com.coe.wms.dao.warehouse.transport.IOutWarehousePackageItemDao;
 import com.coe.wms.exception.ServiceException;
@@ -41,11 +44,15 @@ import com.coe.wms.model.warehouse.transport.FirstWaybillItem;
 import com.coe.wms.model.warehouse.transport.FirstWaybillStatus.FirstWaybillStatusCode;
 import com.coe.wms.model.warehouse.transport.Order;
 import com.coe.wms.model.warehouse.transport.OrderAdditionalSf;
+import com.coe.wms.model.warehouse.transport.OrderCirculations;
+import com.coe.wms.model.warehouse.transport.OrderEventType;
+import com.coe.wms.model.warehouse.transport.OrderEventType.OrderEventTypeCode;
 import com.coe.wms.model.warehouse.transport.OrderPackage;
 import com.coe.wms.model.warehouse.transport.OrderPackageStatus.OrderPackageStatusCode;
 import com.coe.wms.model.warehouse.transport.OrderReceiver;
 import com.coe.wms.model.warehouse.transport.OrderSender;
 import com.coe.wms.model.warehouse.transport.OrderStatus.OrderStatusCode;
+import com.coe.wms.model.warehouse.transport.OrderTraces;
 import com.coe.wms.pojo.api.warehouse.Buyer;
 import com.coe.wms.pojo.api.warehouse.ClearanceDetail;
 import com.coe.wms.pojo.api.warehouse.ErrorCode;
@@ -114,6 +121,15 @@ public class TransportInterfaceService1Impl implements ITransportInterfaceServic
 
 	@Resource(name = "orderDao")
 	private IOrderDao orderDao;
+
+	@Resource(name = "orderCirculationsDao")
+	private IOrderCirculationsDao orderCirculationsDao;
+
+	@Resource(name = "orderTracesDao")
+	private IOrderTracesDao orderTracesDao;
+
+	@Resource(name = "orderEventTypeDao")
+	private IOrderEventTypeDao orderEventTypeDao;
 
 	@Resource(name = "orderPackageDao")
 	private IOrderPackageDao orderPackageDao;
@@ -346,10 +362,11 @@ public class TransportInterfaceService1Impl implements ITransportInterfaceServic
 			response.setReasonDesc("客户订单号(tradeOrderId)重复,保存失败");
 			return XmlUtil.toXml(responses);
 		}
+		Long currentTime = System.currentTimeMillis();
 		// 创建大包
 		Order order = new Order();
 		order.setTradeType(tradeType);
-		order.setCreatedTime(System.currentTimeMillis());
+		order.setCreatedTime(currentTime);
 		order.setCustomerReferenceNo(customerReferenceNo);
 		order.setTradeRemark(tradeRemark);
 		order.setStatus(OrderStatusCode.WWC);
@@ -366,6 +383,26 @@ public class TransportInterfaceService1Impl implements ITransportInterfaceServic
 			order.setTransportType(Order.TRANSPORT_TYPE_J);
 		}
 		Long orderId = orderDao.saveOrder(order);// 保存大包,得到大包id
+
+		// 转运订单流转站点
+		OrderCirculations orderCirculations = new OrderCirculations();
+		orderCirculations.setCreatedTime(currentTime);
+		orderCirculations.setCurrentWarehouseId(warehouseId);
+		orderCirculations.setOrderId(orderId);
+		orderCirculations.setUserIdOfCustomer(userIdOfCustomer);
+		orderCirculationsDao.saveOrderCirculations(orderCirculations);
+		// 订单轨迹
+		OrderTraces orderTraces = new OrderTraces();
+		orderTraces.setCreatedTime(currentTime);
+		OrderEventType orderEventType = orderEventTypeDao.findOrderEventTypeByCode(OrderEventTypeCode.EI);
+		orderTraces.setEventType(OrderEventTypeCode.EI);
+		orderTraces.setEvent(orderEventType.getCn());
+		orderTraces.setLocation(warehouse.getCity());
+		orderTraces.setOrderId(orderId);
+		orderTraces.setUserIdOfCustomer(userIdOfCustomer);
+		orderTraces.setWarehouseId(warehouseId);
+		orderTracesDao.saveOrderTraces(orderTraces);
+		
 		// // 顺丰标签附加内容
 		OrderAdditionalSf additionalSf = new OrderAdditionalSf();
 		// 顺丰指定,出货运单号和渠道
@@ -422,7 +459,7 @@ public class TransportInterfaceService1Impl implements ITransportInterfaceServic
 			FirstWaybill firstWaybill = new FirstWaybill();
 			firstWaybill.setOrderId(orderId);
 			firstWaybill.setCarrierCode(logisticsOrder.getCarrierCode());
-			firstWaybill.setCreatedTime(System.currentTimeMillis());
+			firstWaybill.setCreatedTime(currentTime);
 			firstWaybill.setPoNo(logisticsOrder.getPoNo());
 			firstWaybill.setTrackingNo(logisticsOrder.getMailNo());
 			firstWaybill.setStatus(FirstWaybillStatusCode.WWR);

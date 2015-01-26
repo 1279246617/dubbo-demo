@@ -9,7 +9,7 @@ import java.io.Serializable;
  * 
  */
 public class OrderTraces implements Serializable {
-
+	
 	/**
 	 * 
 	 */

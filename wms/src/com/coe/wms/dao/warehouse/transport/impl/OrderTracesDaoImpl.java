@@ -3,6 +3,7 @@ package com.coe.wms.dao.warehouse.transport.impl;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -48,8 +49,16 @@ public class OrderTracesDaoImpl implements IOrderTracesDao {
 				PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 				ps.setLong(1, orderTraces.getOrderId());
 				ps.setLong(2, orderTraces.getUserIdOfCustomer());
-				ps.setLong(3, orderTraces.getUserIdOfOperator());
-				ps.setLong(4, orderTraces.getWarehouseId());
+				if (orderTraces.getUserIdOfOperator() != null) {
+					ps.setLong(3, orderTraces.getUserIdOfOperator());
+				} else {
+					ps.setNull(3, Types.BIGINT);
+				}
+				if (orderTraces.getWarehouseId() != null) {
+					ps.setLong(4, orderTraces.getWarehouseId());
+				} else {
+					ps.setNull(4, Types.BIGINT);
+				}
 				ps.setString(5, orderTraces.getLocation());
 				ps.setString(6, orderTraces.getEvent());
 				ps.setString(7, orderTraces.getEventType());
