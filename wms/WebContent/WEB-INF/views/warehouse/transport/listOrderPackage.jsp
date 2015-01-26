@@ -122,15 +122,15 @@
 	    	 grid = $("#maingrid").ligerGrid({
 	                columns: [
 	                    { display: '客户帐号', name: 'userNameOfCustomer', align: 'center',type:'float',width:'8%'},
-	  		          	{ display: '客户订单号', name: 'customerReferenceNo', align: 'center', type: 'float',width:'12%'},
+	  		          	{ display: '客户订单号', name: 'customerReferenceNo', align: 'center', type: 'float',width:'11%'},
 		                { display: '仓库', name: 'warehouse', align: 'center', type: 'float',width:'7%'},
 		                { display: '状态', name: 'status', align: 'center', type: 'float',width:'8%'},
 		                { display: '到货承运商', name: 'carrierCode', align: 'center', type: 'float',width:'8%'},
 		                { display: '到货跟踪单号', name: 'trackingNo', align: 'center', type: 'float',width:'12%'},
+		                { display: '创建时间', name: 'createdTime', align: 'center', type: 'float',width:'12%'},
 		                { display: '收货时间', name: 'receivedTime', align: 'center', type: 'float',width:'12%'},
 		                { display: '回传收货状态', name: 'callbackSendStatusIsSuccess', align: 'center', type: 'float',width:'8%'},
-		                { display: '创建时间', name: 'createdTime', align: 'center', type: 'float',width:'12%'},
-		                { display: '备注', name: 'remark', align: 'center', type: 'float',width:'12%'}
+		                { display: '备注', name: 'remark', align: 'center', type: 'float',width:'13%'}
 	                ],  
 	                dataAction: 'server',
 	                url: baseUrl+'/warehouse/transport/getOrderPackageData.do',

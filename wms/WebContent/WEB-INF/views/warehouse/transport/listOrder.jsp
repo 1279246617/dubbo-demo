@@ -187,30 +187,22 @@
 		                { display: '转运类型', name: 'transportType', align: 'center', type: 'float',width:'8%'},
 		                { display: '发货渠道', name: 'shipwayCode', align: 'center', type: 'float',width:'8%'},
 		                { display: '发货跟踪单号', name: 'trackingNo', align: 'center', type: 'float',width:'12%'},
-		               	{ display: '小包预览', isSort: false, align: 'center', type: 'float',width:'20%',render: function(row) {
-		            		var skus = "";
-		            		if (!row._editing) {
-		            			skus += '<a href="javascript:listFirstWaybills(' + row.id + ')">'+row.firstWaybills+'</a> ';
-		            		}
-		            		return skus;
+		                { display: '头程运单数量', name: 'firstWayBillQuantity', align: 'center', type: 'float',width:'9%'},
+		               	{ display: '头程运单预览', isSort: false, align: 'center', type: 'float',width:'12%',render: function(row) {
+		               		return '<a href="javascript:listFirstWaybills(' + row.id + ')">'+row.firstWaybills+'</a> ';
 	  		          	}},
-		                { display: '收件人名', name: 'receiverName', align: 'center', type: 'float',width:'8%'},
-		                { display: '收件人街道1', name: 'receiverAddressLine1', align: 'center', type: 'float',width:'12%'},
-		                { display: '收件人街道2', name: 'receiverAddressLine2', align: 'center', type: 'float',width:'8%'},
-		                { display: '收件人县区', name: 'receiverCounty', align: 'center', type: 'float',width:'8%'},
-		                { display: '收件人城市', name: 'receiverCity', align: 'center', type: 'float',width:'8%'},
-		                { display: '收件人州省', name: 'receiverStateOrProvince', align: 'center', type: 'float',width:'8%'},
-		                { display: '收件人国家', name: 'receiverCountryName', align: 'center', type: 'float',width:'8%'},
-		                { display: '收件人邮编', name: 'receiverPostalCode', align: 'center', type: 'float',width:'8%'},
-		                { display: '收件人手机', name: 'receiverPhoneNumber', align: 'center', type: 'float',width:'8%'},
-		                { display: '收件人电话', name: 'receiverMobileNumber', align: 'center', type: 'float',width:'8%'},
-		                { display: '发件人名', name: 'senderName', align: 'center', type: 'float',width:'8%'},
-		                { display: '备注', name: 'remark', align: 'center', type: 'float',width:'15%'},
+	  		          	{ display: '创建时间', name: 'createdTime', align: 'center', type: 'float',width:'12%'},
+	  		         	{ display: '收件人名', isSort: false, align: 'center', type: 'float',width:'8%',render: function(row) {
+	  		          		return '<a href="javascript:listOrderReceiver(' + row.id + ')">'+row.receiverName+'</a> ';
+	  		          	}},
+		  		      	{ display: '发件人名', isSort: false, align: 'center', type: 'float',width:'8%',render: function(row) {
+	  		          		return '<a href="javascript:listOrderSender(' + row.id + ')">'+row.senderName+'</a> ';
+	  		          	}},
 		                { display: '回传审核状态', name: 'callbackSendCheckIsSuccess', align: 'center', type: 'float',width:'8%'},
+		                { display: '仓库审核结果', name: 'checkResult', align: 'center', type: 'float',width:'9%'},
 		                { display: '回传称重状态', name: 'callbackSendWeightIsSuccess', align: 'center', type: 'float',width:'8%'},
 		                { display: '回传出库状态', name: 'callbackSendStatusIsSuccess', align: 'center', type: 'float',width:'8%'},
-		                { display: '仓库审核', name: 'checkResult', align: 'center', type: 'float',width:'9%'},
-		                { display: '创建时间', name: 'createdTime', align: 'center', type: 'float',width:'12%'},
+		                { display: '备注', name: 'remark', align: 'center', type: 'float',width:'13%'},
 		                {display: '操作',isSort: false,width: '11%',render: function(row) {
 		            		var  h = '<a href="javascript:checkSingleOrder(' + row.id + ')">审核</a> &nbsp;';
 		            		h += '<a href="javascript:printSingleOrder(' + row.id + ')">捡货单</a>&nbsp; ';

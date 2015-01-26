@@ -249,7 +249,7 @@ public class OrderServiceImpl implements IOrderService {
 				map.put("status", orderStatus.getCn());
 			}
 			// 收件人信息
-			OrderReceiver orderReceiver = orderReceiverDao.getOrderReceiverByPackageId(orderId);
+			OrderReceiver orderReceiver = orderReceiverDao.getOrderReceiverByOrderId(orderId);
 			if (orderReceiver != null) {
 				map.put("receiverAddressLine1", orderReceiver.getAddressLine1());
 				map.put("receiverAddressLine2", orderReceiver.getAddressLine2());
@@ -268,7 +268,7 @@ public class OrderServiceImpl implements IOrderService {
 				map.put("receiverStateOrProvince", orderReceiver.getStateOrProvince());
 			}
 			// 发件人
-			OrderSender orderSender = orderSenderDao.getOrderSenderByPackageId(orderId);
+			OrderSender orderSender = orderSenderDao.getOrderSenderByOrderId(orderId);
 			if (orderSender != null) {
 				map.put("senderName", orderSender.getName());
 			}
@@ -277,9 +277,11 @@ public class OrderServiceImpl implements IOrderService {
 			FirstWaybill firstWaybillParam = new FirstWaybill();
 			firstWaybillParam.setOrderId(orderId);
 			List<FirstWaybill> firstWaybillList = firstWaybillDao.findFirstWaybill(firstWaybillParam, null, null);
+			int firstWayBillQuantity = firstWaybillList.size();
 			for (FirstWaybill firstWaybill : firstWaybillList) {
 				firstWaybills += firstWaybill.getTrackingNo() + " ; ";
 			}
+			map.put("firstWayBillQuantity", firstWayBillQuantity);
 			map.put("firstWaybills", firstWaybills);
 			list.add(map);
 		}
@@ -809,8 +811,8 @@ public class OrderServiceImpl implements IOrderService {
 			resultMap.put(Constant.MESSAGE, "该订单已有跟踪单号,申请失效");
 			return resultMap;
 		}
-		OrderReceiver orderReceiver = orderReceiverDao.getOrderReceiverByPackageId(orderId);
-		OrderSender orderSender = orderSenderDao.getOrderSenderByPackageId(orderId);
+		OrderReceiver orderReceiver = orderReceiverDao.getOrderReceiverByOrderId(orderId);
+		OrderSender orderSender = orderSenderDao.getOrderSenderByOrderId(orderId);
 		// 出货渠道是ETK
 		if (StringUtil.isEqual(order.getShipwayCode(), ShipwayCode.ETK)) {
 			resultMap = applyEtkTrackingNo(order, orderReceiver, orderSender);
@@ -934,5 +936,29 @@ public class OrderServiceImpl implements IOrderService {
 		map.put(Constant.STATUS, Constant.FAIL);
 		map.put(Constant.MESSAGE, "未支持对顺丰渠道申请单号");
 		return map;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.coe.wms.service.transport.IOrderService#getOrderReceiverByOrderId
+	 * (java.lang.Long)
+	 */
+	@Override
+	public OrderReceiver getOrderReceiverByOrderId(Long orderId) throws ServiceException {
+		return orderReceiverDao.getOrderReceiverByOrderId(orderId);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.coe.wms.service.transport.IOrderService#getOrderSenderByOrderId(java
+	 * .lang.Long)
+	 */
+	@Override
+	public OrderSender getOrderSenderByOrderId(Long orderId) throws ServiceException {
+		return orderSenderDao.getOrderSenderByOrderId(orderId);
 	}
 }

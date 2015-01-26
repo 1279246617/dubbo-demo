@@ -97,14 +97,14 @@
 										</span>
 									</td>
 								</tr>
-								<tr>
+							</c:forEach>
+							<tr>
 									<td colspan="7" style="height:8mm;text-align: right;">
 										<span style="margin-right: 5mm;">
 											总计:${map.totalPrice}元
 										</span>
 									</td>
-								</tr>
-							</c:forEach>
+							</tr>
 						</table>
 					</div>
 					<!-- 第七行 -->

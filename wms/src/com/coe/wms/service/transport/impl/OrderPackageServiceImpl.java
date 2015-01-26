@@ -75,15 +75,15 @@ public class OrderPackageServiceImpl implements IOrderPackageService {
 	public Pagination getOrderPackageData(com.coe.wms.model.warehouse.transport.OrderPackage param, Map<String, String> moreParam, Pagination pagination) {
 		List<com.coe.wms.model.warehouse.transport.OrderPackage> orderList = orderPackageDao.findOrderPackage(param, moreParam, pagination);
 		List<Object> list = new ArrayList<Object>();
-		for (com.coe.wms.model.warehouse.transport.OrderPackage order : orderList) {
+		for (com.coe.wms.model.warehouse.transport.OrderPackage orderPackage : orderList) {
 			FirstWaybill firstWaybillParam = new FirstWaybill();
-			firstWaybillParam.setOrderPackageId(order.getId());
+			firstWaybillParam.setOrderPackageId(orderPackage.getId());
 			List<FirstWaybill> firstWaybillList = firstWaybillDao.findFirstWaybill(firstWaybillParam, null, null);
 			Map<String, Object> map = new HashMap<String, Object>();
-			Long orderId = order.getId();
+			Long orderId = orderPackage.getId();
 			map.put("id", orderId);
-			if (order.getCreatedTime() != null) {
-				map.put("createdTime", DateUtil.dateConvertString(new Date(order.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss));
+			if (orderPackage.getCreatedTime() != null) {
+				map.put("createdTime", DateUtil.dateConvertString(new Date(orderPackage.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss));
 			}
 			if (firstWaybillList != null && firstWaybillList.size() >= 1) {
 				FirstWaybill firstWaybill = firstWaybillList.get(0);
@@ -91,6 +91,7 @@ public class OrderPackageServiceImpl implements IOrderPackageService {
 					map.put("receivedTime", DateUtil.dateConvertString(new Date(firstWaybill.getReceivedTime()), DateUtil.yyyy_MM_ddHHmmss));
 				}
 				map.put("carrierCode", firstWaybill.getCarrierCode());
+				map.put("trackingNo", firstWaybill.getTrackingNo());
 				// 回传收货
 				if (StringUtil.isEqual(firstWaybill.getCallbackIsSuccess(), Constant.Y)) {
 					map.put("callbackSendStatusIsSuccess", "成功");
@@ -103,18 +104,18 @@ public class OrderPackageServiceImpl implements IOrderPackageService {
 				}
 			}
 			// 查询用户名
-			User user = userDao.getUserById(order.getUserIdOfCustomer());
+			User user = userDao.getUserById(orderPackage.getUserIdOfCustomer());
 			map.put("userNameOfCustomer", user.getLoginName());
-			map.put("customerReferenceNo", order.getCustomerReferenceNo());
-			if (NumberUtil.greaterThanZero(order.getWarehouseId())) {
-				Warehouse warehouse = warehouseDao.getWarehouseById(order.getWarehouseId());
+			map.put("customerReferenceNo", orderPackage.getCustomerReferenceNo());
+			if (NumberUtil.greaterThanZero(orderPackage.getWarehouseId())) {
+				Warehouse warehouse = warehouseDao.getWarehouseById(orderPackage.getWarehouseId());
 				if (warehouse != null) {
 					map.put("warehouse", warehouse.getWarehouseName());
 				}
 			}
-			map.put("remark", order.getRemark());
-			map.put("trackingNo", order.getTrackingNo());
-			OrderPackageStatus orderStatus = orderPackageStatusDao.findOrderPackageStatusByCode(order.getStatus());
+			map.put("remark", orderPackage.getRemark());
+
+			OrderPackageStatus orderStatus = orderPackageStatusDao.findOrderPackageStatusByCode(orderPackage.getStatus());
 			if (orderStatus != null) {
 				map.put("status", orderStatus.getCn());
 			}

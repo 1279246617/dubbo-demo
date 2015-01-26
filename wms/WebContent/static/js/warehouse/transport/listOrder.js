@@ -134,7 +134,7 @@ function listFirstWaybills(orderId){
 	contentArr.push('<table class="table table-condensed" style="width:749px">');
 	$.ajax({ 
         type : "post", 
-        url :baseUrl + '/warehouse/transport/getFirstWaybillItemByorderId.do', 
+        url :baseUrl + '/warehouse/transport/getFirstWaybillItemByOrderId.do', 
         data : "orderId="+orderId, 
         async : false, 
         success : function(msg){ 
@@ -175,6 +175,111 @@ function listFirstWaybills(orderId){
   		title: '转运订单小包详情',
   		width: 820,
   		height: 360,
+  		content: contentHtml,
+  		button: [{
+  			name: '关闭',
+  			callback: function() {
+				
+  			}
+  		}]
+  	})
+}
+
+
+function listOrderReceiver(orderId){
+	var contentArr = [];
+	contentArr.push('<div style="height:340px;overflow:auto; ">');
+	contentArr.push('<table class="table" style="width:749px">');
+	$.ajax({ 
+        type : "post", 
+        url :baseUrl + '/warehouse/transport/getOrderReceiverByOrderId.do', 
+        data : "orderId="+orderId, 
+        async : false, 
+        success : function(msg){ 
+        	msg = eval("(" + msg + ")");
+        	var name = (msg.name == undefined?"": msg.name);
+        	var addressLine1 = (msg.addressLine1 == undefined?"": msg.addressLine1);
+        	var addressLine2 = (msg.addressLine2 == undefined?"": msg.addressLine2);
+        	var county = (msg.county == undefined?"": msg.county);
+        	var city = (msg.city == undefined?"": msg.city);
+        	var stateOrProvince = (msg.stateOrProvince == undefined?"": msg.stateOrProvince);
+        	var countryName = (msg.countryName == undefined?"": msg.countryName);
+        	var postalCode = (msg.postalCode == undefined?"": msg.postalCode);
+        	var mobileNumber = (msg.mobileNumber == undefined?"": msg.mobileNumber);
+        	var phoneNumber = (msg.phoneNumber == undefined?"": msg.phoneNumber);
+        	contentArr.push('<tr><th>名字</th> <td>'+name+'</td></tr>');
+        	contentArr.push('<tr><th>街道</th> <td>'+addressLine1+' '+addressLine2+'</td></tr>');
+        	contentArr.push('<tr><th>县</th> <td>'+county+'</td></tr>');
+        	contentArr.push('<tr><th>城市</th> <td>'+city+'</td></tr>');
+        	contentArr.push('<tr><th>省/州</th> <td>'+stateOrProvince+'</td></tr>');
+        	contentArr.push('<tr><th>国家</th> <td>'+countryName+'</td></tr>');
+        	contentArr.push('<tr><th>邮编</th> <td>'+postalCode+'</td></tr>');
+        	contentArr.push('<tr><th>手机号码</th> <td>'+mobileNumber+'</td></tr>');
+        	contentArr.push('<tr><th>电话号码</th> <td>'+phoneNumber+'</td></tr>');
+        } 
+   	});
+    contentArr.push('</table>');
+    contentArr.push('</div>');
+    var contentHtml = contentArr.join('');
+	$.dialog({
+  		lock: true,
+  		max: false,
+  		min: false,
+  		title: '转运订单收件人',
+  		width: 750,
+  		height: 350,
+  		content: contentHtml,
+  		button: [{
+  			name: '关闭',
+  			callback: function() {
+				
+  			}
+  		}]
+  	})
+}
+
+function listOrderSender(orderId){
+	var contentArr = [];
+	contentArr.push('<div style="height:340px;overflow:auto; ">');
+	contentArr.push('<table class="table" style="width:749px">');
+	$.ajax({ 
+        type : "post", 
+        url :baseUrl + '/warehouse/storage/getOrderSenderByOrderId.do', 
+        data : "orderId="+orderId, 
+        async : false, 
+        success : function(msg){ 
+        	msg = eval("(" + msg + ")");
+        	var name = (msg.name == undefined?"": msg.name);
+        	var addressLine1 = (msg.addressLine1 == undefined?"": msg.addressLine1);
+        	var addressLine2 = (msg.addressLine2 == undefined?"": msg.addressLine2);
+        	var county = (msg.county == undefined?"": msg.county);
+        	var city = (msg.city == undefined?"": msg.city);
+        	var stateOrProvince = (msg.stateOrProvince == undefined?"": msg.stateOrProvince);
+        	var countryName = (msg.countryName == undefined?"": msg.countryName);
+        	var postalCode = (msg.postalCode == undefined?"": msg.postalCode);
+        	var mobileNumber = (msg.mobileNumber == undefined?"": msg.mobileNumber);
+        	var phoneNumber = (msg.phoneNumber == undefined?"": msg.phoneNumber);
+        	contentArr.push('<tr><th>名字</th> <td>'+name+'</td></tr>');
+        	contentArr.push('<tr><th>街道</th> <td>'+addressLine1+' '+addressLine2+'</td></tr>');
+        	contentArr.push('<tr><th>县</th> <td>'+county+'</td></tr>');
+        	contentArr.push('<tr><th>城市</th> <td>'+city+'</td></tr>');
+        	contentArr.push('<tr><th>省/州</th> <td>'+stateOrProvince+'</td></tr>');
+        	contentArr.push('<tr><th>国家</th> <td>'+countryName+'</td></tr>');
+        	contentArr.push('<tr><th>邮编</th> <td>'+postalCode+'</td></tr>');
+        	contentArr.push('<tr><th>手机号码</th> <td>'+mobileNumber+'</td></tr>');
+        	contentArr.push('<tr><th>电话号码</th> <td>'+phoneNumber+'</td></tr>');
+        } 
+   	});
+    contentArr.push('</table>');
+    contentArr.push('</div>');
+    var contentHtml = contentArr.join('');
+	$.dialog({
+  		lock: true,
+  		max: false,
+  		min: false,
+  		title: '转运订单发件人',
+  		width: 750,
+  		height: 350,
   		content: contentHtml,
   		button: [{
   			name: '关闭',
