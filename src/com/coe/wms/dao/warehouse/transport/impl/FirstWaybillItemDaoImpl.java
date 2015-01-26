@@ -160,7 +160,7 @@ public class FirstWaybillItemDaoImpl implements IFirstWaybillItemDao {
 	/**
 	 * 查询入库订单
 	 * 
-	 * 参数一律使用实体类加Map .
+	 * 
 	 */
 	@Override
 	public List<FirstWaybillItem> findFirstWaybillItem(FirstWaybillItem FirstWaybillItem, Map<String, String> moreParam, Pagination page) {

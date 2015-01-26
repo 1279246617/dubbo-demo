@@ -150,7 +150,7 @@ public class OrderSenderDaoImpl implements IOrderSenderDao {
 	/**
 	 * 查询出库订单发件人
 	 * 
-	 * 参数一律使用实体类加Map .
+	 * 
 	 */
 	@Override
 	public List<OrderSender> findOrderSender(OrderSender orderSender, Map<String, String> moreParam, Pagination page) {

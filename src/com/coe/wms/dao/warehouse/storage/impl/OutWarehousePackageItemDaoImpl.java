@@ -79,7 +79,7 @@ public class OutWarehousePackageItemDaoImpl implements IOutWarehousePackageItemD
 	/**
 	 * 查询入库订单
 	 * 
-	 * 参数一律使用实体类加Map .
+	 * 
 	 */
 	@Override
 	public List<OutWarehousePackageItem> findOutWarehousePackageItem(OutWarehousePackageItem outWarehouseShipping, Map<String, String> moreParam, Pagination page) {
