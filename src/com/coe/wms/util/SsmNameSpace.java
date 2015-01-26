@@ -59,4 +59,9 @@ public class SsmNameSpace {
 	 * 报表类型
 	 */
 	public static final String REPORT_TYPE = "REPORT_TYPE";
+	/**
+	 * 订单轨迹类型
+	 */
+	public static final String ORDER_EVENT_TYPE = "ORDER_EVENT_TYPE";
+
 }

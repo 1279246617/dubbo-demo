@@ -3,6 +3,7 @@ package com.coe.wms.dao.warehouse.transport.impl;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -47,8 +48,16 @@ public class OrderCirculationsDaoImpl implements IOrderCirculationsDao {
 				PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 				ps.setLong(1, orderCirculations.getOrderId());
 				ps.setLong(2, orderCirculations.getCurrentWarehouseId());
-				ps.setLong(3, orderCirculations.getFromWarehouseId());
-				ps.setLong(4, orderCirculations.getToWarehouseId());
+				if (orderCirculations.getFromWarehouseId() != null) {
+					ps.setLong(3, orderCirculations.getFromWarehouseId());
+				} else {
+					ps.setNull(3, Types.BIGINT);
+				}
+				if (orderCirculations.getToWarehouseId() != null) {
+					ps.setLong(4, orderCirculations.getToWarehouseId());
+				} else {
+					ps.setNull(4, Types.BIGINT);
+				}
 				ps.setLong(5, orderCirculations.getUserIdOfCustomer());
 				ps.setLong(6, orderCirculations.getCreatedTime());
 				return ps;
@@ -75,7 +84,7 @@ public class OrderCirculationsDaoImpl implements IOrderCirculationsDao {
 	@Override
 	public List<OrderCirculations> findOrderCirculations(OrderCirculations orderCirculations, Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select id,order_id,current_warehouse_id,from_warehouse_id,to_warehouse_id,user_id_of_customer,created_time from w_t_order_circulations from w_t_order_circulations where 1=1 ");
+		sb.append("select id,order_id,current_warehouse_id,from_warehouse_id,to_warehouse_id,user_id_of_customer,created_time   from w_t_order_circulations where 1=1 ");
 		if (orderCirculations != null) {
 			if (orderCirculations.getId() != null) {
 				sb.append(" and id = " + orderCirculations.getId());

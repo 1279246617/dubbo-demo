@@ -148,6 +148,7 @@ public class Warehouse {
 			logger.warn("eventType:" + eventType + "  responseXml:" + responseXml);
 			return responseXml;
 		} catch (Exception e) {
+			e.printStackTrace();
 			Responses responses = new Responses();
 			List<Response> responseItems = new ArrayList<Response>();
 
