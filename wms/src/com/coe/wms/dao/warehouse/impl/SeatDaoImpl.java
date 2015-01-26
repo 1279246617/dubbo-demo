@@ -32,9 +32,9 @@ public class SeatDaoImpl implements ISeatDao {
 
 	@Override
 	@DataSource(DataSourceCode.WMS)
-	public Seat getSeatByCode(Long code) {
+	public Seat getSeatByCode(String code) {
 		String sql = "select id,warehouse_id,shelf_code,seat_code,remark from w_w_seat where seat_code = ?";
-		List<Seat> seatList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(Seat.class));
+		List<Seat> seatList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(Seat.class), code);
 		if (seatList.size() > 0) {
 			return seatList.get(0);
 		}
