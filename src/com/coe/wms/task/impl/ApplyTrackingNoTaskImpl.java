@@ -129,8 +129,8 @@ public class ApplyTrackingNoTaskImpl implements IApplyTrackingNoTask {
 		for (int i = 0; i < orderIds.size(); i++) {
 			Long orderId = orderIds.get(i);
 			Order order = orderDao.getOrderById(orderId);
-			OrderReceiver orderReceiver = orderReceiverDao.getOrderReceiverByPackageId(orderId);
-			OrderSender orderSender = orderSenderDao.getOrderSenderByPackageId(orderId);
+			OrderReceiver orderReceiver = orderReceiverDao.getOrderReceiverByOrderId(orderId);
+			OrderSender orderSender = orderSenderDao.getOrderSenderByOrderId(orderId);
 			// 出货渠道是ETK
 			if (StringUtil.isEqual(order.getShipwayCode(), ShipwayCode.ETK)) {
 				com.coe.etk.api.request.Order apiOrder = new com.coe.etk.api.request.Order();

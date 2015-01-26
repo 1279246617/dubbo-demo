@@ -20,9 +20,9 @@
 </head>
 <body>
 	  <div class="toolbar1">
-           <form action="${baseUrl}/warehouse/transport/getOrderPackageData.do" id="searchform" name="searchform" method="post">
+           <form action="${baseUrl}/warehouse/storage/getOutWarehouseOrderData.do" id="searchform" name="searchform" method="post">
                <div class="pull-right searchContent">
-               		<span class="pull-left" style="width:120px;">
+               		<span class="pull-left" style="width:125px;">
                			仓库
                			<select style="width:80px;" id="warehouseId" name="warehouseId">
                				<option></option>
@@ -33,13 +33,13 @@
 				       		</c:forEach>
 						</select>
                		</span>
-               		<span class="pull-left" style="width:120px;">
-               			状态
-               			<select style="width:80px;" id="status" name="status">
+               		<span class="pull-left" style="width:145px;">
+               			运输方式
+               			<select style="width:80px;" id="shipway" name="shipway">
                				<option></option>
-							<c:forEach items="${orderPackageStatusList}" var="status" >
-				       	 		<option value="<c:out value='${status.code}'/>">
-				       	 			<c:out value="${status.cn}"/>
+							<c:forEach items="${shipwayList}" var="shipway" >
+				       	 		<option value="<c:out value='${shipway.code}'/>">
+				       	 			<c:out value="${shipway.cn}"/>
 				       		 	</option>
 				       		 </c:forEach>
 						</select>
@@ -48,18 +48,19 @@
                			客户
                			<input type="text" name="userLoginName" data-provide="typeahead"  id="userLoginName" style="width:85px;" title="请输入客户登录名" />
                		</span>
+               		
 					<span class="pull-left" style="width:170px;">
 						客户订单号
 						<input type="text"  name="customerReferenceNo"  id="customerReferenceNo"   style="width:90px;"/>
+						<input type="text"  name="nos"  id="nos"   style="display:none;"/>
+						<input type="text"  name="noType"  id="noType"   style="display:none;"/>
 					</span>
-               		<span class="pull-left" style="width:155px;">
-               			跟踪单号
-               			<input type="text" name="trackingNo"   id="trackingNo" style="width:90px;" title="请输入到货跟踪单号" />
-               		</span>
+               		
                		<span class="pull-left" style="width:175px;">
                			创建时间
 	               		<input type="text"   style="width:120px;" name="createdTimeStart" id="createdTimeStart" title="起始创建时间">
                		</span>
+               		
                		<span class="pull-left" style="width:170px;">
                			至	
                			<input type="text"   style="width:120px;" name="createdTimeEnd"  id="createdTimeEnd"  title="终止创建时间">
@@ -68,13 +69,49 @@
                			<a class="btn btn-primary btn-small" id="btn_search"><i class="icon-search icon-white"></i>搜索</a>
                			<input style=" visibility:hidden;">
                		</span>
+               		<span class="pull-left" style="width:75px;">
+               			<a class="btn btn-primary btn-small" id="advancedSearch"><i class="icon-search icon-white"></i>单号搜索</a>
+               			<input style=" visibility:hidden;">
+               		</span>
                </div>
+               
+               <div class="pull-left">
+               		<span class="pull-left" style="width:105px;">
+			       		<a class="btn btn-primary btn-small" onclick="exportOrder('')" title="导出单品订单">
+			           		 <i class="icon-file"></i>导出单品订单
+			       	 	</a>
+			       	 	<input style=" visibility:hidden;">
+		       	 	</span>
+               		<span class="pull-left" style="width:82px;">
+			       		<a class="btn btn-primary btn-small" onclick="applyTrackingNo()" title="申请出库跟踪单号">
+			           		 <i class="icon-folder-open"></i>申请单号
+			       	 	</a>
+			       	 	<input style=" visibility:hidden;">
+		       	 	</span>
+		       	 	<span class="pull-left" style="width:95px;">
+			       		<a class="btn btn-primary btn-small" onclick="printWaitPrintOrder()" title="打印捡货单">
+			           		 <i class="icon-folder-open"></i>打印捡货单
+			       	 	</a>
+			       	 	<input style=" visibility:hidden;">
+		       	 	</span>
+		       	 	<input type="text" name="trackingNoIsNull" id="trackingNoIsNull" style="display:none;">
+		       	 	<span class="pull-left" style="width:85px;">
+			       		<a class="btn btn-primary btn-small"  title="显示所有缺少跟踪单号的订单">
+							<input type="checkbox"  style="margin-bottom: 0px;margin-top: 0px;"onclick="clickTrackingNoCheckBox()" id="trackingNoCheckBox" name="trackingNoCheckBox">无跟踪单号				       			
+			       	 	</a>
+			       	 	<input style=" visibility:hidden;">
+		       	 	</span>
+		       	 	
+		    	</div>    
            </form>
 	</div>
 	<div id="maingrid" class="pull-left" style="width:100%;"></div>
 	
+	
 	<script type="text/javascript" src="${baseUrl}/static/jquery/jquery.js"></script>
 	<script type="text/javascript" src="${baseUrl}/static/bootstrap/bootstrap-typeahead.js"></script>
+    	
+   	<script type="text/javascript" src="${baseUrl}/static/js/warehouse/listOutWarehouseOrder.js"></script>
     <script type="text/javascript">
  		var baseUrl = "${baseUrl}";
    		$(function(){
@@ -113,27 +150,60 @@
    			
    			//btn_search
    			$("#btn_search").click(function(){
+   				$("#noType").val("");//清空高级搜索隐藏框的内容
+   				$("#nos").val("");
+   				
+   				$("#trackingNoIsNull").val("N");
+	   			$("#trackingNoCheckBox").removeAttr("checked");
+	   			
    				btnSearch("#searchform",grid);
    			});
+   			//高级搜索
+   			$("#advancedSearch").click(function(){
+
+   				$("#trackingNoIsNull").val("N");
+	   			$("#trackingNoCheckBox").removeAttr("checked");
+	   			
+   				advancedSearch();
+   			});
+   			
    		});
    		  
    	 	 var grid = null;
 	     function initGrid() {
 	    	 grid = $("#maingrid").ligerGrid({
 	                columns: [
-	                    { display: '客户帐号', name: 'userNameOfCustomer', align: 'center',type:'float',width:'8%'},
+	                    { display: '客户帐号', name: 'userNameOfCustomer', align: 'center',type:'float',width:'9%'},
 	  		          	{ display: '客户订单号', name: 'customerReferenceNo', align: 'center', type: 'float',width:'11%'},
-		                { display: '仓库', name: 'warehouse', align: 'center', type: 'float',width:'7%'},
-		                { display: '状态', name: 'status', align: 'center', type: 'float',width:'8%'},
-		                { display: '到货承运商', name: 'carrierCode', align: 'center', type: 'float',width:'8%'},
-		                { display: '到货跟踪单号', name: 'trackingNo', align: 'center', type: 'float',width:'12%'},
-		                { display: '创建时间', name: 'createdTime', align: 'center', type: 'float',width:'12%'},
-		                { display: '收货时间', name: 'receivedTime', align: 'center', type: 'float',width:'12%'},
-		                { display: '回传收货状态', name: 'callbackSendStatusIsSuccess', align: 'center', type: 'float',width:'8%'},
-		                { display: '备注', name: 'remark', align: 'center', type: 'float',width:'13%'}
+		                { display: '仓库', name: 'warehouse', align: 'center', type: 'float',width:'8%'},
+		                { display: '出库类型', name: 'orderType', align: 'center', type: 'float',width:'7%'},
+		                { display: '状态', name: 'status', align: 'center', type: 'float',width:'7%'},
+		                { display: '发货渠道', name: 'shipwayCode', align: 'center', type: 'float',width:'8%'},
+		                { display: '跟踪单号', name: 'trackingNo', align: 'center', type: 'float',width:'12%'},
+		                { display: '条码数/商品数', name: 'bpQuantity', align: 'center', type: 'float',width:'9%'},
+		                { display: '商品预览', isSort: false, align: 'center', type: 'float',width:'14%',render: function(row) {
+		            		var skus = "";
+		            		if (!row._editing) {
+		            			skus += '<a href="javascript:listOutWarehouseOrderItem(' + row.id + ')">'+row.items+'</a> ';
+		            		}
+		            		return skus;
+	  		          	}},
+	  		            { display: '创建时间', name: 'createdTime', align: 'center', type: 'float',width:'12%'},
+	  		          	{ display: '收件人名', isSort: false, align: 'center', type: 'float',width:'10%',render: function(row) {
+	  		          		return '<a href="javascript:listOutWarehouseOrderReceiver(' + row.id + ')">'+row.receiverName+'</a> ';
+	  		          	}},
+	  		          	{ display: '发件人名', isSort: false, align: 'center', type: 'float',width:'10%',render: function(row) {
+	  		          		return '<a href="javascript:listOutWarehouseOrderSender(' + row.id + ')">'+row.senderName+'</a> ';
+	  		          	}},
+		                { display: '备注', name: 'remark', align: 'center', type: 'float',width:'10%'},
+		                {display: '操作',isSort: false,width: '9%',render: function(row) {
+		            		var  h = '<a href="javascript:printSinleOrder(' + row.id + ')">打印捡货单</a> ';
+		            		return h;
+		            	}
+		            }
 	                ],  
 	                dataAction: 'server',
-	                url: baseUrl+'/warehouse/transport/getOrderPackageData.do',
+	                url: baseUrl+'/warehouse/storage/getOutWarehouseOrderData.do?status=WPP',
 	                pageSize: 100, 
 	                pageSizeOptions:[50,100,150,200,500],
 	                usePager: 'true',
@@ -141,7 +211,7 @@
 	                sortOrder: 'desc',
 	                width: '100%',
 	                height: '99%',
-	                checkbox: false,
+	                checkbox: true,
 	                rownumbers:true,
 	                alternatingRow:true,
 	                minColToggle:20,
@@ -151,13 +221,18 @@
 	                enabledSort:false
 	            });
 	        };		
+	        
+	        
    	</script>
+   
    	
 	<script type="text/javascript" src="${baseUrl}/static/jquery/jquery.showMessage.js"></script>
 	<script type="text/javascript" src="${baseUrl}/static/ligerui/ligerUI/js/core/base.js"></script>
 	<script type="text/javascript" src="${baseUrl}/static/ligerui/ligerUI/js/plugins/ligeruiPatch.js"></script>
+	
 	<script type="text/javascript" src="${baseUrl}/static/lhgdialog/prettify/prettify.js"></script>
 	<script type="text/javascript" src="${baseUrl}/static/lhgdialog/prettify/lhgdialog.js"></script>
+	
 	<script type="text/javascript" src="${baseUrl}/static/calendar/lhgcalendar.min.js"></script>
 	<script type="text/javascript" src="${baseUrl}/static/calendar/prettify.js"></script>
 	<script type="text/javascript" src="${baseUrl}/static/ligerui/ligerUI/js/ligerui.all.js"></script>

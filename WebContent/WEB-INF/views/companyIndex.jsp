@@ -76,6 +76,7 @@
 		              		<li><a href="#${baseUrl}/warehouse/storage/listOutWarehouseOrder.do" tab_id="findOutWarehouseOrder"><i class="icon-list"></i><span class="hidden-tablet">出库订单</span></a></li>
 		              		<!-- 待审核出库订单,只显示未审核出库订单,方便审核的人快速操作 -->
 		              		<li><a href=#${baseUrl}/warehouse/storage/listWaitCheckOutWarehouseOrder.do  tab_id="waitCheckOutWarehouseOrder"><i class="icon-eye-open"></i><span class="hidden-tablet">待审核出库订单</span></a></li>
+		              		<li><a href=#${baseUrl}/warehouse/storage/listWaitPrintOutWarehouseOrder.do  tab_id="waitPrintOutWarehouseOrder"><i class="icon-print"></i><span class="hidden-tablet">待打印捡货订单</span></a></li>
 		                </ul>
 		                <div class="sep">
 		                	<div style="font-weight: bold;color: #006400;margin:5px 0px  0px  9px;  ">

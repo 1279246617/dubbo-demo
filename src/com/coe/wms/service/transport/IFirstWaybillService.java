@@ -40,6 +40,7 @@ public interface IFirstWaybillService {
 	public Pagination getFirstWaybillOnShelfData(FirstWaybillOnShelf param, Map<String, String> moreParam, Pagination page) throws ServiceException;
 
 	public List<Map<String, Object>> getFirstWaybillItems(Long orderId) throws ServiceException;
+	
 
 	public List<FirstWaybillItem> getFirstWaybillItemsByFirstWaybillId(Long firstWaybillId) throws ServiceException;
 

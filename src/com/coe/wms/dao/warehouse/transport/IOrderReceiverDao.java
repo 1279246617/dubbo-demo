@@ -16,5 +16,5 @@ public interface IOrderReceiverDao {
 
 	public List<OrderReceiver> findOrderReceiver(OrderReceiver order, Map<String, String> moreParam, Pagination page);
 
-	public OrderReceiver getOrderReceiverByPackageId(Long orderId);
+	public OrderReceiver getOrderReceiverByOrderId(Long orderId);
 }

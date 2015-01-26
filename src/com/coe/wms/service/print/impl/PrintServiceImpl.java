@@ -427,8 +427,8 @@ public class PrintServiceImpl implements IPrintService {
 				|| StringUtil.isEqual(order.getStatus(), OrderStatusCode.WRG) || StringUtil.isEqual(order.getStatus(), OrderStatusCode.WRP)) {
 			return null;
 		}
-		OrderReceiver receiver = orderReceiverDao.getOrderReceiverByPackageId(orderId);
-		OrderSender sender = orderSenderDao.getOrderSenderByPackageId(orderId);
+		OrderReceiver receiver = orderReceiverDao.getOrderReceiverByOrderId(orderId);
+		OrderSender sender = orderSenderDao.getOrderSenderByOrderId(orderId);
 		FirstWaybill firstWaybillParam = new FirstWaybill();
 		firstWaybillParam.setOrderId(orderId);
 		OrderAdditionalSf additionalSf = orderAdditionalSfDao.getOrderAdditionalSfByOrderId(orderId);
@@ -542,7 +542,7 @@ public class PrintServiceImpl implements IPrintService {
 		// 修改状态到等待称重打单
 		orderDao.updateOrderStatus(orderId, OrderStatusCode.WWW);
 
-		OrderReceiver receiver = orderReceiverDao.getOrderReceiverByPackageId(orderId);
+		OrderReceiver receiver = orderReceiverDao.getOrderReceiverByOrderId(orderId);
 		map.put("customerReferenceNo", order.getCustomerReferenceNo());
 		OrderAdditionalSf orderAdditionalSf = orderAdditionalSfDao.getOrderAdditionalSfByOrderId(orderId);
 		if (orderAdditionalSf != null) {

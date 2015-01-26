@@ -217,7 +217,7 @@ public class OrderSenderDaoImpl implements IOrderSenderDao {
 	}
 
 	@Override
-	public OrderSender getOrderSenderByPackageId(Long orderId) {
+	public OrderSender getOrderSenderByOrderId(Long orderId) {
 		String sql = "select id,order_id,name,company,first_name,last_name,address_line1,state_or_province,city,county,postal_code,country_code,country_name,phone_number,email,mobile_number,address_line2 from w_t_order_sender  where order_id =  "
 				+ orderId;
 		List<OrderSender> orderSenderList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(OrderSender.class));

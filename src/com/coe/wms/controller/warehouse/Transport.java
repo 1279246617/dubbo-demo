@@ -29,13 +29,14 @@ import com.coe.wms.model.warehouse.transport.FirstWaybillStatus;
 import com.coe.wms.model.warehouse.transport.Order;
 import com.coe.wms.model.warehouse.transport.OrderPackage;
 import com.coe.wms.model.warehouse.transport.OrderPackageStatus;
+import com.coe.wms.model.warehouse.transport.OrderReceiver;
+import com.coe.wms.model.warehouse.transport.OrderSender;
 import com.coe.wms.model.warehouse.transport.OrderStatus;
 import com.coe.wms.model.warehouse.transport.OutWarehousePackage;
 import com.coe.wms.model.warehouse.transport.OutWarehousePackageItem;
 import com.coe.wms.service.storage.IInWarehouseOrderService;
 import com.coe.wms.service.storage.IOutWarehouseOrderService;
 import com.coe.wms.service.storage.IStorageService;
-import com.coe.wms.service.storage.IStorageInterfaceService;
 import com.coe.wms.service.transport.IFirstWaybillService;
 import com.coe.wms.service.transport.IOrderPackageService;
 import com.coe.wms.service.transport.IOrderService;
@@ -84,6 +85,7 @@ public class Transport {
 
 	@Resource(name = "outWarehouseOrderService")
 	private IOutWarehouseOrderService outWarehouseOrderService;
+
 	/**
 	 * 转运大包 查询
 	 * 
@@ -253,8 +255,22 @@ public class Transport {
 	}
 
 	@ResponseBody
-	@RequestMapping(value = "/getFirstWaybillItemByorderId", method = RequestMethod.POST)
-	public String getFirstWaybillItemByorderId(Long orderId) {
+	@RequestMapping(value = "/getOrderReceiverByOrderId", method = RequestMethod.POST)
+	public String getOrderReceiverByOrderId(Long orderId) {
+		OrderReceiver orderReceiver = orderService.getOrderReceiverByOrderId(orderId);
+		return GsonUtil.toJson(orderReceiver);
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/getOrderSenderByOrderId", method = RequestMethod.POST)
+	public String getOrderSenderByOrderId(Long orderId) {
+		OrderSender orderSender = orderService.getOrderSenderByOrderId(orderId);
+		return GsonUtil.toJson(orderSender);
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/getFirstWaybillItemByOrderId", method = RequestMethod.POST)
+	public String getFirstWaybillItemByOrderId(Long orderId) {
 		List<Map<String, Object>> firstWaybillItems = firstWaybillService.getFirstWaybillItems(orderId);
 		return GsonUtil.toJson(firstWaybillItems);
 	}
@@ -369,7 +385,8 @@ public class Transport {
 		moreParam.put("createdTimeEnd", createdTimeEnd);
 		moreParam.put("receivedTimeStart", receivedTimeStart);
 		moreParam.put("receivedTimeEnd", receivedTimeEnd);
-//		moreParam.put("isNotOrderPackageWaybill", Constant.Y);
+		// 不显示大包头程运单
+		moreParam.put("isNotOrderPackageWaybill", Constant.Y);
 		moreParam.put("nos", nos);
 		moreParam.put("noType", noType);
 		moreParam.put("isReceived", isReceived);

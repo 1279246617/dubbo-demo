@@ -16,5 +16,5 @@ public interface IOrderSenderDao {
 
 	public List<OrderSender> findOrderSender(OrderSender orderSender, Map<String, String> moreParam, Pagination page);
 
-	public OrderSender getOrderSenderByPackageId(Long orderId);
+	public OrderSender getOrderSenderByOrderId(Long orderId);
 }

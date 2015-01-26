@@ -861,6 +861,29 @@ public class Storage {
 	}
 
 	/**
+	 * 待打印捡货出库订单 查询
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/listWaitPrintOutWarehouseOrder", method = RequestMethod.GET)
+	public ModelAndView listWaitPrintOutWarehouseOrder(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		HttpSession session = request.getSession();
+		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
+		ModelAndView view = new ModelAndView();
+		view.addObject("userId", userId);
+		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
+		User user = userService.getUserById(userId);
+		List<Shipway> shipwayList = storageService.findAllShipway();
+		view.addObject("shipwayList", shipwayList);
+		view.addObject("warehouseList", storageService.findAllWarehouse(user.getDefaultWarehouseId()));
+		view.setViewName("warehouse/storage/listWaitPrintOutWarehouseOrder");
+		return view;
+	}
+
+	/**
 	 * 出库称重和打印发货单
 	 * 
 	 * @param request
