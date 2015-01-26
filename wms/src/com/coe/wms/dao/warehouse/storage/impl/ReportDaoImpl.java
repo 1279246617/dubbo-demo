@@ -76,7 +76,7 @@ public class ReportDaoImpl implements IReportDao {
 
 	/**
 	 * 
-	 * 参数一律使用实体类加Map . 
+	 *  
 	 */
 	@Override
 	public List<Report> findReport(Report report, Map<String, String> moreParam, Pagination page) {

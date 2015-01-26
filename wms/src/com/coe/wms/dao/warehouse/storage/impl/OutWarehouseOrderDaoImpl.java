@@ -92,7 +92,7 @@ public class OutWarehouseOrderDaoImpl implements IOutWarehouseOrderDao {
 	/**
 	 * 查询入库订单
 	 * 
-	 * 参数一律使用实体类加Map .
+	 * 
 	 */
 	@Override
 	public List<OutWarehouseOrder> findOutWarehouseOrder(OutWarehouseOrder outWarehouseOrder, Map<String, String> moreParam, Pagination page) {

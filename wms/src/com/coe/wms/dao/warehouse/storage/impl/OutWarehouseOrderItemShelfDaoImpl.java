@@ -160,7 +160,7 @@ public class OutWarehouseOrderItemShelfDaoImpl implements IOutWarehouseOrderItem
 	/**
 	 * 查询入库订单
 	 * 
-	 * 参数一律使用实体类加Map .
+	 * 
 	 */
 	@Override
 	public List<OutWarehouseOrderItemShelf> findOutWarehouseOrderItemShelf(OutWarehouseOrderItemShelf outWarehouseOrderItemShelf, Map<String, String> moreParam, Pagination page) {

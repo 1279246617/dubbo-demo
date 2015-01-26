@@ -150,7 +150,7 @@ public class OutWarehouseOrderSenderDaoImpl implements IOutWarehouseOrderSenderD
 	/**
 	 * 查询出库订单发件人
 	 * 
-	 * 参数一律使用实体类加Map . 
+	 *  
 	 */
 	@Override
 	public List<OutWarehouseOrderSender> findOutWarehouseOrderSender(OutWarehouseOrderSender outWarehouseOrderSender,

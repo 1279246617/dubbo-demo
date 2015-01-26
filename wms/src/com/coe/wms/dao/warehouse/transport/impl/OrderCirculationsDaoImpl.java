@@ -70,7 +70,7 @@ public class OrderCirculationsDaoImpl implements IOrderCirculationsDao {
 
 	/**
 	 * 
-	 * 参数一律使用实体类加Map .
+	 * 
 	 */
 	@Override
 	public List<OrderCirculations> findOrderCirculations(OrderCirculations orderCirculations, Map<String, String> moreParam, Pagination page) {

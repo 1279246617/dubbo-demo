@@ -92,7 +92,7 @@ public class OrderDaoImpl implements IOrderDao {
 
 	/**
 	 * 
-	 * 参数一律使用实体类加Map .
+	 * 
 	 */
 	@Override
 	public List<Order> findOrder(Order order, Map<String, String> moreParam, Pagination page) {

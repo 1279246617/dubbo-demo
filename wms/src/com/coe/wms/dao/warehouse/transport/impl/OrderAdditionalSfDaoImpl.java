@@ -127,7 +127,7 @@ public class OrderAdditionalSfDaoImpl implements IOrderAdditionalSfDao {
 	/**
 	 * 查询出库订单收件人
 	 * 
-	 * 参数一律使用实体类加Map .
+	 * 
 	 */
 	@Override
 	public List<OrderAdditionalSf> findOrderAdditionalSf(OrderAdditionalSf OrderAdditionalSf, Map<String, String> moreParam, Pagination page) {
