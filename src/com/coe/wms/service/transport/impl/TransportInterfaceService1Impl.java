@@ -320,6 +320,12 @@ public class TransportInterfaceService1Impl implements ITransportInterfaceServic
 			response.setReasonDesc("TradeOrder对象获取Buyer对象得到Null");
 			return XmlUtil.toXml(responses);
 		}
+		// 收件人信息不能为空
+		if (StringUtil.isNull(buyer.getName())) {
+			response.setReason(ErrorCode.S01_CODE);
+			response.setReasonDesc("Buyer对象收件人名不可以为空");
+			return XmlUtil.toXml(responses);
+		}
 		// 小包
 		LogisticsDetail logisticsDetail = eventBody.getLogisticsDetail();
 		if (logisticsDetail == null) {
@@ -345,6 +351,12 @@ public class TransportInterfaceService1Impl implements ITransportInterfaceServic
 		if (senderDetail == null) {
 			response.setReason(ErrorCode.S01_CODE);
 			response.setReasonDesc("LogisticsOrders对象获取SenderDetail对象得到Null");
+			return XmlUtil.toXml(responses);
+		}
+		// 发件人信息不能为空
+		if (StringUtil.isNull(senderDetail.getName())) {
+			response.setReason(ErrorCode.S01_CODE);
+			response.setReasonDesc("SenderDetail对象发件人名不可以为空");
 			return XmlUtil.toXml(responses);
 		}
 		Warehouse warehouse = warehouseDao.getWarehouseByNo(warehouseNo);
@@ -403,7 +415,7 @@ public class TransportInterfaceService1Impl implements ITransportInterfaceServic
 		orderTraces.setUserIdOfCustomer(userIdOfCustomer);
 		orderTraces.setWarehouseId(warehouseId);
 		orderTracesDao.saveOrderTraces(orderTraces);
-		
+
 		// // 顺丰标签附加内容
 		OrderAdditionalSf additionalSf = new OrderAdditionalSf();
 		// 顺丰指定,出货运单号和渠道
@@ -497,6 +509,9 @@ public class TransportInterfaceService1Impl implements ITransportInterfaceServic
 					firstWaybillItem.setSpecification(item.getSpecification());
 					if (NumberUtil.isDecimal(item.getNetWeight()) || NumberUtil.isNumberic(item.getNetWeight())) {
 						firstWaybillItem.setSkuNetWeight(Double.valueOf(item.getNetWeight()));
+					} else {
+						// 如果商品重量为空,将不能申请单号
+						firstWaybillItem.setSkuNetWeight(10d);
 					}
 					firstWaybillItemDao.saveFirstWaybillItem(firstWaybillItem);
 				}

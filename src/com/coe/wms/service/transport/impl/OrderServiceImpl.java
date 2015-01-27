@@ -867,6 +867,10 @@ public class OrderServiceImpl implements IOrderService {
 		etkOrder.setItems(items);
 		// 收件人
 		Receiver receiver = new Receiver();
+		if (orderReceiver == null) {
+			map.put(Constant.MESSAGE, "收件人信息不能为空");
+			return map;
+		}
 		receiver.setReceiverAddress1(orderReceiver.getAddressLine1());
 		receiver.setReceiverAddress2(orderReceiver.getAddressLine2());
 		receiver.setReceiverCity(orderReceiver.getCity());
