@@ -13,7 +13,6 @@
 <link href="${baseUrl}/static/calendar/prettify.css" rel="stylesheet" type="text/css" />
 <link href="${baseUrl}/static/calendar/lhgcalendar.css" rel="stylesheet" type="text/css" />
 <link href="${baseUrl}/static/ligerui/ligerUI/skins/Aqua/css/ligerui-all.css" rel="stylesheet" type="text/css" />
-	 
 
 <title>COE</title>
 </head>
@@ -23,10 +22,8 @@
 					<td style="width:290px;">
 							<span class="pull-left" style="width:75px;">跟踪单号</span>
 							<span class="pull-left" style="width:200px;">
-								<input type="text"  name="trackingNo"  id="trackingNo" t="1" onfocus="trackingNoFocus()"  onblur="trackingNoBlur()" style="width:170px;"/>
-								<!-- 用户按回车时,当入库订单id 为空是第一次提交,后台返回id,或其他提示.  不为空 提示客户可输入SKU和数量进行收货 -->
-								<input type="text"  name="firstWaybillId"  id="firstWaybillId" t="1"  style="display: none;"/>
-								<input type="text"  name="orderId"  id="orderId" t="1"  style="display: none;"/>
+								<input type="text"  name="trackingNo"  id="trackingNo"   onfocus="trackingNoFocus()"  onblur="trackingNoBlur()" style="width:170px;"/>
+								<input type="text"  name="firstWaybillId"  id="firstWaybillId"   style="display: none;"/>
 							</span>
 					</td>		
 					<td style="width:290px;">
@@ -54,14 +51,14 @@
 			</tr>
 	</table>
 	
-	<div style="height:140px;width:100%;overflow:auto;margin-bottom: 2px;" id="firstWaybillDiv">
+	<div style="height:180px;width:100%;overflow:auto;margin-bottom: 2px;" id="firstWaybillDiv">
 			<table   class="table"  style="width:100%;background-color:#f5f5f5;" id="firstWaybilltable" >
 				<tr>
 					<th style="width:50px;text-align:center;">选择</th>
 					<th style="width:155px;text-align:center;">客户帐号</th>
 					<th style="width:225px;text-align:center;">跟踪单号</th> 
 					<th style="width:205px;text-align:center;">承运商</th>
-					<th style="width:205px;text-align:center;">状态</th> 
+					<th style="width:205px;text-align:center;">头程运单状态</th> 
 					<th style="width:205px;text-align:center;">创建时间</th>
 				</tr>
 				<tbody id="firstWaybillbody" style="color:#555555;">
@@ -70,65 +67,19 @@
 		</table>
 	</div>
 	
-	<table class="table" style="background-color:#f5f5f5;margin-bottom: 2px;"  >
-		<tr>
-			<td>
-				<span style="width:90px;height:50px;margin-top: 4mm;font-size: mm;" class="pull-left" >分配货位</span>
-				<input type="text"  name="seatCode"  id="seatCode"  style="width:180px;height:50px; font-size: 10mm;font-weight: bold;color:red;" class="pull-left" readonly="readonly"/>
-			</td>
-		</tr>
-	</table>
+	<div style="height:55px;width:100%;;margin-bottom: 2px; overflow: hidden;">
+			<table  class="table"  style="width:100%;background-color:#f5f5f5;" >
+				<tr>
+					<th style="width:200px;height:55px;font-size: 6mm;margin-top: 11mm;">
+						分配货位
+					</th>
+					<th style="text-align:center;font-size: 8mm;">
+						<span id="seatCode" style="color:red;font-weight: bold;"></span>
+					</th>
+				</tr>
+			</table>
+		</div>
 	
-<!-- 直接转运订单收货时称重打单 开始-           如需解开 ,释放注释 和 inwarehouse.js 104行处理直接转运结果 , 后台submitInWarehouse方法 修改直接转运订单的提示内容--------------------->
-<!-- 		<table class="table" style="background-color:#f5f5f5;margin-bottom: 2px;"  > -->
-<!-- 			<tr> -->
-<!-- 				<th>直接转运订单称重与打出货运单</th> -->
-<!-- 			</tr> -->
-<!-- 			<tr  style="color:#555555;"> -->
-<!-- 				<td colspan="2" style="height:50px;"> -->
-<!-- 					<span style="width:90px;height:30px;margin-top: 4mm;font-size: 5mm;" class="pull-left" >装箱重量</span> -->
-<!-- 					<input type="text"  name="weight"  t="3"  id="weight"  style="width:130px;height:45px; font-size: 10mm;font-weight: bold;color:red;" class="pull-left" readonly="readonly" onkeyup="this.value=this.value.replace(/[^\d\.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d\.]/g,'')"/> -->
-<!-- 					<span style="width:50px;height:30px;margin-top: 4mm;font-size: 6mm;font-weight: bold;" class="pull-left" >KG</span> -->
-<!-- 					<span style="width:90px;height:30px;margin-top: 4mm;font-size: 4mm;" class="pull-left" > -->
-<!-- 						<input class="pull-left"  t="3" name="auto" style="vertical-align: middle;" type="checkbox" checked="checked" id="auto"> -->
-<!-- 						自动读取 -->
-<!-- 					</span> -->
-<!-- 					<span style="height:30px;margin-top: 0mm;font-size: 8mm;" class="pull-left" > -->
-<%-- 						<img id="weightOk" src="${baseUrl}/static/img/nike.png" style="display:none;width:15mm;height:15mm;" > --%>
-<!-- 					</span> -->
-<!-- 				</td> -->
-<!-- 				<td colspan="1"> -->
-<!-- 					<span style="width:90px;height:30px;margin-top: 4mm;font-size: 5mm;" class="pull-left" > -->
-<!-- 							<a class="btn  btn-primary"  onclick="saveweight();"  style="cursor:pointer;"><i class="icon-ok icon-white"></i>保存重量</a> -->
-<!-- 					</span> -->
-<!-- 				</td> -->
-<!-- 				<td rowspan="3"> -->
-<!-- 						<span style="width:90px;height:50px;margin-top: 4mm;font-size: mm;" class="pull-left" >分配货位</span> -->
-<!-- 						<input type="text"  name="seatCode"  t="3"  id="seatCode"  style="width:180px;height:50px; font-size: 10mm;font-weight: bold;color:red;" class="pull-left" readonly="readonly"/> -->
-<!-- 				</td> -->
-<!-- 			</tr> -->
-<!-- 			<tr  > -->
-<!-- 				<td colspan="1" style="width:280px;"> -->
-<!-- 					出货渠道&nbsp;&nbsp; -->
-<!-- 					<input type="text"  name="shipwayCode"  id="shipwayCode"   t="4" style="width:130px;" readonly="readonly"/> -->
-<!-- 				</td> -->
-<!-- 				<td colspan="1" style="width:330px;"> -->
-<!-- 					跟踪单号&nbsp;&nbsp; -->
-<!-- 					<input type="text"  name="outWarehouseTrackingNo"  id="outWarehouseTrackingNo"  t="4"  style="width:150px;" readonly="readonly"/> -->
-<!-- 				</td> -->
-<!-- 				<td colspan="2" > -->
-<!-- 					<a class="btn  btn-primary"  onclick="printShipLabel();" style="cursor:pointer;"> -->
-<!-- 						<i class="icon-ok icon-white"></i>打印出货运单 -->
-<!-- 					</a> -->
-<!-- 					&nbsp;&nbsp;&nbsp; -->
-<!-- 					<a class="btn  btn-primary"  onclick="printOrder();" style="cursor:pointer;"> -->
-<!-- 						<i class="icon-ok icon-white"></i>打印捡货清单 -->
-<!-- 					</a> -->
-<!-- 				</td> -->
-<!-- 			</tr> -->
-<!-- 	</table>			 -->
-<!-- 直接转运订单收货时称重打单 结束---------------------->
-
 	<table  class="table table-striped" style="margin-bottom: 0px;height: 10px;">
 		<tr style="height: 10px;">
 			<td>
@@ -166,7 +117,6 @@
 	   var baseUrl = "${baseUrl}";
 	   //进入页面,焦点跟踪单号
 	   $("#trackingNo").focus();
-	   var focus = "1";
 	    $(window).keydown(function(event){
 	    	//回车加ctrl 下一单
 	    	if((event.keyCode   ==   13) &&   (event.ctrlKey)) {
@@ -175,48 +125,11 @@
 	    	}
 	    	//回车事件
 	    	if((event.keyCode   ==   13)) {
-	    		if(focus == '1'){
-		  		  	saveReceivedFirstWaybill();
-		  		  	return false;
-	  		  	}
-				//保存重量
-				if(focus == '3'){
-					saveweight();
-		      		return false;
-				}
-				//打印运单
-				if(focus == '4'){
-					printShipLabel();
-		      		return false;
-				}
+		  		saveReceivedFirstWaybill();
 	    		return;
 	    	}  
 	    });
   	  	$(function(){
-	  		$("input").focus(function(){
-	  			//当前获取焦点的文本框是 主单还是明细
-	  			focus = $(this).attr("t");
-	  		});
-	  		//自动读取电子秤重量代码开始--------------------
-	  		//toggleConnection(ports[0]);//加载页面时,启动读取电子秤
-	  		//autoWeight = window.setInterval(function(){ 
-				//ws.send("getweig");//启动读取电子秤
-			//}, 300);
-	  		//自动读取电子秤重量代码结束-------------------
-	  		
-	  		$("#auto").click(function(){
-	  			if($("#auto").attr("checked")=="checked"){
-	  				//自动获取电子称数据
-	 	  			$("#weight").attr("readonly","readonly");
-	  				//启动读取电子秤
-		 	  		autoWeight = window.setInterval(function(){ 
-	 		  			ws.send("getweig");		 
-					}, 300);
-	 	  		 }else{
-	 	  			 $("#weight").removeAttr("readonly");
-	 	  		 clearInterval(autoWeight);//取消读取
-	 	  		 }
-	  		});
 	    	 initGrid();
    		});
   		//btn_search
@@ -233,13 +146,13 @@
 	                    { display: '客户帐号', name: 'userNameOfCustomer', align: 'center',width:'9%'},
 	                    { display: '仓库', name: 'warehouse', align: 'center', type: 'float',width:'10%'},
 	                    { display: '转运类型', name: 'transportType', align: 'center', type: 'float',width:'9%'},
-	                    { display: '到货跟踪单号', name: 'trackingNo', align: 'center', type: 'int',width:'13%'},
-	                    { display: '承运商', name: 'carrierCode', align: 'center', type: 'int',width:'10%'},
-	                    { display: '小包状态', name: 'status', align: 'center', type: 'int',width:'9%'},
+	                    { display: '头程跟踪单号', name: 'trackingNo', align: 'center', type: 'int',width:'13%'},
+	                    { display: '头程运单状态', name: 'status', align: 'center', type: 'int',width:'9%'},
+	                    { display: '分配货位', name: 'seatCode', align: 'center', type: 'int',width:'10%'},
 	                    { display: '订单状态', name: 'orderStatus', align: 'center', type: 'int',width:'9%'},
-		                { display: '收货时间', name: 'receivedTime', align: 'center', type: 'float',width:'12%'},
 		                { display: '回传收货状态', name: 'callbackIsSuccess', align: 'center', type: 'float',width:'8%'},
 		                { display: '操作员', name: 'userNameOfOperator',width:'9%'},
+		                { display: '收货时间', name: 'receivedTime', align: 'center', type: 'float',width:'12%'},
 	                ],  
 	                isScroll: true,
 	                dataAction: 'server',
@@ -250,7 +163,7 @@
 	                sortOrder: 'desc',
 	                width: '100%',
 	                height: '99%',
-	                title:"小包收货记录(最新)",
+	                title:"头程运单收货记录",
 	                checkbox: false,
 	                rownumbers:true,
 	                enabledSort:false

@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * 转运订单小包上架
+ * 转运头程运单上架
  * 
  * 
  * @author Administrator

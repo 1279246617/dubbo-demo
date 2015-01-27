@@ -20,7 +20,7 @@ public class OrderPackage implements Serializable {
 	 */
 	private String carrierCode;
 	/**
-	 * 到货跟踪单号
+	 * 头程跟踪单号
 	 */
 	private String trackingNo;
 

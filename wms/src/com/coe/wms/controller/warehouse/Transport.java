@@ -348,7 +348,7 @@ public class Transport {
 	}
 
 	/**
-	 * 获取转运订单小包
+	 * 获取转运头程运单
 	 * 
 	 * @param request
 	 * @param response
@@ -449,11 +449,9 @@ public class Transport {
 			}
 			return GsonUtil.toJson(map);
 		}
-
 		map.put("mapList", mapList);
 		if (mapList.size() > 1) {
-			// 找到多个入库订单,返回跟踪号,承运商,参考号,客户等信息供操作员选择
-			map.put(Constant.MESSAGE, "该单号找到" + mapList.size() + "个转运订单小包,请选择其中一个,并按回车!");
+			map.put(Constant.MESSAGE, "该单号找到" + mapList.size() + "个转运头程运单,请选择其中一个,并按回车!");
 			map.put(Constant.STATUS, "2");
 			return GsonUtil.toJson(map);
 		}
@@ -473,7 +471,6 @@ public class Transport {
 	@ResponseBody
 	@RequestMapping(value = "/submitInWarehouse")
 	public String submitInWarehouse(HttpServletRequest request, String trackingNo, Long warehouseId, Long firstWaybillId, String remark) throws IOException {
-		// 操作员
 		Long userIdOfOperator = (Long) request.getSession().getAttribute(SessionConstant.USER_ID);
 		Map<String, String> serviceResult = orderService.submitInWarehouse(trackingNo, remark, userIdOfOperator, warehouseId, firstWaybillId);
 		return GsonUtil.toJson(serviceResult);

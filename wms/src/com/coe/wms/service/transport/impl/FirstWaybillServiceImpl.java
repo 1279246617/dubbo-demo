@@ -287,40 +287,25 @@ public class FirstWaybillServiceImpl implements IFirstWaybillService {
 			map.put("firstWaybillId", String.valueOf(firstWaybill.getId()));
 			map.put("userLoginName", user.getLoginName());
 			map.put("trackingNo", firstWaybill.getTrackingNo());
-			if (firstWaybill.getOrderId() != null) {
-				map.put("orderId", firstWaybill.getOrderId() + "");
-				Order order = orderDao.getOrderById(firstWaybill.getOrderId());
-				map.put("outWarehouseTrackingNo", order.getTrackingNo());
-				map.put("shipwayCode", order.getShipwayCode());
-			} else {
-				map.put("orderId", "");
-				map.put("outWarehouseTrackingNo", "");
-				map.put("shipwayCode", "");
-			}
-			if (firstWaybill.getOrderPackageId() != null) {
-				map.put("orderPackageId", firstWaybill.getOrderPackageId() + "");
-			} else {
-				map.put("orderPackageId", "");
-			}
-			map.put("seatCode", firstWaybill.getSeatCode());
 			map.put("carrierCode", firstWaybill.getCarrierCode());
 			String time = DateUtil.dateConvertString(new Date(firstWaybill.getCreatedTime()), DateUtil.yyyy_MM_ddHHmmss);
 			map.put("createdTime", time);
 			FirstWaybillStatus status = firstWaybillStatusDao.findFirstWaybillStatusByCode(firstWaybill.getStatus());
 			if (status != null) {
 				map.put("status", status.getCn());
-			} else {
-				map.put("status", "");
 			}
-			String onShelfstatus = firstWaybillOnShelfDao.findStatusByFirstWaybillId(firstWaybill.getId());
-			if (StringUtil.isEqual(onShelfstatus, FirstWaybillOnShelf.STATUS_ON_SHELF)) {
-				map.put("onShelfstatus", "已上架");
-			} else if (StringUtil.isEqual(onShelfstatus, FirstWaybillOnShelf.STATUS_OUT_SHELF)) {
-				map.put("onShelfstatus", "已下架");
-			} else if (StringUtil.isEqual(onShelfstatus, FirstWaybillOnShelf.STATUS_PRE_ON_SHELF)) {
-				map.put("onShelfstatus", "未上架");
-			} else {
-				map.put("onShelfstatus", "");
+			// 检查上架状态
+			FirstWaybillOnShelf onshelf = firstWaybillOnShelfDao.findFirstWaybillOnShelfByFirstWaybillId(firstWaybill.getId());
+			if (onshelf != null) {
+				if (StringUtil.isEqual(onshelf.getStatus(), FirstWaybillOnShelf.STATUS_ON_SHELF)) {
+					map.put("onShelfstatus", "已上架");
+				}
+				if (StringUtil.isEqual(onshelf.getStatus(), FirstWaybillOnShelf.STATUS_OUT_SHELF)) {
+					map.put("onShelfstatus", "已下架");
+				}
+				if (StringUtil.isEqual(onshelf.getStatus(), FirstWaybillOnShelf.STATUS_PRE_ON_SHELF)) {
+					map.put("onShelfstatus", "未上架");
+				}
 			}
 			mapList.add(map);
 		}

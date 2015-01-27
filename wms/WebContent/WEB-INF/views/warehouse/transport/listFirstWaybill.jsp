@@ -142,7 +142,7 @@
 	                    { display: '头程运单状态', name: 'status', align: 'center', type: 'float',width:'8%'},
 	                    { display: '转运订单状态', name: 'orderStatus', align: 'center', type: 'float',width:'8%'},
 	                    { display: '到货承运商', name: 'carrierCode', align: 'center', type: 'float',width:'10%'},
-	  		          	{ display: '到货跟踪单号', name: 'trackingNo', align: 'center', type: 'float',width:'12%'},
+	  		          	{ display: '头程跟踪单号', name: 'trackingNo', align: 'center', type: 'float',width:'12%'},
 	  		          	{ display: '分配货位', name: 'seatCode', align: 'center', type: 'float',width:'11%'},
 	  		          	{ display: '销售编号', name: 'poNo', align: 'center', type: 'float',width:'12%'},
 	  		          	{ display: '商品预览', isSort: false, align: 'center', type: 'float',width:'15%',render: function(row) {

@@ -23,7 +23,7 @@ public interface ICallCustomerTask {
 	public void sendOrderCheckResultToCustomer();
 
 	/**
-	 * 回传转运订单小包收货结果给客户
+	 * 回传转运头程运单收货结果给客户
 	 */
 	public void sendFirstWaybillReceivedToCustomer();
 

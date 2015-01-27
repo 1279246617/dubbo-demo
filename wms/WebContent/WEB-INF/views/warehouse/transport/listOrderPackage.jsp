@@ -54,7 +54,7 @@
 					</span>
                		<span class="pull-left" style="width:155px;">
                			跟踪单号
-               			<input type="text" name="trackingNo"   id="trackingNo" style="width:90px;" title="请输入到货跟踪单号" />
+               			<input type="text" name="trackingNo"   id="trackingNo" style="width:90px;" title="请输入头程跟踪单号" />
                		</span>
                		<span class="pull-left" style="width:175px;">
                			创建时间
@@ -126,7 +126,7 @@
 		                { display: '仓库', name: 'warehouse', align: 'center', type: 'float',width:'7%'},
 		                { display: '状态', name: 'status', align: 'center', type: 'float',width:'8%'},
 		                { display: '到货承运商', name: 'carrierCode', align: 'center', type: 'float',width:'8%'},
-		                { display: '到货跟踪单号', name: 'trackingNo', align: 'center', type: 'float',width:'12%'},
+		                { display: '头程跟踪单号', name: 'trackingNo', align: 'center', type: 'float',width:'12%'},
 		                { display: '创建时间', name: 'createdTime', align: 'center', type: 'float',width:'12%'},
 		                { display: '收货时间', name: 'receivedTime', align: 'center', type: 'float',width:'12%'},
 		                { display: '回传收货状态', name: 'callbackSendStatusIsSuccess', align: 'center', type: 'float',width:'8%'},
