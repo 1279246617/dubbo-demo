@@ -333,60 +333,53 @@ public class OrderServiceImpl implements IOrderService {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put(Constant.STATUS, Constant.FAIL);
 		if (StringUtil.isNull(trackingNo)) {
-			map.put(Constant.MESSAGE, "请输入跟踪单号.");
+			map.put(Constant.MESSAGE, "请输入头程运单跟踪单号");
 			return map;
 		}
 		FirstWaybill firstWaybill = firstWaybillDao.getFirstWaybillById(firstWaybillId);
 		// 转运大包处理
-		if (firstWaybill.getOrderPackageId() != null && firstWaybill.getOrderId() == null) {
+		if (firstWaybill.getOrderPackageId() != null) {
 			if (!StringUtil.isEqual(firstWaybill.getStatus(), FirstWaybillStatusCode.WWR)) {
-				// 非待收货状态
 				map.put(Constant.MESSAGE, "该转运大包非待收货状态,请输入新的跟踪单号");
 				return map;
 			}
-			firstWaybill.setStatus(FirstWaybillStatusCode.WSR);
-			firstWaybill.setReceivedTime(System.currentTimeMillis());
-			// 保存货位,状态,时间
 			firstWaybillDao.receivedFirstWaybill(firstWaybill);
 			orderPackageDao.updateOrderPackageStatus(firstWaybill.getOrderPackageId(), OrderPackageStatusCode.SUCCESS);
-			map.put(Constant.STATUS, "3");
 			map.put(Constant.MESSAGE, "该转运大包收货成功,请注意需要拆包");
 			return map;
 		}
+		// 转运订单
 		if (!StringUtil.isEqual(firstWaybill.getStatus(), FirstWaybillStatusCode.WWR)) {
-			// 非待收货状态
 			map.put(Constant.MESSAGE, "该转运订单非待收货状态,请输入新的跟踪单号");
 			return map;
 		}
-		// 更新为已收货前,查找空闲的转运业务专用货位
-		// 查找其他小包是否已经上架
+		// 分配货位
 		FirstWaybillOnShelf onShelfParam = new FirstWaybillOnShelf();
 		onShelfParam.setOrderId(firstWaybill.getOrderId());
 		List<FirstWaybillOnShelf> firstWaybillOnShelfList = firstWaybillOnShelfDao.findFirstWaybillOnShelf(onShelfParam, null, null);
 		String seatCode = null;
-		if (firstWaybillOnShelfList != null && firstWaybillOnShelfList.size() > 0) {
+		if (firstWaybillOnShelfList != null && firstWaybillOnShelfList.size() > 0) {// 集货转运,找同一个订单的货位
 			FirstWaybillOnShelf firstWaybillOnShelf = firstWaybillOnShelfList.get(0);
 			seatCode = firstWaybillOnShelf.getSeatCode();
 		}
-		if (StringUtil.isNull(seatCode)) {
+		if (StringUtil.isNull(seatCode)) {// 直接转运找新货位
 			seatCode = firstWaybillOnShelfDao.findSeatCodeForOnShelf(firstWaybill.getTransportType());
 		}
 		if (StringUtil.isNull(seatCode)) {
-			// 货位不足,收货失败
 			map.put(Constant.MESSAGE, "转运货位不足,请添加货位再收货");
 			return map;
 		}
-		firstWaybill.setSeatCode(seatCode);// 收货预分配货位 真正的货位信息要在上架记录寻找
-		// 更改为已收货, 待添加操作日志
+		firstWaybill.setUserIdOfOperator(userIdOfOperator);
 		firstWaybill.setStatus(FirstWaybillStatusCode.WSR);
 		firstWaybill.setReceivedTime(System.currentTimeMillis());
-		// 保存货位,状态,时间
+		firstWaybill.setSeatCode(seatCode);// 收货预分配货位
 		firstWaybillDao.receivedFirstWaybill(firstWaybill);
+
 		// 判断order下的所有firstWaybill是否已经全部收货
 		FirstWaybill firstWaybillParam = new FirstWaybill();
 		firstWaybillParam.setOrderId(firstWaybill.getOrderId());
 		List<FirstWaybill> firstWaybillList = firstWaybillDao.findFirstWaybill(firstWaybillParam, null, null);
-		boolean isReceived = true;// 小包是否已经全部收货
+		boolean isReceived = true;
 		for (FirstWaybill temp : firstWaybillList) {
 			if (StringUtil.isEqual(temp.getStatus(), FirstWaybillStatusCode.WWR)) {
 				isReceived = false;
@@ -409,22 +402,15 @@ public class OrderServiceImpl implements IOrderService {
 		onShelf.setUserIdOfOperator(userIdOfOperator);
 		onShelf.setWarehouseId(warehouseId);
 		firstWaybillOnShelfDao.saveFirstWaybillOnShelf(onShelf);
-		map.put("seatCode", seatCode);
-		map.put("orderId", "" + firstWaybill.getOrderId());
 
 		if (StringUtil.isEqual(firstWaybill.getTransportType(), Order.TRANSPORT_TYPE_J)) {// 集货转运
 			map.put(Constant.MESSAGE, "集货转运订单收货成功,请继续收货");
-			map.put(Constant.STATUS, Constant.SUCCESS);
-		} else if (StringUtil.isEqual(firstWaybill.getTransportType(), Order.TRANSPORT_TYPE_Z)) {// 直接转运
-			// map.put(Constant.MESSAGE, "直接转运订单收货成功,请称重打单");
-			// 2014-12-23取消直接转运订单称重打单, 后台修改提示内容, 前台修改操作流程
-			map.put(Constant.MESSAGE, "直接转运订单收货成功,请继续收货");
-			map.put(Constant.STATUS, "2");
-			Order order = orderDao.getOrderById(firstWaybill.getOrderId());
-			map.put("shipwayCode", order.getShipwayCode());
-			map.put("trackingNo", order.getTrackingNo());
-			map.put("seatCode", seatCode);
 		}
+		if (StringUtil.isEqual(firstWaybill.getTransportType(), Order.TRANSPORT_TYPE_Z)) {// 直接转运
+			map.put(Constant.MESSAGE, "直接转运订单收货成功,请继续收货");
+		}
+		map.put("seatCode", seatCode);
+		map.put(Constant.STATUS, Constant.SUCCESS);
 		return map;
 	}
 

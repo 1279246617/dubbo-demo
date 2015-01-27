@@ -1,4 +1,4 @@
-var firstWaybillTrackingNoQuantity = 0;//每个客户参考号下,对应的小包跟踪号个数
+var firstWaybillTrackingNoQuantity = 0;//每个客户参考号下,对应的头程运单跟踪号个数
 
 function submitCustomerReferenceNo(){
  		var customerReferenceNo  = $("#customerReferenceNo").val();
@@ -48,7 +48,7 @@ function submitCustomerReferenceNo(){
 function checkFirstWaybill(){
 		var trackingNo = $("#trackingNo").val();
 		if(trackingNo ==null || trackingNo == ''){
-			parent.$.showShortMessage({msg:"请先输入小包跟踪号码",animate:false,left:"45%"});
+			parent.$.showShortMessage({msg:"请先输入头程运单跟踪号码",animate:false,left:"45%"});
 			return false;
 		}
 		var orderId = $("#orderId").val();
@@ -64,7 +64,7 @@ function checkFirstWaybill(){
 			}
 			if(msg.status == 1){
 				if($("#"+trackingNo).html() ==''){//重复扫描
-					parent.$.showShortMessage({msg:"该小包重复扫描,请扫描下一个小包",animate:false,left:"45%"});
+					parent.$.showShortMessage({msg:"该头程运单重复扫描,请扫描下一个运单",animate:false,left:"45%"});
 					$("#trackingNo").val("");
 					$("#trackingNo").focus();
 					return;
@@ -74,12 +74,12 @@ function checkFirstWaybill(){
 					$("#weight").focus();
 					$("#weight").select();
 				}
-				parent.$.showShortMessage({msg:"复核成功,请继续下一个小包",animate:false,left:"45%"});
+				parent.$.showShortMessage({msg:"复核成功,请继续下一个头程运单",animate:false,left:"45%"});
 				firstWaybillTrackingNoQuantity--;
 				$("#"+trackingNo).html("");//左侧减
 				var tr = "<tr><td>"+trackingNo+"</td></tr>";//右侧加
 				$("#scanTrackingNos").append(tr);
-				//复核成功,请继续下一个小包
+				//复核成功,请继续下一个头程运单
 				$("#trackingNo").val("");
 				$("#trackingNo").focus();
 				

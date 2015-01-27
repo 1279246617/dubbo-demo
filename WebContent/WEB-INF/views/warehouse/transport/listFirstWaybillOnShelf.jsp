@@ -38,7 +38,7 @@
                			<input type="text" name="userLoginName" data-provide="typeahead"  id="userLoginName" style="width:85px;" title="请输入客户登录名" />
                		</span>
 					<span class="pull-left" style="width:190px;">
-						到货跟踪单号
+						头程跟踪单号
 						<input type="text"  name="trackingNo"  id="trackingNo"   style="width:90px;"/>
 					</span>
 					<span class="pull-left" style="width:170px;">
@@ -112,7 +112,7 @@
 	                columns: [
 	                    { display: '客户帐号', name: 'userNameOfCustomer', align: 'center',type:'float',width:'9%'},
 	                    { display: '仓库', name: 'warehouse', align: 'center', type: 'float',width:'8%'},
-	                    { display: '到货跟踪单号', name: 'trackingNo', align: 'center', type: 'float',width:'12%'},
+	                    { display: '头程跟踪单号', name: 'trackingNo', align: 'center', type: 'float',width:'12%'},
 	  		          	{ display: '货位', name: 'seatCode', align: 'center', type: 'float',width:'13%'},
 	                    { display: '上架状态', name: 'status', align: 'center', type: 'float',width:'9%'},
 	                    { display: '转运类型', name: 'transportType', align: 'center', type: 'float',width:'10%'},

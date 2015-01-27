@@ -154,7 +154,7 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 	private final String serviceNameSendCheckOrder = "logistics.event.wms.checkorder";
 
 	/**
-	 * 回传转运订单小包收货
+	 * 回传转运头程运单收货
 	 */
 	private final String serviceNameStockin = "logistics.event.wms.stockin";
 
@@ -628,7 +628,8 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 	/**
 	 * 回传转运小包收货给客户
 	 */
-	@Scheduled(cron = "0 0/10 * * * ? ")
+//	@Scheduled(cron = "0 0/10 * * * ? ")
+	@Scheduled(cron = "0 0/1 * * * ? ")
 	@Override
 	public void sendFirstWaybillReceivedToCustomer() {
 		List<Long> firstWaybillIdList = firstWaybillDao.findCallbackUnSuccessFirstWaybillId();
@@ -748,7 +749,8 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 	/**
 	 * 回传转运合包重量给客户
 	 */
-	@Scheduled(cron = "0 0/10 * * * ? ")
+//	@Scheduled(cron = "0 0/10 * * * ? ")
+	@Scheduled(cron = "0 0/1 * * * ? ")
 	@Override
 	public void sendOrderWeightToCustomer() {
 		List<Long> orderIdList = orderDao.findCallbackSendWeightUnSuccessOrderId();
@@ -859,7 +861,8 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 	/**
 	 * 回传转运出库给客户
 	 */
-	@Scheduled(cron = "0 0/15 * * * ? ")
+//	@Scheduled(cron = "0 0/15 * * * ? ")
+	@Scheduled(cron = "0 0/1 * * * ? ")
 	@Override
 	public void sendOrderStatusToCustomer() {
 		List<Long> orderIdList = orderDao.findCallbackSendStatusUnSuccessOrderId();

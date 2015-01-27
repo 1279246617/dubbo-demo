@@ -40,7 +40,7 @@
 	<div style="width:100%;height:200px;overflow:auto;">
 			<div style="width:9%;height:200px;margin-left:10px; float: left; ">
 				<div style="margin-top: 10px;">
-					<b>待扫描小包:</b>
+					<b>待扫描单号:</b>
 				</div>	
 			</div>			
 			<table class="table" style="width:25%;margin-bottom: 1px;float: left;">
@@ -49,7 +49,7 @@
 			
 			<div style="width:9%;height:200px;margin-left:30px; float: left;">
 				<div style="margin-top: 10px;">	
-					<b>已扫描小包:</b>
+					<b>已扫描单号:</b>
 				</div>	
 			</div>
 			<table class="table" style="width:25%;margin-bottom: 1px;float: left;">

@@ -172,7 +172,7 @@ function listFirstWaybills(orderId){
   		lock: true,
   		max: false,
   		min: false,
-  		title: '转运订单小包详情',
+  		title: '转运头程运单详情',
   		width: 820,
   		height: 360,
   		content: contentHtml,

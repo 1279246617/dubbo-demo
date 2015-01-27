@@ -333,8 +333,8 @@ public class FirstWaybillDaoImpl implements IFirstWaybillDao {
 
 	@Override
 	public int receivedFirstWaybill(FirstWaybill firstWaybill) {
-		String sql = "update w_t_first_waybill set status=? ,received_time=?,seat_code = ? where id=" + firstWaybill.getId();
-		return jdbcTemplate.update(sql, firstWaybill.getStatus(), firstWaybill.getReceivedTime(), firstWaybill.getSeatCode() == null ? "" : firstWaybill.getSeatCode());
+		String sql = "update w_t_first_waybill set status=? ,received_time=?,seat_code = ?,user_id_of_operator=? where id=" + firstWaybill.getId();
+		return jdbcTemplate.update(sql, firstWaybill.getStatus(), firstWaybill.getReceivedTime(), firstWaybill.getSeatCode(), firstWaybill.getUserIdOfOperator());
 	}
 
 	@Override
