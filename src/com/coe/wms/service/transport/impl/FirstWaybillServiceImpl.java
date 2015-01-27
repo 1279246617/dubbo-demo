@@ -402,7 +402,7 @@ public class FirstWaybillServiceImpl implements IFirstWaybillService {
 			} else if (StringUtil.isEqual(firstWaybillOnShelf.getStatus(), FirstWaybillOnShelf.STATUS_OUT_SHELF)) {
 				map.put("status", "已下架");
 			} else if (StringUtil.isEqual(firstWaybillOnShelf.getStatus(), FirstWaybillOnShelf.STATUS_PRE_ON_SHELF)) {
-				map.put("status", "预上架");
+				map.put("status", "未上架");
 			}
 			Order order = orderDao.getOrderById(firstWaybillOnShelf.getOrderId());
 			String transportType = order.getTransportType();
