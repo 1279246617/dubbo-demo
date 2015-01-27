@@ -596,7 +596,28 @@ public class Transport {
 	}
 
 	/**
-	 * 称重
+	 * 直接转运订单称重
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/directOrderWeightAndPrint", method = RequestMethod.GET)
+	public ModelAndView directOrderWeightAndPrint(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		HttpSession session = request.getSession();
+		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
+		ModelAndView view = new ModelAndView();
+		view.addObject("userId", userId);
+		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
+		User user = userService.getUserById(userId);
+		view.addObject("warehouseList", storageService.findAllWarehouse(user.getDefaultWarehouseId()));
+		view.setViewName("warehouse/transport/directOrderWeightAndPrint");
+		return view;
+	}
+
+	/**
+	 * 集货转运订单称重
 	 * 
 	 * @param request
 	 * @param response

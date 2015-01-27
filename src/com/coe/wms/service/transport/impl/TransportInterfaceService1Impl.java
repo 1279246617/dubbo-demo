@@ -509,7 +509,8 @@ public class TransportInterfaceService1Impl implements ITransportInterfaceServic
 					firstWaybillItem.setSpecification(item.getSpecification());
 					if (NumberUtil.isDecimal(item.getNetWeight()) || NumberUtil.isNumberic(item.getNetWeight())) {
 						firstWaybillItem.setSkuNetWeight(Double.valueOf(item.getNetWeight()));
-					} else {
+					}
+					if (firstWaybillItem.getSkuNetWeight() == null || firstWaybillItem.getSkuNetWeight().intValue() == 0) {
 						// 如果商品重量为空,将不能申请单号
 						firstWaybillItem.setSkuNetWeight(10d);
 					}
