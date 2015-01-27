@@ -244,7 +244,7 @@ function listOrderSender(orderId){
 	contentArr.push('<table class="table" style="width:749px">');
 	$.ajax({ 
         type : "post", 
-        url :baseUrl + '/warehouse/storage/getOrderSenderByOrderId.do', 
+        url :baseUrl + '/warehouse/transport/getOrderSenderByOrderId.do', 
         data : "orderId="+orderId, 
         async : false, 
         success : function(msg){ 
