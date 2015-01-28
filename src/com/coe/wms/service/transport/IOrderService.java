@@ -59,6 +59,8 @@ public interface IOrderService {
 	public Map<String, String> orderSubmitWeight(Long userIdOfOperator, Long orderId, Double weight);
 
 	public Map<String, String> orderWeightSubmitCustomerReferenceNo(String customerReferenceNo, Long userIdOfOperator);
+	
+	public Map<String, String> orderWeightSubmitFirstWaybillTrackingNo(String firstWaybillTrackingNo, Long userIdOfOperator);
 
 	public Map<String, Object> outWarehousePackageEnterCoeTrackingNo(String coeTrackingNo);
 

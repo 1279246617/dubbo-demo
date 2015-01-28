@@ -67,13 +67,13 @@
 		</table>
 	</div>
 	
-	<div style="height:55px;width:100%;;margin-bottom: 2px; overflow: hidden;">
+	<div style="height:38px;width:100%;;margin-bottom: 2px; overflow: hidden;">
 			<table  class="table"  style="width:100%;background-color:#f5f5f5;" >
 				<tr>
 					<th style="width:200px;height:55px;font-size: 6mm;margin-top: 11mm;">
 						分配货位
 					</th>
-					<th style="text-align:center;font-size: 8mm;">
+					<th style="text-align:left;font-size: 8mm;">
 						<span id="seatCode" style="color:red;font-weight: bold;"></span>
 					</th>
 				</tr>

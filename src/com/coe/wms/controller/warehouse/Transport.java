@@ -678,6 +678,22 @@ public class Transport {
 	}
 
 	/**
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/orderWeightSubmitFirstWaybillTrackingNo", method = RequestMethod.POST)
+	public String orderWeightSubmitFirstWaybillTrackingNo(HttpServletRequest request, HttpServletResponse response, String firstWaybillTrackingNo) throws IOException {
+		HttpSession session = request.getSession();
+		Long userIdOfOperator = (Long) session.getAttribute(SessionConstant.USER_ID);
+		Map<String, String> checkResultMap = orderService.orderWeightSubmitFirstWaybillTrackingNo(firstWaybillTrackingNo, userIdOfOperator);
+		return GsonUtil.toJson(checkResultMap);
+	}
+
+	/**
 	 * 出库扫描运单建包界面
 	 * 
 	 * @param request

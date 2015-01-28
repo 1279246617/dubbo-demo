@@ -18,89 +18,75 @@
 <title>COE</title>
 </head>
 <body style="font-size: 16px;">
-	<table class="table" style="width:100%;background-color:#f5f5f5;margin-bottom: 1px;">
-			<tr>
-				<td colspan="3" style="height:40px;">
-					客户订单号&nbsp;&nbsp;
-					<input type="text"  name="customerReferenceNo"   t="1" id="customerReferenceNo"  style="width:160px;"/>
-					&nbsp;&nbsp;
-					订单状态<input type="text"  name="status"   t="1" id="status"  style="width:120px;" readonly="readonly"/>
-					<input type="text"  name="orderId"  id="orderId" t="1"  style="display: none;"/>
-				</td>
-			</tr>
-	</table>
-	
-	<table class="table" style="width:100%;background-color:#f5f5f5;margin-bottom: 0px;">
-				<tr>
-					<th>
-							扫描跟踪号码复核小包:&nbsp;&nbsp;&nbsp;<input style="width:200px;" id="trackingNo"    t="2" name="trackingNo">
-					</th>
-				</tr>
-	</table>	
-	<div style="width:100%;height:200px;overflow:auto;">
-			<div style="width:9%;height:200px;margin-left:10px; float: left; ">
-				<div style="margin-top: 10px;">
-					<b>待扫描单号:</b>
-				</div>	
-			</div>			
-			<table class="table" style="width:25%;margin-bottom: 1px;float: left;">
-				<tbody  id="firstWaybillTrackingNos"></tbody>
-			</table>
+	 	<div class="pull-left" style="width:50%;height:95%; margin-top: 15px;margin-left: 35px;'" >
+		<div class="pull-left" style="width:100%;">
+				<div class="pull-left badge badge-success" style="width:20px; margin-left:-20px; font-weight: bold;">1</div>
+				<div style="font-weight: bold;height:30px;">扫描跟踪单号</div>
 			
-			<div style="width:9%;height:200px;margin-left:30px; float: left;">
-				<div style="margin-top: 10px;">	
-					<b>已扫描单号:</b>
-				</div>	
-			</div>
-			<table class="table" style="width:25%;margin-bottom: 1px;float: left;">
-				<tbody  id="scanTrackingNos"></tbody>
-			</table>	  
+				<span style="width:100px;" class="pull-left" >
+					头程跟踪单号
+				</span>
+				<span style="width:200px;" class="pull-left" >
+					<input class="pull-left"  type="text"  name="firstWaybillTrackingNo"   t="1" id="firstWaybillTrackingNo"  style="width:150px;" title="请输入捡货单上的客户订单号"/>
+					<input  type="text" name="firstWaybillId" id="firstWaybillId" style="display:none;">
+					<input  type="text" name="orderId" id="orderId" style="display:none;">
+				</span>
+				<span class="pull-left"  style="width:100px;">订单状态</span>
+				<span style="width:100px;" class="pull-left" >
+					<input class="pull-left"  type="text"  name="status"   t="1" id="status"  style="width:150px;" readonly="readonly"/>
+				</span>	
+		</div>
+		
+		<div class="pull-left" style="width:100%;margin-top: 10px;">
+				<span style="width:100px;" class="pull-left" >
+					出货渠道
+				</span>
+				<span style="width:200px;" class="pull-left" >
+					<input type="text"  name="shipwayCode"  id="shipwayCode"   t="2" style="width:150px;" readonly="readonly"/>
+				</span>
+				
+				<span class="pull-left"  style="width:100px;">出货跟踪单号</span>
+				<span style="width:100px;" class="pull-left" >
+					<input type="text"  name="trackingNo"  id="trackingNo"  t="2"  style="width:150px;" readonly="readonly"/>
+				</span>
+		</div>
+				
+		<div class="pull-left"  style="width:100%; margin-top: 50px;">
+			<div class="pull-left badge badge-success" style="width:20px;font-weight: bold; margin-left:-20px;">2</div>
+			<div style="font-weight: bold;height:30px;">称出库总重量</div>
+			<span class="pull-left"  style="width:100px;">装箱重量</span>
+			<span style="width:500px;" class="pull-left" >
+				<input type="text"  name="weight"  t="2"  id="weight"  style="width:150px; font-size: 4mm;font-weight: bold;color:red;" class="pull-left" readonly="readonly" onkeyup="this.value=this.value.replace(/[^\d\.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d\.]/g,'')"/>
+				<span style="width:50px;height:30px; font-size: 5mm;font-weight: bold;" class="pull-left" >KG</span>
+				<span style="width:90px;height:30px; font-size: 4mm;" class="pull-left" >
+					<input class="pull-left" t="2" name="auto" style="vertical-align: middle;" type="checkbox" checked="checked" id="auto">
+					自动读取
+				</span>
+			</span>
+		</div>	
+		
+		<div class="pull-left"  style="width:100%; margin-top: 20px;">
+			<span style="width:300px;height:30px;font-size: 5mm;" class="pull-left" >
+					<a class="btn  btn-primary"  onclick="saveweight();"  style="cursor:pointer;"><i class="icon-ok icon-white"></i><b>完成装箱</b></a>
+			</span>
+			<span style="width:90px;height:30px; font-size: 4mm;" class="pull-left" >
+					<input class="pull-left" t="2" name="andPrint" style="vertical-align: middle;" type="checkbox" checked="checked" id="andPrint">
+					打印运单
+			</span>
+			<span style="width:90px;height:30px; font-size: 4mm;" class="pull-left" >
+					<input class="pull-left" t="2" name="printWithPreview" style="vertical-align: middle;" type="checkbox"  id="printWithPreview">
+					预览打印
+			</span>
+		</div>
+		
+</div>
+<div class="pull-right" style="width:45%;height:95%; ">
+	<div style="font-size:38mm; margin-top: 225px; height:76mm;width:140mm; ">
+			<font color="red"  id="weight2"></font>
 	</div>
-	  
-	<table class="table" style="background-color:#f5f5f5;margin-bottom: 2px;"  >
-			<tr>
-				<th>转运订单称重与打出货运单</th>
-			</tr>
-			<tr  style="color:#555555;">
-				<td colspan="2" style="height:50px;">
-					<span style="width:90px;height:30px;margin-top: 4mm;font-size: 5mm;" class="pull-left" >装箱重量</span>
-					<input type="text"  name="weight"  t="3"  id="weight"  style="width:130px;height:45px; font-size: 10mm;font-weight: bold;color:red;" class="pull-left" readonly="readonly" onkeyup="this.value=this.value.replace(/[^\d\.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d\.]/g,'')"/>
-					<span style="width:50px;height:30px;margin-top: 4mm;font-size: 6mm;font-weight: bold;" class="pull-left" >KG</span>
-					<span style="width:90px;height:30px;margin-top: 4mm;font-size: 4mm;" class="pull-left" >
-						<input class="pull-left"  t="3" name="auto" style="vertical-align: middle;" type="checkbox" checked="checked" id="auto">
-						自动读取
-					</span>
-					<span style="height:30px;margin-top: 0mm;font-size: 8mm;" class="pull-left" >
-						<img id="weightOk" src="${baseUrl}/static/img/nike.png" style="display:none;width:15mm;height:15mm;" >
-					</span>
-				</td>
-				<td colspan="1">
-					<span style="width:90px;height:30px;margin-top: 4mm;font-size: 5mm;" class="pull-left" >
-							<a class="btn  btn-primary"  onclick="saveweight();"  style="cursor:pointer;"><i class="icon-ok icon-white"></i>保存重量</a>
-					</span>
-				</td>
-			</tr>
-			<tr  >
-				<td colspan="1" style="width:280px;">
-					出货渠道&nbsp;&nbsp;
-					<input type="text"  name="shipwayCode"  id="shipwayCode"   t="4" style="width:130px;" readonly="readonly"/>
-				</td>
-				<td colspan="1" style="width:330px;">
-					跟踪单号&nbsp;&nbsp;
-					<input type="text"  name="outWarehouseTrackingNo"  id="outWarehouseTrackingNo"  t="4"  style="width:150px;" readonly="readonly"/>
-				</td>
-				<td colspan="1" >
-					<a class="btn  btn-primary"  onclick="printShipLabel();" style="cursor:pointer;">
-						<i class="icon-ok icon-white"></i>打印出货运单
-					</a>
-				</td>
-			</tr>
-	</table>			
-	
-	 <script type="text/javascript" src="${baseUrl}/static/jquery/jquery.js"></script>
-	     
+</div>		
+	<script type="text/javascript" src="${baseUrl}/static/jquery/jquery.js"></script>
     <script type="text/javascript" src="${baseUrl}/static/bootstrap/bootstrap-typeahead.js"></script>
-    
 	<script type="text/javascript" src="${baseUrl}/static/jquery/jquery.showMessage.js"></script>
 	<script  type="text/javascript" src="${baseUrl}/static/ligerui/ligerUI/js/core/base.js"></script>
 	<script type="text/javascript" src="${baseUrl}/static/ligerui/ligerUI/js/ligerui.all.js"></script>
@@ -113,70 +99,74 @@
 	<script type="text/javascript" src="${baseUrl}/static/lhgdialog/prettify/lhgdialog.js"></script>
     
     <script  type="text/javascript" src="${baseUrl}/static/js/warehouse/webSocketReadScales.js" ></script>
-    <script  type="text/javascript" src="${baseUrl}/static/js/warehouse/transport/orderWeightAndPrint.js" ></script>
+    <script  type="text/javascript" src="${baseUrl}/static/js/warehouse/transport/directOrderWeightAndPrint.js" ></script>
     
     
     <script type="text/javascript">
 	   var baseUrl = "${baseUrl}";
+	   var baseUrl = "${baseUrl}";
 	   //进入页面,焦点跟踪单号
-	   $("#customerReferenceNo").focus();
-	   var focus = "1";
-	    $(window).keydown(function(event){
-	    	//回车加ctrl 下一单
-	    	if((event.keyCode   ==   13) &&   (event.ctrlKey)) {
-	    		nextInWarehouseRecord();
-	    		return;
-	    	}
+	   $("#firstWaybillTrackingNo").focus();
+	   var focus= "1";
+	   var autoWeight;
+	   $(window).keydown(function(event){
 	    	//回车事件
 	    	if((event.keyCode   ==   13)) {
-	    		if(focus == '1'){
-	    			submitCustomerReferenceNo();
-		  		  	return false;
-	  		  	}
-	    		//复核小包
-				if(focus == '2'){
-					checkFirstWaybill();
-		      		return false;
-				}
-				//保存重量
-				if(focus == '3'){
-					saveweight();
-		      		return false;
-				}
-				//打印运单
-				if(focus == '4'){
-					printShipLabel();
-		      		return false;
-				}
+	    		if(focus == "1"){
+	    			submitFirstWaybillTrackingNo();
+	    		}
+	    		if(focus == "2"){
+	    			saveweight();
+	    		}
 	    		return;
 	    	}  
+	    	//空格
+			if(event.keyCode == 32 && !$(event.target).is('input,textarea')){
+				return;
+			}    	
+	    	if((event.keyCode   ==   13) &&   (event.ctrlKey)) {
+	    	}
 	    });
-  	  	$(function(){
-	  		$("input").focus(function(){
-	  			//当前获取焦点的文本框是 主单还是明细
-	  			focus = $(this).attr("t");
-	  		});
-	  		//加载页面时,启动读取电子秤
-	  		toggleConnection(ports[0]);
-	  		//启动读取电子秤
-	  		autoWeight = window.setInterval(function(){ 
-	  			ws.send("getweig");		 
-			}, 300);
-			 		  	
-	  		$("#auto").click(function(){
-	  			if($("#auto").attr("checked")=="checked"){
-	  				//自动获取电子称数据
-	 	  			$("#weight").attr("readonly","readonly");
-	  				//启动读取电子秤
-		 	  		autoWeight = window.setInterval(function(){ 
-	 		  			ws.send("getweig");		 
-					}, 300);
-	 	  		 }else{
-	 	  			 $("#weight").removeAttr("readonly");
-	 	  		 	clearInterval(autoWeight);//取消读取
-	 	  		 }
-	  		});
-   		});
+ 	  	 $(function(){
+ 		  		$("input").focus(function(){
+ 		  			focus = $(this).attr("t");
+ 		  		});
+ 		  		window.setInterval(function(){ 
+ 		  			$("#weight2").html($('#weight').val());
+				}, 100);
+ 		  		
+ 		  		//加载页面时,启动读取电子秤
+ 		  		toggleConnection(ports[0]);
+ 		  		//启动读取电子秤
+ 		  		autoWeight = window.setInterval(function(){ 
+ 		  			ws.send("getweig");		 
+				}, 200);
+				//自动读取 		  	
+ 		  		$("#auto").click(function(){
+ 		  			if($("#auto").attr("checked")=="checked"){
+ 					 	onAuto();
+ 		 	  		 }else{
+ 		 	  			offAuto();
+ 		 	  		}
+ 		  		});
+ 	   	});
+ 	  	 	
+ 	  	 //开启读取
+ 	  	 function onAuto(){
+ 	  			$("#auto").attr("checked",true);
+	  			$("#weight").attr("readonly","readonly");
+				//启动读取电子秤
+	 	  		autoWeight = window.setInterval(function(){ 
+		  			ws.send("getweig");		 
+				}, 300);
+ 	  	 }
+ 	  	 
+  		//取消读取 	  	 
+ 	  	 function offAuto(){
+ 	  		$("#auto").attr("checked",false);
+ 	  		$("#weight").removeAttr("readonly");
+ 	  		 clearInterval(autoWeight);
+ 	  	 }
     </script>	
     
 </body>
