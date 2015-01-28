@@ -337,20 +337,28 @@ public class OrderServiceImpl implements IOrderService {
 			return map;
 		}
 		FirstWaybill firstWaybill = firstWaybillDao.getFirstWaybillById(firstWaybillId);
+		if (!StringUtil.isEqual(firstWaybill.getStatus(), FirstWaybillStatusCode.WWR)) {
+			map.put(Constant.MESSAGE, "该头程运单非待收货状态");
+			return map;
+		}
 		// 转运大包处理
 		if (firstWaybill.getOrderPackageId() != null) {
-			if (!StringUtil.isEqual(firstWaybill.getStatus(), FirstWaybillStatusCode.WWR)) {
-				map.put(Constant.MESSAGE, "该转运大包非待收货状态,请输入新的跟踪单号");
-				return map;
-			}
 			firstWaybillDao.receivedFirstWaybill(firstWaybill);
 			orderPackageDao.updateOrderPackageStatus(firstWaybill.getOrderPackageId(), OrderPackageStatusCode.SUCCESS);
 			map.put(Constant.MESSAGE, "该转运大包收货成功,请注意需要拆包");
 			return map;
 		}
-		// 转运订单
-		if (!StringUtil.isEqual(firstWaybill.getStatus(), FirstWaybillStatusCode.WWR)) {
-			map.put(Constant.MESSAGE, "该转运订单非待收货状态,请输入新的跟踪单号");
+		Order order = orderDao.getOrderById(firstWaybill.getOrderId());
+		if (StringUtil.isEqual(order.getStatus(), OrderStatusCode.WWC)) {
+			map.put(Constant.MESSAGE, "该转运订单等待仓库审核!");
+			return map;
+		}
+		if (StringUtil.isEqual(order.getStatus(), OrderStatusCode.WCF)) {
+			map.put(Constant.MESSAGE, "该转运订单已经审核拒收!");
+			return map;
+		}
+		if (StringUtil.isEqual(order.getStatus(), OrderStatusCode.WCI)) {
+			map.put(Constant.MESSAGE, "该转运订单等回传审核中,请等待!");
 			return map;
 		}
 		// 分配货位
@@ -489,6 +497,39 @@ public class OrderServiceImpl implements IOrderService {
 		map.put("orderStatus", status.getCn());
 		map.put("shipwayCode", order.getShipwayCode());
 		map.put("trackingNo", order.getTrackingNo());
+		map.put(Constant.STATUS, Constant.SUCCESS);
+		return map;
+	}
+
+	@Override
+	public Map<String, String> orderWeightSubmitFirstWaybillTrackingNo(String firstWaybillTrackingNo, Long userIdOfOperator) {
+		Map<String, String> map = new HashMap<String, String>();
+		map.put(Constant.STATUS, Constant.FAIL);
+		if (StringUtil.isNull(firstWaybillTrackingNo)) {
+			map.put(Constant.MESSAGE, "请输入头程跟踪单号");
+			return map;
+		}
+		FirstWaybill param = new FirstWaybill();
+		param.setTrackingNo(firstWaybillTrackingNo);
+		List<FirstWaybill> firstWaybillList = firstWaybillDao.findFirstWaybill(param, null, null);
+		if (firstWaybillList == null || firstWaybillList.size() <= 0) {
+			map.put(Constant.MESSAGE, "请输入正确头程跟踪单号");
+			return map;
+		}
+		if (firstWaybillList.size() >= 2) {
+			map.put(Constant.MESSAGE, "该跟踪单号找到多个头程运单,请使用集货称重打单功能处理");
+			return map;
+		}
+		FirstWaybill firstWaybill = firstWaybillList.get(0);
+
+		Long orderId = firstWaybill.getOrderId();
+		map.put("orderId", orderId.toString());
+		map.put("firstWaybillId", firstWaybill.getId().toString());
+		Order order = orderDao.getOrderById(orderId);
+		OrderStatus status = orderStatusDao.findOrderStatusByCode(order.getStatus());
+		map.put("orderStatus", status.getCn());
+		map.put("shipwayCode", order.getShipwayCode());
+		map.put("trackingNo", firstWaybill.getTrackingNo());
 		map.put(Constant.STATUS, Constant.SUCCESS);
 		return map;
 	}
