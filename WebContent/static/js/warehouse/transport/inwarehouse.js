@@ -72,12 +72,24 @@ function saveReceivedFirstWaybillStep2(trackingNoStr,remark,warehouseId) {
 	var firstWaybillId = $("#firstWaybillId").val();//保存转运订单入库
 	$.post(baseUrl+ '/warehouse/transport/submitInWarehouse.do?trackingNo='+ trackingNoStr
 		+'&warehouseId='+warehouseId+'&firstWaybillId='+firstWaybillId+'&remark='+remark, function(msg) {
-		if(msg.status == 0){
+		if(msg.status == 0){//收货失败
 			$("#tips").html(msg.message);
 			parent.$.showDialogMessage(msg.message, null, null);
 			unLockTrackingNo();
+			$("#trackingNo").select();
 			return;
 		}
+		if(msg.status == 2){//大包收货成功
+			$("#trackingNo").val("");
+			$("#orderRemark").val("");
+			$("#firstWaybillId").val("");
+			$("#firstWaybillbody").html("");
+			unLockTrackingNo();
+			$("#trackingNo").focus();
+			parent.$.showDialogMessage(msg.message, null, null);
+			return;
+		}
+		//订单收货成功
 		$("#tips").html(msg.message);
 		$("#seatCode").html(msg.seatCode);
 		$("#firstWaybillId").val(msg.firstWaybillId);
@@ -120,6 +132,7 @@ function unLockTrackingNo(){
 		  $(this).removeAttr("readonly");
 	 });
 }
+ 
 
 function nextInWarehouse(message){
 	unLockTrackingNo();

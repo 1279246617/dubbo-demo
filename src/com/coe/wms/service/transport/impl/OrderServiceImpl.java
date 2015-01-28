@@ -341,11 +341,15 @@ public class OrderServiceImpl implements IOrderService {
 			map.put(Constant.MESSAGE, "该头程运单非待收货状态");
 			return map;
 		}
+		firstWaybill.setUserIdOfOperator(userIdOfOperator);
+		firstWaybill.setStatus(FirstWaybillStatusCode.WSR);
+		firstWaybill.setReceivedTime(System.currentTimeMillis());
 		// 转运大包处理
 		if (firstWaybill.getOrderPackageId() != null) {
 			firstWaybillDao.receivedFirstWaybill(firstWaybill);
 			orderPackageDao.updateOrderPackageStatus(firstWaybill.getOrderPackageId(), OrderPackageStatusCode.SUCCESS);
 			map.put(Constant.MESSAGE, "该转运大包收货成功,请注意需要拆包");
+			map.put(Constant.STATUS, "2");
 			return map;
 		}
 		Order order = orderDao.getOrderById(firstWaybill.getOrderId());
@@ -377,12 +381,8 @@ public class OrderServiceImpl implements IOrderService {
 			map.put(Constant.MESSAGE, "转运货位不足,请添加货位再收货");
 			return map;
 		}
-		firstWaybill.setUserIdOfOperator(userIdOfOperator);
-		firstWaybill.setStatus(FirstWaybillStatusCode.WSR);
-		firstWaybill.setReceivedTime(System.currentTimeMillis());
 		firstWaybill.setSeatCode(seatCode);// 收货预分配货位
 		firstWaybillDao.receivedFirstWaybill(firstWaybill);
-
 		// 判断order下的所有firstWaybill是否已经全部收货
 		FirstWaybill firstWaybillParam = new FirstWaybill();
 		firstWaybillParam.setOrderId(firstWaybill.getOrderId());
