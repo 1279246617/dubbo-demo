@@ -20,6 +20,11 @@ public class OrderPackageStatus implements Serializable {
 		public static final String WRG = "WRG";
 
 		/**
+		 * 拒收
+		 */
+		public static final String WCF = "WCF";
+
+		/**
 		 * 完成收货
 		 */
 		public static final String SUCCESS = "SUCCESS";

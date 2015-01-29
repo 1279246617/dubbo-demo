@@ -264,6 +264,7 @@ public class TransportInterfaceService1Impl implements ITransportInterfaceServic
 		orderPackage.setWarehouseId(warehouseId);
 		orderPackage.setRemark(tradeRemark);
 		orderPackage.setTrackingNo(logisticsOrderFirst.getMailNo());
+		orderPackage.setCheckResult(OrderPackage.CHECK_RESULT_SUCCESS);// 大包默认审核通过
 		Long orderPackageId = orderPackageDao.saveOrderPackage(orderPackage);// 保存大包,得到大包id
 		// 头程运单
 		FirstWaybill firstWaybill = new FirstWaybill();
