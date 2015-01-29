@@ -22,8 +22,6 @@ import com.coe.wms.dao.datasource.DataSource;
 import com.coe.wms.dao.datasource.DataSourceCode;
 import com.coe.wms.dao.warehouse.transport.IOrderPackageDao;
 import com.coe.wms.model.warehouse.transport.OrderPackage;
-import com.coe.wms.model.warehouse.transport.OrderPackageStatus.OrderPackageStatusCode;
-import com.coe.wms.util.Constant;
 import com.coe.wms.util.DateUtil;
 import com.coe.wms.util.Pagination;
 import com.coe.wms.util.StringUtil;
@@ -44,7 +42,7 @@ public class OrderPackageDaoImpl implements IOrderPackageDao {
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public long saveOrderPackage(final OrderPackage orderPackage) {
-		final String sql = "insert into w_t_order_package (warehouse_id,user_id_of_customer,user_id_of_operator,created_time,status,customer_reference_no,remark,tracking_no) values (?,?,?,?,?,?,?,?)";
+		final String sql = "insert into w_t_order_package (warehouse_id,user_id_of_customer,user_id_of_operator,created_time,status,customer_reference_no,remark,tracking_no,check_result) values (?,?,?,?,?,?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
@@ -61,6 +59,7 @@ public class OrderPackageDaoImpl implements IOrderPackageDao {
 				ps.setString(6, orderPackage.getCustomerReferenceNo());
 				ps.setString(7, orderPackage.getRemark());
 				ps.setString(8, orderPackage.getTrackingNo());
+				ps.setString(9, orderPackage.getCheckResult());
 				return ps;
 			}
 		}, keyHolder);
@@ -70,7 +69,7 @@ public class OrderPackageDaoImpl implements IOrderPackageDao {
 
 	@Override
 	public OrderPackage getOrderPackageById(Long orderPackageId) {
-		String sql = "select id,warehouse_id,user_id_of_customer,user_id_of_operator,created_time,status,customer_reference_no,remark,tracking_no from w_t_order_package where id =" + orderPackageId;
+		String sql = "select id,warehouse_id,user_id_of_customer,user_id_of_operator,created_time,status,customer_reference_no,remark,tracking_no,check_result from w_t_order_package where id =" + orderPackageId;
 		List<OrderPackage> OrderPackageList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(OrderPackage.class));
 		if (OrderPackageList != null && OrderPackageList.size() > 0) {
 			return OrderPackageList.get(0);
@@ -85,7 +84,7 @@ public class OrderPackageDaoImpl implements IOrderPackageDao {
 	@Override
 	public List<OrderPackage> findOrderPackage(OrderPackage orderPackage, Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select id,tracking_no,warehouse_id,user_id_of_customer,user_id_of_operator,created_time,status,customer_reference_no,remark,tracking_no from w_t_order_package where 1=1 ");
+		sb.append("select id,tracking_no,warehouse_id,user_id_of_customer,user_id_of_operator,created_time,status,customer_reference_no,remark,tracking_no,check_result from w_t_order_package where 1=1 ");
 		if (orderPackage != null) {
 			if (orderPackage.getId() != null) {
 				sb.append(" and id = " + orderPackage.getId());
@@ -110,6 +109,9 @@ public class OrderPackageDaoImpl implements IOrderPackageDao {
 			}
 			if (StringUtil.isNotNull(orderPackage.getRemark())) {
 				sb.append(" and remark = '" + orderPackage.getRemark() + "' ");
+			}
+			if (StringUtil.isNotNull(orderPackage.getCheckResult())) {
+				sb.append(" and check_result = '" + orderPackage.getCheckResult() + "' ");
 			}
 		}
 		if (moreParam != null) {
@@ -164,6 +166,9 @@ public class OrderPackageDaoImpl implements IOrderPackageDao {
 			if (StringUtil.isNotNull(orderPackage.getRemark())) {
 				sb.append(" and remark = '" + orderPackage.getRemark() + "' ");
 			}
+			if (StringUtil.isNotNull(orderPackage.getCheckResult())) {
+				sb.append(" and check_result = '" + orderPackage.getCheckResult() + "' ");
+			}
 		}
 		if (moreParam != null) {
 			if (moreParam.get("createdTimeStart") != null) {
@@ -203,5 +208,31 @@ public class OrderPackageDaoImpl implements IOrderPackageDao {
 	public String getCustomerReferenceNoById(Long orderPackageId) {
 		String sql = "select customer_reference_no from w_t_order_package where id = " + orderPackageId;
 		return jdbcTemplate.queryForObject(sql, String.class);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.coe.wms.dao.warehouse.transport.IOrderPackageDao#
+	 * findCallbackSendCheckUnSuccessOrderPackageId()
+	 */
+	@Override
+	public List<Long> findCallbackSendCheckUnSuccessOrderPackageId() {
+		String sql = "select id from w_t_order_package where check_result is not null  and (callback_send_check_is_success = 'N' or  callback_send_check_is_success is null)";
+		List<Long> orderIdList = jdbcTemplate.queryForList(sql, Long.class);
+		return orderIdList;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.coe.wms.dao.warehouse.transport.IOrderPackageDao#
+	 * updateOrderPackageCallbackSendCheck
+	 * (com.coe.wms.model.warehouse.transport.OrderPackage)
+	 */
+	@Override
+	public int updateOrderPackageCallbackSendCheck(OrderPackage orderPackage) {
+		String sql = "update w_t_order_package set callback_send_check_is_success=? ,callback_send_check_count = ? , status=? where id=" + orderPackage.getId();
+		return jdbcTemplate.update(sql, orderPackage.getCallbackSendCheckIsSuccess(), orderPackage.getCallbackSendCheckCount(), orderPackage.getStatus());
 	}
 }

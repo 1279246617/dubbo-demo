@@ -43,6 +43,8 @@ import com.coe.wms.model.warehouse.storage.record.InWarehouseRecordItem;
 import com.coe.wms.model.warehouse.transport.FirstWaybill;
 import com.coe.wms.model.warehouse.transport.FirstWaybillStatus.FirstWaybillStatusCode;
 import com.coe.wms.model.warehouse.transport.Order;
+import com.coe.wms.model.warehouse.transport.OrderPackage;
+import com.coe.wms.model.warehouse.transport.OrderPackageStatus.OrderPackageStatusCode;
 import com.coe.wms.model.warehouse.transport.OrderStatus.OrderStatusCode;
 import com.coe.wms.pojo.api.warehouse.EventBody;
 import com.coe.wms.pojo.api.warehouse.EventHeader;
@@ -161,7 +163,7 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 	/**
 	 * 发送仓配入库订单信息给客户
 	 */
-	@Scheduled(cron = "0 0/10 * * * ? ")
+	@Scheduled(cron = "0 0/1 * * * ? ")
 	@Override
 	public void sendInWarehouseInfoToCustomer() {
 		List<Long> recordIdList = inWarehouseRecordDao.findCallbackUnSuccessRecordId();
@@ -245,7 +247,6 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 				inWarehouseRecordDao.updateInWarehouseRecordCallback(inWarehouseRecord);
 				continue;
 			}
-
 			List<BasicNameValuePair> basicNameValuePairs = new ArrayList<BasicNameValuePair>();
 			basicNameValuePairs.add(new BasicNameValuePair("logistics_interface", xml));
 			// 仓库编号
@@ -256,9 +257,9 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 			basicNameValuePairs.add(new BasicNameValuePair("data_digest", dataDigest));
 			basicNameValuePairs.add(new BasicNameValuePair("version", "1.0"));
 
-			logger.info("回传SKU入库信息: url=" + url);
+			logger.debug("回传SKU入库信息: url=" + url);
 			logger.info("回传SKU入库信息: logistics_interface=" + xml);
-			logger.info("回传SKU入库信息: data_digest=" + dataDigest + " msg_source=" + msgSource + " msg_type=" + serviceNameSkuStockin + " logistics_provider_id=" + warehouse.getWarehouseNo());
+			logger.debug("回传SKU入库信息: data_digest=" + dataDigest + " msg_source=" + msgSource + " msg_type=" + serviceNameSkuStockin + " logistics_provider_id=" + warehouse.getWarehouseNo());
 			try {
 				String response = HttpUtil.postRequest(url, basicNameValuePairs);
 				logger.info("顺丰返回:" + response);
@@ -365,9 +366,9 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 			String dataDigest = StringUtil.encoderByMd5(xml + user.getOppositeSecretKey());
 			basicNameValuePairs.add(new BasicNameValuePair("data_digest", dataDigest));
 			basicNameValuePairs.add(new BasicNameValuePair("version", "1.0"));
-			logger.info("回传SKU出库称重信息: url=" + url);
+			logger.debug("回传SKU出库称重信息: url=" + url);
 			logger.info("回传SKU出库称重信息: logistics_interface=" + xml);
-			logger.info("回传SKU出库称重信息: data_digest=" + dataDigest + " msg_source=" + msgSource + " msg_type=" + serviceNameSendWeight + " logistics_provider_id=" + warehouse.getWarehouseNo());
+			logger.debug("回传SKU出库称重信息: data_digest=" + dataDigest + " msg_source=" + msgSource + " msg_type=" + serviceNameSendWeight + " logistics_provider_id=" + warehouse.getWarehouseNo());
 			try {
 				String response = HttpUtil.postRequest(url, basicNameValuePairs);
 				logger.info("顺丰返回:" + response);
@@ -475,9 +476,9 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 			basicNameValuePairs.add(new BasicNameValuePair("data_digest", dataDigest));
 			basicNameValuePairs.add(new BasicNameValuePair("version", "1.0"));
 
-			logger.info("回传SKU出库状态信息: url=" + url);
+			logger.debug("回传SKU出库状态信息: url=" + url);
 			logger.info("回传SKU出库状态信息: logistics_interface=" + xml);
-			logger.info("回传SKU出库状态信息: data_digest=" + dataDigest + " msg_source=" + msgSource + " msg_type=" + serviceNameSendStatus + " logistics_provider_id=" + warehouse.getWarehouseNo());
+			logger.debug("回传SKU出库状态信息: data_digest=" + dataDigest + " msg_source=" + msgSource + " msg_type=" + serviceNameSendStatus + " logistics_provider_id=" + warehouse.getWarehouseNo());
 			try {
 				String response = HttpUtil.postRequest(url, basicNameValuePairs);
 				logger.info("顺丰返回:" + response);
@@ -582,9 +583,9 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 			basicNameValuePairs.add(new BasicNameValuePair("data_digest", dataDigest));
 			basicNameValuePairs.add(new BasicNameValuePair("version", "1.0"));
 			String url = user.getOppositeServiceUrl();
-			logger.info("回传转运订单审核: url=" + url);
+			logger.debug("回传转运订单审核: url=" + url);
 			logger.info("回传转运订单审核: logistics_interface=" + xml);
-			logger.info("回传转运订单审核: data_digest=" + dataDigest + " msg_source=" + msgSource + " msg_type=" + serviceNameSkuStockin + " logistics_provider_id=" + warehouse.getWarehouseNo());
+			logger.debug("回传转运订单审核: data_digest=" + dataDigest + " msg_source=" + msgSource + " msg_type=" + serviceNameSkuStockin + " logistics_provider_id=" + warehouse.getWarehouseNo());
 			try {
 				String response = HttpUtil.postRequest(url, basicNameValuePairs);
 				logger.info("顺丰返回:" + response);
@@ -706,9 +707,9 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 			basicNameValuePairs.add(new BasicNameValuePair("data_digest", dataDigest));
 			basicNameValuePairs.add(new BasicNameValuePair("version", "1.0"));
 			String url = user.getOppositeServiceUrl();
-			logger.info("回传转运订单收货: url=" + url);
+			logger.debug("回传转运订单收货: url=" + url);
 			logger.info("回传转运订单收货: logistics_interface=" + xml);
-			logger.info("回传转运订单收货: data_digest=" + dataDigest + " msg_source=" + msgSource + " msg_type=" + serviceNameSkuStockin + " logistics_provider_id=" + warehouse.getWarehouseNo());
+			logger.debug("回传转运订单收货: data_digest=" + dataDigest + " msg_source=" + msgSource + " msg_type=" + serviceNameSkuStockin + " logistics_provider_id=" + warehouse.getWarehouseNo());
 			try {
 				String response = HttpUtil.postRequest(url, basicNameValuePairs);
 				logger.info("顺丰返回:" + response);
@@ -821,9 +822,9 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 			basicNameValuePairs.add(new BasicNameValuePair("data_digest", dataDigest));
 			basicNameValuePairs.add(new BasicNameValuePair("version", "1.0"));
 			String url = user.getOppositeServiceUrl();
-			logger.info("回传转运订单称重: url=" + url);
+			logger.debug("回传转运订单称重: url=" + url);
 			logger.info("回传转运订单称重: logistics_interface=" + xml);
-			logger.info("回传转运订单称重: data_digest=" + dataDigest + " msg_source=" + msgSource + " msg_type=" + serviceNameSkuStockin + " logistics_provider_id=" + warehouse.getWarehouseNo());
+			logger.debug("回传转运订单称重: data_digest=" + dataDigest + " msg_source=" + msgSource + " msg_type=" + serviceNameSkuStockin + " logistics_provider_id=" + warehouse.getWarehouseNo());
 			try {
 				String response = HttpUtil.postRequest(url, basicNameValuePairs);
 				logger.info("顺丰返回:" + response);
@@ -922,9 +923,9 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 			basicNameValuePairs.add(new BasicNameValuePair("data_digest", dataDigest));
 			basicNameValuePairs.add(new BasicNameValuePair("version", "1.0"));
 			String url = user.getOppositeServiceUrl();
-			logger.info("回传转运订单出库状态信息: url=" + url);
+			logger.debug("回传转运订单出库状态信息: url=" + url);
 			logger.info("回传转运订单出库状态信息: logistics_interface=" + xml);
-			logger.info("回传转运订单出库状态信息: data_digest=" + dataDigest + " msg_source=" + msgSource + " msg_type=" + serviceNameSendStatus + " logistics_provider_id=" + warehouse.getWarehouseNo());
+			logger.debug("回传转运订单出库状态信息: data_digest=" + dataDigest + " msg_source=" + msgSource + " msg_type=" + serviceNameSendStatus + " logistics_provider_id=" + warehouse.getWarehouseNo());
 			try {
 				String response = HttpUtil.postRequest(url, basicNameValuePairs);
 				logger.info("顺丰返回:" + response);
@@ -951,6 +952,121 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 				orderDao.updateOrderCallbackSendStatus(order);
 			} catch (Exception e) {
 				logger.error("回传转运订单出库状态信息时发生异常:" + e.getMessage());
+			}
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.coe.wms.task.ICallCustomerTask#sendOrderPackageCheckResultToCustomer
+	 * (com.coe.wms.model.warehouse.transport.OrderPackage)
+	 */
+	 @Scheduled(cron = "0 0/1 * * * ? ")
+	@Override
+	public void sendOrderPackageCheckResultToCustomer() {
+		List<Long> orderPackageIdList = orderPackageDao.findCallbackSendCheckUnSuccessOrderPackageId();
+		for (int i = 0; i < orderPackageIdList.size(); i++) {
+			Long orderPackageId = orderPackageIdList.get(i);
+			Long orderPackageIdLong = Long.valueOf(orderPackageId);
+			// 执行审核,并立即返回通知顺丰,如果顺丰无返回,不能审核通过
+			OrderPackage orderPackage = orderPackageDao.getOrderPackageById(orderPackageIdLong);
+			Warehouse warehouse = warehouseDao.getWarehouseById(orderPackage.getWarehouseId());
+			FirstWaybill firstWaybillParam = new FirstWaybill();
+			firstWaybillParam.setOrderPackageId(orderPackageIdLong);
+			List<FirstWaybill> FirstWaybillList = firstWaybillDao.findFirstWaybill(firstWaybillParam, null, null);
+			LogisticsEventsRequest logisticsEventsRequest = new LogisticsEventsRequest();
+			LogisticsEvent logisticsEvent = new LogisticsEvent();
+			// 事件头
+			EventHeader eventHeader = new EventHeader();
+			eventHeader.setEventType(EventType.WMS_CHECK_ORDER);
+			eventHeader.setEventTime(DateUtil.dateConvertString(new Date(), DateUtil.yyyy_MM_ddHHmmss));
+			// 仓库编码
+			eventHeader.setEventSource(warehouse.getWarehouseNo());
+			// CP_PARTNERFLAT 为 顺丰文档指定
+			eventHeader.setEventTarget("CP_PARTNERFLAT");
+			logisticsEvent.setEventHeader(eventHeader);
+			// 事件body
+			EventBody eventBody = new EventBody();
+			TradeDetail tradeDetail = new TradeDetail();
+			TradeOrder tradeOrder = new TradeOrder();
+			tradeOrder.setTradeOrderId(orderPackage.getCustomerReferenceNo());
+			List<TradeOrder> tradeOrders = new ArrayList<TradeOrder>();
+			tradeOrders.add(tradeOrder);
+			tradeDetail.setTradeOrders(tradeOrders);
+			eventBody.setTradeDetail(tradeDetail);
+			List<LogisticsOrder> logisticsOrders = new ArrayList<LogisticsOrder>();
+			for (FirstWaybill firstWaybill : FirstWaybillList) {
+				LogisticsOrder logisticsOrder = new LogisticsOrder();
+				logisticsOrder.setCarrierCode(firstWaybill.getCarrierCode());
+				logisticsOrder.setMailNo(firstWaybill.getTrackingNo());
+				logisticsOrder.setPoNo(firstWaybill.getPoNo());
+				logisticsOrder.setLogisticsCode(orderPackage.getCheckResult());
+				logisticsOrder.setLogisticsRemark(orderPackage.getCheckResult());
+				logisticsOrder.setOccurTime(DateUtil.dateConvertString(new Date(), DateUtil.yyyy_MM_ddHHmmss));
+				logisticsOrders.add(logisticsOrder);
+			}
+			LogisticsDetail logisticsDetail = new LogisticsDetail();
+			logisticsDetail.setLogisticsOrders(logisticsOrders);
+			eventBody.setLogisticsDetail(logisticsDetail);
+			logisticsEvent.setEventBody(eventBody);
+			logisticsEventsRequest.setLogisticsEvent(logisticsEvent);
+			String xml = XmlUtil.toXml(logisticsEventsRequest);
+
+			// xml内容封装完成,开始准备发送
+			User user = userDao.getUserById(orderPackage.getUserIdOfCustomer());
+			String msgSource = user.getOppositeToken();
+
+			List<BasicNameValuePair> basicNameValuePairs = new ArrayList<BasicNameValuePair>();
+			basicNameValuePairs.add(new BasicNameValuePair("logistics_interface", xml));
+			// 仓库编号
+			basicNameValuePairs.add(new BasicNameValuePair("logistics_provider_id", warehouse.getWarehouseNo()));
+			basicNameValuePairs.add(new BasicNameValuePair("msg_type", serviceNameSendCheckOrder));
+			basicNameValuePairs.add(new BasicNameValuePair("msg_source", msgSource));
+			String dataDigest = StringUtil.encoderByMd5(xml + user.getOppositeSecretKey());
+			basicNameValuePairs.add(new BasicNameValuePair("data_digest", dataDigest));
+			basicNameValuePairs.add(new BasicNameValuePair("version", "1.0"));
+			String url = user.getOppositeServiceUrl();
+			logger.debug("回传转运大包审核: url=" + url);
+			logger.info("回传转运大包审核: logistics_interface=" + xml);
+			logger.debug("回传转运大包审核: data_digest=" + dataDigest + " msg_source=" + msgSource + " msg_type=" + serviceNameSkuStockin + " logistics_provider_id=" + warehouse.getWarehouseNo());
+			try {
+				String response = HttpUtil.postRequest(url, basicNameValuePairs);
+				logger.info("顺丰返回:" + response);
+				orderPackage.setCallbackSendCheckCount(orderPackage.getCallbackSendCheckCount() == null ? 1 : orderPackage.getCallbackSendCheckCount() + 1);
+				Responses responses = (Responses) XmlUtil.toObject(response, Responses.class);
+				if (responses == null) {
+					logger.error("回传转运大包审核 返回信息无法转换成Responses对象");
+					continue;
+				}
+				String newStatus = "";
+				List<Response> responseList = responses.getResponseItems();
+				if (responseList != null && responseList.size() > 0) {
+					if (StringUtil.isEqualIgnoreCase(responseList.get(0).getSuccess(), Constant.TRUE)) {
+						orderPackage.setCallbackSendCheckIsSuccess(Constant.Y);
+						if (StringUtil.isEqual(orderPackage.getCheckResult(), "SUCCESS")) {
+							newStatus = OrderPackageStatusCode.WRG;
+						} else if (StringUtil.isEqual(orderPackage.getCheckResult(), "SECURITY")) {
+							newStatus = OrderPackageStatusCode.WCF;
+						} else if (StringUtil.isEqual(orderPackage.getCheckResult(), "OTHER_REASON")) {
+							newStatus = OrderPackageStatusCode.WCF;
+						}
+						orderPackage.setStatus(newStatus);
+						logger.debug("回传转运大包审核成功");
+					} else {
+						orderPackage.setCallbackSendCheckIsSuccess(Constant.N);
+						logger.debug("回传转运大包审核失败");
+					}
+				} else {
+					logger.error("回传转运大包审核 返回无指明成功与否");
+					orderPackage.setCallbackSendCheckIsSuccess(Constant.N);
+					continue;
+				}
+				// 更新 Callback 次数和成功状态
+				orderPackageDao.updateOrderPackageCallbackSendCheck(orderPackage);
+			} catch (Exception e) {
+				logger.error("回传转运大包审核时发生异常:" + e.getMessage());
 			}
 		}
 	}

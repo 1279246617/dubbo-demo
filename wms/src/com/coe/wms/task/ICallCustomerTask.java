@@ -1,5 +1,7 @@
 package com.coe.wms.task;
 
+import com.coe.wms.model.warehouse.transport.OrderPackage;
+
 public interface ICallCustomerTask {
 
 	/**
@@ -21,6 +23,11 @@ public interface ICallCustomerTask {
 	 * 回传转运订单审核结果给客户
 	 */
 	public void sendOrderCheckResultToCustomer();
+
+	/**
+	 * 回传转运大包审单结果给客户
+	 */
+	public void sendOrderPackageCheckResultToCustomer();
 
 	/**
 	 * 回传转运头程运单收货结果给客户

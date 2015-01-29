@@ -10,6 +10,7 @@ import java.io.Serializable;
  */
 public class OrderPackage implements Serializable {
 
+	public static final String CHECK_RESULT_SUCCESS = "SUCCESS";
 	/**
 	 * 
 	 */
@@ -48,10 +49,23 @@ public class OrderPackage implements Serializable {
 	 * 备注
 	 */
 	private String remark;
-	
+
 	private String trackingNo;
-	
+
 	private String status;
+	/**
+	 * SUCCESS：接单 SECURITY：包裹安全监测不通过 OTHER_REASON：其他异常
+	 */
+	private String checkResult;
+	/**
+	 * 回调审核是否成功 Y 成功 N或者空失败
+	 */
+	private String callbackSendCheckIsSuccess;
+
+	/**
+	 * 回调次数
+	 */
+	private Integer callbackSendCheckCount;
 
 	public Long getId() {
 		return id;
@@ -63,6 +77,14 @@ public class OrderPackage implements Serializable {
 
 	public Long getWarehouseId() {
 		return warehouseId;
+	}
+
+	public String getCheckResult() {
+		return checkResult;
+	}
+
+	public void setCheckResult(String checkResult) {
+		this.checkResult = checkResult;
 	}
 
 	public void setWarehouseId(Long warehouseId) {
@@ -123,5 +145,21 @@ public class OrderPackage implements Serializable {
 
 	public void setRemark(String remark) {
 		this.remark = remark;
+	}
+
+	public String getCallbackSendCheckIsSuccess() {
+		return callbackSendCheckIsSuccess;
+	}
+
+	public void setCallbackSendCheckIsSuccess(String callbackSendCheckIsSuccess) {
+		this.callbackSendCheckIsSuccess = callbackSendCheckIsSuccess;
+	}
+
+	public Integer getCallbackSendCheckCount() {
+		return callbackSendCheckCount;
+	}
+
+	public void setCallbackSendCheckCount(Integer callbackSendCheckCount) {
+		this.callbackSendCheckCount = callbackSendCheckCount;
 	}
 }

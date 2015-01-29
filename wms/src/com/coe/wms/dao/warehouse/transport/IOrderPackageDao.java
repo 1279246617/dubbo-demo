@@ -3,6 +3,7 @@ package com.coe.wms.dao.warehouse.transport;
 import java.util.List;
 import java.util.Map;
 
+import com.coe.wms.model.warehouse.transport.Order;
 import com.coe.wms.model.warehouse.transport.OrderPackage;
 import com.coe.wms.util.Pagination;
 
@@ -21,4 +22,8 @@ public interface IOrderPackageDao {
 	public String getCustomerReferenceNoById(Long orderPackageId);
 
 	public int updateOrderPackageStatus(Long orderPackageId, String newStatus);
+
+	public List<Long> findCallbackSendCheckUnSuccessOrderPackageId();
+
+	public int updateOrderPackageCallbackSendCheck(OrderPackage orderPackage);
 }
