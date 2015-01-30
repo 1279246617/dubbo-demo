@@ -527,6 +527,14 @@ public class OrderServiceImpl implements IOrderService {
 		map.put("firstWaybillId", firstWaybill.getId().toString());
 		Order order = orderDao.getOrderById(orderId);
 		OrderStatus status = orderStatusDao.findOrderStatusByCode(order.getStatus());
+		// 是否是待称重打单
+		if (!(StringUtil.isEqual(order.getStatus(), OrderStatusCode.WOS) 
+				|| StringUtil.isEqual(order.getStatus(), OrderStatusCode.WWP)
+				|| StringUtil.isEqual(order.getStatus(), OrderStatusCode.WWW)
+				)) {
+			map.put(Constant.MESSAGE, "该订单状态:" + status.getCn() + ",不能称重打单");
+			return map;
+		}
 		map.put("orderStatus", status.getCn());
 		map.put("shipwayCode", order.getShipwayCode());
 		map.put("trackingNo", firstWaybill.getTrackingNo());

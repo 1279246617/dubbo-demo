@@ -73,6 +73,7 @@ function countSku(){
 	var weight = $("#weight").val();
 	var customerReferenceNo  = $("#customerReferenceNo").val();
 	var outWarehouseOrderId  = $("#outWarehouseOrderId").val();
+	var shipwayCode = $("#shipwayCode").val();
 	if(customerReferenceNo==''){
 		parent.$.showDialogMessage("请先输入客户订单号");
 		$("#customerReferenceNo").removeAttr("readonly");
@@ -95,7 +96,6 @@ function countSku(){
 		$("#weight").focus();
 		return false;
 	}
-	
 	$.post(baseUrl+ '/warehouse/storage/outWarehouseSubmitWeight.do?customerReferenceNo='+ customerReferenceNo+'&outWarehouseOrderWeight='+weight, function(msg) {
 			if(msg.status == 0){
 				parent.$.showDialogMessage(msg.message);
@@ -120,14 +120,14 @@ function countSku(){
 	
 	//是否同时打印运单
 	if($("#andPrint").attr("checked")=="checked"){
-		printShipLabel(outWarehouseOrderId);
+		printShipLabel(outWarehouseOrderId,shipwayCode);
 	}
  }
  	
  //打印出货运单标签
- function printShipLabel(outWarehouseOrderId){
+ function printShipLabel(outWarehouseOrderId,shipwayCode){
 	//无预览打印
-	var url = baseUrl+'/warehouse/directPrint/storageShipLabel.do?orderId='+outWarehouseOrderId;
+	var url = baseUrl+'/warehouse/directPrint/storageShipLabel.do?orderId='+outWarehouseOrderId+'&shipwayCode='+shipwayCode;
 	 //有预览打印
 	if($("#printWithPreview").attr("checked")=="checked"){
 		url = baseUrl+'/warehouse/print/printShipLabel.do?orderIds='+outWarehouseOrderId;

@@ -163,7 +163,7 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 	/**
 	 * 发送仓配入库订单信息给客户
 	 */
-	@Scheduled(cron = "0 0/1 * * * ? ")
+	@Scheduled(cron = "0 0/10 * * * ? ")
 	@Override
 	public void sendInWarehouseInfoToCustomer() {
 		List<Long> recordIdList = inWarehouseRecordDao.findCallbackUnSuccessRecordId();
@@ -963,7 +963,7 @@ public class CallCustomerTaskImpl implements ICallCustomerTask {
 	 * com.coe.wms.task.ICallCustomerTask#sendOrderPackageCheckResultToCustomer
 	 * (com.coe.wms.model.warehouse.transport.OrderPackage)
 	 */
-	 @Scheduled(cron = "0 0/1 * * * ? ")
+	@Scheduled(cron = "0 0/15 * * * ? ")
 	@Override
 	public void sendOrderPackageCheckResultToCustomer() {
 		List<Long> orderPackageIdList = orderPackageDao.findCallbackSendCheckUnSuccessOrderPackageId();
