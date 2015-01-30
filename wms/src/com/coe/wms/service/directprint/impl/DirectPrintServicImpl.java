@@ -213,4 +213,22 @@ public class DirectPrintServicImpl implements IDirectPrintService {
 		return map;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.coe.wms.service.directprint.IDirectPrintService#getTransportSfShipLabelData(java.lang.Long, java.lang.Double, java.lang.Double)
+	 */
+	@Override
+	public Map<String, Object> getTransportSfShipLabelData(Long orderId, Double height, Double barcodeScale) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.coe.wms.service.directprint.IDirectPrintService#getTransportEtkShipLabelData(java.lang.Long, java.lang.Double, java.lang.Double)
+	 */
+	@Override
+	public Map<String, Object> getTransportEtkShipLabelData(Long orderId, Double height, Double barcodeScale) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

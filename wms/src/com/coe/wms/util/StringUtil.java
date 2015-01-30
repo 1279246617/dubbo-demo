@@ -66,6 +66,31 @@ public class StringUtil {
 	 * @param s2
 	 * @return
 	 */
+	public static boolean isEqual(String s1, String[] s2) {
+		if (s1 == null && s2 == null) {
+			return true;
+		}
+		if (s1 != null && s2 == null) {
+			return false;
+		}
+		if (s2 != null && s1 == null) {
+			return false;
+		}
+		for (String temp : s2) {
+			if (s1.equals(temp)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * 判断2个字符串是否相同 比String 自带的Equal的好处是 ,可以对比 2个都为 null的字符串
+	 * 
+	 * @param s1
+	 * @param s2
+	 * @return
+	 */
 	public static boolean isEqualIgnoreCase(String s1, String s2) {
 		if (s1 == null && s2 == null) {
 			return true;
@@ -234,7 +259,7 @@ public class StringUtil {
 		}
 		return sb.toString();
 	}
-		
+
 	public static String toInRowName(String voName) {
 		StringBuffer sb = new StringBuffer();
 		for (int i = 0; i < voName.length(); i++) {

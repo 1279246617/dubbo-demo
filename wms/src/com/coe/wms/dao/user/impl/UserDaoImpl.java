@@ -3,7 +3,9 @@ package com.coe.wms.dao.user.impl;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -11,6 +13,9 @@ import org.apache.log4j.Logger;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.ParameterizedBeanPropertyRowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -44,10 +49,14 @@ public class UserDaoImpl implements IUserDao {
 	@Resource(name = "jdbcTemplate")
 	private JdbcTemplate jdbcTemplate;
 
+	@Resource(name = "namedParameterJdbcTemplate")
+	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
 	@Override
 	@DataSource(DataSourceCode.WMS)
 	public long saveUser(final User user) {
 		final String sql = "insert into u_user (parent_id,login_name,password,user_name,user_type,phone,email,created_time,status,secret_key,token,opposite_secret_key,opposite_token,opposite_service_url,default_warehouse_id) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		Map<String, String> map = new HashMap<String, String>();
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
@@ -70,6 +79,7 @@ public class UserDaoImpl implements IUserDao {
 				return ps;
 			}
 		}, keyHolder);
+
 		long id = keyHolder.getKey().longValue();
 		logger.debug("保存用户:" + sql + " 返回主键:" + id);
 		return id;
@@ -201,6 +211,40 @@ public class UserDaoImpl implements IUserDao {
 
 	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
+	}
+
+	// ////////////////////////
+	public long saveUser1(User user) {// 实体类参数
+		String sql = "insert into user(name,birthday, money) values (:name,:birthday,:money) ";
+		SqlParameterSource ps = new BeanPropertySqlParameterSource(user);
+		KeyHolder keyHolder = new GeneratedKeyHolder();
+
+		namedParameterJdbcTemplate.update(sql, ps, keyHolder);
+		return keyHolder.getKey().longValue();
+	}
+
+	public void saveUser2(User user) {// Map参数
+		String sql = "insert into user(name,birthday, money) values (:name,:birthday,:money) ";
+		Map<String, String> parameterMap = new HashMap<String, String>();
+		parameterMap.put("loginName", user.getLoginName());
+		// 无需返回主键的插入
+		namedParameterJdbcTemplate.update(sql, parameterMap);
+	}
+
+	public User findUser1(User user) {// 实体类参数
+		String sql = "select id, name, money, birthday  from user where money>:money and id<:id";
+		SqlParameterSource ps = new BeanPropertySqlParameterSource(user);
+		User u = namedParameterJdbcTemplate.queryForObject(sql, ps, new BeanPropertyRowMapper(User.class));
+		return u;
+	}
+
+	public User findUser2(User user) {// Map参数
+		String sql = "select id, name, money, birthday  from user where money>:m and id<:id";
+		Map params = new HashMap();
+		params.put("m", user.getLoginName());
+		params.put("id", user.getId());
+		Object u = namedParameterJdbcTemplate.queryForObject(sql, params, new BeanPropertyRowMapper(User.class));
+		return (User) u;
 	}
 
 }
