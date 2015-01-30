@@ -3,6 +3,7 @@ package com.coe.wms.controller.warehouse;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -57,17 +58,48 @@ public class DirectPrint {
 	 * @throws IOException
 	 */
 	@RequestMapping(value = "/storageShipLabel")
-	public ModelAndView storageShipLabel(HttpServletRequest request, HttpServletResponse response, Long orderId) throws IOException {
+	public ModelAndView storageShipLabel(HttpServletRequest request, HttpServletResponse response, Long orderId, String shipwayCode) throws IOException {
 		ModelAndView view = new ModelAndView();
 		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
-		Map<String, Object> map = directPrintService.getStorageSfShipLabelData(orderId, 17d, null);
-		view.addObject("map", map);
-		String shipwayCode = (String) map.get("shipwayCode");
+
+		Map<String, Object> map = new HashMap<String, Object>();
 		if (StringUtil.isEqual(shipwayCode, ShipwayCode.SF)) {
+			map = directPrintService.getStorageSfShipLabelData(orderId, 17d, null);
 			view.setViewName("warehouse/directprint/storageSfShipLabel");
-		} else if (StringUtil.isEqual(shipwayCode, ShipwayCode.ETK)) {
+		}
+		if (StringUtil.isEqual(shipwayCode, ShipwayCode.ETK)) {
 			view.setViewName("warehouse/directprint/storageEtkShipLabel");
 		}
+		view.addObject("map", map);
+
+		return view;
+	}
+
+	/**
+	 * 
+	 * 打印出库发货单
+	 * 
+	 * 根据出库渠道 判断打印顺丰运单还是ETK运单
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/transportShipLabel")
+	public ModelAndView transportShipLabel(HttpServletRequest request, HttpServletResponse response, Long orderId, String shipwayCode) throws IOException {
+		ModelAndView view = new ModelAndView();
+		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
+		Map<String, Object> map = new HashMap<String, Object>();
+		if (StringUtil.isEqual(shipwayCode, ShipwayCode.SF)) {
+			map = directPrintService.getTransportSfShipLabelData(orderId, 17d, null);
+			view.setViewName("warehouse/directprint/transportSfShipLabel");
+		}
+		if (StringUtil.isEqual(shipwayCode, ShipwayCode.ETK)) {
+			map = directPrintService.getTransportEtkShipLabelData(orderId, 17d, null);
+			view.setViewName("warehouse/directprint/transportEtkShipLabel");
+		}
+		view.addObject("map", map);
 		return view;
 	}
 

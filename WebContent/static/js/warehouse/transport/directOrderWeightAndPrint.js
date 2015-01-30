@@ -1,7 +1,7 @@
 function submitFirstWaybillTrackingNo(){
  		var firstWaybillTrackingNo  = $("#firstWaybillTrackingNo").val();
  		if(firstWaybillTrackingNo == null || firstWaybillTrackingNo == ''){
- 			parent.$.showDialogMessage("请输入头程运单跟踪单号",null,null);
+ 			parent.$.showDialogMessage("请输入头程跟踪单号",null,null);
  			return;
  		}
  		//清空运单信息
@@ -15,7 +15,7 @@ function submitFirstWaybillTrackingNo(){
  			firstWaybillTrackingNo:firstWaybillTrackingNo
  		}, function(msg) {
  				if(msg.status == 0){
- 					parent.$.showShortMessage({msg:msg.message,animate:false,left:"43%"});
+ 					parent.$.showDialogMessage(msg.message,null,null);
  					return;
  				}
  				if(msg.status ==1){
@@ -33,6 +33,7 @@ function submitFirstWaybillTrackingNo(){
 function saveweight(){
 	var weight = $("#weight").val();
 	var orderId = $("#orderId").val();
+	var shipwayCode = $("#shipwayCode").val();
 	var firstWaybillTrackingNo  = $("#firstWaybillTrackingNo").val();
 	if(firstWaybillTrackingNo == null || firstWaybillTrackingNo == ''){
 		parent.$.showDialogMessage("请输入头程运单跟踪单号",null,null);
@@ -63,7 +64,7 @@ function saveweight(){
 			}
 	},"json");
 	if($("#andPrint").attr("checked")=="checked"){
-		printShipLabel(orderId);	//同时打印运单
+		printShipLabel(orderId,shipwayCode);	//同时打印运单
 	}
 }
 
@@ -75,12 +76,21 @@ function next(){
 	$("#weight").val("");
 	$("#trackingNo").val("");
 	focus='1';
+	$("#firstWaybillTrackingNo").val("");
 	$("#firstWaybillTrackingNo").focus();
 }
 
 //打印出货运单标签
-function printShipLabel(orderId){
-	var url = baseUrl+'/warehouse/print/printTransportShipLabel.do?orderIds='+orderId;
-	 window.open(url);
+function printShipLabel(orderId,shipwayCode){
+	//无预览打印
+	var url = baseUrl+'/warehouse/directPrint/transportShipLabel.do?orderId='+orderId+'&shipwayCode='+shipwayCode;
+	 //有预览打印
+	if($("#printWithPreview").attr("checked")=="checked"){
+		url = baseUrl+'/warehouse/print/printTransportShipLabel.do?orderIds='+orderId;
+	}
+	window.open(url);
+	setTimeout(function(){
+		$("#firstWaybillTrackingNo").focus();
+	}, 1500);
 }
 

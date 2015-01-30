@@ -85,8 +85,8 @@ function saveReceivedFirstWaybillStep2(trackingNoStr,remark,warehouseId) {
 			$("#firstWaybillId").val("");
 			$("#firstWaybillbody").html("");
 			unLockTrackingNo();
+			parent.$.showShortMessage({msg:msg.message,animate:false,left:"45%"});
 			$("#trackingNo").focus();
-			parent.$.showDialogMessage(msg.message, null, null);
 			return;
 		}
 		//订单收货成功

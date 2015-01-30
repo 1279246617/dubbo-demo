@@ -140,7 +140,7 @@ function listFirstWaybills(orderId){
         success : function(msg){ 
         	msg = eval("(" + msg + ")");
 			$.each(msg,function(i,e){
-				contentArr.push('<tr class="info"><th>入库跟踪单号</th><th>承运商</th><th>销售编号</th><th>状态</th><th>入库时间</th><th>回传入库状态</th><th>创建时间</th></tr>');
+				contentArr.push('<tr class="info"><th>头程跟踪单号</th><th>承运商</th><th>销售编号</th><th>状态</th><th>入库时间</th><th>回传入库状态</th><th>创建时间</th></tr>');
 			  	contentArr.push('<tr style="border:0;">');
 			  	contentArr.push('<td>'+e.trackingNo+'</td>');
 			  	contentArr.push('<td>'+e.carrierCode+'</td>');
