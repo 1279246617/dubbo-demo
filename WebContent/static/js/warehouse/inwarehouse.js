@@ -121,12 +121,14 @@ function saveInWarehouseRecordItem(isConfirm) {
 		isSubmitIng = 'N';
 		return;
 	}
+	//商品SKU
 	if(itemSku == ''){
 		parent.$.showShortMessage({msg:"请输入商品条码",animate:false,left:"45%"});
 		$("#itemSku").focus();
 		isSubmitIng = 'N';
 		return;
 	}
+	//商品数量
 	if(itemQuantity==''){
 		$("#itemQuantity").focus();
 		isSubmitIng = 'N';
@@ -154,7 +156,7 @@ function saveInWarehouseRecordItem(isConfirm) {
 			focus = "2";
 			return;
 		}
-		if(msg.status == 2){//数量和预报数量不一致显示提示
+		if(msg.status == 2){//
 			var mymes = confirm(msg.message);
 			if(mymes != true){//取消提交,清空数量
 				$("#itemQuantity").val("");
@@ -163,6 +165,39 @@ function saveInWarehouseRecordItem(isConfirm) {
 				return;
 			}
 		}
+		if(msg.status == 3){//出现一个条码对应多个sku需要求改条码
+			parent.$.showDialogMessage(msg.message, function(){
+				$("#itemSku").val("");
+				$("#itemSku").focus();// 光标移至商品条码
+			}, null);
+//			var mymes = confirm(msg.message);
+//			if (mymes == true) {
+//				$.post(baseUrl+ '/warehouse/storage/changeInWarehouseRecordItemBarcode.do',{
+//					itemSku:itemSku,
+//					warehouseId:warehouseId,
+//					inWarehouseRecordId:inWarehouseRecordId
+//				}, function(msg) {
+//					if(msg.status == 0){
+//						parent.$.showShortMessage({msg:msg.message,animate:false,left:"45%"});
+//						return;
+//					} 
+//					if(msg.status == 1){
+//						btnSearch("#searchform",grid);
+//						return;
+//					} 
+//					if(msg.status == 2){
+//						parent.$.showShortMessage({msg:msg.message,animate:false,left:"45%"});
+//						return;
+//					}
+//				});
+//				$("#itemSku").focus();
+//			} else {
+//				$("#itemSku").focus();
+//			}
+			$("#itemQuantity").val("");
+			isReturn = 'Y';
+			return;
+		}
 	},"json");
 	
 	if(isReturn =='Y'){
@@ -170,7 +205,6 @@ function saveInWarehouseRecordItem(isConfirm) {
 		return;
 	}
 	//检验收货数量和预报数量是否一致,不一致要求确认后才提交 ------------------------------------结束
-	
 	$.post(baseUrl+ '/warehouse/storage/saveInWarehouseRecordItem.do',{
 		itemSku:itemSku,
 		itemQuantity:itemQuantity,
@@ -265,3 +299,47 @@ function nextInWarehouseRecord(){
 		$("#trackingNo").focus();
 	},"json");
 }
+
+//打印输入的sku
+function printSkuBarcodeByBarcode(skuBarcode, skuQuantity){
+    var contentArr = [];
+    contentArr.push('<div id="changeContent" style="padding:10px;width: 340px;">');
+    contentArr.push('   <div class="pull-left" style="width: 100%;margin-top:5px;line-height:10px;">');
+    contentArr.push('       <label class="pull-left" style="margin-left: 15px;" for="all">打印指定SKU条码</label>');
+    contentArr.push('       <input class="pull-left" name="sku"  value=' + skuBarcode + ' style="margin-left: 10px;width:120px;height:15px;" type="text" id="sku" readonly="true" >');
+    contentArr.push('   </div>');
+    contentArr.push('   <div class="pull-left" style="width: 100%;margin-top:10px;height:35px;">');
+    contentArr.push('       <label class="pull-left" style="margin-left: 15px;" for="all">每个SKU打印份数</label>');
+    contentArr.push('       <input class="pull-left" name="quantity" value=' + skuQuantity +' style="margin-left: 10px;height:15px;width:80px" type="text" id="quantity">');
+    contentArr.push('   </div>');
+    contentArr.push('</div>');
+    contentArr.push('<div style="color: #ff0000;margin-left: 25px;margin-top:5px;">注：请使用大于等于80*25的标签纸</div>');
+    var contentHtml = contentArr.join('');
+	$.dialog({
+  		lock: true,
+  		max: false,
+  		min: false,
+  		title: '打印SKU条码',
+  	     width: 380,
+         height: 120,
+  		content: contentHtml,
+  		button: [{
+  			name: '确认',
+  			callback: function() {
+                var sku = parent.$("#sku").val();
+	            if(sku == null || sku ==""){
+	                parent.$.showShortMessage({msg:"请输入商品SKU",animate:false,left:"45%"});
+	                return false;
+	            }
+	            var quantity =  parent.$("#quantity").val();
+            	//打印SKU,新建标签页
+			    var url = baseUrl+'/warehouse/print/printSkuBarcode.do?sku='+sku+'&quantity='+quantity;
+  			  	window.open(url);
+  			}
+  		},
+  		{
+  			name: '取消'
+  		}]
+  	});
+}
+
