@@ -21,6 +21,14 @@
 <body>
 	  <div class="toolbar1">
            <form action="${baseUrl}/warehouse/transport/getOrderPackageData.do" id="searchform" name="searchform" method="post">
+<!-- 	           <div class="pull-left"> -->
+<!-- 	           		<span class="pull-left" style="width:60px;"> -->
+<!-- 				       		<a class="btn btn-primary btn-small" onclick="checkOrder()" title="审核大包"> -->
+<!-- 				           		 <i class="icon-eye-open"></i>审核 -->
+<!-- 				       	 	</a> -->
+<!-- 				       	 	<input style=" visibility:hidden;"> -->
+<!-- 			       	 </span> -->
+<!-- 	           </div> -->
                <div class="pull-right searchContent">
                		<span class="pull-left" style="width:120px;">
                			仓库
@@ -122,15 +130,17 @@
 	    	 grid = $("#maingrid").ligerGrid({
 	                columns: [
 	                    { display: '客户帐号', name: 'userNameOfCustomer', align: 'center',type:'float',width:'8%'},
-	  		          	{ display: '客户订单号', name: 'customerReferenceNo', align: 'center', type: 'float',width:'11%'},
+	  		          	{ display: '客户订单号', name: 'customerReferenceNo', align: 'center', type: 'float',width:'10%'},
 		                { display: '仓库', name: 'warehouse', align: 'center', type: 'float',width:'7%'},
 		                { display: '状态', name: 'status', align: 'center', type: 'float',width:'8%'},
-		                { display: '到货承运商', name: 'carrierCode', align: 'center', type: 'float',width:'8%'},
+		                { display: '头程承运商', name: 'carrierCode', align: 'center', type: 'float',width:'8%'},
 		                { display: '头程跟踪单号', name: 'trackingNo', align: 'center', type: 'float',width:'12%'},
 		                { display: '创建时间', name: 'createdTime', align: 'center', type: 'float',width:'12%'},
+		                { display: '回传审核状态', name: 'callbackSendCheckIsSuccess', align: 'center', type: 'float',width:'8%'},
+		                { display: '仓库审核结果', name: 'checkResult', align: 'center', type: 'float',width:'9%'},
 		                { display: '收货时间', name: 'receivedTime', align: 'center', type: 'float',width:'12%'},
 		                { display: '回传收货状态', name: 'callbackSendStatusIsSuccess', align: 'center', type: 'float',width:'8%'},
-		                { display: '备注', name: 'remark', align: 'center', type: 'float',width:'13%'}
+		                { display: '备注', name: 'remark', align: 'center', type: 'float',width:'10%'}
 	                ],  
 	                dataAction: 'server',
 	                url: baseUrl+'/warehouse/transport/getOrderPackageData.do',
