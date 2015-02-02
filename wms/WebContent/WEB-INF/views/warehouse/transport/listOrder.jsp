@@ -94,7 +94,7 @@
 		       	 	</span>
 		       	 	
            			<span class="pull-left" style="width:60px;">
-			       		<a class="btn btn-primary btn-small" onclick="checkOrder()" title="审核出库订单">
+			       		<a class="btn btn-primary btn-small" onclick="checkOrder()" title="审核转运订单">
 			           		 <i class="icon-eye-open"></i>审核
 			       	 	</a>
 			       	 	<input style=" visibility:hidden;">
