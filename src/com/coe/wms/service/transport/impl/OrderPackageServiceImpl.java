@@ -68,8 +68,13 @@ public class OrderPackageServiceImpl implements IOrderPackageService {
 		return orderPackageStatusDao.findAllOrderPackageStatus();
 	}
 
-	/**
-	 * 获取转运订单列表数据
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.coe.wms.service.transport.IOrderPackageService#getOrderPackageData
+	 * (com.coe.wms.model.warehouse.transport.OrderPackage, java.util.Map,
+	 * com.coe.wms.util.Pagination)
 	 */
 	@Override
 	public Pagination getOrderPackageData(com.coe.wms.model.warehouse.transport.OrderPackage param, Map<String, String> moreParam, Pagination pagination) {
@@ -103,6 +108,29 @@ public class OrderPackageServiceImpl implements IOrderPackageService {
 					}
 				}
 			}
+			if (StringUtil.isNotNull(orderPackage.getCheckResult())) {
+				if (StringUtil.isEqual(orderPackage.getCheckResult(), "SECURITY")) {
+					map.put("checkResult", "拒收(安全不通过)");
+				} else if (StringUtil.isEqual(orderPackage.getCheckResult(), "OTHER_REASON")) {
+					map.put("checkResult", "拒收(其他不通过)");
+				} else if (StringUtil.isEqual(orderPackage.getCheckResult(), "SUCCESS")) {
+					map.put("checkResult", "接件(审核已通过)");
+				} else {
+					map.put("checkResult", orderPackage.getCheckResult());
+				}
+			} else {
+				map.put("checkResult", "");
+			}
+			// 回传审核
+			if (StringUtil.isEqual(orderPackage.getCallbackSendCheckIsSuccess(), Constant.Y)) {
+				map.put("callbackSendCheckIsSuccess", "成功");
+			} else {
+				if (orderPackage.getCallbackSendCheckCount() != null && orderPackage.getCallbackSendCheckCount() > 0) {
+					map.put("callbackSendCheckIsSuccess", "失败次数:" + orderPackage.getCallbackSendCheckCount());
+				} else {
+					map.put("callbackSendCheckIsSuccess", "未回传");
+				}
+			}
 			// 查询用户名
 			User user = userDao.getUserById(orderPackage.getUserIdOfCustomer());
 			map.put("userNameOfCustomer", user.getLoginName());
@@ -114,7 +142,6 @@ public class OrderPackageServiceImpl implements IOrderPackageService {
 				}
 			}
 			map.put("remark", orderPackage.getRemark());
-
 			OrderPackageStatus orderStatus = orderPackageStatusDao.findOrderPackageStatusByCode(orderPackage.getStatus());
 			if (orderStatus != null) {
 				map.put("status", orderStatus.getCn());
