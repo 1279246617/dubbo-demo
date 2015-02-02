@@ -69,7 +69,7 @@ public class OrderPackageDaoImpl implements IOrderPackageDao {
 
 	@Override
 	public OrderPackage getOrderPackageById(Long orderPackageId) {
-		String sql = "select id,warehouse_id,user_id_of_customer,user_id_of_operator,created_time,status,customer_reference_no,remark,tracking_no,check_result from w_t_order_package where id =" + orderPackageId;
+		String sql = "select id,warehouse_id,user_id_of_customer,user_id_of_operator,created_time,status,customer_reference_no,remark,tracking_no,check_result,callback_send_check_is_success from w_t_order_package where id =" + orderPackageId;
 		List<OrderPackage> OrderPackageList = jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(OrderPackage.class));
 		if (OrderPackageList != null && OrderPackageList.size() > 0) {
 			return OrderPackageList.get(0);
@@ -84,7 +84,7 @@ public class OrderPackageDaoImpl implements IOrderPackageDao {
 	@Override
 	public List<OrderPackage> findOrderPackage(OrderPackage orderPackage, Map<String, String> moreParam, Pagination page) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select id,tracking_no,warehouse_id,user_id_of_customer,user_id_of_operator,created_time,status,customer_reference_no,remark,tracking_no,check_result from w_t_order_package where 1=1 ");
+		sb.append("select id,tracking_no,warehouse_id,user_id_of_customer,user_id_of_operator,created_time,status,customer_reference_no,remark,tracking_no,check_result,callback_send_check_is_success from w_t_order_package where 1=1 ");
 		if (orderPackage != null) {
 			if (orderPackage.getId() != null) {
 				sb.append(" and id = " + orderPackage.getId());
