@@ -11,6 +11,7 @@ import javax.annotation.Resource;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
+//import com.coe.wms.dao.product.IProductBarcodeChangeDao;
 import com.coe.wms.dao.product.IProductDao;
 import com.coe.wms.dao.user.IUserDao;
 import com.coe.wms.dao.warehouse.ISeatDao;
@@ -40,6 +41,7 @@ import com.coe.wms.dao.warehouse.storage.IReportDao;
 import com.coe.wms.dao.warehouse.storage.IReportTypeDao;
 import com.coe.wms.exception.ServiceException;
 import com.coe.wms.model.product.Product;
+//import com.coe.wms.model.product.ProductBarcodeChange;
 import com.coe.wms.model.unit.Currency.CurrencyCode;
 import com.coe.wms.model.unit.Weight;
 import com.coe.wms.model.user.User;
@@ -157,6 +159,9 @@ public class InWarehouseOrderServiceImpl implements IInWarehouseOrderService {
 
 	@Resource(name = "productService")
 	private IProductService productService;
+	
+//	@Resource(name = "productBarcodeChangeDao")
+//	private IProductBarcodeChangeDao productBarcodeChangeDao;
 
 	/**
 	 * 根据入库订单id, 查找入库物品明细
@@ -225,13 +230,39 @@ public class InWarehouseOrderServiceImpl implements IInWarehouseOrderService {
 			map.put(Constant.MESSAGE, "找不到入库订单Id.");
 			return map;
 		}
+				
+		//检测同一个商品条码是否有对应多个SKU。保证一个条码对应一个SKU。
+		
+		InWarehouseOrderItem orderItemParam = new InWarehouseOrderItem();
+		orderItemParam.setOrderId(orderId);
+		orderItemParam.setSku(itemSku);
+		List<InWarehouseOrderItem> orderItems = inWarehouseOrderItemDao.findInWarehouseOrderItem(orderItemParam, null, null);
+		
+		if (orderItems.size() == 0) {
+			map.put(Constant.STATUS, "2");
+			map.put(Constant.MESSAGE, "该商品条码在此订单中无预报,请输入正确商品条码");
+			return map;
+		} else if (orderItems.size() > 1) {
+			map.put(Constant.STATUS, "3");
+			map.put(Constant.MESSAGE, "该商品条码在此订单中对应多条商品信息,请与供应商协调");
+			return map;
+		} else {
+			String recordeSku = productDao.findProductSkuByBarcode(null, itemSku);
+			if (!(("".equals(recordeSku)) || (orderItems.get(0).getSkuNo().equals(recordeSku)))) {
+				map.put(Constant.STATUS, "3");
+				map.put(Constant.MESSAGE, "其他商品信息中已使用该条码,请与供应商协调");
+				return map;
+			}
+		}
+		
 		// 总数量
 		int totalQuantity = inWarehouseOrderItemDao.countInWarehouseOrderItemSkuQuantityByOrderId(orderId, itemSku);
 		if (totalQuantity <= 0) {
 			map.put(Constant.MESSAGE, "该商品条码在此订单中无预报,请输入正确商品条码");
 			return map;
 		}
-		// 该订单的该条码的总已经收货数量
+		
+//		 该订单的该条码的总已经收货数量
 		int totalReceivedQuantity = inWarehouseRecordItemDao.countInWarehouseItemSkuQuantityByOrderId(orderId, itemSku);
 		// 未收货数量
 		int unReceivedquantity = totalQuantity - totalReceivedQuantity;
@@ -434,6 +465,7 @@ public class InWarehouseOrderServiceImpl implements IInWarehouseOrderService {
 			map.put("totalReceivedQuantity", totalReceivedQuantity);
 			int unReceivedquantity = orderItem.getQuantity() - totalReceivedQuantity;
 			map.put("unReceivedquantity", unReceivedquantity);
+			//map.put("isChanged", orderItem.getIsChanged());
 			// 根据SKU查询收货记录的物品明细
 			InWarehouseRecordItem inWarehouseRecordItemParam = new InWarehouseRecordItem();
 			inWarehouseRecordItemParam.setInWarehouseRecordId(inWarehouseRecordId);
@@ -781,4 +813,95 @@ public class InWarehouseOrderServiceImpl implements IInWarehouseOrderService {
 		page.rows = list;
 		return page;
 	}
+
+//	@Override
+//	public Map<String, String> changeInWarehouseRecordItemBarcode(
+//			String itemSku, Long warehouseId, Long inWarehouseRecordId,
+//			Long userIdOfOperator) throws ServiceException {
+//		Map<String, String> map = new HashMap<String, String>();
+//		map.put(Constant.STATUS, Constant.FAIL);
+//		if (StringUtil.isNull(itemSku)) {
+//			map.put(Constant.MESSAGE, "请输入商品条码.");
+//			return map;
+//		}
+//		itemSku = itemSku.trim();
+//		Long orderId = inWarehouseRecordDao.getInWarehouseOrderIdByRecordId(inWarehouseRecordId);
+//		if (orderId == null) {
+//			map.put(Constant.MESSAGE, "找不到入库订单Id.");
+//			return map;
+//		}
+//		InWarehouseOrderItem orderItemParam = new InWarehouseOrderItem();
+//		orderItemParam.setOrderId(orderId);
+//		orderItemParam.setSku(itemSku);
+//		List<InWarehouseOrderItem> orderItems =null;
+//		
+//		boolean changeLoop = true;
+//		while(changeLoop){
+//			orderItems = inWarehouseOrderItemDao.findInWarehouseOrderItem(orderItemParam, null, null);
+//			if (orderItems.size() == 0) {
+//				map.put(Constant.STATUS, "2");
+//				map.put(Constant.MESSAGE, "该商品条码在此订单中无预报,请输入正确商品条码");
+//				orderItems.clear();
+//				orderItems = null;
+//				return map;
+//			} else if (orderItems.size() > 1) {
+//				String barcode = productBarcodeChangeDao.findProductBarcodeChangeBarcodeBySkuBarcodeOld(orderItems.get(0).getSkuNo(), orderItems.get(0).getSku());
+//				if (barcode == null || "".equals(barcode)) {
+//					//生成新条码
+//					//更改商品条码
+//					//生成新的条码并检测是否已存在
+//					int v = 1;
+//					String newBarcode = orderItems.get(0).getSku() + "V" + v;
+//					while(inWarehouseOrderItemDao.countInWarehouseOrderItemByBarcode(newBarcode) > 0){
+//						v++;
+//						newBarcode = orderItems.get(0).getSku() + "V" + v;
+//					}
+//					//修改订单明细
+//					inWarehouseOrderItemDao.updateInWarehouseOrderItemBarcodeById(orderItems.get(0).getId(), newBarcode);
+//					//商品信息				
+//					Product productUpdate = new Product();
+//					productUpdate.setBarcode(barcode);
+//					productUpdate.setSku(orderItems.get(0).getSkuNo());
+//					productDao.updateProductBarcodeBySku(productUpdate);
+//					productUpdate = null;
+//					//添加修改记录
+//					ProductBarcodeChange productBarcodeChangeupdate = new ProductBarcodeChange(); 
+//					productBarcodeChangeupdate.setBarcode(newBarcode);
+//					productBarcodeChangeupdate.setBarcodeOld(orderItems.get(0).getSku());
+//					productBarcodeChangeupdate.setSku(orderItems.get(0).getSkuNo());
+//					productBarcodeChangeupdate.setIsEnabled("Y");
+//					productBarcodeChangeupdate.setCreatedTime(System.currentTimeMillis());
+//					productBarcodeChangeDao.addProductBarcodeChange(productBarcodeChangeupdate);
+//					productBarcodeChangeupdate = null;
+//					
+//				} else if (!(orderItems.get(0).getSku().equals(barcode))) {
+//					//按之前修改的条码修改
+//					//修改订单明细
+//					inWarehouseOrderItemDao.updateInWarehouseOrderItemBarcodeById(orderItems.get(0).getId(), barcode);
+//					//商品信息修改
+//					Product productUpdate = new Product();
+//					productUpdate.setBarcode(barcode);
+//					productUpdate.setSku(orderItems.get(0).getSkuNo());
+//					productDao.updateProductBarcodeBySku(productUpdate);
+//					productUpdate = null;
+//				}
+//			} else {				
+//				String barcode = productBarcodeChangeDao.findProductBarcodeChangeBarcodeBySkuBarcodeOld(orderItems.get(0).getSkuNo(), orderItems.get(0).getSku());
+//				if (!(barcode == null || "".equals(barcode) || orderItems.get(0).getSku().equals(barcode))) {
+//					//按之前修改的条码修改
+//					//修改订单明细
+//					inWarehouseOrderItemDao.updateInWarehouseOrderItemBarcodeById(orderItems.get(0).getId(), barcode);
+//					//商品信息修改
+//					Product productUpdate = new Product();
+//					productUpdate.setBarcode(barcode);
+//					productUpdate.setSku(orderItems.get(0).getSkuNo());
+//					productDao.updateProductBarcodeBySku(productUpdate);
+//					productUpdate = null;
+//				}
+//				changeLoop = false;
+//			}
+//		}		
+//		map.put(Constant.STATUS, Constant.SUCCESS);
+//		return map;
+//	}
 }
