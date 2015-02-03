@@ -116,8 +116,12 @@ public class User implements Serializable {
 	 * 在界面上,有选择仓库的,优先显示默认仓库
 	 */
 	private Long defaultWarehouseId;
+	
+	@CacheKeyMethod  
+    public String getCacheKey(){  
+        return "wms_user_"+getId();  
+    }
 
-	@CacheKeyMethod
 	public Long getId() {
 		return id;
 	}

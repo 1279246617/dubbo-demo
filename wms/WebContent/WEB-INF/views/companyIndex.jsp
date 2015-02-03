@@ -46,7 +46,7 @@
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-cog icon-white"></i>系统设置 <b class="caret"></b></a>
                                 <ul class="dropdown-menu">
-									<li><a href="#http://baidu.com" tab_id="listRegister">注册信息</a></li>
+									<li><a href="#${baseUrl}/user/listRegister.do" tab_id="listRegister">注册信息</a></li>
                                 </ul>
                             </li>
                             <li class="divider-vertical"></li>

@@ -60,4 +60,19 @@ public interface IUserService {
 	 * @return
 	 */
 	public List<User> findUserByLikeLoginName(String loginName);
+	
+	/**
+	 * 修改用户注册信息
+	 * @param userid
+	 * @param loginName
+	 * @param userName
+	 * @param phoneNumber
+	 * @param email
+	 * @param oldPassword
+	 * @param newPassword
+	 * @return
+	 */
+	public Map<String, String> saveUpdatelistRegister(Long userId, String loginName, 
+			String userName, String phoneNumber, String email, String oldPassword,
+			String newPassword);
 }
