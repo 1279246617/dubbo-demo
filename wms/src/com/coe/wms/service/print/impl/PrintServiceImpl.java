@@ -205,13 +205,14 @@ public class PrintServiceImpl implements IPrintService {
 		map.put("items", itemShelfList);
 		// 商品总数
 		int totalQuantity = 0;
-		double totalPrice = 0d;
+		Double totalPrice = 0d;
 		for (OutWarehouseOrderItemShelf itemShelf : itemShelfList) {
 			totalQuantity += itemShelf.getQuantity();
 			if (itemShelf.getSkuUnitPrice() != null) {
 				totalPrice += (itemShelf.getQuantity() * itemShelf.getSkuUnitPrice() / 100);
 			}
 		}
+		totalPrice = NumberUtil.getNumPrecision(totalPrice, 2);
 		map.put("totalQuantity", totalQuantity);
 		map.put("totalPrice", totalPrice);
 		if (outWarehouseOrder.getPrintedCount() == null) {
