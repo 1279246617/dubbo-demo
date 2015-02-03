@@ -3,8 +3,6 @@ package com.coe.wms.util;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -12,9 +10,6 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
 import org.apache.log4j.Logger;
-
-import com.coe.wms.pojo.api.warehouse.Response;
-import com.coe.wms.pojo.api.warehouse.Responses;
 
 public class XmlUtil {
 	private static final Logger logger = Logger.getLogger(XmlUtil.class);
