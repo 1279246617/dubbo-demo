@@ -168,4 +168,36 @@ public class UserServiceImpl implements IUserService {
 	public void setUserDao(IUserDao userDao) {
 		this.userDao = userDao;
 	}
+
+	/**
+	 * 用户修改自己注册信息
+	 */
+	@Override
+	public Map<String, String> saveUpdatelistRegister(Long userId,
+			String loginName, String userName, String phoneNumber,
+			String email, String oldPassword, String newPassword) {
+		Map<String, String> map = new HashMap<String, String>();
+		map.put(Constant.STATUS, Constant.FAIL);
+		User user = userDao.getUserById(userId);
+		
+		if (StringUtil.isNull(oldPassword)) {
+			map.put(Constant.MESSAGE, "请输入原始密码");
+			return map;
+		}
+		if (!StringUtil.isEqual(oldPassword, user.getPassword())) {
+			map.put(Constant.MESSAGE, "原始密码不正确");
+			return map;
+		}
+		user.setUserName(userName);
+		user.setPhone(phoneNumber);
+		user.setEmail(email);
+		user.setPassword(newPassword);
+		int count = userDao.updateUser(user);
+		if (count > 0){
+			map.put(Constant.STATUS, Constant.SUCCESS);
+		}
+		user = null;
+		user = userDao.getUserById(userId);
+		return map;
+	}
 }

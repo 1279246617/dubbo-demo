@@ -9,6 +9,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
@@ -141,4 +142,38 @@ public class Users {
 	public void setUserService(IUserService userService) {
 		this.userService = userService;
 	}
+	
+	/**
+	 * 用户修改信息界面
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/listRegister", method = RequestMethod.GET)
+	public ModelAndView listRegister(HttpServletRequest request, HttpServletResponse response) {
+		ModelAndView view = new ModelAndView();
+		
+		HttpSession session = request.getSession();
+		Long userId = (Long) session.getAttribute(SessionConstant.USER_ID);
+		User user = userService.getUserById(userId);
+		view.addObject("userId", user.getId());
+		view.addObject("loginName", user.getLoginName());
+		view.addObject("userName", user.getUserName());
+		view.addObject("phoneNumber", user.getPhone());
+		view.addObject("email", user.getEmail());
+		view.addObject(Application.getBaseUrlName(), Application.getBaseUrl());
+		view.setViewName("user/listRegister");
+		return view;
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/saveUpdateListRegister", method = RequestMethod.POST)
+	public String saveUpdateListRegister(HttpServletRequest request, HttpServletResponse response,
+			Long userId, String loginName, String userName, String phoneNumber, String email, String oldPassword,
+			String newPassword){
+		Map<String, String> map = userService.saveUpdatelistRegister(userId, loginName, 
+				userName, phoneNumber, email, oldPassword, newPassword);
+		return GsonUtil.toJson(map);
+	}
+	
 }

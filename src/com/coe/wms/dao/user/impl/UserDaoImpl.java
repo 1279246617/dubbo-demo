@@ -153,9 +153,9 @@ public class UserDaoImpl implements IUserDao {
 	@UpdateSingleCache(namespace = SsmNameSpace.USER, expiration = 3600)
 	@DataSource(DataSourceCode.WMS)
 	public int updateUser(@ParameterValueKeyProvider @ParameterDataUpdateContent User user) {
-		String sql = "update u_user set password =?,user_uame=?,phone=?,email=?,status=?,user_type=?,secret_key=?,token=?,opposite_secret_key=?,opposite_token=?,opposite_service_url=?,default_warehouse_id=? where id=? ";
-		int count = jdbcTemplate.update(sql, user.getParentId(), user.getUserName(), user.getPhone(), user.getEmail(), user.getStatus(), user.getUserType(), user.getSecretKey(), user.getToken(), user.getOppositeSecretKey(), user.getOppositeToken(),
-				user.getId(), user.getOppositeServiceUrl(), user.getDefaultWarehouseId());
+		String sql = "update u_user set password =?,user_name=?,phone=?,email=?,status=?,user_type=?,secret_key=?,token=?,opposite_secret_key=?,opposite_token=?,opposite_service_url=?,default_warehouse_id=? where id=? ";
+		int count = jdbcTemplate.update(sql, user.getPassword(), user.getUserName(), user.getPhone(), user.getEmail(), user.getStatus(), user.getUserType(), user.getSecretKey(), user.getToken(), user.getOppositeSecretKey(), user.getOppositeToken(),
+				 user.getOppositeServiceUrl(), user.getDefaultWarehouseId(), user.getId());
 		logger.debug("更新用户:" + sql + " 影响行数:" + count);
 		return count;
 	}
