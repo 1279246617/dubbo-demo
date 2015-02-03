@@ -243,8 +243,8 @@ public class UserDaoImpl implements IUserDao {
 		Map params = new HashMap();
 		params.put("m", user.getLoginName());
 		params.put("id", user.getId());
-		Object u = namedParameterJdbcTemplate.queryForObject(sql, params, new BeanPropertyRowMapper(User.class));
-		return (User) u;
+		User u = namedParameterJdbcTemplate.queryForObject(sql, params, new BeanPropertyRowMapper(User.class));
+		return u;
 	}
 
 }
