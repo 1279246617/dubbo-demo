@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50631
 File Encoding         : 65001
 
-Date: 2016-12-27 11:56:42
+Date: 2016-12-27 17:06:20
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -21,11 +21,11 @@ SET FOREIGN_KEY_CHECKS=0;
 DROP TABLE IF EXISTS `message`;
 CREATE TABLE `message` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `request_id` varchar(36) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '请求id,长度36的UUID,不可重复',
+  `request_id` varchar(36) COLLATE utf8_unicode_ci NOT NULL COMMENT '请求id,长度36的UUID,不可重复',
   `keyword` varchar(100) COLLATE utf8_unicode_ci NOT NULL COMMENT '用于搜索报文的关键字 一般如:订单号,跟踪单号,订单id,客户id之类',
   `keyword1` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '用于搜索报文的关键字 一般如:订单号,跟踪单号,订单id,客户id之类',
   `keyword2` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '用于搜索报文的关键字 一般如:订单号,跟踪单号,订单id,客户id之类',
-  `created_time` bigint(20) DEFAULT NULL,
+  `created_time` date DEFAULT NULL,
   `count` int(11) DEFAULT '0' COMMENT '发送次数',
   `status` int(11) DEFAULT '0' COMMENT '0:未推送,1:已推送并得到http status 200响应 2:已推送,但响应失败',
   PRIMARY KEY (`id`),
