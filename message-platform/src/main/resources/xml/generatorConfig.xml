@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
+<generatorConfiguration>
+    <!--指定drvier位置-->
+	<classPathEntry location="H:\util_jar\mysql-connector-java-5.1.32.jar"/>
+	<context id="context1">
+		<jdbcConnection driverClass="com.mysql.jdbc.Driver"
+			connectionURL="jdbc:mysql://localhost:3306/message_platform" userId="root"
+			password="root1234" />
+		<!--实体类 -->
+		<javaModelGenerator targetPackage="com.coe.message.entity"
+			targetProject="message-push" />
+		<!--映射xml文件 -->
+		<sqlMapGenerator targetPackage="com.coe.message.dao.mapping"
+			targetProject="message-push" />
+		<!--mapper接口 -->
+		<javaClientGenerator targetPackage="com.coe.message.dao.mapper"
+			targetProject="message-push" type="XMLMAPPER" />
+		<table schema="" tableName="message_response_newest">
+			<!-- <columnOverride column="???" property="???" /> -->
+		</table>
+	</context>
+</generatorConfiguration>
