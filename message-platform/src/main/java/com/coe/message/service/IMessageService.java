@@ -1,5 +1,6 @@
 package com.coe.message.service;
 
-public interface IMessageService {
 
+/**报文信息接口*/
+public interface IMessageService {
 }

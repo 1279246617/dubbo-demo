@@ -1,4 +1,4 @@
-package com.coe.message.entity;
+package com.coe.message.api.entity;
 
 /**回应信息实体(回应给仓配系统等)*/
 public class ResultEntity {
