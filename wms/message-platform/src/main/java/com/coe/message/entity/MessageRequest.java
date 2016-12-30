@@ -11,10 +11,12 @@ public class MessageRequest {
 	private String url;
 	/**请求方式，1:get,2:post*/
 	private Integer method;
-	/**超时时间:毫秒*/
-	private Integer timeOut;
 	/**创建时间*/
 	private Date createdTime;
+	/**数据读取超时时间(毫秒)*/
+	private int soTimeOut;
+	/**连接超时时间(毫秒)*/
+	private int connectionTimeOut;
 
 	public Long getId() {
 		return id;
@@ -48,20 +50,28 @@ public class MessageRequest {
 		this.method = method;
 	}
 
-	public Integer getTimeOut() {
-		return timeOut;
-	}
-
-	public void setTimeOut(Integer timeOut) {
-		this.timeOut = timeOut;
-	}
-
 	public Date getCreatedTime() {
 		return createdTime;
 	}
 
 	public void setCreatedTime(Date createdTime) {
 		this.createdTime = createdTime;
+	}
+
+	public int getSoTimeOut() {
+		return soTimeOut;
+	}
+
+	public void setSoTimeOut(int soTimeOut) {
+		this.soTimeOut = soTimeOut;
+	}
+
+	public int getConnectionTimeOut() {
+		return connectionTimeOut;
+	}
+
+	public void setConnectionTimeOut(int connectionTimeOut) {
+		this.connectionTimeOut = connectionTimeOut;
 	}
 
 }

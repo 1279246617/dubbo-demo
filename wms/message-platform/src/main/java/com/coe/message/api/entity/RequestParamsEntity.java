@@ -8,6 +8,10 @@ public class RequestParamsEntity {
 	private String headerParams;
 	/**请求参数主体*/
 	private String bodyParams;
+	/**数据传输超时时间(毫秒)*/
+	private int soTimeOut;
+	/**连接超时时间(毫秒)*/
+	private int connectionTimeOut;
 	/**请求地址(非空)*/
 	private String url;
 	/**请求方法，1：get,2:post(非空)*/
@@ -101,6 +105,22 @@ public class RequestParamsEntity {
 
 	public void setCallbackUrl(String callbackUrl) {
 		this.callbackUrl = callbackUrl;
+	}
+
+	public int getSoTimeOut() {
+		return soTimeOut;
+	}
+
+	public void setSoTimeOut(int soTimeOut) {
+		this.soTimeOut = soTimeOut;
+	}
+
+	public int getConnectionTimeOut() {
+		return connectionTimeOut;
+	}
+
+	public void setConnectionTimeOut(int connectionTimeOut) {
+		this.connectionTimeOut = connectionTimeOut;
 	}
 
 }
