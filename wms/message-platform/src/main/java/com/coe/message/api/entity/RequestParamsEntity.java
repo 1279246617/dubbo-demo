@@ -1,13 +1,13 @@
-package com.coe.message.entity;
+package com.coe.message.api.entity;
 
 /**请求参数实体类*/
 public class RequestParamsEntity {
-	/**请求体*/
+	/**接口请求body*/
 	private String body;
-	/**请求参数*/
-	private String params;
-	/**请求头信息*/
-	private String headers;
+	/**头部请求信息*/
+	private String headerParams;
+	/**请求参数主体*/
+	private String bodyParams;
 	/**请求地址(非空)*/
 	private String url;
 	/**请求方法，1：get,2:post(非空)*/
@@ -31,20 +31,20 @@ public class RequestParamsEntity {
 		this.body = body;
 	}
 
-	public String getParams() {
-		return params;
+	public String getHeaderParams() {
+		return headerParams;
 	}
 
-	public void setParams(String params) {
-		this.params = params;
+	public void setHeaderParams(String headerParams) {
+		this.headerParams = headerParams;
 	}
 
-	public String getHeaders() {
-		return headers;
+	public String getBodyParams() {
+		return bodyParams;
 	}
 
-	public void setHeaders(String headers) {
-		this.headers = headers;
+	public void setBodyParams(String bodyParams) {
+		this.bodyParams = bodyParams;
 	}
 
 	public String getUrl() {

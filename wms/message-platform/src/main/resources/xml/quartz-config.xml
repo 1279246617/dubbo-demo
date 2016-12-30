@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+			http://www.springframework.org/schema/beans/spring-beans.xsd    
+            http://www.springframework.org/schema/context 
+            http://www.springframework.org/schema/context/spring-context.xsd    
+            http://www.springframework.org/schema/mvc 
+            http://www.springframework.org/schema/mvc/spring-mvc.xsd 
+            http://www.springframework.org/schema/aop
+           http://www.springframework.org/schema/aop/spring-aop.xsd 
+           http://www.springframework.org/schema/tx 
+     	   http://www.springframework.org/schema/tx/spring-tx.xsd  
+           http://www.springframework.org/schema/util 
+           http://www.springframework.org/schema/util/spring-util.xsd">
+	<!-- 要调用的工作类 -->
+	<bean id="messageTask" class="com.coe.message.api.timeTask.MessageTask"></bean>
+	<!-- 定义调用对象和调用对象的方法 -->
+	<bean id="jobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="messageTask"/>
+		</property>
+		<property name="targetMethod">
+			<value>test</value>
+		</property>
+	</bean>
+	<!--定义触发时间 -->
+	<bean id="doTime" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="jobDetail"/>
+		<!-- cron表达式 -->
+		<property name="cronExpression">
+			<!-- 每隔10秒执行一次 -->
+			<value>0/10 * * * * ?</value>
+		</property>
+	</bean>
+	<!-- 总管理类 如果将lazy-init='false'那么容器启动就会执行调度程序 -->
+	<bean id="startQuartz" lazy-init="false" autowire="no" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+				<ref bean="doTime" />
+			</list>
+		</property>
+	</bean>
+
+</beans>

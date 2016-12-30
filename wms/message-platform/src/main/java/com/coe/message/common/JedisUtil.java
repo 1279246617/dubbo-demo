@@ -17,12 +17,12 @@ public class JedisUtil {
 		if (jedisPool == null) {
 			JedisPoolConfig config = new JedisPoolConfig();
 			// 控制一个pool最多有多少个状态为idle(空闲的)的jedis实例。
-			config.setMaxIdle(10);
+			config.setMaxIdle(RedisServerConstant.MAX_IDLE);
 			// 表示当borrow(引入)一个jedis实例时，最大的等待时间，如果超过等待时间，则直接抛出JedisConnectionException；
-			config.setMaxWaitMillis(1000 * 100);
+			config.setMaxWaitMillis(RedisServerConstant.MAX_WAIT_MILLIS);
 			// 在borrow一个jedis实例时，是否提前进行validate操作；如果为true，则得到的jedis实例均是可用的；
 			config.setTestOnBorrow(true);
-			jedisPool = new JedisPool(config, ip, port, 100000);
+			jedisPool = new JedisPool(config, ip, port, RedisServerConstant.MAX_WAIT_MILLIS);
 		}
 	}
 
@@ -34,7 +34,7 @@ public class JedisUtil {
 	 */
 	public JedisUtil(JedisPoolConfig config, String ip, int prot) {
 		if (jedisPool == null) {
-			jedisPool = new JedisPool(config, ip, prot, 10000);
+			jedisPool = new JedisPool(config, ip, prot, RedisServerConstant.MAX_WAIT_MILLIS);
 		}
 	}
 
@@ -50,27 +50,36 @@ public class JedisUtil {
 			jedisPool = new JedisPool(config, ip, prot, timeout);
 		}
 	}
-	
-	/**
-	 * 放入键值对数据
-	 * @param key
-	 * @param value
-	 */
-	public void setString(String key,String value){
+
+	/**获取Jedis实例*/
+	public static Jedis getJedis() {
+		JedisUtil jedisUtil = new JedisUtil(RedisServerConstant.IP, RedisServerConstant.PORT);
+		JedisPool jedisPool = jedisUtil.getJedisPool();
 		Jedis jedis = jedisPool.getResource();
+		return jedis;
+
+	}
+
+	/**
+	 * 存入键值对数据
+	 * @param key 键
+	 * @param value 值（任何格式的字符串）
+	 */
+	public static void setString(String key, String value) {
+		Jedis jedis = getJedis();
 		jedis.set(key, value);
 	}
-	
+
 	/**
-	 * 根据key获取value
-	 * @param key
-	 * @return key对应的value
+	 * 根据键获取值
+	 * @param key 键值
+	 * @return 键对应的值
 	 */
-	public String getString(String key){
-		Jedis jedis = jedisPool.getResource();
+	public static String getString(String key) {
+		Jedis jedis = getJedis();
 		return jedis.get(key);
 	}
-	
+
 	public JedisPool getJedisPool() {
 		return jedisPool;
 	}
@@ -78,5 +87,4 @@ public class JedisUtil {
 	public void setJedisPool(JedisPool jedisPool) {
 		this.jedisPool = jedisPool;
 	}
-
 }
