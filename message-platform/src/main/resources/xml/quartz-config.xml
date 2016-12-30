@@ -23,6 +23,10 @@
 		<property name="targetMethod">
 			<value>saveMessageFromRedis</value>
 		</property>
+		<!--设置任务不并行执行，即串行执行-->
+		<property name="concurrent">
+			<value>false</value>
+		</property >  
 	</bean>
 	<!--定义触发时间 -->
 	<bean id="doTime" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">

@@ -22,6 +22,7 @@ import org.apache.http.util.EntityUtils;
 
 /**HttpClient工具类*/
 public class HttpClientUtil {
+
 	/**连接池管理对象*/
 	private static PoolingHttpClientConnectionManager cm;
 
@@ -164,5 +165,4 @@ public class HttpClientUtil {
 		}
 		return null;
 	}
-
 }

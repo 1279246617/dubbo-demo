@@ -1,6 +1,5 @@
 package com.coe.message.api.service.impl;
 
-import java.sql.Timestamp;
 import java.util.Date;
 import org.apache.commons.lang.StringUtils;
 import com.coe.message.api.entity.RequestMsgEntity;
@@ -34,9 +33,11 @@ public class MsgServiceImplApi implements IMsgServiceApi {
 			String keyword1 = paramsEntity.getKeyword1();
 			String keyword2 = paramsEntity.getKeyword2();
 			String callbackUrl = paramsEntity.getCallbackUrl();
+			int soTimeOut = paramsEntity.getSoTimeOut();
+			int connectionTimeOut = paramsEntity.getConnectionTimeOut();
 			Date currentTime = new Date();
 			if (StringUtils.isEmpty(url) || method == null || StringUtils.isEmpty(requestId) || StringUtils.isEmpty(keyword) || StringUtils.isEmpty(callbackUrl)) {
-				throw new NullPointerException("参数缺失，必选参数[url,method,requestId,keyword,callback],可选参数[body,bodyParams,headerParams,keyword1,keyword2]");
+				throw new NullPointerException("参数缺失，必选参数[url,method,requestId,keyword,callback],可选参数[body,bodyParams,headerParams,keyword1,keyword2,timeOut]");
 			}
 			// Message
 			Message message = new Message();
@@ -63,6 +64,8 @@ public class MsgServiceImplApi implements IMsgServiceApi {
 			mrwb.setBody(body);
 			mrwb.setBodyParams(bodyParams);
 			mrwb.setHeaderParams(headerParams);
+			mrwb.setSoTimeOut(soTimeOut);
+			mrwb.setConnectionTimeOut(connectionTimeOut);
 			// RequestMsgEntity
 			RequestMsgEntity requestMsgEntity = new RequestMsgEntity();
 			requestMsgEntity.setMessage(message);
