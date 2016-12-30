@@ -21,7 +21,7 @@
 			<ref bean="messageTask"/>
 		</property>
 		<property name="targetMethod">
-			<value>test</value>
+			<value>saveMessageFromRedis</value>
 		</property>
 	</bean>
 	<!--定义触发时间 -->
