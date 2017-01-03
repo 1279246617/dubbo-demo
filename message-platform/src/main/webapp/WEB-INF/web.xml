@@ -60,15 +60,15 @@
 	</servlet-mapping>
 	<!-- Hessian与Spring整合时在web.xml上的配置 -->
 	<servlet>
-		<servlet-name>HessionRemoteServlet</servlet-name>
+		<servlet-name>HessianRemoteServlet</servlet-name>
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
 		<init-param>
 			<param-name>contextConfigLocation</param-name>
-			<param-value>/WEB-INF/classes/hessian-servlet.xml</param-value>
+			<param-value>/WEB-INF/classes/xml/hessian-servlet.xml</param-value>
 		</init-param>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>HessionRemoteServlet</servlet-name>
+		<servlet-name>HessianRemoteServlet</servlet-name>
 		<url-pattern>/remote/hessian/*</url-pattern>
 	</servlet-mapping>
 	<!--index page -->

@@ -1,7 +1,10 @@
 package com.coe.message.api.entity;
 
+import java.io.Serializable;
+
 /**请求参数实体类*/
-public class RequestParamsEntity {
+@SuppressWarnings("serial")
+public class RequestParamsEntity implements Serializable{
 	/**接口请求body*/
 	private String body;
 	/**头部请求信息*/
