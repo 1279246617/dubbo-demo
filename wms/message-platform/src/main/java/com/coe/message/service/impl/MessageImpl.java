@@ -1,10 +1,8 @@
 package com.coe.message.service.impl;
 
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.coe.message.dao.mapper.MessageCallbackMapper;
 import com.coe.message.dao.mapper.MessageMapper;
 import com.coe.message.dao.mapper.MessageRequestMapper;
@@ -12,12 +10,11 @@ import com.coe.message.entity.Message;
 import com.coe.message.entity.MessageCallback;
 import com.coe.message.entity.MessageExample;
 import com.coe.message.entity.MessageExample.Criteria;
-import com.coe.message.entity.MessageRequest;
 import com.coe.message.entity.MessageRequestWithBLOBs;
 import com.coe.message.service.IMessage;
 
 /**报文信息接口实现类*/
-@Service
+@Service("messageImpl")
 public class MessageImpl implements IMessage {
 	@Autowired
 	private MessageMapper msgMapper;
