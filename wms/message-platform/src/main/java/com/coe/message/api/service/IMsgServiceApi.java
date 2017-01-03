@@ -6,7 +6,7 @@ import com.coe.message.api.entity.ResultEntity;
 /**报文信息接口*/
 public interface IMsgServiceApi {
 	/**
-	 * 接收报文
+	 * 接收报文(存入Redis)
 	 * @param paramsEntity 参数实体类
 	 * @return ResultEntity返回信息实体
 	 */

@@ -1,17 +1,20 @@
 package com.coe.message.api.entity;
 
+import java.io.Serializable;
+
 import com.coe.message.entity.Message;
 import com.coe.message.entity.MessageCallback;
 import com.coe.message.entity.MessageRequestWithBLOBs;
 
 /**请求相关信息实体*/
-public class RequestMsgEntity {
+@SuppressWarnings("serial")
+public class RequestMsgEntity implements Serializable{
 	/**Message，基础类*/
 	private Message message;
 	/**接口请求实体*/
-	private MessageRequestWithBLOBs messageRequest;
+	private MessageRequestWithBLOBs msgReqWithBlobs;
 	/**回调基础类*/
-	private MessageCallback messageCallback;
+	private MessageCallback msgCallback;
 
 	public Message getMessage() {
 		return message;
@@ -21,20 +24,20 @@ public class RequestMsgEntity {
 		this.message = message;
 	}
 
-	public MessageRequestWithBLOBs getMessageRequest() {
-		return messageRequest;
+	public MessageRequestWithBLOBs getMsgReqWithBlobs() {
+		return msgReqWithBlobs;
 	}
 
-	public void setMessageRequest(MessageRequestWithBLOBs messageRequest) {
-		this.messageRequest = messageRequest;
+	public void setMsgReqWithBlobs(MessageRequestWithBLOBs msgReqWithBlobs) {
+		this.msgReqWithBlobs = msgReqWithBlobs;
 	}
 
-	public MessageCallback getMessageCallback() {
-		return messageCallback;
+	public MessageCallback getMsgCallback() {
+		return msgCallback;
 	}
 
-	public void setMessageCallback(MessageCallback messageCallback) {
-		this.messageCallback = messageCallback;
+	public void setMsgCallback(MessageCallback msgCallback) {
+		this.msgCallback = msgCallback;
 	}
 
 }

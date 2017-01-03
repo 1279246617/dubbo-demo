@@ -1,7 +1,10 @@
 package com.coe.message.api.entity;
 
+import java.io.Serializable;
+
 /**回应信息实体(回应给仓配系统等)*/
-public class ResultEntity {
+@SuppressWarnings("serial")
+public class ResultEntity implements Serializable{
 	
 	/**返回编码(0是正确，其余均错误)*/
 	public int code;
