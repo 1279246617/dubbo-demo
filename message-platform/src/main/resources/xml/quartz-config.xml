@@ -14,23 +14,23 @@
            http://www.springframework.org/schema/util 
            http://www.springframework.org/schema/util/spring-util.xsd">
 	<!-- 要调用的工作类 -->
-	<bean id="messageTask" class="com.coe.message.service.impl.MessageTaskService"></bean>
+	<bean id="messageTask" class="com.coe.message.api.task.MessageTimeTask"></bean>
 	<!-- 定义调用对象和调用对象的方法 -->
 	<bean id="jobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 		<property name="targetObject">
-			<ref bean="messageTask"/>
+			<ref bean="messageTask" />
 		</property>
 		<property name="targetMethod">
 			<value>saveMessageFromRedis</value>
 		</property>
-		<!--设置任务不并行执行，即串行执行-->
+		<!--设置任务不并行执行，即串行执行 -->
 		<property name="concurrent">
 			<value>false</value>
-		</property >  
+		</property>
 	</bean>
 	<!--定义触发时间 -->
 	<bean id="doTime" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-		<property name="jobDetail" ref="jobDetail"/>
+		<property name="jobDetail" ref="jobDetail" />
 		<!-- cron表达式 -->
 		<property name="cronExpression">
 			<!-- 每隔10秒执行一次 -->
@@ -45,5 +45,4 @@
 			</list>
 		</property>
 	</bean>
-
 </beans>

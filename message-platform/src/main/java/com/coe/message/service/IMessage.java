@@ -2,6 +2,8 @@ package com.coe.message.service;
 
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import com.coe.message.entity.Message;
 import com.coe.message.entity.MessageCallback;
 import com.coe.message.entity.MessageRequestWithBLOBs;
