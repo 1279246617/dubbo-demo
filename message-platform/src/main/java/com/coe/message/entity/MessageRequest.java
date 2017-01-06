@@ -1,6 +1,5 @@
 package com.coe.message.entity;
 
-import java.util.Date;
 
 /**接口请求实体类*/
 public class MessageRequest {
@@ -12,7 +11,7 @@ public class MessageRequest {
 	/**请求方式，1:get,2:post*/
 	private Integer method;
 	/**创建时间*/
-	private Date createdTime;
+	private Long createdTime;
 	/**数据读取超时时间(毫秒)*/
 	private Integer soTimeOut;
 	/**连接超时时间(毫秒)*/
@@ -52,12 +51,20 @@ public class MessageRequest {
 		this.method = method;
 	}
 
-	public Date getCreatedTime() {
+	public Long getCreatedTime() {
 		return createdTime;
 	}
 
-	public void setCreatedTime(Date createdTime) {
+	public void setCreatedTime(Long createdTime) {
 		this.createdTime = createdTime;
+	}
+
+	public void setSoTimeOut(Integer soTimeOut) {
+		this.soTimeOut = soTimeOut;
+	}
+
+	public void setConnectionTimeOut(Integer connectionTimeOut) {
+		this.connectionTimeOut = connectionTimeOut;
 	}
 
 	public int getSoTimeOut() {

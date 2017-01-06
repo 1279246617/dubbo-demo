@@ -1,7 +1,5 @@
 package com.coe.message.entity;
 
-import java.util.Date;
-
 /**信息实体类*/
 public class Message {
 
@@ -15,7 +13,7 @@ public class Message {
 	/**用于搜索报文的关键字 一般如:订单号,跟踪单号,订单id,客户id之类*/
 	private String keyword2;
 	/**报文创建时间*/
-	private Date createdTime;
+	private Long createdTime;
 	/**发送次数*/
 	private Integer count;
 	/**0:未推送,1:已推送并得到http status 200响应 2:已推送,但响应失败*/
@@ -61,11 +59,11 @@ public class Message {
 		this.keyword2 = keyword2;
 	}
 
-	public Date getCreatedTime() {
+	public Long getCreatedTime() {
 		return createdTime;
 	}
 
-	public void setCreatedTime(Date createdTime) {
+	public void setCreatedTime(Long createdTime) {
 		this.createdTime = createdTime;
 	}
 

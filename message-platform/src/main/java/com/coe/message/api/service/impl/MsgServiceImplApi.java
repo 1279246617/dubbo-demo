@@ -46,7 +46,8 @@ public class MsgServiceImplApi implements IMsgServiceApi {
 			String callbackUrl = paramsEntity.getCallbackUrl();
 			Integer soTimeOut = paramsEntity.getSoTimeOut();
 			Integer connectionTimeOut = paramsEntity.getConnectionTimeOut();
-			Date currentTime = new Date();
+			Long currentTime = new Date().getTime();
+			System.out.println("currentTime:"+currentTime);
 			if (StringUtils.isEmpty(url) || method == null || StringUtils.isEmpty(requestId) || StringUtils.isEmpty(keyword) || StringUtils.isEmpty(callbackUrl)) {
 				code = 1;
 				msg = "参数缺失，必选参数[url,method,requestId,keyword,callbackUrl],可选参数[body,bodyParams,headerParams,keyword1,keyword2,soTimeOut,connectionTimeOut]";
