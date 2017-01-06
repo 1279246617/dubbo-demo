@@ -65,7 +65,7 @@
 		</property>
 	</bean>
 	<!--总管理工厂 -->
-	<bean id="startQuertz" lazy-init="false" autowire="no" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+	<bean id="startQuartz" lazy-init="false" autowire="no" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
 		<property name="triggers">
 			<list>
 				<ref bean="toDatabaseJobDoTime" />

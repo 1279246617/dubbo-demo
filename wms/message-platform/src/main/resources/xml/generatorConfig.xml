@@ -16,7 +16,7 @@
 		<!--mapper接口 -->
 		<javaClientGenerator targetPackage="com.coe.message.dao.mapper"
 			targetProject="message-platform" type="XMLMAPPER" />
-		<table schema="" tableName="message_request">
+		<table schema="" tableName="message_response_newest">
 			<!-- <columnOverride column="???" property="???" /> -->
 		</table>
 	</context>

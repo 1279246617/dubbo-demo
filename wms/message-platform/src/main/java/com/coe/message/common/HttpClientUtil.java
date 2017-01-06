@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -48,12 +49,12 @@ public class HttpClientUtil {
 	}
 
 	/**
-	 * get方式请求（无参数）
-	 * @param url 请求地址
-	 * @param headers  头信息
-	 * @return 任意格式的字符串
+	 * 创建HttpGet,get方式请求（无参数）
+	 * @param url
+	 * @param headers
+	 * @return
 	 */
-	public static String httpGetRequest(String url, Map<String, Object> headers) {
+	public static HttpGet initHttpGet(String url, Map<String, Object> headers) {
 		HttpGet httpGet = new HttpGet(url);
 		if (headers != null) {
 			for (Map.Entry<String, Object> param : headers.entrySet()) {
@@ -61,17 +62,28 @@ public class HttpClientUtil {
 			}
 
 		}
+		return httpGet;
+	}
+
+	/**
+	 * get方式请求（无参数）
+	 * @param url 请求地址
+	 * @param headers  头信息
+	 * @return 任意格式的字符串
+	 */
+	public static String httpGetRequest(String url, Map<String, Object> headers) {
+		HttpGet httpGet = initHttpGet(url, headers);
 		return getResult(httpGet);
 	}
 
 	/**
-	 * get方式请求（有参数）
+	 *创建HttpGet, get方式请求（有参数）
 	 * @param url 请求地址
 	 * @param params 参数集合
 	 * @param headers  头信息
 	 * @return 任意格式的字符串
 	 */
-	public static String httpGetRequest(String url, Map<String, Object> params, Map<String, Object> headers) {
+	public static HttpGet initHttpGet(String url, Map<String, Object> params, Map<String, Object> headers) {
 		HttpGet httpGet = null;
 		try {
 			URIBuilder ub = new URIBuilder();
@@ -88,8 +100,37 @@ public class HttpClientUtil {
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
 		}
+		return httpGet;
+
+	}
+
+	/**
+	 * get方式请求（有参数）
+	 * @param url 请求地址
+	 * @param params 参数集合
+	 * @param headers  头信息
+	 * @return 任意格式的字符串
+	 */
+	public static String httpGetRequest(String url, Map<String, Object> params, Map<String, Object> headers) {
+		HttpGet httpGet = initHttpGet(url, params, headers);
 		return getResult(httpGet);
 
+	}
+
+	/**
+	 * 创建HttpPost,post方式请求（无参）
+	 * @param url 请求地址
+	 * @param headers 头信息
+	 * @return HttpPost实例
+	 */
+	public static HttpPost initHttpPost(String url, Map<String, Object> headers) {
+		HttpPost httpPost = new HttpPost(url);
+		if (headers != null) {
+			for (Map.Entry<String, Object> param : headers.entrySet()) {
+				httpPost.addHeader(param.getKey(), param.getValue().toString());
+			}
+		}
+		return httpPost;
 	}
 
 	/**
@@ -99,23 +140,18 @@ public class HttpClientUtil {
 	 * @return 任意格式的字符串
 	 */
 	public static String httpPostRequest(String url, Map<String, Object> headers) {
-		HttpPost httpPost = new HttpPost(url);
-		if (headers != null) {
-			for (Map.Entry<String, Object> param : headers.entrySet()) {
-				httpPost.addHeader(param.getKey(), param.getValue().toString());
-			}
-		}
+		HttpPost httpPost = initHttpPost(url, headers);
 		return getResult(httpPost);
 	}
 
 	/**
-	 * post方式请求（有参）
+	 * 创建HttpPost,post方式请求（有参）
 	 * @param url 请求地址
 	 * @param params 参数集合
 	 * @param headers 头信息集合
-	 * @return 任意格式的字符串
+	 * @return HttpPost实例
 	 */
-	public static String httpPostRequest(String url, Map<String, Object> params, Map<String, Object> headers) {
+	public static HttpPost initHttpPost(String url, Map<String, Object> params, Map<String, Object> headers) {
 		HttpPost httpPost = new HttpPost(url);
 		ArrayList<NameValuePair> pairs = covertParams2NVPS(params);
 		try {
@@ -128,6 +164,17 @@ public class HttpClientUtil {
 				httpPost.addHeader(param.getKey(), param.getValue().toString());
 			}
 		}
+		return httpPost;
+	}
+	/**
+	 * post方式请求（有参）
+	 * @param url 请求地址
+	 * @param params 参数集合
+	 * @param headers 头信息集合
+	 * @return 任意格式的字符串
+	 */
+	public static String httpPostRequest(String url, Map<String, Object> params, Map<String, Object> headers) {
+		HttpPost httpPost = initHttpPost(url,params,headers);
 		return getResult(httpPost);
 	}
 
@@ -146,14 +193,24 @@ public class HttpClientUtil {
 	}
 
 	/**
+	 * 执行请求返回HttpResponse
+	 * @param request 请求对象
+	 * @return HttpResponse实例
+	 */
+	public static HttpResponse getResponse(HttpRequestBase request) throws Exception {
+		CloseableHttpClient httpClient = getHttpClient();
+		CloseableHttpResponse response = httpClient.execute(request);
+		return response;
+	}
+
+	/**
 	 * 执行请求返回结果
 	 * @param request 请求对象
 	 * @return 任意格式的字符串
 	 */
 	public static String getResult(HttpRequestBase request) {
 		try {
-			CloseableHttpClient httpClient = getHttpClient();
-			CloseableHttpResponse response = httpClient.execute(request);
+			CloseableHttpResponse response = (CloseableHttpResponse) getResponse(request);
 			HttpEntity entity = response.getEntity();
 			if (entity != null) {
 				String result = EntityUtils.toString(entity);
