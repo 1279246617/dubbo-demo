@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 /**请求参数实体类*/
 @SuppressWarnings("serial")
-public class RequestParamsEntity implements Serializable{
+public class RequestParamsEntity implements Serializable {
 	/**接口请求body*/
 	private String body;
 	/**头部请求信息*/
@@ -12,13 +12,13 @@ public class RequestParamsEntity implements Serializable{
 	/**请求参数主体*/
 	private String bodyParams;
 	/**数据传输超时时间(毫秒)*/
-	private int soTimeOut;
+	private Integer soTimeOut;
 	/**连接超时时间(毫秒)*/
-	private int connectionTimeOut;
+	private Integer connectionTimeOut;
 	/**请求地址(非空)*/
 	private String url;
 	/**请求方法，1：get,2:post(非空)*/
-	private int method;
+	private Integer method;
 	/**请求id,长度36的UUID,不可重复(非空)*/
 	private String requestId;
 	/**用于搜索报文的关键字 一般如:订单号,跟踪单号,订单id,客户id之类(类似关键字最多可传3个，非空)*/
@@ -54,6 +54,22 @@ public class RequestParamsEntity implements Serializable{
 		this.bodyParams = bodyParams;
 	}
 
+	public Integer getSoTimeOut() {
+		return soTimeOut;
+	}
+
+	public void setSoTimeOut(Integer soTimeOut) {
+		this.soTimeOut = soTimeOut;
+	}
+
+	public Integer getConnectionTimeOut() {
+		return connectionTimeOut;
+	}
+
+	public void setConnectionTimeOut(Integer connectionTimeOut) {
+		this.connectionTimeOut = connectionTimeOut;
+	}
+
 	public String getUrl() {
 		return url;
 	}
@@ -62,11 +78,11 @@ public class RequestParamsEntity implements Serializable{
 		this.url = url;
 	}
 
-	public int getMethod() {
+	public Integer getMethod() {
 		return method;
 	}
 
-	public void setMethod(int method) {
+	public void setMethod(Integer method) {
 		this.method = method;
 	}
 
@@ -108,22 +124,6 @@ public class RequestParamsEntity implements Serializable{
 
 	public void setCallbackUrl(String callbackUrl) {
 		this.callbackUrl = callbackUrl;
-	}
-
-	public int getSoTimeOut() {
-		return soTimeOut;
-	}
-
-	public void setSoTimeOut(int soTimeOut) {
-		this.soTimeOut = soTimeOut;
-	}
-
-	public int getConnectionTimeOut() {
-		return connectionTimeOut;
-	}
-
-	public void setConnectionTimeOut(int connectionTimeOut) {
-		this.connectionTimeOut = connectionTimeOut;
 	}
 
 }

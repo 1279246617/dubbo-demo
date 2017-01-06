@@ -9,11 +9,11 @@ import com.coe.message.entity.MessageRequest;
 import com.coe.message.entity.MessageRequestExample;
 import com.coe.message.entity.MessageRequestExample.Criteria;
 import com.coe.message.entity.MessageRequestWithBLOBs;
-import com.coe.message.service.IMessageRequest;
+import com.coe.message.service.IMessageRequestService;
 
 /**报文请求信息接口实现类*/
 @Service
-public class MessageRequestImpl implements IMessageRequest {
+public class MessageRequestServiceImpl implements IMessageRequestService {
 	@Autowired
 	private MessageRequestMapper msgReqMapper;
 
