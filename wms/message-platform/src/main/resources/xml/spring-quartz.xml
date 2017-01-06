@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+			http://www.springframework.org/schema/beans/spring-beans.xsd    
+            http://www.springframework.org/schema/context 
+            http://www.springframework.org/schema/context/spring-context.xsd    
+            http://www.springframework.org/schema/mvc 
+            http://www.springframework.org/schema/mvc/spring-mvc.xsd 
+            http://www.springframework.org/schema/aop
+           http://www.springframework.org/schema/aop/spring-aop.xsd 
+           http://www.springframework.org/schema/tx 
+     	   http://www.springframework.org/schema/tx/spring-tx.xsd  
+           http://www.springframework.org/schema/util 
+           http://www.springframework.org/schema/util/spring-util.xsd">
+	<!--定时任务类 -->
+	<bean id="toDatabaseJob" class="com.coe.message.api.job.MsgToDatabaseJob" />
+	<bean id="toListJob" class="com.coe.message.api.job.MsgToListJob" />
+	<bean id="msgSendJob" class="com.coe.message.api.job.MsgSendJob" />
+	<!--指定要调用的类和方法 -->
+	<bean id="toDatabaseJobTask" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="toDatabaseJob" />
+		<property name="targetMethod" value="msgToDB" />
+		<!--设置不并行执行，即串行执行 -->
+		<property name="concurrent" value="false" />
+	</bean>
+	<bean id="toListJobTask" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="toListJob" />
+		<property name="targetMethod" value="msgToList" />
+		<!--设置不并行执行，即串行执行 -->
+		<property name="concurrent" value="false" />
+	</bean>
+	<bean id="msgSendJobTask" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="msgSendJob" />
+		<property name="targetMethod" value="sendMsg" />
+		<!--设置不并行执行，即串行执行 -->
+		<property name="concurrent" value="false" />
+	</bean>
+	<!-- 定义触发时间 -->
+	<bean id="toDatabaseJobDoTime" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail">
+			<ref bean="toDatabaseJobTask" />
+		</property>
+		<!--每5秒执行一次 -->
+		<property name="cronExpression">
+			<value>0/5 * * * * ?</value>
+		</property>
+	</bean>
+	<bean id="toListJobDoTime" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail">
+			<ref bean="toListJobTask" />
+		</property>
+		<!--每5秒执行一次 -->
+		<property name="cronExpression">
+			<value>0/5 * * * * ?</value>
+		</property>
+	</bean>
+	<bean id="msgSendJobDoTime" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail">
+			<ref bean="msgSendJobTask"/>
+		</property>
+		<!--每10秒执行一次 -->
+		<property name="cronExpression">
+			<value>0/10 * * * * ?</value>
+		</property>
+	</bean>
+	<!--总管理工厂 -->
+	<bean id="startQuertz" lazy-init="false" autowire="no" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+				<ref bean="toDatabaseJobDoTime" />
+				<ref bean="toListJobDoTime" />
+				<ref bean="msgSendJobDoTime"/>
+			</list>
+		</property>
+	</bean>
+</beans>
