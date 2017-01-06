@@ -11,13 +11,12 @@ import com.coe.message.dao.mapper.MessageRequestMapper;
 import com.coe.message.entity.Message;
 import com.coe.message.entity.MessageExample;
 import com.coe.message.entity.MessageExample.Criteria;
-import com.coe.message.entity.MessageRequest;
 import com.coe.message.entity.MessageRequestWithBLOBs;
-import com.coe.message.service.IMessage;
+import com.coe.message.service.IMessageService;
 
 /**报文信息接口实现类*/
 @Service
-public class MessageImpl implements IMessage {
+public class MessageServiceImpl implements IMessageService {
 	@Autowired
 	private MessageMapper msgMapper;
 	@Autowired

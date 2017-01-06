@@ -1,5 +1,6 @@
 package com.coe.message.api.job;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import org.apache.log4j.Logger;
@@ -8,14 +9,14 @@ import com.coe.message.api.entity.RequestMsgEntity;
 import com.coe.message.common.JedisUtil;
 import com.coe.message.entity.Message;
 import com.coe.message.entity.MessageRequestWithBLOBs;
-import com.coe.message.service.IMessage;
+import com.coe.message.service.IMessageService;
 import com.google.gson.Gson;
 import redis.clients.jedis.Jedis;
 
 /**定时任务类(定时将Redis里的数据保存到Mysql数据库)*/
 public class MsgToDatabaseJob {
 	@Autowired
-	private IMessage messageService;
+	private IMessageService messageService;
 	private Logger log = Logger.getLogger(this.getClass());
 
 	/**定时任务，定时将Redis里的数据保存到MySql数据库*/
@@ -43,6 +44,8 @@ public class MsgToDatabaseJob {
 				continue;
 			}
 			MessageRequestWithBLOBs msgRequestWithBlobs = requestMsgEntity.getMsgReqWithBlobs();
+			msgRequestWithBlobs.setCreatedTime(new Date().getTime());
+			message.setCreatedTime(new Date().getTime());
 			boolean flag = false;
 			try {
 				flag = messageService.saveMessageAll(message, msgRequestWithBlobs);

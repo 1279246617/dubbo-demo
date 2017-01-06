@@ -1,21 +1,36 @@
 package com.coe.message.api.job;
 
+import java.io.IOException;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang.StringUtils;
+import org.apache.http.Header;
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import com.coe.message.api.entity.QueueEntity;
 import com.coe.message.common.HttpClientUtil;
 import com.coe.message.common.JsonMapUtil;
+import com.coe.message.entity.Message;
 import com.coe.message.entity.MessageRequestWithBLOBs;
+import com.coe.message.entity.MessageResponseWithBLOBs;
+import com.coe.message.service.IMessageResponseService;
+import com.coe.message.service.IMessageService;
 import com.google.gson.Gson;
 
 /**发送报文任务类*/
 public class MsgSendJob {
 	private Logger log = Logger.getLogger(this.getClass());
+	@Autowired
+	private IMessageService messageService;
+	@Autowired
+	private IMessageResponseService msgResponseService;
 
 	/**发送报文*/
 	public void sendMsg() {
@@ -26,7 +41,7 @@ public class MsgSendJob {
 		// 遍历队列
 		for (int i = 0; i < msgReqJsonSize; i++) {
 			String msgReqJson = msgReqJsonList.get(i);
-			log.info("报文信息：" + msgReqJson);
+			log.info("发送报文信息：" + msgReqJson);
 			Gson gson = new Gson();
 			MessageRequestWithBLOBs msgReq = gson.fromJson(msgReqJson, MessageRequestWithBLOBs.class);
 			// 请求地址
@@ -36,6 +51,10 @@ public class MsgSendJob {
 			String bodyParams = msgReq.getBodyParams();
 			// header参数(Json格式字符串)
 			String headerParams = msgReq.getHeaderParams();
+			//链接超时时间
+			Integer connectTimeout = msgReq.getConnectionTimeOut();
+			//响应超时时间
+			Integer socketTimeout = msgReq.getSoTimeOut();
 			Map<String, Object> headers = null;
 			Map<String, Object> requestParams = null;
 			if (StringUtils.isNotBlank(headerParams)) {
@@ -53,33 +72,88 @@ public class MsgSendJob {
 			// 队列长度减1
 			msgReqJsonSize--;
 			// 开始发送报文
+			Long sendBeginTime = new Date().getTime();
 			try {
 				HttpResponse response = null;
-				// get方式请求
-				if (method == 1) {
-					HttpGet httpGet = null;
-					if (requestParams != null) { // 有参数
-						httpGet = HttpClientUtil.initHttpGet(requestUrl, requestParams, headers);
-					} else {// 无参数
-						httpGet = HttpClientUtil.initHttpGet(requestUrl, headers);
-					}
-					response = HttpClientUtil.getResponse(httpGet);
-				} else {// post请求
-					HttpPost httpPost = null;
-					if (requestParams != null) {
-						httpPost = HttpClientUtil.initHttpPost(requestUrl, requestParams, headers);
-					} else {
-						httpPost = HttpClientUtil.initHttpPost(requestUrl, headers);
-					}
-					response = HttpClientUtil.getResponse(httpPost);
-				}
+				//发送请求，获得响应信息
+				response = sendHttpRequest(requestUrl, headers, requestParams, method,connectTimeout,socketTimeout);
 				int statusCode = response.getStatusLine().getStatusCode();
-				System.out.println(statusCode);
+				Long sendEndTime = new Date().getTime();
+				Message msg = new Message();
+				msg.setId(msgReq.getMessageId());
+				if (statusCode == 200) {
+					msg.setStatus(1);
+				} else {
+					msg.setStatus(2);
+				}
+				// 将Message表字段status更新
+				messageService.updateOrSave(msg);
+				saveMsgResponse(sendBeginTime, response, statusCode, sendEndTime);
 			} catch (Exception e) {
 				log.info("报文发送出错，报文信息：" + msgReqJson);
 				e.printStackTrace();
 			}
 		}
+	}
+
+	/**保存响应信息到数据库*/
+	private void saveMsgResponse(Long sendBeginTime, HttpResponse response, int statusCode, Long sendEndTime) throws IOException {
+		MessageResponseWithBLOBs msgResponse = new MessageResponseWithBLOBs();
+		msgResponse.setCreatedTime(new Date().getTime());
+		msgResponse.setHttpStatus(statusCode);
+		msgResponse.setSendBeginTime(sendBeginTime);
+		msgResponse.setSendEndTime(sendEndTime);
+		msgResponse.setUsedTime(sendEndTime - sendBeginTime);
+		HttpEntity entity = response.getEntity();
+		Header[] responseHeaders = response.getAllHeaders();
+		String headerJson = "";
+		for (Header respHeader : responseHeaders) {
+			Map<String,Object> headerMap = new HashMap<String,Object>();
+			headerMap.put(respHeader.getName(),respHeader.getValue());
+			headerJson = JsonMapUtil.mapToJson(headerMap);
+		}
+		msgResponse.setResponseHeader(headerJson);
+		if (entity != null) {
+			msgResponse.setResponseBody(EntityUtils.toString(entity));
+		}
+		if(statusCode==200){
+			//成功
+			msgResponse.setStatus(1);
+		}else{
+			//对方响应状态码不为200
+			msgResponse.setStatus(4);
+		}
+		msgResponseService.saveOrUpdate(msgResponse);
+	}
+
+	/**
+	 * 发送请求返回HttpResponse实例，响应信息
+	 * @param requestUrl
+	 * @param headers
+	 * @param requestParams
+	 * @param method
+	 */
+	private HttpResponse sendHttpRequest(String requestUrl, Map<String, Object> headers, Map<String, Object> requestParams, Integer method,Integer connectTimeout, Integer socketTimeout) throws Exception {
+		HttpResponse response;
+		// get方式请求
+		if (method == 1) {
+			HttpGet httpGet = null;
+			if (requestParams != null) { // 有参数
+				httpGet = HttpClientUtil.initHttpGet(requestUrl, requestParams, headers,connectTimeout,socketTimeout);
+			} else {// 无参数
+				httpGet = HttpClientUtil.initHttpGet(requestUrl, headers,connectTimeout,socketTimeout);
+			}
+			response = HttpClientUtil.getResponse(httpGet);
+		} else {// post请求
+			HttpPost httpPost = null;
+			if (requestParams != null) {
+				httpPost = HttpClientUtil.initHttpPost(requestUrl, requestParams, headers,connectTimeout,socketTimeout);
+			} else {
+				httpPost = HttpClientUtil.initHttpPost(requestUrl, headers,connectTimeout,socketTimeout);
+			}
+			response = HttpClientUtil.getResponse(httpPost);
+		}
+		return response;
 	}
 
 }

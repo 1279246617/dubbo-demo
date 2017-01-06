@@ -13,7 +13,7 @@ import com.coe.message.api.service.IMsgServiceApi;
 import com.coe.message.common.JedisUtil;
 import com.coe.message.entity.Message;
 import com.coe.message.entity.MessageRequestWithBLOBs;
-import com.coe.message.service.IMessage;
+import com.coe.message.service.IMessageService;
 import com.google.gson.Gson;
 import redis.clients.jedis.Jedis;
 
@@ -22,7 +22,7 @@ public class MsgServiceImplApi implements IMsgServiceApi {
 
 	private Logger log = Logger.getLogger(this.getClass());
 	@Autowired
-	private IMessage messageService;
+	private IMessageService messageService;
 
 	/**
 	 * 接收报文(存入Redis)
@@ -47,7 +47,6 @@ public class MsgServiceImplApi implements IMsgServiceApi {
 			Integer soTimeOut = paramsEntity.getSoTimeOut();
 			Integer connectionTimeOut = paramsEntity.getConnectionTimeOut();
 			Long currentTime = new Date().getTime();
-			System.out.println("currentTime:"+currentTime);
 			if (StringUtils.isEmpty(url) || method == null || StringUtils.isEmpty(requestId) || StringUtils.isEmpty(keyword) || StringUtils.isEmpty(callbackUrl)) {
 				code = 1;
 				msg = "参数缺失，必选参数[url,method,requestId,keyword,callbackUrl],可选参数[body,bodyParams,headerParams,keyword1,keyword2,soTimeOut,connectionTimeOut]";
@@ -113,11 +112,11 @@ public class MsgServiceImplApi implements IMsgServiceApi {
 		return resultEntity;
 	}
 
-	public IMessage getMessageService() {
+	public IMessageService getMessageService() {
 		return messageService;
 	}
 
-	public void setMessageService(IMessage messageService) {
+	public void setMessageService(IMessageService messageService) {
 		this.messageService = messageService;
 	}
 

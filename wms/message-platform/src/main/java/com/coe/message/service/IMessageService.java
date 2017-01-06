@@ -2,11 +2,10 @@ package com.coe.message.service;
 
 import java.util.List;
 import com.coe.message.entity.Message;
-import com.coe.message.entity.MessageRequest;
 import com.coe.message.entity.MessageRequestWithBLOBs;
 
 /**报文信息接口*/
-public interface IMessage {
+public interface IMessageService {
 	/**
 	 * 批量更新Count字段
 	 * @param idList Message主键id列表

@@ -8,16 +8,16 @@ import com.coe.message.api.entity.QueueEntity;
 import com.coe.message.entity.Message;
 import com.coe.message.entity.MessageRequest;
 import com.coe.message.entity.MessageRequestWithBLOBs;
-import com.coe.message.service.IMessage;
-import com.coe.message.service.IMessageRequest;
+import com.coe.message.service.IMessageService;
+import com.coe.message.service.IMessageRequestService;
 import com.google.gson.Gson;
 
 /**定时任务类(定时读取数据库数据保存到队列LinkedList)*/
 public class MsgToListJob {
 	@Autowired
-	private IMessage messageService;
+	private IMessageService messageService;
 	@Autowired
-	private IMessageRequest messageReqService;
+	private IMessageRequestService messageReqService;
 	private Logger log = Logger.getLogger(this.getClass());
 	/**存放报文队列最大长度*/
 	private static final int LIST_SIZE = 5000;
@@ -60,7 +60,7 @@ public class MsgToListJob {
 						// 队列中不存在则存入
 						if (!msgReqJsonList.contains(messageReqJson)) {
 							msgReqJsonList.add(messageReqJson);
-							log.info("报文存入队列成功，报文信息：" + messageReqJson);
+							log.info("报文存入队列，报文信息：" + messageReqJson);
 							// 更新Message字段count，使count加1
 							Message updateMsg = new Message();
 							updateMsg.setId(messageId);

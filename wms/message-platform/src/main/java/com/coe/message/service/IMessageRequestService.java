@@ -5,7 +5,7 @@ import com.coe.message.entity.MessageRequest;
 import com.coe.message.entity.MessageRequestWithBLOBs;
 
 /**报文请求信息接口*/
-public interface IMessageRequest {
+public interface IMessageRequestService {
 	/**根据模板查询*/
 	public List<MessageRequestWithBLOBs> selectByExample(MessageRequest msgReq);
 }

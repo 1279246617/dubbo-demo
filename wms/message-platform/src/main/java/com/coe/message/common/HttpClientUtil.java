@@ -9,6 +9,8 @@ import java.util.Set;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.config.RequestConfig.Builder;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -54,8 +56,10 @@ public class HttpClientUtil {
 	 * @param headers
 	 * @return
 	 */
-	public static HttpGet initHttpGet(String url, Map<String, Object> headers) {
+	public static HttpGet initHttpGet(String url, Map<String, Object> headers,Integer connectTimeout, Integer socketTimeout) {
 		HttpGet httpGet = new HttpGet(url);
+		RequestConfig config = getReqConfig(connectTimeout, socketTimeout);
+		httpGet.setConfig(config);
 		if (headers != null) {
 			for (Map.Entry<String, Object> param : headers.entrySet()) {
 				httpGet.addHeader(param.getKey(), param.getValue().toString());
@@ -71,8 +75,8 @@ public class HttpClientUtil {
 	 * @param headers  头信息
 	 * @return 任意格式的字符串
 	 */
-	public static String httpGetRequest(String url, Map<String, Object> headers) {
-		HttpGet httpGet = initHttpGet(url, headers);
+	public static String httpGetRequest(String url, Map<String, Object> headers,Integer connectTimeout, Integer socketTimeout) {
+		HttpGet httpGet = initHttpGet(url, headers,connectTimeout, socketTimeout);
 		return getResult(httpGet);
 	}
 
@@ -83,7 +87,7 @@ public class HttpClientUtil {
 	 * @param headers  头信息
 	 * @return 任意格式的字符串
 	 */
-	public static HttpGet initHttpGet(String url, Map<String, Object> params, Map<String, Object> headers) {
+	public static HttpGet initHttpGet(String url, Map<String, Object> params, Map<String, Object> headers,Integer connectTimeout, Integer socketTimeout) {
 		HttpGet httpGet = null;
 		try {
 			URIBuilder ub = new URIBuilder();
@@ -100,6 +104,7 @@ public class HttpClientUtil {
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
 		}
+		httpGet.setConfig(getReqConfig(connectTimeout, socketTimeout));
 		return httpGet;
 
 	}
@@ -111,8 +116,8 @@ public class HttpClientUtil {
 	 * @param headers  头信息
 	 * @return 任意格式的字符串
 	 */
-	public static String httpGetRequest(String url, Map<String, Object> params, Map<String, Object> headers) {
-		HttpGet httpGet = initHttpGet(url, params, headers);
+	public static String httpGetRequest(String url, Map<String, Object> params, Map<String, Object> headers,Integer connectTimeout, Integer socketTimeout) {
+		HttpGet httpGet = initHttpGet(url, params, headers,connectTimeout,socketTimeout);
 		return getResult(httpGet);
 
 	}
@@ -123,8 +128,9 @@ public class HttpClientUtil {
 	 * @param headers 头信息
 	 * @return HttpPost实例
 	 */
-	public static HttpPost initHttpPost(String url, Map<String, Object> headers) {
+	public static HttpPost initHttpPost(String url, Map<String, Object> headers,Integer connectTimeout, Integer socketTimeout) {
 		HttpPost httpPost = new HttpPost(url);
+		httpPost.setConfig(getReqConfig(connectTimeout, socketTimeout));
 		if (headers != null) {
 			for (Map.Entry<String, Object> param : headers.entrySet()) {
 				httpPost.addHeader(param.getKey(), param.getValue().toString());
@@ -139,8 +145,8 @@ public class HttpClientUtil {
 	 * @param headers 头信息
 	 * @return 任意格式的字符串
 	 */
-	public static String httpPostRequest(String url, Map<String, Object> headers) {
-		HttpPost httpPost = initHttpPost(url, headers);
+	public static String httpPostRequest(String url, Map<String, Object> headers,Integer connectTimeout, Integer socketTimeout) {
+		HttpPost httpPost = initHttpPost(url, headers,connectTimeout, socketTimeout);
 		return getResult(httpPost);
 	}
 
@@ -151,8 +157,9 @@ public class HttpClientUtil {
 	 * @param headers 头信息集合
 	 * @return HttpPost实例
 	 */
-	public static HttpPost initHttpPost(String url, Map<String, Object> params, Map<String, Object> headers) {
+	public static HttpPost initHttpPost(String url, Map<String, Object> params, Map<String, Object> headers,Integer connectTimeout, Integer socketTimeout) {
 		HttpPost httpPost = new HttpPost(url);
+		httpPost.setConfig(getReqConfig(connectTimeout, socketTimeout));
 		ArrayList<NameValuePair> pairs = covertParams2NVPS(params);
 		try {
 			httpPost.setEntity(new UrlEncodedFormEntity(pairs, "UTF-8"));
@@ -166,6 +173,7 @@ public class HttpClientUtil {
 		}
 		return httpPost;
 	}
+
 	/**
 	 * post方式请求（有参）
 	 * @param url 请求地址
@@ -173,8 +181,8 @@ public class HttpClientUtil {
 	 * @param headers 头信息集合
 	 * @return 任意格式的字符串
 	 */
-	public static String httpPostRequest(String url, Map<String, Object> params, Map<String, Object> headers) {
-		HttpPost httpPost = initHttpPost(url,params,headers);
+	public static String httpPostRequest(String url, Map<String, Object> params, Map<String, Object> headers,Integer connectTimeout, Integer socketTimeout) {
+		HttpPost httpPost = initHttpPost(url, params, headers,connectTimeout,socketTimeout);
 		return getResult(httpPost);
 	}
 
@@ -221,5 +229,36 @@ public class HttpClientUtil {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	
+	/**
+	 * 设置链接超时时间，响应超时时间
+	 * @param connectTimeout
+	 * @param socketTimeout
+	 * @return RequestConfig实例
+	 */
+	public static RequestConfig getReqConfig(Integer connectTimeout, Integer socketTimeout) {
+		Builder builder = RequestConfig.custom();
+		if (connectTimeout != null) {
+			if (connectTimeout <= 0) {
+				builder.setConnectTimeout(30 * 1000);// 默认30s
+			} else {
+				builder.setConnectTimeout(connectTimeout);
+			}
+		} else {
+			builder.setConnectTimeout(30 * 1000);// 默认30s
+		}
+		if (socketTimeout != null) {
+			if (socketTimeout <= 0) {
+				builder.setSocketTimeout(30*1000);// 默认30s
+			}else{
+				builder.setSocketTimeout(socketTimeout);
+			}
+		} else {
+			builder.setSocketTimeout(30*1000);// 默认30s
+		}
+		
+		return builder.build();
 	}
 }
