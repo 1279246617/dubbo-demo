@@ -32,14 +32,6 @@ public class MessageServiceImpl implements IMessageService {
 	}
 
 	/**
-	 * 批量更新Count字段
-	 * @param idList Message主键id列表
-	 */
-	public int updateCountBatchForApi(List<Long> idList) {
-		return msgMapper.updateCountBatchForApi(idList);
-	}
-
-	/**
 	 * 分页查询(For API)
 	 * @param records 总记录数
 	 */
