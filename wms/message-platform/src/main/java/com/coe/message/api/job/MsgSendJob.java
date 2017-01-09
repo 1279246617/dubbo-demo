@@ -51,9 +51,9 @@ public class MsgSendJob {
 			String bodyParams = msgReq.getBodyParams();
 			// header参数(Json格式字符串)
 			String headerParams = msgReq.getHeaderParams();
-			//链接超时时间
+			// 链接超时时间
 			Integer connectTimeout = msgReq.getConnectionTimeOut();
-			//响应超时时间
+			// 响应超时时间
 			Integer socketTimeout = msgReq.getSoTimeOut();
 			Map<String, Object> headers = null;
 			Map<String, Object> requestParams = null;
@@ -75,12 +75,13 @@ public class MsgSendJob {
 			Long sendBeginTime = new Date().getTime();
 			try {
 				HttpResponse response = null;
-				//发送请求，获得响应信息
-				response = sendHttpRequest(requestUrl, headers, requestParams, method,connectTimeout,socketTimeout);
+				// 发送请求，获得响应信息
+				response = sendHttpRequest(requestUrl, headers, requestParams, method, connectTimeout, socketTimeout);
 				int statusCode = response.getStatusLine().getStatusCode();
 				Long sendEndTime = new Date().getTime();
 				Message msg = new Message();
-				msg.setId(msgReq.getMessageId());
+				Long messageId = msgReq.getMessageId();
+				msg.setId(messageId);
 				if (statusCode == 200) {
 					msg.setStatus(1);
 				} else {
@@ -88,39 +89,40 @@ public class MsgSendJob {
 				}
 				// 将Message表字段status更新
 				messageService.updateOrSave(msg);
-				saveMsgResponse(sendBeginTime, response, statusCode, sendEndTime);
+				saveMsgResponse(sendBeginTime, response, statusCode, sendEndTime, messageId);
 			} catch (Exception e) {
 				log.info("报文发送出错，报文信息：" + msgReqJson);
-				e.printStackTrace();
+				System.out.println("错误信息:"+e.toString());
 			}
 		}
 	}
 
 	/**保存响应信息到数据库*/
-	private void saveMsgResponse(Long sendBeginTime, HttpResponse response, int statusCode, Long sendEndTime) throws IOException {
+	private void saveMsgResponse(Long sendBeginTime, HttpResponse response, int statusCode, Long sendEndTime, Long messageId) throws IOException {
 		MessageResponseWithBLOBs msgResponse = new MessageResponseWithBLOBs();
 		msgResponse.setCreatedTime(new Date().getTime());
 		msgResponse.setHttpStatus(statusCode);
 		msgResponse.setSendBeginTime(sendBeginTime);
 		msgResponse.setSendEndTime(sendEndTime);
 		msgResponse.setUsedTime(sendEndTime - sendBeginTime);
+		msgResponse.setMessageId(messageId);
 		HttpEntity entity = response.getEntity();
 		Header[] responseHeaders = response.getAllHeaders();
 		String headerJson = "";
 		for (Header respHeader : responseHeaders) {
-			Map<String,Object> headerMap = new HashMap<String,Object>();
-			headerMap.put(respHeader.getName(),respHeader.getValue());
+			Map<String, Object> headerMap = new HashMap<String, Object>();
+			headerMap.put(respHeader.getName(), respHeader.getValue());
 			headerJson = JsonMapUtil.mapToJson(headerMap);
 		}
 		msgResponse.setResponseHeader(headerJson);
 		if (entity != null) {
 			msgResponse.setResponseBody(EntityUtils.toString(entity));
 		}
-		if(statusCode==200){
-			//成功
+		if (statusCode == 200) {
+			// 成功
 			msgResponse.setStatus(1);
-		}else{
-			//对方响应状态码不为200
+		} else {
+			// 对方响应状态码不为200
 			msgResponse.setStatus(4);
 		}
 		msgResponseService.saveOrUpdate(msgResponse);
@@ -133,23 +135,23 @@ public class MsgSendJob {
 	 * @param requestParams
 	 * @param method
 	 */
-	private HttpResponse sendHttpRequest(String requestUrl, Map<String, Object> headers, Map<String, Object> requestParams, Integer method,Integer connectTimeout, Integer socketTimeout) throws Exception {
+	private HttpResponse sendHttpRequest(String requestUrl, Map<String, Object> headers, Map<String, Object> requestParams, Integer method, Integer connectTimeout, Integer socketTimeout) throws Exception {
 		HttpResponse response;
 		// get方式请求
 		if (method == 1) {
 			HttpGet httpGet = null;
 			if (requestParams != null) { // 有参数
-				httpGet = HttpClientUtil.initHttpGet(requestUrl, requestParams, headers,connectTimeout,socketTimeout);
+				httpGet = HttpClientUtil.initHttpGet(requestUrl, requestParams, headers, connectTimeout, socketTimeout);
 			} else {// 无参数
-				httpGet = HttpClientUtil.initHttpGet(requestUrl, headers,connectTimeout,socketTimeout);
+				httpGet = HttpClientUtil.initHttpGet(requestUrl, headers, connectTimeout, socketTimeout);
 			}
 			response = HttpClientUtil.getResponse(httpGet);
 		} else {// post请求
 			HttpPost httpPost = null;
 			if (requestParams != null) {
-				httpPost = HttpClientUtil.initHttpPost(requestUrl, requestParams, headers,connectTimeout,socketTimeout);
+				httpPost = HttpClientUtil.initHttpPost(requestUrl, requestParams, headers, connectTimeout, socketTimeout);
 			} else {
-				httpPost = HttpClientUtil.initHttpPost(requestUrl, headers,connectTimeout,socketTimeout);
+				httpPost = HttpClientUtil.initHttpPost(requestUrl, headers, connectTimeout, socketTimeout);
 			}
 			response = HttpClientUtil.getResponse(httpPost);
 		}

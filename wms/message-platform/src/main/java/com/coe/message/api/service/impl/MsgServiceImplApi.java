@@ -72,6 +72,7 @@ public class MsgServiceImplApi implements IMsgServiceApi {
 			message.setCreatedTime(currentTime);
 			message.setCount(0);
 			message.setStatus(0);
+			message.setIsValid(0);
 			if (StringUtils.isNotBlank(keyword1)) {
 				message.setKeyword1(keyword1);
 			}
