@@ -5,10 +5,10 @@ public class MessageResponse {
 	private Long id;
 	/**Message主键id*/
 	private Long messageId;
-	/**http状态 如:200 ,404,500(负数为自定义)*/
+	/**http状态 如:200 ,404,500(负数为自定义),-1:响应超时，-2：链接超时，-3：其他异常*/
 	private Integer httpStatus;
 	/**http状态信息*/
-	private Integer httpStatusMsg;
+	private String httpStatusMsg;
 	/**发送起始时间*/
 	private Long sendBeginTime;
 	/**发送结束时间*/
@@ -46,11 +46,11 @@ public class MessageResponse {
 		this.httpStatus = httpStatus;
 	}
 
-	public Integer getHttpStatusMsg() {
+	public String getHttpStatusMsg() {
 		return httpStatusMsg;
 	}
 
-	public void setHttpStatusMsg(Integer httpStatusMsg) {
+	public void setHttpStatusMsg(String httpStatusMsg) {
 		this.httpStatusMsg = httpStatusMsg;
 	}
 

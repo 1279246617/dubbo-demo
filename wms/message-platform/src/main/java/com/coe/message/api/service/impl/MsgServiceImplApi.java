@@ -40,16 +40,16 @@ public class MsgServiceImplApi implements IMsgServiceApi {
 			String url = paramsEntity.getUrl();
 			Integer method = paramsEntity.getMethod();
 			String requestId = paramsEntity.getRequestId();
-			String keyword = paramsEntity.getKeyword();
 			String keyword1 = paramsEntity.getKeyword1();
 			String keyword2 = paramsEntity.getKeyword2();
+			String keyword3 = paramsEntity.getKeyword3();
 			String callbackUrl = paramsEntity.getCallbackUrl();
 			Integer soTimeOut = paramsEntity.getSoTimeOut();
 			Integer connectionTimeOut = paramsEntity.getConnectionTimeOut();
 			Long currentTime = new Date().getTime();
-			if (StringUtils.isEmpty(url) || method == null || StringUtils.isEmpty(requestId) || StringUtils.isEmpty(keyword) || StringUtils.isEmpty(callbackUrl)) {
+			if (StringUtils.isEmpty(url) || method == null || StringUtils.isEmpty(requestId) || StringUtils.isEmpty(keyword1) || StringUtils.isEmpty(callbackUrl)) {
 				code = 1;
-				msg = "参数缺失，必选参数[url,method,requestId,keyword,callbackUrl],可选参数[body,bodyParams,headerParams,keyword1,keyword2,soTimeOut,connectionTimeOut]";
+				msg = "参数缺失，必选参数[url,method,requestId,keyword1,callbackUrl],可选参数[body,bodyParams,headerParams,keyword2,keyword3,soTimeOut,connectionTimeOut]";
 				resultEntity.setCode(code);
 				resultEntity.setResultMsg(msg);
 				return resultEntity;
@@ -68,16 +68,16 @@ public class MsgServiceImplApi implements IMsgServiceApi {
 			// Message
 			Message message = new Message();
 			message.setRequestId(requestId);
-			message.setKeyword(keyword);
+			message.setKeyword1(keyword1);
 			message.setCreatedTime(currentTime);
 			message.setCount(0);
 			message.setStatus(0);
 			message.setIsValid(0);
-			if (StringUtils.isNotBlank(keyword1)) {
-				message.setKeyword1(keyword1);
-			}
 			if (StringUtils.isNotBlank(keyword2)) {
 				message.setKeyword2(keyword2);
+			}
+			if (StringUtils.isNotBlank(keyword3)) {
+				message.setKeyword2(keyword3);
 			}
 			// MessageRequest
 			MessageRequestWithBLOBs mrwb = new MessageRequestWithBLOBs();

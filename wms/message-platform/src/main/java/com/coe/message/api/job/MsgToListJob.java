@@ -25,7 +25,7 @@ public class MsgToListJob {
 	/**定时任务，定时从数据库读取数据保存到List*/
 	public void msgToList() {
 		try {
-			log.info("toListJob...........................");
+			log.info("报文数据存入队列任务(toListJob)...........................");
 			QueueEntity queueEntity = QueueEntity.getInstance();
 			List<String> msgReqJsonList = queueEntity.getMsgReqJsonList();
 			// 集合当前的长度
@@ -71,6 +71,7 @@ public class MsgToListJob {
 				}
 			}
 		} catch (Exception e) {
+			log.info("报文存入队列出错！");
 			e.printStackTrace();
 		}
 	}

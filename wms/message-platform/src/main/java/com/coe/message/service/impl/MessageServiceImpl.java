@@ -6,12 +6,16 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.coe.message.common.BeanMapUtil;
+import com.coe.message.common.DateUtil;
+import com.coe.message.common.Page;
 import com.coe.message.dao.mapper.MessageMapper;
 import com.coe.message.dao.mapper.MessageRequestMapper;
 import com.coe.message.entity.Message;
 import com.coe.message.entity.MessageExample;
 import com.coe.message.entity.MessageExample.Criteria;
 import com.coe.message.entity.MessageRequestWithBLOBs;
+import com.coe.message.entity.QueryParamsEntity;
 import com.coe.message.service.IMessageService;
 
 /**报文信息接口实现类*/
@@ -22,6 +26,22 @@ public class MessageServiceImpl implements IMessageService {
 	@Autowired
 	private MessageRequestMapper msgReqMapper;
 
+	/**分页模糊查询*/
+	public List<Message> selectByExamplePagination(Message message, QueryParamsEntity queryParams) {
+		MessageExample msgExample = generateExampleForVague(message, queryParams);
+		int pageNo = queryParams.getPage();
+		int pageSize = queryParams.getRows();
+		Page page = new Page();
+		page.setPageNo(pageNo);
+		page.setPageSize(pageSize);
+		int startIndex = page.getStartIndex();
+		Map<String, Object> paramsMap = BeanMapUtil.convertBean(msgExample);
+		paramsMap.put("startIndex", startIndex);
+		paramsMap.put("pageSize", pageSize);
+		return null;
+	}
+
+	/**保存或更新*/
 	public int updateOrSave(Message msg) {
 		Long id = msg.getId();
 		if (id != null) {
@@ -70,7 +90,7 @@ public class MessageServiceImpl implements IMessageService {
 	public List<Message> selectByExample(Message message) {
 		Integer count = message.getCount();
 		Long id = message.getId();
-		String keyword = message.getKeyword();
+		String keyword3 = message.getKeyword3();
 		String keyword1 = message.getKeyword1();
 		String keyword2 = message.getKeyword2();
 		String requestId = message.getRequestId();
@@ -89,8 +109,8 @@ public class MessageServiceImpl implements IMessageService {
 		if (StringUtils.isNotBlank(requestId)) {
 			messageCriteria.andRequestIdEqualTo(requestId);
 		}
-		if (StringUtils.isNotBlank(keyword)) {
-			messageCriteria.andKeywordEqualTo(keyword);
+		if (StringUtils.isNotBlank(keyword3)) {
+			messageCriteria.andKeyword3EqualTo(keyword3);
 		}
 		if (StringUtils.isNotBlank(keyword1)) {
 			messageCriteria.andKeyword1EqualTo(keyword1);
@@ -99,5 +119,46 @@ public class MessageServiceImpl implements IMessageService {
 			messageCriteria.andKeyword2EqualTo(keyword2);
 		}
 		return msgMapper.selectByExample(msgExample);
+	}
+
+	/**生成查询样例*/
+	public MessageExample generateExampleForVague(Message message, QueryParamsEntity queryParams) {
+		MessageExample msgExample = new MessageExample();
+		Criteria criteria = msgExample.createCriteria();
+		Integer isValid = message.getIsValid();
+		Integer status = message.getStatus();
+		String requestId = message.getRequestId();
+		String keyword1 = message.getKeyword1();
+		String keyword2 = message.getKeyword2();
+		String keyword3 = message.getKeyword3();
+		String endTime = queryParams.getEndTime();
+		String startTime = queryParams.getStartTime();
+		if (isValid != null) {
+			criteria.andIsValidEqualTo(isValid);
+		}
+		if (status != null) {
+			criteria.andStatusEqualTo(status);
+		}
+		if(StringUtils.isNotBlank(requestId)){
+			criteria.andRequestIdLike("%"+requestId+"%");
+		}
+		if(StringUtils.isNotBlank(keyword1)){
+			criteria.andKeyword1Like("%"+keyword1+"%");
+		}
+		if(StringUtils.isNotBlank(keyword2)){
+			criteria.andKeyword2Like("%"+keyword2+"%");
+		}
+		if(StringUtils.isNotBlank(keyword3)){
+			criteria.andKeyword3Like("%"+keyword3+"%");
+		}
+		if(StringUtils.isNotBlank(endTime)){
+			Long endTimeLong = DateUtil.getTimestampFromDateStr(endTime,DateUtil.simple);
+			criteria.andCreatedTimeLessThan(endTimeLong);
+		}
+		if(StringUtils.isNotBlank(startTime)){
+			Long startTimeLong = DateUtil.getTimestampFromDateStr(startTime,DateUtil.simple);
+			criteria.andCreatedTimeGreaterThanOrEqualTo(startTimeLong);
+		}
+		return msgExample;
 	}
 }
