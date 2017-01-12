@@ -34,7 +34,7 @@ public class MsgSendJob {
 
 	/**发送报文*/
 	public void sendMsg() {
-		log.info("msgSendJob......................");
+		log.info("发送报文任务(msgSendJob)......................");
 		QueueEntity queueEntity = QueueEntity.getInstance();
 		List<String> msgReqJsonList = queueEntity.getMsgReqJsonList();
 		int msgReqJsonSize = msgReqJsonList.size();
@@ -44,6 +44,7 @@ public class MsgSendJob {
 			log.info("发送报文信息：" + msgReqJson);
 			Gson gson = new Gson();
 			MessageRequestWithBLOBs msgReq = gson.fromJson(msgReqJson, MessageRequestWithBLOBs.class);
+			Long messageId = msgReq.getMessageId();
 			// 请求地址
 			String requestUrl = msgReq.getUrl();
 			// String body = msgReq.getBody();
@@ -77,31 +78,53 @@ public class MsgSendJob {
 				HttpResponse response = null;
 				// 发送请求，获得响应信息
 				response = sendHttpRequest(requestUrl, headers, requestParams, method, connectTimeout, socketTimeout);
-				int statusCode = response.getStatusLine().getStatusCode();
+				int httpCode = response.getStatusLine().getStatusCode();
 				Long sendEndTime = new Date().getTime();
 				Message msg = new Message();
-				Long messageId = msgReq.getMessageId();
 				msg.setId(messageId);
-				if (statusCode == 200) {
+				if (httpCode == 200) {
 					msg.setStatus(1);
 				} else {
 					msg.setStatus(2);
 				}
 				// 将Message表字段status更新
 				messageService.updateOrSave(msg);
-				saveMsgResponse(sendBeginTime, response, statusCode, sendEndTime, messageId);
+				saveMsgResponse(sendBeginTime, response, httpCode, sendEndTime, messageId);
 			} catch (Exception e) {
 				log.info("报文发送出错，报文信息：" + msgReqJson);
-				System.out.println("错误信息:"+e.toString());
+				String errorMsg = e.getMessage();
+				log.info("错误信息:"+errorMsg);
+				MessageResponseWithBLOBs msgResponse = new MessageResponseWithBLOBs();
+				msgResponse.setMessageId(messageId);
+				int httpStatus = 0;
+				String httpStatusMsg = "";
+				if(errorMsg.contains("Read timed out")){
+					httpStatus = -1;
+					httpStatusMsg = "Read timed out";
+				}else if(errorMsg.contains("connect timed out")){
+					httpStatus = -2;
+					httpStatusMsg = "connect timed out";
+				}else{
+					httpStatus = -3;
+					httpStatusMsg = e.getMessage();
+				}
+				msgResponse.setHttpStatus(httpStatus);
+				msgResponse.setHttpStatusMsg(httpStatusMsg);
+				msgResponse.setCreatedTime(new Date().getTime());
+				msgResponse.setSendBeginTime(sendBeginTime);
+				Long sendEndTime = new Date().getTime();
+				msgResponse.setSendEndTime(sendEndTime);
+				msgResponse.setUsedTime(sendEndTime-sendBeginTime);
+				msgResponseService.saveOrUpdate(msgResponse);
 			}
 		}
 	}
 
 	/**保存响应信息到数据库*/
-	private void saveMsgResponse(Long sendBeginTime, HttpResponse response, int statusCode, Long sendEndTime, Long messageId) throws IOException {
+	private void saveMsgResponse(Long sendBeginTime, HttpResponse response, int httpCode, Long sendEndTime, Long messageId) throws IOException {
 		MessageResponseWithBLOBs msgResponse = new MessageResponseWithBLOBs();
 		msgResponse.setCreatedTime(new Date().getTime());
-		msgResponse.setHttpStatus(statusCode);
+		msgResponse.setHttpStatus(httpCode);
 		msgResponse.setSendBeginTime(sendBeginTime);
 		msgResponse.setSendEndTime(sendEndTime);
 		msgResponse.setUsedTime(sendEndTime - sendBeginTime);
@@ -118,13 +141,8 @@ public class MsgSendJob {
 		if (entity != null) {
 			msgResponse.setResponseBody(EntityUtils.toString(entity));
 		}
-		if (statusCode == 200) {
-			// 成功
-			msgResponse.setStatus(1);
-		} else {
-			// 对方响应状态码不为200
-			msgResponse.setStatus(4);
-		}
+		msgResponse.setHttpStatus(httpCode);
+		msgResponse.setHttpStatusMsg(response.getStatusLine().getReasonPhrase());
 		msgResponseService.saveOrUpdate(msgResponse);
 	}
 

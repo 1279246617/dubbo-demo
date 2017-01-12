@@ -21,7 +21,7 @@ public class MsgToDatabaseJob {
 
 	/**定时任务，定时将Redis里的数据保存到MySql数据库*/
 	public void msgToDB() {
-		log.info("toDatabeseJob.................................");
+		log.info("Redis数据存入数据库任务(toDatabeseJob).................................");
 		// 遍历Redis里的数据
 		Jedis jedis = JedisUtil.getJedis();
 		Set<String> keySet = jedis.keys("*");

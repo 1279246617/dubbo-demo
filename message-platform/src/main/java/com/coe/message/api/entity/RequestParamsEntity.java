@@ -22,11 +22,11 @@ public class RequestParamsEntity implements Serializable {
 	/**请求id,长度36的UUID,不可重复(非空)*/
 	private String requestId;
 	/**用于搜索报文的关键字 一般如:订单号,跟踪单号,订单id,客户id之类(类似关键字最多可传3个，非空)*/
-	private String keyword;
-	/**用于搜索报文的关键字 一般如:订单号,跟踪单号,订单id,客户id之类(类似关键字最多可传3个)*/
 	private String keyword1;
 	/**用于搜索报文的关键字 一般如:订单号,跟踪单号,订单id,客户id之类(类似关键字最多可传3个)*/
 	private String keyword2;
+	/**用于搜索报文的关键字 一般如:订单号,跟踪单号,订单id,客户id之类(类似关键字最多可传3个)*/
+	private String keyword3;
 	/**回调地址(非空)*/
 	private String callbackUrl;
 
@@ -94,12 +94,12 @@ public class RequestParamsEntity implements Serializable {
 		this.requestId = requestId;
 	}
 
-	public String getKeyword() {
-		return keyword;
+	public String getKeyword3() {
+		return keyword3;
 	}
 
-	public void setKeyword(String keyword) {
-		this.keyword = keyword;
+	public void setKeyword3(String keyword3) {
+		this.keyword3 = keyword3;
 	}
 
 	public String getKeyword1() {
