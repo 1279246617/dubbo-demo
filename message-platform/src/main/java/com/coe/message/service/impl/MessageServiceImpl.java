@@ -1,5 +1,6 @@
 package com.coe.message.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -170,8 +171,34 @@ public class MessageServiceImpl implements IMessageService {
 	}
 
 	/**实体转Map*/
-	public List<Map<String,Object>> objToMapList(List<Message> msgList) {
-		return null;
+	public List<Map<String, Object>> objToMapList(List<Message> msgList) {
+		List<Map<String, Object>> msgMapList = new ArrayList<Map<String, Object>>();
+		for (Message message : msgList) {
+			Map<String, Object> msgMap = BeanMapUtil.convertBean(message);
+			Long createTime = message.getCreatedTime();
+			Integer isValid = message.getIsValid();
+			Integer status = message.getStatus();
+			if (createTime != null) {
+				String timeStr = DateUtil.getDateStrFromTimestamp(createTime, DateUtil.simple);
+				msgMap.put("createTime", timeStr);
+			}
+			if (isValid == 0) {
+				msgMap.put("isValid","有效");
+			} else {
+				msgMap.put("isValid","无效");
+			}
+			if (status == 0) {
+				msgMap.put("status","未推送");
+			} else if (status == 1) {
+				msgMap.put("status","已推送且响应成功");
+			} else if (status == 2) {
+				msgMap.put("status","已推送响应不成功");
+			}else{
+				msgMap.put("status","未知");
+			}
+			msgMapList.add(msgMap);
+		}
+		return msgMapList;
 	}
 
 }
