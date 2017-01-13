@@ -27,7 +27,7 @@ public class MessageServiceImpl implements IMessageService {
 	private MessageRequestMapper msgReqMapper;
 
 	/**分页模糊查询*/
-	public List<Message> selectByExamplePagination(Message message, QueryParamsEntity queryParams) {
+	public List<Map<String, Object>> queryListPageForVague(Message message, QueryParamsEntity queryParams) {
 		MessageExample msgExample = generateExampleForVague(message, queryParams);
 		int pageNo = queryParams.getPage();
 		int pageSize = queryParams.getRows();
@@ -38,7 +38,8 @@ public class MessageServiceImpl implements IMessageService {
 		Map<String, Object> paramsMap = BeanMapUtil.convertBean(msgExample);
 		paramsMap.put("startIndex", startIndex);
 		paramsMap.put("pageSize", pageSize);
-		return null;
+		List<Message> msgList = msgMapper.queryListPageForVague(paramsMap);
+		return objToMapList(msgList);
 	}
 
 	/**保存或更新*/
@@ -139,26 +140,38 @@ public class MessageServiceImpl implements IMessageService {
 		if (status != null) {
 			criteria.andStatusEqualTo(status);
 		}
-		if(StringUtils.isNotBlank(requestId)){
-			criteria.andRequestIdLike("%"+requestId+"%");
+		if (StringUtils.isNotBlank(requestId)) {
+			criteria.andRequestIdLike("%" + requestId + "%");
 		}
-		if(StringUtils.isNotBlank(keyword1)){
-			criteria.andKeyword1Like("%"+keyword1+"%");
+		if (StringUtils.isNotBlank(keyword1)) {
+			criteria.andKeyword1Like("%" + keyword1 + "%");
 		}
-		if(StringUtils.isNotBlank(keyword2)){
-			criteria.andKeyword2Like("%"+keyword2+"%");
+		if (StringUtils.isNotBlank(keyword2)) {
+			criteria.andKeyword2Like("%" + keyword2 + "%");
 		}
-		if(StringUtils.isNotBlank(keyword3)){
-			criteria.andKeyword3Like("%"+keyword3+"%");
+		if (StringUtils.isNotBlank(keyword3)) {
+			criteria.andKeyword3Like("%" + keyword3 + "%");
 		}
-		if(StringUtils.isNotBlank(endTime)){
-			Long endTimeLong = DateUtil.getTimestampFromDateStr(endTime,DateUtil.simple);
+		if (StringUtils.isNotBlank(endTime)) {
+			Long endTimeLong = DateUtil.getTimestampFromDateStr(endTime, DateUtil.simple);
 			criteria.andCreatedTimeLessThan(endTimeLong);
 		}
-		if(StringUtils.isNotBlank(startTime)){
-			Long startTimeLong = DateUtil.getTimestampFromDateStr(startTime,DateUtil.simple);
+		if (StringUtils.isNotBlank(startTime)) {
+			Long startTimeLong = DateUtil.getTimestampFromDateStr(startTime, DateUtil.simple);
 			criteria.andCreatedTimeGreaterThanOrEqualTo(startTimeLong);
 		}
 		return msgExample;
 	}
+
+	/**计数(For vague)*/
+	public int countForVague(Message message, QueryParamsEntity paramsEntity) {
+		MessageExample msgExample = generateExampleForVague(message, paramsEntity);
+		return msgMapper.countByExample(msgExample);
+	}
+
+	/**实体转Map*/
+	public List<Map<String,Object>> objToMapList(List<Message> msgList) {
+		return null;
+	}
+
 }

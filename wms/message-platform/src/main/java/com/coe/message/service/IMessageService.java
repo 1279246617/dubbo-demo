@@ -1,6 +1,8 @@
 package com.coe.message.service;
 
 import java.util.List;
+import java.util.Map;
+
 import com.coe.message.entity.Message;
 import com.coe.message.entity.MessageRequestWithBLOBs;
 import com.coe.message.entity.QueryParamsEntity;
@@ -20,12 +22,15 @@ public interface IMessageService {
 	/**根据模板查询*/
 	public List<Message> selectByExample(Message message);
 
-	/**分页模糊查询*/
-	public List<Message> selectByExamplePagination(Message message, QueryParamsEntity queryParams);
-
 	/**保存Message*/
 	public Long saveMessageBackId(Message message);
 
 	/**保存Message,MessageRequestWithBLOBs,MessageCallback报文相关请求信息*/
 	public boolean saveMessageAll(Message message, MessageRequestWithBLOBs msgRequestWithBlobs) throws Exception;
+	
+	/**分页模糊查询*/
+	public List<Map<String,Object>> queryListPageForVague(Message message,QueryParamsEntity paramsEntity);
+	
+	/**计数(For vague)*/
+	public int countForVague(Message message,QueryParamsEntity paramsEntity);
 }

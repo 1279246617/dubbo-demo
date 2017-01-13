@@ -1,5 +1,5 @@
 $(function(){
-	
+	queryDataList();
 });
 
 function queryDataList() {
