@@ -1,3 +1,10 @@
+//监控回车按钮
+$(document).keydown(function(event) {
+	if (event.keyCode == 13) {
+		doLogin();
+	}
+});
+
 //重置
 function reSet() {
 	$("#userName").val("");
@@ -27,9 +34,10 @@ function doLogin() {
 		success:function(result){
 			var flag = result.flag;
 			if(flag){
+				$("#login-notice").html("");
 				location.href="/loginUser/toIndex.do";
 			}else{
-				alert("用户名或密码错误！");
+				$("#login-notice").html("用户名或密码错误！");
 			}
 		},
 		error:function(){

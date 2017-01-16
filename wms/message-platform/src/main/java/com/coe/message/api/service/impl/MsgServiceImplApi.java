@@ -77,7 +77,7 @@ public class MsgServiceImplApi implements IMsgServiceApi {
 				message.setKeyword2(keyword2);
 			}
 			if (StringUtils.isNotBlank(keyword3)) {
-				message.setKeyword2(keyword3);
+				message.setKeyword3(keyword3);
 			}
 			// MessageRequest
 			MessageRequestWithBLOBs mrwb = new MessageRequestWithBLOBs();

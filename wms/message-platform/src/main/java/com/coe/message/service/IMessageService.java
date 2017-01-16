@@ -9,6 +9,9 @@ import com.coe.message.entity.QueryParamsEntity;
 
 /**报文信息接口*/
 public interface IMessageService {
+	
+	/**根据主键查询*/
+	public Message selectByPrimarykey(Long id);
 
 	/**更新或保存*/
 	public int updateOrSave(Message msg);
@@ -33,4 +36,9 @@ public interface IMessageService {
 	
 	/**计数(For vague)*/
 	public int countForVague(Message message,QueryParamsEntity paramsEntity);
+	/**批量设置is_valid=1,设置无效停止发送*/
+	public int stopToSend(List<Long> idList);
+	/**批量设置is_valid=0,设置有效继续发送*/
+	public int continueToSend(List<Long> idList);
+	
 }

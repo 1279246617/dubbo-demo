@@ -51,10 +51,28 @@ ul li {
 }
 
 #search-top {
-	width:1380px;
+	width: 1380px;
 	height: 35px;
 	line-height: 35px;
 	margin-left: 20px;
+}
+
+#request-msg-win {
+	display: none;
+	width: 430px;
+	height: 400px;
+	background-color: #d9e5f0;
+}
+
+#request-msg-win table {
+	text-align: left;
+	margin-top: 20px;
+	margin-left: 10px;
+	font-size: 14px;
+}
+
+#request-msg-win td {
+	padding: 5px;
 }
 </style>
 </head>
@@ -73,21 +91,63 @@ ul li {
 			</ul>
 		</div>
 	</div>
-	<div region="center" class="easyui-layout">
-		<div region="north" style="height:40px;" collapsible="false">
+	<div region="center" class="easyui-layout" style="overflow: auto;">
+		<div region="north" style="height: 40px;" collapsible="false">
 			<div id="search-top">
-				<span>唯一编号:<input type="text" style="width:120px;" id="requestId"/></span>
-				<span>第一关键字:<input type="text" style="width:120px;" id="keyword"/></span>
-				<span>第二关键字:<input type="text" style="width:120px;"/></span>
-				<span>第三关键字:<input type="text" style="width:120px;"/></span>
-				<span>接收时间：
-				     <input onClick="WdatePicker();" type="text"/>—<input onClick="WdatePicker();" type="text"/>
-				</span>
-			    <a class="easyui-linkbutton" iconcls="icon-search" style="margin-left:40px;">查询</a>
+				<span>唯一编号:<input type="text" style="width: 120px;" id="requestId" /></span>
+				<span>第一关键字:<input type="text" style="width: 120px;" id="keyword1" /></span>
+				<span>第二关键字:<input type="text" style="width: 120px;" id="keyword2" />
+				</span> <span>第三关键字:<input type="text" style="width: 120px;" id="keyword3" /></span>
+				<span>接收时间： <input onClick="WdatePicker();" type="text" id="startTime" />—<input onClick="WdatePicker();" type="text" id="endTime" /></span>
+				 <a href="javascript:queryDataList(false);" class="easyui-linkbutton" iconcls="icon-search" style="margin-left: 10px;">查询</a>
+				 <a href="javascript:reloadData();" class="easyui-linkbutton" iconcls="icon-reload" style="margin-left: 5px;">刷新数据</a>
+				 <a href="javascript:cleanInputData();"class="easyui-linkbutton" iconcls="icon-no" style="margin-left: 5px;">清空输入框</a>
 			</div>
 		</div>
-		<div region="center"></div>
+		<div region="center">
+			<table id="msgTable"></table>
+		</div>
 	</div>
 	<div region="south" style="height: 40px; line-height: 40px; text-align: center;">深圳秀驿国际物流</div>
+	<div id="request-msg-win">
+		<table>
+			<tr>
+				<td>请求地址:</td>
+				<td><input type="text" id="url" style="width: 260px;"></td>
+			</tr>
+			<tr>
+				<td>请求body:</td>
+				<td><input type="text" id="body" /></td>
+			</tr>
+			<tr>
+				<td>请求头(header):</td>
+				<td><input type="text" id="header-params" style="width: 260px;" /></td>
+			</tr>
+			<tr>
+				<td>请求参数:</td>
+				<td><input type="text" id="body-params" style="width: 260px;" /></td>
+			</tr>
+			<tr>
+				<td>请求方式:</td>
+				<td><input type="text" id="method" /></td>
+			</tr>
+			<tr>
+				<td>读取超时时间(ms):</td>
+				<td><input type="text" id="socket-time-out" /></td>
+			</tr>
+			<tr>
+				<td>连接超时时间(ms):</td>
+				<td><input type="text" id="connection-time-out" /></td>
+			</tr>
+			<tr>
+				<td>回调地址:</td>
+				<td><input type="text" id="callback-url" style="width: 260px;" /></td>
+			</tr>
+			<tr>
+				<td>创建时间:</td>
+				<td><input type="text" id="created-time" /></td>
+			</tr>
+		</table>
+	</div>
 </body>
 </html>

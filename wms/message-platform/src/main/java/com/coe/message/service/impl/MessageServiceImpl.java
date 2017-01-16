@@ -26,6 +26,11 @@ public class MessageServiceImpl implements IMessageService {
 	private MessageMapper msgMapper;
 	@Autowired
 	private MessageRequestMapper msgReqMapper;
+	
+	/**根据主键查询*/
+	public Message selectByPrimarykey(Long id) {
+		return msgMapper.selectByPrimaryKey(id);
+	}
 
 	/**分页模糊查询*/
 	public List<Map<String, Object>> queryListPageForVague(Message message, QueryParamsEntity queryParams) {
@@ -175,30 +180,39 @@ public class MessageServiceImpl implements IMessageService {
 		List<Map<String, Object>> msgMapList = new ArrayList<Map<String, Object>>();
 		for (Message message : msgList) {
 			Map<String, Object> msgMap = BeanMapUtil.convertBean(message);
-			Long createTime = message.getCreatedTime();
+			Long createdTime = message.getCreatedTime();
 			Integer isValid = message.getIsValid();
 			Integer status = message.getStatus();
-			if (createTime != null) {
-				String timeStr = DateUtil.getDateStrFromTimestamp(createTime, DateUtil.simple);
-				msgMap.put("createTime", timeStr);
+			if (createdTime != null) {
+				String timeStr = DateUtil.getDateStrFromTimestamp(createdTime, DateUtil.simple);
+				msgMap.put("createdTime", timeStr);
 			}
 			if (isValid == 0) {
-				msgMap.put("isValid","有效");
+				msgMap.put("isValid", "有效");
 			} else {
-				msgMap.put("isValid","无效");
+				msgMap.put("isValid", "无效(暂停发送)");
 			}
 			if (status == 0) {
-				msgMap.put("status","未推送");
+				msgMap.put("status", "未推送");
 			} else if (status == 1) {
-				msgMap.put("status","已推送且响应成功");
+				msgMap.put("status", "已推送且响应成功");
 			} else if (status == 2) {
-				msgMap.put("status","已推送响应不成功");
-			}else{
-				msgMap.put("status","未知");
+				msgMap.put("status", "已推送响应不成功");
+			} else {
+				msgMap.put("status", "未知");
 			}
 			msgMapList.add(msgMap);
 		}
 		return msgMapList;
 	}
 
+	/**批量设置is_valid=1,设置无效停止发送*/
+	public int stopToSend(List<Long> idList) {
+		return msgMapper.stopToSend(idList);
+	}
+
+	/**批量设置is_valid=0,设置有效继续发送*/
+	public int continueToSend(List<Long> idList) {
+		return msgMapper.continueToSend(idList);
+	}
 }

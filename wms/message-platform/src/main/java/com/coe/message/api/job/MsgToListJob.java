@@ -53,7 +53,7 @@ public class MsgToListJob {
 					Long messageId = message.getId();
 					MessageRequest msgReq = new MessageRequest();
 					msgReq.setMessageId(messageId);
-					List<MessageRequestWithBLOBs> msgReqRecords = messageReqService.selectByExample(msgReq);
+					List<MessageRequestWithBLOBs> msgReqRecords = messageReqService.selectByExampleBackList(msgReq);
 					if (msgReqRecords.size() > 0) {
 						MessageRequest messageReq = msgReqRecords.get(0);
 						String messageReqJson = new Gson().toJson(messageReq);
@@ -61,11 +61,6 @@ public class MsgToListJob {
 						if (!msgReqJsonList.contains(messageReqJson)) {
 							msgReqJsonList.add(messageReqJson);
 							log.info("报文存入队列，报文信息：" + messageReqJson);
-							// 更新Message字段count，使count加1
-							Message updateMsg = new Message();
-							updateMsg.setId(messageId);
-							updateMsg.setCount(message.getCount() + 1);
-							messageService.updateOrSave(updateMsg);
 						}
 					}
 				}
