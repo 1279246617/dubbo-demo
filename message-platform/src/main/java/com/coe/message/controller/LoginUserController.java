@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.coe.message.common.MD5Util;
 import com.coe.message.entity.LoginUser;
 import com.coe.message.service.ILoginUserService;
 
@@ -38,6 +39,7 @@ public class LoginUserController {
 		String password = loginUser.getPassword();
 		Integer isValid = loginUser.getIsValid();
 		if (StringUtils.isNotBlank(userName) && StringUtils.isNotBlank(password) && isValid != null) {
+			loginUser.setPassword(MD5Util.toMD5Code(password));
 			List<LoginUser> userList = userService.getLoginUser(loginUser);
 			int records = userList.size();
 			if (records > 0) {

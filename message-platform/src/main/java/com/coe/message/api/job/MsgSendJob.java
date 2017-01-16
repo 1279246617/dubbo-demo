@@ -74,23 +74,22 @@ public class MsgSendJob {
 			msgReqJsonSize--;
 			// 开始发送报文
 			Long sendBeginTime = new Date().getTime();
+			Message message = messageService.selectByPrimarykey(messageId);
 			try {
 				HttpResponse response = null;
 				// 发送请求，获得响应信息
 				response = sendHttpRequest(requestUrl, headers, requestParams, method, connectTimeout, socketTimeout);
 				int httpCode = response.getStatusLine().getStatusCode();
 				Long sendEndTime = new Date().getTime();
-				Message msg = new Message();
-				msg.setId(messageId);
 				if (httpCode == 200) {
-					msg.setStatus(1);
+					message.setStatus(1);
 				} else {
-					msg.setStatus(2);
+					message.setStatus(2);
 				}
-				// 将Message表字段status更新
-				messageService.updateOrSave(msg);
 				saveMsgResponse(sendBeginTime, response, httpCode, sendEndTime, messageId);
 			} catch (Exception e) {
+//				e.printStackTrace();
+				message.setStatus(2);
 				log.info("报文发送出错，报文信息：" + msgReqJson);
 				String errorMsg = e.getMessage();
 				log.info("错误信息:"+errorMsg);
@@ -116,6 +115,10 @@ public class MsgSendJob {
 				msgResponse.setSendEndTime(sendEndTime);
 				msgResponse.setUsedTime(sendEndTime-sendBeginTime);
 				msgResponseService.saveOrUpdate(msgResponse);
+			}finally{
+				// 更新Message字段count，使count加1
+				message.setCount(message.getCount()+1);
+				messageService.updateOrSave(message);
 			}
 		}
 	}
