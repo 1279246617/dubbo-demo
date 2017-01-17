@@ -87,7 +87,7 @@ function queryDataList(ifOnload) {
 			align : 'center',
 			formatter : function(value, row, index) {
 				var id = row.id;
-				return '<a href="javascript:getReqMsg(' + id + ');">请求信息</a><a style="margin-left:10px;" href="#">最新一次响应信息</a>';
+				return '<a href="javascript:getReqMsg(' + id + ');">请求信息</a><a style="margin-left:10px;" href="javascript:getNewResMsg(' + id + ');">最新一次响应信息</a>';
 			}
 		} ] ],
 		toolbar : [ {
@@ -248,4 +248,57 @@ function clearRequestWin() {
 	$("#connection-time-out").val("");
 	$("#callback_url").val("");
 	$("#created_time").val("");
+}
+// 清除responseNewestWin数据
+function clearRespNewestWin() {
+	$("#http-status").val("");
+	$("#http-status-msg").val("");
+	$("#response-header").val("");
+	$("#response-body").val("");
+	$("#send-begin-time").val("");
+	$("#send-end-time").val("");
+	$("#used-time").val("");
+	$("#created-time").val("");
+}
+
+// 最新一次响应信息
+function getNewResMsg(messageId) {
+	$.ajax({
+		url : "/msgRespNewest/getMsgRespNewest.do",
+		type : "post",
+		data : {
+			"messageId" : messageId
+		},
+		dataType : "json",
+		success : function(result) {
+			var msgRespNewestList = result.msgRespNewestList;
+			var msgLength = msgRespNewestList.length;
+			if (msgLength > 0) {
+				var msgRespNewest = msgRespNewestList[0];
+				// 先清空之前的数据
+				clearRespNewestWin();
+				$("#http-status").val(msgRespNewest.httpStatus);
+				$("#http-status-msg").val(msgRespNewest.httpStatusMsg);
+				$("#response-header").val(msgRespNewest.responseHeader);
+				$("#response-body").val(msgRespNewest.responseBody);
+				$("#send-begin-time").val(msgRespNewest.sendBeginTime);
+				$("#send-end-time").val(msgRespNewest.sendEndTime);
+				$("#used-time").val(msgRespNewest.usedTime);
+				$("#created-time").val(msgRespNewest.createdTime);
+				$("#resp-msg-new-win").window({
+					title : "当前最新一次响应信息",
+					modal : true,
+					collapsible : false,
+					minimizable : false,
+					maximizable : false,
+					resizable : false
+				});
+			} else {
+				alert("暂未获得响应信息，请稍后再试！");
+			}
+		},
+		error : function() {
+			alert("请求出错，请稍后再试！");
+		}
+	});
 }
