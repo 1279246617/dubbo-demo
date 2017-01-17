@@ -43,7 +43,7 @@
 		</property>
 		<!--每5秒执行一次 -->
 		<property name="cronExpression">
-			<value>0/5 * * * * ?</value>
+			<value>0/3 * * * * ?</value>
 		</property>
 	</bean>
 	<bean id="toListJobDoTime" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
@@ -52,7 +52,7 @@
 		</property>
 		<!--每5秒执行一次 -->
 		<property name="cronExpression">
-			<value>0/5 * * * * ?</value>
+			<value>0/3 * * * * ?</value>
 		</property>
 	</bean>
 	<bean id="msgSendJobDoTime" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
@@ -61,7 +61,7 @@
 		</property>
 		<!--每10秒执行一次 -->
 		<property name="cronExpression">
-			<value>0/10 * * * * ?</value>
+			<value>0/5 * * * * ?</value>
 		</property>
 	</bean>
 	<!--总管理工厂 -->

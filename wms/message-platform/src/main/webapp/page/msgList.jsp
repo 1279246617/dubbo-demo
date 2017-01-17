@@ -61,7 +61,7 @@ ul li {
 	display: none;
 	width: 430px;
 	height: 400px;
-	background-color: #d9e5f0;
+	background-color: #fff;
 }
 
 #request-msg-win table {
@@ -73,6 +73,14 @@ ul li {
 
 #request-msg-win td {
 	padding: 5px;
+}
+#resp-msg-new-win{
+	width:380px;
+	height:320px;
+	display:none;
+}
+#resp-msg-new-win td{
+	padding:5px;
 }
 </style>
 </head>
@@ -147,6 +155,42 @@ ul li {
 				<td>创建时间:</td>
 				<td><input type="text" id="created-time" /></td>
 			</tr>
+		</table>
+	</div>
+	<div id="resp-msg-new-win">
+		<table style="margin-top:10px;margin-left:10px;">
+			<tr>
+			   <td>http状态码</td>
+			   <td><input type="text" id="http-status"/></td>
+			</tr>
+			<tr>
+			   <td>状态码信息</td>
+			   <td><input type="text" id="http-status-msg" style="width:260px;"/></td>
+			</tr>
+			<tr>
+			   <td>响应头信息</td>
+			   <td><input type="text" id="response-header" style="width:260px;"/></td>
+			</tr>
+			<tr>
+			   <td>响应body信息</td>
+			   <td><input type="text" id="response-body" style="width:260px;"/></td>
+			</tr>
+			<tr>
+			   <td>发送起始时间</td>
+			   <td><input type="text" id="send-begin-time"/></td>
+			</tr>
+			<tr>
+			   <td>发送结束时间</td>
+			   <td><input type="text" id="send-end-time"/></td>
+			</tr>
+			<tr>
+				<td>耗时(毫秒ms)</td>
+				<td><input type="text" id="used-time"/></td>
+			</tr>
+			<tr>
+				<td>创建时间</td>
+				<td><input type="text" id="created-time"/></td>
+			</tr> 
 		</table>
 	</div>
 </body>
