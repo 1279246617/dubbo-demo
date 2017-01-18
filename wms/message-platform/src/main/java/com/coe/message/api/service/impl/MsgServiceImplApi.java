@@ -120,14 +120,4 @@ public class MsgServiceImplApi implements IMsgServiceApi {
 	public void setMessageService(IMessageService messageService) {
 		this.messageService = messageService;
 	}
-
-	public static void main(String[] args) {
-		Jedis jedis = JedisUtil.getJedis();
-		Set<String> keySet = jedis.keys("*");
-		for (String key : keySet) {
-			System.out.println("key:" + key);
-			System.out.println(jedis.get(key));
-			JedisUtil.getJedis().del(key);
-		}
-	}
 }

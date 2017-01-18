@@ -258,7 +258,7 @@ function clearRespNewestWin() {
 	$("#send-begin-time").val("");
 	$("#send-end-time").val("");
 	$("#used-time").val("");
-	$("#created-time").val("");
+	$("#created-time-newest").val("");
 }
 
 // 最新一次响应信息
@@ -284,7 +284,7 @@ function getNewResMsg(messageId) {
 				$("#send-begin-time").val(msgRespNewest.sendBeginTime);
 				$("#send-end-time").val(msgRespNewest.sendEndTime);
 				$("#used-time").val(msgRespNewest.usedTime);
-				$("#created-time").val(msgRespNewest.createdTime);
+				$("#created-time-newest").val(msgRespNewest.createdTime);
 				$("#resp-msg-new-win").window({
 					title : "当前最新一次响应信息",
 					modal : true,
