@@ -54,7 +54,7 @@ ul li {
 	width: 1380px;
 	height: 35px;
 	line-height: 35px;
-	margin-left: 20px;
+	margin-left: 10px;
 }
 
 #request-msg-win {
@@ -102,11 +102,11 @@ ul li {
 	<div region="center" class="easyui-layout" style="overflow: auto;">
 		<div region="north" style="height: 40px;" collapsible="false">
 			<div id="search-top">
-				<span>唯一编号:<input type="text" style="width: 120px;" id="requestId" /></span>
-				<span>第一关键字:<input type="text" style="width: 120px;" id="keyword1" /></span>
-				<span>第二关键字:<input type="text" style="width: 120px;" id="keyword2" />
-				</span> <span>第三关键字:<input type="text" style="width: 120px;" id="keyword3" /></span>
-				<span>接收时间： <input onClick="WdatePicker();" type="text" id="startTime" />—<input onClick="WdatePicker();" type="text" id="endTime" /></span>
+				<span>唯一编号:<input type="text" style="width: 110px;" id="requestId" /></span>
+				<span>第一关键字:<input type="text" style="width: 110px;" id="keyword1" /></span>
+				<span>第二关键字:<input type="text" style="width: 110px;" id="keyword2" />
+				</span> <span>第三关键字:<input type="text" style="width: 110px;" id="keyword3" /></span>
+				<span>接收时间： <input onClick="WdatePicker();" style="width:140px;" type="text" id="startTime" />—<input style="width:140px;" onClick="WdatePicker();" type="text" id="endTime" /></span>
 				 <a href="javascript:queryDataList(false);" class="easyui-linkbutton" iconcls="icon-search" style="margin-left: 10px;">查询</a>
 				 <a href="javascript:reloadData();" class="easyui-linkbutton" iconcls="icon-reload" style="margin-left: 5px;">刷新数据</a>
 				 <a href="javascript:cleanInputData();"class="easyui-linkbutton" iconcls="icon-no" style="margin-left: 5px;">清空输入框</a>
@@ -189,7 +189,7 @@ ul li {
 			</tr>
 			<tr>
 				<td>创建时间</td>
-				<td><input type="text" id="created-time"/></td>
+				<td><input type="text" id="created-time-newest"/></td>
 			</tr> 
 		</table>
 	</div>
