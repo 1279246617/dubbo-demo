@@ -1,0 +1,21 @@
+<assembly>
+	<id>assembly</id>
+	<formats>
+		<format>tar.gz</format>
+	</formats>
+	<includeBaseDirectory>true</includeBaseDirectory>
+	<fileSets>
+		<fileSet>
+			<directory>src/main/assembly/bin</directory>
+			<outputDirectory>bin</outputDirectory>
+			<!--<fileMode>0755</fileMode>指明bin目录下所有文件的权限为755。assembly插件不仅可以对文件夹操作，同样也可以对单独文件操作 -->
+			<fileMode>0755</fileMode>
+		</fileSet>
+	</fileSets>
+	<dependencySets>
+		<dependencySet>
+			<outputDirectory>lib</outputDirectory>
+			<scope>runtime</scope>
+		</dependencySet>
+	</dependencySets>
+</assembly>
