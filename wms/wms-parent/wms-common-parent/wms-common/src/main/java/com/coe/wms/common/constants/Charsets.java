@@ -7,6 +7,7 @@ import java.nio.charset.Charset;
  * @author yechao 编码类型
  */
 public class Charsets {
+	
 	public static Charset toCharset(Charset charset) {
 		return charset == null ? Charset.defaultCharset() : charset;
 	}
