@@ -14,12 +14,13 @@
 	<url>http://maven.apache.org</url>
 
 	<dependencies>
+		<!-- facade层 -->
 		<dependency>
 			<groupId>com.coe.wms</groupId>
 			<artifactId>wms-facade-sso</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
-
+		
 		<!-- 单元测试 start -->
 		<dependency>
 			<groupId>junit</groupId>
