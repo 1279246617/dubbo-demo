@@ -69,8 +69,11 @@
 
 		<fpx-mybatis-plugin.version>1.0.4</fpx-mybatis-plugin.version>
 
-		<qcloud-cos_api.version>3.3</qcloud-cos_api.version>
-
+		<dubbo.version>2.5.3</dubbo.version>
+		<javassist.version>3.20.0-GA</javassist.version>
+		<netty.version>3.2.10.Final</netty.version>
+		<zkclient.version>0.4</zkclient.version>
+		<zookeeper.version>3.3.4</zookeeper.version>
 	</properties>
 
 	<!-- 声明依赖,统一版本 -->
@@ -381,6 +384,40 @@
 				<version>${spring-boot.version}</version>
 			</dependency>
 			<!-- springfox end -->
+
+			<!-- dubbo dependency start -->
+			<dependency>
+				<groupId>com.alibaba</groupId>
+				<artifactId>dubbo</artifactId>
+				<version>${dubbo-version}</version>
+				<exclusions>
+					<exclusion>
+						<artifactId>spring</artifactId>
+						<groupId>org.springframework</groupId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+			<dependency>
+				<groupId>org.javassist</groupId>
+				<artifactId>javassist</artifactId>
+				<version>${javassist-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jboss.netty</groupId>
+				<artifactId>netty</artifactId>
+				<version>${netty-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.101tec</groupId>
+				<artifactId>zkclient</artifactId>
+				<version>${zkclient-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.zookeeper</groupId>
+				<artifactId>zookeeper</artifactId>
+				<version>${zookeeper-version}</version>
+			</dependency>
+			<!-- dubbo dependency end -->
 
 		</dependencies>
 	</dependencyManagement>
