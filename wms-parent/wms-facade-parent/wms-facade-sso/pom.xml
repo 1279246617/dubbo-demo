@@ -23,6 +23,6 @@
 	</dependencies>
 
 	<build>
-		<finalName>wms-service-sso</finalName>
+		<finalName>wms-facade-sso</finalName>
 	</build>
 </project>
