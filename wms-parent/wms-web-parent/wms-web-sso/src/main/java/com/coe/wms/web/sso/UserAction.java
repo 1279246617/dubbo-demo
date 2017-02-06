@@ -9,6 +9,7 @@
 package com.coe.wms.web.sso;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.coe.wms.facade.sso.service.UserFacade;
 /**
@@ -18,6 +19,7 @@ import com.coe.wms.facade.sso.service.UserFacade;
  * @Description: TODO
  */
 @Controller
+@RequestMapping("/userAction")
 public class UserAction {
 
 	private UserFacade userFacade;
