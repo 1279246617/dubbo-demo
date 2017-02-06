@@ -245,9 +245,6 @@
 		<dependency>
 			<groupId>com.alibaba</groupId>
 			<artifactId>dubbo</artifactId>
-			<!-- dubbo2.8.4兼容spring4.2x,若以后出现与spring版本兼容问题,释放以下注释 -->
-			<!-- <exclusions> <exclusion> <artifactId>spring</artifactId> <groupId>org.springframework</groupId> 
-				</exclusion> </exclusions> -->
 		</dependency>
 
 		<dependency>
@@ -311,8 +308,8 @@
 			</plugin>
 
 			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>build-helper-maven-plugin</artifactId>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
 			</plugin>
 		</plugins>
 	</build>
