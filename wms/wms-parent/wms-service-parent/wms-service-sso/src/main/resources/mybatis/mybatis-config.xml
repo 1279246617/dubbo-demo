@@ -15,11 +15,11 @@
 	<!-- mybatis映射文件中所用到的别名配置 -->
 	<typeAliases>
 		<package name="com.coe.wms" />
-		 
+
 	</typeAliases>
 
 	<plugins>
-		<plugin interceptor="com.fpx.mybatis.plugin.PagePlugin">
+		<plugin interceptor="org.mybatis.plugin.PagePlugin">
 			<property name="dialect" value="MYSQL" />
 			<!-- 拦截要分页的selectId -->
 			<property name="pageSqlId" value=".*select.*List.*|.*\.page*|query.*List" />
