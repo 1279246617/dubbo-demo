@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>		
+	  <context id="MySqlTables" targetRuntime="MyBatis3">
+	      
+        <!--序列化插件 -->
+         <plugin type="org.mybatis.generator.plugins.SerializablePlugin">  </plugin>
+       	<!--重命名插件-->
+	     <plugin type="org.mybatis.generator.plugins.RenameExampleClassPlugin">      
+            <property name="searchString" value="Example$" />      
+            <property name="replaceString" value="Criteria" />  
+        </plugin>
+        <!---Redis Cache 
+        <plugin type="org.mybatis.generator.plugins.CachePlugin"> 
+        	 <property name="cache_type" value="com.ylp.user.common.caches.mybatis.redis.RedisCache" /> 
+        </plugin>
+        -->
+        <!--自动生成service插件 -->
+		<plugin type="org.mybatis.generator.plugins.MybatisServicePlugin2" >
+			<property name="targetProject" value="src/main/java" />
+			<property name="targetPackage" value="com.ylp.facade.trade.service" />
+			<property name="implementationPackage" value="com.ylp.facade.trade.service.impl" />
+		</plugin>
+		<!--生成分页插件-->
+		<plugin type="org.mybatis.generator.plugins.PaginationPlugin" ></plugin>
+		<!--自动生成 mapper测试 插件  targetPackage与对应的实体生成保持一致-->
+		<plugin type="org.mybatis.generator.plugins.MybatisMapperJunitPlugin" >
+			<property name="targetProject" value="src/test/java" />
+			<property name="targetPackage" value="com.ylp.core.trade.dao" />
+			<!--测试基类-->
+			<property name="superTestCase" value="com.yolipai.common.SpringTransactionalTestCase" />
+		</plugin>
+		<!-- 去除自动生成的注释 -->
+		<commentGenerator>
+			<property name="suppressAllComments" value="true" />
+		</commentGenerator>
+		
+		<!-- 指定连接字符串 -->
+		<jdbcConnection driverClass="com.mysql.jdbc.Driver"
+			connectionURL="jdbc:mysql://172.16.8.211:3306/ylp_user_dev?useUnicode=true&amp;characterEncoding=utf-8&amp;zeroDateTimeBehavior=convertToNull" 
+			userId="ylp_user_dev"
+			password="yolipai2305">
+		</jdbcConnection>
+		
+		<javaTypeResolver>
+			<property name="forceBigDecimals" value="false" />
+		</javaTypeResolver>
+		
+		<!-- targetProject:自动生成代码的输出位置,文件夹名称必须存在，否则生成失败;targetPackage:生成代码的jar包名称; -->
+		<!-- 实体类对象 -->
+		<javaModelGenerator targetPackage="com.ylp.facade.trade.entity"
+			targetProject="src/main/java">
+			<property name="enableSubPackages" value="true" />
+			<property name="trimStrings" value="true" />
+		</javaModelGenerator>
+		<!-- mybatis 数据库表sql.xml对象的文件-->
+		<sqlMapGenerator targetPackage="com.ylp.core.trade.dao"
+			targetProject="src/main/resources">
+			<property name="enableSubPackages" value="true" />
+		</sqlMapGenerator>
+		<!-- mybatis dao对应的接口类-->
+		<javaClientGenerator type="XMLMAPPER" targetPackage="com.ylp.core.trade.dao" 
+			targetProject="src/main/java">
+			<property name="enableSubPackages" value="true" />
+		</javaClientGenerator>
+           <!-- 指定需要生成的数据库表-->
+		   <!-- 指定需要生成的数据库表-->
+		<!-- <table tableName="ylp_trade_red_pack"  domainObjectName="RedPack" /> -->
+		<table tableName="ylp_trade_sub_red_pack"  domainObjectName="SubRedPack" />
+		<!-- <table tableName="system_properties"  domainObjectName="SystemProperties" /> -->
+		
+	</context>
+</generatorConfiguration>

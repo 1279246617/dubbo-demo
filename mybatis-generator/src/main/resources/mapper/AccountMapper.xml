@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.shixun.common.mapper.AccountMapper" >
+  <resultMap id="BaseResultMap" type="com.shixun.common.entity.Account" >
+    <id column="id" property="id" jdbcType="CHAR" />
+    <result column="user_id" property="userId" jdbcType="CHAR" />
+    <result column="account_no" property="accountNo" jdbcType="CHAR" />
+    <result column="balance" property="balance" jdbcType="DECIMAL" />
+    <result column="unbalance" property="unbalance" jdbcType="DECIMAL" />
+    <result column="security_money" property="securityMoney" jdbcType="DECIMAL" />
+    <result column="status" property="status" jdbcType="SMALLINT" />
+    <result column="total_income" property="totalIncome" jdbcType="DECIMAL" />
+    <result column="total_expend" property="totalExpend" jdbcType="DECIMAL" />
+    <result column="today_income" property="todayIncome" jdbcType="DECIMAL" />
+    <result column="today_expend" property="todayExpend" jdbcType="DECIMAL" />
+    <result column="sett_amount" property="settAmount" jdbcType="DECIMAL" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Condition_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, user_id, account_no, balance, unbalance, security_money, status, total_income, 
+    total_expend, today_income, today_expend, sett_amount, remark, create_time, update_time
+  </sql>
+  <select id="selectByConditionList" resultMap="BaseResultMap" parameterType="com.shixun.common.entity.AccountCriteria" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from t_account
+    <if test="_parameter != null" >
+      <include refid="Condition_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limit>0" >
+      limit ${start} , ${limit}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_account
+    where id = #{id,jdbcType=CHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from t_account
+    where id = #{id,jdbcType=CHAR}
+  </delete>
+  <delete id="deleteByCondition" parameterType="com.shixun.common.entity.AccountCriteria" >
+    delete from t_account
+    <if test="_parameter != null" >
+      <include refid="Condition_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insertSelective" parameterType="com.shixun.common.entity.Account" >
+    insert into t_account
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="accountNo != null" >
+        account_no,
+      </if>
+      <if test="balance != null" >
+        balance,
+      </if>
+      <if test="unbalance != null" >
+        unbalance,
+      </if>
+      <if test="securityMoney != null" >
+        security_money,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="totalIncome != null" >
+        total_income,
+      </if>
+      <if test="totalExpend != null" >
+        total_expend,
+      </if>
+      <if test="todayIncome != null" >
+        today_income,
+      </if>
+      <if test="todayExpend != null" >
+        today_expend,
+      </if>
+      <if test="settAmount != null" >
+        sett_amount,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=CHAR},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=CHAR},
+      </if>
+      <if test="accountNo != null" >
+        #{accountNo,jdbcType=CHAR},
+      </if>
+      <if test="balance != null" >
+        #{balance,jdbcType=DECIMAL},
+      </if>
+      <if test="unbalance != null" >
+        #{unbalance,jdbcType=DECIMAL},
+      </if>
+      <if test="securityMoney != null" >
+        #{securityMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=SMALLINT},
+      </if>
+      <if test="totalIncome != null" >
+        #{totalIncome,jdbcType=DECIMAL},
+      </if>
+      <if test="totalExpend != null" >
+        #{totalExpend,jdbcType=DECIMAL},
+      </if>
+      <if test="todayIncome != null" >
+        #{todayIncome,jdbcType=DECIMAL},
+      </if>
+      <if test="todayExpend != null" >
+        #{todayExpend,jdbcType=DECIMAL},
+      </if>
+      <if test="settAmount != null" >
+        #{settAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByCondition" parameterType="com.shixun.common.entity.AccountCriteria" resultType="java.lang.Integer" >
+    select count(*) from t_account
+    <if test="_parameter != null" >
+      <include refid="Condition_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByPrimaryKeySelective" parameterType="com.shixun.common.entity.Account" >
+    update t_account
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=CHAR},
+      </if>
+      <if test="accountNo != null" >
+        account_no = #{accountNo,jdbcType=CHAR},
+      </if>
+      <if test="balance != null" >
+        balance = #{balance,jdbcType=DECIMAL},
+      </if>
+      <if test="unbalance != null" >
+        unbalance = #{unbalance,jdbcType=DECIMAL},
+      </if>
+      <if test="securityMoney != null" >
+        security_money = #{securityMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=SMALLINT},
+      </if>
+      <if test="totalIncome != null" >
+        total_income = #{totalIncome,jdbcType=DECIMAL},
+      </if>
+      <if test="totalExpend != null" >
+        total_expend = #{totalExpend,jdbcType=DECIMAL},
+      </if>
+      <if test="todayIncome != null" >
+        today_income = #{todayIncome,jdbcType=DECIMAL},
+      </if>
+      <if test="todayExpend != null" >
+        today_expend = #{todayExpend,jdbcType=DECIMAL},
+      </if>
+      <if test="settAmount != null" >
+        sett_amount = #{settAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=CHAR}
+  </update>
+</mapper>

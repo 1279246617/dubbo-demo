@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>		
+	  <context id="MySqlTables" targetRuntime="MyBatis3">
+	      
+        <!--序列化插件 -->
+         <plugin type="org.mybatis.generator.plugins.SerializablePlugin">  </plugin>
+       	<!--重命名插件-->
+	     <plugin type="org.mybatis.generator.plugins.RenameExampleClassPlugin">      
+            <property name="searchString" value="Example$" />      
+            <property name="replaceString" value="Criteria" />  
+        </plugin>
+        <!---Redis Cache 
+        <plugin type="org.mybatis.generator.plugins.CachePlugin"> 
+        	 <property name="cache_type" value="com.ylp.user.common.caches.mybatis.redis.RedisCache" /> 
+        </plugin>
+        -->
+        <!--自动生成service插件 -->
+		<plugin type="org.mybatis.generator.plugins.MybatisServicePlugin2" >
+			<property name="targetProject" value="src/main/java" />
+			<property name="targetPackage" value="com.shixun.common.service" />
+			<property name="implementationPackage" value="com.shixun.common.service.impl" />
+		</plugin>
+		<!--生成分页插件-->
+		<plugin type="org.mybatis.generator.plugins.PaginationPlugin" ></plugin>
+		<!--自动生成 mapper测试 插件  targetPackage与对应的实体生成保持一致-->
+		<plugin type="org.mybatis.generator.plugins.MybatisMapperJunitPlugin" >
+			<property name="targetProject" value="src/test/java" />
+			<property name="targetPackage" value="com.shixun.common.test.mapper" />
+			<!--测试基类-->
+			<!-- <property name="superTestCase" value="com.yolipai.common.SpringTransactionalTestCase" /> -->
+			<property name="superTestCase" value="com.shixun.test.BaseTest" />
+		</plugin>
+		<!-- 去除自动生成的注释 -->
+		<commentGenerator>
+			<property name="suppressAllComments" value="true" />
+		</commentGenerator>
+		
+		<!-- 指定连接字符串 -->
+		<jdbcConnection driverClass="com.mysql.jdbc.Driver"
+			connectionURL="jdbc:mysql://127.0.0.1:3306/shixun?useUnicode=true&amp;characterEncoding=utf-8&amp;zeroDateTimeBehavior=convertToNull" 
+			userId="root"
+			password="root">
+		</jdbcConnection>
+		
+		<javaTypeResolver>
+			<property name="forceBigDecimals" value="false" />
+		</javaTypeResolver>
+		
+		<!-- targetProject:自动生成代码的输出位置,文件夹名称必须存在，否则生成失败;targetPackage:生成代码的jar包名称; -->
+		<!-- 实体类对象 -->
+		<javaModelGenerator targetPackage="com.shixun.common.entity"
+			targetProject="src/main/java">
+			<property name="enableSubPackages" value="true" />
+			<property name="trimStrings" value="true" />
+		</javaModelGenerator>
+		<!-- mybatis 数据库表sql.xml对象的文件-->
+		<sqlMapGenerator targetPackage="mapper"
+			targetProject="src/main/resources">
+			<property name="enableSubPackages" value="true" />
+		</sqlMapGenerator>
+		<!-- mybatis dao对应的接口类-->
+		<javaClientGenerator type="XMLMAPPER" targetPackage="com.shixun.common.mapper" 
+			targetProject="src/main/java">
+			<property name="enableSubPackages" value="true" />
+		</javaClientGenerator>
+		
+        <!-- 指定需要生成的数据库表-->
+		
+		
+		<!-- <table tableName="t_feedback"  domainObjectName="Feedback" />
+		<table tableName="t_friendly_link"  domainObjectName="FriendlyLink" /> -->
+		<!-- <table tableName="t_keyword"  domainObjectName="Keyword" /> -->
+		
+		
+		
+		
+		<!-- done 废弃 -->
+		<!-- <table tableName="t_course_class"  domainObjectName="CourseClass" />
+		<table tableName="t_course_set_category"  domainObjectName="CourseSetCategory" />
+		<table tableName="t_course_set"  domainObjectName="CourseSet" />
+		<table tableName="t_course_set_item"  domainObjectName="CourseSetItem" /> -->
+
+
+		<table tableName="t_account"  domainObjectName="Account" />
+		<table tableName="t_account_history"  domainObjectName="AccountHistory" />
+		<!-- done -->
+		<!-- <table tableName="t_gift_order"  domainObjectName="GiftOrder" />
+		<table tableName="t_order"  domainObjectName="Order" />
+		<table tableName="t_order_payment"  domainObjectName="OrderPayment" />
+		<table tableName="t_order_payment_log"  domainObjectName="OrderPaymentLog" />
+		<table tableName="t_order_payment_poll_log"  domainObjectName="OrderPaymentPollLog" />
+		<table tableName="t_order_item"  domainObjectName="OrderItem" /> -->
+		
+		
+		<!-- done -->
+		<!-- <table tableName="t_follower"  domainObjectName="Follower" />
+		<table tableName="t_vl_mylive"  domainObjectName="MyLive" />
+		<table tableName="t_vl_topic"  domainObjectName="Topic" />
+		<table tableName="t_vl_live"  domainObjectName="Live" />
+		<table tableName="t_vl_audience"  domainObjectName="Audience" />
+		<table tableName="t_im_msg"  domainObjectName="ImMsg" />
+		<table tableName="t_vl_live_ppt"  domainObjectName="LivePpt" /> -->
+		
+		<!-- done -->
+		<!-- <table tableName="t_course_category"  domainObjectName="CourseCategory" />
+		<table tableName="t_course_topic"  domainObjectName="CourseTopic" />
+		<table tableName="t_course_segment"  domainObjectName="CourseSegment" />
+		<table tableName="t_course"  domainObjectName="Course" />
+		<table tableName="t_course_star"  domainObjectName="CourseStar" />
+		<table tableName="t_course_praise"  domainObjectName="CoursePraise" />
+		<table tableName="t_course_comment"  domainObjectName="CourseComment" />
+		<table tableName="t_course_favorite"  domainObjectName="CourseFavorite" />
+		<table tableName="t_course_apply"  domainObjectName="CourseApply" />
+		<table tableName="t_course_complaint"  domainObjectName="CourseComplaint" /> -->
+		
+		<!-- done -->
+		<!-- <table tableName="t_news"  domainObjectName="News" />
+		<table tableName="t_ad"  domainObjectName="AD" />
+		<table tableName="t_news_category"  domainObjectName="NewsCategory" />
+		<table tableName="t_news_praise"  domainObjectName="NewsPraise" />
+		<table tableName="t_news_comment"  domainObjectName="NewsComment" />
+		<table tableName="t_news_subscribe"  domainObjectName="NewsSubscribe" />
+		<table tableName="t_hot_news"  domainObjectName="HotNews" /> -->
+		
+		<!-- done -->
+		<!-- <table tableName="t_user"  domainObjectName="User" />
+		<table tableName="t_teacher"  domainObjectName="Teacher" />
+		<table tableName="t_admin_user"  domainObjectName="AdminUser" />
+		<table tableName="t_teacher_experience"  domainObjectName="TeacherExperience" />
+		<table tableName="t_teacher_achievement"  domainObjectName="TeacherAchievement" />
+		<table tableName="t_login_info"  domainObjectName="LoginInfo" />
+		<table tableName="t_login_log"  domainObjectName="LoginLog" /> -->
+		
+		<!-- done -->
+		<!-- <table tableName="t_operation_log"  domainObjectName="OperationLog" />
+		<table tableName="t_system_log"  domainObjectName="SystemLog" />
+		<table tableName="t_system_properties"  domainObjectName="SystemProperties" />
+		
+		<table tableName="t_base_province"  domainObjectName="Province" />
+		<table tableName="t_base_city"  domainObjectName="City" />
+		<table tableName="t_base_area"  domainObjectName="Area" />
+		<table tableName="t_sequence"  domainObjectName="Sequence" /> -->
+		
+	</context>
+</generatorConfiguration>
