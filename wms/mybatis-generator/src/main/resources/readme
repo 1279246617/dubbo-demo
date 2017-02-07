@@ -1,0 +1,61 @@
+bug/改进记录
+
+1. 生成代码 模糊查询 criteria value --> "%"+value+"%" -- 已修复20160603
+2. 整合分页插件(分页坑) -- 已修复20160603
+2. serviceImpl使用了java8 map 语法  -- 已修复20160603
+3. mapper insert 返回不包含id
+4. 当表的主键不是 id(没有id字段), 生成的测试类代码, 获取主键时也会调用bean#getId方法
+5. 生成的测试代码, 字符串常量部分首字母大写, 部分则是小写
+6. mapper insert & insertSelective, 只保留 insertSelective 即可(同时把名称改为insert)
+7. 屏蔽 mapper #countByCondition #updateByCondition #updateByPrimaryKey #updateByPrimaryKeySelective
+	同时把#updateByConditionSelective 改为 #updateByCondition
+8. 把mapper#update对主键的更新去掉
+
+2016-06-06
+1. mapper添加 org.springframework.stereotype.Repository 注解,
+       当mapper分多个目录存放时, mybatis的扫描目录指向一个父级目录, 通过指定扫描Repository注解, 可以避免mybatis扫描配置时, 加载其他类(会导致spring重复加载).
+2. mapper.xml 使用到的 entity criteria 使用别名, 避免每次都要修改包路径(生成多模块代码, 每个模块的路径不一样),
+       修改后, 只需要配置mybatis typeAliases扫描即可.
+
+2016-06-06 ??? 已修改(双值条件允许值为空(单值和3值则不允许为空), 如: <name like '%mik%'>)
+---- 双值允许为空, 是否合适? 会存在条件不生效, 导致全部记录被更新的隐患
+protected void addCriterion(String condition, Object value, String property) {
+            if (value == null) {
+            	return;
+            }
+            criteria.add(new Criterion(condition, value));
+        }
+改为 -->
+protected void addCriterion(String condition, Object value, String property) {
+            if (value == null) {
+            	return;
+//              throw new RuntimeException("Value for " + property + " cannot be null");
+            }
+            criteria.add(new Criterion(condition, value));
+        }
+
+
+2016-06-27 bug
+Criteria cri = criteria.createCriteria();
+
+2016-06-27 bug in list , list isEmpty 时会报错
+@Override
+	public List<OrderGoods> list(List<Integer> orderIds) {
+//		if(orderIds == null || orderIds.isEmpty()) {
+//			return new ArrayList<>();
+//		}
+		
+		OrderGoodsCriteria criteria = new OrderGoodsCriteria();
+		criteria.setPage(1);
+		criteria.setLimit(-1);
+		Criteria cri = criteria.createCriteria();
+		cri.andOrderIdIn(orderIds);
+		return orderGoodsMapper.selectByConditionList(criteria);
+	}
+
+2016-07-05 like null bug  "%null%"
+public Criteria andModuleLike(String value) {
+            addCriterion("module like", "%" + value + "%", "module");
+            return (Criteria) this;
+        }
+

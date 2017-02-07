@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>		
+	  <context id="MySqlTables" targetRuntime="MyBatis3">
+	      
+        <!--序列化插件 -->
+         <plugin type="org.mybatis.generator.plugins.SerializablePlugin">  </plugin>
+       	<!--重命名插件-->
+	     <plugin type="org.mybatis.generator.plugins.RenameExampleClassPlugin">      
+            <property name="searchString" value="Example$" />      
+            <property name="replaceString" value="Criteria" />  
+        </plugin>
+        <!---Redis Cache 
+        <plugin type="org.mybatis.generator.plugins.CachePlugin"> 
+        	 <property name="cache_type" value="com.ylp.user.common.caches.mybatis.redis.RedisCache" /> 
+        </plugin>
+        -->
+        <!--自动生成service插件 -->
+		<plugin type="org.mybatis.generator.plugins.MybatisServicePlugin2" >
+			<property name="targetProject" value="src/main/java" />
+			<property name="targetPackage" value="com.xsili.mshop.service" />
+			<property name="implementationPackage" value="com.xsili.mshop.service.impl" />
+		</plugin>
+		<!--生成分页插件-->
+		<plugin type="org.mybatis.generator.plugins.PaginationPlugin" ></plugin>
+		<!--自动生成 mapper测试 插件  targetPackage与对应的实体生成保持一致-->
+		<plugin type="org.mybatis.generator.plugins.MybatisMapperJunitPlugin" >
+			<property name="targetProject" value="src/test/java" />
+			<property name="targetPackage" value="com.xsili.mshop.test.mapper" />
+			<!--测试基类-->
+			<!-- <property name="superTestCase" value="com.yolipai.common.SpringTransactionalTestCase" /> -->
+			<property name="superTestCase" value="com.xsili.mshop.test.BaseTest" />
+		</plugin>
+		<!-- 去除自动生成的注释 -->
+		<commentGenerator>
+			<property name="suppressAllComments" value="true" />
+		</commentGenerator>
+		
+		<!-- 指定连接字符串 -->
+		<jdbcConnection driverClass="com.mysql.jdbc.Driver"
+			connectionURL="jdbc:mysql://127.0.0.1:3306/mshop?useUnicode=true&amp;characterEncoding=utf-8&amp;zeroDateTimeBehavior=convertToNull" 
+			userId="root"
+			password="root">
+		</jdbcConnection>
+		
+		<javaTypeResolver>
+			<property name="forceBigDecimals" value="false" />
+		</javaTypeResolver>
+		
+		<!-- targetProject:自动生成代码的输出位置,文件夹名称必须存在，否则生成失败;targetPackage:生成代码的jar包名称; -->
+		<!-- 实体类对象 -->
+		<javaModelGenerator targetPackage="com.xsili.mshop.entity"
+			targetProject="src/main/java">
+			<property name="enableSubPackages" value="true" />
+			<property name="trimStrings" value="true" />
+		</javaModelGenerator>
+		<!-- mybatis 数据库表sql.xml对象的文件-->
+		<sqlMapGenerator targetPackage="mapper"
+			targetProject="src/main/resources">
+			<property name="enableSubPackages" value="true" />
+		</sqlMapGenerator>
+		<!-- mybatis dao对应的接口类-->
+		<javaClientGenerator type="XMLMAPPER" targetPackage="com.xsili.mshop.mapper" 
+			targetProject="src/main/java">
+			<property name="enableSubPackages" value="true" />
+		</javaClientGenerator>
+           <!-- 指定需要生成的数据库表-->
+		   <!-- 指定需要生成的数据库表-->
+		<!-- <table tableName="t_category"  domainObjectName="Category" />
+		<table tableName="t_good"  domainObjectName="Good" />
+		<table tableName="t_good_annex"  domainObjectName="GoodAnnex" />
+		<table tableName="t_specification"  domainObjectName="Specification" />
+		<table tableName="t_good_specification"  domainObjectName="GoodSpecification" />
+		<table tableName="t_order"  domainObjectName="Order" />
+		<table tableName="t_delivery_way"  domainObjectName="DeliveryWay" />
+		<table tableName="t_order_goods"  domainObjectName="OrderGoods" />
+		<table tableName="t_order_pay_log"  domainObjectName="OrderPayLog" />
+		<table tableName="t_mobile_user"  domainObjectName="MobileUser" />
+		<table tableName="t_recipient_addr"  domainObjectName="RecipientAddr" />
+		<table tableName="t_admin_user"  domainObjectName="AdminUser" />
+		<table tableName="t_user_login"  domainObjectName="UserLogin" />
+		<table tableName="t_account"  domainObjectName="Account" />
+		<table tableName="t_system_properties"  domainObjectName="SystemProperties" />
+		<table tableName="t_sequence"  domainObjectName="Sequence" /> -->
+		
+		<!-- <table tableName="t_good_group_set"  domainObjectName="GoodGroupSet" />
+		<table tableName="t_good_group"  domainObjectName="GoodGroup" />
+		<table tableName="t_good_group_item"  domainObjectName="GoodGroupItem" />
+		<table tableName="t_good_favorite"  domainObjectName="GoodFavorite" />
+		<table tableName="t_uv"  domainObjectName="UV" /> -->
+		<table tableName="t_ad"  domainObjectName="AD" />
+		
+		<!-- <table tableName="t_shopping_cart"  domainObjectName="ShoppingCart" />
+		<table tableName="t_base_province"  domainObjectName="Province" />
+		<table tableName="t_base_city"  domainObjectName="City" />
+		<table tableName="t_base_area"  domainObjectName="Area" /> -->
+		
+		<!-- <table tableName="t_operation_log"  domainObjectName="OperationLog" /> -->
+	</context>
+</generatorConfiguration>
