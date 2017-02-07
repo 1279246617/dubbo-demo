@@ -10,13 +10,6 @@
 	<artifactId>wms-service-parent</artifactId>
 	<packaging>pom</packaging>
 
-	<dependencies>
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-		</dependency>
-	</dependencies>
-
 	<modules>
 		<module>wms-service-sso</module>
 	</modules>
