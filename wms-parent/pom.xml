@@ -67,7 +67,7 @@
 
 		<hibernate-validator.version>5.1.3.Final</hibernate-validator.version>
 
-		<fpx-mybatis-plugin.version>1.0.4</fpx-mybatis-plugin.version>
+		<mybatis-plugin-page.version>1.0.4</mybatis-plugin-page.version>
 
 		<dubbo.version>2.8.4</dubbo.version>
 		<javassist.version>3.20.0-GA</javassist.version>
@@ -373,9 +373,9 @@
 
 			<!-- 分页插件 -->
 			<dependency>
-				<groupId>fpx.mybatis.plugin</groupId>
-				<artifactId>fpx-mybatis-plugin</artifactId>
-				<version>${fpx-mybatis-plugin.version}</version>
+				<groupId>mybatis.plugin.page</groupId>
+				<artifactId>mybatis-plugin-page</artifactId>
+				<version>${mybatis-plugin-page.version}</version>
 			</dependency>
 
 			<!-- springfox start -->

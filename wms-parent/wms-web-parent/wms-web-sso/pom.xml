@@ -268,8 +268,8 @@
 
 		<!-- 分页插件 -->
 		<dependency>
-			<groupId>fpx.mybatis.plugin</groupId>
-			<artifactId>fpx-mybatis-plugin</artifactId>
+			<groupId>mybatis.plugin.page</groupId>
+			<artifactId>mybatis-plugin-page</artifactId>
 		</dependency>
 
 		<!-- springfox start -->
