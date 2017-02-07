@@ -9,7 +9,7 @@
 	<dubbo:application name="wms-web-sso" />
 
 	<!--zookeeper注册中心 -->
-	<dubbo:registry protocol="zookeeper" address="172.17.84.84:2181" />
+	<dubbo:registry protocol="zookeeper" address="${dubbo.registry.address}" />
 
 	<!--监控地址 -->
 	<!-- <dubbo:monitor address="127.0.0.1:7070" /> -->
