@@ -137,7 +137,7 @@ public class MybatisServicePlugin3 extends PluginAdapter {
 		listType = new FullyQualifiedJavaType("java.util.List");
 		mapType  = new FullyQualifiedJavaType("java.util.Map");
 		stringUtilsType =new FullyQualifiedJavaType("org.apache.commons.lang.StringUtils");
-		pagerType=new FullyQualifiedJavaType("com.fpx.mybatis.plugin.model.Pager");
+		pagerType=new FullyQualifiedJavaType("org.mybatis.plugin.model.Pager");
 		Interface interface1 = new Interface(interfaceType);
 		TopLevelClass topLevelClass = new TopLevelClass(serviceType);
 		// 导入必要的类

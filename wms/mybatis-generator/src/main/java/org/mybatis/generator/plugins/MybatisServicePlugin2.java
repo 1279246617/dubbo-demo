@@ -137,7 +137,7 @@ public class MybatisServicePlugin2 extends PluginAdapter {
 		listType = new FullyQualifiedJavaType("java.util.List");
 		mapType  = new FullyQualifiedJavaType("java.util.Map");
 		stringUtilsType =new FullyQualifiedJavaType("org.apache.commons.lang.StringUtils");
-		pagerType=new FullyQualifiedJavaType("com.fpx.mybatis.plugin.model.Pager");
+		pagerType=new FullyQualifiedJavaType("org.mybatis.plugin.model.Pager");
 		Interface interface1 = new Interface(interfaceType);
 		TopLevelClass topLevelClass = new TopLevelClass(serviceType);
 		// 导入必要的类
@@ -240,7 +240,7 @@ public class MybatisServicePlugin2 extends PluginAdapter {
 
 	private Method getPagerEntitys(TopLevelClass topLevelClass, IntrospectedTable introspectedTable,
 			String tableName) {
-		topLevelClass.addImportedType(new FullyQualifiedJavaType("com.fpx.mybatis.plugin.util.PagerUtil"));
+		topLevelClass.addImportedType(new FullyQualifiedJavaType("org.mybatis.plugin.util.PagerUtil"));
 		Method method = new Method();
 		method.setName("getPager"+tableName);
 		method.setReturnType(new FullyQualifiedJavaType("Pager<" + tableName + ">"));
@@ -269,7 +269,7 @@ public class MybatisServicePlugin2 extends PluginAdapter {
 	
 	private Method listEntitys(TopLevelClass topLevelClass, IntrospectedTable introspectedTable,
 	        String tableName) {
-	    topLevelClass.addImportedType(new FullyQualifiedJavaType("com.fpx.mybatis.plugin.util.PagerUtil"));
+	    topLevelClass.addImportedType(new FullyQualifiedJavaType("org.mybatis.plugin.util.PagerUtil"));
 	    Method method = new Method();
 	    method.setName("list");
 	    method.setReturnType(new FullyQualifiedJavaType("Pager<" + tableName + ">"));
