@@ -1,6 +1,6 @@
 package com.shixun.common.entity;
 
-import com.fpx.mybatis.plugin.model.QueryParam;
+import org.mybatis.plugin.model.QueryParam;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;

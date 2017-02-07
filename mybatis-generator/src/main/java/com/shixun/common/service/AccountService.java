@@ -1,6 +1,6 @@
 package com.shixun.common.service;
 
-import com.fpx.mybatis.plugin.model.Pager;
+import org.mybatis.plugin.model.Pager;
 import com.shixun.common.entity.Account;
 
 public interface AccountService {

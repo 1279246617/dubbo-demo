@@ -1,7 +1,7 @@
 package com.shixun.common.service.impl;
 
-import com.fpx.mybatis.plugin.model.Pager;
-import com.fpx.mybatis.plugin.util.PagerUtil;
+import org.mybatis.plugin.model.Pager;
+import org.mybatis.plugin.util.PagerUtil;
 import com.shixun.common.entity.PaidFlag;
 import com.shixun.common.entity.PaidFlagCriteria.Criteria;
 import com.shixun.common.entity.PaidFlagCriteria;

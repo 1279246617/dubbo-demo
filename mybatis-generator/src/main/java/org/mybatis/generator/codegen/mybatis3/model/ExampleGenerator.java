@@ -60,8 +60,8 @@ public class ExampleGenerator extends AbstractJavaGenerator {
                 introspectedTable.getExampleType());
         TopLevelClass topLevelClass = new TopLevelClass(type);
         // modify by yepeng 集成分页插件
-        topLevelClass.addImportedType(new FullyQualifiedJavaType("com.fpx.mybatis.plugin.model.QueryParam"));
-        topLevelClass.setSuperClass(new FullyQualifiedJavaType("com.fpx.mybatis.plugin.model.QueryParam"));
+        topLevelClass.addImportedType(new FullyQualifiedJavaType("org.mybatis.plugin.model.QueryParam"));
+        topLevelClass.setSuperClass(new FullyQualifiedJavaType("org.mybatis.plugin.model.QueryParam"));
         topLevelClass.setVisibility(JavaVisibility.PUBLIC);
         commentGenerator.addJavaFileComment(topLevelClass);
 

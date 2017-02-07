@@ -61,8 +61,8 @@
 		    <version>2.4</version>
 		</dependency>
 		<dependency>
-			<groupId>fpx.mybatis.plugin</groupId>
-			<artifactId>fpx-mybatis-plugin</artifactId>
+			<groupId>mybatis.plugin.page</groupId>
+			<artifactId>mybatis-plugin-page</artifactId>
 			<version>1.0.4</version>
 		</dependency>
 		 <!-- <dependency>
