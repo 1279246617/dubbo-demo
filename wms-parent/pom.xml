@@ -74,6 +74,13 @@
 		<netty.version>3.2.10.Final</netty.version>
 		<zkclient.version>0.4</zkclient.version>
 		<zookeeper.version>3.3.4</zookeeper.version>
+
+		<wms-common-config.version>0.0.1-SNAPSHOT</wms-common-config.version>
+		<wms-common-core.version>0.0.1-SNAPSHOT</wms-common-core.version>
+		<wms-common-web.version>0.0.1-SNAPSHOT</wms-common-web.version>
+		<wms-common.version>0.0.1-SNAPSHOT</wms-common.version>
+
+		<wms-facade-sso.version>0.0.1-SNAPSHOT</wms-facade-sso.version>
 	</properties>
 
 	<!-- 声明依赖,统一版本 -->
