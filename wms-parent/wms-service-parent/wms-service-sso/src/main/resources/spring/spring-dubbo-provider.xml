@@ -7,9 +7,10 @@
        http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
 
 	<dubbo:application owner="whb" name="hello-world-app" />
+	
 	<!--zookeeper注册中心 -->
-	<dubbo:registry address="zookeeper://172.17.84.84:2181" />
-
+	<dubbo:registry protocol="zookeeper" address="${dubbo.registry.address}"/>
+	
 	<dubbo:protocol name="dubbo" port="20880" />
 
 	<!-- 配置监控的服务地址和IP -->
