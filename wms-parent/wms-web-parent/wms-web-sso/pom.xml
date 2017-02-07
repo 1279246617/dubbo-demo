@@ -14,12 +14,39 @@
 	<url>http://maven.apache.org</url>
 
 	<dependencies>
-		<!-- facade层 -->
+		<!-- common层 -->
+		<dependency>
+			<groupId>com.coe.wms</groupId>
+			<artifactId>wms-common-config</artifactId>
+			<version>${wms-common-config.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.coe.wms</groupId>
+			<artifactId>wms-common-core</artifactId>
+			<version>${wms-common-core.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.coe.wms</groupId>
+			<artifactId>wms-common-web</artifactId>
+			<version>${wms-common-web.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.coe.wms</groupId>
+			<artifactId>wms-common</artifactId>
+			<version>${wms-common.version}</version>
+		</dependency>
+		<!-- common层end -->
+
+		<!-- facade层 start -->
 		<dependency>
 			<groupId>com.coe.wms</groupId>
 			<artifactId>wms-facade-sso</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>${wms-facade-sso.version}</version>
 		</dependency>
+		<!-- facade层 end -->
 
 		<!-- 单元测试 start -->
 		<dependency>
@@ -43,22 +70,22 @@
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>jcl-over-slf4j</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>jul-to-slf4j</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
@@ -70,12 +97,12 @@
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-core</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>com.fasterxml.jackson.dataformat</groupId>
 			<artifactId>jackson-dataformat-xml</artifactId>
