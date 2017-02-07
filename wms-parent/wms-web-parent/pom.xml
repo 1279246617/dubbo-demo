@@ -12,11 +12,4 @@
 	<modules>
 		<module>wms-web-sso</module>
 	</modules>
-	
-	<dependencies>
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-		</dependency>
-	</dependencies>
 </project>
