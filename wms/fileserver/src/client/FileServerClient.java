@@ -11,6 +11,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Random;
 
+import sun.swing.StringUIClientPropertyKey;
+
 /**
  * 文件服务器客户端工具类 复制此文件到客户端工程,修改serverUrl 即可使用
  * 
@@ -129,8 +131,24 @@ public class FileServerClient {
 	 * @return
 	 */
 	public static String changeFileName(String fileName) {
+		if (!isContainsChinese(fileName)) {
+			return fileName;
+		}
 		String fileType = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length());
 		return getStringRandom(10) + "." + fileType;
+	}
+
+	/**
+	 * 是否包含中文
+	 * 
+	 * @param str
+	 * @return
+	 */
+	public static boolean isContainsChinese(String str) {
+		if (str.length() == str.replaceFirst("[\u4e00-\u9fa5]", "").length()) {
+			return false;
+		}
+		return true;
 	}
 
 	/**
