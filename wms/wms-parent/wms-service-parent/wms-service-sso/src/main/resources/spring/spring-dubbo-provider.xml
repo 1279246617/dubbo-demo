@@ -1,16 +1,16 @@
 <?xml version="1.1" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans  
-       http://www.springframework.org/schema/beans/spring-beans.xsd  
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+       http://www.springframework.org/schema/beans/spring-beans-4.2.xsd 
        http://code.alibabatech.com/schema/dubbo  
        http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
 
 	<dubbo:application owner="whb" name="hello-world-app" />
-	
+
 	<!--zookeeper注册中心 -->
-	<dubbo:registry protocol="zookeeper" address="${dubbo.registry.address}"/>
-	
+	<dubbo:registry protocol="zookeeper" address="${dubbo.registry.address}" />
+
 	<dubbo:protocol name="dubbo" port="20880" />
 
 	<!-- 配置监控的服务地址和IP -->
