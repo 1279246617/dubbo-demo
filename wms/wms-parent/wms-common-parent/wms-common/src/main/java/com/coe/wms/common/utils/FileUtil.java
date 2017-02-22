@@ -165,7 +165,7 @@ public class FileUtil {
 	 * @throws IOException
 	 */
 	public static boolean writeFileBinary(String fileName, byte[] content) throws IOException {
-		if (content == null || StringUtil.isNull(fileName)) {
+		if (content == null || StringUtil.isEmpty(fileName)) {
 			return false;
 		}
 		FileOutputStream fout = null;

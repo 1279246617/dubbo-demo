@@ -17,23 +17,12 @@ public class StringUtil {
 	 *            “ ”、null 都返回true
 	 * @return
 	 */
-	public static boolean isNull(String str) {
+	public static boolean isEmpty(String str) {
 		return (null == str || "".equals(str.trim()));
 	}
 
 	/**
-	 * 判断字符串是否为空
-	 * 
-	 * @param str
-	 *            非空返回true
-	 * @return
-	 */
-	public static boolean isNotNull(String str) {
-		return (null != str && !"".equals(str.trim()));
-	}
-
-	/**
-	 * 判断2个字符串是否相同 比String 自带的Equal的好处是 ,可以对比 2个都为 null的字符串
+	 * 判断2个字符串是否相同,可以对比 2个都为 null的字符串
 	 * 
 	 * @param s1
 	 * @param s2
@@ -56,30 +45,11 @@ public class StringUtil {
 	}
 
 	/**
-	 * 判断2个字符串是否相同 比String 自带的Equal的好处是 ,可以对比 2个都为 null的字符串
 	 * 
-	 * @param s1
-	 * @param s2
+	 * @param str
+	 * @param strings
 	 * @return
 	 */
-	public static boolean isEqual(String s1, String[] s2) {
-		if (s1 == null && s2 == null) {
-			return true;
-		}
-		if (s1 != null && s2 == null) {
-			return false;
-		}
-		if (s2 != null && s1 == null) {
-			return false;
-		}
-		for (String temp : s2) {
-			if (s1.equals(temp)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
 	public static boolean isEquals(String str, String... strings) {
 		for (int i = 0; i < strings.length; i++) {
 			if (StringUtil.isEqual(str, strings[i])) {
@@ -152,7 +122,7 @@ public class StringUtil {
 	 * @param strs
 	 * @return
 	 */
-	public static String concatList(List strs) {
+	public static String concatList(List<?> strs) {
 		String concats = "";
 		for (Object str : strs) {
 			concats += str + ",";
@@ -170,7 +140,7 @@ public class StringUtil {
 	 * @return
 	 */
 	public static String trim(String str) {
-		if (isNotNull(str)) {
+		if (!isEmpty(str)) {
 			str = str.trim();
 		}
 		return str;
