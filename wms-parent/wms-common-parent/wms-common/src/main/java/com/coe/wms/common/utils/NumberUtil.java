@@ -18,14 +18,14 @@ public class NumberUtil {
 	 * @return
 	 */
 	public static boolean isDecimal(String num) {
-		if (StringUtil.isNull(num)) {
+		if (StringUtil.isEmpty(num)) {
 			return false;
 		}
 		return Pattern.compile("([1-9]+[0-9]*|0)(\\.[\\d]+)?").matcher(num).matches();
 	}
 
 	public static boolean isDecimal1(String num) {
-		if (StringUtil.isNull(num)) {
+		if (StringUtil.isEmpty(num)) {
 			return false;
 		}
 		return Pattern.compile("([-+]{0,1}\\d+\\.\\d*|[-+]{0,1}\\d*\\.\\d+)?").matcher(num).matches();
@@ -38,7 +38,7 @@ public class NumberUtil {
 	 * @return
 	 */
 	public static boolean isNumberic(String num) {
-		if (StringUtil.isNull(num)) {
+		if (StringUtil.isEmpty(num)) {
 			return false;
 		}
 		return Pattern.compile("[0-9]+").matcher(num).matches();

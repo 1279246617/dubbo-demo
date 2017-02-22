@@ -20,8 +20,7 @@ import java.io.OutputStream;
 
 import javax.imageio.ImageIO;
 
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
+import org.apache.commons.codec.binary.Base64;
 
 public class ImageUtil {
 	/**
@@ -253,10 +252,7 @@ public class ImageUtil {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
-		// 对字节数组Base64编码
-		BASE64Encoder encoder = new BASE64Encoder();
-		return encoder.encode(data);// 返回Base64编码过的字节数组字符串
+		return EnCodeUtil.base64Encode(data);
 	}
 
 	/**
@@ -267,12 +263,13 @@ public class ImageUtil {
 	 * @return
 	 */
 	public static boolean GenerateImage(String imgStr, String imgFilePath) {
-		if (imgStr == null) // 图像数据为空
+		// 图像数据为空
+		if (imgStr == null) {
 			return false;
-		BASE64Decoder decoder = new BASE64Decoder();
+		}
 		try {
 			// Base64解码
-			byte[] bytes = decoder.decodeBuffer(imgStr);
+			byte[] bytes = Base64.decodeBase64(imgStr.getBytes());
 			for (int i = 0; i < bytes.length; ++i) {
 				if (bytes[i] < 0) {// 调整异常数据
 					bytes[i] += 256;

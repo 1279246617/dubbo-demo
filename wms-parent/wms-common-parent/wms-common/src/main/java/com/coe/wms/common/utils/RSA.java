@@ -135,6 +135,7 @@ public class RSA {
 	 * 
 	 * @return 私钥、公钥
 	 */
+	@SuppressWarnings("unused")
 	private static String[] genRSAKeyPair() {
 		KeyPairGenerator rsaKeyGen = null;
 		KeyPair rsaKeyPair = null;

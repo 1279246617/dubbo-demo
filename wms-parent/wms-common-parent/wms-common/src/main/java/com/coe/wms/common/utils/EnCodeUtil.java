@@ -8,14 +8,16 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.security.MessageDigest;
 
-import sun.misc.BASE64Encoder;
+import org.apache.commons.codec.binary.Base64;
+
+import com.coe.wms.common.constants.Charsets;
 
 /**
  * @author yechao
  * 
  */
 public class EnCodeUtil {
-	
+
 	private static final char[] HEX_LOOKUP_STRING = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
 
 	/**
@@ -50,15 +52,37 @@ public class EnCodeUtil {
 		return null;
 	}
 
-	public static String base64(String str) {
-		try {
-			BASE64Encoder base64en = new BASE64Encoder();
-			String newstr = base64en.encode(str.getBytes());
-			return newstr;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
+	/**
+	 * base64解码. 不可换为sun jdk 自带方法
+	 * 
+	 * @param str
+	 * @return
+	 */
+	public static String base64Decode(String str) {
+		byte[] b = Base64.decodeBase64(str.getBytes(Charsets.UTF_8));
+		return new String(b, Charsets.UTF_8);
+	}
+
+	/**
+	 * base64编码. 不可换为sun jdk 自带方法
+	 * 
+	 * @param str
+	 * @return
+	 */
+	public static String base64Encode(String str) {
+		byte[] b = Base64.encodeBase64(str.getBytes(Charsets.UTF_8));
+		return new String(b, Charsets.UTF_8);
+	}
+
+	/**
+	 * base64编码. 不可换为sun jdk 自带方法
+	 * 
+	 * @param str
+	 * @return
+	 */
+	public static String base64Encode(byte[] bt) {
+		byte[] b = Base64.encodeBase64(bt);
+		return new String(b);
 	}
 
 	/**
@@ -66,7 +90,7 @@ public class EnCodeUtil {
 	 * 
 	 * @return String 返回32位md5加密字符串(16位加密取substring(8,24))
 	 */
-	public final static String md5_32(String plainText) {
+	public final static String md5_32bit(String plainText) {
 		String md5Str = null;
 		try {
 			StringBuffer buf = new StringBuffer();
@@ -95,8 +119,10 @@ public class EnCodeUtil {
 	/**
 	 * md5 16位加密方法
 	 * 
+	 * @param plainText
+	 * @return
 	 */
-	public final static String md5_16(String plainText) {
+	public final static String md5_16bit(String plainText) {
 		String md5Str = null;
 		try {
 			StringBuffer buf = new StringBuffer();

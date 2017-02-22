@@ -1,4 +1,4 @@
-package com.coe.wms.common.utils;
+package com.coe.wms.common.constants;
 
 public class RegexConstant {
 	/**

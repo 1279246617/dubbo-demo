@@ -4,7 +4,6 @@
 package com.coe.wms.common.utils;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -16,7 +15,6 @@ import java.util.zip.CRC32;
 import java.util.zip.CheckedOutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 /**
@@ -33,6 +31,7 @@ public class ZipUtils {
 	// 符号"/"用来作为目录标识判断符
 	private static final String PATH = "/";
 	private static final int BUFFER = 1024;
+	private static ZipFile zip;
 
 	/**
 	 * 压缩
@@ -209,9 +208,8 @@ public class ZipUtils {
 	 * @param descDir
 	 *            指定目录
 	 */
-	@SuppressWarnings("rawtypes")
 	public static void unZipFiles(File zipFile, String descDir) throws IOException {
-		ZipFile zip = new ZipFile(zipFile, Charset.forName("GBK"));// 解决中文文件夹乱码
+		zip = new ZipFile(zipFile, Charset.forName("GBK"));
 		String name = zipFile.getName().substring(0, zipFile.getName().lastIndexOf("."));
 		File pathFile = new File(descDir + name);
 		if (!pathFile.exists()) {

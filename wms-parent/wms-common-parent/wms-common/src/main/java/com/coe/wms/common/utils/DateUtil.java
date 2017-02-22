@@ -98,7 +98,7 @@ public class DateUtil {
 		try {
 			return srcsdf.parse(strDate);
 		} catch (ParseException e) {
-			// e.printStackTrace();
+			 e.printStackTrace();
 		}
 		return null;
 	}
