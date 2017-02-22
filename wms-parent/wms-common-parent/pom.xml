@@ -18,13 +18,6 @@
 		<wms-common.version>0.0.1-SNAPSHOT</wms-common.version>
 	</properties>
 
-	<dependencies>
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-		</dependency>
-	</dependencies>
-
 	<modules>
 		<module>wms-common-core</module>
 		<module>wms-common-web</module>
