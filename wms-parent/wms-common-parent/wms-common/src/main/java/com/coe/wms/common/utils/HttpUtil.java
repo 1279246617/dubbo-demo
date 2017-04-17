@@ -2,51 +2,66 @@ package com.coe.wms.common.utils;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.InterruptedIOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
+import javax.net.ssl.SSLException;
+import javax.net.ssl.SSLHandshakeException;
 
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpEntityEnclosingRequest;
+import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
+import org.apache.http.NoHttpResponseException;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.HttpRequestRetryHandler;
 import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.config.CookieSpecs;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.client.params.CookiePolicy;
-import org.apache.http.client.params.HttpClientParams;
-import org.apache.http.conn.ClientConnectionManager;
-import org.apache.http.conn.scheme.Scheme;
-import org.apache.http.conn.scheme.SchemeRegistry;
-import org.apache.http.conn.ssl.SSLSocketFactory;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.client.protocol.HttpClientContext;
+import org.apache.http.config.Registry;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.conn.ConnectTimeoutException;
+import org.apache.http.conn.HttpHostConnectException;
+import org.apache.http.conn.socket.ConnectionSocketFactory;
+import org.apache.http.conn.socket.LayeredConnectionSocketFactory;
+import org.apache.http.conn.socket.PlainConnectionSocketFactory;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.params.CoreConnectionPNames;
+import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 
 import com.coe.wms.common.constants.Charsets;
-
-import sun.misc.BASE64Encoder;
+import com.coe.wms.common.constants.HttpConnectConstant;
 
 /**
  * httpclient4 工具类
@@ -66,7 +81,7 @@ public class HttpUtil {
 	 * @throws IOException
 	 */
 	public static String post(String url, Map<String, String> parames) throws IOException {
-		DefaultHttpClient http = new DefaultHttpClient();
+		CloseableHttpClient http = HttpClients.createDefault();
 		HttpPost post = new HttpPost(url);
 		try {
 			List<BasicNameValuePair> nvps = new ArrayList<BasicNameValuePair>();
@@ -75,13 +90,13 @@ public class HttpUtil {
 				String value = parames.get(key);
 				nvps.add(new BasicNameValuePair(key, value));
 			}
-			post.setEntity(new UrlEncodedFormEntity(nvps, "UTF-8"));
+			post.setEntity(new UrlEncodedFormEntity(nvps, Charsets.UTF_8));
 			HttpResponse httpResponse = http.execute(post);
 			return EntityUtils.toString(httpResponse.getEntity());
 		} catch (IOException e) {
 			throw e;
 		} finally {
-			http.getConnectionManager().shutdown();
+			http.close();
 		}
 	}
 
@@ -98,34 +113,40 @@ public class HttpUtil {
 	 */
 	public static String postRequest(String urlPath, List<BasicNameValuePair> basicNameValuePairs) throws ClientProtocolException, IOException {
 
-		DefaultHttpClient httpClient = new DefaultHttpClient();
+		RequestConfig config = RequestConfig.custom().setSocketTimeout(HttpConnectConstant.TIMEOUT)
+											.setConnectTimeout(HttpConnectConstant.TIMEOUT)
+											.setConnectionRequestTimeout(HttpConnectConstant.TIMEOUT).build();
+		CloseableHttpClient httpClient = HttpClients.custom().setDefaultRequestConfig(config).build();
 		HttpPost httpPost = new HttpPost(urlPath);
-		try {
-			httpClient.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 5000);
-			UrlEncodedFormEntity entity = new UrlEncodedFormEntity(basicNameValuePairs, Charsets.UTF_8);
-			httpPost.setEntity(entity);
+		UrlEncodedFormEntity entity = new UrlEncodedFormEntity(basicNameValuePairs, Charsets.UTF_8);
+		httpPost.setEntity(entity);
 
-			ResponseHandler<String> handler = new ResponseHandler<String>() {
-				public String handleResponse(HttpResponse response) throws ClientProtocolException, IOException {
-					HttpEntity httpEntity = null;
-					httpEntity = response.getEntity();
+		ResponseHandler<String> handler = new ResponseHandler<String>() {
+			public String handleResponse(HttpResponse response) throws ClientProtocolException, IOException {
+				HttpEntity httpEntity = null;
+				httpEntity = response.getEntity();
 
-					if (httpEntity != null) {
-						return EntityUtils.toString(httpEntity);
-					} else {
-						return null;
-					}
+				if (httpEntity != null) {
+					return EntityUtils.toString(httpEntity);
+				} else {
+					return null;
 				}
-			};
+			}
+		};
 
-			String xmlResult = httpClient.execute(httpPost, handler);
-
-			return xmlResult;
-
+		String result = "";
+		try {
+			result = httpClient.execute(httpPost, handler);
+		} catch (HttpHostConnectException e) {
+			e.printStackTrace();
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
 		} finally {
 			abortRequest(httpPost);
-			shutdown(httpClient);
+			httpClient.close();
 		}
+		return result;
+
 	}
 
 	/**
@@ -147,17 +168,6 @@ public class HttpUtil {
 		return postRequest(urlPath, list);
 	}
 
-	/**
-	 * 关闭连接
-	 * 
-	 * @param httpclient
-	 */
-	public static void shutdown(final HttpClient httpclient) {
-		if (httpclient != null) {
-			httpclient.getConnectionManager().shutdown();
-		}
-	}
-
 	public static void abortRequest(final HttpRequestBase hrb) {
 		if (hrb != null && hrb.isAborted()) {
 			hrb.abort();
@@ -170,31 +180,71 @@ public class HttpUtil {
 	 * @param base
 	 * @return
 	 */
-	public static HttpClient wrapSSLClient(HttpClient base) {
+	public static HttpClient wrapSSLClient() {
+
+		LayeredConnectionSocketFactory sslsf = null;
+
+		RegistryBuilder<ConnectionSocketFactory> registryBuilder = RegistryBuilder.create();
+
+		PlainConnectionSocketFactory plainsf = PlainConnectionSocketFactory.getSocketFactory();
+		registryBuilder.register("http", plainsf);
+
 		try {
-			SSLContext ctx = SSLContext.getInstance("TLS");
-			X509TrustManager tm = new X509TrustManager() {
-				public void checkClientTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
-				}
 
-				public void checkServerTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
-				}
+			// Trust own CA and all self-signed certs
+			SSLContext sslcontext = SSLContext.getInstance("TLS");
 
-				public X509Certificate[] getAcceptedIssuers() {
-					return null;
-				}
-			};
+			HostnameVerifier allowAllHostnameVerifier = NoopHostnameVerifier.INSTANCE;
+			sslsf = new SSLConnectionSocketFactory(sslcontext, allowAllHostnameVerifier);
 
-			ctx.init(null, new TrustManager[] { tm }, null);
-			SSLSocketFactory ssf = new SSLSocketFactory(ctx, SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
-			ClientConnectionManager ccm = base.getConnectionManager();
-			SchemeRegistry sr = ccm.getSchemeRegistry();
-			sr.register(new Scheme("https", 443, ssf));
-			return new DefaultHttpClient(ccm, base.getParams());
+			registryBuilder.register("https", sslsf);
 
-		} catch (Exception e) {
-			return null;
+		} catch (Throwable e) {
+			e.printStackTrace();
 		}
+
+		Registry<ConnectionSocketFactory> r = registryBuilder.build();
+
+		PoolingHttpClientConnectionManager connManager = new PoolingHttpClientConnectionManager(r);
+		connManager.setMaxTotal(100);// 连接池最大并发连接数
+		connManager.setDefaultMaxPerRoute(100);// 单路由最大并发数
+		// 请求重试处理
+		HttpRequestRetryHandler httpRequestRetryHandler = new HttpRequestRetryHandler() {
+			public boolean retryRequest(IOException exception, int executionCount, HttpContext context) {
+				if (executionCount >= 5) {// 如果已经重试了5次，就放弃
+					return false;
+				}
+				if (exception instanceof NoHttpResponseException) {// 如果服务器丢掉了连接，那么就重试
+					return true;
+				}
+				if (exception instanceof SSLHandshakeException) {// 不要重试SSL握手异常
+					return false;
+				}
+				if (exception instanceof InterruptedIOException) {// 超时
+					return false;
+				}
+				if (exception instanceof UnknownHostException) {// 目标服务器不可达
+					return false;
+				}
+				if (exception instanceof ConnectTimeoutException) {// 连接被拒绝
+					return false;
+				}
+				if (exception instanceof SSLException) {// SSL握手异常
+					return false;
+				}
+
+				HttpClientContext clientContext = HttpClientContext.adapt(context);
+				HttpRequest request = clientContext.getRequest();
+				// 如果请求是幂等的，就再次尝试
+				if (!(request instanceof HttpEntityEnclosingRequest)) {
+					return true;
+				}
+				return false;
+			}
+		};
+		HttpClient base = HttpClients.custom().setConnectionManager(connManager).setRetryHandler(httpRequestRetryHandler).build();
+		return base;
+
 	}
 
 	/**
@@ -207,18 +257,12 @@ public class HttpUtil {
 	 *            超时时间
 	 * @return
 	 */
-	public static HttpResponse getGetResponse(HttpClient httpClient, final String url, int timeout) {
+	public static HttpResponse getGetResponse(final String url, int timeout) {
 
-		HttpClientParams.setCookiePolicy(httpClient.getParams(), CookiePolicy.BROWSER_COMPATIBILITY);
-
-		// if (useProxy) {
-		// HttpHost proxy = new HttpHost("rproxy01.hongkongpost.com", 80);
-		// httpClient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY,
-		// proxy);
-		// }
-		httpClient.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, timeout);
+		RequestConfig config = RequestConfig.custom().setSocketTimeout(timeout).setConnectTimeout(timeout).setConnectionRequestTimeout(timeout)
+				.setCookieSpec(CookieSpecs.DEFAULT).build();
+		HttpClient httpClient = HttpClients.custom().setDefaultRequestConfig(config).build();
 		HttpGet httpget = new HttpGet(url);
-
 		try {
 			HttpResponse response = httpClient.execute(httpget);
 
@@ -242,8 +286,8 @@ public class HttpUtil {
 	 * @throws ClientProtocolException
 	 * @throws IOException
 	 */
-	public static String postRquest(HttpClient httpClient, final String strUrl, List<BasicNameValuePair> basicNameValuePairs)
-			throws ClientProtocolException, IOException {
+	public static String postRquest(final String strUrl, List<BasicNameValuePair> basicNameValuePairs) throws ClientProtocolException, IOException {
+		HttpClient httpClient = HttpClients.createDefault();
 		HttpPost httpPost = new HttpPost(strUrl);
 		UrlEncodedFormEntity entity = new UrlEncodedFormEntity(basicNameValuePairs, Charsets.UTF_8);
 		httpPost.setEntity(entity);
@@ -255,7 +299,19 @@ public class HttpUtil {
 
 	}
 
-	public static String postRquest(HttpClient httpClient, final String strUrl, String data) throws ClientProtocolException, IOException {
+	/**
+	 * 发送post请求
+	 * 
+	 * @param strUrl
+	 *            http路径
+	 * @param data
+	 *            参数
+	 * @return
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 */
+	public static String postRquest(final String strUrl, String data) throws ClientProtocolException, IOException {
+		HttpClient httpClient = HttpClients.createDefault();
 		HttpPost httpPost = new HttpPost(strUrl);
 		org.apache.http.entity.StringEntity entity = new org.apache.http.entity.StringEntity(data);
 		httpPost.setEntity(entity);
@@ -358,6 +414,17 @@ public class HttpUtil {
 		return result.toString();
 	}
 
+	/**
+	 * 获取getHttpURLConnection链接
+	 * 
+	 * @param url
+	 * @param postData
+	 * @param methodType
+	 * @param contentType
+	 * @return
+	 * @throws MalformedURLException
+	 * @throws IOException
+	 */
 	private static HttpURLConnection getHttpURLConnection(String url, String postData, String methodType, String contentType)
 			throws MalformedURLException, IOException {
 		HttpURLConnection httpConnection = (HttpURLConnection) new URL(url).openConnection();
@@ -373,53 +440,62 @@ public class HttpUtil {
 	}
 
 	/**
-	 * 下载至文件
+	 * 执行文件下载
 	 * 
-	 * @param url
-	 * @param filePath
+	 * @param httpClient
+	 *            HttpClient客户端实例，传入null会自动创建一个
+	 * @param remoteFileUrl
+	 *            远程下载文件地址
+	 * @param localFilePath
+	 *            本地存储文件地址
 	 * @return
+	 * @throws ClientProtocolException
+	 * @throws IOException
 	 */
-	public static boolean download(String url, String filePath) {
-		HttpClient httpClient = new DefaultHttpClient();
-		HttpClientParams.setCookiePolicy(httpClient.getParams(), CookiePolicy.BROWSER_COMPATIBILITY);
-		httpClient.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 10000);
-		HttpGet httpget = new HttpGet(url);
-		FileOutputStream fos = null;
-		InputStream is = null;
+	public static boolean executeDownloadFile(String remoteFileUrl, String localFilePath) throws ClientProtocolException, IOException {
+		CloseableHttpClient httpClient = HttpClients.createDefault();
+		CloseableHttpResponse response = null;
+		InputStream in = null;
+		FileOutputStream fout = null;
 		try {
-			HttpResponse response = httpClient.execute(httpget);
-			if (HttpStatus.SC_OK != response.getStatusLine().getStatusCode()) {
+			HttpGet httpget = new HttpGet(remoteFileUrl);
+			response = httpClient.execute(httpget);
+			HttpEntity entity = response.getEntity();
+			if (entity == null) {
 				return false;
 			}
-			fos = new FileOutputStream(filePath);
-			byte[] bb = new byte[1024];
-			is = response.getEntity().getContent();
-			int length = 0;
-			while ((length = is.read(bb)) != -1) {
-				fos.write(bb, 0, length);
+			in = entity.getContent();
+			File file = new File(localFilePath);
+			fout = new FileOutputStream(file);
+			int l = -1;
+			byte[] tmp = new byte[1024];
+			while ((l = in.read(tmp)) != -1) {
+				fout.write(tmp, 0, l);
+				// 注意这里如果用OutputStream.write(buff)的话，图片会失真
 			}
-			is.close();
+			// 将文件输出到本地
+			fout.flush();
+			EntityUtils.consume(entity);
 			return true;
-		} catch (Exception e) {
-			e.printStackTrace();
 		} finally {
-			if (fos != null) {
+			// 关闭低层流。
+			if (fout != null) {
 				try {
-					fos.close();
-				} catch (IOException e) {
-					e.printStackTrace();
+					fout.close();
+				} catch (Exception e) {
 				}
 			}
-			if (is != null) {
+			if (response != null) {
 				try {
-					is.close();
-				} catch (IOException e) {
-					e.printStackTrace();
+					response.close();
+				} catch (Exception e) {
 				}
 			}
-			shutdown(httpClient);
+			try {
+				httpClient.close();
+			} catch (Exception e) {
+			}
 		}
-		return false;
 	}
 
 	/**
@@ -429,9 +505,11 @@ public class HttpUtil {
 	 * @return
 	 */
 	public static String downloadToBase64(String url) {
-		HttpClient httpClient = new DefaultHttpClient();
-		HttpClientParams.setCookiePolicy(httpClient.getParams(), CookiePolicy.BROWSER_COMPATIBILITY);
-		httpClient.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 10000);
+		RequestConfig config = RequestConfig.custom().setSocketTimeout(HttpConnectConstant.TIMEOUT)
+													.setConnectTimeout(HttpConnectConstant.TIMEOUT)
+													.setConnectionRequestTimeout(HttpConnectConstant.TIMEOUT)
+				.setCookieSpec(CookieSpecs.DEFAULT).build();
+		CloseableHttpClient httpClient = HttpClients.custom().setDefaultRequestConfig(config).build();
 		HttpGet httpget = new HttpGet(url);
 		InputStream is = null;
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -447,8 +525,7 @@ public class HttpUtil {
 			while ((length = is.read(bb)) != -1) {
 				bos.write(bb, 0, length);
 			}
-			BASE64Encoder encoder = new BASE64Encoder();
-			return encoder.encode(bos.toByteArray());
+			return Base64.getEncoder().encodeToString(bos.toByteArray());
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -464,8 +541,13 @@ public class HttpUtil {
 					e.printStackTrace();
 				}
 			}
-			shutdown(httpClient);
+			try {
+				httpClient.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 		return null;
 	}
+
 }
