@@ -11,6 +11,6 @@
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>wms-service-sso</module>
+	
 	</modules>
 </project>
