@@ -11,6 +11,6 @@
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>wms-facade-sso</module>
+	
 	</modules>
 </project>

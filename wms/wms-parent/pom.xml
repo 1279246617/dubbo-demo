@@ -101,25 +101,25 @@
 
 			<!-- common层 -->
 			<dependency>
-				<groupId>com.coe.fcs</groupId>
+				<groupId>com.coe.wms</groupId>
 				<artifactId>fcs-common-config</artifactId>
 				<version>${fcs-common-config.version}</version>
 			</dependency>
 
 			<dependency>
-				<groupId>com.coe.fcs</groupId>
+				<groupId>com.coe.wms</groupId>
 				<artifactId>fcs-common-core</artifactId>
 				<version>${fcs-common-core.version}</version>
 			</dependency>
 
 			<dependency>
-				<groupId>com.coe.fcs</groupId>
+				<groupId>com.coe.wms</groupId>
 				<artifactId>fcs-common</artifactId>
 				<version>${fcs-common.version}</version>
 			</dependency>
 
 			<dependency>
-				<groupId>com.coe.fcs</groupId>
+				<groupId>com.coe.wms</groupId>
 				<artifactId>fcs-common-web</artifactId>
 				<version>${fcs-common-web.version}</version>
 			</dependency>
