@@ -23,7 +23,7 @@ public class ServiceExceptionAspect {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ServiceExceptionAspect.class);
 
 	/** 切入点 */
-	@Pointcut("execution(* com.coe.fcs.facade..*.*(..))")
+	@Pointcut("execution(* com.coe.wms.facade..*.*(..))")
 	private void pointcut() {
 	}
 
