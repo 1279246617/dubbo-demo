@@ -10,14 +10,6 @@
 	<artifactId>wms-common-parent</artifactId>
 	<packaging>pom</packaging>
 
-
-	<properties>
-		<wms-common-core.version>0.0.1-SNAPSHOT</wms-common-core.version>
-		<wms-common-web.version>0.0.1-SNAPSHOT</wms-common-web.version>
-		<wms-common-config.version>0.0.1-SNAPSHOT</wms-common-config.version>
-		<wms-common.version>0.0.1-SNAPSHOT</wms-common.version>
-	</properties>
-
 	<modules>
 		<module>wms-common-core</module>
 		<module>wms-common-web</module>
