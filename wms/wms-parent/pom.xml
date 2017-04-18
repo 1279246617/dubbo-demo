@@ -38,7 +38,7 @@
 		<wms-common-core.version>0.0.1-SNAPSHOT</wms-common-core.version>
 		<wms-common-web.version>0.0.1-SNAPSHOT</wms-common-web.version>
 		<wms-common.version>0.0.1-SNAPSHOT</wms-common.version>
-	
+
 		<wms-facade-user.version>0.0.1-SNAPSHOT</wms-facade-user.version>
 
 		<!--子工程版本声明 end -->
@@ -102,26 +102,26 @@
 			<!-- common层 -->
 			<dependency>
 				<groupId>com.coe.wms</groupId>
-				<artifactId>fcs-common-config</artifactId>
-				<version>${fcs-common-config.version}</version>
+				<artifactId>wms-common-config</artifactId>
+				<version>${wms-common-config.version}</version>
 			</dependency>
 
 			<dependency>
 				<groupId>com.coe.wms</groupId>
-				<artifactId>fcs-common-core</artifactId>
-				<version>${fcs-common-core.version}</version>
+				<artifactId>wms-common-core</artifactId>
+				<version>${wms-common-core.version}</version>
 			</dependency>
 
 			<dependency>
 				<groupId>com.coe.wms</groupId>
-				<artifactId>fcs-common</artifactId>
-				<version>${fcs-common.version}</version>
+				<artifactId>wms-common</artifactId>
+				<version>${wms-common.version}</version>
 			</dependency>
 
 			<dependency>
 				<groupId>com.coe.wms</groupId>
-				<artifactId>fcs-common-web</artifactId>
-				<version>${fcs-common-web.version}</version>
+				<artifactId>wms-common-web</artifactId>
+				<version>${wms-common-web.version}</version>
 			</dependency>
 			<!-- common层end -->
 
@@ -571,7 +571,7 @@
 				<filtering>true</filtering>
 			</resource>
 
-			<!-- service 专用,但对其他工程无害, 另外如果在fcs-service-parent 配置resources,则孙级工程,不会继承fcs-parent的resources配置 -->
+			<!-- service 专用,但对其他工程无害, 另外如果在wms-service-parent 配置resources,则孙级工程,不会继承wms-parent的resources配置 -->
 			<!-- 因dubbo启动类会从META-INF下读取spring-context.xml文件,所以 -->
 			<!-- 把src/main/resources/spring下的spring-context.xml 文件复制到target/classes/META-INF/spring下 -->
 			<resource>
