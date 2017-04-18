@@ -1,12 +1,18 @@
 package org.mybatis.plugin.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Pager<T> {
+public class Pager<T> implements Serializable{
+
+	/**  
+	* @Fields serialVersionUID : TODO  
+	*/   
+	private static final long serialVersionUID = 5858226881390560587L;
 
 	/** 数据集合 */
-	private List<T> rows;
+	private List<T> list;
 
 	/** 当前页码 */
 	private int page;
@@ -15,27 +21,27 @@ public class Pager<T> {
 	private int totalPage;
 
 	/** 总记录数 */
-	private int totalCount;
-
+	private int total;
+	
 	public Pager() {
 	}
 
-	public Pager(List<T> rows, int page, int totalPage, int totalCount) {
-		this.rows = rows;
+	public Pager(List<T> list, int page, int totalPage, int total) {
+		this.list = list;
 		this.page = page;
 		this.totalPage = totalPage;
-		this.totalCount = totalCount;
+		this.total = total;
 	}
 
-	public List<T> getRows() {
-		if (rows == null) {
+	public List<T> getList() {
+		if (list == null) {
 			return new ArrayList<T>();
 		}
-		return rows;
+		return list;
 	}
 
-	public void setRows(List<T> rows) {
-		this.rows = rows;
+	public void setList(List<T> list) {
+		this.list = list;
 	}
 
 	public int getPage() {
@@ -54,12 +60,12 @@ public class Pager<T> {
 		this.totalPage = totalPage;
 	}
 
-	public int getTotalCount() {
-		return totalCount;
+	public int getTotal() {
+		return total;
 	}
 
-	public void setTotalCount(int totalCount) {
-		this.totalCount = totalCount;
+	public void setTotal(int total) {
+		this.total = total;
 	}
 
 }

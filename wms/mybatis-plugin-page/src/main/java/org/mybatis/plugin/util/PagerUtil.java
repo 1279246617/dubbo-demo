@@ -8,10 +8,10 @@ import org.mybatis.plugin.model.QueryParam;
 public class PagerUtil {
     public static <T> Pager<T> getPager(List<T> rows, QueryParam queryParam) {
         Pager<T> pagerModel = new Pager<T>();
-        pagerModel.setRows(rows);
+        pagerModel.setList(rows);
         pagerModel.setPage(queryParam.getPage());
-        pagerModel.setTotalCount(queryParam.getCount());
-        int totalPage = getTotalPage(queryParam.getLimit(), pagerModel.getTotalCount());
+        pagerModel.setTotal(queryParam.getCount());
+        int totalPage = getTotalPage(queryParam.getLimit(), pagerModel.getTotal());
         pagerModel.setTotalPage(totalPage);
         return pagerModel;
     }

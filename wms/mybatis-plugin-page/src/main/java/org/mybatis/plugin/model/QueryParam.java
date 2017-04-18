@@ -1,5 +1,7 @@
 package org.mybatis.plugin.model;
 
+import java.io.Serializable;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
@@ -7,8 +9,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  * @author shiw
  *
  */
-public class QueryParam {
+public class QueryParam implements Serializable{
 	
+	/**  
+	* @Fields serialVersionUID : TODO  
+	*/   
+	private static final long serialVersionUID = -7560520335154923297L;
+
 	/** 记录页码 */
 	@JsonIgnore
 	private int page = 1;
