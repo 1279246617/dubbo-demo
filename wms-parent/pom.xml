@@ -583,7 +583,7 @@
 				<filtering>true</filtering>
 			</resource>
 
-			<!-- service 专用,但对其他工程无害, 另外如果在fcs-service-parent 配置resources,则孙级工程,不会继承fcs-parent的resources配置 -->
+			<!-- service 专用,但对其他工程无害, 另外如果在wms-service-parent 配置resources,则孙级工程,不会继承wms-parent的resources配置 -->
 			<!-- 因dubbo启动类会从META-INF下读取spring-context.xml文件,所以 -->
 			<!-- 把src/main/resources/spring下的spring-context.xml 文件复制到target/classes/META-INF/spring下 -->
 			<resource>
