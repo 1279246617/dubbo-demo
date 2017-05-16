@@ -44,7 +44,7 @@ public class MySwaggerConfig {
 	}
 
 	private ApiInfo apiInfo() {
-		ApiInfo apiInfo = new ApiInfo("fcs财务结算系统", // 应用名称
+		ApiInfo apiInfo = new ApiInfo("wmsms系统", // 应用名称
 				"内部人员开发文档", // 文档名称
 				"本API为了解决前端与后台连接问题", // 概述
 				"邮箱", // 联系作者
