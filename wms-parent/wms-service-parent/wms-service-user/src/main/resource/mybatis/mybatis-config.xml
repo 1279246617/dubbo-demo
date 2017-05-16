@@ -14,22 +14,15 @@
 
 	<!-- mybatis映射文件中所用到的别名配置 -->
 	<typeAliases>
-		<package name="com.coe.wms.facade.user.entity"/>
+		<package name="com.coe.wms.facade.user.entity" />
 		<package name="com.coe.wms.facade.user.criteria" />
 		<package name="com.coe.wms.service.user.mapper" />
 		<package name="com.coe.wms.service.user.queryvo" />
-		<!-- <package name="com.coe.wms.facade.menu.entity" />
-		<package name="com.coe.wms.facade.menu.criteria" />
-		<package name="com.coe.wms.service.menu.mapper" /> -->
 	</typeAliases>
 
 	<plugins>
-		<!-- 动态数据源路由插件 -->
-<!-- 		<plugin interceptor="org.mybatis.plugin.rw.DynamicPlugin"> -->
-<!-- 		</plugin> -->
-
+		<!-- 分页插件 -->
 		<plugin interceptor="org.mybatis.plugin.PagePlugin">
-			<!-- 拦截要分页的selectId -->
 			<property name="dialect" value="MYSQL" />
 			<property name="pageSqlId" value=".*select.*List.*|.*\.page*|query.*List" />
 		</plugin>
