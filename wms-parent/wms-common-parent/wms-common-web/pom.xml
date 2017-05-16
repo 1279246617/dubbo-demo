@@ -16,6 +16,18 @@
 	</properties>
 
 	<dependencies>
+		<!-- common层 -->
+		<dependency>
+			<groupId>com.coe.wms</groupId>
+			<artifactId>wms-common-core</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.coe.wms</groupId>
+			<artifactId>wms-common</artifactId>
+		</dependency>
+		<!-- common层end -->
+
 		<!-- log start -->
 		<dependency>
 			<groupId>log4j</groupId>
