@@ -23,6 +23,7 @@
 		</repository>
 
 		<!-- snapshot版本 -->
+		<!-- snapshotRepository，表示开发过程中的发布库 -->
 		<snapshotRepository>
 			<id>nexus-snapshots</id>
 			<name>User Project SNAPSHOTS</name>
@@ -83,11 +84,11 @@
 		<hibernate-validator.version>5.1.3.Final</hibernate-validator.version>
 
 		<mybatis-plugin-page.version>1.0.4</mybatis-plugin-page.version>
-		<mybatis-plugin-rw.version>1.0.1</mybatis-plugin-rw.version>
-
+		<org.apache.poi.version>3.16</org.apache.poi.version>
 		<dubbo.version>2.8.4</dubbo.version>
 		<javassist.version>3.3.GA</javassist.version>
 		<netty.version>3.2.10.Final</netty.version>
+		<io.netty.version>3.10.6.Final</io.netty.version>
 		<zkclient.version>0.4</zkclient.version>
 		<zookeeper.version>3.3.4</zookeeper.version>
 		<swagger.version>0.9.5</swagger.version>
@@ -354,6 +355,19 @@
 			</dependency>
 			<!-- springmvc websocket end -->
 
+			<!-- poi start -->
+			<dependency>
+				<groupId>org.apache.poi</groupId>
+				<artifactId>poi</artifactId>
+				<version>${org.apache.poi.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.poi</groupId>
+				<artifactId>poi-ooxml</artifactId>
+				<version>${org.apache.poi.version}</version>
+			</dependency>
+			<!-- poi end -->
+
 			<!-- shiro start -->
 			<dependency>
 				<groupId>org.apache.shiro</groupId>
@@ -444,13 +458,6 @@
 				<version>${mybatis-plugin-page.version}</version>
 			</dependency>
 
-			<!-- 读写分离插件 -->
-			<dependency>
-				<groupId>mybatis.plugin.rw</groupId>
-				<artifactId>mybatis-plugin-rw</artifactId>
-				<version>${mybatis-plugin-rw.version}</version>
-			</dependency>
-
 			<!-- mysql驱动 -->
 			<dependency>
 				<groupId>mysql</groupId>
@@ -488,6 +495,12 @@
 				<groupId>org.jboss.netty</groupId>
 				<artifactId>netty</artifactId>
 				<version>${netty.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>io.netty</groupId>
+				<artifactId>netty</artifactId>
+				<version>${io.netty.version}</version>
 			</dependency>
 
 			<dependency>
@@ -551,7 +564,6 @@
 		</dependencies>
 	</dependencyManagement>
 
-
 	<build>
 		<!-- 指定 src/main/resources下xml,properties文件及文件夹为资源文件 -->
 		<resources>
@@ -571,7 +583,7 @@
 				<filtering>true</filtering>
 			</resource>
 
-			<!-- service 专用,但对其他工程无害, 另外如果在wms-service-parent 配置resources,则孙级工程,不会继承wms-parent的resources配置 -->
+			<!-- service 专用,但对其他工程无害, 另外如果在fcs-service-parent 配置resources,则孙级工程,不会继承fcs-parent的resources配置 -->
 			<!-- 因dubbo启动类会从META-INF下读取spring-context.xml文件,所以 -->
 			<!-- 把src/main/resources/spring下的spring-context.xml 文件复制到target/classes/META-INF/spring下 -->
 			<resource>

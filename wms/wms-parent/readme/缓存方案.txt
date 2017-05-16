@@ -1,0 +1,3 @@
+使用redis作为缓存服务器
+
+RedisClient

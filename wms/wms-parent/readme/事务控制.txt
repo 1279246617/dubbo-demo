@@ -1,0 +1,19 @@
+本地事务
+
+使用spring 声明式事务管理
+
+事务隔离级别:READ_COMMITTED 无脏读,只读取已经提交的数据 only read committed
+事务传播:增删改:REQUIRED 必须有事务, 查询:SUPPORTS 可无事务
+
+
+
+分布式事务目前比较多的解决方案有几个： 
+一、结合MQ消息中间件实现的可靠消息最终一致性 
+二、TCC补偿性事务解决方案 
+三、最大努力通知型方案 
+第一种方案：可靠消息最终一致性，需要业务系统结合MQ消息中间件实现，在实现过程中需要保证消息的成功发送及成功消费。即需要通过业务系统控制MQ的消息状态 
+第二种方案：TCC补偿性，分为三个阶段TRYING-CONFIRMING-CANCELING。每个阶段做不同的处理。 TRYING阶段主要是对业务系统进行检测及资源预留 CONFIRMING阶段是做业务提交，通过TRYING阶段执行成功后，再执行该阶段。默认如果TRYING阶段执行成功，CONFIRMING就一定能成功。 CANCELING阶段是回对业务做回滚，在TRYING阶段中，如果存在分支事务TRYING失败，则需要调用CANCELING将已预留的资源进行释放。
+第三种方案：最大努力通知型，这种方案主要用在与第三方系统通讯时，比如：调用微信或支付宝支付后的支付结果通知。这种方案也是结合MQ进行实现，例如：通过MQ发送http请求，设置最大通知次数。达到通知次数后即不再通知。
+
+
+https://github.com/QNJR-GROUP/EasyTransaction
