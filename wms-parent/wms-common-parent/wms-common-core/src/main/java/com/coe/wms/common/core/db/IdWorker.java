@@ -1,7 +1,5 @@
 package com.coe.wms.common.core.db;
 
-import org.apache.log4j.Logger;
-
 /**
  * 雪花算法自造全局自增ID
  * 
@@ -9,42 +7,37 @@ import org.apache.log4j.Logger;
  * @author twitter
  * @date 2017年2月22日 下午5:48:32
  * @Description: TODO自造全局自增ID，适合大数据环境的分布式场景 每秒能够产生26万ID左右
+ * 
+ * 
+ * @ClassName: IdWorker
+ * @author yechao
+ * @date 2017年5月6日 下午5:44:19
+ * @Description: TODO
  */
 public class IdWorker {
-
-	protected static final Logger LOG = Logger.getLogger(IdWorker.class);
-
-	// 机器标识位
 	private long workerId;
-
-	// 数据中心标识位
 	private long datacenterId;
 	private long sequence = 0L;
-
-	private long twepoch = 1288834974657L;
-
+	// 基准时间2010
+	private static long twepoch = 1288834974657L;
 	// 机器标识位数
-	private long workerIdBits = 5L;
+	private static long workerIdBits = 5;
 	// 数据中心标识位数
-	private long datacenterIdBits = 5L;
-	private long maxWorkerId = -1L ^ (-1L << workerIdBits);
-	private long maxDatacenterId = -1L ^ (-1L << datacenterIdBits);
-	// 毫秒内自增位
-	private long sequenceBits = 12L;
+	private static long datacenterIdBits = 5L;
+	// 机器标识最大值
+	private static long maxWorkerId = -1L ^ (-1L << (int) workerIdBits);
+	// 数据中心标识最大值
+	private static long maxDatacenterId = -1L ^ (-1L << (int) datacenterIdBits);
+	// 毫秒内序列号识位数
+	private static long sequenceBits = 12L;
 
 	private long workerIdShift = sequenceBits;
 	private long datacenterIdShift = sequenceBits + workerIdBits;
 	private long timestampLeftShift = sequenceBits + workerIdBits + datacenterIdBits;
-	private long sequenceMask = -1L ^ (-1L << sequenceBits);
+	private long sequenceMask = -1L ^ (-1L << (int) sequenceBits);
 
 	private long lastTimestamp = -1L;
 
-	/**
-	 * 
-	 * @param workerId机器标识位
-	 * 
-	 * @param datacenterId数据中心标示位
-	 */
 	public IdWorker(long workerId, long datacenterId) {
 		// sanity check for workerId
 		if (workerId > maxWorkerId || workerId < 0) {
@@ -55,20 +48,12 @@ public class IdWorker {
 		}
 		this.workerId = workerId;
 		this.datacenterId = datacenterId;
-		LOG.info(String.format("worker starting. timestamp left shift %d, datacenter id bits %d, worker id bits %d, sequence bits %d, workerid %d",
-				timestampLeftShift, datacenterIdBits, workerIdBits, sequenceBits, workerId));
 	}
 
-	/**
-	 * get id
-	 * 
-	 * @return
-	 */
 	public synchronized long nextId() {
 		long timestamp = timeGen();
 
 		if (timestamp < lastTimestamp) {
-			LOG.error(String.format("clock is moving backwards.  Rejecting requests until %d.", lastTimestamp));
 			throw new RuntimeException(
 					String.format("Clock moved backwards.  Refusing to generate id for %d milliseconds", lastTimestamp - timestamp));
 		}
@@ -84,7 +69,8 @@ public class IdWorker {
 
 		lastTimestamp = timestamp;
 
-		return ((timestamp - twepoch) << timestampLeftShift) | (datacenterId << datacenterIdShift) | (workerId << workerIdShift) | sequence;
+		return ((timestamp - twepoch) << (int) timestampLeftShift) | (datacenterId << (int) datacenterIdShift) | (workerId << (int) workerIdShift)
+				| sequence;
 	}
 
 	protected long tilNextMillis(long lastTimestamp) {
@@ -96,6 +82,7 @@ public class IdWorker {
 	}
 
 	protected long timeGen() {
+
 		return System.currentTimeMillis();
 	}
 }
