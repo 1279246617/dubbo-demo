@@ -18,7 +18,7 @@ public class NotQueryParamSubclassException extends Exception {
 	}
 
 	public NotQueryParamSubclassException(String message) {
-		super(message + "查询条件类必须继承QueryParam类");
+		super(message + "查询条件类必须继承org.mybatis.plugin.model.QueryParam类");
 	}
 
 	public NotQueryParamSubclassException(Throwable cause) {
