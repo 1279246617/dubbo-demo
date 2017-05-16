@@ -109,7 +109,6 @@ public class MybatisMapperJunitPlugin extends PluginAdapter{
 		method.setReturnType(new FullyQualifiedJavaType("void"));
 		method.setVisibility(JavaVisibility.PUBLIC);
 		method.addAnnotation("@Test");
-		StringBuilder sb = new StringBuilder();
 		method.addBodyLine(pojoType.getShortName()+" record=new "+pojoType.getShortName()+"();");
 		List<IntrospectedColumn> introspectedColumnsList=introspectedTable.getAllColumns();
 		for (IntrospectedColumn introspectedColumn : introspectedColumnsList) {
