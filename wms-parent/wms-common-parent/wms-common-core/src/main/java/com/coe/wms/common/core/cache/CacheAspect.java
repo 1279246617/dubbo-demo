@@ -29,7 +29,7 @@ public class CacheAspect {
 	private static final Logger LOGGER = LoggerFactory.getLogger(CacheAspect.class);
 
 	/** 切入点 */
-	@Pointcut("execution(* com.coe.fcs.service.*.biz.*.*(..))")
+	@Pointcut("execution(* com.coe.wms.service.*.biz.*.*(..))")
 	private void pointcut() {
 	}
 

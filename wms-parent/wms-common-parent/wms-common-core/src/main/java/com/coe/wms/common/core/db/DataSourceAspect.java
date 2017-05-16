@@ -15,7 +15,7 @@ public class DataSourceAspect implements Ordered {
 	private static String REGEX = "select.*List.*|count.*|find.*|query.*|get.*";
 
 	/** 切入点 */
-	@Pointcut("execution(* com.coe.fcs.facade..*(..))")
+	@Pointcut("execution(* com.coe.wms.facade..*(..))")
 	private void pointcut() {
 	}
 
