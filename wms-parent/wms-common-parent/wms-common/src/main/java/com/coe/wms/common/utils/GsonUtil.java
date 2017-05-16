@@ -16,4 +16,5 @@ public class GsonUtil {
 		Gson gson = builder.create();
 		return gson.fromJson(json, c);
 	}
+	
 }

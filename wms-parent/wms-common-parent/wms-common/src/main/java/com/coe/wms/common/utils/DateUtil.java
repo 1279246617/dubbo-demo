@@ -98,7 +98,7 @@ public class DateUtil {
 		try {
 			return srcsdf.parse(strDate);
 		} catch (ParseException e) {
-			 e.printStackTrace();
+			e.printStackTrace();
 		}
 		return null;
 	}
@@ -265,12 +265,11 @@ public class DateUtil {
 	 * @param hours
 	 * @return
 	 */
-	public static String getDateTimeAddHours(Date dateTime, Integer hours) {
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DateUtil.yyyy_MM_ddHHmmss);
+	public static Date getDateTimeAddHours(Date dateTime, Integer hours) {
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(dateTime);
 		calendar.add(Calendar.HOUR, hours);
-		return simpleDateFormat.format(calendar.getTime());
+		return calendar.getTime();
 	}
 
 }
