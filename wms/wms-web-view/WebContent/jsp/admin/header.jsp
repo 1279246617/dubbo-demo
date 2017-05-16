@@ -23,14 +23,14 @@
 	<div id="header_menu_body">
 	
 	<div class="hmb-logo">
-		<img src="${ctx}/static/img/logo.png" style="width:200px;"/>
+		<img src="${ctx}/3rd/img/logo.png" style="width:200px;"/>
 	</div>
 	
-	<div class="hmb-left">
-		<ul class="hmb-eles">
+	<div class="hmb-left" style="width: 800px;">
+		<ul class="hmb-eles" id="addMenuOne">
 			<li class="sel" mu="index">首页</li>
-			<li mu="basicdata">基本资料</li>
-			<li mu="user">用户管理</li>
+			<!-- <li mu="basicdata">基础资料</li>
+			<li mu="symgr">系统管理</li> -->
 		</ul>
 	</div>
 	
@@ -47,6 +47,8 @@
 	  </ul>
 	</div>
 	
+
+
 	<div class="hmb-right">
 	<i class="fa fa-forward"></i>
 	</div>
@@ -55,7 +57,7 @@
 </div>
 
 <script>
-$(function(){
+function headerEvent(){
 	var headerBody=$("#header_body");
 	var navBody=$("#nav_body");
 	var navBox=$("#nav_box");
@@ -156,5 +158,5 @@ $(function(){
 		}
 	});
 	
-})
+}
 </script>

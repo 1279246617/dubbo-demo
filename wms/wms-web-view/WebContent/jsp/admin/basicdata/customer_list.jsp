@@ -75,7 +75,7 @@
 $(function () {
 	
 	mmList({
-	    url:'http://localhost:8080/fcs-web-basicdata/customer/getCustomerList.json',
+	    url:url.path+'/fcs-web-basicdata/customer/getCustomerList.json',
 		onLoadSuccess:function(data){
 		
 		},  

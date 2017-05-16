@@ -1,0 +1,190 @@
+body{margin:0px; padding:0px}
+ .wrap {
+	position:absolute;
+	left:0px;
+	top:0px;
+	right:0px;
+	bottom:0px;
+	marign:0px;
+	padding:0px;
+	font-size:0.9em;
+  }
+  
+  .wrap .operation{
+	height:35px;
+	padding: 10px;
+	line-height:35px;
+	text-align:left;
+ }
+.btn-sm, .btn-group-sm > .btn {
+    padding: 5px 10px;
+    font-size: 12px;
+    line-height: 1.5;
+    border-radius: 3px;
+}
+
+.btn-primary:focus,
+.btn-primary.focus {
+  color: #fff;
+  background-color: #286090;
+  border-color: #122b40;
+}
+.btn-primary:hover {
+  color: #fff;
+  background-color: #286090;
+  border-color: #204d74;
+}
+.btn-primary .badge {
+  color: #337ab7;
+  background-color: #fff;
+}
+.btn-primary {
+    background-image: -webkit-linear-gradient(top,#337ab7 0,#265a88 100%);
+    background-image: -o-linear-gradient(top,#337ab7 0,#265a88 100%);
+    background-image: -webkit-gradient(linear,left top,left bottom,from(#337ab7),to(#265a88));
+    background-image: linear-gradient(to bottom,#337ab7 0,#265a88 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff337ab7', endColorstr='#ff265a88', GradientType=0);
+    filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+    background-repeat: repeat-x;
+}
+
+.btn:hover,
+.btn:focus,
+.btn.focus {
+  color: #333;
+  text-decoration: none;
+}
+.btn:active,
+.btn.active {
+  background-image: none;
+  outline: 0;
+  -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);
+          box-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);
+}
+
+.btn-danger, .btn-default, .btn-info, .btn-primary, .btn-success, .btn-warning {
+    text-shadow: 0 -1px 0 rgba(0,0,0,.2);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.15), 0 1px 1px rgba(0,0,0,.075);
+}
+
+.btn-sm, .btn-group-sm > .btn {
+    padding: 5px 10px;
+    font-size: 12px;
+    line-height: 1.5;
+    border-radius: 3px;
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: #337ab7;
+}
+
+.btn {
+    display: inline-block;
+    margin-bottom: 0;
+    font-weight: normal;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    touch-action: manipulation;
+    cursor: pointer;
+    user-select: none;
+    border: 1px solid transparent;
+}
+
+
+ /* .wrap .operation a{
+	margin:2px 10px;
+	padding: 5px 10px;
+	border:1px solid #ccc;
+	cursor:pointer;
+  }
+  .wrap .operation a:hover{
+	color:#84a0d2;
+	border-color:#84a0d2
+  }
+  .wrap .operation a:active{
+	color:#03a9f4;
+	border-color:#03a9f4
+  } */
+  
+ .wrap fieldset{  border:1px solid #84a0d2; box-shadow: 2px 2px 2px #aaa;height:90%}
+ .wrap .userGroup{ margin:0px; height:90%; float:left; width:40%}
+ .wrap .groupMember{ margin:0px; height:90%; float:left; width:25%}
+ .wrap .left{ margin:0px; height:90%; float:right; width:35%}
+ /* .wrap .right{ height:90%; float:right; width:15%} */
+ /* .wrap .right .rightContent,  */.wrap .left .leftContent, .wrap .userGroup .userGroupContent, .wrap .groupMember .groupMemberContent{width:100%;height:100%;position:relative}
+  
+ 
+ .wrap  .contentTitle{margin:10px; height:30px;}
+ .wrap  .contentMain{position:absolute; top:30px; left:0px; right:0px; bottom:0px; overflow-y:auto}
+ .wrap  .menuname{color:#F00}
+  table {
+    border-bottom: 1px  solid #84a0d2;
+	border-left: 1px  solid #84a0d2;
+    border-collapse: collapse;
+}
+
+td, th {
+	border: none;
+    border-right: 1px solid #84a0d2;
+	font-size: 0.8em
+}
+.subTable td{border-bottom:1px solid #84a0d2}
+.tableTree .ztitle {
+    width: 100%;
+    margin: 0px;
+    padding: 0px;
+}
+
+.tableTree .ztitle tbody {
+    width: 100%;
+    margin: 0px;
+    padding: 0px;
+    border: none;
+}
+
+.tableTree .ztitle tbody tr {
+}
+
+.tableTree th {
+    border: 1px solid #84a0d2;
+    font-weight: normal;
+    padding: .3em 1em .1em 1em;
+    text-align: left;
+    background: #84a0d2  url("../img/tr.png")   repeat-x top left;
+}
+.tableTree td{font-size:12px;text-align:center;zoom:80%;}
+
+
+ .tableTree .td1 {
+    width: 55%;
+	text-align:left;
+}
+
+.tableTree .td2 {
+    width: 15%;
+	text-align:center;
+}
+
+.tableTree .td3 {
+    width: 15%;
+	text-align:center;
+}
+
+.tableTree .td4 {
+    width: 15%;
+	text-align:center;
+}
+
+.tableTree .td5{
+	width: 40%;
+	text-align:center;
+}
+.ztree {
+    padding: 0px;
+}
+
+.ztree li ul {
+    padding: 0px;
+}
