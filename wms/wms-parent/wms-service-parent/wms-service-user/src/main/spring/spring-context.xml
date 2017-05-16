@@ -18,7 +18,7 @@
 	<!-- 引入properties配置文件 -->
 	<context:property-placeholder location="classpath*:jdbc.properties,classpath*:service.properties" ignore-unresolvable="true" />
 	<!-- 异常处理 -->
-	<bean class="com.coe.fcs.common.aspect.ServiceExceptionAspect" />
+	<bean class="com.coe.wms.common.aspect.ServiceExceptionAspect" />
 
 	<!-- context:component-scan 配置在dubbo-provider.xml -->
 	<!-- dubbo配置 -->
