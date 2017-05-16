@@ -48,7 +48,7 @@ public class UserServiceImpl implements UserFacade {
 
 	
 	/* (non-Javadoc)
-	 * @see com.coe.fcs.facade.user.service.UserFacade#listUserNotPage(com.coe.fcs.facade.user.queryvo.UserQueryVo)
+	 * @see com.coe.wms.facade.user.service.UserFacade#listUserNotPage(com.coe.wms.facade.user.queryvo.UserQueryVo)
 	 */
 	@Override
 	public List<UserResultVo> listUserNotPage(UserQueryVo vo) {
