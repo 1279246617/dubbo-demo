@@ -14,8 +14,6 @@ import com.coe.wms.common.core.cache.annot.InvalidateCache;
 import com.coe.wms.common.core.cache.annot.ReadAndSetCache;
 import com.coe.wms.common.core.cache.annot.SetCache;
 import com.coe.wms.common.core.cache.annot.UpdateCache;
-//import com.coe.wms.common.web.aspect.WebExceptionAspect;
-import com.coe.wms.common.core.cache.redis.RedisClient;
 
 /**
  * redis 缓存切面类
