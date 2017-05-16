@@ -42,9 +42,9 @@
 	<!-- aop start -->
 	
 	<!-- 异常处理 -->
-	<bean class="com.coe.fcs.common.web.aspect.WebExceptionAspect" />	
+	<bean class="com.coe.wms.common.web.aspect.WebExceptionAspect" />	
 	<!-- 日志处理 -->
-	<bean class="com.coe.fcs.common.web.aspect.WebLogAspect" />
+	<bean class="com.coe.wms.common.web.aspect.WebLogAspect" />
 		
 	<!-- aop end -->
 
@@ -61,5 +61,5 @@
 		</property>
 	</bean>
 	<!-- 注入swagger配置类 -->
-	<bean class="com.coe.fcs.common.web.swagger.MySwaggerConfig"></bean>
+	<bean class="com.coe.wms.common.web.swagger.MySwaggerConfig"></bean>
 </beans>
