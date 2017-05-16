@@ -131,12 +131,6 @@
 			<artifactId>mybatis-plugin-page</artifactId>
 		</dependency>
 
-		<!-- 读写分离插件 -->
-		<dependency>
-			<groupId>mybatis.plugin.rw</groupId>
-			<artifactId>mybatis-plugin-rw</artifactId>
-		</dependency>
-
 		<!-- mysql驱动 -->
 		<dependency>
 			<groupId>mysql</groupId>
@@ -167,6 +161,11 @@
 
 		<dependency>
 			<groupId>org.jboss.netty</groupId>
+			<artifactId>netty</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>io.netty</groupId>
 			<artifactId>netty</artifactId>
 		</dependency>
 
@@ -229,7 +228,7 @@
 	</dependencies>
 
 	<build>
-		<finalName>wms-service-user</finalName>
+		<finalName>fcs-service-user</finalName>
 		<plugins>
 			<!-- 解决Maven插件生命周期内引起的冲突 -->
 			<plugin>
@@ -280,4 +279,5 @@
 			</plugin>
 		</plugins>
 	</build>
+
 </project>
