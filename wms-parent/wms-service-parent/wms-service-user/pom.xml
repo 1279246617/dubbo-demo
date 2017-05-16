@@ -228,7 +228,7 @@
 	</dependencies>
 
 	<build>
-		<finalName>fcs-service-user</finalName>
+		<finalName>wms-service-user</finalName>
 		<plugins>
 			<!-- 解决Maven插件生命周期内引起的冲突 -->
 			<plugin>
