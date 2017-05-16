@@ -20,14 +20,14 @@
 	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource"
 		init-method="init" destroy-method="close">
 
-		<property name="driverClassName" value="${jdbc.fcs.driverClassName}" />
-		<property name="url" value="${jdbc.fcs.write.url}" />
-		<property name="username" value="${jdbc.fcs.write.username}" />
-		<property name="password" value="${jdbc.fcs.write.password}" />
+		<property name="driverClassName" value="${jdbc.wms.driverClassName}" />
+		<property name="url" value="${jdbc.wms.write.url}" />
+		<property name="username" value="${jdbc.wms.write.username}" />
+		<property name="password" value="${jdbc.wms.write.password}" />
 
-		<property name="initialSize" value="${jdbc.fcs.write.initPoolSize}" />
-		<property name="minIdle" value="${jdbc.fcs.write.minPoolSize}" />
-		<property name="maxActive" value="${jdbc.fcs.write.maxPoolSize}" />
+		<property name="initialSize" value="${jdbc.wms.write.initPoolSize}" />
+		<property name="minIdle" value="${jdbc.wms.write.minPoolSize}" />
+		<property name="maxActive" value="${jdbc.wms.write.maxPoolSize}" />
 
 	</bean>
 
@@ -52,7 +52,7 @@
 	<!-- 会自动将basePackage中配置的包路径下的所有dao -->
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
 		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
-		<property name="basePackage" value="com.coe.fcs.service.*" />
+		<property name="basePackage" value="com.coe.wms.service.*" />
 	</bean>
 
 </beans>

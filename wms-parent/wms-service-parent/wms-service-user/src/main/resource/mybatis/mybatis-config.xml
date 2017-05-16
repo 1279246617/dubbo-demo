@@ -14,13 +14,13 @@
 
 	<!-- mybatis映射文件中所用到的别名配置 -->
 	<typeAliases>
-		<package name="com.coe.fcs.facade.user.entity"/>
-		<package name="com.coe.fcs.facade.user.criteria" />
-		<package name="com.coe.fcs.service.user.mapper" />
-		<package name="com.coe.fcs.service.user.queryvo" />
-		<!-- <package name="com.coe.fcs.facade.menu.entity" />
-		<package name="com.coe.fcs.facade.menu.criteria" />
-		<package name="com.coe.fcs.service.menu.mapper" /> -->
+		<package name="com.coe.wms.facade.user.entity"/>
+		<package name="com.coe.wms.facade.user.criteria" />
+		<package name="com.coe.wms.service.user.mapper" />
+		<package name="com.coe.wms.service.user.queryvo" />
+		<!-- <package name="com.coe.wms.facade.menu.entity" />
+		<package name="com.coe.wms.facade.menu.criteria" />
+		<package name="com.coe.wms.service.menu.mapper" /> -->
 	</typeAliases>
 
 	<plugins>
