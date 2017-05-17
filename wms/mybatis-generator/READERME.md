@@ -1,4 +1,4 @@
-1.修改生成的配置文件generator.xml
+修改配置文件src/test/resources/generator.xml
 
 a.属性<jdbcConnection>是数据库连接的配置标签
 
