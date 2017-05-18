@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import com.coe.wms.common.exception.ServiceException;
 
 /**
- * service工程切面 异常处理 不适用@Component注解方式,由依赖工程根据需要自由配置
+ * service工程切面 异常处理 不适用@Component注解方式,由依赖工程按需配置
  * 
  * @ClassName: ServiceExceptionAspect
  * @author yechao
