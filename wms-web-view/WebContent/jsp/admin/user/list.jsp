@@ -73,7 +73,7 @@
 <script>
 $(function () {
 	mmList({
-		url:'http://localhost:8080/fcs-web-user/user/userMgr/listUser.json',
+		url:'http://localhost:8080/wms-web-user/user/userMgr/listUser.json',
 		onLoadSuccess:function(data){},
 		columns: [
 			{checkbox: true},
@@ -116,7 +116,7 @@ $(function () {
     	parent.mmui.confirm("删除用户"+data[0].userName,function(delUser){
     		parent.mmui.close(delUser);
     		
-    		mmUtl.ajax.postJson("http://localhost:8080/fcs-web-user/user/userMgr/delUser",function(data){
+    		mmUtl.ajax.postJson("http://localhost:8080/wms-web-user/user/userMgr/delUser",function(data){
     			mmui.oper(data.msg,1); 
     			document.location.reload();
     		},{

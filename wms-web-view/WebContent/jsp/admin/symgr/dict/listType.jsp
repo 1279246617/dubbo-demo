@@ -43,7 +43,7 @@
 <script>
 $(function () {
 	mmList({
-		url:url.path+'/fcs-web-symgr/symgr/dictType/listDictType.json',
+		url:url.path+'/wms-web-symgr/symgr/dictType/listDictType.json',
 		onLoadSuccess:function(data){},
 		columns: [
 			{checkbox: true},
@@ -72,7 +72,7 @@ $(function () {
     	parent.mmui.confirm("删除字典类型"+data[0].dictName+"以及类型下的条目",function(delType){
     		parent.mmui.close(delType);
     		
-    		mmUtl.ajax.postJson(url.path+"/fcs-web-symgr/symgr/dictType/delDictType",function(data){
+    		mmUtl.ajax.postJson(url.path+"/wms-web-symgr/symgr/dictType/delDictType",function(data){
     			mmui.oper(data.msg,1); 
     			document.location.reload();
     		},{

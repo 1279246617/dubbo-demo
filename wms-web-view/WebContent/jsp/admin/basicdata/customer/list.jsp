@@ -69,7 +69,7 @@
 <script>
 $(function () {
 		mmList({
-		    url:url.path+'/fcs-web-basicdata/basicdata/customer/listCustomer.json',
+		    url:url.path+'/wms-web-basicdata/basicdata/customer/listCustomer.json',
 			onLoadSuccess:function(data){
 			
 			},  
@@ -166,7 +166,7 @@ $(function () {
 	    	}
 	    }
 	    var idList;
-		mmUtl.ajax.postJsonAntSyn(url.path+'/fcs-web-basicdata/basicdata/customer/listCustomerId', function(data){
+		mmUtl.ajax.postJsonAntSyn(url.path+'/wms-web-basicdata/basicdata/customer/listCustomerId', function(data){
 			idList=data.data;
 			}, formData);
 		
@@ -183,7 +183,7 @@ $(function () {
 		var id=data[0].id;
 		parent.mmui.confirm("删除客户"+data[0].custName,function(deleteCustomer){
 			parent.mmui.close(deleteCustomer);
-			mmUtl.ajax.postJson(url.path+"/fcs-web-basicdata/basicdata/customer/deleteCustomer",function(data){
+			mmUtl.ajax.postJson(url.path+"/wms-web-basicdata/basicdata/customer/deleteCustomer",function(data){
 				mmui.oper(data.msg,1); 
 				document.location.reload();
 			},{
@@ -222,7 +222,7 @@ $(function () {
 });
 
 function initSiteOption(){
-	  mmUtl.ajax.postJson(url.path+"/fcs-web-basicdata/basicdata/site/listALLSiteCode ",function(data){
+	  mmUtl.ajax.postJson(url.path+"/wms-web-basicdata/basicdata/site/listALLSiteCode ",function(data){
 		    var resultVo=data.data;
 		    $('#siteCode').typeahead({source: resultVo});
 		 },{
@@ -230,7 +230,7 @@ function initSiteOption(){
 	   });
 };
 function inintfinanceCode(){
-	 mmUtl.ajax.postJson(url.path+"/fcs-web-symgr/symgr/userMgr/getAllUserCode",function(data){
+	 mmUtl.ajax.postJson(url.path+"/wms-web-symgr/symgr/userMgr/getAllUserCode",function(data){
 		    var resultVo=data.data;
 	        $('#financeCode').typeahead({source: resultVo});
 		 },{

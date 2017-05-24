@@ -34,7 +34,7 @@
 $(function () {
 	
 	mmList({
-		url:url.path+'/fcs-web-basicdata/basicdata/currency/listCurrency.json',
+		url:url.path+'/wms-web-basicdata/basicdata/currency/listCurrency.json',
 	 	onLoadSuccess:function(data){}, 
 		columns: [{checkbox: true},
 			{field: 'cyCode',title: '币种代码'},
@@ -80,7 +80,7 @@ $(function () {
 		
 		parent.mmui.confirm("确认删除站点资料"+data[0].cyName,function(delCurrency){
 			parent.mmui.close(delCurrency);
-			mmUtl.ajax.postJson(url.path+"/fcs-web-basicdata/basicdata/currency/deleteCurrency",function(data){
+			mmUtl.ajax.postJson(url.path+"/wms-web-basicdata/basicdata/currency/deleteCurrency",function(data){
 					mmui.oper(data.msg,1); 
 					
 					document.location.reload(); 

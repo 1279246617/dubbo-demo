@@ -78,7 +78,7 @@
 		$(function(){
 			var userCode = getParam("userCode");
 			//var userCode = window.location.search.substring(1).replace('userCode=','');
-			mmUtl.ajax.postJson(url.path+"/fcs-web-symgr/symgr/menu/listMenuRightTree.json",function(data){
+			mmUtl.ajax.postJson(url.path+"/wms-web-symgr/symgr/menu/listMenuRightTree.json",function(data){
 				if(data.code == 0){
 					console.info(data);
 					$.fn.zTree.init($("#tree"), setting, data.data);

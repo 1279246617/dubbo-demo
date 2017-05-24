@@ -63,7 +63,7 @@
 <script>
 $(function () {
 	mmList({
-		url:url.path+'/fcs-web-basicdata/basicdata/supplier/listSupplier.json',
+		url:url.path+'/wms-web-basicdata/basicdata/supplier/listSupplier.json',
 	 	onLoadSuccess:function(data){}, 
 		columns: [{checkbox: true}, 
 			    {field: 'suppCode',title: '供应商代码'},
@@ -91,7 +91,7 @@ $(function () {
 	initFinanceCode();
 
 	
-	  mmUtl.ajax.postJson(url.path+"/fcs-web-symgr/symgr/userMgr/getAllUserCode",function(data){
+	  mmUtl.ajax.postJson(url.path+"/wms-web-symgr/symgr/userMgr/getAllUserCode",function(data){
 		    var resultVo=data.data;
 		    $("#financeCode").append('<option value="">全部</option>');
 	    	 $.each(resultVo,function(i,item){
@@ -110,7 +110,7 @@ $(function () {
 		var id=data[0].id;
 		parent.mmui.confirm("确认删除供应商资料"+data[0].suppName,function(delSite){
 			parent.mmui.close(delSite);
-			mmUtl.ajax.postJson(url.path+"/fcs-web-basicdata/basicdata/supplier/deleteSupplier",function(data){
+			mmUtl.ajax.postJson(url.path+"/wms-web-basicdata/basicdata/supplier/deleteSupplier",function(data){
 				   mmui.oper(data.msg,1); 
 				   document.location.reload();
 			    },{
@@ -148,7 +148,7 @@ $(function () {
 });
 //初始化站点
 function initSite(){
-	mmUtl.ajax.getJson(url.path+"/fcs-web-basicdata/basicdata/site/listALLSiteCode",function(data){
+	mmUtl.ajax.getJson(url.path+"/wms-web-basicdata/basicdata/site/listALLSiteCode",function(data){
 	    var resultVo=data.data;
 	    $("#siteCode").typeahead({source : resultVo});
 	  },{
@@ -158,7 +158,7 @@ function initSite(){
 
 //初始化对账员
 function initFinanceCode(){
-	   mmUtl.ajax.postJsonSyn(url.path+"/fcs-web-symgr/symgr/userMgr/getAllUserCode",function(data){
+	   mmUtl.ajax.postJsonSyn(url.path+"/wms-web-symgr/symgr/userMgr/getAllUserCode",function(data){
 		    var resultVo=data.data;
 	    	$("#financeCode").typeahead({source : resultVo}); 
 		 },{

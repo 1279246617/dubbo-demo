@@ -111,7 +111,7 @@ $(function(){
 var id= getParam("id");
 function get(){
 	$("#titelDetial").html("查看供应商");
-	mmUtl.ajax.getJson(url.path+'/fcs-web-basicdata/basicdata/supplier/getSupplier', function(data){
+	mmUtl.ajax.getJson(url.path+'/wms-web-basicdata/basicdata/supplier/getSupplier', function(data){
 		var supplier=data.data;
 		initForm(supplier);
 	},{
@@ -149,7 +149,7 @@ function add(){
 			 return false;
 		 }
 		 var data = $("#supplierForm").serialize();
-		 mmUtl.ajax.postJsonAnt(url.path+'/fcs-web-basicdata/basicdata/supplier/addSupplier', function(data){
+		 mmUtl.ajax.postJsonAnt(url.path+'/wms-web-basicdata/basicdata/supplier/addSupplier', function(data){
 			mmui.oper(data.msg,1); 
 			clearForm("siteForm");
 		}, mmUtl.ajax.getArgs($("#supplierForm")))
@@ -168,7 +168,7 @@ function update(){
 			 return false;
 		 }
 		 var data = $("#supplierForm").serialize();
-		 mmUtl.ajax.postJsonAnt(url.path+'/fcs-web-basicdata/basicdata/supplier/updateSupplier', function(data){
+		 mmUtl.ajax.postJsonAnt(url.path+'/wms-web-basicdata/basicdata/supplier/updateSupplier', function(data){
 			mmui.oper(data.msg,1); 
 		}, mmUtl.ajax.getArgs($("#supplierForm")))
 	
@@ -177,7 +177,7 @@ function update(){
  function initFinanceName(){
 	 var dataCode;
 	 var financeCode=$.trim($("#financeCode").val());
-		mmUtl.ajax.postJsonSyn(url.path+'/fcs-web-symgr/symgr/userMgr/getUserByUserCode', function(data){
+		mmUtl.ajax.postJsonSyn(url.path+'/wms-web-symgr/symgr/userMgr/getUserByUserCode', function(data){
 			var user=data.data;
 			dataCode=data.code;
 			if(0!=data.code){
@@ -193,7 +193,7 @@ function update(){
 };
 
 function initFinanceCode(){
-	 mmUtl.ajax.postJsonSyn(url.path+"/fcs-web-symgr/symgr/userMgr/getAllUserCode",function(data){
+	 mmUtl.ajax.postJsonSyn(url.path+"/wms-web-symgr/symgr/userMgr/getAllUserCode",function(data){
 		    var resultVo=data.data;
 	    	$("#financeCode").typeahead({source: resultVo});
 		 },{
@@ -201,7 +201,7 @@ function initFinanceCode(){
 };
 
 function initCurrency(){
-	 mmUtl.ajax.postJsonSyn(url.path+"/fcs-web-basicdata/basicdata/currency/getAllCyCode",function(data){
+	 mmUtl.ajax.postJsonSyn(url.path+"/wms-web-basicdata/basicdata/currency/getAllCyCode",function(data){
 		    var resultVo=data.data;
 	    	$("#currency").typeahead({source: resultVo});
 		 },{
@@ -209,7 +209,7 @@ function initCurrency(){
 };
 //初始化站点下拉列表
 function initSite(){
-    mmUtl.ajax.postJsonSyn(url.path+"/fcs-web-basicdata/basicdata/site/listALLSiteCode",function(data){
+    mmUtl.ajax.postJsonSyn(url.path+"/wms-web-basicdata/basicdata/site/listALLSiteCode",function(data){
 	    var resultVo=data.data;
 	    $("#siteCode").typeahead({source: resultVo});
 	    
@@ -220,7 +220,7 @@ function initSite(){
 };
 function siteIsExits(siteCode){
 	var code;
-	mmUtl.ajax.postJsonSyn(url.path+'/fcs-web-basicdata/basicdata/site/getSiteByCode.json', function(data){
+	mmUtl.ajax.postJsonSyn(url.path+'/wms-web-basicdata/basicdata/site/getSiteByCode.json', function(data){
 		code=data.code
 	},{
 		"siteCode":siteCode
@@ -232,7 +232,7 @@ function siteIsExits(siteCode){
 };
 function financeIsExits(userCode){
 	var code;
-	mmUtl.ajax.postJsonSyn(url.path+'/fcs-web-symgr/symgr/userMgr/getUserByUserCode', function(data){
+	mmUtl.ajax.postJsonSyn(url.path+'/wms-web-symgr/symgr/userMgr/getUserByUserCode', function(data){
 		code=data.code;
 	},{
 		userCode:userCode
@@ -270,7 +270,7 @@ function getCode(){
 		mmui.oper("供应商代码不能为空",1); 
 		return;
 	}
-	mmUtl.ajax.postJsonSyn(url.path+'/fcs-web-basicdata/basicdata/supplier/getSupplierByCode.json', function(data){
+	mmUtl.ajax.postJsonSyn(url.path+'/wms-web-basicdata/basicdata/supplier/getSupplierByCode.json', function(data){
 		if(data.code == 0){
 			mmui.oper("供应商代码重复",1); 
 			setTimeout(function(){$("#suppCode").focus();},1);

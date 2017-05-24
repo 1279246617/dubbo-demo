@@ -116,7 +116,7 @@ $(function(){
 var id = getParam("id");
 var get=function(){
 	$("#titelDetial").html("查看结算科目");
-	mmUtl.ajax.getJson(url.path+'/fcs-web-basicdata/basicdata/subject/getSubject', function(data){
+	mmUtl.ajax.getJson(url.path+'/wms-web-basicdata/basicdata/subject/getSubject', function(data){
 		
 		var subject=data.data;
 		initForm(subject);
@@ -156,7 +156,7 @@ function add(){
 			return false;
 		 }
 		 var data = $("#subjectForm").serialize();
-		 mmUtl.ajax.postJsonAnt(url.path+'/fcs-web-basicdata/basicdata/subject/addSubject', function(data){
+		 mmUtl.ajax.postJsonAnt(url.path+'/wms-web-basicdata/basicdata/subject/addSubject', function(data){
 			mmui.oper(data.msg,1);
 			clearForm("subjectForm");
 		}, mmUtl.ajax.getArgs($("#subjectForm")))
@@ -173,7 +173,7 @@ function update(){
 			return false;
 		 }
 		 var data = $("#subjectForm").serialize();
-		 mmUtl.ajax.postJsonAnt(url.path+'/fcs-web-basicdata/basicdata/subject/updateSubject', function(data){
+		 mmUtl.ajax.postJsonAnt(url.path+'/wms-web-basicdata/basicdata/subject/updateSubject', function(data){
 			mmui.oper(data.msg,1); 
 		}, mmUtl.ajax.getArgs($("#subjectForm")))
 	
@@ -190,7 +190,7 @@ function banChange(obj){
 };
 //拼接复选框的value值
 function concat(){
-	mmUtl.ajax.postJsonSyn(url.path+"/fcs-web-symgr/symgr/dictItem/getAllItemByCode",function(data){
+	mmUtl.ajax.postJsonSyn(url.path+"/wms-web-symgr/symgr/dictItem/getAllItemByCode",function(data){
 	    var resultVo=data.data;
 	    var dictSubjectType;
 	   
@@ -228,7 +228,7 @@ function getCode(){
 		mmui.oper("科目代码不能为空",1); 
 		return;
 	}
-	mmUtl.ajax.postJsonSyn(url.path+'/fcs-web-basicdata/basicdata/subject/getSubjectByCode.json', function(data){
+	mmUtl.ajax.postJsonSyn(url.path+'/wms-web-basicdata/basicdata/subject/getSubjectByCode.json', function(data){
 		if(data.code == 0){
 			mmui.oper("科目代码重复",1); 
 			setTimeout(function(){$("#subjectCode").focus();},1);

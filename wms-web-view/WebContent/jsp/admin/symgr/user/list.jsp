@@ -20,7 +20,7 @@
 	<div class="form-group" id="buttonAll">
 <!-- 		<button type="button" id="add" class="btn btn-primary btn-sm" url="symgr/user/add.jsp" pageuid="addUserCard" title="新增用户" onclick="addMethod(this)" >新增</button> -->
 <!-- 		<button type="button" id="upd" class="btn btn-primary btn-sm" url="symgr/user/add.jsp" pageuid="addUserCard" title="修改用户" onclick="updMethod(this,userCode)">修改</button> -->
-<!-- 		<button type="button" id="del" class="btn btn-primary btn-sm" url="/fcs-web-symgr/symgr/userMgr/delUser" onclick="delMethod(this,userCode)">删除</button> -->
+<!-- 		<button type="button" id="del" class="btn btn-primary btn-sm" url="/wms-web-symgr/symgr/userMgr/delUser" onclick="delMethod(this,userCode)">删除</button> -->
 <!-- 		<button type="button" id="export" class="btn btn-primary btn-sm" >导出</button> -->
 <!-- 		<button type="button" id="searchRight" class="btn btn-primary btn-sm" onclick="searchRight()">查看权限</button> -->
 <!-- 		<button type="button" id="allotGroup" class="btn btn-primary btn-sm" onclick="allotUserGroup();" >分配用户组</button> -->
@@ -73,7 +73,7 @@
 $(function () {
 	
 	mmList({
-		url:url.path+'/fcs-web-symgr/symgr/userMgr/listUser.json',
+		url:url.path+'/wms-web-symgr/symgr/userMgr/listUser.json',
 		onLoadSuccess:function(data){
 		},
 		columns: [
@@ -141,7 +141,7 @@ $(function () {
 //     	parent.mmui.confirm("删除用户"+data[0].userName,function(delUser){
 //     		parent.mmui.close(delUser);
     		
-//     		mmUtl.ajax.postJson(url.path+"/fcs-web-symgr/symgr/userMgr/delUser",function(data){
+//     		mmUtl.ajax.postJson(url.path+"/wms-web-symgr/symgr/userMgr/delUser",function(data){
 //     			mmui.oper(data.msg,1);
 //     			document.location.reload();
 //     		},{
@@ -181,7 +181,7 @@ $(function () {
     initDict("dictStatus","option","pos_status","dictStatus"); 
     initDict("dictIsEnableRight","option","is","dictIsEnableRight");
     //初始化用户组信息
-    mmUtl.ajax.postJson(url.path+"/fcs-web-symgr/symgr/group/listUserGroup.json",function(data){
+    mmUtl.ajax.postJson(url.path+"/wms-web-symgr/symgr/group/listUserGroup.json",function(data){
 		var resultVo=data.data;
 		$("#groupCode").append('<option value="">全部</option>');
    	 	$.each(resultVo,function(i,item){

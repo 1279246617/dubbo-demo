@@ -44,7 +44,7 @@
 <script>
 $(function () {
 	mmList({
-		url:url.path+'/fcs-web-symgr/symgr/dictItem/listDictItem.json',
+		url:url.path+'/wms-web-symgr/symgr/dictItem/listDictItem.json',
 		onLoadSuccess:function(data){},
 		columns: [
 			{checkbox: true},
@@ -74,7 +74,7 @@ $(function () {
     	parent.mmui.confirm("删除条目"+data[0].itemValue,function(delItem){
     		parent.mmui.close(delItem);
     		
-    		mmUtl.ajax.postJson(url.path+"/fcs-web-symgr/symgr/dictItem/delDictItem",function(data){
+    		mmUtl.ajax.postJson(url.path+"/wms-web-symgr/symgr/dictItem/delDictItem",function(data){
     			mmui.oper(data.msg,1); 
     			document.location.reload();
     		},{

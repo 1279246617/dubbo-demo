@@ -43,7 +43,7 @@
 <script>
 $(function () {
 	mmList({
-		url:url.path+'/fcs-web-symgr/symgr/menu/listMenuRight.json',
+		url:url.path+'/wms-web-symgr/symgr/menu/listMenuRight.json',
 		onLoadSuccess:function(data){},
 		columns: [
 			{checkbox: true},
@@ -77,7 +77,7 @@ $(function () {
     	parent.mmui.confirm("删除菜单权限 '"+data[0].menuName+"' 以及子权限",function(delType){
     		parent.mmui.close(delType);
     		
-    		mmUtl.ajax.postJson(url.path+"/fcs-web-symgr/symgr/menu/delMenuRight",function(data){
+    		mmUtl.ajax.postJson(url.path+"/wms-web-symgr/symgr/menu/delMenuRight",function(data){
     			mmui.oper(data.msg,1); 
     			document.location.reload();
     		},{

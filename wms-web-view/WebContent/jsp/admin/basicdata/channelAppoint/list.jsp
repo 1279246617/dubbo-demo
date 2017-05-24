@@ -51,7 +51,7 @@
 <script>
 $(function () {
 	mmList({
-		url:url.path+'/fcs-web-basicdata/basicdata/channelAppoint/listChannelAppoint.json',
+		url:url.path+'/wms-web-basicdata/basicdata/channelAppoint/listChannelAppoint.json',
 	 	onLoadSuccess:function(data){}, 
 		columns: [{checkbox: true}, 
 		    {field: 'channelCode',title: '渠道代码'},
@@ -95,7 +95,7 @@ $(function () {
 		var id=data[0].id;
 		parent.mmui.confirm("确认删除指定渠道资料"+data[0].channelName,function(delSite){
 			parent.mmui.close(delSite);
-			mmUtl.ajax.postJson(url.path+"/fcs-web-basicdata/basicdata/channelAppoint/deleteChannelAppoint",function(data){
+			mmUtl.ajax.postJson(url.path+"/wms-web-basicdata/basicdata/channelAppoint/deleteChannelAppoint",function(data){
 				   mmui.oper(data.msg,1); 
 				   document.location.reload();
 			    },{

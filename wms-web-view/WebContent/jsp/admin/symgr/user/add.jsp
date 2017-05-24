@@ -142,7 +142,7 @@ $(function(){
 	}
 });
 var initFormData=function(){
-	mmUtl.ajax.postJson(url.path+"/fcs-web-symgr/symgr/group/listUserGroup.json",function(data){
+	mmUtl.ajax.postJson(url.path+"/wms-web-symgr/symgr/group/listUserGroup.json",function(data){
 		var resultVo=data.data;
    	 	$.each(resultVo,function(i,item){
         	$("#userGroup").append('<option value="'+item.groupCode+'">'+item.groupName+'</option>');
@@ -161,7 +161,7 @@ function getCode(){
 		mmui.oper("用户code不能为空",1); 
 		return;
 	}
-	mmUtl.ajax.postJsonSyn(url.path+'/fcs-web-symgr/symgr/userMgr/getUserByUserCode', function(data){
+	mmUtl.ajax.postJsonSyn(url.path+'/wms-web-symgr/symgr/userMgr/getUserByUserCode', function(data){
 		if(data.code == 0){
 			mmui.oper("用户code重复",1); 
 			setTimeout(function(){$("#userCode").focus();},1);
@@ -178,11 +178,11 @@ function add(){
 		var groupCode = $("#userGroup").val();
 		var data = $("#addUserForm").serialize();
 		if(dataValid()){
-			mmUtl.ajax.postJsonAnt(url.path+'/fcs-web-symgr/symgr/userMgr/addUser', function(data){
+			mmUtl.ajax.postJsonAnt(url.path+'/wms-web-symgr/symgr/userMgr/addUser', function(data){
 				mmui.oper(data.msg,1); 
 			}, mmUtl.ajax.getArgs($("#addUserForm")))
 			
-			mmUtl.ajax.postJsonAnt(url.path+'/fcs-web-symgr/symgr/userGoup/addUserGroup', function(data){
+			mmUtl.ajax.postJsonAnt(url.path+'/wms-web-symgr/symgr/userGoup/addUserGroup', function(data){
 				mmui.oper(data.msg,1); 
 			}, {
 				userCode:userCode,
@@ -202,7 +202,7 @@ function update(){
 	$("#password").hide();
 	$("#submit").click(function(){
 		if(dataValid()){
-			mmUtl.ajax.postJsonAnt(url.path+'/fcs-web-symgr/symgr/userMgr/updUser', function(data){
+			mmUtl.ajax.postJsonAnt(url.path+'/wms-web-symgr/symgr/userMgr/updUser', function(data){
 				mmui.oper(data.msg,1);
 			}, mmUtl.ajax.getArgs($("#addUserForm")))
 		}else{
@@ -218,7 +218,7 @@ function get(){
 //获取user数据并初始化表单
 function getUser(){
 	var id=getParam("id");
-	mmUtl.ajax.postJson(url.path+'/fcs-web-symgr/symgr/userMgr/getUpdUser.json', function(data){
+	mmUtl.ajax.postJson(url.path+'/wms-web-symgr/symgr/userMgr/getUpdUser.json', function(data){
 		var user=data.data;
 
 		initForm(user);

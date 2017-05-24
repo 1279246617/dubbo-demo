@@ -37,7 +37,7 @@ $(function () {
 	
 	$("#dictSubjectType").attr("value",subjectType);
 	mmList({
-		url:url.path+'/fcs-web-basicdata/basicdata/subject/listChildSubject.json?subjectType='+subjectType,
+		url:url.path+'/wms-web-basicdata/basicdata/subject/listChildSubject.json?subjectType='+subjectType,
 	 	onLoadSuccess:function(data){}, 
 		columns: [{checkbox: true},
 		    {field: 'subjectCode',title: '科目代码'},

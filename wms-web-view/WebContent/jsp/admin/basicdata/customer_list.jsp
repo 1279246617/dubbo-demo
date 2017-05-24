@@ -75,7 +75,7 @@
 $(function () {
 	
 	mmList({
-	    url:url.path+'/fcs-web-basicdata/customer/getCustomerList.json',
+	    url:url.path+'/wms-web-basicdata/customer/getCustomerList.json',
 		onLoadSuccess:function(data){
 		
 		},  
