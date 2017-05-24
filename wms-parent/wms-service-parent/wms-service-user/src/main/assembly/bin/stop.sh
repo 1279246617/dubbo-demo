@@ -23,7 +23,7 @@ echoReport()
 }
 
 #应用名
-SERVER_NAME=`sed '/^app.process.name/!d;s/.*=//' conf/dubbo.properties | tr -d '\r'`
+SERVER_NAME=`sed '/dubbo.application.name/!d;s/.*=//' conf/dubbo.properties | tr -d '\r'`
 
 if [ -z "$SERVER_NAME" ]; then
     SERVER_NAME=`hostname`
