@@ -31,7 +31,7 @@ function clearForm(id) {
 }
 //根据字典表加载 相应界面   id=要渲染的模块id,type=界面类型，typeCode=字典表类型，name=单选复选框的name属性值
 function initDict(id,type,typeCode,name){
-    mmUtl.ajax.postJsonSyn(url.path+"/fcs-web-symgr/symgr/dictItem/getAllItemByCode",function(data){
+    mmUtl.ajax.postJsonSyn(url.path+"/wms-web-symgr/symgr/dictItem/getAllItemByCode",function(data){
 	    var resultVo=data.data;
 	    
 	    if(type=="checkbox"){
@@ -119,7 +119,7 @@ var ctx =function(){
  * 获取页面的按钮
  */
 function getButton(){
-	mmUtl.ajax.postJson(url.path+"/fcs-web-symgr/symgr/menu/getMnuRightTree.json",function(data){
+	mmUtl.ajax.postJson(url.path+"/wms-web-symgr/symgr/menu/getMnuRightTree.json",function(data){
 		if(data.code == 0){
 			menuList = data.data;
 			addButton(menuList);
@@ -169,7 +169,7 @@ function addMethod(obj){
  * 通用删除方法
  * obj 是传过来的this
  * code: 要获取的code
- * url格式: /fcs-web-symgr/symgr/userMgr/delUser
+ * url格式: /wms-web-symgr/symgr/userMgr/delUser
  */
 function delMethod(obj,code){
 	data = selectData();

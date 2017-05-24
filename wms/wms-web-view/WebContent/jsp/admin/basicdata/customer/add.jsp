@@ -248,7 +248,7 @@ $(function(){
 });
 
 var initUserCode=function(){
-	mmUtl.ajax.postJson(url.path+"/fcs-web-symgr/symgr/userMgr/getAllUserCode",function(data){
+	mmUtl.ajax.postJson(url.path+"/wms-web-symgr/symgr/userMgr/getAllUserCode",function(data){
 	    var resultVo=data.data;
 	    $('#salesCode').typeahead({source: resultVo});
 	    $('#maintainCode').typeahead({source: resultVo});
@@ -261,7 +261,7 @@ var initUserCode=function(){
 //初始化站点下拉列表
 function initSite(){
 	
-    mmUtl.ajax.postJsonSyn(url.path+"/fcs-web-basicdata/basicdata/site/listALLSiteCode",function(data){
+    mmUtl.ajax.postJsonSyn(url.path+"/wms-web-basicdata/basicdata/site/listALLSiteCode",function(data){
 	    var resultVo=data.data;
 	    $("#siteCode").typeahead({source: resultVo});
 	    
@@ -296,7 +296,7 @@ function add(){
 			return false;
 		}
 		var data = $("#customerForm").serialize();
-		mmUtl.ajax.postJsonAnt(url.path+'/fcs-web-basicdata/basicdata/customer/addCustomer', function(data){
+		mmUtl.ajax.postJsonAnt(url.path+'/wms-web-basicdata/basicdata/customer/addCustomer', function(data){
 			mmui.oper(data.msg,1); 
 			if(data.code==0){
 				clearForm("customerForm");
@@ -315,7 +315,7 @@ function update(){
 			return false;
 		}
 		var data = $("#customerForm").serialize();
-		mmUtl.ajax.postJsonAnt(url.path+'/fcs-web-basicdata/basicdata/customer/updateCustomer', function(data){
+		mmUtl.ajax.postJsonAnt(url.path+'/wms-web-basicdata/basicdata/customer/updateCustomer', function(data){
 			mmui.oper(data.msg,1); 
 
 			$("#submit").unbind();
@@ -333,7 +333,7 @@ var id=getParam("id");
 //获取customer数据并初始化表单
 function getCustomer(){
 	$("#titelDetial").html("查看客户");
-	mmUtl.ajax.postJsonSyn(url.path+'/fcs-web-basicdata/basicdata/customer/getCustomer', function(data){
+	mmUtl.ajax.postJsonSyn(url.path+'/wms-web-basicdata/basicdata/customer/getCustomer', function(data){
 		 
         var customer=data.data;
 	    initForm(customer);
@@ -401,7 +401,7 @@ function initForm(customer){
 function getFinance(){
     var userCode=$("#financeCode").val();
     var code;
-	mmUtl.ajax.postJsonSyn(url.path+'/fcs-web-symgr/symgr/userMgr/getUserByUserCode', function(data){
+	mmUtl.ajax.postJsonSyn(url.path+'/wms-web-symgr/symgr/userMgr/getUserByUserCode', function(data){
 		var user=data.data;
 		code=data.code;
 		if(0!=code){
@@ -423,7 +423,7 @@ function getFinance(){
 function getSales(){
 	var code;
     var userCode=$("#salesCode").val();
-	mmUtl.ajax.postJsonSyn(url.path+'/fcs-web-symgr/symgr/userMgr/getUserByUserCode', function(data){
+	mmUtl.ajax.postJsonSyn(url.path+'/wms-web-symgr/symgr/userMgr/getUserByUserCode', function(data){
 		var user=data.data;
 		code=data.code;
 		if(0!=code){
@@ -443,7 +443,7 @@ function getSales(){
 function getMaintain(){
 	var userCode=$("#maintainCode").val();
 	var code;
-	mmUtl.ajax.postJsonSyn(url.path+'/fcs-web-symgr/symgr/userMgr/getUserByUserCode', function(data){
+	mmUtl.ajax.postJsonSyn(url.path+'/wms-web-symgr/symgr/userMgr/getUserByUserCode', function(data){
 		var user=data.data;
 		code=data.code;
 		if(0!=code){
@@ -491,7 +491,7 @@ $("#maintainCode").change(function(){
 });
 function siteIsExits(siteCode){
 	var code;
-	mmUtl.ajax.postJsonSyn(url.path+'/fcs-web-basicdata/basicdata/site/getSiteByCode.json', function(data){
+	mmUtl.ajax.postJsonSyn(url.path+'/wms-web-basicdata/basicdata/site/getSiteByCode.json', function(data){
 		code= data.code
 	},{
 		"siteCode":siteCode
@@ -543,7 +543,7 @@ function getCode(){
 		mmui.oper("客户代码不能为空",1); 
 		return;
 	}
-	mmUtl.ajax.postJsonSyn(url.path+'/fcs-web-basicdata/basicdata/customer/getCustomerByCode.json', function(data){
+	mmUtl.ajax.postJsonSyn(url.path+'/wms-web-basicdata/basicdata/customer/getCustomerByCode.json', function(data){
 		if(data.code == 0){
 			mmui.oper("客户代码重复",1); 
 			setTimeout(function(){$("#custCode").focus();},1);

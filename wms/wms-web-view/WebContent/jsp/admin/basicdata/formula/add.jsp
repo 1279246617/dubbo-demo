@@ -118,7 +118,7 @@ $(function(){
 var id = getParam("id");
 var get=function(){
 	$("#titelDetial").html("查看账单公式");
-	mmUtl.ajax.postJsonSyn(url.path+'/fcs-web-basicdata/basicdata/formula/getFormula', function(data){	
+	mmUtl.ajax.postJsonSyn(url.path+'/wms-web-basicdata/basicdata/formula/getFormula', function(data){	
 		var formula=data.data;
 		initForm(formula);
 	},{
@@ -154,7 +154,7 @@ function add(){
 			return;
 		}
 		 var data = $("#FormulaForm").serialize();
-		 mmUtl.ajax.postJsonAnt(url.path+'/fcs-web-basicdata/basicdata/formula/addFormula', function(data){
+		 mmUtl.ajax.postJsonAnt(url.path+'/wms-web-basicdata/basicdata/formula/addFormula', function(data){
 			mmui.oper(data.msg,1);
 			clearForm("formulaForm");
 		}, mmUtl.ajax.getArgs($("#formulaForm")))
@@ -170,7 +170,7 @@ function update(){
 			return;
 		}
 		 var data = $("#FormulaForm").serialize();
-		 mmUtl.ajax.postJsonAnt(url.path+'/fcs-web-basicdata/basicdata/formula/updateFormula', function(data){
+		 mmUtl.ajax.postJsonAnt(url.path+'/wms-web-basicdata/basicdata/formula/updateFormula', function(data){
 			mmui.oper(data.msg,1); 
 		}, mmUtl.ajax.getArgs($("#formulaForm")))
 	
@@ -236,7 +236,7 @@ function getCode(){
 		mmui.oper("客户代码不能为空",1); 
 		return;
 	}
-	mmUtl.ajax.postJsonSyn(url.path+'/fcs-web-basicdata/basicdata/formula/getFormulaByCode.json', function(data){
+	mmUtl.ajax.postJsonSyn(url.path+'/wms-web-basicdata/basicdata/formula/getFormulaByCode.json', function(data){
 		if(data.code == 0){
 			mmui.oper("客户代码重复",1); 
 			setTimeout(function(){$("#formulaCode").focus();},1);

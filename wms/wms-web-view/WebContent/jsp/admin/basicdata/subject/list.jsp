@@ -59,7 +59,7 @@
 <script>
 $(function () {
 	mmList({
-		url:url.path+'/fcs-web-basicdata/basicdata/subject/listSubject.json',
+		url:url.path+'/wms-web-basicdata/basicdata/subject/listSubject.json',
 	 	onLoadSuccess:function(data){}, 
 		columns: [{checkbox: true}, 
 		    {field: 'subjectCode',title: '科目代码'},
@@ -104,7 +104,7 @@ $(function () {
 		var subjectCode=data[0].subjectCode;
 		parent.mmui.confirm("确认删除结算科目资料"+data[0].subjectName,function(delSite){
 			parent.mmui.close(delSite);
-			mmUtl.ajax.postJson(url.path+"/fcs-web-basicdata/basicdata/subject/deleteSubject",function(data){
+			mmUtl.ajax.postJson(url.path+"/wms-web-basicdata/basicdata/subject/deleteSubject",function(data){
 				   mmui.oper(data.msg,1); 
 				   document.location.reload();
 			    },{

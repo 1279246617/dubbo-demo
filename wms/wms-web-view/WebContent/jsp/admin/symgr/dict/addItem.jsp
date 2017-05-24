@@ -69,7 +69,7 @@
 
 $("#submit").click(function(){
 	var data = $("#addDictItemForm").serialize();
-	mmUtl.ajax.postJsonAnt(url.path+'/fcs-web-symgr/symgr/dictItem/addDictItem', function(data){
+	mmUtl.ajax.postJsonAnt(url.path+'/wms-web-symgr/symgr/dictItem/addDictItem', function(data){
 		mmui.oper(data.msg,1);
 		clearForm("addDictItemForm");
 	}, mmUtl.ajax.getArgs($("#addDictItemForm")))

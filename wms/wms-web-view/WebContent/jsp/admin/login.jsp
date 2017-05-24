@@ -74,7 +74,7 @@
     <script type="text/javascript">
     	$("#submit").click(function(){
     		
-    		var urlPath = url.path+'/fcs-web-symgr/symgr/login/loginAction.json';
+    		var urlPath = url.path+'/wms-web-symgr/symgr/login/loginAction.json';
     		mmUtl.ajax.postJsonSyn(urlPath, function(data){
     			if(data.code==0){
 	    			window.location.href = $("#successPath").val();

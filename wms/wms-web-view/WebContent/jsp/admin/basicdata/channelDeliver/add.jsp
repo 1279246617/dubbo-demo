@@ -127,7 +127,7 @@ $(function(){
 });
 //初始化站点下拉列表
 function initSite(){
-    mmUtl.ajax.postJsonSyn(url.path+"/fcs-web-basicdata/basicdata/site/listALLSiteCode",function(data){
+    mmUtl.ajax.postJsonSyn(url.path+"/wms-web-basicdata/basicdata/site/listALLSiteCode",function(data){
 	    var resultVo=data.data;
 	    $("#siteCode").typeahead({source: resultVo});
 	    
@@ -139,7 +139,7 @@ function initSite(){
 var id= getParam("id");
 function get(){
 	$("#titelDetial").html("查看走货渠道");
-	mmUtl.ajax.getJson(url.path+'/fcs-web-basicdata/basicdata/channelDeliver/getChannelDeliver.json', function(data){
+	mmUtl.ajax.getJson(url.path+'/wms-web-basicdata/basicdata/channelDeliver/getChannelDeliver.json', function(data){
 		var channelDeliver=data.data;
 		initForm(channelDeliver);
 	},{
@@ -179,7 +179,7 @@ function add(){
 		}
 	
 		 var data = $("#channelDeliverForm").serialize();
-		 mmUtl.ajax.postJsonAnt(url.path+'/fcs-web-basicdata/basicdata/channelDeliver/addChannelDeliver', function(data){
+		 mmUtl.ajax.postJsonAnt(url.path+'/wms-web-basicdata/basicdata/channelDeliver/addChannelDeliver', function(data){
 			mmui.oper(data.msg,1); 
 			clearForm("channelDeliverForm");
 		}, mmUtl.ajax.getArgs($("#channelDeliverForm")))
@@ -196,7 +196,7 @@ function update(){
 		}
 	
 		 var data = $("#channelDeliverForm").serialize();
-		 mmUtl.ajax.postJsonAnt(url.path+'/fcs-web-basicdata/basicdata/channelDeliver/updateChannelDeliver', function(data){
+		 mmUtl.ajax.postJsonAnt(url.path+'/wms-web-basicdata/basicdata/channelDeliver/updateChannelDeliver', function(data){
 			mmui.oper(data.msg,1); 
 			
 		}, mmUtl.ajax.getArgs($("#channelDeliverForm")))
@@ -235,7 +235,7 @@ function divSizeIsNum(){
 
 function siteIsExits(siteCode){
 	var code;
-	mmUtl.ajax.postJsonSyn(url.path+'/fcs-web-basicdata/basicdata/site/getSiteByCode.json', function(data){
+	mmUtl.ajax.postJsonSyn(url.path+'/wms-web-basicdata/basicdata/site/getSiteByCode.json', function(data){
 		code=data.code
 	},{
 		"siteCode":siteCode
@@ -252,7 +252,7 @@ function getCode(){
 		mmui.oper("走货渠道代码不能为空",1); 
 		return;
 	}
-	mmUtl.ajax.postJsonSyn(url.path+'/fcs-web-basicdata/basicdata/channelDeliver/getChannelDeliverByCode.json', function(data){
+	mmUtl.ajax.postJsonSyn(url.path+'/wms-web-basicdata/basicdata/channelDeliver/getChannelDeliverByCode.json', function(data){
 		if(data.code == 0){
 			mmui.oper("走货渠道代码重复",1); 
 			setTimeout(function(){$("#channelCode").focus();},1);

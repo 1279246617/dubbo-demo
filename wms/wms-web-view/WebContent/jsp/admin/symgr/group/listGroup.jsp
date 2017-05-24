@@ -248,7 +248,7 @@
 
 <script type = "text/javascript" >
 		$(function(){
-			mmUtl.ajax.postJson(url.path+"/fcs-web-symgr/symgr/group/listGroup.json",function(data){
+			mmUtl.ajax.postJson(url.path+"/wms-web-symgr/symgr/group/listGroup.json",function(data){
 				if(data.code == 0){
 					console.info(data);
 					/* adapterList(data.data,groupTPL,group); */
@@ -323,7 +323,7 @@
 			$("#groupMember").html(groupName);
 			$("#groupRight").html(groupName);
 			//异步请求该用户组下的用户
-			mmUtl.ajax.postJson(url.path+"/fcs-web-symgr/symgr/userMgr/listUserNotPage.json",function(data){
+			mmUtl.ajax.postJson(url.path+"/wms-web-symgr/symgr/userMgr/listUserNotPage.json",function(data){
 				if(data.code == 0){
 					console.info(data);
 					adapterUser(data.data);
@@ -334,7 +334,7 @@
 				"groupCode":groupCode
     		});
 			//异步请求该用户组下的权限
-			mmUtl.ajax.postJson(url.path+"/fcs-web-symgr/symgr/menu/listMenuRightTree.json",function(data){
+			mmUtl.ajax.postJson(url.path+"/wms-web-symgr/symgr/menu/listMenuRightTree.json",function(data){
 				if(data.code == 0){
 					console.info(data);
 					var nodes = data.data;
@@ -465,7 +465,7 @@
 		
 		function getSubMenu(id){
 			//异步请求该用户组下的权限
-			mmUtl.ajax.postJson(url.path+"/fcs-web-symgr/symgr/menu/listMenuRightTree.json",function(data){
+			mmUtl.ajax.postJson(url.path+"/wms-web-symgr/symgr/menu/listMenuRightTree.json",function(data){
 				if(data.code == 0){
 					console.info(data);
 					var nodes = data.data;
@@ -546,7 +546,7 @@
 		    	parent.mmui.confirm("确定删除用户组 ?",function(delType){
 		    		parent.mmui.close(delType);
 		    		
-		    		mmUtl.ajax.postJson(url.path+"/fcs-web-symgr/symgr/group/delGroup",function(data){
+		    		mmUtl.ajax.postJson(url.path+"/wms-web-symgr/symgr/group/delGroup",function(data){
 		    			mmui.oper(data.msg,1); 
 		    			document.location.reload();
 		    		},{
@@ -582,11 +582,11 @@
 		$("#submitBtn").click(function(){
 			var groupName = $("#groupName").val();
 			var dis = $("#discript").val();
-			/* var url=url.path+'/fcs-web-symgr/symgr/group/copyGroup';
+			/* var url=url.path+'/wms-web-symgr/symgr/group/copyGroup';
 			$("#editForm").attr("action",url);
 			$("#gCode").val(gCode);
 			$("#groupCode").val(groupCode); */
-			mmUtl.ajax.postJsonAnt(url.path+'/fcs-web-symgr/symgr/group/copyGroup', function(data){
+			mmUtl.ajax.postJsonAnt(url.path+'/wms-web-symgr/symgr/group/copyGroup', function(data){
 				$('#dialog').addClass('bounceOutUp').fadeOut();
 				document.location.reload();
 				mmui.oper(data.msg,1);
@@ -617,7 +617,7 @@
 			 var dataJson=[];
 				if($('input[name="enableMenu"]:checked').length == 0){
 					//执行删除user下的userGroup
-					mmUtl.ajax.postJsonAnt(url.path+'/fcs-web-symgr/symgr/menuGoup/delMenuGroup', function(data){
+					mmUtl.ajax.postJsonAnt(url.path+'/wms-web-symgr/symgr/menuGoup/delMenuGroup', function(data){
 						mmui.oper(data.msg,1); 
 					},{
 						"groupCode":gCode
@@ -629,7 +629,7 @@
 						dataJson.push({"groupCode":gCode,"menuCode":$(this).val()});
 					
 					});
-					mmUtl.ajax.postJsonAnt(url.path+'/fcs-web-symgr/symgr/menuGoup/addMenuGroupBatch', function(data){
+					mmUtl.ajax.postJsonAnt(url.path+'/wms-web-symgr/symgr/menuGoup/addMenuGroupBatch', function(data){
 						mmui.oper(data.msg,1); 
 					},
 						JSON.stringify(dataJson)

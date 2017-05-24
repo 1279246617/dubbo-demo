@@ -159,7 +159,7 @@ $(function(){
 var id= getParam("id");
 var get=function(){
 	$("#titelDetial").html("查看指定渠道");
-	mmUtl.ajax.getJson(url.path+'/fcs-web-basicdata/basicdata/channelAppoint/getChannelAppoint', function(data){
+	mmUtl.ajax.getJson(url.path+'/wms-web-basicdata/basicdata/channelAppoint/getChannelAppoint', function(data){
 		
 		var channelAppoint=data.data;
 		initForm(channelAppoint);
@@ -209,7 +209,7 @@ function add(){
 			return false;
 		}
 		 var data = $("#channelAppointForm").serialize();
-		 mmUtl.ajax.postJsonAnt(url.path+'/fcs-web-basicdata/basicdata/channelAppoint/addChannelAppoint', function(data){
+		 mmUtl.ajax.postJsonAnt(url.path+'/wms-web-basicdata/basicdata/channelAppoint/addChannelAppoint', function(data){
 			mmui.oper(data.msg,1);
 			clearForm("channelAppointForm");
 		}, mmUtl.ajax.getArgs($("#channelAppointForm")))
@@ -227,7 +227,7 @@ function update(){
 		}
 			
 		 var data = $("#channelAppointForm").serialize();
-		 mmUtl.ajax.postJsonAnt(url.path+'/fcs-web-basicdata/basicdata/channelAppoint/updateChannelAppoint', function(data){
+		 mmUtl.ajax.postJsonAnt(url.path+'/wms-web-basicdata/basicdata/channelAppoint/updateChannelAppoint', function(data){
 			mmui.oper(data.msg,1); 
 		}, mmUtl.ajax.getArgs($("#channelAppointForm")))
 		
@@ -310,7 +310,7 @@ function getCode(){
 		mmui.oper("指定渠道代码不能为空",1); 
 		return;
 	}
-	mmUtl.ajax.postJsonSyn(url.path+'/fcs-web-basicdata/basicdata/channelAppoint/getChannelAppointByCode', function(data){
+	mmUtl.ajax.postJsonSyn(url.path+'/wms-web-basicdata/basicdata/channelAppoint/getChannelAppointByCode', function(data){
 		if(data.code == 0){
 			mmui.oper("指定渠道代码重复",1); 
 			setTimeout(function(){$("#channelCode").focus();},1);

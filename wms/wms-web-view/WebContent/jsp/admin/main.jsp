@@ -131,7 +131,7 @@ $(function(){
 	}
 	
 	/* var menuList; */
-	mmUtl.ajax.postJson(url.path+"/fcs-web-symgr/symgr/menu/getMnuRightTree.json",function(data){
+	mmUtl.ajax.postJson(url.path+"/wms-web-symgr/symgr/menu/getMnuRightTree.json",function(data){
 		
 		if(data.code == 0){
 			menuList = data.data;

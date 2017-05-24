@@ -52,7 +52,7 @@
 <script>
 $(function () {
 	mmList({
-		url:url.path+'/fcs-web-basicdata/basicdata/channelDeliver/listChannelDeliver.json',
+		url:url.path+'/wms-web-basicdata/basicdata/channelDeliver/listChannelDeliver.json',
 	 	onLoadSuccess:function(data){}, 
 		columns: [
 			{checkbox: true}, 
@@ -89,7 +89,7 @@ $(function () {
 		var id=data[0].id;
 		parent.mmui.confirm("确认删除走货渠道资料"+data[0].channelName,function(delSite){
 			parent.mmui.close(delSite);
-			mmUtl.ajax.postJson(url.path+"/fcs-web-basicdata/basicdata/channelDeliver/deleteChannelDeliver",function(data){
+			mmUtl.ajax.postJson(url.path+"/wms-web-basicdata/basicdata/channelDeliver/deleteChannelDeliver",function(data){
 				   mmui.oper(data.msg,1); 
 				   document.location.reload();
 			    },{

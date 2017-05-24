@@ -64,7 +64,7 @@
 
 $("#submit").click(function(){
 	var data = $("#addDictTypeForm").serialize();
-	mmUtl.ajax.postJsonAnt(url.path+'/fcs-web-symgr/symgr/dictType/addDictType', function(data){
+	mmUtl.ajax.postJsonAnt(url.path+'/wms-web-symgr/symgr/dictType/addDictType', function(data){
 		mmui.oper(data.msg,1);
 		clearForm("addDictTypeForm");
 	}, mmUtl.ajax.getArgs($("#addDictTypeForm")))

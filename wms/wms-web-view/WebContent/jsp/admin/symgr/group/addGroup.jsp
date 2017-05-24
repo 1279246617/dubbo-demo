@@ -93,7 +93,7 @@ function add(){
 	$("#submit").click(function(){
 		var data = $("#addGroupForm").serialize();
 		if(dataValid()){
-			mmUtl.ajax.postJsonAnt(url.path+'/fcs-web-symgr/symgr/group/addGroup', function(data){
+			mmUtl.ajax.postJsonAnt(url.path+'/wms-web-symgr/symgr/group/addGroup', function(data){
 				mmui.oper(data.msg,1);
 				clearForm("addGroupForm");
 			}, mmUtl.ajax.getArgs($("#addGroupForm")));
@@ -110,7 +110,7 @@ function update(){
 	$("#groupCode").removeAttr("onblur");
 	$("#submit").click(function(){
 		if(dataValid()){
-			mmUtl.ajax.postJsonAnt(url.path+'/fcs-web-symgr/symgr/group/updGroup', function(data){
+			mmUtl.ajax.postJsonAnt(url.path+'/wms-web-symgr/symgr/group/updGroup', function(data){
 				mmui.oper(data.msg,1);
 			}, mmUtl.ajax.getArgs($("#addGroupForm")));
 		}else{
@@ -124,7 +124,7 @@ var id= getParam("id");
 //获取group数据并初始化表单
 function getGroup(){
 	var groupCode = getParam("groupCode");
-	mmUtl.ajax.postJson(url.path+'/fcs-web-symgr/symgr/group/getGroupByCode.json', function(data){
+	mmUtl.ajax.postJson(url.path+'/wms-web-symgr/symgr/group/getGroupByCode.json', function(data){
 		var group=data.data;
 		console.info(data);
 		initForm(group);
@@ -164,7 +164,7 @@ function getCode(){
 		mmui.oper("用户组code不能为空",1); 
 		return;
 	}
-	mmUtl.ajax.postJson(url.path+'/fcs-web-symgr/symgr/group/getGroupByCode.json', function(data){
+	mmUtl.ajax.postJson(url.path+'/wms-web-symgr/symgr/group/getGroupByCode.json', function(data){
 		if(data.code == 0){
 			mmui.oper("用户组code重复",1); 
 			setTimeout(function(){$("#groupCode").focus();},1);

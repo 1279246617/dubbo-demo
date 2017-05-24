@@ -120,7 +120,7 @@ $(function(){
 var id= getParam("id");
 function get(){
 	$("#titelDetial").html("查看站点");
-	mmUtl.ajax.getJson(url.path+'/fcs-web-basicdata/basicdata/site/getSite', function(data){
+	mmUtl.ajax.getJson(url.path+'/wms-web-basicdata/basicdata/site/getSite', function(data){
 		var site=data.data;
 		initForm(site);
 	},{
@@ -165,7 +165,7 @@ function add(){
 			return false;
 		}
 		 var data = $("#siteForm").serialize();
-		 mmUtl.ajax.postJsonAnt(url.path+'/fcs-web-basicdata/basicdata/site/addSite', function(data){
+		 mmUtl.ajax.postJsonAnt(url.path+'/wms-web-basicdata/basicdata/site/addSite', function(data){
 			mmui.oper(data.msg,1); 
 			clearForm("siteForm");
 		}, mmUtl.ajax.getArgs($("#siteForm")))
@@ -181,7 +181,7 @@ function update(){
 			return false;
 		}
 		 var data = $("#siteForm").serialize();
-		 mmUtl.ajax.postJsonAnt(url.path+'/fcs-web-basicdata/basicdata/site/updateSite', function(data){
+		 mmUtl.ajax.postJsonAnt(url.path+'/wms-web-basicdata/basicdata/site/updateSite', function(data){
 			mmui.oper(data.msg,1); 
 			
 		}, mmUtl.ajax.getArgs($("#siteForm")));
@@ -191,7 +191,7 @@ function update(){
 
 //初始化本位币
 function initCurrency(){
-	  mmUtl.ajax.postJsonSyn(url.path+"/fcs-web-basicdata/basicdata/currency/getAllCurrency",function(data){
+	  mmUtl.ajax.postJsonSyn(url.path+"/wms-web-basicdata/basicdata/currency/getAllCurrency",function(data){
 		    var resultVo=data.data;
 	    	$("#cyCode").append('<option value=""></option>');
 	    	 $.each(resultVo,function(i,item){
@@ -221,7 +221,7 @@ function getCode(){
 		mmui.oper("站点代码不能为空",1); 
 		return;
 	}
-	mmUtl.ajax.postJsonSyn(url.path+'/fcs-web-basicdata/basicdata/site/getSiteByCode.json', function(data){
+	mmUtl.ajax.postJsonSyn(url.path+'/wms-web-basicdata/basicdata/site/getSiteByCode.json', function(data){
 		if(data.code == 0){
 			mmui.oper("站点代码重复",1); 
 			setTimeout(function(){$("#siteCode").focus();},1);

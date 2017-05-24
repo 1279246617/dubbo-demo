@@ -78,7 +78,7 @@ $(function(){
 var id= getParam("id");
 function get(){
 	$("#titelDetail").html("查看币别");
-	mmUtl.ajax.getJson(url.path+'/fcs-web-basicdata/basicdata/currency/getCurrency', function(data){
+	mmUtl.ajax.getJson(url.path+'/wms-web-basicdata/basicdata/currency/getCurrency', function(data){
 		var currency=data.data;
 		initForm(currency);
 	},{
@@ -100,7 +100,7 @@ function add(){
 		}
 	
 		 var data = $("#currencyForm").serialize();
-		 mmUtl.ajax.postJsonAnt(url.path+'/fcs-web-basicdata/basicdata/currency/addCurrency', function(data){
+		 mmUtl.ajax.postJsonAnt(url.path+'/wms-web-basicdata/basicdata/currency/addCurrency', function(data){
 			mmui.oper(data.msg,1);
 			clearForm("currencyForm");
 		}, mmUtl.ajax.getArgs($("#currencyForm")))
@@ -115,7 +115,7 @@ function update(){
 			return false;
 		}
 		 var data = $("#currencyForm").serialize();
-		 mmUtl.ajax.postJsonAnt(url.path+'/fcs-web-basicdata/basicdata/currency/updateCurrency', function(data){
+		 mmUtl.ajax.postJsonAnt(url.path+'/wms-web-basicdata/basicdata/currency/updateCurrency', function(data){
 			mmui.oper(data.msg,1); 
 		}, mmUtl.ajax.getArgs($("#currencyForm")))
 	
@@ -148,7 +148,7 @@ function getCode(){
 		mmui.oper("币别代码不能为空",1); 
 		return;
 	}
-	mmUtl.ajax.postJsonSyn(url.path+'/fcs-web-basicdata/basicdata/currency/getCyNameByCyCode.json', function(data){
+	mmUtl.ajax.postJsonSyn(url.path+'/wms-web-basicdata/basicdata/currency/getCyNameByCyCode.json', function(data){
 		if(data.code == 0){
 			mmui.oper("币别代码重复",1); 
 			setTimeout(function(){$("#cyCode").focus();},1);

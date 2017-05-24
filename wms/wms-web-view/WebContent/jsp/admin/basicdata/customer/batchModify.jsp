@@ -69,7 +69,7 @@
 <script>
 $(function(){
 
-   mmUtl.ajax.postJson(url.path+"/fcs-web-symgr/symgr/dictItem/getAllItemByCode",function(data){
+   mmUtl.ajax.postJson(url.path+"/wms-web-symgr/symgr/dictItem/getAllItemByCode",function(data){
 	    var resultVo=data.data;
     	 $.each(resultVo,function(i,item){
     		 $("#dictPartnerType").append('<option value="'+item.itemCode+'">'+item.itemValue+'</option>');
@@ -79,7 +79,7 @@ $(function(){
 		code:'partner_type',
 		codeType:'aaa'
     });
-    mmUtl.ajax.postJson(url.path+"/fcs-web-symgr/symgr/userMgr/getAllUserCode",function(data){
+    mmUtl.ajax.postJson(url.path+"/wms-web-symgr/symgr/userMgr/getAllUserCode",function(data){
 	    var resultVo=data.data;
         $('#salesCode').typeahead({source: resultVo});
         $('#maintainCode').typeahead({source: resultVo});
@@ -95,7 +95,7 @@ $("#allPage").attr("value",idList);
 $("#submit_btn").click(function(){
 	cancelUnchecked();
 	var data = $("#toolform").serialize();
-	mmUtl.ajax.postJson(url.path+'/fcs-web-basicdata/basicdata/customer/batchmodify', function(data){
+	mmUtl.ajax.postJson(url.path+'/wms-web-basicdata/basicdata/customer/batchmodify', function(data){
 		mmui.oper(data.msg,1); 
 		location.reload();
 	}, mmUtl.ajax.getArgs($("#toolform")));
@@ -134,7 +134,7 @@ function cancelUnchecked(){
 	
 };
 function initSalesName(salesCode){
-	mmUtl.ajax.postJsonSyn(url.path+'/fcs-web-symgr/symgr/userMgr/getUserByUserCode', function(data){
+	mmUtl.ajax.postJsonSyn(url.path+'/wms-web-symgr/symgr/userMgr/getUserByUserCode', function(data){
 		var user=data.data;
 		
 		if(0!=data.code){
@@ -149,7 +149,7 @@ function initSalesName(salesCode){
 	
 };
 function initMaintainName(maintainCode){
-	mmUtl.ajax.postJsonSyn(url.path+'/fcs-web-symgr/symgr/userMgr/getUserByUserCode', function(data){
+	mmUtl.ajax.postJsonSyn(url.path+'/wms-web-symgr/symgr/userMgr/getUserByUserCode', function(data){
 		var user=data.data;
 		
 		if(0!=data.code){

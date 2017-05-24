@@ -130,7 +130,7 @@ $("#submit").click(function(){
 	var data = $("#addUserForm").serialize();
 	console.info('-------------->data:', data);
 	console.info('-------------->mmmdata:', mmUtl.ajax.getArgs($("#addUserForm")));
-	mmUtl.ajax.postJsonAnt('http://localhost:8080/fcs-web-user/user/userMgr/addUser', function(){
+	mmUtl.ajax.postJsonAnt('http://localhost:8080/wms-web-user/user/userMgr/addUser', function(){
 		console.info('--------->success:', arguments);
 	}, mmUtl.ajax.getArgs($("#addUserForm")))
 

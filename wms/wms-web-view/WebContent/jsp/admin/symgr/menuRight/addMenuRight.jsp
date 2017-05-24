@@ -90,7 +90,7 @@
 
 $("#submit").click(function(){
 	var data = $("#addMenuRightForm").serialize();
-	mmUtl.ajax.postJsonAnt(url.path+'/fcs-web-symgr/symgr/menu/addMenuRight', function(data){
+	mmUtl.ajax.postJsonAnt(url.path+'/wms-web-symgr/symgr/menu/addMenuRight', function(data){
 		mmui.oper(data.msg,1);
 		/* clearForm("addMenuRightForm"); */
 	}, mmUtl.ajax.getArgs($("#addMenuRightForm")))

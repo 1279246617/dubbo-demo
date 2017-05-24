@@ -57,7 +57,7 @@
 <script>
 $(function () {
 	mmList({
-		url:url.path+'/fcs-web-basicdata/basicdata/site/listSite.json',
+		url:url.path+'/wms-web-basicdata/basicdata/site/listSite.json',
 	 	onLoadSuccess:function(data){}, 
 		columns: [
 			{checkbox: true}, 
@@ -94,7 +94,7 @@ $(function () {
 		var id=data[0].id;
 		parent.mmui.confirm("确认删除站点资料"+data[0].siteName,function(delSite){
 			parent.mmui.close(delSite);
-			mmUtl.ajax.postJson(url.path+"/fcs-web-basicdata/basicdata/site/deleteSite",function(data){
+			mmUtl.ajax.postJson(url.path+"/wms-web-basicdata/basicdata/site/deleteSite",function(data){
 				   mmui.oper(data.msg,1); 
 				   document.location.reload();
 			    },{
@@ -132,7 +132,7 @@ $(function () {
 });
 //初始化站点下拉框
 function initSiteOption(){
-	  mmUtl.ajax.postJsonSyn(url.path+"/fcs-web-basicdata/basicdata/site/listALLSiteCode",function(data){
+	  mmUtl.ajax.postJsonSyn(url.path+"/wms-web-basicdata/basicdata/site/listALLSiteCode",function(data){
 		    var resultVo=data.data;
 		    $("#parentCode").typeahead({source: resultVo});
 		    $("#belongSite").typeahead({source: resultVo});

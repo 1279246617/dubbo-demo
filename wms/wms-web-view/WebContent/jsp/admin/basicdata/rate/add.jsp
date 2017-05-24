@@ -91,7 +91,7 @@ $(function(){
 });
 var id= getParam("id");
 var get=function(){
-	mmUtl.ajax.getJson(url.path+'/fcs-web-basicdata/basicdata/rate/getRate', function(data){
+	mmUtl.ajax.getJson(url.path+'/wms-web-basicdata/basicdata/rate/getRate', function(data){
 		var rate=data.data;
 		initForm(rate);
 	},{
@@ -121,7 +121,7 @@ function add(){
 			return false;
 		}
 		 var data = $("#rateForm").serialize();
-		 mmUtl.ajax.postJsonAnt(url.path+'/fcs-web-basicdata/basicdata/rate/addRate', function(data){
+		 mmUtl.ajax.postJsonAnt(url.path+'/wms-web-basicdata/basicdata/rate/addRate', function(data){
 			mmui.oper(data.msg,1);
 			clearForm("rateForm");
 		}, mmUtl.ajax.getArgs($("#rateForm")))
@@ -137,14 +137,14 @@ function update(){
 			return false;
 		}
 		 var data = $("#rateForm").serialize();
-		 mmUtl.ajax.postJsonAnt(url.path+'/fcs-web-basicdata/basicdata/rate/updateRate', function(data){
+		 mmUtl.ajax.postJsonAnt(url.path+'/wms-web-basicdata/basicdata/rate/updateRate', function(data){
 			mmui.oper(data.msg,1); 
 		}, mmUtl.ajax.getArgs($("#rateForm")))
 		
 	});
 };
 function initCyCode(){
-	 mmUtl.ajax.postJsonSyn(url.path+"/fcs-web-basicdata/basicdata/currency/getAllCurrency",function(data){
+	 mmUtl.ajax.postJsonSyn(url.path+"/wms-web-basicdata/basicdata/currency/getAllCurrency",function(data){
 		 $("#cyCode").append('<option value=""></option>');
 		    if(data.code==0){
 			    var resultVo=data.data;
@@ -171,7 +171,7 @@ $("#exrate").change(function(){
 });
 function validSame(cyCode,usedTime){
 	var code;
-	 mmUtl.ajax.postJsonSyn(url.path+"/fcs-web-basicdata/basicdata/rate/getRateByCodeAndTime",function(data){
+	 mmUtl.ajax.postJsonSyn(url.path+"/wms-web-basicdata/basicdata/rate/getRateByCodeAndTime",function(data){
            code=data.code;
 		 },{
 			 cyCode : cyCode, 

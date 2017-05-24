@@ -143,7 +143,7 @@
 	var userCode=getParam("userCode");
 	$(function(){
 		/* userCode = window.location.search.substring(1).replace('userCode=',''); */
-		mmUtl.ajax.postJson(url.path+"/fcs-web-symgr/symgr/group/listUserGroup.json",function(data){
+		mmUtl.ajax.postJson(url.path+"/wms-web-symgr/symgr/group/listUserGroup.json",function(data){
 			if(data.code == 0){
 				console.info(data);
 				/* adapterList(data.data,groupTPL,group); */
@@ -169,7 +169,7 @@
 		$("#groupRight").html(groupName);
 		
 		//异步请求该用户组下的权限
-		mmUtl.ajax.postJson(url.path+"/fcs-web-symgr/symgr/menu/listMenuRightTree.json",function(data){
+		mmUtl.ajax.postJson(url.path+"/wms-web-symgr/symgr/menu/listMenuRightTree.json",function(data){
 			if(data.code == 0){
 				console.info(data);
 				var nodes = data.data;
@@ -235,7 +235,7 @@
 			var dataJson=[];
 			if($('input[name="ck"]:checked').length == 0){
 				//执行删除user下的userGroup
-				mmUtl.ajax.postJsonAnt(url.path+'/fcs-web-symgr/symgr/userGoup/delUserGroup', function(data){
+				mmUtl.ajax.postJsonAnt(url.path+'/wms-web-symgr/symgr/userGoup/delUserGroup', function(data){
 					mmui.oper(data.msg,1); 
 				},{
 					"userCode":userCode
@@ -247,7 +247,7 @@
 					dataJson.push({"userCode":userCode,"groupCode":$(this).val()});
 				
 				});
-				mmUtl.ajax.postJsonAnt(url.path+'/fcs-web-symgr/symgr/userGoup/addUserGroupBatch', function(data){
+				mmUtl.ajax.postJsonAnt(url.path+'/wms-web-symgr/symgr/userGoup/addUserGroupBatch', function(data){
 					alert(data.msg);
 					mmui.oper(data.msg,1); 
 				},
