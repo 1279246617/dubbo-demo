@@ -10,16 +10,16 @@
     http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
 
 	<!-- 提供方应用信息，用于计算依赖关系 -->
-	<dubbo:application name="wms-service-user" />
+	<dubbo:application name="${dubbo.application.name}" />
 
 	<!-- 使用zookeeper注册中心暴露服务地址 -->
 	<dubbo:registry protocol="zookeeper" address="${dubbo.registry.address}" />
 
 	<!-- 从注册中心发现监控中心地址，如需直连监控中心address=${dubbo.monitor.address} -->
 	<dubbo:monitor protocol="registry" />
-
-	<!-- 用dubbo协议在20000端口暴露服务 -->
-	<dubbo:protocol name="dubbo" port="20000" />
+	
+	<!-- 用dubbo协议在xxx端口暴露服务 -->
+	<dubbo:protocol name="dubbo" port="${dubbo.protocol.port}" />
 
 	<!-- delay进行延迟暴露,配置超时时间,重试次数 -->
 	<dubbo:provider delay="0" timeout="6000" retries="0" />
