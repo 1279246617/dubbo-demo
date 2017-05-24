@@ -21,7 +21,7 @@
 	<aop:aspectj-autoproxy proxy-target-class="true" />
 
 	<!-- 引入properties配置文件 -->
-	<context:property-placeholder location="classpath*:jdbc.properties,classpath*:service.properties" ignore-unresolvable="true" />
+	<context:property-placeholder location="classpath*:jdbc.properties,classpath*:service.properties,classpath*:dubbo.properties" ignore-unresolvable="true" />
 
 	<!-- aop start -->
 	
