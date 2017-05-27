@@ -11,5 +11,6 @@
 
 	<modules>
     <module>wms-facade-user</module>
+    <module>wms-facade-mgmt</module>
   </modules>
 </project>
