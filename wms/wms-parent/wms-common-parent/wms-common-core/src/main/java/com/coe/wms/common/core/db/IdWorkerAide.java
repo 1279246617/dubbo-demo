@@ -18,7 +18,6 @@ public class IdWorkerAide {
 	 */
 	private static void initIdWorker() {
 		String workerIdKey = "sequence-workerId";
-
 		// 机器id
 		Integer workerId = (Integer) RedisClient.getInstance().getObject(workerIdKey);
 		if (workerId == null) {
@@ -41,7 +40,7 @@ public class IdWorkerAide {
 			datacenterId = 0;
 			workerId++;
 
-			// 每32 个数据中心id 换一个机器id
+	 		// 每32 个数据中心id 换一个机器id
 			RedisClient.getInstance().setObject(workerIdKey, workerId);
 			datacenterIdKey = "sequence-datacenterId" + workerId;
 			RedisClient.getInstance().setObject(datacenterIdKey, datacenterId);
