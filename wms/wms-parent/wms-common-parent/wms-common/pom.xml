@@ -107,6 +107,6 @@
 	</dependencies>
 	
 	<build>
-		<finalName>fcs-common</finalName>
+		<finalName>wms-common</finalName>
 	</build>
 </project>
