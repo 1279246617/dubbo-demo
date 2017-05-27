@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+
+	<localRepository>F:/maven/repository</localRepository>
+
+	<pluginGroups></pluginGroups>
+	<proxies></proxies>
+	
+	<mirrors>
+		<!--当a.jar在第一个mirror中不存在的时候，maven不会去第二个mirror中查询下载。当第一个mirror中不存在a.jar的时候，并不会去第二个mirror中查找，只有当前一个mirror无法连接的时候，才会去找后一个，类似于备份和容灾。-->
+		<!--maven仓库的优先级别为：本地仓库 >profile > pom中的repository > mirror -->
+		<!--
+		仅当公司私服挂了的时候,打开此注释
+		<mirror>
+		  <id>alimaven</id>
+		  <name>aliyun maven</name>
+		  <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+		  <mirrorOf>central</mirrorOf>        
+		</mirror>
+		-->
+		<mirror>
+			<id>nexus-releases</id>
+			<mirrorOf>*</mirrorOf>
+			<url>http://192.168.80.51:9001/nexus/content/groups/public</url>
+		</mirror>
+		<mirror>
+			<id>nexus-snapshots</id>
+			<mirrorOf>*</mirrorOf>
+			<url>http://192.168.80.51:9001/nexus/content/groups/public-snapshots</url>
+		</mirror>
+	</mirrors>
+	
+	<servers>
+		<server>
+			<id>nexus-releases</id>
+			<username>admin</username>
+			<password>admin123</password>
+		</server>
+		<server>
+			<id>nexus-snapshots</id>
+			<username>admin</username>
+			<password>admin123</password>
+		</server>
+	</servers>
+	 
+	<profiles>
+		<profile>
+			<id>nexus</id>
+			<repositories>
+				<repository>
+					<id>nexus-releases</id>
+					<url>http://192.168.80.51:9001/nexus/content/repositories/releases</url>
+					<releases>
+						<enabled>true</enabled>
+					</releases>
+					<snapshots>
+						<enabled>true</enabled>
+					</snapshots>
+				</repository>
+				<repository>
+					<id>nexus-snapshots</id>
+					<url>http://192.168.80.51:9001/nexus/content/repositories/snapshots</url>
+					<releases>
+						<enabled>true</enabled>
+					</releases>
+					<snapshots>
+						<enabled>true</enabled>
+					</snapshots>
+				</repository>
+			</repositories>
+			<pluginRepositories>
+				<pluginRepository>
+					<id>nexus-releases</id>
+					<url>http://192.168.80.51:9001/nexus/content/repositories/releases</url>
+					<releases>
+						<enabled>true</enabled>
+					</releases>
+					<snapshots>
+						<enabled>true</enabled>
+					</snapshots>
+				</pluginRepository>
+				<pluginRepository>
+					<id>nexus-snapshots</id>
+					<url>http://192.168.80.51:9001/nexus/content/repositories/snapshots</url>
+					<releases>
+						<enabled>true</enabled>
+					</releases>
+					<snapshots>
+						<enabled>true</enabled>
+					</snapshots>
+				</pluginRepository>
+			</pluginRepositories>
+		</profile>
+	</profiles>
+
+	<activeProfiles>
+		<activeProfile>nexus</activeProfile>
+	</activeProfiles>
+
+</settings>
