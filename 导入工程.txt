@@ -1,0 +1,26 @@
+仓配系统后端服务工程
+
+外网地址:svn://183.57.45.146/Java/wms/wms-parent
+内网地址:svn://192.168.80.10/Java/wms/wms-parent
+
+方法1:eclipse svn 从svn检出项目,在eclipse删除项目(不删除源文件),再通过eclipse->File->Import->Existing Maven Projects
+
+方法2:svn客户端检出代码到本地,再通过eclipse->File->Import->Existing Maven Projects
+
+
+仓配系统前端工程
+
+地址:svn://192.168.80.10/Java/wms/wms-web-view
+
+
+
+
+
+辅助工程
+
+mybatis代码生成器工程
+地址:svn://192.168.80.10/Java/wms/mybatis-generator
+
+mybatis分页插件工程
+地址:svn://192.168.80.10/Java/wms/mybatis-plugin-page
+

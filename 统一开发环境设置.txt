@@ -1,0 +1,40 @@
+﻿版本:JDK1.8, eclipse-jee-neon-2-win32-x86_64 , maven3.39
+
+一 eclipse设置
+
+1. eclipse 目录下 打开eclipse.ini文件添加 -Xms256m -Xmx1024m -Duser.name=你的名字 
+
+2. Window -> Preferences ->Java -> Code Style -> Code Template -> Comments ->Import 导入codetemplates.xml
+
+3. Window -> Preferences ->Java -> Code Style ->Formatter -> -New -> Edit
+   Line Wrapping -> Maximum line width:150  
+   Comments -> Line width Maxinmum line ...:150
+
+4. Window -> Preferences -> XML -> XML Catelog -> Add -> File System.. 选择dubbo.xsd, 然后对key值加上/dubbo.xsd
+
+5. 设置 Installed JREs : 【Window】-->【Prefrences】-->【Java】-->【Installed JREs】修为为JDK
+
+6. SVN插件版本1.6x, 在线安装地址:http://subclipse.tigris.org/update_1.6.x  (不要使用高于1.6版本,否则引发服务器版本兼容问题)
+   安装时,去掉Show only the latest versions ... ; contact all update sites during intall to ...  选项
+
+
+7. 无特殊说明,编码统一UTF-8
+
+
+二 maven设置
+
+1.替换settings.xml (settings.xml内配置了maven本地仓库地址,请自行选择本地仓库地址)
+
+2.设置eclipse maven 配置文件为settings.xml 
+	 Window -> Preferences ->User settings .. Browse..
+
+
+	 
+三  svn插件设置
+
+1.svn设置隐藏target目录
+	Windows -> Preferences -> Team -> Ignored Resources -> Add Pattern 输入 */target/*
+	
+	
+2.svn 解决 Failed to load JavaHL Library
+	Windows -> Preferences -> Team -> SVN -> SVN接口 选SVNKit....

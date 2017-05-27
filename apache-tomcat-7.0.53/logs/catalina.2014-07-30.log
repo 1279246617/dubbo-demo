@@ -1,0 +1,34 @@
+七月 30, 2014 10:45:53 上午 org.apache.catalina.core.AprLifecycleListener init
+信息: Loaded APR based Apache Tomcat Native library 1.1.29 using APR version 1.4.8.
+七月 30, 2014 10:45:53 上午 org.apache.catalina.core.AprLifecycleListener init
+信息: APR capabilities: IPv6 [true], sendfile [true], accept filters [false], random [true].
+七月 30, 2014 10:45:54 上午 org.apache.catalina.core.AprLifecycleListener initializeSSL
+信息: OpenSSL successfully initialized (OpenSSL 1.0.1e 11 Feb 2013)
+七月 30, 2014 10:45:55 上午 org.apache.coyote.AbstractProtocol init
+信息: Initializing ProtocolHandler ["http-apr-8080"]
+七月 30, 2014 10:45:55 上午 org.apache.coyote.AbstractProtocol init
+信息: Initializing ProtocolHandler ["ajp-apr-8009"]
+七月 30, 2014 10:45:55 上午 org.apache.catalina.startup.Catalina load
+信息: Initialization processed in 3469 ms
+七月 30, 2014 10:45:55 上午 org.apache.catalina.core.StandardService startInternal
+信息: Starting service Catalina
+七月 30, 2014 10:45:55 上午 org.apache.catalina.core.StandardEngine startInternal
+信息: Starting Servlet Engine: Apache Tomcat/7.0.53
+七月 30, 2014 10:45:55 上午 org.apache.catalina.startup.HostConfig deployDirectory
+信息: Deploying web application directory F:\tomcat-7-x86\apache-tomcat-7.0.53\webapps\docs
+七月 30, 2014 10:45:57 上午 org.apache.catalina.util.SessionIdGenerator createSecureRandom
+信息: Creation of SecureRandom instance for session ID generation using [SHA1PRNG] took [157] milliseconds.
+七月 30, 2014 10:45:57 上午 org.apache.catalina.startup.HostConfig deployDirectory
+信息: Deploying web application directory F:\tomcat-7-x86\apache-tomcat-7.0.53\webapps\examples
+七月 30, 2014 10:45:58 上午 org.apache.catalina.startup.HostConfig deployDirectory
+信息: Deploying web application directory F:\tomcat-7-x86\apache-tomcat-7.0.53\webapps\host-manager
+七月 30, 2014 10:45:58 上午 org.apache.catalina.startup.HostConfig deployDirectory
+信息: Deploying web application directory F:\tomcat-7-x86\apache-tomcat-7.0.53\webapps\manager
+七月 30, 2014 10:45:59 上午 org.apache.catalina.startup.HostConfig deployDirectory
+信息: Deploying web application directory F:\tomcat-7-x86\apache-tomcat-7.0.53\webapps\ROOT
+七月 30, 2014 10:45:59 上午 org.apache.coyote.AbstractProtocol start
+信息: Starting ProtocolHandler ["http-apr-8080"]
+七月 30, 2014 10:45:59 上午 org.apache.coyote.AbstractProtocol start
+信息: Starting ProtocolHandler ["ajp-apr-8009"]
+七月 30, 2014 10:45:59 上午 org.apache.catalina.startup.Catalina start
+信息: Server startup in 3734 ms
