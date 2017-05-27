@@ -2,4 +2,4 @@
 
 提供基础能力
 
-redis缓存能力,http封装能力
+redis缓存能力,http封装能力,db实现支持

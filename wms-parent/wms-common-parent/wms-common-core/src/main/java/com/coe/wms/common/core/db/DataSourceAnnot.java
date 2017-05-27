@@ -7,7 +7,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 数据源注解,注解在方法上
+ * 数据源注解,注解在facade实现类的方法上
  * 
  * @ClassName: DataSource
  * @author yechao
