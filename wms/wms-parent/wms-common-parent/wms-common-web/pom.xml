@@ -14,7 +14,6 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
-
 	<dependencies>
 		<!-- common层 -->
 		<dependency>
@@ -224,4 +223,8 @@
 		</dependency>
 		<!-- swagger dependency end -->
 	</dependencies>
+
+	<build>
+		<finalName>wms-common-web</finalName>
+	</build>
 </project>

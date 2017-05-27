@@ -197,4 +197,8 @@
 		</dependency>
 		<!-- servlet end -->
 	</dependencies>
+
+	<build>
+		<finalName>wms-common-core</finalName>
+	</build>
 </project>
