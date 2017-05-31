@@ -11,5 +11,6 @@
 	<modules>
 		<module>wms-web-user</module>
     <module>wms-web-mgmt</module>
+    <module>wms-web-symgmt</module>
   </modules>
 </project>

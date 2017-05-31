@@ -34,16 +34,15 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>1.8</java.version>
+
 		<!--子工程版本声明 start -->
 		<wms-common-config.version>0.0.1-SNAPSHOT</wms-common-config.version>
 		<wms-common-core.version>0.0.1-SNAPSHOT</wms-common-core.version>
 		<wms-common-web.version>0.0.1-SNAPSHOT</wms-common-web.version>
 		<wms-common.version>0.0.1-SNAPSHOT</wms-common.version>
 
-		<wms-facade-user.version>0.0.1-SNAPSHOT</wms-facade-user.version>
-		<wms-facade-symgr.version>0.0.1-SNAPSHOT</wms-facade-symgr.version>
-		<wms-facade-basicdata.version>0.0.1-SNAPSHOT</wms-facade-basicdata.version>
-		<wms-facade-clearing.version>0.0.1-SNAPSHOT</wms-facade-clearing.version>
+		<wms-facade-symgmt.version>0.0.1-SNAPSHOT</wms-facade-symgmt.version>
+
 
 		<!--子工程版本声明 end -->
 
@@ -133,6 +132,17 @@
 				<version>${wms-common-web.version}</version>
 			</dependency>
 			<!-- common层end -->
+
+			<!-- facade层 start -->
+			<dependency>
+				<groupId>com.coe.wms</groupId>
+				<artifactId>wms-facade-symgmt</artifactId>
+				<version>${wms-facade-symgmt.version}</version>
+			</dependency>
+			
+			
+			<!-- facade层 end -->
+
 
 			<!-- 单元测试 start -->
 			<dependency>
