@@ -12,5 +12,6 @@
 	<modules>
 		<module>wms-service-user</module>
     <module>wms-service-mgmt</module>
+    <module>wms-service-symgmt</module>
   </modules>
 </project>
