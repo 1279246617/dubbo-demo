@@ -14,5 +14,6 @@
     <module>wms-service-api</module>
     <module>wms-service-inventory</module>
     <module>wms-service-ms</module>
+    <module>wms-service-inwarehouse</module>
   </modules>
 </project>
