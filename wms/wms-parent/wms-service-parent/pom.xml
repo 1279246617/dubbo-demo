@@ -15,5 +15,8 @@
     <module>wms-service-inventory</module>
     <module>wms-service-ms</module>
     <module>wms-service-inwarehouse</module>
+    <module>wms-service-outwarehouse</module>
+    <module>wms-service-report</module>
+    <module>wms-service-base</module>
   </modules>
 </project>
