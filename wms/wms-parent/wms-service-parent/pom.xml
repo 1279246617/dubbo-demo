@@ -12,5 +12,7 @@
 	<modules>
     <module>wms-service-symgmt</module>
     <module>wms-service-api</module>
+    <module>wms-service-inventory</module>
+    <module>wms-service-ms</module>
   </modules>
 </project>

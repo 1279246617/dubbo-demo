@@ -11,5 +11,6 @@
 	<modules>
     <module>wms-web-symgmt</module>
     <module>wms-web-api</module>
+    <module>wms-web-inventory</module>
   </modules>
 </project>
