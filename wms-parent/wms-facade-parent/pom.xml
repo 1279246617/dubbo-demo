@@ -12,5 +12,7 @@
 	<modules>
     <module>wms-facade-symgmt</module>
     <module>wms-facade-api</module>
+    <module>wms-facade-inventory</module>
+    <module>wms-facade-ms</module>
   </modules>
 </project>
