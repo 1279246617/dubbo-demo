@@ -15,5 +15,8 @@
     <module>wms-facade-inventory</module>
     <module>wms-facade-ms</module>
     <module>wms-facade-inwarehouse</module>
+    <module>wms-facade-outwarehouse</module>
+    <module>wms-facade-report</module>
+    <module>wms-facade-base</module>
   </modules>
 </project>

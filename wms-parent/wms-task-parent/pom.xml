@@ -11,5 +11,6 @@
   <name>wms-task-parent</name>
   <modules>
     <module>wms-task-ms</module>
+    <module>wms-task-report</module>
   </modules>
 </project>

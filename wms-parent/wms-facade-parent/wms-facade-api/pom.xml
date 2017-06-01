@@ -7,9 +7,7 @@
     <artifactId>wms-facade-parent</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
-  <groupId>com.coe.wms</groupId>
   <artifactId>wms-facade-api</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
   <name>wms-facade-api</name>
   <url>http://maven.apache.org</url>
   <properties>

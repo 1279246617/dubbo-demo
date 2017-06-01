@@ -13,5 +13,8 @@
     <module>wms-web-api</module>
     <module>wms-web-inventory</module>
     <module>wms-web-inwarehouse</module>
+    <module>wms-web-outwarehouse</module>
+    <module>wms-web-report</module>
+    <module>wms-web-base</module>
   </modules>
 </project>
