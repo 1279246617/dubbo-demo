@@ -10,8 +10,6 @@
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>wms-service-user</module>
-    <module>wms-service-mgmt</module>
     <module>wms-service-symgmt</module>
     <module>wms-service-api</module>
   </modules>
