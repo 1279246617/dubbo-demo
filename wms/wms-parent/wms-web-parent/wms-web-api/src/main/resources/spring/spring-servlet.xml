@@ -19,7 +19,7 @@
 
 	<!-- dubbo 配置..........................................start -->
 	<!--消费方应用名，用于计算依赖关系，不是匹配条件，不要与提供方一样 -->
-	<dubbo:application name="fcs-web-symgr" />
+	<dubbo:application name="wms-web-symgr" />
 	<!-- 使用zookeeper注册中心暴露服务地址 -->
 	<dubbo:registry protocol="zookeeper" address="${dubbo.registry.address}" />
 	<!-- 从注册中心发现监控中心地址 -->
@@ -29,11 +29,11 @@
 	<!-- MVC转换 -->
 	<mvc:annotation-driven />
 	<mvc:default-servlet-handler />
-	<dubbo:annotation package="com.coe.fcs.web" />
+	<dubbo:annotation package="com.coe.wms.web" />
 	<!-- dubbo 配置..........................................end -->
 
 	<!-- 扫描类包，将标注Spring注解的类自动转化Bean，同时完成Bean的注入 -->
-	<context:component-scan base-package="com.coe.fcs.web." />
+	<context:component-scan base-package="com.coe.wms.web." />
 
 	<!-- CGLIB动态代理 -->
 	<aop:aspectj-autoproxy proxy-target-class="true" />
@@ -41,9 +41,9 @@
 	<!-- aop start -->
 
 	<!-- 异常处理 -->
-	<bean class="com.coe.fcs.common.web.aspect.WebExceptionAspect" />
+	<bean class="com.coe.wms.common.web.aspect.WebExceptionAspect" />
 	<!-- 日志处理 -->
-	<bean class="com.coe.fcs.common.web.aspect.WebLogAspect" />
+	<bean class="com.coe.wms.common.web.aspect.WebLogAspect" />
 
 	<!-- aop end -->
 
@@ -65,7 +65,7 @@
 		<mvc:interceptor>
 			<!--拦截所有请求 -->
 			<mvc:mapping path="/**" />
-			<bean class="com.coe.fcs.common.web.interceptor.SessionInterceptor">
+			<bean class="com.coe.wms.common.web.interceptor.SessionInterceptor">
 				<!-- 若有路径不需要拦截,使用正则配置unInterceptUrls -->
 				<property name="unInterceptUrls" value=".*login.*|.*open.*|.*api.*" />
 			</bean>
@@ -73,5 +73,5 @@
 	</mvc:interceptors>
 	
 	<!-- 注入swagger配置类 -->
-	<bean class="com.coe.fcs.common.web.swagger.MySwaggerConfig"></bean>
+	<bean class="com.coe.wms.common.web.swagger.MySwaggerConfig"></bean>
 </beans>
