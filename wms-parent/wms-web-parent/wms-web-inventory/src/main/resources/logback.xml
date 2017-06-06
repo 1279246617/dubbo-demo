@@ -13,9 +13,9 @@
 	<appender name="file"
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
 		<Encoding>UTF-8</Encoding>
-		<File>/mnt/fcs/web/symgr/fcs.log</File>
+		<File>/mnt/wms/web/symgr/wms.log</File>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<FileNamePattern>/mnt/fcs/web/symgr/fcs-%d{yyyy-MM-dd}.log
+			<FileNamePattern>/mnt/wms/web/symgr/wms-%d{yyyy-MM-dd}.log
 			</FileNamePattern>
 			<MaxHistory>10</MaxHistory>
 			<TimeBasedFileNamingAndTriggeringPolicy

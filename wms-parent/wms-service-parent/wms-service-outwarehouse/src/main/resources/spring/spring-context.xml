@@ -26,13 +26,13 @@
 	<!-- aop start -->
 	
 	<!-- 异常处理 -->
-	<bean class="com.coe.fcs.common.aspect.ServiceExceptionAspect" />
+	<bean class="com.coe.wms.common.aspect.ServiceExceptionAspect" />
 	
 	<!-- 数据源主从切换控制 -->
-	<!-- <bean class="com.coe.fcs.common.core.db.DataSourceAspect" /> -->
+	<!-- <bean class="com.coe.wms.common.core.db.DataSourceAspect" /> -->
 	
 	<!-- redis缓存 -->
-	<bean class="com.coe.fcs.common.core.cache.CacheAspect" />
+	<bean class="com.coe.wms.common.core.cache.CacheAspect" />
 	
 	<!-- aop end -->
 	
