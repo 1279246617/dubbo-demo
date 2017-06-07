@@ -16,7 +16,8 @@ PRIMARY KEY (`id`)
 CREATE TABLE `w_warehouse` (
 `id`  bigint NULL ,
 `whse_name`  varchar(50) NULL COMMENT '仓库名字' ,
-`whse_code`  varchar(20) NULL COMMENT '仓库代码' 
+`whse_code`  varchar(20) NULL COMMENT '仓库代码',
+PRIMARY KEY (`id`)
 );
 
 #服务器表
@@ -24,7 +25,8 @@ CREATE TABLE `s_server` (
 `id`  bigint NULL ,
 `server_code`  varchar(20) NULL COMMENT '服务器代码' ,
 `server_name`  varchar(50) NULL COMMENT '服务器名字' ,
-`server_index_url`  varchar(255) NULL COMMENT '服务器入口地址' 
+`server_index_url`  varchar(255) NULL COMMENT '服务器入口地址',
+PRIMARY KEY (`id`)
 );
 
 #客户表
