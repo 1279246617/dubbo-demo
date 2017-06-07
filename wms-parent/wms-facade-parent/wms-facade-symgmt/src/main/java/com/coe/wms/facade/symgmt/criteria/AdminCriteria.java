@@ -5,14 +5,14 @@ import java.util.Date;
 import java.util.List;
 import org.mybatis.plugin.model.QueryParam;
 
-public class AadminCriteria extends QueryParam {
+public class AdminCriteria extends QueryParam {
     protected String orderByClause;
 
     protected boolean distinct;
 
     protected List<Criteria> oredCriteria;
 
-    public AadminCriteria() {
+    public AdminCriteria() {
         oredCriteria = new ArrayList<Criteria>();
     }
 

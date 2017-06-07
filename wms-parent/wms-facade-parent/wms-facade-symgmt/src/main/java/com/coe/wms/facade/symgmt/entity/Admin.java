@@ -3,7 +3,7 @@ package com.coe.wms.facade.symgmt.entity;
 import java.io.Serializable;
 import java.util.Date;
 
-public class Aadmin implements Serializable {
+public class Admin implements Serializable {
     private Long id;
 
     private String userName;
@@ -24,7 +24,7 @@ public class Aadmin implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public Aadmin() {
+    public Admin() {
         super();
     }
 
