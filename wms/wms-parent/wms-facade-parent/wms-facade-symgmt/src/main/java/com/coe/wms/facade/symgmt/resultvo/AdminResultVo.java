@@ -1,15 +1,14 @@
-package com.coe.wms.facade.symgmt.queryvo;
+package com.coe.wms.facade.symgmt.resultvo;
 
+import java.io.Serializable;
 import java.util.Date;
 
-import org.mybatis.plugin.model.QueryParam;
+public class AdminResultVo implements Serializable {
 
-public class AadminQueryVo extends QueryParam {
-	
 	/**  
 	* @Fields serialVersionUID : TODO  
 	*/   
-	private static final long serialVersionUID = -268326298282768868L;
+	private static final long serialVersionUID = -4273244832171932990L;
 
 	private Long id;
 
@@ -28,10 +27,6 @@ public class AadminQueryVo extends QueryParam {
 	private Date lastUpdatedTime;
 
 	private Long lastsUpdatedByAdminId;
-
-	public AadminQueryVo() {
-		super();
-	}
 
 	public Long getId() {
 		return id;
