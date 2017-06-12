@@ -3,7 +3,7 @@ package com.coe.wms.facade.symgmt.service;
 import com.coe.wms.facade.symgmt.entity.Server;
 import org.mybatis.plugin.model.Pager;
 
-public interface ServerService {
+public interface IServerFacade {
     Server add(Server record);
 
     boolean delete(Long id);
