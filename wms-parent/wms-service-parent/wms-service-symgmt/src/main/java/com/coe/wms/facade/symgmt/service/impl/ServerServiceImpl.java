@@ -1,53 +1,39 @@
 package com.coe.wms.facade.symgmt.service.impl;
 
-import java.util.List;
-
 import org.mybatis.plugin.model.Pager;
-import org.mybatis.plugin.util.PagerUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.coe.wms.facade.symgmt.criteria.ServerCriteria;
-import com.coe.wms.facade.symgmt.criteria.ServerCriteria.Criteria;
 import com.coe.wms.facade.symgmt.entity.Server;
 import com.coe.wms.facade.symgmt.service.ServerService;
-import com.coe.wms.service.symgmt.mapper.ServerMapper;
+import com.coe.wms.service.symgmt.biz.ServerBiz;
 
 @Service("serverService")
 public class ServerServiceImpl implements ServerService {
-    @Autowired
-    private ServerMapper serverMapper;
+	@Autowired
+	private ServerBiz serverBiz;
 
-    private static final Logger logger = LoggerFactory.getLogger(ServerServiceImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(ServerServiceImpl.class);
 
-    public Server add(Server record) {
-        if(this.serverMapper.insertSelective(record)==1)
-        	return record; 
-        return null;
-    }
+	public Server add(Server record) {
+		return this.serverBiz.add(record);
+	}
 
-    public boolean delete(Long id) {
-        return this.serverMapper.deleteByPrimaryKey(id)==1;
-    }
+	public boolean delete(Long id) {
+		return this.serverBiz.delete(id);
+	}
 
-    public Server update(Server record) {
-        if(this.serverMapper.updateByPrimaryKeySelective(record)==1)
-        	return record;
-        return null;
-    }
+	public Server update(Server record) {
+		return this.serverBiz.update(record);
+	}
 
-    public Server get(Long id) {
-        return this.serverMapper.selectByPrimaryKey(id);
-    }
+	public Server get(Long id) {
+		return this.serverBiz.get(id);
+	}
 
-    public Pager<Server> list(int page, int limit) {
-        ServerCriteria criteria = new ServerCriteria();
-        criteria.setPage(page);
-        criteria.setLimit(limit);
-        Criteria cri = criteria.createCriteria();
-        List<Server> list = serverMapper.selectByConditionList(criteria);
-        return PagerUtil.getPager(list, criteria);
-    }
+	public Pager<Server> list(int page, int limit) {
+		return this.serverBiz.list(page, limit);
+	}
 }

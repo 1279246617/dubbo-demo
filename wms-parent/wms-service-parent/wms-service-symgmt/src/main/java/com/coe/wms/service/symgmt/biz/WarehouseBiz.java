@@ -7,47 +7,47 @@ import org.mybatis.plugin.util.PagerUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import com.coe.wms.facade.symgmt.criteria.WarehouseCriteria;
 import com.coe.wms.facade.symgmt.criteria.WarehouseCriteria.Criteria;
 import com.coe.wms.facade.symgmt.entity.Warehouse;
-import com.coe.wms.facade.symgmt.service.WarehouseService;
 import com.coe.wms.service.symgmt.mapper.WarehouseMapper;
 
-@Service("warehouseService")
-public class WarehouseBiz implements WarehouseService {
-    @Autowired
-    private WarehouseMapper warehouseMapper;
+@Component
+public class WarehouseBiz {
 
-    private static final Logger logger = LoggerFactory.getLogger(WarehouseBiz.class);
+	@Autowired
+	private WarehouseMapper warehouseMapper;
 
-    public Warehouse add(Warehouse record) {
-        if(this.warehouseMapper.insertSelective(record)==1)
-        	return record; 
-        return null;
-    }
+	private static final Logger logger = LoggerFactory.getLogger(WarehouseBiz.class);
 
-    public boolean delete(Long id) {
-        return this.warehouseMapper.deleteByPrimaryKey(id)==1;
-    }
+	public Warehouse add(Warehouse record) {
+		if (this.warehouseMapper.insertSelective(record) == 1)
+			return record;
+		return null;
+	}
 
-    public Warehouse update(Warehouse record) {
-        if(this.warehouseMapper.updateByPrimaryKeySelective(record)==1)
-        	return record;
-        return null;
-    }
+	public boolean delete(Long id) {
+		return this.warehouseMapper.deleteByPrimaryKey(id) == 1;
+	}
 
-    public Warehouse get(Long id) {
-        return this.warehouseMapper.selectByPrimaryKey(id);
-    }
+	public Warehouse update(Warehouse record) {
+		if (this.warehouseMapper.updateByPrimaryKeySelective(record) == 1)
+			return record;
+		return null;
+	}
 
-    public Pager<Warehouse> list(int page, int limit) {
-        WarehouseCriteria criteria = new WarehouseCriteria();
-        criteria.setPage(page);
-        criteria.setLimit(limit);
-        Criteria cri = criteria.createCriteria();
-        List<Warehouse> list = warehouseMapper.selectByConditionList(criteria);
-        return PagerUtil.getPager(list, criteria);
-    }
+	public Warehouse get(Long id) {
+		return this.warehouseMapper.selectByPrimaryKey(id);
+	}
+
+	public Pager<Warehouse> list(int page, int limit) {
+		WarehouseCriteria criteria = new WarehouseCriteria();
+		criteria.setPage(page);
+		criteria.setLimit(limit);
+		Criteria cri = criteria.createCriteria();
+		List<Warehouse> list = warehouseMapper.selectByConditionList(criteria);
+		return PagerUtil.getPager(list, criteria);
+	}
 }
