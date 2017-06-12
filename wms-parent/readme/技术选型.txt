@@ -21,3 +21,5 @@
 持久层框架：MyBatis 3.2
 
 日志管理：SLF4J 1.7、Log4j
+
+API网关:OpenResty 
