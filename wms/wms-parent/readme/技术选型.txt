@@ -22,4 +22,4 @@
 
 日志管理：SLF4J 1.7、Log4j
 
-API网关:OpenResty 
+API网关:Kong 

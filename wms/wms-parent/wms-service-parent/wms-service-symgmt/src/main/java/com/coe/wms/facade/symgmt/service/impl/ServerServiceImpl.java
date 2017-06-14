@@ -7,11 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.coe.wms.facade.symgmt.entity.Server;
-import com.coe.wms.facade.symgmt.service.ServerService;
+import com.coe.wms.facade.symgmt.service.IServerFacade;
 import com.coe.wms.service.symgmt.biz.ServerBiz;
 
 @Service("serverService")
-public class ServerServiceImpl implements ServerService {
+public class ServerServiceImpl implements IServerFacade {
 	@Autowired
 	private ServerBiz serverBiz;
 
