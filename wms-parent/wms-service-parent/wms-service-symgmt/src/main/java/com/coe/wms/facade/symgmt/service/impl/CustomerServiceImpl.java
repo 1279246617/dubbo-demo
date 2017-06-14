@@ -7,11 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.coe.wms.facade.symgmt.entity.Customer;
-import com.coe.wms.facade.symgmt.service.CustomerService;
+import com.coe.wms.facade.symgmt.service.ICustomerFacade;
 import com.coe.wms.service.symgmt.biz.CustomerBiz;
 
 @Service("customerService")
-public class CustomerServiceImpl implements CustomerService {
+public class CustomerServiceImpl implements ICustomerFacade {
 	@Autowired
 	private CustomerBiz customerBiz;
 
