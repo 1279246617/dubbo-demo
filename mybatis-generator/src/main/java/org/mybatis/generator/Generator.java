@@ -16,20 +16,19 @@ import org.mybatis.generator.internal.DefaultShellCallback;
 public class Generator {
 
 	public static void main(String[] args) throws SQLException, InterruptedException, InvalidConfigurationException {
-           List<String> warnings = new ArrayList<String>();
-           boolean overwrite = true;
-           File configFile = new File("generator.xml");
-           ConfigurationParser cp = new ConfigurationParser(warnings);
-           Configuration config;
+		List<String> warnings = new ArrayList<String>();
+		boolean overwrite = true;
+		File configFile = new File("generator.xml");
+		ConfigurationParser cp = new ConfigurationParser(warnings);
+		Configuration config;
 		try {
 			config = cp.parseConfiguration(configFile);
 			DefaultShellCallback callback = new DefaultShellCallback(overwrite);
-	           MyBatisGenerator myBatisGenerator = new MyBatisGenerator(config, callback, warnings);
-	           myBatisGenerator.generate(null);
+			MyBatisGenerator myBatisGenerator = new MyBatisGenerator(config, callback, warnings);
+			myBatisGenerator.generate(null);
 		} catch (IOException | XMLParserException e) {
 			e.printStackTrace();
 		}
-           
 
 	}
 

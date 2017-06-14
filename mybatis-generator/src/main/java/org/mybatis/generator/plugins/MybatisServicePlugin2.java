@@ -122,18 +122,17 @@ public class MybatisServicePlugin2 extends PluginAdapter {
 		List<GeneratedJavaFile> files = new ArrayList<GeneratedJavaFile>();
 		String table = introspectedTable.getBaseRecordType();
 		String tableName = table.replaceAll(this.pojoUrl + ".", "");
+		
+		
 		interfaceType = new FullyQualifiedJavaType(servicePack + "." + tableName + "Service");
-
 		// mybatis
 		daoType = new FullyQualifiedJavaType(introspectedTable.getMyBatis3JavaMapperType());
-
 		// logger.info(toLowerCase(daoType.getShortName()));
 		serviceType = new FullyQualifiedJavaType(serviceImplPack + "." + tableName + "ServiceImpl");
-
 		pojoType = new FullyQualifiedJavaType(pojoUrl + "." + tableName);
-
-		pojoCriteriaType = new FullyQualifiedJavaType(pojoUrl + "." + tableName + "Criteria");
-		pojoSubCriteriaType=new FullyQualifiedJavaType(pojoUrl + "." + tableName + "Criteria.Criteria");
+		pojoCriteriaType = new FullyQualifiedJavaType(pojoUrl.replaceAll("entity", "criteria") + "." + tableName + "Criteria");
+		pojoSubCriteriaType = new FullyQualifiedJavaType(pojoUrl.replaceAll("entity", "criteria")  + "." + tableName + "Criteria.Criteria");
+		
 		listType = new FullyQualifiedJavaType("java.util.List");
 		mapType  = new FullyQualifiedJavaType("java.util.Map");
 		stringUtilsType =new FullyQualifiedJavaType("org.apache.commons.lang.StringUtils");
