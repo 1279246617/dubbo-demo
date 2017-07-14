@@ -10,7 +10,7 @@ public class GenMysqlCountUtil {
 	/** 结果集最后一个子查询 */
 	public static Pattern lastSubquery = Pattern.compile("\\(\\s*select[^\\)]+\\)[\\s\\w]+?(?!from)", Pattern.CASE_INSENSITIVE);
 	/** 外层order by */
-	public static Pattern pOrder = Pattern.compile("order\\s+by(\\s[\\w\\.]+)?(\\s*,\\s*[\\w\\.]+)*", Pattern.CASE_INSENSITIVE);
+	public static Pattern pOrder = Pattern.compile("order\\s+by(\\s[\\w\\.]+(\\s*asc|\\s*desc)*)?(\\s*,\\s*[\\w\\.]+(\\s*asc|\\s*desc)*)*", Pattern.CASE_INSENSITIVE);
 	/** 外层group by */
 	public static Pattern pGroup = Pattern.compile("group\\s+by(\\s[\\w\\.]+)?(\\s*,\\s*[\\w\\.]+)*", Pattern.CASE_INSENSITIVE);
 	/** 外层limit */
