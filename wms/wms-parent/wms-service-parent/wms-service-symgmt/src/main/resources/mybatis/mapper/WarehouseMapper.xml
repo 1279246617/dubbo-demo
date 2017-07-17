@@ -5,6 +5,8 @@
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="whse_name" property="whseName" jdbcType="VARCHAR" />
     <result column="whse_code" property="whseCode" jdbcType="VARCHAR" />
+    <result column="p_code" property="pCode" jdbcType="VARCHAR" />
+    <result column="p_id" property="pId" jdbcType="BIGINT" />
   </resultMap>
   <sql id="Condition_Where_Clause" >
     <where >
@@ -36,7 +38,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, whse_name, whse_code
+    id, whse_name, whse_code, p_code, p_id
   </sql>
   <select id="selectByConditionList" resultMap="BaseResultMap" parameterType="com.coe.wms.facade.symgmt.entity.WarehouseCriteria" >
     select
@@ -83,6 +85,12 @@
       <if test="whseCode != null" >
         whse_code,
       </if>
+      <if test="pCode != null" >
+        p_code,
+      </if>
+      <if test="pId != null" >
+        p_id,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -93,6 +101,12 @@
       </if>
       <if test="whseCode != null" >
         #{whseCode,jdbcType=VARCHAR},
+      </if>
+      <if test="pCode != null" >
+        #{pCode,jdbcType=VARCHAR},
+      </if>
+      <if test="pId != null" >
+        #{pId,jdbcType=BIGINT},
       </if>
     </trim>
   </insert>
@@ -110,6 +124,12 @@
       </if>
       <if test="whseCode != null" >
         whse_code = #{whseCode,jdbcType=VARCHAR},
+      </if>
+      <if test="pCode != null" >
+        p_code = #{pCode,jdbcType=VARCHAR},
+      </if>
+      <if test="pId != null" >
+        p_id = #{pId,jdbcType=BIGINT},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
