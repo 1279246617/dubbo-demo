@@ -1,9 +1,9 @@
 package com.coe.wms.service.symgmt.mapper;
 
-import java.util.List;
-
-import com.coe.wms.facade.symgmt.criteria.OperatorCriteria;
 import com.coe.wms.facade.symgmt.entity.Operator;
+import com.coe.wms.facade.symgmt.entity.OperatorCriteria;
+
+import java.util.List;
 
 public interface OperatorMapper {
     int deleteByCondition(OperatorCriteria condition);

@@ -1,9 +1,9 @@
 package com.coe.wms.service.symgmt.mapper;
 
-import java.util.List;
-
-import com.coe.wms.facade.symgmt.criteria.AdminCriteria;
 import com.coe.wms.facade.symgmt.entity.Admin;
+import com.coe.wms.facade.symgmt.entity.AdminCriteria;
+
+import java.util.List;
 
 public interface AdminMapper {
     int deleteByCondition(AdminCriteria condition);
