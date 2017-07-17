@@ -1,9 +1,9 @@
 package com.coe.wms.service.symgmt.mapper;
 
-import java.util.List;
-
-import com.coe.wms.facade.symgmt.criteria.WarehouseCriteria;
 import com.coe.wms.facade.symgmt.entity.Warehouse;
+import com.coe.wms.facade.symgmt.entity.WarehouseCriteria;
+
+import java.util.List;
 
 public interface WarehouseMapper {
     int deleteByCondition(WarehouseCriteria condition);

@@ -1,9 +1,9 @@
 package com.coe.wms.service.symgmt.mapper;
 
-import java.util.List;
-
-import com.coe.wms.facade.symgmt.criteria.ServerCriteria;
 import com.coe.wms.facade.symgmt.entity.Server;
+import com.coe.wms.facade.symgmt.entity.ServerCriteria;
+
+import java.util.List;
 
 public interface ServerMapper {
     int deleteByCondition(ServerCriteria condition);

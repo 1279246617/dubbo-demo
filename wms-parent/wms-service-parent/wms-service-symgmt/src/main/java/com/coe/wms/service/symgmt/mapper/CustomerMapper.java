@@ -1,9 +1,9 @@
 package com.coe.wms.service.symgmt.mapper;
 
-import java.util.List;
-
-import com.coe.wms.facade.symgmt.criteria.CustomerCriteria;
 import com.coe.wms.facade.symgmt.entity.Customer;
+import com.coe.wms.facade.symgmt.entity.CustomerCriteria;
+
+import java.util.List;
 
 public interface CustomerMapper {
     int deleteByCondition(CustomerCriteria condition);
