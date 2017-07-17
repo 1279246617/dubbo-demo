@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.coe.wms.service.symgmt.mapper.WarehouseMapper" >
-  <resultMap id="BaseResultMap" type="com.coe.wms.facade.symgmt.entity.Warehouse" >
+<mapper namespace="com.coe.wms.service.symgmt.mapper.rolePermissionMapper" >
+  <resultMap id="BaseResultMap" type="com.coe.wms.facade.symgmt.entity.rolePermission" >
     <id column="id" property="id" jdbcType="BIGINT" />
-    <result column="whse_name" property="whseName" jdbcType="VARCHAR" />
-    <result column="whse_code" property="whseCode" jdbcType="VARCHAR" />
-    <result column="p_code" property="pCode" jdbcType="VARCHAR" />
-    <result column="p_id" property="pId" jdbcType="BIGINT" />
+    <result column="menu_id" property="menuId" jdbcType="BIGINT" />
+    <result column="role_id" property="roleId" jdbcType="BIGINT" />
   </resultMap>
   <sql id="Condition_Where_Clause" >
     <where >
@@ -38,15 +36,15 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, whse_name, whse_code, p_code, p_id
+    id, menu_id, role_id
   </sql>
-  <select id="selectByConditionList" resultMap="BaseResultMap" parameterType="com.coe.wms.facade.symgmt.entity.WarehouseCriteria" >
+  <select id="selectByConditionList" resultMap="BaseResultMap" parameterType="com.coe.wms.facade.symgmt.entity.rolePermissionCriteria" >
     select
     <if test="distinct" >
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from w_warehouse
+    from u_role_permission
     <if test="_parameter != null" >
       <include refid="Condition_Where_Clause" />
     </if>
@@ -60,76 +58,58 @@
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
-    from w_warehouse
+    from u_role_permission
     where id = #{id,jdbcType=BIGINT}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
-    delete from w_warehouse
+    delete from u_role_permission
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <delete id="deleteByCondition" parameterType="com.coe.wms.facade.symgmt.entity.WarehouseCriteria" >
-    delete from w_warehouse
+  <delete id="deleteByCondition" parameterType="com.coe.wms.facade.symgmt.entity.rolePermissionCriteria" >
+    delete from u_role_permission
     <if test="_parameter != null" >
       <include refid="Condition_Where_Clause" />
     </if>
   </delete>
-  <insert id="insertSelective" parameterType="com.coe.wms.facade.symgmt.entity.Warehouse" >
-    insert into w_warehouse
+  <insert id="insertSelective" parameterType="com.coe.wms.facade.symgmt.entity.rolePermission" >
+    insert into u_role_permission
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,
       </if>
-      <if test="whseName != null" >
-        whse_name,
+      <if test="menuId != null" >
+        menu_id,
       </if>
-      <if test="whseCode != null" >
-        whse_code,
-      </if>
-      <if test="pCode != null" >
-        p_code,
-      </if>
-      <if test="pId != null" >
-        p_id,
+      <if test="roleId != null" >
+        role_id,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         #{id,jdbcType=BIGINT},
       </if>
-      <if test="whseName != null" >
-        #{whseName,jdbcType=VARCHAR},
+      <if test="menuId != null" >
+        #{menuId,jdbcType=BIGINT},
       </if>
-      <if test="whseCode != null" >
-        #{whseCode,jdbcType=VARCHAR},
-      </if>
-      <if test="pCode != null" >
-        #{pCode,jdbcType=VARCHAR},
-      </if>
-      <if test="pId != null" >
-        #{pId,jdbcType=BIGINT},
+      <if test="roleId != null" >
+        #{roleId,jdbcType=BIGINT},
       </if>
     </trim>
   </insert>
-  <select id="countByCondition" parameterType="com.coe.wms.facade.symgmt.entity.WarehouseCriteria" resultType="java.lang.Integer" >
-    select count(*) from w_warehouse
+  <select id="countByCondition" parameterType="com.coe.wms.facade.symgmt.entity.rolePermissionCriteria" resultType="java.lang.Integer" >
+    select count(*) from u_role_permission
     <if test="_parameter != null" >
       <include refid="Condition_Where_Clause" />
     </if>
   </select>
-  <update id="updateByPrimaryKeySelective" parameterType="com.coe.wms.facade.symgmt.entity.Warehouse" >
-    update w_warehouse
+  <update id="updateByPrimaryKeySelective" parameterType="com.coe.wms.facade.symgmt.entity.rolePermission" >
+    update u_role_permission
     <set >
-      <if test="whseName != null" >
-        whse_name = #{whseName,jdbcType=VARCHAR},
+      <if test="menuId != null" >
+        menu_id = #{menuId,jdbcType=BIGINT},
       </if>
-      <if test="whseCode != null" >
-        whse_code = #{whseCode,jdbcType=VARCHAR},
-      </if>
-      <if test="pCode != null" >
-        p_code = #{pCode,jdbcType=VARCHAR},
-      </if>
-      <if test="pId != null" >
-        p_id = #{pId,jdbcType=BIGINT},
+      <if test="roleId != null" >
+        role_id = #{roleId,jdbcType=BIGINT},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}

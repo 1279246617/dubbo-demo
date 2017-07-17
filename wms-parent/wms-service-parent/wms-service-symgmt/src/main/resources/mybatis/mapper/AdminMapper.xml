@@ -7,9 +7,9 @@
     <result column="login_name" property="loginName" jdbcType="VARCHAR" />
     <result column="password" property="password" jdbcType="VARCHAR" />
     <result column="status" property="status" jdbcType="INTEGER" />
-    <result column="created_time" property="createdTime" jdbcType="TIMESTAMP" />
+    <result column="created_time" property="createdTime" jdbcType="BIGINT" />
     <result column="created_by_admin_id" property="createdByAdminId" jdbcType="BIGINT" />
-    <result column="last_updated_time" property="lastUpdatedTime" jdbcType="TIMESTAMP" />
+    <result column="last_updated_time" property="lastUpdatedTime" jdbcType="BIGINT" />
     <result column="lasts_updated_by_admin_id" property="lastsUpdatedByAdminId" jdbcType="BIGINT" />
   </resultMap>
   <sql id="Condition_Where_Clause" >
@@ -126,13 +126,13 @@
         #{status,jdbcType=INTEGER},
       </if>
       <if test="createdTime != null" >
-        #{createdTime,jdbcType=TIMESTAMP},
+        #{createdTime,jdbcType=BIGINT},
       </if>
       <if test="createdByAdminId != null" >
         #{createdByAdminId,jdbcType=BIGINT},
       </if>
       <if test="lastUpdatedTime != null" >
-        #{lastUpdatedTime,jdbcType=TIMESTAMP},
+        #{lastUpdatedTime,jdbcType=BIGINT},
       </if>
       <if test="lastsUpdatedByAdminId != null" >
         #{lastsUpdatedByAdminId,jdbcType=BIGINT},
@@ -161,13 +161,13 @@
         status = #{status,jdbcType=INTEGER},
       </if>
       <if test="createdTime != null" >
-        created_time = #{createdTime,jdbcType=TIMESTAMP},
+        created_time = #{createdTime,jdbcType=BIGINT},
       </if>
       <if test="createdByAdminId != null" >
         created_by_admin_id = #{createdByAdminId,jdbcType=BIGINT},
       </if>
       <if test="lastUpdatedTime != null" >
-        last_updated_time = #{lastUpdatedTime,jdbcType=TIMESTAMP},
+        last_updated_time = #{lastUpdatedTime,jdbcType=BIGINT},
       </if>
       <if test="lastsUpdatedByAdminId != null" >
         lasts_updated_by_admin_id = #{lastsUpdatedByAdminId,jdbcType=BIGINT},
