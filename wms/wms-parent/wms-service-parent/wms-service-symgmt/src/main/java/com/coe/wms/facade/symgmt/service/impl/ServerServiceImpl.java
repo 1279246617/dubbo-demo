@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service("serverService")
+@com.alibaba.dubbo.config.annotation.Service
 public class ServerServiceImpl implements ServerService {
     @Autowired
     private ServerMapper serverMapper;

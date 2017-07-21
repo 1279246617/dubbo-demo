@@ -24,10 +24,13 @@
 	<!-- delay进行延迟暴露,配置超时时间,重试次数 -->
 	<dubbo:provider delay="0" timeout="6000" retries="0" />
 
-	<!-- 扫描注解包路径，多个包用逗号分隔 -->
-	<dubbo:annotation package="com.coe.wms.facade" />
-
+	
+<!-- 扫描注解包路径，多个包用逗号分隔 -->
+	<dubbo:annotation package="com.coe.wms.facade.symgmt.service.impl" />
 	<!-- 扫描类包，将标注Spring注解的类自动转化Bean，同时完成Bean的注入 -->
 	<!-- 必须先配置dubbo注解扫描再配置spring注解扫描否则dubbo注解无效 -->
 	<context:component-scan base-package="com.coe.wms.*" />
+	
+	
+	
 </beans>

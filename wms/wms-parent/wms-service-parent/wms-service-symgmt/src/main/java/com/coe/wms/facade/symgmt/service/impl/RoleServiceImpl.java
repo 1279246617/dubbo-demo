@@ -6,7 +6,6 @@ import com.coe.wms.facade.symgmt.entity.RoleCriteria.Criteria;
 import com.coe.wms.facade.symgmt.service.RoleService;
 import com.coe.wms.service.symgmt.mapper.RoleMapper;
 
-import java.util.Date;
 import java.util.List;
 
 import org.mybatis.plugin.model.Pager;
@@ -17,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service("roleService")
+@com.alibaba.dubbo.config.annotation.Service
 public class RoleServiceImpl implements RoleService {
     @Autowired
     private RoleMapper roleMapper;

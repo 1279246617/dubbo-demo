@@ -1,8 +1,13 @@
 package com.coe.wms.facade.symgmt.service.impl;
 
+import com.coe.wms.common.core.db.IdWorker;
+import com.coe.wms.common.core.db.IdWorkerAide;
+import com.coe.wms.common.utils.Beanut;
+import com.coe.wms.common.utils.StringUtil;
 import com.coe.wms.facade.symgmt.entity.Admin;
 import com.coe.wms.facade.symgmt.entity.AdminCriteria;
 import com.coe.wms.facade.symgmt.entity.AdminCriteria.Criteria;
+import com.coe.wms.facade.symgmt.entity.vo.AdminVo;
 import com.coe.wms.facade.symgmt.service.AdminService;
 import com.coe.wms.service.symgmt.mapper.AdminMapper;
 
@@ -16,14 +21,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service("adminService")
+@com.alibaba.dubbo.config.annotation.Service
 public class AdminServiceImpl implements AdminService {
     @Autowired
     private AdminMapper adminMapper;
+    
+   
 
     private static final Logger logger = LoggerFactory.getLogger(AdminServiceImpl.class);
 
     public Admin add(Admin record) {
-        if(this.adminMapper.insertSelective(record)==1)
+    	record.setId(IdWorkerAide.nextId());
+    	if(this.adminMapper.insertSelective(record)==1)
         	return record; 
         return null;
     }
@@ -50,4 +59,42 @@ public class AdminServiceImpl implements AdminService {
         List<Admin> list = adminMapper.selectByConditionList(criteria);
         return PagerUtil.getPager(list, criteria);
     }
+
+	@Override
+	public AdminVo login(AdminVo adminVo) {
+		if(StringUtil.isEmpty(adminVo.getLoginName())||StringUtil.isEmpty(adminVo.getPassword())){
+			return null;
+		}
+         AdminCriteria criteria = new AdminCriteria();
+		 Criteria cri = criteria.createCriteria();
+		 cri.andLoginNameEqualTo(adminVo.getLoginName());
+		 cri.andPasswordEqualTo(adminVo.getPassword());
+		 criteria.getOredCriteria().clear();
+		 criteria.getOredCriteria().add(cri);
+		 List<Admin> adminList = adminMapper.selectByConditionList(criteria);
+		 //登录成功
+		 if(adminList!=null && adminList.size()>0){
+		     Admin admin = adminList.get(0);
+		     //把基本用户信息拷贝至vo
+		     Beanut.copy(admin, adminVo);
+		     return adminVo;
+		 }
+		return null;
+	}
+
+	@Override
+	public Pager<Admin> getFromFront(AdminVo adminVo) {
+		 AdminCriteria criteria = new AdminCriteria();
+		 criteria.setPage(adminVo.getPage());
+	      criteria.setLimit(adminVo.getLimit());
+		 Criteria cri = criteria.createCriteria();
+		 if(!StringUtil.isEmpty(adminVo.getUserName()))
+		   cri.andUserNameEqualTo(adminVo.getUserName());
+		 if(!StringUtil.isEmpty(adminVo.getLoginName()))
+		  cri.andLoginNameEqualTo(adminVo.getLoginName());
+		 criteria.getOredCriteria().clear();
+		 criteria.getOredCriteria().add(cri);
+		 List<Admin> adminList = adminMapper.selectByConditionList(criteria);
+		 return PagerUtil.getPager(adminList, criteria);
+	}
 }

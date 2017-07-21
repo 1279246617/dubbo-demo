@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service("operatorService")
+@com.alibaba.dubbo.config.annotation.Service
 public class OperatorServiceImpl implements OperatorService {
     @Autowired
     private OperatorMapper operatorMapper;
