@@ -10,6 +10,7 @@
 		<setting name="defaultExecutorType" value="REUSE" />
 		<setting name="defaultStatementTimeout" value="25000" />
 		<setting name="logPrefix" value="mapper." />
+		<setting name="logImpl" value="LOG4J"/>
 	</settings>
 
 	<!-- mybatis映射文件中所用到的别名配置 -->

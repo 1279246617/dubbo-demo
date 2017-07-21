@@ -2,6 +2,7 @@ package com.coe.wms.service.symgmt.mapper;
 
 import com.coe.wms.facade.symgmt.entity.Menu;
 import com.coe.wms.facade.symgmt.entity.MenuCriteria;
+import com.coe.wms.facade.symgmt.entity.vo.AdminVo;
 
 import java.util.List;
 
@@ -19,4 +20,6 @@ public interface MenuMapper {
     int countByCondition(MenuCriteria condition);
 
     int updateByPrimaryKeySelective(Menu record);
+    
+    List<Long> getListMenuByAdminVo(AdminVo adminVo);
 }

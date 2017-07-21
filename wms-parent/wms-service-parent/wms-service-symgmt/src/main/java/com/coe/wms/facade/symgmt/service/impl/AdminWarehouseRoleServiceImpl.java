@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service("adminWarehouseRoleService")
+@com.alibaba.dubbo.config.annotation.Service
 public class AdminWarehouseRoleServiceImpl implements AdminWarehouseRoleService {
     @Autowired
     private AdminWarehouseRoleMapper adminWarehouseRoleMapper;

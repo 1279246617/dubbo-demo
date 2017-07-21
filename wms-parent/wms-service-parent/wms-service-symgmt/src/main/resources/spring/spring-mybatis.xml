@@ -164,7 +164,7 @@
 
 	<!-- 通过扫描的模式，扫描目录下所有的mapper， 根据对应的mapper.xml为其生成代理类 -->
 	<bean id="mapper" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-		<property name="basePackage" value="com.coe.wms.service.clearing.mapper" />
+		<property name="basePackage" value="com.coe.wms.service.symgmt.mapper" />
 		<!-- <property name="sqlSessionTemplate" ref="sqlSessionTemplate"></property> -->
 		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
 	</bean>

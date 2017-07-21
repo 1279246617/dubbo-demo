@@ -1,5 +1,7 @@
 package com.coe.wms.facade.symgmt.service.impl;
 
+import com.coe.wms.common.core.cache.annot.SetCache;
+import com.coe.wms.constant.SymgmtConstant;
 import com.coe.wms.facade.symgmt.entity.Warehouse;
 import com.coe.wms.facade.symgmt.entity.WarehouseCriteria;
 import com.coe.wms.facade.symgmt.entity.WarehouseCriteria.Criteria;
@@ -16,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service("warehouseService")
+@com.alibaba.dubbo.config.annotation.Service
 public class WarehouseServiceImpl implements WarehouseService {
     @Autowired
     private WarehouseMapper warehouseMapper;
@@ -50,4 +53,16 @@ public class WarehouseServiceImpl implements WarehouseService {
         List<Warehouse> list = warehouseMapper.selectByConditionList(criteria);
         return PagerUtil.getPager(list, criteria);
     }
+
+	@Override
+	@SetCache(key = SymgmtConstant.WAREHOUSE_KEY,expire=12*60*60)
+	public List<Warehouse> getAllParentWarehouse() {
+		WarehouseCriteria warehouseCriteria = new WarehouseCriteria();
+		Criteria cri = warehouseCriteria.createCriteria();
+		cri.andPIdEqualTo(-1l);
+		warehouseCriteria.getOredCriteria().clear();
+		warehouseCriteria.getOredCriteria().add(cri);
+		List<Warehouse> warehouseList = warehouseMapper.selectByConditionList(warehouseCriteria);
+		return warehouseList;
+	}
 }
