@@ -5,15 +5,13 @@ import java.lang.reflect.Method;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.coe.wms.common.core.cache.annot.InvalidateCache;
-import com.coe.wms.common.core.cache.annot.ReadAndSetCache;
 import com.coe.wms.common.core.cache.annot.SetCache;
 import com.coe.wms.common.core.cache.annot.UpdateCache;
+import com.coe.wms.common.core.cache.redis.RedisClient;
+import com.google.gson.Gson;
 
 /**
  * redis 缓存切面类
@@ -28,12 +26,7 @@ public class CacheAspect {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(CacheAspect.class);
 
-	/** 切入点 */
-	@Pointcut("execution(* com.coe.wms.service.*.biz.*.*(..))")
-	private void pointcut() {
-	}
-
-	@Around(value = "pointcut()")
+	@Around("execution(* com.coe.wms.*.*.service.impl.*.*(..))")
 	public Object around(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
 		Object target = proceedingJoinPoint.getTarget();
 
@@ -54,12 +47,61 @@ public class CacheAspect {
 			return proceedingJoinPoint.proceed();
 		}
 		// 获取注解
+		Gson gson = new Gson();
 
 		// 设置缓存
-		SetCache setCache = method.getAnnotation(SetCache.class);
+		SetCache cache = method.getAnnotation(SetCache.class);
+		if (cache != null) {
+			// 后缀
+			String cacheSuffix = null;
+			// 获取请求参数
+			Object[] args = proceedingJoinPoint.getArgs();
+			// 如果有参数
+			if (args != null && args.length != 0) {
+				cacheSuffix = gson.toJson(args);
+			}
+			String cacheKey = cache.key();
+			if (cacheSuffix != null) {
+				cacheKey = cacheKey + cacheSuffix;
+			}
+			RedisClient redisClient = RedisClient.getInstance();
+
+			Object value = redisClient.getObject(cacheKey);
+
+			if (value != null) {
+				return value;
+			} else {
+				// 执行目标方法,得到结果
+				Object result = proceedingJoinPoint.proceed();
+				if (result != null) {
+					// 放入缓存中
+					if (cache.expire() != -1)
+						redisClient.setObject(cacheKey, result, cache.expire());
+					else
+						redisClient.setObject(cacheKey, result);
+				}
+				return result;
+			}
+		}
+		// 删除缓存
 		UpdateCache updateCache = method.getAnnotation(UpdateCache.class);
-		InvalidateCache invalidateCache = method.getAnnotation(InvalidateCache.class);
-		ReadAndSetCache readAndSetCache = method.getAnnotation(ReadAndSetCache.class);
+		if (updateCache != null) {
+			// 后缀
+			String cacheSuffix = null;
+			// 获取请求参数
+			Object[] args = proceedingJoinPoint.getArgs();
+			// 如果有参数
+			if (args != null && args.length != 0) {
+				cacheSuffix = gson.toJson(args);
+			}
+			String cacheKey = updateCache.key();
+			if (cacheSuffix != null) {
+				cacheKey = cacheKey + cacheSuffix;
+			}
+			RedisClient redisClient = RedisClient.getInstance();
+			redisClient.delete(cacheKey);
+
+		}
 
 		// 执行目标方法,得到结果
 		Object result = proceedingJoinPoint.proceed();

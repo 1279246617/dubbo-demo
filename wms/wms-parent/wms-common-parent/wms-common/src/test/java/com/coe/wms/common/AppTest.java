@@ -1,5 +1,7 @@
 package com.coe.wms.common;
 
+import java.util.UUID;
+
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -35,4 +37,9 @@ public class AppTest
     {
         assertTrue( true );
     }
+    
+    
+    public static void main(String[] args) {
+		System.out.println(UUID.randomUUID().toString().replace("-", ""));
+	}
 }

@@ -1,6 +1,8 @@
 package com.coe.wms.common.core.cache.redis;
 
 import java.io.IOException;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
 
@@ -325,6 +327,105 @@ public class RedisClient {
 		}
 		return "";
 	}
+	
+	/**
+	 * 保存 map
+	 * 
+	 * @param key
+	 * @param k
+	 * @param v
+	 * @return
+	 */
+	public	void put(String key, String k, String v,Integer expire){
+		Jedis jedis = null;
+		try {
+			jedis = getJedis();
+			jedis.hset(key, k, v);
+			if(expire!=null)
+			  jedis.expire(key, expire);
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.info("" + e);
+		} finally {
+			returnResource(jedis);
+		}
+		
+		
+	}
+
+	/**
+	 * 批量保存map
+	 * 
+	 * @param key
+	 * @param kv
+	 * @return
+	 */
+	public	void putAll(String key, Map<String, String> kv,Integer expire){
+		Jedis jedis = null;
+		try {
+			jedis = getJedis();
+			
+			Set<Entry<String, String>> kvs = kv.entrySet();
+			for (Entry<String, String> entry : kvs) {
+				jedis.hset(key, entry.getKey(), entry.getValue());
+			}
+			if(expire!=null)
+			 jedis.expire(key, expire);
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.info("" + e);
+		} finally {
+			returnResource(jedis);
+		}
+		
+		
+	}
+
+	/**
+	 * 从map中取
+	 * 
+	 * @param key
+	 * @param k
+	 * @return
+	 */
+	public String mapGet(String key, String k,Integer expire){
+		Jedis jedis = null;
+		try {
+			jedis = getJedis();
+			String value = jedis.hget(key, k);
+			if(expire!=null)
+			 jedis.expire(key, expire);
+			return value;
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.info("" + e);
+			return null;
+		} finally {
+			returnResource(jedis);
+		}
+	}
+
+	/**
+	 * 取出map
+	 * 
+	 * @param key
+	 * @return
+	 */
+	public Map<String, String> mapGetAll(String key){
+		Jedis jedis = null;
+		try {
+			jedis = getJedis();
+			return jedis.hgetAll(key);
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.info("" + e);
+			return null;
+		} finally {
+			returnResource(jedis);
+		}
+	}
+
+	
 
 	/**
 	 * 返还到连接池
@@ -336,5 +437,7 @@ public class RedisClient {
 			jedisPool.returnResourceObject(redis);
 		}
 	}
+	
+	
 
 }

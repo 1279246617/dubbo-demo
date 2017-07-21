@@ -7,32 +7,30 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 更新缓存
+ *
+ * 删除缓存里面的数据
  * 
- * @ClassName: AddCache
- * @author yechao
- * @date 2017年5月9日 下午3:34:26
+ * @ClassName: UpdateCache
+ * @author lqg
+ * @date 2017年7月19日 上午11:36:49
  * @Description: TODO
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 @Documented
 public @interface UpdateCache {
+
 	/**
-	 * 命名空间
-	 * 
-	 * 默认:包+类名
+	 * key值 方法有参数则加前缀,若方法无参则作为key
 	 * 
 	 * @return
 	 */
-	String namespace() default "default";
+	String key();
 
 	/**
-	 * key值 默认:方法名+参数值
+	 * 缓存超时时间
 	 * 
 	 * @return
 	 */
-	String key() default "default";
-
-	long expire() default -1;
+	int expire() default -1;
 }

@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.coe.wms.service.symgmt.mapper.WarehouseMapper" >
+  <resultMap id="BaseResultMap" type="com.coe.wms.facade.symgmt.entity.Warehouse" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="whse_name" property="whseName" jdbcType="VARCHAR" />
+    <result column="whse_code" property="whseCode" jdbcType="VARCHAR" />
+    <result column="p_code" property="pCode" jdbcType="VARCHAR" />
+    <result column="p_id" property="pId" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Condition_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, whse_name, whse_code, p_code, p_id
+  </sql>
+  <select id="selectByConditionList" resultMap="BaseResultMap" parameterType="com.coe.wms.facade.symgmt.entity.WarehouseCriteria" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from w_warehouse
+    <if test="_parameter != null" >
+      <include refid="Condition_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limit>0" >
+      limit ${start} , ${limit}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from w_warehouse
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from w_warehouse
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByCondition" parameterType="com.coe.wms.facade.symgmt.entity.WarehouseCriteria" >
+    delete from w_warehouse
+    <if test="_parameter != null" >
+      <include refid="Condition_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insertSelective" parameterType="com.coe.wms.facade.symgmt.entity.Warehouse" >
+    insert into w_warehouse
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="whseName != null" >
+        whse_name,
+      </if>
+      <if test="whseCode != null" >
+        whse_code,
+      </if>
+      <if test="pCode != null" >
+        p_code,
+      </if>
+      <if test="pId != null" >
+        p_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="whseName != null" >
+        #{whseName,jdbcType=VARCHAR},
+      </if>
+      <if test="whseCode != null" >
+        #{whseCode,jdbcType=VARCHAR},
+      </if>
+      <if test="pCode != null" >
+        #{pCode,jdbcType=VARCHAR},
+      </if>
+      <if test="pId != null" >
+        #{pId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByCondition" parameterType="com.coe.wms.facade.symgmt.entity.WarehouseCriteria" resultType="java.lang.Integer" >
+    select count(*) from w_warehouse
+    <if test="_parameter != null" >
+      <include refid="Condition_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByPrimaryKeySelective" parameterType="com.coe.wms.facade.symgmt.entity.Warehouse" >
+    update w_warehouse
+    <set >
+      <if test="whseName != null" >
+        whse_name = #{whseName,jdbcType=VARCHAR},
+      </if>
+      <if test="whseCode != null" >
+        whse_code = #{whseCode,jdbcType=VARCHAR},
+      </if>
+      <if test="pCode != null" >
+        p_code = #{pCode,jdbcType=VARCHAR},
+      </if>
+      <if test="pId != null" >
+        p_id = #{pId,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
