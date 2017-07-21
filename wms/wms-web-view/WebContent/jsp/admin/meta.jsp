@@ -40,9 +40,9 @@
 	
 	<script type="text/javascript" src="${ctx}/3rd/template-web/template-web.js"></script>
 	
-	<script type="text/javascript" src="${ctx}/js/config.js?xx=9"></script>
-	<script type="text/javascript" src="${ctx}/js/common.js?xx=7"></script>
-	<script type="text/javascript" src="${ctx}/js/diylqg.js?xx=17"></script>
+	<script type="text/javascript" src="${ctx}/js/config.js?xx=22"></script>
+	<script type="text/javascript" src="${ctx}/js/common.js?xx=22"></script>
+	<script type="text/javascript" src="${ctx}/js/diylqg.js?xx=22"></script>
 	
 	
 	<script type="text/javascript">
@@ -50,8 +50,7 @@
 	document.domain="coewms.com";
 	
 	$(function(){
-		getButton();
-		loadConfig();
+		
 		ctx="${ctx}"
 		
 	})

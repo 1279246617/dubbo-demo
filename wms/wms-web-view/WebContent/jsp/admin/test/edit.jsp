@@ -62,21 +62,23 @@
 
 						<div class="input-group ">
 							<span class="input-group-addon">用户名称</span> <input type="text"
-								class="form-control width100 notNullVali" placeholder="用户名" name="userName" id="user_name">
+								class="form-control width100 notNullVali" placeholder="用户名"
+								name="userName" id="user_name">
 						</div>
 
 						<div class="input-group ">
 							<span class="input-group-addon" id="sizing-addon3">登录名称</span> <input
-								type="text" class="form-control width100 notNullVali" name="loginName" placeholder="登录名称"
-								id="login_name">
+								type="text" class="form-control width100 notNullVali"
+								name="loginName" placeholder="登录名称" id="login_name">
 						</div>
-						
+
 						<div class="input-group ">
 							<span class="input-group-addon" id="sizing-addon3">登录密码</span> <input
-								type="password" class="form-control width100 notNullVali" name="password" placeholder="登录密码"
-								id="password">
+								type="password" class="form-control width100 notNullVali"
+								name="password" placeholder="登录密码" id="password">
 						</div>
-						
+						<input name="id" type="hidden"/>
+
 
 						<!-- <div class="input-group "> -->
 						<!--   <span class="input-group-addon" id="sizing-addon3">证件类型</span> -->
@@ -99,48 +101,96 @@
 			</div>
 		</div>
 
-		
 
-		
+
+
 	</div>
 
 	<script>
-	//执行新增方法
-	function upd(index, locationUri,menuid) {
-		var errStr = valiNotNull("#fromUpd .notNullVali")
-		if (errStr != '') {
-			mmui.alert(errStr, 3, 2000);
-			return false;
-		}
+	
+	var isAllow=false;
+	
+	$(function(){
+	    loadConfig();
+		//getButton();
+		//页面加载时从数据库中获取信息
+		//获取参数id
+		var id = getParam("id");
+	   //获取菜单id
+	    var menuid=getParam("menuid");
+		//从数据库加载数据
+		var symgmtPath=globalUrl.symgmtPath;
+       
+	
+		doGet( globalUrl.symgmtPath+"/symgmt/admin/getById/"+id+"?menuid="+menuid, function(data) {
+			if (data.code == 0) {
+				var entity=data.data;
+				var formId="fromUpd";
+				//封装实体  简单封装
+				packageFormBean(formId,entity)
+				isAllow=true;
+			} else {
+				mmui.alert(data.msg, 3, 2000);
+				
+			}
+
+		},true)
+	})
+
 		
-
-		var jsonStr = '{"userName":"' + $("#fromAdd [name='userName']").val()
-				+ '","loginName":"' + $("#fromAdd [name='loginName']").val() + '","password":"'+$("#fromAdd [name='password']").val()+'"}';
-
+		//执行新增方法
+		function upd(index, locationUri, menuid) {
+			if(!isAllow){
+				mmui.alert("禁止操作", 3, 2000);
+				return
+			}
 		
-		var paIfram = getIfram(locationUri)
+		    var errStr = valiNotNull("#fromUpd .notNullVali")
+			if (errStr != '') {
+				mmui.alert(errStr, 3, 2000);
+				return false;
+			}
 
-		$.ajax({
-			type : "POST",
-			url : globalUrl.symgmtPath+"/symgmt/admin/addFromFront?menuid="+menuid,
-			async : false,
-			data : jsonStr,
-			contentType : "application/json",
-			dataType:'json',
-			success : function(data) {
+		    
+		    //把form表单序列化成json字符串
+		   var jsonStr=formToJson("fromUpd");
+			
+
+			var paIfram = getIfram(locationUri)
+
+			/*$.ajax({
+				type : "POST",
+				url : globalUrl.symgmtPath
+						+ "/symgmt/admin/updateFromFront?menuid=" + menuid,
+				async : false,
+				data : jsonStr,
+				contentType : "application/json",
+				dataType : 'json',
+				success : function(data) {
+					if (data.code == 0) {
+						paIfram.contentWindow.refresh(index, data.msg)
+					} else {
+						mmui.alert(data.msg, 3, 2000);
+					}
+
+				},
+				crossDomain : true,
+				xhrFields : {
+					withCredentials : true
+				},
+			});
+			*/
+			
+			doJsonPost(globalUrl.symgmtPath+ "/symgmt/admin/updateFromFront?menuid=" + menuid, function(data) {
 				if (data.code == 0) {
 					paIfram.contentWindow.refresh(index, data.msg)
 				} else {
 					mmui.alert(data.msg, 3, 2000);
 				}
 
-			},
-		crossDomain: true,
-    	xhrFields: {withCredentials: true},
-		});
-	}
-
-		
+			}, false, jsonStr)
+			
+		}
 	</script>
 
 </body>
