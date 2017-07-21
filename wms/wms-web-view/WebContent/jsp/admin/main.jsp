@@ -137,13 +137,11 @@
 
 							$("#leftMenuId").html(allStr)
 
-							// addMenuEvent();
-							//headerEvent();
+							
 							loadHead();
 							bindMuenEvent();
 							initMain();
-							//window.initMain();
-							//alert('加载页面')
+							
 						})
 
 			}
