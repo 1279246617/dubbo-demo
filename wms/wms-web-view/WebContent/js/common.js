@@ -121,14 +121,33 @@ var ctx =function(){
 function getButton(){
 	var id = getParam("menuId");
 	if(id!=null)
-	mmUtl.ajax.postJson(globalUrl.symgmtPath+"/symgmt/menu/getButtonByPid/"+id+"",function(data){
-		if(data.code == 0){
-			menuList = data.data;
-			addButton(menuList);
-		}else{
-			mmui.oper(data.msg,1); 
-		}
-	});
+//	mmUtl.ajax.postJson(globalUrl.symgmtPath+"/symgmt/menu/getButtonByPid/"+id+"",function(data){
+//		if(data.code == 0){
+//			menuList = data.data;
+//			addButton(menuList);
+//		}else{
+//			mmui.oper(data.msg,1); 
+//		}
+//	});
+		
+		$.ajax({
+			type : "POST",
+			url : globalUrl.symgmtPath+"/symgmt/menu/getButtonByPid/"+id+"",
+			async : false,
+			contentType : "application/json",
+			dataType:'json',
+			success : function(data) {
+				if (data.code == 0) {
+					menuList = data.data;
+					addButton(menuList);
+				} else {
+					mmui.alert(data.msg, 3, 2000);
+				}
+
+			},
+		crossDomain: true,
+    	xhrFields: {withCredentials: true},
+		});
 	
 	function addButton(menuList){
 		$.each(menuList, function (n, value) {
@@ -253,7 +272,7 @@ function updMethod(obj){
 		  title: title,
 		  shadeClose: true,
 		  area: ['800px','600px'],
-		  content: ctx+url,
+		  content: ctx+url+"?id="+id+"&menuid="+menuid,
 		  btn: ['提交','取消'],
 		  yes: function(index,obj){	
 			  obj.find("iframe")[0].contentWindow.upd(index,location.href,menuid);
@@ -286,6 +305,26 @@ function loadConfig(){
 	}
 	
 }
+//把form转换成json
+function formToJson(formId){
+	var fromArray=$("#"+formId).serializeArray();
+    
+    var jsonStr="{";
+    $(fromArray).each(function(){
+
+    	var name=this.name;
+    	var value=this.value;
+    	
+    	if(value!=null&&value!=''){
+    		jsonStr+='"'+name+'":"'+value+'",'
+    	}
+    })
+    if(jsonStr.length>2){
+    	jsonStr=jsonStr.substring(0, jsonStr.length-1)+"}"
+    }
+    return jsonStr;
+}
+
 //封装配置
 function packageConfig(configMap){
 	 globalUrl.symgmtPath=configMap['symgmtPath']
@@ -297,11 +336,11 @@ function packageConfig(configMap){
 }
 //刷新配置
 function refreshConfig(wareHouseCode){
-			$.ajax({
-				url : globalUrl.symgmtPath
+			
+	 
+	   doGet(globalUrl.symgmtPath
 						+ "/symgmt/config/getConfigByWareHouseCode/"
-						+ wareHouseCode + "",
-				success : function(data) {
+						+ wareHouseCode + "", function(data) {
 					//loadWareHouse
 					if (data.code != 0) {
 						mmui.alert(data.msg, 2, 2000);
@@ -313,12 +352,93 @@ function refreshConfig(wareHouseCode){
 					var configStr = JSON.stringify(configMap);
 
 					$.cookie("configStr", configStr, {
-						path : '/'
+						path : '/',
+						expires:7 
 					})
 
-				},
-				crossDomain: true,
-	        	xhrFields: {withCredentials: true},
-				dataType : 'json'
-			})
+				})
+	
+	  
 		}
+
+
+
+/**
+ * 封装实体
+ * @param formId
+ * @param entity
+ * @param entPrefix
+ */
+function packageFormBean(formId,entity,entPrefix){
+	for(var filed in entity){
+		
+		var val=entity[filed]
+		
+		var formFiledName=filed
+		
+		if(entPrefix){
+			formFiledName=entPrefix+"."+formFiledName;
+		}
+		
+		if(typeof(val)!='object'&& val!=null ){
+		    $("#"+formId+" [name='"+formFiledName+"']").val(val)
+		}
+		
+		if(typeof(val)=='object' &&  !(val instanceof Array) && val !=null){
+			packageFormBean(formId,val,formFiledName);
+		}
+	}
+	
+}
+/**
+ * 执行json请求
+ * @param url
+ * @param backFac
+ */
+function doJsonPost(url,backFac,isAsync,data){
+	if(isAsync==undefined){
+		isAsync=true;
+	}
+	if(data==undefined){
+		data="{}"
+	}
+	
+	$.ajax({
+		type : "POST",
+		url : url,
+		async : isAsync,
+		data : data,
+		contentType : "application/json",
+		dataType:'json',
+		success : function(data) {
+			backFac(data)
+
+		},
+	crossDomain: true,
+	xhrFields: {withCredentials: true},
+	});
+}
+/**
+ * get请求数据
+ * @param url
+ * @param backFac
+ * @param isAsync
+ */
+function doGet(url,backFac,isAsync){
+	if(isAsync==undefined){
+		isAsync=true;
+	}
+	$.ajax({
+		type : "POST",
+		url : url,
+		async : isAsync,
+		contentType : "application/json",
+		dataType:'json',
+		success : function(data) {
+			backFac(data)
+
+		},
+	crossDomain: true,
+	xhrFields: {withCredentials: true},
+	});
+}
