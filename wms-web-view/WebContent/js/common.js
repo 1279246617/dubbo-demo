@@ -119,7 +119,9 @@ var ctx =function(){
  * 获取页面的按钮
  */
 function getButton(){
-	mmUtl.ajax.postJson(url.path+"/wms-web-symgr/symgr/menu/getMnuRightTree.json",function(data){
+	var id = getParam("menuId");
+	if(id!=null)
+	mmUtl.ajax.postJson(globalUrl.symgmtPath+"/symgmt/menu/getButtonByPid/"+id+"",function(data){
 		if(data.code == 0){
 			menuList = data.data;
 			addButton(menuList);
@@ -129,22 +131,33 @@ function getButton(){
 	});
 	
 	function addButton(menuList){
-		var id = getParam("id");
 		$.each(menuList, function (n, value) {
-			if(value.pId == id){
 				$("#buttonAll").append(value.menuEvent+"&nbsp;");
-			}
 		});
 	};
 };
 
-
+/**
+ * 跳转新页面
+ */
+function reloadNewUri(newHref,timeOut){
+	 
+	if(timeOut&&timeOut!=0)
+		window
+				.setTimeout(
+						function() {
+							location.href =newHref; //"${ctx}/jsp/admin/login.jsp"
+						}, timeOut)
+	else
+		location.href =newHref;
+	
+}
 
 /*
  * 获取表格中的选中
  */
 var selectData = function getSelectData(){
-	var data=$("#list_body").mmuiTable("getSelections");
+	var data=$("#list_body").bootstrapTable("getSelections");
 	if(data.length!=1){
 		parent.mmui.alert("请选择一条要修改的数据",3);
 		return null;
@@ -162,7 +175,24 @@ function addMethod(obj){
 	var url = obj.getAttribute("url");
 	var pageuid = obj.getAttribute("pageuid");
 	var title = obj.getAttribute("title");
-	parent.mmgrid(ctx+url+"?method=add",pageuid,title,true);
+	var menuid=obj.getAttribute("menuid");
+	//parent.mmgrid(ctx+url+"?method=add",pageuid,title,true);
+	
+
+	parent.mmui.open({
+			  type: 2,
+			  title: title,
+			  shadeClose: true,
+			  area: ['800px','600px'],
+			  content: ctx+url,
+			  btn: ['提交','取消'],
+			  yes: function(index,obj){	
+				 
+				  obj.find("iframe")[0].contentWindow.add(index,location.href,menuid);
+			  },cancel: function(index){
+			  },
+			  afterFn:function(index,obj){}
+		});
 };
 
 /*
@@ -201,10 +231,10 @@ function delMethod(obj,code){
 /*
  * 通用修改方法
  * obj:传过来的this对象
- * code: 要获取的code
- * url格式: symgr/user/add.jsp
+ *
+ * 
  */
-function updMethod(obj,code){
+function updMethod(obj){
 	data = selectData();
    	if(data == null){
    		return false;
@@ -213,9 +243,25 @@ function updMethod(obj,code){
 	var url = obj.getAttribute("url");
 	var pageuid = obj.getAttribute("pageuid");
 	var title = obj.getAttribute("title");
+	var menuid=obj.getAttribute("menuid");
+	
 	/* parent.window.ssss=data; */
-	var objCode = code.getAttribute("name");
-	parent.mmgrid(ctx+url+"?method=update&id="+id+"&"+objCode+"="+data[0][objCode],pageuid,title,true);
+	//var objCode = code.getAttribute("name");
+	//parent.mmgrid(ctx+url+"?method=update&id="+id+"&"+objCode+"="+data[0][objCode],pageuid,title,true);
+	 parent.mmui.open({
+		  type: 2,
+		  title: title,
+		  shadeClose: true,
+		  area: ['800px','600px'],
+		  content: ctx+url,
+		  btn: ['提交','取消'],
+		  yes: function(index,obj){	
+			  obj.find("iframe")[0].contentWindow.upd(index,location.href,menuid);
+		  },cancel: function(index){
+		  },
+		  afterFn:function(index,obj){}
+	});
+	
 };
 
 /*
@@ -231,4 +277,48 @@ function exportMethod(){
 function importMethod(){
 	
 };
+//加载配置
+function loadConfig(){
+	var configMapStr=$.cookie('configStr')
+	if(configMapStr!=null){
+	  var configMap=JSON.parse(configMapStr);
+	  packageConfig(configMap);
+	}
+	
+}
+//封装配置
+function packageConfig(configMap){
+	 globalUrl.symgmtPath=configMap['symgmtPath']
+     globalUrl.inwarehousePath=configMap['inwarehousePath']
+     globalUrl.outwarehousePath=configMap['outwarehousePath']
+     globalUrl.basePath=configMap['basePath']
+     globalUrl.inventoryPath=configMap['inventoryPath']
+     globalUrl.reportPath=configMap['reportPath']
+}
+//刷新配置
+function refreshConfig(wareHouseCode){
+			$.ajax({
+				url : globalUrl.symgmtPath
+						+ "/symgmt/config/getConfigByWareHouseCode/"
+						+ wareHouseCode + "",
+				success : function(data) {
+					//loadWareHouse
+					if (data.code != 0) {
+						mmui.alert(data.msg, 2, 2000);
+						return;
+					}
+					var configMap = data.data;
+					packageConfig(configMap)
 
+					var configStr = JSON.stringify(configMap);
+
+					$.cookie("configStr", configStr, {
+						path : '/'
+					})
+
+				},
+				crossDomain: true,
+	        	xhrFields: {withCredentials: true},
+				dataType : 'json'
+			})
+		}

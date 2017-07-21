@@ -1,0 +1,27 @@
+/********************************header********************************/
+#header_menu_body{height:45px;width:100%;background:#337ab7;clear:both;line-height:45px;color:#fff;}
+#header_menu_body .hmb-logo{float:left;width:200px;position:relative;}
+#header_menu_body .hmb-left{float:left;overflow:hidden;}
+#header_menu_body .hmb-eles{width:10000px;}
+#header_menu_body .hmb-right{float:right;width:40px;margin-right:10px;text-align:center;cursor:pointer;}
+#header_menu_body .hmb-right:hover{background-color:#609dd2;}
+#header_menu_body .hmb-eles,#header_menu_body li{margin:0;padding:0;}
+#header_menu_body .hmb-eles li{width:150px;float:left;list-style:none;text-align:center;cursor:pointer;}
+#header_menu_body .hmb-eles li:hover{background:#609dd2;}
+#header_menu_body .hmb-eles li.sel{background:#609dd2;}
+
+#header_menu_body .dropdown{    width: 100px;
+    float: right;
+    list-style: none;
+    text-align: center;
+    cursor: pointer;}
+#header_menu_body .dropdown:hover{background-color:#609dd2;}
+
+/********************************left********************************/
+.side-menu{display:none;}
+.side-menu a{cursor:default;}
+.side-menu a.use:hover{cursor:pointer;color:#f80;}
+.user-info{height:31px;line-height:31px;border-bottom:1px solid #ccc;}
+.user-name{padding-left:15px;color:#337ab7}
+#hidden_left{display:block;position:absolute;top:0;right:0;width:36px;line-height:31px;color:#337ab7;text-align:center;cursor:pointer;}
+#hidden_left:hover{background-color:#eee;}
