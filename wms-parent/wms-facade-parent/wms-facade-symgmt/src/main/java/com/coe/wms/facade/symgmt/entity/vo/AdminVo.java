@@ -3,6 +3,11 @@ package com.coe.wms.facade.symgmt.entity.vo; import java.io.Serializable; import
  private String voEnd;//创建时间  结束 
  private Integer page=1;//页码 
  private Integer limit=50;//页面数量 
+ 
+ private Long warehouseId;//仓库id
+ 
+ private String warehouseCode;//仓库代码
+ 
  public String getVoStart() {
  return voStart; } 
  public void setVoStart(String voStart) {
@@ -24,4 +29,16 @@ package com.coe.wms.facade.symgmt.entity.vo; import java.io.Serializable; import
  }
  public void setLimit(Integer limit) {
  this.limit = limit;
+}
+public Long getWarehouseId() {
+	return warehouseId;
+}
+public void setWarehouseId(Long warehouseId) {
+	this.warehouseId = warehouseId;
+}
+public String getWarehouseCode() {
+	return warehouseCode;
+}
+public void setWarehouseCode(String warehouseCode) {
+	this.warehouseCode = warehouseCode;
 } }

@@ -17,10 +17,18 @@ public class Session implements Serializable {
 	 * @Fields serialVersionUID : TODO
 	 */
 	private static final long serialVersionUID = -5831560176413366670L;
+	// 角色key
+	public static final String USER_ROLE_KEY = "USER_ROLE_KEY";
 
 	public static final String SESSION_ID_KEY = "SESSION_ID";
 
 	public static final String SESSION_TOKEN_KEY = "SESSION_TOKEN";
+
+	public static final String USER_IDENTIFICATION = "USER_IDENTIFICATION";// 用户标识是否登录
+
+	public static final String USER_ADMINVO_KEY = "USER_VO";
+
+	public static final String REFRESH_TIME = "REFRESH_TIME";
 
 	/** cookie 过期时间 一年,约等于无限 */
 	public final static int COOKIE_MAX_AGE = 60 * 60 * 24 * 30 * 12;

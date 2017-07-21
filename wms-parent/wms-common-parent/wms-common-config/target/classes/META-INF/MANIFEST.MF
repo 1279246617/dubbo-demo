@@ -1,7 +1,0 @@
-Manifest-Version: 1.0
-Built-By: yechao
-Class-Path: lib/log4j-1.2.17.jar .
-Build-Jdk: 1.8.0_111
-Created-By: Maven Integration for Eclipse
-Main-Class: com.alibaba.dubbo.container.Main
-

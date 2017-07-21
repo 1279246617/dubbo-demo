@@ -1,8 +1,13 @@
-package com.coe.wms.facade.symgmt.entity.vo; import java.io.Serializable; import com.coe.wms.facade.symgmt.entity.Menu; 
+package com.coe.wms.facade.symgmt.entity.vo; import java.io.Serializable; import java.util.List;
+
+import com.coe.wms.facade.symgmt.entity.Menu; 
  public class MenuVo extends Menu implements Serializable  { private String voStart;//创建时间  开始 
  private String voEnd;//创建时间  结束 
  private Integer page=1;//页码 
  private Integer limit=50;//页面数量 
+ 
+ private List<MenuVo> childrenMenuVo;
+ 
  public String getVoStart() {
  return voStart; } 
  public void setVoStart(String voStart) {
@@ -24,4 +29,10 @@ package com.coe.wms.facade.symgmt.entity.vo; import java.io.Serializable; import
  }
  public void setLimit(Integer limit) {
  this.limit = limit;
+}
+public List<MenuVo> getChildrenMenuVo() {
+	return childrenMenuVo;
+}
+public void setChildrenMenuVo(List<MenuVo> childrenMenuVo) {
+	this.childrenMenuVo = childrenMenuVo;
 } }

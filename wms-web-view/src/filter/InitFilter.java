@@ -9,6 +9,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 
@@ -20,9 +21,17 @@ import javax.servlet.http.HttpServletRequest;
 public class InitFilter implements Filter {
 
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException, ServletException {
-		HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+		/*HttpServletRequest httpServletRequest = (HttpServletRequest) request;
 		String ctx = httpServletRequest.getRequestURI().replace(httpServletRequest.getServletPath(), "");
 		((HttpServletRequest) request).getSession().setAttribute("ctx", ctx);
+		*/
+		HttpServletResponse httpServletResponse = (HttpServletResponse) response;
+		httpServletResponse.setCharacterEncoding("UTF-8");
+		HttpServletRequest httpRequest = (HttpServletRequest) request;
+		String ctx = httpRequest.getScheme() + "://" + httpRequest.getServerName() + ":" + httpRequest.getServerPort()
+				+ httpRequest.getContextPath();
+		((HttpServletRequest) request).getSession().setAttribute("ctx", ctx);
+		
 		filterChain.doFilter(request, response);
 	}
 	

@@ -7,32 +7,31 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 设置缓存
+ * 如果缓存已经存在 则组织方法继续进行
  * 
  * @ClassName: SetCache
- * @author yechao
- * @date 2017年5月9日 下午3:34:26
+ * @author lqg
+ * @date 2017年7月19日 上午11:36:11
  * @Description: TODO
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 @Documented
 public @interface SetCache {
+
 	/**
-	 * 命名空间
-	 * 
-	 * 默认:包+类名
+	 * key值 方法有参数则加前缀,若方法无参则作为key
 	 * 
 	 * @return
 	 */
-	String namespace() default "default";
+	String key();
+	
+	
 
 	/**
-	 * key值 默认:方法名+参数值
+	 * 缓存超时时间
 	 * 
 	 * @return
 	 */
-	String key() default "default";
-
-	long expire() default -1;
+	int expire() default -1;
 }
