@@ -5,6 +5,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -82,6 +83,38 @@ public class AdminController extends AbstractController{
 			return Result.error("新增失败，请稍后重试!");
 		}
 		return Result.success("新增成功!");
+	}
+	/**
+	 * 根据id获取数据
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("getById/{id}")
+	public Result getById(@PathVariable("id") Long id){
+		//根据id获取用户信息
+		Admin admin = adminService.get(id);
+		//如果用户信息为空
+		if(admin==null){
+			return Result.error("信息不存在,请稍后重试!");
+		}
+		//获取成功
+		return Result.success(admin);
+	}
+	
+	/**
+	 * 更新来自前端的数据
+	 * @param adminVo
+	 * @return
+	 */
+	@RequestMapping("updateFromFront")
+	public Result updateFromFront(@RequestBody AdminVo adminVo){
+		//根据id更新
+		Admin admin = adminService.update(adminVo);
+		//如果更新结果为空
+		if(admin==null){
+			return Result.error("更新失败,请稍后重试!");
+		}
+		return Result.success("更新成功!");
 	}
 
 }
