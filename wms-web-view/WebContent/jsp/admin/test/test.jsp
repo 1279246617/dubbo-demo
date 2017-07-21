@@ -49,6 +49,8 @@
 		})
 
 		$(function() {
+			loadConfig();
+			getButton();
 			initTable();
 		});
 
@@ -107,7 +109,7 @@
 		}
 
 		$("#submit_btn").click(function() {
-			$("#table").bootstrapTable('refresh')
+			$("#list_body").bootstrapTable('refresh')
 		});
 
 		
