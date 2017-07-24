@@ -83,6 +83,6 @@ public class IdWorker {
 
 	protected long timeGen() {
 
-		return System.currentTimeMillis();
+		return System.nanoTime()/422;
 	}
 }

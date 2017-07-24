@@ -425,6 +425,26 @@ public class RedisClient {
 		}
 	}
 
+	/**
+	 * 自增长
+	 * @param key
+	 * @return
+	 */
+	public Long nextId(String key){
+
+		Jedis jedis = null;
+		try {
+			jedis = getJedis();
+			return jedis.incr(key);
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.info("" + e);
+			return null;
+		} finally {
+			returnResource(jedis);
+		}
+	
+	}
 	
 
 	/**
@@ -437,6 +457,8 @@ public class RedisClient {
 			jedisPool.returnResourceObject(redis);
 		}
 	}
+	
+	
 	
 	
 
