@@ -2,6 +2,7 @@ package com.coe.wms.facade.symgmt.service.impl;
 
 import com.coe.wms.common.core.db.IdWorker;
 import com.coe.wms.common.core.db.IdWorkerAide;
+import com.coe.wms.common.core.db.IdWorkerForRedis;
 import com.coe.wms.common.utils.Beanut;
 import com.coe.wms.common.utils.StringUtil;
 import com.coe.wms.facade.symgmt.entity.Admin;
@@ -31,7 +32,7 @@ public class AdminServiceImpl implements AdminService {
     private static final Logger logger = LoggerFactory.getLogger(AdminServiceImpl.class);
 
     public Admin add(Admin record) {
-    	record.setId(IdWorkerAide.nextId());
+    	record.setId(IdWorkerForRedis.netId("admin"));
     	if(this.adminMapper.insertSelective(record)==1)
         	return record; 
         return null;

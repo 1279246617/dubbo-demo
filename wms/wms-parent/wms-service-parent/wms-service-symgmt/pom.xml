@@ -21,6 +21,13 @@
 			<groupId>com.coe.wms</groupId>
 			<artifactId>wms-common-config</artifactId>
 		</dependency>
+		
+		
+		<dependency>
+			<groupId>com.coe.wms</groupId>
+			<artifactId>wms-common-config-service</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 
 		<dependency>
 			<groupId>com.coe.wms</groupId>

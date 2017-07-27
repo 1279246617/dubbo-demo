@@ -101,11 +101,29 @@
 		<jxls-poi.version>1.0.12</jxls-poi.version>
 		<jxls-jexcel.version>1.0.6</jxls-jexcel.version>
 		<jxls-reader.version>2.0.2</jxls-reader.version>
+		<org.csource.version>1.27</org.csource.version>
+		<rabbitmq.version>3.5</rabbitmq.version>
 	</properties>
 
 	<!-- 声明依赖,统一版本 -->
 	<dependencyManagement>
 		<dependencies>
+
+
+			<dependency>
+				<groupId>com.rabbitmq</groupId>
+				<artifactId>client</artifactId>
+				<version>${rabbitmq.version}</version>
+			</dependency>
+
+			<!-- fastdfs 依赖包 -->
+
+			<dependency>
+				<groupId>org.csource</groupId>
+				<artifactId>fastdfs-client-java</artifactId>
+				<version>${org.csource.version}</version>
+			</dependency>
+
 
 			<!-- common层 -->
 			<dependency>
@@ -139,8 +157,8 @@
 				<artifactId>wms-facade-symgmt</artifactId>
 				<version>${wms-facade-symgmt.version}</version>
 			</dependency>
-			
-			
+
+
 			<!-- facade层 end -->
 
 
