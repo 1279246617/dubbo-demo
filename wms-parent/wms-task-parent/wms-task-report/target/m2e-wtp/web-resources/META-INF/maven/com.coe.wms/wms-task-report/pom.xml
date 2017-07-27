@@ -37,7 +37,8 @@
 		<!-- facade层 start -->
 		<dependency>
 			<groupId>com.coe.wms</groupId>
-			<artifactId>wms-facade-symgmt</artifactId>
+			<artifactId>wms-facade-report</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<!-- facade层 end -->
 

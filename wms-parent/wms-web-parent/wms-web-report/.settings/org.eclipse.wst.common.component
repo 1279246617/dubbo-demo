@@ -16,9 +16,6 @@
         <dependent-module archiveName="wms-common-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/wms-common/wms-common">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="wms-facade-symgmt-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/wms-facade-symgmt/wms-facade-symgmt">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
         <dependent-module archiveName="mybatis-plugin-page-1.0.4.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/mybatis-plugin-page/mybatis-plugin-page">
             <dependency-type>uses</dependency-type>
         </dependent-module>
