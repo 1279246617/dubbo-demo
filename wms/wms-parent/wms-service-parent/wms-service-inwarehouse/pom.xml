@@ -13,12 +13,20 @@
 	<url>http://maven.apache.org</url>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<log4j.leve>debug</log4j.leve>
 	</properties>
 	<dependencies>
 		<!-- common层 -->
 		<dependency>
 			<groupId>com.coe.wms</groupId>
 			<artifactId>wms-common-config</artifactId>
+		</dependency>
+
+
+		<dependency>
+			<groupId>com.coe.wms</groupId>
+			<artifactId>wms-common-config-service</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
@@ -35,7 +43,8 @@
 		<!-- facade层 start -->
 		<dependency>
 			<groupId>com.coe.wms</groupId>
-			<artifactId>wms-facade-symgmt</artifactId>
+			<artifactId>wms-facade-inwarehouse</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<!-- facade层 end -->
 
@@ -227,7 +236,7 @@
 	</dependencies>
 
 	<build>
-		<finalName>wms-service-symgr</finalName>
+		<finalName>wms-service-inwarehouse</finalName>
 		<plugins>
 			<!-- 解决Maven插件生命周期内引起的冲突 -->
 			<plugin>

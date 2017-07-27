@@ -35,7 +35,8 @@
 		<!-- facade层 start -->
 		<dependency>
 			<groupId>com.coe.wms</groupId>
-			<artifactId>wms-facade-symgmt</artifactId>
+			<artifactId>wms-facade-ms</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<!-- facade层 end -->
 
@@ -227,7 +228,7 @@
 	</dependencies>
 
 	<build>
-		<finalName>wms-service-symgr</finalName>
+		<finalName>wms-service-ms</finalName>
 		<plugins>
 			<!-- 解决Maven插件生命周期内引起的冲突 -->
 			<plugin>

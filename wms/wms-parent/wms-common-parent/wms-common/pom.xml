@@ -123,6 +123,13 @@
 			<groupId>org.csource</groupId>
 			<artifactId>fastdfs-client-java</artifactId>
 		</dependency>
+		
+<!-- 		spting test -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
