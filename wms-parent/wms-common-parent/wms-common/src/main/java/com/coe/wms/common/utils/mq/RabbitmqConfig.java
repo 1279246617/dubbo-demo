@@ -12,6 +12,24 @@ public class RabbitmqConfig {
 	private String userName;//用户名
 	private String password;//密码
 	private Integer port;//端口
+	
+	private Long connectionSurvivalTime=2*60*1000l;//(单位  毫秒) 连接对象存活时间 默认存活时间 3小时
+	private Long channelSurvivalTime=1*60*1000l;//(单位 毫秒)  连接通道存活时间  默认存活时间  1小时  
+	
+	
+	
+	public Long getConnectionSurvivalTime() {
+		return connectionSurvivalTime;
+	}
+	public void setConnectionSurvivalTime(Long connectionSurvivalTime) {
+		this.connectionSurvivalTime = connectionSurvivalTime;
+	}
+	public Long getChannelSurvivalTime() {
+		return channelSurvivalTime;
+	}
+	public void setChannelSurvivalTime(Long channelSurvivalTime) {
+		this.channelSurvivalTime = channelSurvivalTime;
+	}
 	public String getHost() {
 		return host;
 	}
