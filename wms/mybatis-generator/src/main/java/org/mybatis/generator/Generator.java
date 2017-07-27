@@ -18,7 +18,7 @@ public class Generator {
 	public static void main(String[] args) throws SQLException, InterruptedException, InvalidConfigurationException {
 		List<String> warnings = new ArrayList<String>();
 		boolean overwrite = true;
-		File configFile = new File("generator.xml");
+		File configFile = new File("E:/wmskaifa/mybatis-generator/src/main/resources/generator.xml");
 		ConfigurationParser cp = new ConfigurationParser(warnings);
 		Configuration config;
 		try {
