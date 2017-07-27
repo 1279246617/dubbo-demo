@@ -115,7 +115,7 @@ public class RabbitmqManager {
 				
 				try {
 					connection.close();
-				} catch (IOException e) {
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
 
