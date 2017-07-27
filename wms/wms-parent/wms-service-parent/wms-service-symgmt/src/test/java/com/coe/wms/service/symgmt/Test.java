@@ -3,39 +3,23 @@ package com.coe.wms.service.symgmt;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.coe.wms.facade.symgmt.entity.Admin;
 import com.coe.wms.facade.symgmt.entity.Config;
 import com.coe.wms.facade.symgmt.entity.Menu;
+import com.coe.wms.facade.symgmt.service.AdminService;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-public class Test {
-public static void main(String[] args) {
-	List<Config> configList=new ArrayList<Config>();
-	Config config=new Config();
-	config.setId(0l);
+public class Test extends BaseServiceTest {
+
+	@Autowired
+	private AdminService adminService;
 	
-	
-	Config config1=new Config();
-	config1.setId(1l);
-	
-	
-	
-	Config config2=new Config();
-	config2.setId(2l);
-	
-	configList.add(config);
-	configList.add(config1);
-	configList.add(config2);
-	
-	
-	Gson gson=new Gson();
-	String configListStr=gson.toJson(configList);
-	
-	List<Config> list = gson.fromJson(configListStr, new TypeToken<List<Config>>() { }.getType());
-    
-	for (Config config3 : list) {
-		System.out.println(gson.toJson(config3));
+	@org.junit.Test
+	public void test(){
+		Admin admin = adminService.get(2l);
+		System.out.println(new Gson().toJson(admin));
 	}
-	
-}
 }
