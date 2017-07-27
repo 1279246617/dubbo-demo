@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.coe.wms.service.symgmt.mapper.MenuMapper" >
+  <resultMap id="BaseResultMap" type="com.coe.wms.facade.symgmt.entity.Menu" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="menu_code" property="menuCode" jdbcType="VARCHAR" />
+    <result column="menu_name" property="menuName" jdbcType="VARCHAR" />
+    <result column="parent_id" property="parentId" jdbcType="BIGINT" />
+    <result column="menu_event" property="menuEvent" jdbcType="VARCHAR" />
+    <result column="menu_sort_no" property="menuSortNo" jdbcType="INTEGER" />
+    <result column="dict_menu_status" property="dictMenuStatus" jdbcType="VARCHAR" />
+    <result column="menu_right_code" property="menuRightCode" jdbcType="BIGINT" />
+    <result column="menu_right_pos" property="menuRightPos" jdbcType="INTEGER" />
+    <result column="dict_is_common" property="dictIsCommon" jdbcType="VARCHAR" />
+    <result column="dict_menu_type" property="dictMenuType" jdbcType="VARCHAR" />
+    <result column="create_operator" property="createOperator" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="BIGINT" />
+    <result column="update_operator" property="updateOperator" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Condition_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, menu_code, menu_name, parent_id, menu_event, menu_sort_no, dict_menu_status, 
+    menu_right_code, menu_right_pos, dict_is_common, dict_menu_type, create_operator, 
+    create_time, update_operator, update_time
+  </sql>
+  <select id="selectByConditionList" resultMap="BaseResultMap" parameterType="com.coe.wms.facade.symgmt.entity.MenuCriteria" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from u_menu
+    <if test="_parameter != null" >
+      <include refid="Condition_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limit>0" >
+      limit ${start} , ${limit}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from u_menu
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from u_menu
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByCondition" parameterType="com.coe.wms.facade.symgmt.entity.MenuCriteria" >
+    delete from u_menu
+    <if test="_parameter != null" >
+      <include refid="Condition_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insertSelective" parameterType="com.coe.wms.facade.symgmt.entity.Menu" >
+    insert into u_menu
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="menuCode != null" >
+        menu_code,
+      </if>
+      <if test="menuName != null" >
+        menu_name,
+      </if>
+      <if test="parentId != null" >
+        parent_id,
+      </if>
+      <if test="menuEvent != null" >
+        menu_event,
+      </if>
+      <if test="menuSortNo != null" >
+        menu_sort_no,
+      </if>
+      <if test="dictMenuStatus != null" >
+        dict_menu_status,
+      </if>
+      <if test="menuRightCode != null" >
+        menu_right_code,
+      </if>
+      <if test="menuRightPos != null" >
+        menu_right_pos,
+      </if>
+      <if test="dictIsCommon != null" >
+        dict_is_common,
+      </if>
+      <if test="dictMenuType != null" >
+        dict_menu_type,
+      </if>
+      <if test="createOperator != null" >
+        create_operator,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateOperator != null" >
+        update_operator,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="menuCode != null" >
+        #{menuCode,jdbcType=VARCHAR},
+      </if>
+      <if test="menuName != null" >
+        #{menuName,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null" >
+        #{parentId,jdbcType=BIGINT},
+      </if>
+      <if test="menuEvent != null" >
+        #{menuEvent,jdbcType=VARCHAR},
+      </if>
+      <if test="menuSortNo != null" >
+        #{menuSortNo,jdbcType=INTEGER},
+      </if>
+      <if test="dictMenuStatus != null" >
+        #{dictMenuStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="menuRightCode != null" >
+        #{menuRightCode,jdbcType=BIGINT},
+      </if>
+      <if test="menuRightPos != null" >
+        #{menuRightPos,jdbcType=INTEGER},
+      </if>
+      <if test="dictIsCommon != null" >
+        #{dictIsCommon,jdbcType=VARCHAR},
+      </if>
+      <if test="dictMenuType != null" >
+        #{dictMenuType,jdbcType=VARCHAR},
+      </if>
+      <if test="createOperator != null" >
+        #{createOperator,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=BIGINT},
+      </if>
+      <if test="updateOperator != null" >
+        #{updateOperator,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByCondition" parameterType="com.coe.wms.facade.symgmt.entity.MenuCriteria" resultType="java.lang.Integer" >
+    select count(*) from u_menu
+    <if test="_parameter != null" >
+      <include refid="Condition_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByPrimaryKeySelective" parameterType="com.coe.wms.facade.symgmt.entity.Menu" >
+    update u_menu
+    <set >
+      <if test="menuCode != null" >
+        menu_code = #{menuCode,jdbcType=VARCHAR},
+      </if>
+      <if test="menuName != null" >
+        menu_name = #{menuName,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null" >
+        parent_id = #{parentId,jdbcType=BIGINT},
+      </if>
+      <if test="menuEvent != null" >
+        menu_event = #{menuEvent,jdbcType=VARCHAR},
+      </if>
+      <if test="menuSortNo != null" >
+        menu_sort_no = #{menuSortNo,jdbcType=INTEGER},
+      </if>
+      <if test="dictMenuStatus != null" >
+        dict_menu_status = #{dictMenuStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="menuRightCode != null" >
+        menu_right_code = #{menuRightCode,jdbcType=BIGINT},
+      </if>
+      <if test="menuRightPos != null" >
+        menu_right_pos = #{menuRightPos,jdbcType=INTEGER},
+      </if>
+      <if test="dictIsCommon != null" >
+        dict_is_common = #{dictIsCommon,jdbcType=VARCHAR},
+      </if>
+      <if test="dictMenuType != null" >
+        dict_menu_type = #{dictMenuType,jdbcType=VARCHAR},
+      </if>
+      <if test="createOperator != null" >
+        create_operator = #{createOperator,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=BIGINT},
+      </if>
+      <if test="updateOperator != null" >
+        update_operator = #{updateOperator,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
