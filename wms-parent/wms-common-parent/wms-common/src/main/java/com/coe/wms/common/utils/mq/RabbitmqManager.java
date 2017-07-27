@@ -456,6 +456,12 @@ public class RabbitmqManager {
 		rabbitmqConfig.setPassword(pro.getProperty("password"));
 		String portStr = pro.getProperty("port");
 		Integer port = Integer.parseInt(portStr);
+		
+		String connectionSurvivalTime=pro.getProperty("connection_survival_time");
+		String channelSurvivalTime=pro.getProperty("channel_survival_time");
+		
+		rabbitmqConfig.setConnectionSurvivalTime(Integer.parseInt(connectionSurvivalTime)*60*1000l);
+		rabbitmqConfig.setChannelSurvivalTime(Integer.parseInt(channelSurvivalTime)*60*1000l);
 		rabbitmqConfig.setPort(port);
 	}
 
