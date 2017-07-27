@@ -18,15 +18,15 @@ public class QueryParam implements Serializable{
 
 	/** 记录页码 */
 	@JsonIgnore
-	private int page = 1;
+	private Integer page = 1;
 	
 	/** 限制纪录条数 */
 	@JsonIgnore
-	private int limit = 10;
+	private Integer limit = 10;
 	
 	/** 总纪录数 */
 	@JsonIgnore
-	private int count;
+	private Integer count;
 	
 	public int getLimit() {
 		return limit;
