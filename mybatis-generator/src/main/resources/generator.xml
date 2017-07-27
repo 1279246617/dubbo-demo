@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+	<context id="MySqlTables" targetRuntime="MyBatis3">
+
+		<!--序列化插件 -->
+		<plugin type="org.mybatis.generator.plugins.SerializablePlugin">
+		</plugin>
+		<!--重命名插件 -->
+		<plugin type="org.mybatis.generator.plugins.RenameExampleClassPlugin">
+			<property name="searchString" value="Example$" />
+			<property name="replaceString" value="Criteria" />
+		</plugin>
+
+		<!--自动生成service插件 -->
+		<plugin type="org.mybatis.generator.plugins.MybatisServicePlugin2">
+			<property name="targetProject" value="src/main/java" />
+			<property name="targetPackage" value="com.coe.wms.facade.symgmt.service" />
+			<property name="implementationPackage" value="com.coe.wms.facade.symgmt.service.impl" />
+		</plugin>
+
+		<!--生成分页插件 -->
+		<plugin type="org.mybatis.generator.plugins.PaginationPlugin"></plugin>
+		
+		<!-- 去除自动生成的注释 -->
+		<commentGenerator>
+			<property name="suppressAllComments" value="true" />
+		</commentGenerator>
+
+		<!-- 指定连接字符串 -->
+		<jdbcConnection driverClass="com.mysql.jdbc.Driver"
+			connectionURL="jdbc:mysql://192.168.80.12:3306/wms_write?useUnicode=true&amp;characterEncoding=utf-8&amp;zeroDateTimeBehavior=convertToNull"
+			userId="root" password="kwiktogcb">
+		</jdbcConnection>
+
+		<javaTypeResolver>
+			<property name="forceBigDecimals" value="false" />
+		</javaTypeResolver>
+
+		<!-- targetPackage:生成代码的包名 targetProject:生成代码的输出位置 -->
+		
+		
+
+		<!-- 实体类对象 -->
+		<javaModelGenerator targetPackage="com.coe.wms.facade.symgmt.entity" targetProject="src/main/java">
+			<property name="enableSubPackages" value="true" />
+			<property name="trimStrings" value="true" />
+		</javaModelGenerator>
+		
+		<!-- mybatis mapper.xml -->
+		<sqlMapGenerator targetPackage="mapper" targetProject="src/main/resources">
+			<property name="enableSubPackages" value="true" />
+		</sqlMapGenerator>
+		
+		<!-- mybatis mapper -->
+		<javaClientGenerator type="XMLMAPPER"
+			targetPackage="com.coe.wms.service.symgmt.mapper" targetProject="src/main/java">
+			<property name="enableSubPackages" value="true" />
+		</javaClientGenerator>
+		
+		
+
+		<!-- 指定需要生成的数据库表 -->
+		<table tableName="s_config" domainObjectName="Config" />
+<!-- 		<table tableName="u_admin" domainObjectName="Admin" /> -->
+<!-- 		<table tableName="u_customer" domainObjectName="Customer" /> -->
+<!-- 		<table tableName="u_operator" domainObjectName="Operator" /> -->
+<!-- 		<table tableName="w_warehouse" domainObjectName="Warehouse" /> -->
+<!-- 		<table tableName="u_admin_warehouse_role" domainObjectName="AdminWarehouseRole" /> -->
+<!-- 		<table tableName="u_menu" domainObjectName="Menu"/> -->
+<!-- 		<table tableName="u_role" domainObjectName="Role"/> -->
+<!-- 		<table tableName="u_role_permission" domainObjectName="rolePermission"/> -->
+		
+<!-- s_server -->
+<!-- u_admin -->
+<!-- u_customer -->
+<!-- u_operator -->
+<!-- w_warehouse -->
+<!-- u_admin_warehouse_role -->
+<!-- u_menu -->
+<!-- u_role -->
+<!-- u_role_permission -->
+
+		
+		
+
+	</context>
+</generatorConfiguration>
