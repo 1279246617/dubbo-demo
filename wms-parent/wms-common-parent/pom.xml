@@ -15,5 +15,7 @@
 		<module>wms-common-web</module>
 		<module>wms-common-config</module>
 		<module>wms-common</module>
+		<module>wms-common-config-web</module>
+		<module>wms-common-config-service</module>
 	</modules>
 </project>
