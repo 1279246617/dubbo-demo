@@ -50,6 +50,10 @@ public class RabbitmqManager {
 	// 通道队列
 	private static DelayQueue<Delayed> channelDelayed = new DelayQueue<Delayed>();
 
+	
+	
+
+	
 	// 此链接用于接收数据
 	private static Connection connection;
 
@@ -71,21 +75,27 @@ public class RabbitmqManager {
 			e.printStackTrace();
 		}
 		// 销毁通道队列
-		/*
-		 * new Thread() {
-		 * 
-		 * @Override public void run() { destroyChannelDelayed(); }
-		 * 
-		 * }.start();
-		 */
+		/**/
+		new Thread() {
+
+			@Override
+			public void run() {
+				destroyChannelDelayed();
+			}
+
+		}.start();
+
 		// 销毁连接队列
-		/*
-		 * new Thread() {
-		 * 
-		 * @Override public void run() { destroyConnectionDelayed(); }
-		 * 
-		 * }.start();
-		 */
+		/**/
+		new Thread() {
+
+			@Override
+			public void run() {
+				destroyConnectionDelayed();
+			}
+
+		}.start();
+
 	}
 
 	/**
@@ -102,6 +112,7 @@ public class RabbitmqManager {
 				connectionMap.remove(connectionKey);
 				// 删除channel
 				channelMap.remove(connectionKey);
+				
 				try {
 					connection.close();
 				} catch (IOException e) {
@@ -133,8 +144,10 @@ public class RabbitmqManager {
 					if (childChannelExpand.getChannelKey().equals(channelKey)) {
 						Channel channel = childChannelExpand.getChannel();
 						try {
-							channel.close();
-						} catch (IOException e) {
+							if(channel.isOpen()){
+							  channel.close();
+							}
+						} catch (Exception e) {
 							e.printStackTrace();
 						}
 						channelExpandList.remove(i);
@@ -194,11 +207,11 @@ public class RabbitmqManager {
 				channel.exchangeDeclare(exchangeName, "fanout");
 				// 创建一个非持久的、唯一的且自动删除的队列
 
-				if (title == null||title.trim().length()==0) {
+				if (title == null || title.trim().length() == 0) {
 					title = channel.queueDeclare().getQueue();
 				}
 
-				// 为转发器指定队列，设置binding 
+				// 为转发器指定队列，设置binding
 				channel.queueBind(title, exchangeName, "");
 
 				QueueingConsumer consumer = new QueueingConsumer(channel);
@@ -280,7 +293,7 @@ public class RabbitmqManager {
 			RabbitMqChannelPoolDelayed rabbitMqChannelPoolDelayed = new RabbitMqChannelPoolDelayed();
 			rabbitMqChannelPoolDelayed.setChannelExpand(channelExpand);
 			rabbitMqChannelPoolDelayed.setChannelKey(channelExpand.getChannelKey());
-			rabbitMqChannelPoolDelayed.setEndTime(System.currentTimeMillis() + 1 * 60 * 60 * 1000l);
+			rabbitMqChannelPoolDelayed.setEndTime(System.currentTimeMillis() +rabbitmqConfig.getChannelSurvivalTime());
 			channelDelayed.remove(rabbitMqChannelPoolDelayed);
 			channelDelayed.add(rabbitMqChannelPoolDelayed);
 		} catch (Exception e) {
@@ -294,7 +307,7 @@ public class RabbitmqManager {
 		RabbitMqConnectionPoolDelayed rabbitMqConnectionPoolDelayed = new RabbitMqConnectionPoolDelayed();
 		rabbitMqConnectionPoolDelayed.setConnection(connection);
 		rabbitMqConnectionPoolDelayed.setConnectionKey(connectionKey);
-		rabbitMqConnectionPoolDelayed.setEndTime(System.currentTimeMillis() + 3 * 60 * 60 * 1000l);
+		rabbitMqConnectionPoolDelayed.setEndTime(System.currentTimeMillis() + rabbitmqConfig.getConnectionSurvivalTime());
 		connectionDelayed.remove(rabbitMqConnectionPoolDelayed);
 		connectionDelayed.add(rabbitMqConnectionPoolDelayed);
 
@@ -311,7 +324,6 @@ public class RabbitmqManager {
 	 */
 	private static ChannelExpand createChannel(String connectionKey, Connection connection, Integer channelCount, List<ChannelExpand> channelList) {
 		try {
-			System.out.println("创建通道");
 			Channel channel = connection.createChannel();
 			ChannelExpand channelExpand = new ChannelExpand();
 			channelExpand.setChannel(channel);
@@ -324,7 +336,7 @@ public class RabbitmqManager {
 			RabbitMqChannelPoolDelayed rabbitMqChannelPoolDelayed = new RabbitMqChannelPoolDelayed();
 			rabbitMqChannelPoolDelayed.setChannelExpand(channelExpand);
 			rabbitMqChannelPoolDelayed.setChannelKey(channelExpand.getChannelKey());
-			rabbitMqChannelPoolDelayed.setEndTime(System.currentTimeMillis() + 1 * 60 * 60 * 1000l);
+			rabbitMqChannelPoolDelayed.setEndTime(System.currentTimeMillis() + rabbitmqConfig.getChannelSurvivalTime());
 			channelDelayed.add(rabbitMqChannelPoolDelayed);
 			return channelExpand;
 		} catch (IOException e) {
@@ -350,7 +362,7 @@ public class RabbitmqManager {
 			RabbitMqConnectionPoolDelayed rabbitMqConnectionPoolDelayed = new RabbitMqConnectionPoolDelayed();
 			rabbitMqConnectionPoolDelayed.setConnection(connection);
 			rabbitMqConnectionPoolDelayed.setConnectionKey(newMapKey);
-			rabbitMqConnectionPoolDelayed.setEndTime(System.currentTimeMillis() + 3 * 60 * 60 * 1000l);
+			rabbitMqConnectionPoolDelayed.setEndTime(System.currentTimeMillis() + rabbitmqConfig.getConnectionSurvivalTime());
 			connectionDelayed.add(rabbitMqConnectionPoolDelayed);
 
 		} catch (IOException e) {
