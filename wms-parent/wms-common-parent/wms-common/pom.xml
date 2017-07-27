@@ -12,9 +12,23 @@
 	<name>wms-common</name>
 	<url>http://maven.apache.org</url>
 	<properties>
+	
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	<dependencies>
+
+
+		<dependency>
+			<groupId>com.coe.wms</groupId>
+			<artifactId>wms-common-config</artifactId>
+			<version>0.0.1-SNAPSHOT</version><!--$NO-MVN-MAN-VER$-->
+		</dependency>
+		<!-- rabbitmq -->
+		<dependency>
+			<groupId>com.rabbitmq</groupId>
+			<artifactId>client</artifactId>
+		</dependency>
+
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
@@ -104,8 +118,13 @@
 			<groupId>org.jxls</groupId>
 			<artifactId>jxls-reader</artifactId>
 		</dependency>
+		<!-- fastdfs-pom -->
+		<dependency>
+			<groupId>org.csource</groupId>
+			<artifactId>fastdfs-client-java</artifactId>
+		</dependency>
 	</dependencies>
-	
+
 	<build>
 		<finalName>wms-common</finalName>
 	</build>
