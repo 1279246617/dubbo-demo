@@ -25,7 +25,7 @@ import com.rabbitmq.client.QueueingConsumer;
  * @ClassName: RabbitmqManager
  * @author lqg
  * @date 2017年7月25日 下午7:14:48
- * @Description: TODO
+ * @Description: 
  */
 public class RabbitmqManager {
 
