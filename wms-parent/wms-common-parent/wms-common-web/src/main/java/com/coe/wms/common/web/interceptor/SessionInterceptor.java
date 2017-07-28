@@ -45,6 +45,13 @@ public class SessionInterceptor extends HandlerInterceptorAdapter {
 		// Access-Control-Allow-Credentials: true
 		// ------------------------------------设置跨域结束
 
+		// 访问路径
+		String url = request.getServletPath();
+		// 不拦截的url
+		if (url.matches(unInterceptUrls)) {
+			return true;
+		}
+
 		// ---------------------------------cookie
 		// 获取cookie
 		String sessionId = CookieUtil.getValue(request, Session.SESSION_ID_KEY);
@@ -62,15 +69,9 @@ public class SessionInterceptor extends HandlerInterceptorAdapter {
 				"/", false);
 
 		// --------------------------------cookie结束
-		// 访问路径
-		String url = request.getServletPath();
-		// 不拦截的url
-		if (url.matches(unInterceptUrls)) {
-			return true;
-		}
 
 		String isLogin = session.getAttr(Session.USER_IDENTIFICATION);
-		// 登录校验 
+		// 登录校验
 		if (isLogin == null) {
 			response.getWriter().print("{\"code\":2,\"msg\":\"会话已失效,请重新登录\"}");
 			return false;
