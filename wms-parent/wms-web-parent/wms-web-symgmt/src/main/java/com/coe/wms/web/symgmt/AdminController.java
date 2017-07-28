@@ -1,6 +1,7 @@
 package com.coe.wms.web.symgmt;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,10 +13,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.coe.wms.common.model.Session;
+import com.coe.wms.common.utils.CookieUtil;
 import com.coe.wms.common.utils.GsonUtil;
+import com.coe.wms.common.utils.StringUtil;
 import com.coe.wms.common.web.AbstractController;
 import com.coe.wms.common.web.model.Result;
 import com.coe.wms.common.web.session.CacheSession;
+import com.coe.wms.common.web.session.CookieHolder;
 import com.coe.wms.facade.symgmt.entity.Admin;
 import com.coe.wms.facade.symgmt.entity.vo.AdminVo;
 import com.coe.wms.facade.symgmt.service.AdminService;
@@ -47,6 +51,17 @@ public class AdminController extends AbstractController{
 		if(adminVo==null){
 			return Result.error("登录失败，请检查用户名和密码");
 		}
+		
+		
+		//生产唯一cookie
+		// 重新设置cookie
+		String	sessionId = UUID.randomUUID().toString().replace("-", "");
+		CookieHolder.setSessionId(sessionId);
+
+		CookieUtil.addCookie(getHttpServletResponse(), Session.SESSION_ID_KEY, sessionId, session.getSessionTimeOut() * 60);
+		// 线上使用 用于共享cookie
+		CookieUtil.addCookie(getHttpServletResponse(), Session.SESSION_ID_KEY, sessionId, "coewms.com", false, session.getSessionTimeOut() * 60,
+				"/", false);
 		//如果登录成功  记录数据
 		//session.getAttr(Session.USER_IDENTIFICATION);
 		//Session.USER_ADMINVO_KEY
