@@ -14,28 +14,36 @@
 	<!-- 启动spring注解扫描 -->
 	<context:annotation-config />
 
-	
+
 	<!-- 基于JDK动态代理 ，可以将@注解放置在接口和具体类上。 -->
 	<!-- 基于CGLIB类代理，只能将@注解放置在具体类上。 -->
 	<!-- CGLIB动态代理 -->
 	<aop:aspectj-autoproxy proxy-target-class="true" />
 
 	<!-- 引入properties配置文件 -->
-	<context:property-placeholder location="classpath*:jdbc.properties,classpath*:service.properties,classpath*:dubbo.properties" ignore-unresolvable="true" />
+	<context:property-placeholder
+		location="classpath*:jdbc.properties,classpath*:service.properties,classpath*:dubbo.properties,classpath*:sys.properties"
+		ignore-unresolvable="true" />
 
 	<!-- aop start -->
-	
+
 	<!-- 异常处理 -->
 	<bean class="com.coe.wms.common.aspect.ServiceExceptionAspect" />
-	
+
 	<!-- 数据源主从切换控制 -->
 	<bean class="com.coe.wms.common.core.db.DataSourceAspect" />
-	
+
 	<!-- redis缓存 -->
 	<bean class="com.coe.wms.common.core.cache.CacheAspect" />
-	
+
 	<!-- aop end -->
-	
+
+
+	<!-- 系统参数 -->
+	<bean id="systemConfig" class="com.coe.wms.common.model.SystemConfig">
+		<property name="ownWarehoouse" value="${own_warehouse}" />
+	</bean>
+
 	<!-- dubbo配置 -->
 	<import resource="classpath:spring/spring-dubbo-provider.xml" />
 	<!-- mybatis -->
