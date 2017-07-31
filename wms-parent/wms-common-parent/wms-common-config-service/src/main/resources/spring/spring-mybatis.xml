@@ -63,6 +63,13 @@
 		<property name="minIdle" value="${jdbc.wms.write.minPoolSize}" />
 		<property name="maxActive" value="${jdbc.wms.write.maxPoolSize}" />
 	</bean>
+	
+<!-- 	jdbc.wms.write.url=jdbc:mysql://192.168.80.12:3306/wms_write?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true -->
+<!-- jdbc.wms.write.username=root -->
+<!-- jdbc.wms.write.password=kwiktogcb -->
+<!-- jdbc.wms.write.initPoolSize=5 -->
+<!-- jdbc.wms.write.minPoolSize=5 -->
+<!-- jdbc.wms.write.maxPoolSize=50 -->
 
 	<!-- 从库1 -->
 	<bean id="dataSourceSlave1" parent="abstractDataSource">
